@@ -2,6 +2,7 @@ version: "3.9"
 
 services:
   backend:
+      container_name: backend
       build: ./backend
       volumes:
         - ./backend/core:/usr/src/app/
@@ -10,6 +11,7 @@ services:
       env_file:
         - ./backend/docker-compose.env
   frontend_dashboard:
+      container_name: dashboard
       build: ./dashboard
       environment:
         CHOKIDAR_USEPOLLING: "true" # https://stackoverflow.com/questions/61576659/how-to-hot-reload-in-reactjs-docker
@@ -21,6 +23,7 @@ services:
       depends_on:
         - backend
   frontend_storefront:
+      container_name: storefront
       build: ./storefront
       environment:
         CHOKIDAR_USEPOLLING: "true" # https://stackoverflow.com/questions/61576659/how-to-hot-reload-in-reactjs-docker
