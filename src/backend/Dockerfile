@@ -20,6 +20,6 @@ RUN chmod +x /usr/src/app/entrypoint.sh
 # this has to be done...
 # the following code replaces import of format_error from graphql.error with import of GraphQLFormattedError in graphql-graphene views
 # otherwise grapql views cannot be imported
-RUN sed -i "/from graphql.error import format_error as format_graphql_error/c\from graphql.error import GraphQLFormattedError as format_graphql_error" /usr/local/lib/python3.9/site-packages/graphene_django/views.py
+# RUN sed -i "/from graphql.error import format_error as format_graphql_error/c\from graphql.error import GraphQLFormattedError as format_graphql_error" /usr/local/lib/python3.9/site-packages/graphene_django/views.py
 ENTRYPOINT [ "sh", "/usr/src/app/entrypoint.sh" ]
 # ENTRYPOINT ["tail", "-f", "/dev/null"]

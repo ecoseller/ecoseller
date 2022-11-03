@@ -1,8 +1,5 @@
 version: "3.9"
 
-
-# name: ecoseller.io
-
 services:
   backend:
       container_name: backend
