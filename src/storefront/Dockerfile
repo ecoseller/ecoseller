@@ -13,12 +13,16 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-RUN npm run build 
+# RUN npm run build 
 
 # runner
 FROM builder as runner
 WORKDIR /usr/src/app
 # ENV NODE_ENV production
+ENV NODE_ENV development
+# EXPOSE 3000
 
 
-CMD ["npm", "start"]
+
+# CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]
