@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "cms.apps.CmsConfig",
     "cart.apps.CartConfig",
     "category.apps.CategoryConfig",
+    "country.apps.CountryConfig",
     "order.apps.OrderConfig",
     "product.apps.ProductConfig",
     "review.apps.ReviewConfig",
@@ -115,7 +116,19 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
+PARLER_DEFAULT_LANGUAGE_CODE = 'en'
+
+PARLER_LANGUAGES = {
+    None: (
+        {'code': 'en',},
+        {'code': 'cs',},
+    ),
+    'default': {
+        'fallbacks': ['en'],          # defaults to PARLER_DEFAULT_LANGUAGE_CODE
+        'hide_untranslated': False,   # the default; let .active_translations() return fallbacks too.
+    }
+}
 
 TIME_ZONE = 'UTC'
 
