@@ -19,6 +19,9 @@ RUN npm run build
 FROM builder as runner
 WORKDIR /usr/src/app
 # ENV NODE_ENV production
+ENV NODE_ENV development
 
 
-CMD ["npm", "start"]
+
+# CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]

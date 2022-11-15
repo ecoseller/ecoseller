@@ -16,6 +16,8 @@ services:
       environment:
         CHOKIDAR_USEPOLLING: "true" # https://stackoverflow.com/questions/61576659/how-to-hot-reload-in-reactjs-docker
       volumes:
+        - ./dashboard/pages:/usr/src/app/pages
+        - ./dashboard/styles:/usr/src/app/styles
         - ./dashboard/src:/usr/src/app/src
         - ./dashboard/public:/usr/src/app/public
       ports:
