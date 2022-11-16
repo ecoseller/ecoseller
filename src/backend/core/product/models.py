@@ -10,9 +10,10 @@ class ProductVariant(models.Model):
     weight = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     update_at=models.DateTimeField(auto_now=True)
     create_at=models.DateTimeField(auto_now_add=True)
-    # TODO:
-    # product attributes (color, size, etc.)
-    # filter attrbutes (color, size, material, etc)   
+    attributes=models.ManyToManyField('BaseAttribute') 
+
+    def __str__(self) -> str:
+        return "sku: {} ean: {}".format(self.sku, self.ean)
 
 class Product(TranslatableModel):
     id = models.CharField(primary_key=True, max_length=20, unique=True)
@@ -29,3 +30,39 @@ class Product(TranslatableModel):
     product_variants = models.ManyToManyField('ProductVariant', symmetrical=False, blank=True)
     update_at=models.DateTimeField(auto_now=True)
     create_at=models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return "id: {} title: {}".format(self.id, self.title)
+
+
+# Attributes
+
+class AttributeType(models.Model):
+    type_name=models.CharField(max_length=200, blank=False, null=False, help_text='Type name of attribute (e.g. weight, size)')
+    unit=models.CharField(max_length=200, blank=True, null=True, help_text='Unit of given type in which value is measured')
+
+    def __str__(self) -> str:
+        return "{} ({})".format(self.type_name, self.unit)
+
+class BaseAttribute(models.Model):
+    type=models.ForeignKey('AttributeType', on_delete=models.CASCADE)
+    value=models.CharField(max_length=200, blank=False, null=False)
+    order=models.IntegerField(blank=True, null=True)
+    ext_attributes=models.ManyToManyField('ExtensionAttribute')
+
+    def __str__(self) -> str:
+        return "{}: {}".format(self.type.type_name, self.value)
+
+class ExtAttributeType(models.Model):
+    type_name=models.CharField(max_length=200, blank=False, null=False, help_text='Type name of attribute (e.g. weight, size)')
+    unit=models.CharField(max_length=200, blank=True, null=True, help_text='Unit of given type in which value is measured')
+
+    def __str__(self) -> str:
+        return "{} ({})".format(self.type_name, self.unit)
+class ExtensionAttribute(models.Model):
+    type=models.ForeignKey('ExtAttributeType', on_delete=models.CASCADE)
+    value=models.CharField(max_length=200, blank=False, null=False)
+    ext_attributes=models.ManyToManyField("self", blank=True, symmetrical=False) 
+
+    def __str__(self) -> str:
+        return "{}: {}".format(self.type.type_name, self.value)
