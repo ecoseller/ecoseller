@@ -20,6 +20,7 @@ services:
         - ./dashboard/styles:/usr/src/app/styles
         - ./dashboard/src:/usr/src/app/src
         - ./dashboard/public:/usr/src/app/public
+        - ./http-library/src:/usr/src/http-library/src
       ports:
         - 3030:3000
       depends_on:
@@ -34,6 +35,7 @@ services:
         - ./storefront/styles:/usr/src/app/styles
         - ./storefront/src:/usr/src/app/src
         - ./storefront/public:/usr/src/app/public
+        - ./http-library/src:/usr/src/http-library/src
       ports:
         - 3031:3000
       depends_on:
