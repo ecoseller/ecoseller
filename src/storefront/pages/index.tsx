@@ -1,6 +1,6 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import Image from "next/image";
+import styles from "../styles/Home.module.css";
 
 export default function Home() {
   return (
@@ -11,29 +11,23 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       Menu
-
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          ecoseller.io
-        </h1>
+        <h1 className={styles.title}>ecoseller.io</h1>
 
-        <p className={styles.description}>
-          best ecommerce solution ever made
-        </p>
+        <p className={styles.description}>best ecommerce solution ever made</p>
       </main>
-
       <footer className={styles.footer}>
         <a
           href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by{" "}
           <span className={styles.logo}>
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
         </a>
       </footer>
     </div>
-  )
+  );
 }
