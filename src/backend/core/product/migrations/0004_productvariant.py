@@ -6,18 +6,32 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('product', '0003_remove_product_product_variants_and_more'),
+        ("product", "0003_remove_product_product_variants_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ProductVariant',
+            name="ProductVariant",
             fields=[
-                ('sku', models.CharField(blank=True, max_length=255, primary_key=True, serialize=False, unique=True)),
-                ('ean', models.CharField(blank=True, max_length=13)),
-                ('weight', models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True)),
-                ('update_at', models.DateTimeField(auto_now=True)),
-                ('create_at', models.DateTimeField(auto_now_add=True)),
+                (
+                    "sku",
+                    models.CharField(
+                        blank=True,
+                        max_length=255,
+                        primary_key=True,
+                        serialize=False,
+                        unique=True,
+                    ),
+                ),
+                ("ean", models.CharField(blank=True, max_length=13)),
+                (
+                    "weight",
+                    models.DecimalField(
+                        blank=True, decimal_places=2, max_digits=10, null=True
+                    ),
+                ),
+                ("update_at", models.DateTimeField(auto_now=True)),
+                ("create_at", models.DateTimeField(auto_now_add=True)),
             ],
         ),
     ]

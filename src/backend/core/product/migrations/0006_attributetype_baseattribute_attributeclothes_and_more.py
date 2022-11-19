@@ -7,40 +7,75 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('product', '0005_product_product_variants'),
+        ("product", "0005_product_product_variants"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='AttributeType',
+            name="AttributeType",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('type_name', models.CharField(help_text='Type name of attribute (e.g. weight, size)', max_length=200)),
-                ('unit', models.CharField(blank=True, help_text='Unit of given type in which value is measured', max_length=200, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "type_name",
+                    models.CharField(
+                        help_text="Type name of attribute (e.g. weight, size)",
+                        max_length=200,
+                    ),
+                ),
+                (
+                    "unit",
+                    models.CharField(
+                        blank=True,
+                        help_text="Unit of given type in which value is measured",
+                        max_length=200,
+                        null=True,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='BaseAttribute',
+            name="BaseAttribute",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('value', models.CharField(max_length=200)),
-                ('type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='product.attributetype')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("value", models.CharField(max_length=200)),
+                (
+                    "type",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="product.attributetype",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='AttributeClothes',
-            fields=[
-            ],
+            name="AttributeClothes",
+            fields=[],
             options={
-                'proxy': True,
-                'indexes': [],
-                'constraints': [],
+                "proxy": True,
+                "indexes": [],
+                "constraints": [],
             },
-            bases=('product.baseattribute',),
+            bases=("product.baseattribute",),
         ),
         migrations.AddField(
-            model_name='productvariant',
-            name='attributes',
-            field=models.ManyToManyField(to='product.baseattribute'),
+            model_name="productvariant",
+            name="attributes",
+            field=models.ManyToManyField(to="product.baseattribute"),
         ),
     ]
