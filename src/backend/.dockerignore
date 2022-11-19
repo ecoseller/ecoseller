@@ -103,3 +103,6 @@ GitHub.sublime-settings
 # IDEs
 .vscode
 .idea
+
+# Django static files
+core/static

@@ -137,3 +137,6 @@ GitHub.sublime-settings
 .history
 
 *.icloud
+
+# Django static files
+core/static
