@@ -1,7 +1,6 @@
 from django.db import models
 from ckeditor.fields import RichTextField
 from parler.models import TranslatableModel, TranslatedFields
-from parler.managers import TranslatableQuerySet, TranslatableManager
 from mptt.models import MPTTModel
 from mptt.fields import TreeForeignKey
 

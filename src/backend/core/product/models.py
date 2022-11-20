@@ -4,7 +4,6 @@ from ckeditor.fields import RichTextField
 from category.models import (
     Category,
 )
-from datetime import datetime
 
 
 class ProductVariant(models.Model):

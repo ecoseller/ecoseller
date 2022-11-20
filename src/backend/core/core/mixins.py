@@ -1,7 +1,7 @@
 from rest_framework.serializers import (
     ReadOnlyField,
 )
-from django.conf import settings
+
 from settings import PARLER_DEFAULT_LANGUAGE_CODE as DEFAULT_LANG
 
 
@@ -67,7 +67,7 @@ class TranslatedSerializerMixin(object):
                 translate = translation_model.objects.get(
                     master=instance, language_code=lang_code
                 )
-            except:
+            except Exception:
                 print("No translation for language: %s" % lang_code)
                 translate = None
                 try:
@@ -75,7 +75,7 @@ class TranslatedSerializerMixin(object):
                     translate = translation_model.objects.get(
                         master=instance, language_code=DEFAULT_LANG
                     )
-                except:
+                except Exception:
                     translate = None
 
         for field_name, field in self.get_fields().items():

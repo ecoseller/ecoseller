@@ -1,9 +1,11 @@
 from django.contrib import admin
-from product.models import *
-from parler.admin import (
-    TranslatableAdmin,
-    TranslatableModelForm,
-    TranslatableTabularInline,
+from .models import (
+    ProductVariant,
+    Product,
+    AttributeType,
+    BaseAttribute,
+    ExtAttributeType,
+    ExtensionAttribute,
 )
 
 

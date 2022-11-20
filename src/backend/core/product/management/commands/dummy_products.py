@@ -1,4 +1,4 @@
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from product.models import Product, ProductVariant
 from random import randrange
 import functools
@@ -24,7 +24,10 @@ class Command(BaseCommand):
         :rtype: Integer
         """
         assert len(ean) == 12, "EAN must be a list of 12 numbers"
-        sum_ = lambda x, y: int(x) + int(y)
+
+        def sum_(x, y):
+            return int(x) + int(y)
+
         evensum = functools.reduce(sum_, ean[::2])
         oddsum = functools.reduce(sum_, ean[1::2])
         return (10 - ((evensum + oddsum * 3) % 10)) % 10
