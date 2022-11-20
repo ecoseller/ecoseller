@@ -7,6 +7,9 @@ on:
     branches:
       - master
 
+env:
+  NEXTJS_SOURCE_FILES: src pages styles
+
 jobs:
   backend:
     runs-on: ubuntu-latest
@@ -50,9 +53,9 @@ jobs:
       # - name: Test
       #   run: npm test
       - name: Lint
-        run: npx next lint .
+        run: npx next lint $NEXTJS_SOURCE_FILES
       - name: Check formatting
-        run: npx prettier --check .
+        run: npx prettier --check $NEXTJS_SOURCE_FILES
 
   storefront:
     runs-on: ubuntu-latest
@@ -68,14 +71,14 @@ jobs:
           node-version: "18.x"
       - name: Install dependencies
         run: npm ci
-      - name: Build
-        run: npm run build
+      # - name: Build
+      #   run: npm run build
       # - name: Test
       #   run: npm test
       - name: Lint
-        run: npx next lint .
+        run: npx next lint $NEXTJS_SOURCE_FILES
       - name: Check formatting
-        run: npx prettier --check .
+        run: npx prettier --check $NEXTJS_SOURCE_FILES
 
   http-library:
     runs-on: ubuntu-latest
