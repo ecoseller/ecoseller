@@ -82,6 +82,8 @@ jobs:
 
   http-library:
     runs-on: ubuntu-latest
+    env:
+      SOURCE_FILES: src
     defaults:
       run:
         working-directory: src/http-library
@@ -99,9 +101,9 @@ jobs:
       # - name: Test
       #   run: npm test
       - name: Lint
-        run: npx eslint .
+        run: npx eslint $SOURCE_FILES
       - name: Check formatting
-        run: npx prettier --check .
+        run: npx prettier --check $SOURCE_FILES
 
   # build:
   #   runs-on: [ubuntu-latest]
