@@ -8,7 +8,7 @@ on:
       - master
 
 env:
-  NEXTJS_SOURCE_FILES: src pages styles
+  NEXTJS_SOURCE_FILES: src styles
 
 jobs:
   backend:
@@ -71,8 +71,8 @@ jobs:
           node-version: "18.x"
       - name: Install dependencies
         run: npm ci
-      # - name: Build
-      #   run: npm run build
+      - name: Build
+        run: npm run build
       # - name: Test
       #   run: npm test
       - name: Lint
@@ -94,8 +94,8 @@ jobs:
           node-version: "18.x"
       - name: Install dependencies
         run: npm ci
-      - name: Build
-        run: npm run build
+      # - name: Build
+      #   run: npm run build
       # - name: Test
       #   run: npm test
       - name: Lint
