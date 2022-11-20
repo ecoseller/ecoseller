@@ -9,8 +9,6 @@ on:
 
 env:
   NEXTJS_SOURCE_FILES: "src styles"
-  PYTHON_VERSION: "3.9"
-  NODE_VERSION: $NODE_VERSION
 
 jobs:
   backend:
@@ -23,10 +21,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python $PYTHON_VERSION
+      - name: Set up Python 3.9
         uses: actions/setup-python@v4
         with:
-          python-version: PYTHON_VERSION
+          python-version: "3.9"
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -47,7 +45,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: $NODE_VERSION
+          node-version: "18.x"
       - name: Install dependencies
         run: npm ci
       - name: Build
@@ -70,7 +68,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: $NODE_VERSION
+          node-version: "18.x"
       - name: Install dependencies
         run: npm ci
       - name: Build
@@ -95,7 +93,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: $NODE_VERSION
+          node-version: "18.x"
       - name: Install dependencies
         run: npm ci
       # - name: Build
@@ -107,13 +105,12 @@ jobs:
       - name: Check formatting
         run: npx prettier --check $SOURCE_FILES
 
-  docker-compose:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: src
+  # build:
+  #   runs-on: [ubuntu-latest]
 
-    steps:
-      - uses: actions/checkout@v3
-      - name: Build the Docker image
-        run: docker compose build
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Build the Docker image
+  #       run: |
+  #         cd src
+  #         docker compose build
