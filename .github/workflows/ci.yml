@@ -8,7 +8,7 @@ on:
       - master
 
 env:
-  NEXTJS_SOURCE_FILES: "src styles"
+  NEXTJS_SOURCE_FILES: "app styles"
 
 jobs:
   backend:
