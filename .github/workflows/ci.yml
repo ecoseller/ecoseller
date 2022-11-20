@@ -105,12 +105,13 @@ jobs:
       - name: Check formatting
         run: npx prettier --check $SOURCE_FILES
 
-  # build:
-  #   runs-on: [ubuntu-latest]
+  docker-compose:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src
 
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - name: Build the Docker image
-  #       run: |
-  #         cd src
-  #         docker compose build
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build the Docker image
+        run: docker compose build
