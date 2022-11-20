@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('product', '0007_extattributetype_extensionattribute_and_more'),
+        ("product", "0007_extattributetype_extensionattribute_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='extensionattribute',
-            name='ext_attributes',
-            field=models.ManyToManyField(blank=True, to='product.extensionattribute'),
+            model_name="extensionattribute",
+            name="ext_attributes",
+            field=models.ManyToManyField(blank=True, to="product.extensionattribute"),
         ),
     ]

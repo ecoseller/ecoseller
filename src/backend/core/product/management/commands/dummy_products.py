@@ -1,10 +1,11 @@
-from django.core.management.base import BaseCommand, CommandError
-from product.models import (Product, ProductVariant)
+from django.core.management.base import BaseCommand
+from product.models import Product, ProductVariant
 from random import randrange
 import functools
 
+
 class Command(BaseCommand):
-    help = 'Creates dummy product data'
+    help = "Creates dummy product data"
 
     def add_arguments(self, parser):
         pass
@@ -23,11 +24,14 @@ class Command(BaseCommand):
         :rtype: Integer
         """
         assert len(ean) == 12, "EAN must be a list of 12 numbers"
-        sum_ = lambda x, y: int(x) + int(y)
+
+        def sum_(x, y):
+            return int(x) + int(y)
+
         evensum = functools.reduce(sum_, ean[::2])
         oddsum = functools.reduce(sum_, ean[1::2])
         return (10 - ((evensum + oddsum * 3) % 10)) % 10
-    
+
     def generate_ean(self):
         ean = self.generate_12_random_numbers()
         ean.append(self.calculate_checksum(ean))
@@ -43,22 +47,10 @@ class Command(BaseCommand):
                 "category": "men's clothing",
                 "image": "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
                 "variants": [
-                    {
-                        "sku": "FJA-1",
-                        "ean": f"{self.generate_ean()}",
-                        "weight": 500
-                    },
-                    {
-                        "sku": "FJA-2",
-                        "ean": f"{self.generate_ean()}",
-                        "weight": 500
-                    },
-                    {
-                        "sku": "FJA-3",
-                        "ean": f"{self.generate_ean()}",
-                        "weight": 500
-                    }
-                ]
+                    {"sku": "FJA-1", "ean": f"{self.generate_ean()}", "weight": 500},
+                    {"sku": "FJA-2", "ean": f"{self.generate_ean()}", "weight": 500},
+                    {"sku": "FJA-3", "ean": f"{self.generate_ean()}", "weight": 500},
+                ],
             },
             {
                 "id": 2,
@@ -68,22 +60,10 @@ class Command(BaseCommand):
                 "category": "men's clothing",
                 "image": "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg",
                 "variants": [
-                    {
-                        "sku": "TSH-1",
-                        "ean": f"{self.generate_ean()}",
-                        "weight": 150
-                    },
-                    {
-                        "sku": "TSH-2",
-                        "ean": f"{self.generate_ean()}",
-                        "weight": 150
-                    },
-                    {
-                        "sku": "TSH-3",
-                        "ean": f"{self.generate_ean()}",
-                        "weight": 150
-                    }
-                ]
+                    {"sku": "TSH-1", "ean": f"{self.generate_ean()}", "weight": 150},
+                    {"sku": "TSH-2", "ean": f"{self.generate_ean()}", "weight": 150},
+                    {"sku": "TSH-3", "ean": f"{self.generate_ean()}", "weight": 150},
+                ],
             },
             {
                 "id": 3,
@@ -93,38 +73,25 @@ class Command(BaseCommand):
                 "category": "men's clothing",
                 "image": "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_.jpg",
                 "variants": [
-                    {
-                        "sku": "JCK-1",
-                        "ean": f"{self.generate_ean()}",
-                        "weight": 700
-                    },
-                    {
-                        "sku": "JCK-2",
-                        "ean": f"{self.generate_ean()}",
-                        "weight": 700
-                    },
-                    {
-                        "sku": "JCK-3",
-                        "ean": f"{self.generate_ean()}",
-                        "weight": 700
-                    }
-                ]
-            }   
+                    {"sku": "JCK-1", "ean": f"{self.generate_ean()}", "weight": 700},
+                    {"sku": "JCK-2", "ean": f"{self.generate_ean()}", "weight": 700},
+                    {"sku": "JCK-3", "ean": f"{self.generate_ean()}", "weight": 700},
+                ],
+            },
         ]
         for product in products:
             p = Product.objects.create(
-                id=product['id'],
-                title=product['title'],
-                description=product['description'],
+                id=product["id"],
+                title=product["title"],
+                description=product["description"],
             )
             p.save()
-            for variant in product['variants']:
+            for variant in product["variants"]:
                 v = ProductVariant.objects.create(
-                    sku=variant['sku'],
-                    ean=variant['ean'],
-                    weight=variant['weight'],
+                    sku=variant["sku"],
+                    ean=variant["ean"],
+                    weight=variant["weight"],
                 )
                 v.save()
                 p.product_variants.add(v)
                 p.save()
-                

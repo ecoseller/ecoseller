@@ -7,18 +7,22 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Country',
+            name="Country",
             fields=[
-                ('code', models.CharField(max_length=2, primary_key=True, serialize=False, unique=True)),
-                ('name', models.CharField(max_length=200)),
-                ('locale', models.CharField(max_length=2)),
-                ('update_at', models.DateTimeField(auto_now=True)),
-                ('create_at', models.DateTimeField(auto_now_add=True)),
+                (
+                    "code",
+                    models.CharField(
+                        max_length=2, primary_key=True, serialize=False, unique=True
+                    ),
+                ),
+                ("name", models.CharField(max_length=200)),
+                ("locale", models.CharField(max_length=2)),
+                ("update_at", models.DateTimeField(auto_now=True)),
+                ("create_at", models.DateTimeField(auto_now_add=True)),
             ],
         ),
     ]

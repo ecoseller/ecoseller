@@ -9,32 +9,84 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('country', '0001_initial'),
-        ('product', '0005_product_product_variants'),
+        ("country", "0001_initial"),
+        ("product", "0005_product_product_variants"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Cart',
+            name="Cart",
             fields=[
-                ('token', models.CharField(max_length=20, primary_key=True, serialize=False, unique=True)),
-                ('update_at', models.DateTimeField(auto_now=True)),
-                ('create_at', models.DateTimeField(auto_now_add=True)),
-                ('country', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='country.country')),
+                (
+                    "token",
+                    models.CharField(
+                        max_length=20, primary_key=True, serialize=False, unique=True
+                    ),
+                ),
+                ("update_at", models.DateTimeField(auto_now=True)),
+                ("create_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "country",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="country.country",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='CartItem',
+            name="CartItem",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('unit_price_gross', models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True)),
-                ('unit_price_net', models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True)),
-                ('quantity', models.IntegerField(default=1)),
-                ('update_at', models.DateTimeField(auto_now=True)),
-                ('create_at', models.DateTimeField(auto_now_add=True)),
-                ('cart', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='cart_items', to='cart.cart')),
-                ('product', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='product.product')),
-                ('product_variant', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='product.productvariant')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "unit_price_gross",
+                    models.DecimalField(
+                        blank=True, decimal_places=2, max_digits=10, null=True
+                    ),
+                ),
+                (
+                    "unit_price_net",
+                    models.DecimalField(
+                        blank=True, decimal_places=2, max_digits=10, null=True
+                    ),
+                ),
+                ("quantity", models.IntegerField(default=1)),
+                ("update_at", models.DateTimeField(auto_now=True)),
+                ("create_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "cart",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="cart_items",
+                        to="cart.cart",
+                    ),
+                ),
+                (
+                    "product",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="product.product",
+                    ),
+                ),
+                (
+                    "product_variant",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="product.productvariant",
+                    ),
+                ),
             ],
         ),
     ]

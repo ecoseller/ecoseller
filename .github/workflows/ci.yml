@@ -1,0 +1,117 @@
+name: Continuous integration
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+env:
+  NEXTJS_SOURCE_FILES: "src styles"
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    env:
+      SOURCE_FILES: ./core
+    defaults:
+      run:
+        working-directory: src/backend
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Check formatting
+        run: black --check $SOURCE_FILES
+      - name: Lint with flake8
+        run: flake8 $SOURCE_FILES
+
+  dashboard:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/dashboard
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+      # - name: Test
+      #   run: npm test
+      - name: Check formatting
+        run: npx prettier --check $NEXTJS_SOURCE_FILES
+      - name: Lint
+        run: npx next lint
+
+  storefront:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/storefront
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+      # - name: Test
+      #   run: npm test
+      - name: Check formatting
+        run: npx prettier --check $NEXTJS_SOURCE_FILES
+      - name: Lint
+        run: npx next lint
+
+  http-library:
+    runs-on: ubuntu-latest
+    env:
+      SOURCE_FILES: src
+    defaults:
+      run:
+        working-directory: src/http-library
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+      - name: Install dependencies
+        run: npm ci
+      # - name: Build
+      #   run: npm run build
+      # - name: Test
+      #   run: npm test
+      - name: Lint
+        run: npx eslint $SOURCE_FILES
+      - name: Check formatting
+        run: npx prettier --check $SOURCE_FILES
+
+  docker-compose:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build the Docker image
+        run: docker compose build
