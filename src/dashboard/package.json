@@ -7,16 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-<<<<<<< HEAD
     "format": "npx prettier --write src styles"
-=======
-    "format": "npx prettier --write styles app"
->>>>>>> ee286ff (T-19 NextJS dashboard login page + pipeline issues on storefront)
   },
   "dependencies": {
-    "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
-    "@mui/material": "^5.10.14",
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.9",

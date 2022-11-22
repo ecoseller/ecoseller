@@ -17,7 +17,6 @@ services:
         CHOKIDAR_USEPOLLING: "true" # https://stackoverflow.com/questions/61576659/how-to-hot-reload-in-reactjs-docker
       volumes:
         - ./dashboard/pages:/usr/src/app/pages
-        - ./dashboard/app:/usr/src/app/app
         - ./dashboard/styles:/usr/src/app/styles
         - ./dashboard/src:/usr/src/app/src
         - ./dashboard/public:/usr/src/app/public
@@ -33,7 +32,6 @@ services:
         CHOKIDAR_USEPOLLING: "true" # https://stackoverflow.com/questions/61576659/how-to-hot-reload-in-reactjs-docker
       volumes:
         - ./storefront/pages:/usr/src/app/pages
-        - ./storefront/app:/usr/src/app/app
         - ./storefront/styles:/usr/src/app/styles
         - ./storefront/src:/usr/src/app/src
         - ./storefront/public:/usr/src/app/public

@@ -13,7 +13,7 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-# RUN npm run build 
+RUN npm run build 
 
 # runner
 FROM builder as runner
