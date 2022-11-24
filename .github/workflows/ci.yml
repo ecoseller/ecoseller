@@ -7,9 +7,6 @@ on:
     branches:
       - master
 
-env:
-  NEXTJS_SOURCE_FILES: "app styles"
-
 jobs:
   backend:
     runs-on: ubuntu-latest
@@ -53,7 +50,7 @@ jobs:
       # - name: Test
       #   run: npm test
       - name: Check formatting
-        run: npx prettier --check $NEXTJS_SOURCE_FILES
+        run: npx prettier --check .
       - name: Lint
         run: npx next lint
 
@@ -76,7 +73,7 @@ jobs:
       # - name: Test
       #   run: npm test
       - name: Check formatting
-        run: npx prettier --check $NEXTJS_SOURCE_FILES
+        run: npx prettier --check .
       - name: Lint
         run: npx next lint
 
@@ -103,7 +100,7 @@ jobs:
       - name: Lint
         run: npx eslint $SOURCE_FILES
       - name: Check formatting
-        run: npx prettier --check $SOURCE_FILES
+        run: npx prettier --check .
 
   docker-compose:
     runs-on: ubuntu-latest
