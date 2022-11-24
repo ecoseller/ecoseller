@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "format": "npx prettier --write src",
+    "format": "npx prettier --write .",
     "lint": "npx eslint ."
   },
   "devDependencies": {
