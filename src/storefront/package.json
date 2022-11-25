@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "npx prettier --write app styles"
+    "format": "npx prettier --write ."
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
@@ -24,6 +24,7 @@
     "typescript": "4.8.4"
   },
   "devDependencies": {
+    "eslint-config-prettier": "^8.5.0",
     "prettier": "2.7.1"
   }
 }
