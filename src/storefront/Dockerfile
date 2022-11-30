@@ -10,19 +10,17 @@ RUN npm install --legacy-peer-deps
 # builder
 FROM dependencies as builder
 WORKDIR /usr/src/app
-
 COPY . .
 
-# RUN npm run build 
-
-# runner
-FROM builder as runner
+# development environment
+FROM builder as development
 WORKDIR /usr/src/app
-# ENV NODE_ENV production
 ENV NODE_ENV development
-# EXPOSE 3000
-
-
-
-# CMD ["npm", "start"]
 CMD ["npm", "run", "dev"]
+
+# production environment
+FROM builder as production
+WORKDIR /usr/src/app
+ENV NODE_ENV production
+RUN npm run build
+CMD ["npm", "start"]

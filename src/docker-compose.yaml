@@ -3,7 +3,9 @@ version: "3.9"
 services:
   backend:
       container_name: backend
-      build: ./backend
+      build: 
+        context: ./backend
+        target: development
       volumes:
         - ./backend/core:/usr/src/app/
       ports:
@@ -12,7 +14,9 @@ services:
         - ./backend/docker-compose.env
   frontend_dashboard:
       container_name: dashboard
-      build: ./dashboard
+      build: 
+        context: ./dashboard
+        target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
       environment:
         CHOKIDAR_USEPOLLING: "true" # https://stackoverflow.com/questions/61576659/how-to-hot-reload-in-reactjs-docker
       volumes:
@@ -28,7 +32,9 @@ services:
         - backend
   frontend_storefront:
       container_name: storefront
-      build: ./storefront
+      build: 
+        context: ./storefront
+        target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
       environment:
         CHOKIDAR_USEPOLLING: "true" # https://stackoverflow.com/questions/61576659/how-to-hot-reload-in-reactjs-docker
       volumes:
