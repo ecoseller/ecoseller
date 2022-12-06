@@ -85,7 +85,7 @@ class Profile(AbstractBaseUser):
         dt = datetime.now() + settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']
 
         token = jwt.encode({
-            'id': settings.SIMPLE_JWT['USER_ID_FIELD'],
+            'id': self.pk,
             'exp': int(dt.strftime('%s'))
         }, settings.SECRET_KEY, algorithm=settings.SIMPLE_JWT['ALGORITHM'])
 

@@ -31,3 +31,18 @@ class RegistrationSerializer(ModelSerializer):
 
         return user
 
+class ProfileSerializer(ModelSerializer):
+    """
+    Serializes user profiles.
+    """
+    class Meta:
+        model = Profile
+        fields = (
+            "email",
+            "first_name",
+            "last_name",
+            "birth_date",
+            "is_active",
+            "is_admin",
+            "is_staff",
+        )
