@@ -79,7 +79,7 @@ class RefreshTokenView(APIView):
             except jwt.DecodeError:
                 return Response({"error": "Invalid token"}, status=400)
 
-            user = User.objects.filter(id=payload["id"]).first()
+            user = User.objects.filter(email=payload["id"]).first()
             if user is None:
                 return Response({"error": "User does not exist"}, status=400)
             access_token = user.access_token
@@ -87,7 +87,7 @@ class RefreshTokenView(APIView):
             response.set_cookie(key="jwt_access_token", value=access_token, httponly=True)
             response.data = {"access_token": access_token}
             return response
-            
+
         except Exception as e:
             return Response({"error": str(e)}, status=400)
 
@@ -114,7 +114,9 @@ class UserView(APIView):
         except jwt.DecodeError:
             return Response({"error": "Invalid token"}, status=400)
 
-        user = User.objects.filter(id=payload["id"]).first()
+        print("PAYLOAD: ", payload)
+
+        user = User.objects.filter(email=payload['id']).first()
         if user is None:
             return Response({"error": "User does not exist"}, status=400)
 
