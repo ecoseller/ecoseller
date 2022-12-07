@@ -5,6 +5,7 @@ from .models import Profile
 from .serializers import (
     RegistrationSerializer,
     ProfileSerializer,
+    LoginSerializer,
 )
 from django.conf import settings
 
@@ -28,29 +29,19 @@ class LoginView(APIView):
     View for logging in users.
     """
     def post(self, request):
-        email = request.data.get("email")
-        password = request.data.get("password")
-        if email is None or password is None:
-            return Response({"error": "Please provide both email and password"},
-                            status=400)
-
-        user = Profile.objects.filter(email=email).first()
-        if user is None:
-            return Response({"error": "Invalid credentials"}, status=400)
-        if not user.check_password(password):
-            return Response({"error": "Invalid credentials"}, status=400)
-        
-        #create token
-        token = user.token
-
-        #set token as cookie and return it
-        response = Response()
-        response.set_cookie(key='jwt', value=token, httponly=True)
-        response.data = {
-            'token': token
-        }
-
-        return response
+        try:
+            serializer = LoginSerializer(data=request.data)
+            if not serializer.is_valid():
+                return Response(serializer.errors, status=400)
+            token = serializer.data.get('token')
+            response = Response()
+            response.set_cookie(key='jwt', value=token, httponly=True)
+            response.data = {
+                'token': token
+            }
+            return response
+        except Exception as e:
+            return Response({"error": str(e)}, status=400)
 
 class LogoutView(APIView):
     """
