@@ -36,10 +36,13 @@ class LoginView(APIView):
             serializer = LoginSerializer(data=request.data)
             if not serializer.is_valid():
                 return Response(serializer.errors, status=400)
-            token = serializer.data.get("token")
+            access_token = serializer.data.get("access_token")
+            refresh_token = serializer.data.get("refresh_token")
             response = Response()
-            response.set_cookie(key="jwt", value=token, httponly=True)
-            response.data = {"token": token}
+            response.set_cookie(key="jwt_access_token", value=access_token, httponly=True)
+            response.set_cookie(key="jwt_refresh_token", value=refresh_token, httponly=True)
+            response.data = {"access_token": access_token,
+                             "refresh_token": refresh_token}
             return response
         except Exception as e:
             return Response({"error": str(e)}, status=400)
@@ -52,9 +55,41 @@ class LogoutView(APIView):
 
     def post(self, request):
         response = Response()
-        response.delete_cookie("jwt")
+        response.delete_cookie("jwt_access_token")
+        response.delete_cookie("jwt_refresh_token")
         response.data = {"message": "success"}
         return response
+
+
+class RefreshTokenView(APIView):
+    """
+    View for refreshing access token.
+    """
+    def post(self, request):
+        try:
+            refresh_token = request.COOKIES.get("jwt_refresh_token")
+            if refresh_token is None:
+                return Response({"error": "Missing refresh token"}, status=400)
+            try:
+                payload = jwt.decode(
+                    refresh_token, settings.SECRET_KEY, settings.SIMPLE_JWT["ALGORITHM"]
+                )
+            except jwt.ExpiredSignatureError:
+                return Response({"error": "Expired token"}, status=400)
+            except jwt.DecodeError:
+                return Response({"error": "Invalid token"}, status=400)
+
+            user = User.objects.filter(id=payload["id"]).first()
+            if user is None:
+                return Response({"error": "User does not exist"}, status=400)
+            access_token = user.access_token
+            response = Response()
+            response.set_cookie(key="jwt_access_token", value=access_token, httponly=True)
+            response.data = {"access_token": access_token}
+            return response
+            
+        except Exception as e:
+            return Response({"error": str(e)}, status=400)
 
 
 # create view that returns user data from token
@@ -65,7 +100,7 @@ class UserView(APIView):
     """
 
     def get(self, request):
-        token = request.COOKIES.get("jwt")
+        token = request.COOKIES.get("jwt_access_token")
 
         if token is None:
             return Response({"error": "Missing auth token"}, status=400)

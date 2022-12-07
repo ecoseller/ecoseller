@@ -39,7 +39,8 @@ class LoginSerializer(serializers.Serializer):
     """
 
     email = serializers.EmailField()
-    token = serializers.CharField(read_only=True)
+    access_token = serializers.CharField(read_only=True)
+    refresh_token = serializers.CharField(read_only=True)
     password = serializers.CharField(write_only=True)
 
     def validate(self, data):
@@ -55,7 +56,9 @@ class LoginSerializer(serializers.Serializer):
         if not user.is_active:
             raise serializers.ValidationError("This user has been deactivated.")
 
-        return {"token": user.token, "email": user.email}
+        return {"access_token": user.access_token,
+                "refresh_token": user.refresh_token,
+                "email": user.email,}
 
 
 class UserSerializer(serializers.ModelSerializer):

@@ -68,19 +68,42 @@ class User(AbstractBaseUser):
     REQUIRED_FIELDS = []
 
     @property
-    def token(self):
+    def access_token(self):
         """
-        Allows us to get a user's token by calling `user.token` instead of
-        `user.generate_jwt_token().
+        Allows us to get a user's access token by calling `user.access_token` instead of
+        `user._generate_jwt_access_token().
         """
-        return self._generate_jwt_token()
+        return self._generate_jwt_access_token()
 
-    def _generate_jwt_token(self):
+    @property
+    def refresh_token(self):
+        """
+        Allows us to get a user's refresh token by calling `user.refresh_token` instead
+        of `user._generate_jwt_refresh_token()`.
+        """
+        return self._generate_jwt_refresh_token()
+
+    def _generate_jwt_access_token(self):
         """
         Generates a JSON Web Token that stores this user's ID and has an expiry
-        date set to 1 day into the future.
+        date set ACCESS_TOKEN_LIFETIME into the future.
         """
         dt = datetime.now() + settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"]
+
+        token = jwt.encode(
+            {"id": self.pk, "exp": int(dt.strftime("%s"))},
+            settings.SECRET_KEY,
+            algorithm=settings.SIMPLE_JWT["ALGORITHM"],
+        )
+
+        return token
+    
+    def _generate_jwt_refresh_token(self):
+        """
+        Generates a JSON Web Token that stores this user's ID and has an expiry
+        date set to REFRESH_TOKEN_LIFETIME into the future.
+        """
+        dt = datetime.now() + settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"]
 
         token = jwt.encode(
             {"id": self.pk, "exp": int(dt.strftime("%s"))},
