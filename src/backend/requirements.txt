@@ -53,5 +53,6 @@ uritemplate==4.1.1
 urllib3==1.26.12
 wrapt==1.14.1
 zipp==3.8.0
+djangorestframework-simplejwt==5.2.2
 # lxml==4.8.0
 # graphene-django==3.0.0b7 # https://github.com/graphql-python/graphene-django/pull/1275
