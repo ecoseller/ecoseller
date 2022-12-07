@@ -39,10 +39,16 @@ class LoginView(APIView):
             access_token = serializer.data.get("access_token")
             refresh_token = serializer.data.get("refresh_token")
             response = Response()
-            response.set_cookie(key="jwt_access_token", value=access_token, httponly=True)
-            response.set_cookie(key="jwt_refresh_token", value=refresh_token, httponly=True)
-            response.data = {"access_token": access_token,
-                             "refresh_token": refresh_token}
+            response.set_cookie(
+                key="jwt_access_token", value=access_token, httponly=True
+            )
+            response.set_cookie(
+                key="jwt_refresh_token", value=refresh_token, httponly=True
+            )
+            response.data = {
+                "access_token": access_token,
+                "refresh_token": refresh_token,
+            }
             return response
         except Exception as e:
             return Response({"error": str(e)}, status=400)
@@ -65,6 +71,7 @@ class RefreshTokenView(APIView):
     """
     View for refreshing access token.
     """
+
     def post(self, request):
         try:
             refresh_token = request.COOKIES.get("jwt_refresh_token")
@@ -84,7 +91,9 @@ class RefreshTokenView(APIView):
                 return Response({"error": "User does not exist"}, status=400)
             access_token = user.access_token
             response = Response()
-            response.set_cookie(key="jwt_access_token", value=access_token, httponly=True)
+            response.set_cookie(
+                key="jwt_access_token", value=access_token, httponly=True
+            )
             response.data = {"access_token": access_token}
             return response
 
@@ -116,7 +125,7 @@ class UserView(APIView):
 
         print("PAYLOAD: ", payload)
 
-        user = User.objects.filter(email=payload['id']).first()
+        user = User.objects.filter(email=payload["id"]).first()
         if user is None:
             return Response({"error": "User does not exist"}, status=400)
 

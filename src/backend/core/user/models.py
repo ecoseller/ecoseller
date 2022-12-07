@@ -97,7 +97,7 @@ class User(AbstractBaseUser):
         )
 
         return token
-    
+
     def _generate_jwt_refresh_token(self):
         """
         Generates a JSON Web Token that stores this user's ID and has an expiry

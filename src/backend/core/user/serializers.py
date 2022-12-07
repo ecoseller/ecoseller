@@ -56,9 +56,11 @@ class LoginSerializer(serializers.Serializer):
         if not user.is_active:
             raise serializers.ValidationError("This user has been deactivated.")
 
-        return {"access_token": user.access_token,
-                "refresh_token": user.refresh_token,
-                "email": user.email,}
+        return {
+            "access_token": user.access_token,
+            "refresh_token": user.refresh_token,
+            "email": user.email,
+        }
 
 
 class UserSerializer(serializers.ModelSerializer):
