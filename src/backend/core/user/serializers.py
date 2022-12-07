@@ -2,15 +2,17 @@ from rest_framework import serializers
 from django.contrib.auth import authenticate
 
 from .models import (
-    Profile,
+    User,
 )
+
 
 class RegistrationSerializer(serializers.ModelSerializer):
     """
     Serializers registration requests and creates a new user.
     """
+
     class Meta:
-        model = Profile
+        model = User
         fields = (
             "email",
             "password",
@@ -21,7 +23,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         try:
-            user = Profile.objects.create_user(
+            user = User.objects.create_user(
                 email=validated_data["email"],
                 password=validated_data["password"],
             )
@@ -35,6 +37,7 @@ class LoginSerializer(serializers.Serializer):
     """
     Serializes login requests and returns a token with email.
     """
+
     email = serializers.EmailField()
     token = serializers.CharField(read_only=True)
     password = serializers.CharField(write_only=True)
@@ -43,27 +46,25 @@ class LoginSerializer(serializers.Serializer):
         email = data.get("email")
         password = data.get("password")
         if email is None or password is None:
-            raise serializers.ValidationError('Please provide both email and password')
+            raise serializers.ValidationError("Please provide both email and password")
 
         user = authenticate(email=email, password=password)
 
         if user is None:
-            raise serializers.ValidationError('Invalid credentials')
+            raise serializers.ValidationError("Invalid credentials")
         if not user.is_active:
-            raise serializers.ValidationError(
-                'This user has been deactivated.'
-            )
+            raise serializers.ValidationError("This user has been deactivated.")
 
-        return { "token": user.token,
-                 "email": user.email }
+        return {"token": user.token, "email": user.email}
 
 
-class ProfileSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     """
     Serializes user profiles.
     """
+
     class Meta:
-        model = Profile
+        model = User
         fields = (
             "email",
             "first_name",
