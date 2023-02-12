@@ -1,5 +1,3 @@
-"use client";
-
 import ThemeProvider from "@mui/material/styles/ThemeProvider";
 import createTheme from "@mui/material/styles/createTheme";
 
@@ -34,11 +32,9 @@ const RootLayout = ({
   });
 
   return (
-    <html lang="en">
-      <body>
-        <ThemeProvider theme={theme}>{children}</ThemeProvider>
-      </body>
-    </html>
+    <>
+      <ThemeProvider theme={theme}>{children}</ThemeProvider>
+    </>
   );
 };
 
