@@ -22,7 +22,6 @@ const Page = () => {
         display: "flex",
         flexDirection: "column",
         position: "relative",
-        bottom: "25%",
         // width: 2/3,
         // alignItems: 'center',
       }}
@@ -32,7 +31,7 @@ const Page = () => {
           sx={{
             height: "40px",
             flexShrink: 0,
-            backgroundImage: "url(/public/logo/black/ecoseller.io.svg)",
+            backgroundImage: "url(/logo/black/ecoseller.io.svg)",
             backgroundSize: "contain",
             backgroundPosition: "left center",
             backgroundRepeat: "no-repeat",
