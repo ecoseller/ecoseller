@@ -92,7 +92,7 @@ Page.getLayout = function getLayout(page: ReactElement) {
     <RootLayout>
       <LoginLayout>{page}</LoginLayout>
     </RootLayout>
-  )
-}
+  );
+};
 
 export default Page;

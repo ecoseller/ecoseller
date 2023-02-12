@@ -8,11 +8,7 @@ const Page = () => {
 };
 
 Page.getLayout = function getLayout(page: ReactElement) {
-  return (
-    <RootLayout>
-      {page}
-    </RootLayout>
-  )
-}
+  return <RootLayout>{page}</RootLayout>;
+};
 
 export default Page;

@@ -1,10 +1,9 @@
-import RootLayout from "./layout"
+import RootLayout from "./layout";
 
-
-export default function App({ Component, pageProps }) {
+export default function App({ Component, pageProps }: any) {
   return (
     <RootLayout>
       <Component {...pageProps} />
     </RootLayout>
-  )
+  );
 }
