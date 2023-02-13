@@ -1,5 +1,3 @@
-"use client";
-
 // app/login/page.tsx
 import Image from "next/image";
 import TextField from "@mui/material/TextField";
@@ -11,6 +9,9 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Logo from "/public/logo/black/ecoseller.io.svg";
 import Link from "next/link";
+import { ReactElement } from "react";
+import RootLayout from "../layout";
+import LoginLayout from "./layout";
 
 const Page = () => {
   return (
@@ -21,7 +22,6 @@ const Page = () => {
         display: "flex",
         flexDirection: "column",
         position: "relative",
-        bottom: "25%",
         // width: 2/3,
         // alignItems: 'center',
       }}
@@ -84,6 +84,14 @@ const Page = () => {
         </Grid>
       </Box>
     </Box>
+  );
+};
+
+Page.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <RootLayout>
+      <LoginLayout>{page}</LoginLayout>
+    </RootLayout>
   );
 };
 
