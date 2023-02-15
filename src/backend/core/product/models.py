@@ -82,7 +82,7 @@ class BaseAttribute(models.Model):
     type = models.ForeignKey("AttributeType", on_delete=models.CASCADE)
     value = models.CharField(max_length=200, blank=False, null=False)
     order = models.IntegerField(blank=True, null=True)
-    ext_attributes = models.ManyToManyField("ExtensionAttribute")
+    ext_attributes = models.ManyToManyField("ExtensionAttribute", blank=True)
 
     def __str__(self) -> str:
         return "{}: {}".format(self.type.type_name, self.value)
@@ -128,6 +128,9 @@ class PriceList(models.Model):
     rounding = models.BooleanField(default=False)
     includes_vat = models.BooleanField(default=True) # prices in pricelist are including VAT
 
+    update_at = models.DateTimeField(auto_now=True)
+    create_at = models.DateTimeField(auto_now_add=True)
+
     def __str__(self) -> str:
         return "{} ({})".format(self.code, self.currency)
 
@@ -136,13 +139,16 @@ class PriceList(models.Model):
         Formats price according to rounding and currency
         """
         price = round(price) if self.rounding else round(price, 2)
+        price = f'{price:,}'.replace(',', ' ')
         return self.currency.format_price(price)
-        
 
 class ProductPrice(models.Model):
     price_list = models.ForeignKey(PriceList, on_delete=models.CASCADE, blank=False, null=False)
     product_variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE, blank=False, null=False)
     price = models.DecimalField(max_digits=10, decimal_places=2, blank=False, null=False)
+
+    update_at = models.DateTimeField(auto_now=True)
+    create_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
         return "{}: {} {}".format(self.product_variant, self.price, self.price_list.currency)

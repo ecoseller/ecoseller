@@ -27,6 +27,7 @@ class Category(MPTTModel, TranslatableModel):
         ),
     )
     published = models.BooleanField(default=False)
+    
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
 
