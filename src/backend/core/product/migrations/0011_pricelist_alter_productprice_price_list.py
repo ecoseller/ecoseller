@@ -7,23 +7,36 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('country', '0003_remove_pricelist_currency'),
-        ('product', '0010_productprice_delete_currency_delete_price_and_more'),
+        ("country", "0003_remove_pricelist_currency"),
+        ("product", "0010_productprice_delete_currency_delete_price_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='PriceList',
+            name="PriceList",
             fields=[
-                ('code', models.CharField(max_length=200, primary_key=True, serialize=False, unique=True)),
-                ('rounding', models.BooleanField(default=False)),
-                ('includes_vat', models.BooleanField(default=True)),
-                ('currency', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='country.currency')),
+                (
+                    "code",
+                    models.CharField(
+                        max_length=200, primary_key=True, serialize=False, unique=True
+                    ),
+                ),
+                ("rounding", models.BooleanField(default=False)),
+                ("includes_vat", models.BooleanField(default=True)),
+                (
+                    "currency",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="country.currency",
+                    ),
+                ),
             ],
         ),
         migrations.AlterField(
-            model_name='productprice',
-            name='price_list',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='product.pricelist'),
+            model_name="productprice",
+            name="price_list",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="product.pricelist"
+            ),
         ),
     ]

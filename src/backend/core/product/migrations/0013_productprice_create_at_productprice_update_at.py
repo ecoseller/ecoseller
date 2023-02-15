@@ -7,19 +7,21 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('product', '0012_alter_baseattribute_ext_attributes'),
+        ("product", "0012_alter_baseattribute_ext_attributes"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='productprice',
-            name='create_at',
-            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            model_name="productprice",
+            name="create_at",
+            field=models.DateTimeField(
+                auto_now_add=True, default=django.utils.timezone.now
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='productprice',
-            name='update_at',
+            model_name="productprice",
+            name="update_at",
             field=models.DateTimeField(auto_now=True),
         ),
     ]

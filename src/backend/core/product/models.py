@@ -114,6 +114,7 @@ class ExtensionAttribute(models.Model):
     def __str__(self) -> str:
         return "{}: {}".format(self.type.type_name, self.value)
 
+
 # Prices
 class PriceList(models.Model):
     """
@@ -123,10 +124,15 @@ class PriceList(models.Model):
     * currency of pricelist
     * rounding flag
     """
-    code = models.CharField(max_length=200, blank=False, null=False, unique=True, primary_key=True)
+
+    code = models.CharField(
+        max_length=200, blank=False, null=False, unique=True, primary_key=True
+    )
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
     rounding = models.BooleanField(default=False)
-    includes_vat = models.BooleanField(default=True) # prices in pricelist are including VAT
+    includes_vat = models.BooleanField(
+        default=True
+    )  # prices in pricelist are including VAT
 
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
@@ -139,19 +145,28 @@ class PriceList(models.Model):
         Formats price according to rounding and currency
         """
         price = round(price) if self.rounding else round(price, 2)
-        price = f'{price:,}'.replace(',', ' ')
+        price = f"{price:,}".replace(",", " ")
         return self.currency.format_price(price)
 
+
 class ProductPrice(models.Model):
-    price_list = models.ForeignKey(PriceList, on_delete=models.CASCADE, blank=False, null=False)
-    product_variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE, blank=False, null=False)
-    price = models.DecimalField(max_digits=10, decimal_places=2, blank=False, null=False)
+    price_list = models.ForeignKey(
+        PriceList, on_delete=models.CASCADE, blank=False, null=False
+    )
+    product_variant = models.ForeignKey(
+        ProductVariant, on_delete=models.CASCADE, blank=False, null=False
+    )
+    price = models.DecimalField(
+        max_digits=10, decimal_places=2, blank=False, null=False
+    )
 
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
-        return "{}: {} {}".format(self.product_variant, self.price, self.price_list.currency)
+        return "{}: {} {}".format(
+            self.product_variant, self.price, self.price_list.currency
+        )
 
     @property
     def formatted_price(self):
