@@ -4,6 +4,9 @@ from ckeditor.fields import RichTextField
 from category.models import (
     Category,
 )
+from country.models import (
+    Currency,
+)
 
 
 class ProductVariant(models.Model):
@@ -57,8 +60,6 @@ class Product(TranslatableModel):
 
 
 # Attributes
-
-
 class AttributeType(models.Model):
     type_name = models.CharField(
         max_length=200,
@@ -81,7 +82,7 @@ class BaseAttribute(models.Model):
     type = models.ForeignKey("AttributeType", on_delete=models.CASCADE)
     value = models.CharField(max_length=200, blank=False, null=False)
     order = models.IntegerField(blank=True, null=True)
-    ext_attributes = models.ManyToManyField("ExtensionAttribute")
+    ext_attributes = models.ManyToManyField("ExtensionAttribute", blank=True)
 
     def __str__(self) -> str:
         return "{}: {}".format(self.type.type_name, self.value)
@@ -112,3 +113,61 @@ class ExtensionAttribute(models.Model):
 
     def __str__(self) -> str:
         return "{}: {}".format(self.type.type_name, self.value)
+
+
+# Prices
+class PriceList(models.Model):
+    """
+    This model represents an object directly linked from `Price` models
+    This should contain basic information such as:
+    * some kind of identifier (e.g. code)
+    * currency of pricelist
+    * rounding flag
+    """
+
+    code = models.CharField(
+        max_length=200, blank=False, null=False, unique=True, primary_key=True
+    )
+    currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
+    rounding = models.BooleanField(default=False)
+    includes_vat = models.BooleanField(
+        default=True
+    )  # prices in pricelist are including VAT
+
+    update_at = models.DateTimeField(auto_now=True)
+    create_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return "{} ({})".format(self.code, self.currency)
+
+    def format_price(self, price):
+        """
+        Formats price according to rounding and currency
+        """
+        price = round(price) if self.rounding else round(price, 2)
+        price = f"{price:,}".replace(",", " ")
+        return self.currency.format_price(price)
+
+
+class ProductPrice(models.Model):
+    price_list = models.ForeignKey(
+        PriceList, on_delete=models.CASCADE, blank=False, null=False
+    )
+    product_variant = models.ForeignKey(
+        ProductVariant, on_delete=models.CASCADE, blank=False, null=False
+    )
+    price = models.DecimalField(
+        max_digits=10, decimal_places=2, blank=False, null=False
+    )
+
+    update_at = models.DateTimeField(auto_now=True)
+    create_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return "{}: {} {}".format(
+            self.product_variant, self.price, self.price_list.currency
+        )
+
+    @property
+    def formatted_price(self):
+        return self.price_list.format_price(self.price)

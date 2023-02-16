@@ -2,6 +2,8 @@ from django.contrib import admin
 from .models import (
     ProductVariant,
     Product,
+    ProductPrice,
+    PriceList,
     AttributeType,
     BaseAttribute,
     ExtAttributeType,
@@ -53,6 +55,20 @@ class ProductAdmin(admin.ModelAdmin):
     #     return {
     #         'slug': ('title',)
     #     }
+
+
+@admin.register(PriceList)
+class PriceListAdmin(admin.ModelAdmin):
+    list_display = ("code", "currency", "update_at", "create_at")
+    list_filter = ("currency", "update_at", "create_at")
+    search_fields = ("code", "currency__code")
+
+
+@admin.register(ProductPrice)
+class ProductPriceAdmin(admin.ModelAdmin):
+    list_display = ("product_variant", "price_list", "price", "update_at", "create_at")
+    list_filter = ("product_variant", "price_list", "update_at", "create_at")
+    search_fields = ("product_variant__sku", "price_list__code")
 
 
 @admin.register(AttributeType)
