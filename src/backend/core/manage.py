@@ -14,7 +14,6 @@ def main():
             import debugpy
 
             debugpy.listen(("0.0.0.0", 8001))
-            debugpy.wait_for_client()
             print("Attached!")
 
     try:
