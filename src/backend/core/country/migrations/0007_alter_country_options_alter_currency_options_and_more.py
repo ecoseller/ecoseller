@@ -6,21 +6,25 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('country', '0006_country_default_price_list'),
+        ("country", "0006_country_default_price_list"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='country',
-            options={'verbose_name': 'Country', 'verbose_name_plural': 'Countries'},
+            name="country",
+            options={"verbose_name": "Country", "verbose_name_plural": "Countries"},
         ),
         migrations.AlterModelOptions(
-            name='currency',
-            options={'verbose_name': 'Currency', 'verbose_name_plural': 'Currencies'},
+            name="currency",
+            options={"verbose_name": "Currency", "verbose_name_plural": "Currencies"},
         ),
         migrations.AlterField(
-            model_name='currency',
-            name='symbol_position',
-            field=models.CharField(choices=[('BEFORE', 'BEFORE'), ('AFTER', 'AFTER')], default='AFTER', max_length=6),
+            model_name="currency",
+            name="symbol_position",
+            field=models.CharField(
+                choices=[("BEFORE", "BEFORE"), ("AFTER", "AFTER")],
+                default="AFTER",
+                max_length=6,
+            ),
         ),
     ]
