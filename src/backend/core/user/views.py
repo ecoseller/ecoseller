@@ -1,3 +1,4 @@
+from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -17,6 +18,10 @@ class RegistrationView(APIView):
     View for registering new users.
     """
 
+    # All views have authentication backend by default
+    # We need to allow even unauthenticated users to register
+    permission_classes = (permissions.AllowAny,)
+
     def post(self, request):
         print("IN POST AT REGISTRATION VIEW")
         serializer = RegistrationSerializer(data=request.data)
@@ -31,20 +36,17 @@ class LoginView(APIView):
     View for logging in users.
     """
 
+    permission_classes = (permissions.AllowAny,)
+
     def post(self, request):
         try:
+            user = request.user
             serializer = LoginSerializer(data=request.data)
             if not serializer.is_valid():
                 return Response(serializer.errors, status=400)
             access_token = serializer.data.get("access_token")
             refresh_token = serializer.data.get("refresh_token")
             response = Response()
-            response.set_cookie(
-                key="jwt_access_token", value=access_token, httponly=True
-            )
-            response.set_cookie(
-                key="jwt_refresh_token", value=refresh_token, httponly=True
-            )
             response.data = {
                 "access_token": access_token,
                 "refresh_token": refresh_token,
@@ -52,19 +54,6 @@ class LoginView(APIView):
             return response
         except Exception as e:
             return Response({"error": str(e)}, status=400)
-
-
-class LogoutView(APIView):
-    """
-    View for logging out users.
-    """
-
-    def post(self, request):
-        response = Response()
-        response.delete_cookie("jwt_access_token")
-        response.delete_cookie("jwt_refresh_token")
-        response.data = {"message": "success"}
-        return response
 
 
 class RefreshTokenView(APIView):
@@ -110,6 +99,8 @@ class UserView(APIView):
 
     def get(self, request):
         token = request.COOKIES.get("jwt_access_token")
+        user = request.user
+        auth = request.auth
 
         if token is None:
             return Response({"error": "Missing auth token"}, status=400)

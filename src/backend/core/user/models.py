@@ -91,7 +91,7 @@ class User(AbstractBaseUser):
         dt = datetime.now() + settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"]
 
         token = jwt.encode(
-            {"id": self.pk, "exp": int(dt.strftime("%s"))},
+            {"email": self.pk, "exp": int(dt.strftime("%s"))},
             settings.SECRET_KEY,
             algorithm=settings.SIMPLE_JWT["ALGORITHM"],
         )
@@ -106,7 +106,7 @@ class User(AbstractBaseUser):
         dt = datetime.now() + settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"]
 
         token = jwt.encode(
-            {"id": self.pk, "exp": int(dt.strftime("%s"))},
+            {"email": self.pk, "exp": int(dt.strftime("%s"))},
             settings.SECRET_KEY,
             algorithm=settings.SIMPLE_JWT["ALGORITHM"],
         )
