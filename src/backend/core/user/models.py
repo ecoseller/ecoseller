@@ -67,52 +67,6 @@ class User(AbstractBaseUser):
     EMAIL_FIEL = "email"
     REQUIRED_FIELDS = []
 
-    @property
-    def access_token(self):
-        """
-        Allows us to get a user's access token by calling `user.access_token` instead of
-        `user._generate_jwt_access_token().
-        """
-        return self._generate_jwt_access_token()
-
-    @property
-    def refresh_token(self):
-        """
-        Allows us to get a user's refresh token by calling `user.refresh_token` instead
-        of `user._generate_jwt_refresh_token()`.
-        """
-        return self._generate_jwt_refresh_token()
-
-    def _generate_jwt_access_token(self):
-        """
-        Generates a JSON Web Token that stores this user's ID and has an expiry
-        date set ACCESS_TOKEN_LIFETIME into the future.
-        """
-        dt = datetime.now() + settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"]
-
-        token = jwt.encode(
-            {"email": self.pk, "exp": int(dt.strftime("%s"))},
-            settings.SECRET_KEY,
-            algorithm=settings.SIMPLE_JWT["ALGORITHM"],
-        )
-
-        return token
-
-    def _generate_jwt_refresh_token(self):
-        """
-        Generates a JSON Web Token that stores this user's ID and has an expiry
-        date set to REFRESH_TOKEN_LIFETIME into the future.
-        """
-        dt = datetime.now() + settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"]
-
-        token = jwt.encode(
-            {"email": self.pk, "exp": int(dt.strftime("%s"))},
-            settings.SECRET_KEY,
-            algorithm=settings.SIMPLE_JWT["ALGORITHM"],
-        )
-
-        return token
-
     def get_full_name(self):
         """
         Returns the first_name plus the last_name, with a space in between.
