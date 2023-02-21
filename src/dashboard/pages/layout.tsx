@@ -32,9 +32,9 @@ const RootLayout = ({
   });
 
   return (
-    <>
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
-    </>
+    <ThemeProvider theme={theme}>
+      {children}
+    </ThemeProvider>
   );
 };
 
