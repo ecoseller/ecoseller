@@ -17,7 +17,7 @@ const LoginPage = () => {
       direction="column"
       alignItems="center"
       justifyContent="center"
-      style={{ minHeight: '100vh' }}
+      style={{ minHeight: "100vh" }}
     >
       <Grid item xs={3}>
         <div className={styles.login_container}>
@@ -32,16 +32,15 @@ LoginPage.getLayout = (page: ReactElement) => {
   return (
     <RootLayout>
       <LoginLayout>{page}</LoginLayout>
-    </RootLayout >
+    </RootLayout>
   );
 };
 
 export const getServersideProps = async (context: any) => {
-  console.log('Login')
+  console.log("Login");
   return {
     props: {},
   };
 };
-
 
 export default LoginPage;
