@@ -60,7 +60,7 @@ const DashboardNav = ({ openNav, onCloseNav }: IDashboardNavProps) => {
 
       <Box sx={{ flexGrow: 1 }} />
 
-      <Box sx={{ px: 1, pb: 3, mt: 10 }}>
+      <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
         <StyledAccount>
           <AccountCircleIcon />
           <Box sx={{ ml: 2 }}>
