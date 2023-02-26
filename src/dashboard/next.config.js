@@ -6,12 +6,6 @@ const nextConfig = {
     appDir: false,
   },
   modularizeImports: {
-    "react-bootstrap": {
-      transform: "react-bootstrap/{{member}}",
-    },
-    lodash: {
-      transform: "lodash/{{member}}",
-    },
     "@mui/material": {
       transform: "@mui/material/{{member}}",
     },
