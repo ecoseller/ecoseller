@@ -1,12 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from django.conf import settings
 
 from cart.models import Cart
-
-from datetime import datetime
-
-import jwt
 
 
 # Manager for User model

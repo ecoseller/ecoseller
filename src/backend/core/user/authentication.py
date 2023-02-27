@@ -1,6 +1,5 @@
 from .models import User
 from rest_framework import authentication
-from django.core.exceptions import ValidationError
 from rest_framework_simplejwt.backends import TokenBackend
 from django.conf import settings
 
@@ -10,7 +9,6 @@ class UserAuthBackend(authentication.BaseAuthentication):
     def authenticate(self, request):
         try:
             token = request.META.get("HTTP_AUTHORIZATION", " ").split(" ")[1]
-            data = {"token": token}
             valid_data = TokenBackend(
                 algorithm=settings.SIMPLE_JWT["ALGORITHM"]
             ).decode(token, verify=False)
