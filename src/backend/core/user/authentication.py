@@ -9,10 +9,12 @@ class UserAuthBackend(authentication.BaseAuthentication):
     # Expects JWT token in request, from which username is extracted and user is returned
     def authenticate(self, request):
         try:
-            token = request.META.get('HTTP_AUTHORIZATION', " ").split(' ')[1]
-            data = {'token': token}
-            valid_data = TokenBackend(algorithm=settings.SIMPLE_JWT['ALGORITHM']).decode(token,verify=False)
-            username = valid_data['user_id']
+            token = request.META.get("HTTP_AUTHORIZATION", " ").split(" ")[1]
+            data = {"token": token}
+            valid_data = TokenBackend(
+                algorithm=settings.SIMPLE_JWT["ALGORITHM"]
+            ).decode(token, verify=False)
+            username = valid_data["user_id"]
             user = User.objects.get(email=username)
             return user
         except Exception as e:

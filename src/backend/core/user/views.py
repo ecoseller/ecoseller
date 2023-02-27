@@ -40,12 +40,13 @@ class BlacklistTokenView(APIView):
             token = RefreshToken(refresh_token)
             token.blacklist()
             return Response(status=201)
-        except Exception as e :
+        except Exception as e:
             print("LOGOUT Error", e)
             return Response(status=400)
 
 
 from django.contrib.auth import authenticate
+
 # create view that returns user data from token
 class UserView(APIView):
     """
@@ -57,7 +58,7 @@ class UserView(APIView):
         user = request.user
         auth = request.auth
 
-        #currently triggers UserAuthBackend
+        # currently triggers UserAuthBackend
         # user = authenticate(request)
 
         print("USER", user)
