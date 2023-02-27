@@ -10,6 +10,8 @@ export interface INavigationItem {
   path: string;
   icon?: React.ReactNode;
   info?: React.ReactNode;
+  children?: INavigationItem[];
+  level?: number;
 }
 
 const navigationData: INavigationItem[] = [
@@ -24,14 +26,21 @@ const navigationData: INavigationItem[] = [
     icon: <ShoppingBasketIcon />,
   },
   {
-    title: "Products",
-    path: "/dashboard/products",
+    title: "Catalog",
+    path: "/dashboard/catalog",
     icon: <InventoryIcon />,
-  },
-  {
-    title: "Categories",
-    path: "/dashboard/categories",
-    icon: <CategoryIcon />,
+    children: [
+      {
+        title: "Products",
+        path: "/products",
+        icon: <InventoryIcon />,
+      },
+      {
+        title: "Categories",
+        path: "/products",
+        icon: <CategoryIcon />,
+      },
+    ],
   },
   {
     title: "CMS",
