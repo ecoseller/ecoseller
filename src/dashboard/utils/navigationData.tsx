@@ -10,7 +10,7 @@ export interface INavigationItem {
   path: string;
   icon?: React.ReactNode;
   info?: React.ReactNode;
-  children?: INavigationItem[];
+  children?: INavigationItem[]; // path of children is relative to parent
   level?: number;
 }
 
