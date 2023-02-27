@@ -1,6 +1,7 @@
 from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from .serializers import (
     RegistrationSerializer,
@@ -26,6 +27,25 @@ class RegistrationView(APIView):
         return Response(serializer.data, status=201)
 
 
+class BlacklistTokenView(APIView):
+    """
+    View for blacklisting refresh token after user logout
+    """
+
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request):
+        try:
+            refresh_token = request.data["refresh_token"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response(status=201)
+        except Exception as e :
+            print("LOGOUT Error", e)
+            return Response(status=400)
+
+
+from django.contrib.auth import authenticate
 # create view that returns user data from token
 class UserView(APIView):
     """
@@ -36,6 +56,9 @@ class UserView(APIView):
     def get(self, request):
         user = request.user
         auth = request.auth
+
+        #currently triggers UserAuthBackend
+        # user = authenticate(request)
 
         print("USER", user)
         print("AUTH", auth)
