@@ -49,7 +49,7 @@ class BlacklistTokenView(APIView):
 class UserView(APIView):
     """
     View for testing purposes.
-    Print user data from token acquired from cookies.
+    Print user data from token passed in header.
     """
 
     def get(self, request):
