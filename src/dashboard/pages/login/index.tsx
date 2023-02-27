@@ -10,7 +10,6 @@ import Grid from "@mui/material/Grid";
 
 const LoginPage = () => {
   return (
-    // <div className={styles.login_background}>
     <Grid
       container
       spacing={0}

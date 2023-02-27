@@ -1,18 +1,22 @@
-import Image from "next/image";
+// /components/login/LoginBox
+
+// next.js
+import { useRouter } from "next/router";
+// mui
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import Logo from "/public/logo/black/ecoseller.io.svg";
 import Link from "next/link";
-
-import styles from "./LoginBox.module.scss";
+// components
 import Emoji from "../Emoji";
+// styles
+import styles from "./LoginBox.module.scss";
+// public
+import Logo from "/public/logo/black/ecoseller.io.svg";
 
 const LoginBox = ({}) => {
+  const router = useRouter();
   return (
     <>
       <Link href={"https://ecoseller.io"}>
@@ -53,6 +57,12 @@ const LoginBox = ({}) => {
           fullWidth
           variant="contained"
           sx={{ mt: 2, mb: 2, height: 60 }}
+          onClick={() => {
+            // validate
+
+            // redirect
+            router.replace("/dashboard/overview");
+          }}
         >
           Login
         </Button>
