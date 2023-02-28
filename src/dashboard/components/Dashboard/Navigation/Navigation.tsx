@@ -73,7 +73,7 @@ function NavigationItem({ item, sx, onClick }: INavigationItemProps) {
   const { pathname } = useRouter();
 
   const [open, setOpen] = useState(pathname.includes(path));
-  // const [timeout, setTimeout] = useState<"auto" | number>("auto");
+  const [timeout, setTimeout] = useState<"auto" | number>("auto");
 
   useEffect(() => {
     setOpen(pathname.includes(path));
