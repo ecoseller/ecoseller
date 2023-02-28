@@ -88,7 +88,6 @@ const DashboardHeader = ({ onOpenNav }: IDashboardHeaderProps) => {
     }
 
     setActiveTitle(title);
-
   }, [pathname]);
 
   console.log("activeTitle", activeTitle);
