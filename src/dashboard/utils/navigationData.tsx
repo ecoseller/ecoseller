@@ -37,7 +37,7 @@ const navigationData: INavigationItem[] = [
       },
       {
         title: "Categories",
-        path: "/products",
+        path: "/categories",
         icon: <CategoryIcon />,
       },
     ],
@@ -48,7 +48,7 @@ const navigationData: INavigationItem[] = [
     icon: <ArticleIcon />,
   },
   {
-    title: "Roles & Users",
+    title: "Users & Roles",
     path: "/dashboard/users-roles",
     icon: <GroupIcon />,
   },

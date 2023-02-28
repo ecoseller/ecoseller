@@ -58,14 +58,36 @@ const DashboardHeader = ({ onOpenNav }: IDashboardHeaderProps) => {
   const { pathname } = useRouter();
 
   useEffect(() => {
-    const active = navigationData.find(
-      (item: INavigationItem) => item.path === pathname
+    let fullPathFound: Boolean = false;
+    let activeLevel = navigationData.find((item: INavigationItem) =>
+      pathname.includes(item.path)
     );
-    if (active) {
-      setActiveTitle(active.title);
-    } else {
+
+    if (activeLevel && activeLevel.path == pathname) {
+      // not a sub level
+      setActiveTitle(activeLevel.title);
+      return;
+    } else if (!activeLevel) {
+      // not even a subpath found on the first level
       setActiveTitle(null);
+      return;
     }
+    let title = activeLevel.title;
+    // don't have full path yet
+    while (!fullPathFound) {
+      if (activeLevel && activeLevel.children) {
+        activeLevel = activeLevel.children.find((item: INavigationItem) =>
+          pathname.includes(item.path)
+        );
+      } else {
+        // no more children
+        fullPathFound = true;
+        break;
+      }
+      title += ` / ${activeLevel?.title}`;
+    }
+
+    setActiveTitle(title);
   }, [pathname]);
 
   console.log("activeTitle", activeTitle);
