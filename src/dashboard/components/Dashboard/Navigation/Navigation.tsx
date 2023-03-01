@@ -58,9 +58,10 @@ const StyledNavivationItemIcon = styled(ListItemIcon)({
 interface INavigationItemProps {
   item: INavigationItem;
   sx?: any;
+  onClick?: () => void;
 }
 
-function NavigationItem({ item, sx }: INavigationItemProps) {
+function NavigationItem({ item, sx, onClick }: INavigationItemProps) {
   /**
    * Main Navigation Item divided into 2 parts - main-item and sub-navigation where sub-navigation is a list of children
    * @param item - navigation item - see utils/navigationData.ts
@@ -71,12 +72,11 @@ function NavigationItem({ item, sx }: INavigationItemProps) {
 
   const { pathname } = useRouter();
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(pathname.includes(path));
+  const [timeout, setTimeout] = useState<"auto" | number>("auto");
 
   useEffect(() => {
-    if (children && children.length > 0) {
-      setOpen(pathname.includes(path));
-    }
+    setOpen(pathname.includes(path));
   }, [pathname]);
 
   if (children && children.length > 0) {
@@ -91,6 +91,7 @@ function NavigationItem({ item, sx }: INavigationItemProps) {
         <StyledNavigationItem
           onClick={() => {
             setOpen(!open);
+            // onClick && onClick();
           }}
           selected={path.includes(pathname)}
           sx={{
@@ -114,10 +115,13 @@ function NavigationItem({ item, sx }: INavigationItemProps) {
             {open ? <ExpandLess /> : <ExpandMore />}
           </StyledNavivationItemIcon>
         </StyledNavigationItem>
-        <Collapse in={open} timeout="auto" unmountOnExit>
+        <Collapse in={open} timeout={"auto"} unmountOnExit>
           <List component="div" disablePadding>
             {children.map((child) => (
               <NavigationItem
+                onClick={() => {
+                  setTimeout(0);
+                }}
                 key={child.title}
                 item={{
                   ...child,
