@@ -8,6 +8,15 @@ import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import Popover from "@mui/material/Popover";
 
+// Cookies
+import Cookies from "js-cookie";
+
+// next.js
+import { useRouter } from "next/router";
+
+// Axios
+import { axiosPrivate } from "../../../src/common/axiosPrivate";
+
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const MENU_OPTIONS = [
@@ -21,6 +30,8 @@ const AccountPopover = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [id, setId] = useState<string | undefined>(undefined);
 
+  const router = useRouter();
+
   useEffect(() => {
     setId(Boolean(anchorEl) ? "avatar-popover" : undefined);
   }, [anchorEl]);
@@ -30,6 +41,21 @@ const AccountPopover = () => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    const refreshToken = Cookies.get("refreshToken") || null;
+    if (refreshToken != null) {
+      axiosPrivate.post("/user/logout", {
+        refresh: refreshToken,
+      });
+    }
+    Cookies.remove("accessToken");
+    Cookies.remove("refreshToken");
+
+    setAnchorEl(null);
+
+    router.replace("/login");
   };
 
   return (
@@ -82,7 +108,7 @@ const AccountPopover = () => {
 
         <Divider sx={{ borderStyle: "dashed" }} />
 
-        <MenuItem onClick={handleClose} sx={{ m: 1 }}>
+        <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
           Logout
         </MenuItem>
       </Popover>
