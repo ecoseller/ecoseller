@@ -19,7 +19,7 @@ const DashboardOverviewPage = () => {
     <DashboardLayout>
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Today's order overview
+          {`Today's order overview`}
         </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
@@ -122,7 +122,7 @@ const DashboardOverviewPage = () => {
       </Container>
       <Container maxWidth="xl" sx={{ paddingTop: 8 }}>
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Today's recommender overview
+          {`Today's recommender overview`}
         </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
