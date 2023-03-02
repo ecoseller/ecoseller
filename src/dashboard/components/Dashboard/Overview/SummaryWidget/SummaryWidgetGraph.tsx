@@ -10,20 +10,20 @@ import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 
-interface ISummaryWidgetGraphOrders {
+interface ISummaryWidgetGraph {
   title: string;
   subheader: string;
   chartOptions?: any;
   chartData?: any[];
 }
 
-const SummaryWidgetGraphOrders = ({
+const SummaryWidgetGraph = ({
   title,
   subheader,
   chartOptions,
   chartData,
   ...other
-}: ISummaryWidgetGraphOrders) => {
+}: ISummaryWidgetGraph) => {
   return (
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} />
@@ -41,4 +41,4 @@ const SummaryWidgetGraphOrders = ({
   );
 };
 
-export default SummaryWidgetGraphOrders;
+export default SummaryWidgetGraph;
