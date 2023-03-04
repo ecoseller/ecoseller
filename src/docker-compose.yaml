@@ -2,53 +2,53 @@ version: "3.9"
 
 services:
   backend:
-      container_name: backend
-      build: 
-        context: ./backend
-        target: development
-      volumes:
-        - ./backend/core:/usr/src/app/
-      ports:
-        - 8000:8000
-        - 8001:8001
-      env_file:
-        - ./backend/docker-compose.env
+    container_name: backend
+    build:
+      context: ./backend
+      target: development
+    volumes:
+      - ./backend/core:/usr/src/app/
+    ports:
+      - 8000:8000
+      - 8001:8001
+    env_file:
+      - ./backend/docker-compose.env
   frontend_dashboard:
-      container_name: dashboard
-      build: 
-        context: ./dashboard
-        target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
-      environment:
-        CHOKIDAR_USEPOLLING: "true" # https://stackoverflow.com/questions/61576659/how-to-hot-reload-in-reactjs-docker
-      volumes:
-        - ./dashboard/pages:/usr/src/app/pages
-        - ./dashboard/app:/usr/src/app/app
-        - ./dashboard/styles:/usr/src/app/styles
-        - ./dashboard/src:/usr/src/app/src
-        - ./dashboard/public:/usr/src/app/public
-        - ./http-library/src:/usr/src/http-library/src
-      ports:
-        - 3030:3000
-      depends_on:
-        - backend
+    container_name: dashboard
+    build:
+      context: ./dashboard
+      target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
+    environment:
+      CHOKIDAR_USEPOLLING: "true" # https://stackoverflow.com/questions/61576659/how-to-hot-reload-in-reactjs-docker
+    volumes:
+      - ./dashboard/pages:/usr/src/app/pages
+      - ./dashboard/app:/usr/src/app/app
+      - ./dashboard/styles:/usr/src/app/styles
+      - ./dashboard/src:/usr/src/app/src
+      - ./dashboard/public:/usr/src/app/public
+      - ./http-library/src:/usr/src/http-library/src
+    ports:
+      - 3030:3000
+    depends_on:
+      - backend
   frontend_storefront:
-      container_name: storefront
-      build: 
-        context: ./storefront
-        target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
-      environment:
-        CHOKIDAR_USEPOLLING: "true" # https://stackoverflow.com/questions/61576659/how-to-hot-reload-in-reactjs-docker
-      volumes:
-        - ./storefront/pages:/usr/src/app/pages
-        - ./storefront/app:/usr/src/app/app
-        - ./storefront/styles:/usr/src/app/styles
-        - ./storefront/src:/usr/src/app/src
-        - ./storefront/public:/usr/src/app/public
-        - ./http-library/src:/usr/src/http-library/src
-      ports:
-        - 3031:3000
-      depends_on:
-        - backend
+    container_name: storefront
+    build:
+      context: ./storefront
+      target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
+    environment:
+      CHOKIDAR_USEPOLLING: "true" # https://stackoverflow.com/questions/61576659/how-to-hot-reload-in-reactjs-docker
+    volumes:
+      - ./storefront/pages:/usr/src/app/pages
+      - ./storefront/app:/usr/src/app/app
+      - ./storefront/styles:/usr/src/app/styles
+      - ./storefront/src:/usr/src/app/src
+      - ./storefront/public:/usr/src/app/public
+      - ./http-library/src:/usr/src/http-library/src
+    ports:
+      - 3031:3000
+    depends_on:
+      - backend
   recommender_system:
     container_name: recommender_system
     build:
