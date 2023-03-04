@@ -49,3 +49,14 @@ services:
         - 3031:3000
       depends_on:
         - backend
+  recommender_system:
+    container_name: recommender_system
+    build:
+      context: ./recommender_system
+      target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
+    volumes:
+      - ./recommender_system/app:/usr/src/app/
+    ports:
+      - 8086:8086
+    env_file:
+      - ./recommender_system/docker-compose.env
