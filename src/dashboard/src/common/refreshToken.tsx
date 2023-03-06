@@ -25,7 +25,7 @@ const refreshTokenFn = async () => {
         }
 
         Cookies.set("accessToken", session?.accessToken, {
-            expires: new Date(jwt_decode(session?.accessToken).exp * 1000),
+            expires: new Date((jwt_decode(session?.accessToken) as any).exp * 1000),
         });
 
         return session;
