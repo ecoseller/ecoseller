@@ -1,6 +1,7 @@
 // /common/axiosPrivate.js
 import axios from "axios";
 // Cookies
+// @ts-ignore
 import Cookies from "js-cookie";
 
 import { memoizedRefreshToken } from "../src/common/refreshToken";

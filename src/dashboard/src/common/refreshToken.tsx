@@ -4,6 +4,7 @@ import mem from "mem";
 import jwt_decode from "jwt-decode";
 
 // Cookies
+// @ts-ignore
 import Cookies from "js-cookie";
 
 import { axiosPublic } from "@/utils/axiosPublic";
