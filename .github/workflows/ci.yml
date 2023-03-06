@@ -102,6 +102,29 @@ jobs:
       - name: Check formatting
         run: npx prettier --check .
 
+  recommender_system:
+    runs-on: ubuntu-latest
+    env:
+      SOURCE_FILES: ./app
+    defaults:
+      run:
+        working-directory: src/recommender_system
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Check formatting
+        run: black --check $SOURCE_FILES
+      - name: Lint with flake8
+        run: flake8 $SOURCE_FILES
+
   docker-compose:
     runs-on: ubuntu-latest
     defaults:
