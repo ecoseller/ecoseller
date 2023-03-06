@@ -18,6 +18,7 @@ import Logo from "/public/logo/black/ecoseller.io.svg";
 // axios
 import { axiosPrivate } from "@/utils/axiosPrivate"
 // Cookies
+// @ts-ignore
 import Cookies from "js-cookie";
 // JWT
 import jwt_decode from "jwt-decode";

@@ -9,6 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import Popover from "@mui/material/Popover";
 
 // Cookies
+// @ts-ignore
 import Cookies from "js-cookie";
 
 // next.js
