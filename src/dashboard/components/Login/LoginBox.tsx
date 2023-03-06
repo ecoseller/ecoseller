@@ -16,14 +16,14 @@ import styles from "./LoginBox.module.scss";
 // public
 import Logo from "/public/logo/black/ecoseller.io.svg";
 // axios
-import { axiosPrivate } from "@/utils/axiosPrivate"
+import { axiosPrivate } from "@/utils/axiosPrivate";
 // Cookies
 // @ts-ignore
 import Cookies from "js-cookie";
 // JWT
 import jwt_decode from "jwt-decode";
 
-const LoginBox = ({ }) => {
+const LoginBox = ({}) => {
   const router = useRouter();
 
   const [email, setEmail] = useState<string>("");
@@ -78,27 +78,38 @@ const LoginBox = ({ }) => {
           onClick={() => {
             // validate
             try {
-              axiosPrivate.post("/user/login", {
-                email,
-                password
-              }).then((response) => {
-                const accessToken = response.data.access;
-                const refreshToken = response.data.refresh;
+              axiosPrivate
+                .post("/user/login", {
+                  email,
+                  password,
+                })
+                .then((response) => {
+                  const accessToken = response.data.access;
+                  const refreshToken = response.data.refresh;
 
-                const accessTokenDecoded: any = jwt_decode(accessToken);
-                const refreshTokenDecoded: any = jwt_decode(refreshToken);
+                  const accessTokenDecoded: any = jwt_decode(accessToken);
+                  const refreshTokenDecoded: any = jwt_decode(refreshToken);
 
-                const expiresAccessToken = new Date(accessTokenDecoded.exp * 1000);
-                const expiresRefreshToken = new Date(refreshTokenDecoded.exp * 1000);
+                  const expiresAccessToken = new Date(
+                    accessTokenDecoded.exp * 1000
+                  );
+                  const expiresRefreshToken = new Date(
+                    refreshTokenDecoded.exp * 1000
+                  );
 
-                Cookies.set("accessToken", accessToken, { expires: expiresAccessToken });
-                Cookies.set("refreshToken", refreshToken, { expires: expiresRefreshToken });
+                  Cookies.set("accessToken", accessToken, {
+                    expires: expiresAccessToken,
+                  });
+                  Cookies.set("refreshToken", refreshToken, {
+                    expires: expiresRefreshToken,
+                  });
 
-                //redirect
-                router.replace("/dashboard/overview");
-              }).catch((error) => {
-                console.log(error);
-              });
+                  //redirect
+                  router.replace("/dashboard/overview");
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
             } catch (error) {
               console.log(error);
             }
