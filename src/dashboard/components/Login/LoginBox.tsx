@@ -16,7 +16,7 @@ import styles from "./LoginBox.module.scss";
 // public
 import Logo from "/public/logo/black/ecoseller.io.svg";
 // axios
-import { axiosPrivate } from "../../src/common/axiosPrivate";
+import { axiosPrivate } from "@/utils/axiosPrivate"
 // Cookies
 import Cookies from "js-cookie";
 // JWT
@@ -95,6 +95,8 @@ const LoginBox = ({ }) => {
 
                 //redirect
                 router.replace("/dashboard/overview");
+              }).catch((error) => {
+                console.log(error);
               });
             } catch (error) {
               console.log(error);

@@ -6,7 +6,7 @@ import jwt_decode from "jwt-decode";
 // Cookies
 import Cookies from "js-cookie";
 
-import { axiosPublic } from "./axiosPublic";
+import { axiosPublic } from "@/utils/axiosPublic";
 
 const refreshTokenFn = async () => {
     const refreshToken = Cookies.get("refreshToken") || null;

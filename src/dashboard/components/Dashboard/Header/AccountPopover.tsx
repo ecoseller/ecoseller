@@ -15,7 +15,7 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 
 // Axios
-import { axiosPrivate } from "../../../src/common/axiosPrivate";
+import { axiosPrivate } from "@/utils/axiosPrivate";
 
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 

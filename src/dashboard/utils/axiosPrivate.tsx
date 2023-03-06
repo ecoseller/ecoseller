@@ -3,7 +3,7 @@ import axios from "axios";
 // Cookies
 import Cookies from "js-cookie";
 
-import { memoizedRefreshToken } from "./refreshToken";
+import { memoizedRefreshToken } from "../src/common/refreshToken";
 
 axios.defaults.baseURL = "http://localhost:8000/";
 
@@ -31,7 +31,7 @@ axios.interceptors.response.use(
         console.log("axios.interceptors.response.use")
         const config = error?.config;
 
-        if (error?.response?.status === 401 && !config?.sent) {
+        if (error?.request?.status === 401 && !config?.sent) {
             console.log("axios.interceptors.response.use 401")
             config.sent = true;
 
@@ -42,9 +42,9 @@ axios.interceptors.response.use(
                     ...config.headers,
                     authorization: `JWT ${result?.accessToken}`,
                 };
-            }
 
-            return axios(config);
+                return axios(config);
+            }
         }
         return Promise.reject(error);
     }
