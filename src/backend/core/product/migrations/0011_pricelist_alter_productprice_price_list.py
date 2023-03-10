@@ -5,7 +5,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("country", "0003_remove_pricelist_currency"),
         ("product", "0010_productprice_delete_currency_delete_price_and_more"),

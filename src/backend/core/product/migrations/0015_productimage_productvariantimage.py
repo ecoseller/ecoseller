@@ -5,34 +5,67 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('product', '0014_pricelist_create_at_pricelist_update_at'),
+        ("product", "0014_pricelist_create_at_pricelist_update_at"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ProductImage',
+            name="ProductImage",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image', models.ImageField(upload_to='product_images')),
-                ('alt', models.CharField(blank=True, max_length=128, null=True)),
-                ('order', models.IntegerField(blank=True, null=True)),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='product.product')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("image", models.ImageField(upload_to="product_images")),
+                ("alt", models.CharField(blank=True, max_length=128, null=True)),
+                ("order", models.IntegerField(blank=True, null=True)),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="product.product",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['order'],
+                "ordering": ["order"],
             },
         ),
         migrations.CreateModel(
-            name='ProductVariantImage',
+            name="ProductVariantImage",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='product.productimage')),
-                ('product_variant', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='product.productvariant')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "image",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="product.productimage",
+                    ),
+                ),
+                (
+                    "product_variant",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="product.productvariant",
+                    ),
+                ),
             ],
             options={
-                'unique_together': {('product_variant', 'image')},
+                "unique_together": {("product_variant", "image")},
             },
         ),
     ]
