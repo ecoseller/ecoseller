@@ -58,6 +58,16 @@ class Product(TranslatableModel):
     def __str__(self) -> str:
         return "id: {} title: {}".format(self.id, self.title)
 
+    def get_primary_photo(self):
+        from .models import (ProductImage,)# roductMediaTypes, )
+        return (
+            ProductImage.objects.filter(
+                product=self,
+                # type=ProductMediaTypes.IMAGE,
+            )
+            .order_by("sort_order")
+            .first()
+        )
 
 # Attributes
 class AttributeType(models.Model):
@@ -154,7 +164,7 @@ class ProductPrice(models.Model):
         PriceList, on_delete=models.CASCADE, blank=False, null=False
     )
     product_variant = models.ForeignKey(
-        ProductVariant, on_delete=models.CASCADE, blank=False, null=False
+        ProductVariant, on_delete=models.CASCADE, blank=False, null=False, related_name="price"
     )
     price = models.DecimalField(
         max_digits=10, decimal_places=2, blank=False, null=False

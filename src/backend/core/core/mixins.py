@@ -1,9 +1,13 @@
 from rest_framework.serializers import (
     ReadOnlyField,
 )
+from django.conf import settings
+from django.utils.translation import get_language_from_request
 
-from settings import PARLER_DEFAULT_LANGUAGE_CODE as DEFAULT_LANG
+# from settings import PARLER_DEFAULT_LANGUAGE_CODE as DEFAULT_LANG
 
+
+DEFAULT_LANG = settings.PARLER_DEFAULT_LANGUAGE_CODE
 
 class TranslatedSerializerMixin(object):
     """
@@ -51,7 +55,9 @@ class TranslatedSerializerMixin(object):
         inst_rep = super().to_representation(instance)
         # request = self.context.get('request')
         # lang_code = request.META.get('HTTP_ACCEPT_LANGUAGE', None)
-        lang_code = self.context.get("locale")
+        request = self.context.get("request")
+        lang_code = get_language_from_request(request)
+        # lang_code = self.context.get("locale")
 
         # Only use the first two chars for language code
         if lang_code and "-" in lang_code:
