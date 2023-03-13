@@ -12,6 +12,15 @@ from product.models import (
     ProductVariant,
 )
 
+"""
+Dashboard serializers
+"""
+
+class ProductDashboardSerializer(ModelSerializer):
+    """
+    Product Dashboard Serializer (see product/models.py)
+    returns product fields such as title, short description
+
 
 class ProductVarinatSerializer(ModelSerializer):
     """
