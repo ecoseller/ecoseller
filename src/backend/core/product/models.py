@@ -207,7 +207,7 @@ class ProductMedia(SortableModel):
         ordering = ["sort_order"]
 
     def __str__(self) -> str:
-        return "{}: {}".format(self.product, self.type, self.media)
+        return "{}: {} {}".format(self.product, self.type, self.media)
 
 
 class ProductVariantMedia(models.Model):
