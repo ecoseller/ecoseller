@@ -13,13 +13,44 @@ from product.models import (
 )
 
 """
+Common serializers
+"""
+class ProductMediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductMedia
+        order_by = [
+            "variant_media__variant__sku",
+            "sort_order",
+        ]
+        fields = ("id", "media", "type", "alt", "sort_order",)
+    
+
+
+
+
+"""
 Dashboard serializers
 """
 
-class ProductDashboardSerializer(ModelSerializer):
+class ProductDashboardListSerializer(TranslatedSerializerMixin):
     """
     Product Dashboard Serializer (see product/models.py)
-    returns product fields such as title, short description
+    returns product fields for dashboard
+    """
+
+    main_image = 
+
+    class Meta:
+        model = Product
+        fields = (
+            "id",
+            "title",
+            "slug",
+            "main_image",
+            "published",
+            "create_at",
+            "update_at",
+        )
 
 
 class ProductVarinatSerializer(ModelSerializer):

@@ -19,7 +19,7 @@ class ProductListDashboard(APIView, DashboardPagination):
     pagination_class = DashboardPagination()
     def get(self, request):
         products = Product.objects.all()
-        serialized_products = ProductDashboardSerializer(products, many=True)
+        serialized_products = ProductDashboardListSerializer(products, many=True)
         return Response(serialized_products.data, status=200)
 
 
