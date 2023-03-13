@@ -66,7 +66,7 @@ class ProductVariantSerializer(ModelSerializer):
             "sku",
             "ean",
             "weight",
-            "price"
+            "price",
         )
 
 
