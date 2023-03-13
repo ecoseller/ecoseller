@@ -1,6 +1,7 @@
 from django.db import models, transaction
 from django.db.models import F, Max
 
+
 class SortableModel(models.Model):
     sort_order = models.IntegerField(editable=False, db_index=True, null=True)
 
@@ -27,7 +28,6 @@ class SortableModel(models.Model):
                 sort_order=F("sort_order") - 1
             )
         super().delete(*args, **kwargs)
-
 
     class Meta:
         abstract = True

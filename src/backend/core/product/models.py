@@ -1,7 +1,9 @@
 from django.db import models
 from parler.models import TranslatableModel, TranslatedFields
 from ckeditor.fields import RichTextField
-from core.models import (SortableModel, )
+from core.models import (
+    SortableModel,
+)
 from category.models import (
     Category,
 )
@@ -173,6 +175,7 @@ class ProductPrice(models.Model):
     def formatted_price(self):
         return self.price_list.format_price(self.price)
 
+
 class ProductMediaTypes:
     IMAGE = "IMAGE"
     VIDEO = "VIDEO"
@@ -181,6 +184,7 @@ class ProductMediaTypes:
         (IMAGE, "An uploaded image or an URL to an image"),
         (VIDEO, "A URL to an external video"),
     ]
+
 
 class ProductMedia(SortableModel):
     """
@@ -204,6 +208,7 @@ class ProductMedia(SortableModel):
 
     def __str__(self) -> str:
         return "{}: {}".format(self.product, self.type, self.media)
+
 
 class ProductVariantMedia(models.Model):
     """
