@@ -5,7 +5,6 @@ import django.utils.timezone
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("product", "0012_alter_baseattribute_ext_attributes"),
     ]

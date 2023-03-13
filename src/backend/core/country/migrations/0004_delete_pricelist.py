@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("country", "0003_remove_pricelist_currency"),
         ("product", "0011_pricelist_alter_productprice_price_list"),

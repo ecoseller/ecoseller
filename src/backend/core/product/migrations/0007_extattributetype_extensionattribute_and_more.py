@@ -5,7 +5,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("product", "0006_attributetype_baseattribute_attributeclothes_and_more"),
     ]

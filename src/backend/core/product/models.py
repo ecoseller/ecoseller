@@ -171,3 +171,40 @@ class ProductPrice(models.Model):
     @property
     def formatted_price(self):
         return self.price_list.format_price(self.price)
+
+
+class ProductImage(models.Model):
+    """
+    Model used to store images for products (high level object - not variant)
+    """
+
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, blank=False, null=False
+    )
+    image = models.ImageField(upload_to="product_images", blank=False, null=False)
+    alt = models.CharField(max_length=128, blank=True, null=True)
+    order = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        ordering = ["order"]
+
+    def __str__(self) -> str:
+        return "{}: {}".format(self.product, self.image)
+
+
+class ProductVariantImage(models.Model):
+    """
+    Model used to store images for product variants (low level object)
+    So that we can have different images for different variants of the same product
+    and resolve, for example, image for red t-shirt, blue t-shirt etc.
+    """
+
+    product_variant = models.ForeignKey(
+        ProductVariant, on_delete=models.CASCADE, blank=False, null=False
+    )
+    image = models.ForeignKey(
+        ProductImage, on_delete=models.CASCADE, blank=False, null=False
+    )
+
+    class Meta:
+        unique_together = ("product_variant", "image")
