@@ -1,14 +1,13 @@
-from django.db import models, transaction
+from django.db import models
 from parler.models import TranslatableModel, TranslatedFields
 from ckeditor.fields import RichTextField
+from core.models import (SortableModel, )
 from category.models import (
     Category,
 )
 from country.models import (
     Currency,
 )
-
-from core.models import (SortableModel, )
 
 
 class ProductVariant(models.Model):
@@ -174,7 +173,6 @@ class ProductPrice(models.Model):
     def formatted_price(self):
         return self.price_list.format_price(self.price)
 
-
 class ProductMediaTypes:
     IMAGE = "IMAGE"
     VIDEO = "VIDEO"
@@ -205,11 +203,7 @@ class ProductMedia(SortableModel):
         ordering = ["sort_order"]
 
     def __str__(self) -> str:
-        return "{}: {}".format(self.product, self.type, self.image)
-
-    @transaction.atomic
-    def delete(self, *args, **kwargs):
-        super(SortableModel, self).delete(*args, **kwargs)
+        return "{}: {}".format(self.product, self.type, self.media)
 
 class ProductVariantMedia(models.Model):
     """
