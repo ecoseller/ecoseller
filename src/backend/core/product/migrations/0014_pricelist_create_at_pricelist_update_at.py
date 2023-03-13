@@ -5,7 +5,6 @@ import django.utils.timezone
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("product", "0013_productprice_create_at_productprice_update_at"),
     ]

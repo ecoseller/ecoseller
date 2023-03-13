@@ -9,7 +9,6 @@ import mptt.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("category", "0001_initial"),
     ]
