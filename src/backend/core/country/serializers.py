@@ -16,7 +16,6 @@ class CurrencySerializer(ModelSerializer):
         model = Currency
         fields = (
             "code",
-            "name",
             "symbol",
             "symbol_position",
         )
