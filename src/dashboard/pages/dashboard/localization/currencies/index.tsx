@@ -160,6 +160,7 @@ const DashboardCurrencyPage = () => {
               icon={<SaveIcon />}
               label="Save"
               onClick={handleSaveClick(id)}
+              key={"save"}
             />,
             <GridActionsCellItem
               icon={<CancelIcon />}
@@ -167,6 +168,7 @@ const DashboardCurrencyPage = () => {
               className="textPrimary"
               onClick={handleCancelClick(id)}
               color="inherit"
+              key={"cancel"}
             />,
           ];
         }
@@ -178,12 +180,14 @@ const DashboardCurrencyPage = () => {
             className="textPrimary"
             onClick={handleEditClick(id)}
             color="inherit"
+            key={"edit"}
           />,
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
             onClick={handleDeleteClick(id)}
             color="inherit"
+            key={"delete"}
           />,
         ];
       },

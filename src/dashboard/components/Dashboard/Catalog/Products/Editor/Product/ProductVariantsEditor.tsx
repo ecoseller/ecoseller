@@ -139,6 +139,7 @@ const ProductVariantsEditor = ({ disabled }: IProductVariantsEditorProps) => {
               icon={<SaveIcon />}
               label="Save"
               onClick={handleSaveClick(id)}
+              key={"save"}
             />,
             <GridActionsCellItem
               icon={<CancelIcon />}
@@ -146,6 +147,7 @@ const ProductVariantsEditor = ({ disabled }: IProductVariantsEditorProps) => {
               className="textPrimary"
               onClick={handleCancelClick(id)}
               color="inherit"
+              key={"cancel"}
             />,
           ];
         }
@@ -157,12 +159,14 @@ const ProductVariantsEditor = ({ disabled }: IProductVariantsEditorProps) => {
             className="textPrimary"
             onClick={handleEditClick(id)}
             color="inherit"
+            key={"edit"}
           />,
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
             onClick={handleDeleteClick(id)}
             color="inherit"
+            key={"delete"}
           />,
         ];
       },
