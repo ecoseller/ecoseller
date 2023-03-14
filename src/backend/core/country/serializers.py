@@ -21,6 +21,7 @@ class CurrencySerializer(ModelSerializer):
             "symbol_position",
         )
 
+
 class CountrySerializer(ModelSerializer):
     """
     Basic Country model serializer (see country/models.py)

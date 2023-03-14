@@ -4,7 +4,10 @@ from core.mixins import (
 from rest_framework.serializers import (
     ModelSerializer,
 )
-from parler_rest.serializers import (TranslatableModelSerializer, TranslatedFieldsField, )
+from parler_rest.serializers import (
+    TranslatableModelSerializer,
+    TranslatedFieldsField,
+)
 
 from category.serializers import (
     CategorySerializer,
@@ -18,29 +21,44 @@ from product.models import (
     ProductVariant,
     ProductImage,
     ProductPrice,
-    #ProductMedia
+    # ProductMedia
 )
 
 """
 Common serializers
 """
+
+
 class ProductMediaSerializer(ModelSerializer):
     class Meta:
         model = ProductImage
-        order_by = [
-        ]
-        fields = ("id", "image", "alt",)
+        order_by = []
+        fields = (
+            "id",
+            "image",
+            "alt",
+        )
+
 
 class PriceListSerializer(ModelSerializer):
     currency = CurrencySerializer(read_only=True, many=False)
+
     class Meta:
         model = ProductPrice
-        fields = ("id", "name", "currency", "rounding", "includes_vat", "update_at", "create_at",)
+        fields = (
+            "id",
+            "name",
+            "currency",
+            "rounding",
+            "includes_vat",
+            "update_at",
+            "create_at",
+        )
 
 
 class ProductPriceSerializer(ModelSerializer):
     price_list = PriceListSerializer(read_only=True, many=False)
-    
+
     class Meta:
         model = ProductPrice
         fields = (
@@ -48,11 +66,14 @@ class ProductPriceSerializer(ModelSerializer):
             "price",
             "currency",
             "price_list",
-        )    
+        )
+
 
 """
 Dashboard serializers
 """
+
+
 class ProductVariantSerializer(ModelSerializer):
     """
     Product Variant Serializer (see product/models.py)
@@ -60,6 +81,7 @@ class ProductVariantSerializer(ModelSerializer):
     TODO: price, stock, attributes
     """
     price = ProductPriceSerializer(many=True, read_only=True)
+
     class Meta:
         model = ProductVariant
         fields = (
@@ -90,6 +112,7 @@ class ProductDashboardListSerializer(TranslatedSerializerMixin, ModelSerializer)
             "update_at",
         )
 
+
 class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSerializer):
     translations = TranslatedFieldsField(shared_model=Product)
     product_variant = ProductVariantSerializer(many=True, read_only=True)
@@ -99,9 +122,9 @@ class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSeriali
         fields = (
             "id",
             "published",
-            "translations", # translations object with all translations
-            "category", # serialized as id
-            "product_variant", 
+            "translations",  # translations object with all translations
+            "category",  # serialized as id
+            "product_variant",
             "update_at",
             "create_at",
         )

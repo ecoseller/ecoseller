@@ -9,6 +9,7 @@ from django.utils.translation import get_language_from_request
 
 DEFAULT_LANG = settings.PARLER_DEFAULT_LANGUAGE_CODE
 
+
 class TranslatedSerializerMixin(object):
     """
     Source of this source code:

@@ -1,6 +1,7 @@
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
+
 class DashboardPagination(PageNumberPagination):
     page_size = 30
     page_size_query_param = "limit"

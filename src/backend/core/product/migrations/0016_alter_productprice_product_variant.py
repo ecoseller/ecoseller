@@ -7,13 +7,17 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('product', '0015_productimage_productvariantimage'),
+        ("product", "0015_productimage_productvariantimage"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='productprice',
-            name='product_variant',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='price', to='product.productvariant'),
+            model_name="productprice",
+            name="product_variant",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="price",
+                to="product.productvariant",
+            ),
         ),
     ]
