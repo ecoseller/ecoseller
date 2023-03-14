@@ -134,7 +134,11 @@ const ProductTranslatedFieldsWrapper = () => {
               </TabList>
             </Box>
             {languages?.map((language) => (
-              <TabPanel sx={{ padding: 0 }} value={language.code}>
+              <TabPanel
+                sx={{ padding: 0 }}
+                key={language.code}
+                value={language.code}
+              >
                 <ProductTranslatedFields language={language.code} />
               </TabPanel>
             ))}

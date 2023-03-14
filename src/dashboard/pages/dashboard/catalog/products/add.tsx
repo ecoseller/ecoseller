@@ -42,7 +42,7 @@ const DashboardProductsAddPage = () => {
           <Grid item md={8} xs={"auto"}>
             <ProductBasicInfo />
             <ProductTranslatedFieldsWrapper />
-            <ProductVariantsEditor disabled={true} />
+            <ProductVariantsEditor disabled={false} />
             <ProductMediaEditor disabled={true} />
             <ProductVariantPricesEditor disabled={true} />
           </Grid>

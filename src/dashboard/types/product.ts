@@ -1,5 +1,11 @@
 import { IPaginated } from "@/types/common";
 
+export interface IProductVariant {
+  sku: string;
+  ean: string;
+  weight: number;
+}
+
 export interface IProductListItem {
   id: string;
   title: string | null;

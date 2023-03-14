@@ -14,7 +14,6 @@ import { TextField } from "@mui/material";
 import Stack from "@mui/material/Stack";
 const ProductBasicInfo = () => {
   // simple select with categories
-  const [categoryId, setCategoryId] = useState<string>("");
 
   return (
     <EditorCard>

@@ -13,7 +13,7 @@ const ProductListBody = ({ products }: IProductListBody) => {
   return (
     <TableBody>
       {products?.map((product) => (
-        <TableRow>
+        <TableRow key={product.id}>
           <TableCell>
             <Checkbox />
           </TableCell>
