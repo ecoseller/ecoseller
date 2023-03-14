@@ -5,6 +5,9 @@ import type { NextPage } from "next";
 import type { AppProps } from "next/app";
 import { Montserrat, Work_Sans } from "@next/font/google";
 import Head from "next/head";
+import { SWRConfig } from "swr";
+import { axiosPrivate } from "@/utils/axiosPrivate";
+import { useRouter } from "next/router";
 
 const montserrat = Montserrat({
   weight: ["400", "500", "700"],
@@ -26,7 +29,7 @@ type AppPropsWithLayout = AppProps & {
 
 const App = ({ Component, pageProps }: AppPropsWithLayout) => {
   const getLayout = Component.getLayout ?? ((page) => page);
-
+  const { locale } = useRouter();
   return getLayout(
     <>
       <Head>
@@ -70,7 +73,29 @@ const App = ({ Component, pageProps }: AppPropsWithLayout) => {
         `}
       </style>
       <main>
-        <Component {...pageProps} />
+        <SWRConfig
+          value={{
+            dedupingInterval: 2000,
+            fetcher: (url: string) =>
+              axiosPrivate
+                .get(url, {
+                  withCredentials: true,
+                  headers: {
+                    "Accept-Language": locale,
+                  },
+                })
+                .then((r: any) => {
+                  if (r.data?.error && r.data?.error === "forbidden") {
+                    // throw "forbidden";
+                    return;
+                  }
+                  return r.data;
+                })
+                .catch((err: any) => console.log("fetcher err")),
+          }}
+        >
+          <Component {...pageProps} />
+        </SWRConfig>
       </main>
     </>
   );
