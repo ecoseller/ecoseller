@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef } from "react";
 const throwFakeErrorToFoolNextRouter = () => {
   // Throwing an actual error class trips the Next.JS 500 Page, this string literal does not.
   // eslint-disable-next-line no-throw-literal
-  throw " Abort route change due to unsaved changes in form. Triggered by useNavigationObserver. Please ignore this error.";
+  throw " Abort route change due to unsaved changes in form. Triggered by useOnLeavePageConfirmation. Please ignore this error.";
 };
 
 interface IuseOnLeavePageConfirmationProps {
