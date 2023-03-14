@@ -69,7 +69,8 @@ const DashboardContentWithSaveFooter = ({
           bottom: 0,
           // left: 0,
           height: "65px",
-          // backgroundColor: "white",
+          backgroundColor: "#F6F8FA",
+          zIndex: 100,
           borderTop: "1px solid #E6E8EA",
         }}
       >

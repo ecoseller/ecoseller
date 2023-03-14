@@ -41,14 +41,14 @@ const DashboardProductsPage = () => {
   };
 
   const { data: products } = useSWR<IProductList | undefined>(
-    `/product/dashboard?page=${page}&limit=${rowsPerPage}}`
+    `/product/dashboard/?page=${page + 1}&limit=${rowsPerPage}`
   );
 
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
         <ProductListTopLine />
-        <Card>
+        <Card elevation={0}>
           <TableContainer sx={{ minWidth: 650 }}>
             <Table>
               <ProductListHead
