@@ -26,8 +26,8 @@ import jwt_decode from "jwt-decode";
 const LoginBox = ({}) => {
   const router = useRouter();
 
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>("admin@example.com");
+  const [password, setPassword] = useState<string>("admin");
 
   return (
     <>
@@ -48,6 +48,7 @@ const LoginBox = ({}) => {
           name="e-mail"
           autoComplete="email"
           autoFocus
+          defaultValue={email}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setEmail(e.target.value);
           }}
@@ -61,6 +62,7 @@ const LoginBox = ({}) => {
           type="password"
           id="password"
           autoComplete="current-password"
+          defaultValue={password}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setPassword(e.target.value);
           }}

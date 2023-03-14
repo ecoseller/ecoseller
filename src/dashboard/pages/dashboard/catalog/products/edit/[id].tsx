@@ -1,4 +1,4 @@
-// /dashboard/products
+// /dashboard/product/add
 
 // layout
 import DashboardLayout from "@/pages/dashboard/layout"; //react
@@ -8,10 +8,9 @@ import RootLayout from "@/pages/layout";
 
 // mui
 import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
 import ProductListTopLine from "@/components/Dashboard/Catalog/Products/List/TopLine";
 
-const DashboardProductsPage = () => {
+const DashboardProductsEditPage = () => {
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
@@ -21,7 +20,7 @@ const DashboardProductsPage = () => {
   );
 };
 
-DashboardProductsPage.getLayout = (page: ReactElement) => {
+DashboardProductsEditPage.getLayout = (page: ReactElement) => {
   return (
     <RootLayout>
       <DashboardLayout>{page}</DashboardLayout>
@@ -30,10 +29,9 @@ DashboardProductsPage.getLayout = (page: ReactElement) => {
 };
 
 export const getServersideProps = async (context: any) => {
-  console.log("Dashboard orders");
   return {
     props: {},
   };
 };
 
-export default DashboardProductsPage;
+export default DashboardProductsEditPage;
