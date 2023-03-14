@@ -15,6 +15,8 @@
     "@mui/icons-material": "^5.11.9",
     "@mui/lab": "^5.0.0-alpha.123",
     "@mui/material": "^5.10.14",
+    "@mui/x-data-grid": "^6.0.1",
+    "@mui/x-data-grid-generator": "^6.0.1",
     "@next/font": "^13.1.6",
     "@types/node": "18.11.9",
     "@types/react": "^18.0.25",

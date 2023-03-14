@@ -1,19 +1,20 @@
-import CollapsableContentWithTitle from "@/components/Dashboard/Generic/CollapsableContentWithTitle";
-import EditorCard from "@/components/Dashboard/Generic/EditorCard";
-import { IProductVariant } from "@/types/product";
-import IconButton from "@mui/material/IconButton";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
+// /dashboard/products
+
+// libraries
+import useSWR from "swr";
+
+// layout
+import DashboardLayout from "@/pages/dashboard/layout"; //react
+import { ReactElement, useEffect, useState } from "react";
+import RootLayout from "@/pages/layout";
+// components
+// mui
+import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
+import Card from "@mui/material/Card";
+import Stack from "@mui/material/Stack";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import Paper from "@mui/material/Paper";
 import {
   DataGrid,
   GridRowsProp,
@@ -26,27 +27,25 @@ import {
   MuiEvent,
   GridEventListener,
   GridRowId,
-  GridRowModel,
 } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { randomId } from "@mui/x-data-grid-generator";
-import { useRouter } from "next/router";
 import { Alert, Snackbar } from "@mui/material";
-interface IProductVariantTable extends IProductVariant {
+// types
+import { ICurrency } from "@/types/localization";
+
+interface ICurrencyTable extends ICurrency {
+  isNew?: boolean;
   id: string;
-  isNew: boolean;
-}
-interface IProductVariantsEditorProps {
-  disabled: boolean;
 }
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
   setRowModesModel: (
-    newModel: (oldModel: IProductVariantTable) => IProductVariantTable
+    newModel: (oldModel: ICurrencyTable) => ICurrencyTable
   ) => void;
 }
 
@@ -57,7 +56,7 @@ const EditToolbar = (props: EditToolbarProps) => {
     const id = randomId();
     setRows((oldRows) => [
       ...oldRows,
-      { id, sku: "", ean: "", weight: 0, attributes: [], isNew: true },
+      { id, code: "", symbol: "", symbol_position: "AFTER", isNew: true },
     ]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
@@ -68,21 +67,47 @@ const EditToolbar = (props: EditToolbarProps) => {
   return (
     <GridToolbarContainer>
       <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-        Add variant
+        Add currency
       </Button>
     </GridToolbarContainer>
   );
 };
 
-const ProductVariantsEditor = ({ disabled }: IProductVariantsEditorProps) => {
-  const router = useRouter();
+const DashboardCurrencyPage = () => {
+  const {
+    data: currencies,
+    error: currenciesError,
+    mutate,
+  } = useSWR<ICurrency[]>("/country/currency/");
+
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
     message: string;
     severity: "success" | "error" | "info" | "warning";
   } | null>(null);
 
-  const [rows, setRows] = useState<IProductVariantTable[]>([]);
+  useEffect(() => {
+    if (currenciesError) {
+      setSnackbar({
+        open: true,
+        message: "Something went wrong",
+        severity: "error",
+      });
+    }
+  }, [currenciesError]);
+
+  useEffect(() => {
+    if (currencies) {
+      setRows(
+        currencies.map((currency: ICurrency) => ({
+          ...currency,
+          id: currency.code,
+        }))
+      );
+    }
+  }, [currencies]);
+
+  const [rows, setRows] = useState<ICurrencyTable[]>([]);
 
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 
@@ -90,37 +115,33 @@ const ProductVariantsEditor = ({ disabled }: IProductVariantsEditorProps) => {
 
   const columns: GridColDef[] = [
     {
-      field: "sku",
-      headerName: "SKU",
+      field: "code",
+      headerName: "Code",
       editable: true,
       flex: 1,
       sortable: false,
       disableColumnMenu: true,
     },
     {
-      field: "ean",
-      headerName: "EAN",
+      field: "symbol",
+      headerName: "Symbol",
       editable: true,
       flex: 1,
-      sortable: false,
-      disableColumnMenu: true,
+      // sortable: false,
+      // disableColumnMenu: true,
     },
     {
-      field: "weight",
-      headerName: "Weight",
+      field: "symbol_position",
+      headerName: "Symbol position",
       editable: true,
       flex: 1,
-      sortable: false,
-      disableColumnMenu: true,
-    },
-    {
-      field: "attributes",
-      headerName: "Attributes",
-      // width: 150,
-      editable: true,
-      sortable: false,
-      flex: 1,
-      disableColumnMenu: true,
+      type: "singleSelect",
+      valueOptions: [
+        { value: "AFTER", label: "Before price" },
+        { value: "BEFORE", label: "After price" },
+      ],
+      // sortable: false,
+      // disableColumnMenu: true,
     },
     {
       field: "actions",
@@ -152,7 +173,7 @@ const ProductVariantsEditor = ({ disabled }: IProductVariantsEditorProps) => {
 
         return [
           <GridActionsCellItem
-            icon={<OpenInNewIcon />}
+            icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
             onClick={handleEditClick(id)}
@@ -186,19 +207,7 @@ const ProductVariantsEditor = ({ disabled }: IProductVariantsEditorProps) => {
   const handleEditClick = (id: GridRowId) => () => {
     // open edit mode for the row with sku
     // get row by id
-    const row = rows.find((row) => row.id === id);
-    if (!row) return;
-    // open variant editor page with SKU
-    if (!row.sku) {
-      setSnackbar({
-        open: true,
-        message: "SKU is required",
-        severity: "error",
-      });
-      return;
-    }
-    router.push(`/products/variants/${row.sku}`);
-    // setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
 
   const handleSaveClick = (id: GridRowId) => () => {
@@ -221,22 +230,34 @@ const ProductVariantsEditor = ({ disabled }: IProductVariantsEditorProps) => {
     }
   };
 
-  const processRowUpdate = (
-    newRow: IProductVariantTable,
-    oldRow: IProductVariantTable
-  ) => {
+  const processRowUpdate = (newRow: ICurrencyTable, oldRow: ICurrencyTable) => {
     const updatedRow = { ...newRow, isNew: false };
 
     // check if row has SKU
     // if not, show error
     // if yes, save row
-    if (!updatedRow.sku) {
+    if (!updatedRow.code) {
       setSnackbar({
         open: true,
-        message: "SKU is required",
+        message: "Code is required",
         severity: "error",
       });
-      throw new Error("SKU is required");
+      throw new Error("Code is required");
+    }
+
+    // check if there's duplicate code
+    // if yes, show error
+    // if no, save row
+    const isDuplicateCode = rows.some(
+      (row) => row.code === updatedRow.code && row.id !== updatedRow.id
+    );
+    if (isDuplicateCode) {
+      setSnackbar({
+        open: true,
+        message: "Code already exists",
+        severity: "error",
+      });
+      throw new Error("Code already exists");
     }
 
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
@@ -258,15 +279,19 @@ const ProductVariantsEditor = ({ disabled }: IProductVariantsEditorProps) => {
   };
 
   return (
-    <EditorCard>
-      <CollapsableContentWithTitle title="Variants">
-        {disabled ? (
-          <Typography variant="body1" color="textSecondary">
-            Adding or editing product variants will be available after first
-            save.
+    <DashboardLayout>
+      <Container maxWidth="xl">
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mb={5}
+        >
+          <Typography variant="h4" gutterBottom>
+            Currencies
           </Typography>
-        ) : (
-          // <div style={{ height: 250, width: "100%" }}>
+        </Stack>
+        <Card elevation={0}>
           <DataGrid
             rows={rows}
             columns={columns}
@@ -286,9 +311,8 @@ const ProductVariantsEditor = ({ disabled }: IProductVariantsEditorProps) => {
               toolbar: { setRows, setRowModesModel },
             }}
           />
-          // </div>
-        )}
-      </CollapsableContentWithTitle>
+        </Card>
+      </Container>
       {snackbar ? (
         <Snackbar
           open={snackbar.open}
@@ -304,8 +328,23 @@ const ProductVariantsEditor = ({ disabled }: IProductVariantsEditorProps) => {
           </Alert>
         </Snackbar>
       ) : null}
-    </EditorCard>
+    </DashboardLayout>
   );
 };
 
-export default ProductVariantsEditor;
+DashboardCurrencyPage.getLayout = (page: ReactElement) => {
+  return (
+    <RootLayout>
+      <DashboardLayout>{page}</DashboardLayout>
+    </RootLayout>
+  );
+};
+
+export const getServersideProps = async (context: any) => {
+  console.log("Dashboard pricelists");
+  return {
+    props: {},
+  };
+};
+
+export default DashboardCurrencyPage;

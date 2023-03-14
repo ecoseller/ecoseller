@@ -30,12 +30,6 @@ const DashboardContentWithSaveFooter = ({
   const [saveDialogOpen, setSaveDialogOpen] = useState<boolean>(false);
   const [isSaved, setIsSaved] = useState<boolean>(false);
 
-  const forceClose = () => {
-    setPreventNavigation(false);
-    setIsSaved(true);
-    router.push(PRODUCTLIST_PATH);
-  };
-
   useEffect(() => {
     setIsSaved(false);
   }, [preventNavigation]);
@@ -51,12 +45,19 @@ const DashboardContentWithSaveFooter = ({
     setIsSaved(true);
   };
 
-  const navigate = useOnLeavePageConfirmation({
+  const { navigate, pathToNavigateTo } = useOnLeavePageConfirmation({
     preventNavigation: !isSaved || false,
     onNavigate: () => {
       setSaveDialogOpen(true);
     },
   });
+
+  const forceClose = () => {
+    setPreventNavigation(false);
+    setIsSaved(true);
+    navigate();
+    // router.push(pathToNavigateTo);
+  };
 
   return (
     <>

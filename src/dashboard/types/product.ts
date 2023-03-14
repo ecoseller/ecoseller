@@ -4,6 +4,7 @@ export interface IProductVariant {
   sku: string;
   ean: string;
   weight: number;
+  attributes: number[];
 }
 
 export interface IProductListItem {

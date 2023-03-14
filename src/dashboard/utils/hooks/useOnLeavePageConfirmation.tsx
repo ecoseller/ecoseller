@@ -1,5 +1,6 @@
+import next from "next";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const throwFakeErrorToFoolNextRouter = () => {
   // Throwing an actual error class trips the Next.JS 500 Page, this string literal does not.
@@ -21,6 +22,8 @@ const useOnLeavePageConfirmation = ({
   const currentPath = router.asPath;
   const nextPath = useRef("");
 
+  const [pathToNavigateTo, setPathToNavigateTo] = useState<string>("");
+
   const killRouterEvent = useCallback(() => {
     // router.events.emit("routeChangeError");
     router.events.emit("routeChangeError", "", "", { shallow: false });
@@ -33,8 +36,10 @@ const useOnLeavePageConfirmation = ({
         nextPath.current = url;
         onNavigate(url);
         killRouterEvent();
+        setPathToNavigateTo(url);
       }
     };
+    console.log("url", nextPath);
 
     router.events.on("routeChangeStart", onRouteChange);
 
@@ -52,8 +57,8 @@ const useOnLeavePageConfirmation = ({
   const navigate = () => {
     router.push(nextPath.current);
   };
-
-  return navigate;
+  console.log("pathToNavigateTo", pathToNavigateTo);
+  return { navigate, pathToNavigateTo };
 };
 
 export { useOnLeavePageConfirmation };

@@ -4,7 +4,9 @@ import GroupIcon from "@mui/icons-material/Group";
 import ArticleIcon from "@mui/icons-material/Article";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
-
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import LanguageIcon from "@mui/icons-material/Language";
+import MoneyIcon from "@mui/icons-material/Money";
 export interface INavigationItem {
   title: string;
   path: string;
@@ -39,6 +41,23 @@ const navigationData: INavigationItem[] = [
         title: "Categories",
         path: "/categories",
         icon: <CategoryIcon />,
+      },
+    ],
+  },
+  {
+    title: "Localization",
+    path: "/dashboard/localization",
+    icon: <LanguageIcon />,
+    children: [
+      {
+        title: "Price lists",
+        path: "/price-lists",
+        icon: <MoneyIcon />,
+      },
+      {
+        title: "Currency",
+        path: "/currencies",
+        icon: <AttachMoneyIcon />,
       },
     ],
   },

@@ -31,7 +31,7 @@ const CollapsableContentWithTitle = ({
           {title}
         </Typography>
 
-        <Button variant="outlined" onClick={() => setOpen(!open)}>
+        <Button variant="text" onClick={() => setOpen(!open)}>
           {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
         </Button>
       </Stack>
