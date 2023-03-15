@@ -28,32 +28,76 @@ import IconButton from "@mui/material/IconButton";
 
 import SyncDisabledIcon from "@mui/icons-material/SyncDisabled";
 import SyncIcon from "@mui/icons-material/Sync";
+import {
+  ActionSetProduct,
+  IProductTranslation,
+  ISetProductStateData,
+} from "@/types/product";
+import { ISetProductStateAction } from "../ProductEditorWrapper";
 
 interface IProductTranslatedFieldsProps {
   language: string;
+  state: IProductTranslation;
+  dispatch: React.Dispatch<ISetProductStateAction>;
 }
 const ProductTranslatedFields = ({
   language,
+  state,
+  dispatch,
 }: IProductTranslatedFieldsProps) => {
-  const [title, setTitle] = useState<string>("");
-  const [slug, setSlug] = useState<string>("");
+  // const [title, setTitle] = useState<string>("");
+  // const [slug, setSlug] = useState<string>("");
   const [editSlug, setEditSlug] = useState<boolean>(false);
   const [description, setDescription] = useState<string>("");
 
   useEffect(() => {
-    if (!editSlug) {
+    if (!editSlug && state?.title != undefined) {
       // set slug from title
       // but only if slug is empty
-      setSlug(slugify(title));
+      setSlug(
+        slugify(state?.title || "", {
+          lower: true,
+          strict: true,
+          locale: language,
+        })
+      );
     }
-  }, [title]);
+  }, [state?.title]);
+
+  const setTitle = (title: string) => {
+    dispatch({
+      type: ActionSetProduct.SETTRANSLATION,
+      payload: {
+        translation: {
+          language,
+          data: {
+            title: title,
+          },
+        },
+      },
+    });
+  };
+
+  const setSlug = (slug: string) => {
+    dispatch({
+      type: ActionSetProduct.SETTRANSLATION,
+      payload: {
+        translation: {
+          language,
+          data: {
+            slug: slug,
+          },
+        },
+      },
+    });
+  };
 
   return (
     <FormControl fullWidth margin={"normal"}>
       <Stack spacing={2}>
         <TextField
           label="Title"
-          value={title}
+          value={state?.title || ""}
           onChange={(
             e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
           ) => {
@@ -62,12 +106,16 @@ const ProductTranslatedFields = ({
         />
         <TextField
           label="Slug"
-          value={slug}
-          // disabled={!editSlug}
+          value={state?.slug || ""}
+          disabled={!editSlug}
           onChange={(
             e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
           ) => {
-            const slugiffied = slugify(e.target.value);
+            const slugiffied = slugify(e.target.value, {
+              lower: true,
+              locale: language,
+              strict: true,
+            });
             setSlug(slugiffied);
           }}
           InputProps={{
@@ -94,7 +142,15 @@ const ProductTranslatedFields = ({
   );
 };
 
-const ProductTranslatedFieldsWrapper = () => {
+interface IProductTranslatedFieldsWrapperProps {
+  state: ISetProductStateData;
+  dispatch: React.Dispatch<ISetProductStateAction>;
+}
+
+const ProductTranslatedFieldsWrapper = ({
+  state,
+  dispatch,
+}: IProductTranslatedFieldsWrapperProps) => {
   const { data: languages } = useSWRImmutable<
     { code: string; default: boolean }[]
   >("/country/languages/");
@@ -139,7 +195,15 @@ const ProductTranslatedFieldsWrapper = () => {
                 key={language.code}
                 value={language.code}
               >
-                <ProductTranslatedFields language={language.code} />
+                <ProductTranslatedFields
+                  language={language.code}
+                  state={
+                    state?.translations
+                      ? state?.translations[language.code]
+                      : ({} as IProductTranslation)
+                  }
+                  dispatch={dispatch}
+                />
               </TabPanel>
             ))}
           </TabContext>

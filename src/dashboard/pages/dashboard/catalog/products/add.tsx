@@ -20,37 +20,17 @@ import Box from "@mui/material/Box";
 import ProductVariantsEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVariantsEditor";
 import ProductMediaEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductMediaEditor";
 import ProductVariantPricesEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVariantPricesEditor";
+import ProductEditorWrapper from "@/components/Dashboard/Catalog/Products/Editor/ProductEditorWrapper";
 
 const DashboardProductsAddPage = () => {
-  const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
-
-  const router = useRouter();
-
   return (
     <DashboardLayout>
-      <Container maxWidth="xl"></Container>
-      <DashboardContentWithSaveFooter
-        preventNavigation={true}
-        setPreventNavigation={setPreventNavigation}
-      >
-        <TopLineWithReturn
+      <Container maxWidth="xl">
+        <ProductEditorWrapper
           title={"Add product"}
           returnPath={"/dashboard/catalog/products"}
         />
-
-        <Grid container spacing={2} direction={{ xs: "column", md: "row" }}>
-          <Grid item md={8} xs={"auto"}>
-            <ProductBasicInfo />
-            <ProductTranslatedFieldsWrapper />
-            <ProductVariantsEditor disabled={false} />
-            <ProductMediaEditor disabled={true} />
-            <ProductVariantPricesEditor disabled={true} />
-          </Grid>
-          <Grid item md={4} xs={"auto"}>
-            <ProductCategorySelect />
-          </Grid>
-        </Grid>
-      </DashboardContentWithSaveFooter>
+      </Container>
     </DashboardLayout>
   );
 };

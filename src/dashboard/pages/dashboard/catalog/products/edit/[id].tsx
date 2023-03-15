@@ -7,27 +7,28 @@ import { ReactElement, useState } from "react";
 import DashboardLayout from "@/pages/dashboard/layout"; //react
 import RootLayout from "@/pages/layout";
 // components
-import ProductListTopLine from "@/components/Dashboard/Catalog/Products/List/TopLine";
-import DashboardContentWithSaveFooter from "@/components/Dashboard/Generic/EditableContent";
-import TopLineWithReturn from "@/components/Dashboard/Catalog/Products/TopLineWithReturn";
+import ProductEditorWrapper from "@/components/Dashboard/Catalog/Products/Editor/ProductEditorWrapper";
 // mui
 import Container from "@mui/material/Container";
+import { useRouter } from "next/router";
 
-const DashboardProductsEditPage = () => {
+interface IProps {
+  // id: string;
+}
+
+const DashboardProductsEditPage = ({}: IProps) => {
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
+  const router = useRouter();
+  const { id } = router.query;
 
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
-        <DashboardContentWithSaveFooter
-          preventNavigation={true}
-          setPreventNavigation={setPreventNavigation}
-        >
-          <TopLineWithReturn
-            title={"Add product"}
-            returnPath={"/dashboard/catalog/products"}
-          />
-        </DashboardContentWithSaveFooter>
+        <ProductEditorWrapper
+          title={`Edit product ${id}`}
+          returnPath={"/dashboard/catalog/products"}
+          productId={Array.isArray(id) ? id[0] : id}
+        />
       </Container>
     </DashboardLayout>
   );
@@ -42,8 +43,12 @@ DashboardProductsEditPage.getLayout = (page: ReactElement) => {
 };
 
 export const getServersideProps = async (context: any) => {
+  // const { id } = context.query;
+
   return {
-    props: {},
+    props: {
+      // id,
+    },
   };
 };
 

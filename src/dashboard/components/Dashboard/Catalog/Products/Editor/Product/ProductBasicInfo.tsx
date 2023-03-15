@@ -1,6 +1,6 @@
 // next.js
 // react
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 // mui
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -12,7 +12,19 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import EditorCard from "@/components/Dashboard/Generic/EditorCard";
 import { TextField } from "@mui/material";
 import Stack from "@mui/material/Stack";
-const ProductBasicInfo = () => {
+import { ISetProductStateAction } from "../ProductEditorWrapper";
+import {
+  ActionSetProduct,
+  IProduct,
+  ISetProductStateData,
+} from "@/types/product";
+
+interface IProductBasicInfoProps {
+  state: ISetProductStateData;
+  dispatch: React.Dispatch<ISetProductStateAction>;
+}
+
+const ProductBasicInfo = ({ state, dispatch }: IProductBasicInfoProps) => {
   // simple select with categories
 
   return (
@@ -21,8 +33,19 @@ const ProductBasicInfo = () => {
       <Box mt={2}>
         <FormControl fullWidth>
           <Stack spacing={2}>
-            <TextField label="ID" />
-            <TextField label="Name" />
+            <TextField
+              label="ID"
+              value={state.id}
+              onChange={(
+                event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+              ) => {
+                dispatch({
+                  type: ActionSetProduct.SETID,
+                  payload: { id: event.target.value },
+                });
+              }}
+            />
+            {/* <TextField label="Name" /> */}
           </Stack>
         </FormControl>
       </Box>
