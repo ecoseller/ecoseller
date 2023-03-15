@@ -21,6 +21,7 @@ from product.models import (
     ProductVariant,
     ProductImage,
     ProductPrice,
+    PriceList,
     # ProductMedia
 )
 
@@ -40,11 +41,24 @@ class ProductMediaSerializer(ModelSerializer):
         )
 
 
-class PriceListSerializer(ModelSerializer):
+class PriceListBaseSerializer(ModelSerializer):
+    class Meta:
+        model = PriceList
+        fields = (
+            "code",
+            "currency",
+            "rounding",
+            "includes_vat",
+            "update_at",
+            "create_at",
+        )
+
+
+class PriceListSerializer(PriceListBaseSerializer):
     currency = CurrencySerializer(read_only=True, many=False)
 
     class Meta:
-        model = ProductPrice
+        model = PriceList
         fields = (
             "id",
             "name",
@@ -80,6 +94,7 @@ class ProductVariantSerializer(ModelSerializer):
     returns only basic variant fields such as SKU, EAN, weight
     TODO: price, stock, attributes
     """
+
     price = ProductPriceSerializer(many=True, read_only=True)
 
     class Meta:
@@ -116,6 +131,7 @@ class ProductDashboardListSerializer(TranslatedSerializerMixin, ModelSerializer)
 class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSerializer):
     translations = TranslatedFieldsField(shared_model=Product)
     product_variant = ProductVariantSerializer(many=True, read_only=True)
+
     # media = ProductMediaSerializer(many=True, read_only=True)
     class Meta:
         model = Product
