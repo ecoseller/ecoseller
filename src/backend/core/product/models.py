@@ -1,6 +1,9 @@
 from django.db import models
 from parler.models import TranslatableModel, TranslatedFields
 from ckeditor.fields import RichTextField
+from core.models import (
+    SortableModel,
+)
 from category.models import (
     Category,
 )
@@ -171,3 +174,55 @@ class ProductPrice(models.Model):
     @property
     def formatted_price(self):
         return self.price_list.format_price(self.price)
+
+
+class ProductMediaTypes:
+    IMAGE = "IMAGE"
+    VIDEO = "VIDEO"
+
+    CHOICES = [
+        (IMAGE, "An uploaded image or an URL to an image"),
+        (VIDEO, "A URL to an external video"),
+    ]
+
+
+class ProductMedia(SortableModel):
+    """
+    Model used to store images for products (high level object - not variant)
+    """
+
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, blank=False, null=False
+    )
+    media = models.ImageField(upload_to="product_media", blank=False, null=False)
+    type = models.CharField(
+        max_length=10,
+        choices=ProductMediaTypes.CHOICES,
+        default=ProductMediaTypes.IMAGE,
+    )
+
+    alt = models.CharField(max_length=128, blank=True, null=True)
+
+    class Meta:
+        ordering = ["sort_order"]
+
+    def __str__(self) -> str:
+        return "{}: {} {}".format(self.product, self.type, self.media)
+
+
+class ProductVariantMedia(models.Model):
+    """
+    Model used to store images for product variants (low level object)
+    So that we can have different images for different variants of the same product
+    and resolve, for example, image for red t-shirt, blue t-shirt etc.
+    """
+
+    product_variant = models.ForeignKey(
+        ProductVariant, on_delete=models.CASCADE, blank=False, null=False
+    )
+    media = models.ForeignKey(
+        ProductMedia, on_delete=models.CASCADE, blank=False, null=False
+    )
+
+    class Meta:
+        unique_together = ("product_variant", "media")
