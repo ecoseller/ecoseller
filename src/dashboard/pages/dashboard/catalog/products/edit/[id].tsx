@@ -11,12 +11,15 @@ import ProductEditorWrapper from "@/components/Dashboard/Catalog/Products/Editor
 // mui
 import Container from "@mui/material/Container";
 import { useRouter } from "next/router";
+import { IProduct } from "@/types/product";
+import { axiosPrivate } from "@/utils/axiosPrivate";
 
 interface IProps {
   // id: string;
+  product: IProduct;
 }
 
-const DashboardProductsEditPage = ({}: IProps) => {
+const DashboardProductsEditPage = ({ product }: IProps) => {
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
   const router = useRouter();
   const { id } = router.query;
@@ -27,7 +30,7 @@ const DashboardProductsEditPage = ({}: IProps) => {
         <ProductEditorWrapper
           title={`Edit product ${id}`}
           returnPath={"/dashboard/catalog/products"}
-          productId={Array.isArray(id) ? id[0] : id}
+          productData={product}
         />
       </Container>
     </DashboardLayout>
@@ -42,12 +45,23 @@ DashboardProductsEditPage.getLayout = (page: ReactElement) => {
   );
 };
 
-export const getServersideProps = async (context: any) => {
-  // const { id } = context.query;
+export const getServerSideProps = async (context: any) => {
+  const { id } = context.params;
+  console.log("id", id);
+  // feth product data
+  const productRes = await axiosPrivate.get(`/product/dashboard/detail/${id}/`);
+  const product = productRes.data;
+
+  console.log("product", product);
+  if (!product) {
+    return {
+      notFound: true,
+    };
+  }
 
   return {
     props: {
-      // id,
+      product,
     },
   };
 };

@@ -90,19 +90,20 @@ const setProductStateReducer = (
 interface IProductEditorWrapperProps {
   title: string;
   returnPath: string;
-  productId?: string;
+  // productId?: string;
+  productData?: IProduct;
 }
 
 const ProductEditorWrapper = ({
   title,
   returnPath,
-  productId,
+  productData,
 }: IProductEditorWrapperProps) => {
   /**
    * Product editor wrapper
    * @param title - title of the page
    * @param returnPath - path to return to
-   * @param productId - id of the product to edit (if any)
+   * @param product - initial product data to edit (if any)
    *
    * This component holds the state of the product being edited as reducer state which is passed down to the child components as props.
    * Child components can dispatch actions to the reducer to update the "large" product state.
@@ -114,10 +115,6 @@ const ProductEditorWrapper = ({
     severity: "success" | "error" | "info" | "warning";
   } | null>(null);
 
-  const { data: productData, error: productError } = useSWRImmutable<IProduct>(
-    `/product/dashboard/detail/${productId}/`
-  );
-
   console.log("productData", productData);
 
   const router = useRouter();
@@ -125,16 +122,18 @@ const ProductEditorWrapper = ({
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
   const [productState, dispatchProductState] = useReducer(
     setProductStateReducer,
-    {
-      id: null,
-      published: false,
-      category: null,
-      product_variants: [],
-      product_media: [],
-      translations: {},
-      update_at: undefined,
-      create_at: undefined,
-    }
+    productData
+      ? productData
+      : {
+          id: null,
+          published: false,
+          category: null,
+          product_variants: [],
+          product_media: [],
+          translations: {},
+          update_at: undefined,
+          create_at: undefined,
+        }
   );
 
   useEffect(() => {
@@ -212,7 +211,7 @@ const ProductEditorWrapper = ({
       preventNavigation={true}
       setPreventNavigation={setPreventNavigation}
       onSave={async () => {
-        if (!productId) {
+        if (!productData) {
           // save product
           await saveProductAndRedirect();
         } else {
@@ -250,8 +249,8 @@ const ProductEditorWrapper = ({
         </Grid>
         <Grid item md={4} xs={12}>
           <ProductCategorySelect
-          // state={productState.category}
-          // dispatch={dispatchProductState}
+            state={productState}
+            dispatch={dispatchProductState}
           />
           <ProductVisibilitySelect
             state={productState}
