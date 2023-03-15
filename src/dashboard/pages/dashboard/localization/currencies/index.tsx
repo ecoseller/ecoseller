@@ -36,6 +36,11 @@ import { randomId } from "@mui/x-data-grid-generator";
 import { Alert, Snackbar } from "@mui/material";
 // types
 import { ICurrency } from "@/types/localization";
+import {
+  deleteCurrency,
+  postCurrency,
+  putCurrency,
+} from "@/api/country/currency";
 
 interface ICurrencyTable extends ICurrency {
   isNew?: boolean;
@@ -111,7 +116,7 @@ const DashboardCurrencyPage = () => {
 
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 
-  console.log("variants", rows);
+  console.log("currencies", rows);
 
   const columns: GridColDef[] = [
     {
@@ -137,8 +142,8 @@ const DashboardCurrencyPage = () => {
       flex: 1,
       type: "singleSelect",
       valueOptions: [
-        { value: "AFTER", label: "Before price" },
-        { value: "BEFORE", label: "After price" },
+        { value: "BEFORE", label: "Before price" },
+        { value: "AFTER", label: "After price" },
       ],
       // sortable: false,
       // disableColumnMenu: true,
@@ -219,6 +224,25 @@ const DashboardCurrencyPage = () => {
   };
 
   const handleDeleteClick = (id: GridRowId) => () => {
+    const deletedRow = rows.find((row) => row.id === id);
+    if (deletedRow && !deletedRow!.isNew) {
+      deleteCurrency(deletedRow.code)
+        .then(() => {
+          setSnackbar({
+            open: true,
+            message: "Currency deleted successfully",
+            severity: "success",
+          });
+        })
+        .catch(() => {
+          setSnackbar({
+            open: true,
+            message: "Something went wrong",
+            severity: "error",
+          });
+          throw new Error("Something went wrong");
+        });
+    }
     setRows(rows.filter((row) => row.id !== id));
   };
 
@@ -235,9 +259,12 @@ const DashboardCurrencyPage = () => {
   };
 
   const processRowUpdate = (newRow: ICurrencyTable, oldRow: ICurrencyTable) => {
+    const previousRows = oldRow;
     const updatedRow = { ...newRow, isNew: false };
 
-    // check if row has SKU
+    const postNew = oldRow && oldRow.isNew && !oldRow.code;
+
+    // check if row has code
     // if not, show error
     // if yes, save row
     if (!updatedRow.code) {
@@ -262,6 +289,45 @@ const DashboardCurrencyPage = () => {
         severity: "error",
       });
       throw new Error("Code already exists");
+    }
+
+    // POST or PUT
+    if (updatedRow && !postNew) {
+      // update currency
+      putCurrency(updatedRow as ICurrency)
+        .then(() => {
+          setSnackbar({
+            open: true,
+            message: "Currency updated successfully",
+            severity: "success",
+          });
+        })
+        .catch(() => {
+          setSnackbar({
+            open: true,
+            message: "Something went wrong",
+            severity: "error",
+          });
+          throw new Error("Something went wrong");
+        });
+    } else {
+      // create currency
+      postCurrency(updatedRow as ICurrency)
+        .then(() => {
+          setSnackbar({
+            open: true,
+            message: "Currency created successfully",
+            severity: "success",
+          });
+        })
+        .catch(() => {
+          setSnackbar({
+            open: true,
+            message: "Something went wrong",
+            severity: "error",
+          });
+          throw new Error("Something went wrong");
+        });
     }
 
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
