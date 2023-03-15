@@ -6,7 +6,7 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("product", "0014_pricelist_create_at_pricelist_update_at"),
+        ("product", "0015_productimage_productvariantimage"),
     ]
 
     operations = [
