@@ -19,10 +19,9 @@ from country.serializers import (
 from product.models import (
     Product,
     ProductVariant,
-    ProductImage,
     ProductPrice,
     PriceList,
-    # ProductMedia
+    ProductMedia,
 )
 
 """
@@ -32,7 +31,7 @@ Common serializers
 
 class ProductMediaSerializer(ModelSerializer):
     class Meta:
-        model = ProductImage
+        model = ProductMedia
         order_by = []
         fields = (
             "id",
@@ -130,7 +129,7 @@ class ProductDashboardListSerializer(TranslatedSerializerMixin, ModelSerializer)
 
 class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSerializer):
     translations = TranslatedFieldsField(shared_model=Product)
-    product_variant = ProductVariantSerializer(many=True, read_only=True)
+    # product_variant = ProductVariantSerializer(many=True, read_only=True)
 
     # media = ProductMediaSerializer(many=True, read_only=True)
     class Meta:
@@ -140,7 +139,7 @@ class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSeriali
             "published",
             "translations",  # translations object with all translations
             "category",  # serialized as id
-            "product_variant",
+            "product_variants",  # serialized as list of ids
             "update_at",
             "create_at",
         )

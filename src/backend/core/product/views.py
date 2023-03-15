@@ -8,8 +8,8 @@ from core.pagination import (
 from .models import (
     Product,
     ProductVariant,
-    ProductImage,
-    ProductVariantImage,
+    ProductMedia,
+    ProductVariantMedia,
     PriceList,
     ProductPrice,
 )
@@ -68,6 +68,13 @@ class ProductDetailDashboard(APIView):
 
     def patch(self, request, id):
         raise NotImplementedError("PATCH method not implemented yet")
+
+    def post(self, request):
+        serializer = ProductDashboardDetailSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
 
 
 class PriceListDashboard(APIView):
