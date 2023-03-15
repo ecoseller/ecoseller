@@ -13,25 +13,25 @@ import RootLayout from "@/pages/layout";
 // components
 import DashboardContentWithSaveFooter from "@/components/Dashboard/Generic/EditableContent";
 import TopLineWithReturn from "@/components/Dashboard/Catalog/Products/TopLineWithReturn";
-// mui
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import ProductCategorySelect from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductCategorySelect";
-import ProductBasicInfo from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductBasicInfo";
-import ProductTranslatedFieldsWrapper from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductTranslatedFields";
-import { Typography } from "@mui/material";
-import Box from "@mui/material/Box";
 import ProductVariantsEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVariantsEditor";
 import ProductMediaEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductMediaEditor";
 import ProductVariantPricesEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVariantPricesEditor";
+import ProductVisibilitySelect from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVisibilitySelect";
+import ProductCategorySelect from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductCategorySelect";
+import ProductBasicInfo from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductBasicInfo";
+import ProductTranslatedFieldsWrapper from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductTranslatedFields";
+// mui
+import Grid from "@mui/material/Grid";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+
+// types
 import {
   ActionSetProduct,
   IProduct,
   ISetProductStateData,
 } from "@/types/product";
-import Snackbar from "@mui/material/Snackbar";
 import { postProduct, putProduct } from "@/api/country/product/product";
-import Alert from "@mui/material/Alert";
 
 export interface ISetProductStateAction {
   type: ActionSetProduct;
@@ -252,6 +252,10 @@ const ProductEditorWrapper = ({
           <ProductCategorySelect
           // state={productState.category}
           // dispatch={dispatchProductState}
+          />
+          <ProductVisibilitySelect
+            state={productState}
+            dispatch={dispatchProductState}
           />
         </Grid>
       </Grid>
