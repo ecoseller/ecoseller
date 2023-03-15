@@ -27,6 +27,8 @@ class CategorySerializer(TranslatedSerializerMixin, ModelSerializer):
             "meta_description",
             "description",
             "slug",
+            "create_at",
+            "update_at",
         )
 
 

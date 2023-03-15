@@ -5,10 +5,11 @@ from mptt.models import MPTTModel
 from mptt.fields import TreeForeignKey
 
 
-class Category(MPTTModel, TranslatableModel):
-    parent = TreeForeignKey(
-        "self", blank=True, null=True, related_name="children", on_delete=models.CASCADE
-    )  # CASCADE when referenced category is deleted, delet all children
+# class Category(MPTTModel, TranslatableModel):
+class Category(TranslatableModel):
+    # parent = TreeForeignKey(
+    #     "self", blank=True, null=True, related_name="children", on_delete=models.CASCADE
+    # )  # CASCADE when referenced category is deleted, delet all children
     translations = TranslatedFields(
         title=models.CharField(
             max_length=200, blank=True, help_text="Category title in given language"
@@ -31,6 +32,6 @@ class Category(MPTTModel, TranslatableModel):
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
 
-    @property
-    def published_children(self):
-        return self.get_children().filter(published=True)
+    # @property
+    # def published_children(self):
+    #     return self.get_children().filter(published=True)
