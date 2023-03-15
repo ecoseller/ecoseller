@@ -19,7 +19,7 @@ const TopLineWithReturn = ({ title, returnPath }: ITopLineWithReturnProps) => {
       direction="row"
       alignItems="center"
       justifyContent="left"
-      mb={5}
+      mb={3}
       spacing={2}
     >
       <Button

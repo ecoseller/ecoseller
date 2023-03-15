@@ -44,6 +44,9 @@ const ProductBasicInfo = ({ state, dispatch }: IProductBasicInfoProps) => {
                   payload: { id: event.target.value },
                 });
               }}
+              InputLabelProps={{
+                shrink: Boolean(state.id),
+              }}
             />
             {/* <TextField label="Name" /> */}
           </Stack>

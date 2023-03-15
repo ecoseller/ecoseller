@@ -9,3 +9,13 @@ export const postProduct = async (data: IProduct) => {
   // Return: Promise
   return await axiosPrivate.post(`/product/dashboard/detail/`, data);
 };
+
+export const putProduct = async (data: IProduct) => {
+  // Update product
+  // URL: /product/dashboard/product/
+  // Method: PUT
+  // Params: data
+  // Return: Promise
+  if (!data.id) throw new Error("Product id is required to update product");
+  return await axiosPrivate.put(`/product/dashboard/detail/${data.id}/`, data);
+};

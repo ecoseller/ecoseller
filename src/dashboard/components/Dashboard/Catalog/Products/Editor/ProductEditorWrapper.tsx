@@ -30,7 +30,7 @@ import {
   ISetProductStateData,
 } from "@/types/product";
 import Snackbar from "@mui/material/Snackbar";
-import { postProduct } from "@/api/country/product/product";
+import { postProduct, putProduct } from "@/api/country/product/product";
 import Alert from "@mui/material/Alert";
 
 export interface ISetProductStateAction {
@@ -159,34 +159,66 @@ const ProductEditorWrapper = ({
     setSnackbar(null);
   };
 
+  const saveProductAndRedirect = async () => {
+    console.log("saveAction", productState);
+    postProduct(productState as IProduct)
+      .then((res: any) => {
+        console.log("postProduct", res);
+        const { data } = res;
+        const { id } = data;
+        router.replace(
+          {
+            pathname: `/dashboard/catalog/products/edit/[id]`,
+            query: { id: id },
+          },
+          undefined,
+          { shallow: true }
+        );
+      })
+      .catch((err: any) => {
+        console.log("postProduct", err);
+        setSnackbar({
+          open: true,
+          message: "Something went wrong",
+          severity: "error",
+        });
+      });
+  };
+
+  const updateProduct = async () => {
+    console.log("updateAction", productState);
+
+    putProduct(productState as IProduct)
+      .then((res: any) => {
+        console.log("putProduct", res);
+        setSnackbar({
+          open: true,
+          message: "Product updated",
+          severity: "success",
+        });
+      })
+      .catch((err: any) => {
+        console.log("putProduct", err);
+        setSnackbar({
+          open: true,
+          message: "Something went wrong",
+          severity: "error",
+        });
+      });
+  };
+
   return (
     <DashboardContentWithSaveFooter
       preventNavigation={true}
       setPreventNavigation={setPreventNavigation}
       onSave={async () => {
-        console.log("saveAction", productState);
-        postProduct(productState as IProduct)
-          .then((res: any) => {
-            console.log("postProduct", res);
-            const { data } = res;
-            const { id } = data;
-            router.replace(
-              {
-                pathname: `/dashboard/catalog/products/edit/[id]`,
-                query: { id: id },
-              },
-              undefined,
-              { shallow: true }
-            );
-          })
-          .catch((err: any) => {
-            console.log("postProduct", err);
-            setSnackbar({
-              open: true,
-              message: "Something went wrong",
-              severity: "error",
-            });
-          });
+        if (!productId) {
+          // save product
+          await saveProductAndRedirect();
+        } else {
+          // update product
+          await updateProduct();
+        }
       }}
     >
       <TopLineWithReturn
