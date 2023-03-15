@@ -61,7 +61,15 @@ class ProductDetailDashboard(APIView):
         return Response(serialized_product.data, status=200)
 
     def put(self, request, id):
-        raise NotImplementedError("PUT method not implemented yet")
+        try:
+            product = Product.objects.get(id=id)
+            serializer = ProductDashboardDetailSerializer(product, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=200)
+            return Response(serializer.errors, status=400)
+        except Product.DoesNotExist:
+            return Response(status=404)
 
     def delete(self, request, id):
         raise NotImplementedError("DELETE method not implemented yet")
