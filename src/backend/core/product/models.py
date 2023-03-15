@@ -63,13 +63,13 @@ class Product(TranslatableModel):
 
     def get_primary_photo(self):
         from .models import (
-            ProductImage,
+            ProductMedia,
         )  # roductMediaTypes, )
 
         return (
-            ProductImage.objects.filter(
+            ProductMedia.objects.filter(
                 product=self,
-                # type=ProductMediaTypes.IMAGE,
+                type=ProductMediaTypes.IMAGE,
             )
             .order_by("sort_order")
             .first()
@@ -210,7 +210,11 @@ class ProductMedia(SortableModel):
     """
 
     product = models.ForeignKey(
-        Product, on_delete=models.CASCADE, blank=False, null=False
+        Product,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        related_name="product_media",
     )
     media = models.ImageField(upload_to="product_media", blank=False, null=False)
     type = models.CharField(
