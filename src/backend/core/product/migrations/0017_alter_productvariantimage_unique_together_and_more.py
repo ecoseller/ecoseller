@@ -6,26 +6,26 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('product', '0016_productmedia_productvariantmedia'),
+        ("product", "0016_productmedia_productvariantmedia"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='productvariantimage',
+            name="productvariantimage",
             unique_together=None,
         ),
         migrations.RemoveField(
-            model_name='productvariantimage',
-            name='image',
+            model_name="productvariantimage",
+            name="image",
         ),
         migrations.RemoveField(
-            model_name='productvariantimage',
-            name='product_variant',
+            model_name="productvariantimage",
+            name="product_variant",
         ),
         migrations.DeleteModel(
-            name='ProductImage',
+            name="ProductImage",
         ),
         migrations.DeleteModel(
-            name='ProductVariantImage',
+            name="ProductVariantImage",
         ),
     ]
