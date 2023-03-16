@@ -175,8 +175,8 @@ class ProductPrice(models.Model):
     product_variant = models.ForeignKey(
         ProductVariant,
         on_delete=models.CASCADE,
-        blank=False,
-        null=False,
+        blank=True,
+        null=True,
         related_name="price",
     )
     price = models.DecimalField(
@@ -185,6 +185,9 @@ class ProductPrice(models.Model):
 
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
+
+    # class Meta:
+    #     unique_together = ("price_list", "product_variant")
 
     def __str__(self) -> str:
         return "{}: {} {}".format(

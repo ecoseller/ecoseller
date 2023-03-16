@@ -24,12 +24,25 @@ from .serializers import (
     PriceListBaseSerializer,
     BaseAttributeDashboardSerializer,
     AtrributeTypeDashboardSerializer,
+    ProductVariantSerializer,
 )
 
 
 """
 Dashboard views
 """
+
+
+class ProductVariantDashboard(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, requests, sku):
+        try:
+            product_variant = ProductVariant.objects.get(sku=sku)
+        except ProductVariant.DoesNotExist:
+            return Response({"error": "Product variant does not exist"}, status=404)
+        serialized_product_variant = ProductVariantSerializer(product_variant)
+        return Response(serialized_product_variant.data, status=200)
 
 
 class ProductListDashboard(APIView, DashboardPagination):
@@ -73,6 +86,7 @@ class ProductDetailDashboard(APIView):
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=200)
+            print(serializer.errors)
             return Response(serializer.errors, status=400)
         except Product.DoesNotExist:
             return Response(status=404)

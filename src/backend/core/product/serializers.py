@@ -77,22 +77,89 @@ class PriceListSerializer(PriceListBaseSerializer):
         )
 
 
+"""
+Dashboard serializers
+"""
+
+
+class ProductPriceListSerializer(serializers.ListSerializer):
+    def create(self, validated_data, **kwargs):
+        """
+        Create new price
+        """
+        product_variant = kwargs.get("product_variant", None)
+        if not product_variant:
+            raise "Product variant is required"
+
+        prices = []
+        for price in validated_data:
+            price_list = price.pop("price_list")
+            price = price.pop("price")
+            try:
+                price_obj = ProductPrice.objects.get(
+                    price_list=price_list,
+                    product_variant=product_variant,
+                )
+                price_obj.price = price
+            except ProductPrice.DoesNotExist:
+                price_obj = ProductPrice.objects.create(
+                    price_list=price_list,
+                    product_variant=product_variant,
+                    price=price,
+                )
+            price_obj.save()
+            prices.append(price_obj)
+
+        return prices
+
+
 class ProductPriceSerializer(ModelSerializer):
-    price_list = PriceListSerializer(read_only=True, many=False)
+    # price_list = PriceListSerializer(read_only=True, many=False) <-- TODO: ucommenting this line breaks the serializer or at least
+    # the price_list field is not serialized correctly when sent as:
+    # {"price_list": "CZK_maloobchod", "price": 1000} <-- price list is not serialized and hence not returned
 
     class Meta:
+        list_serializer_class = ProductPriceListSerializer
         model = ProductPrice
         fields = (
             "id",
             "price",
-            "currency",
             "price_list",
         )
 
+    def validate(self, attrs):
+        """
+        Validate price
+        """
+        price = attrs.get("price", None)
+        if price is None:
+            raise ValidationError("Price is required")
+        if price < 0:
+            raise ValidationError("Price must be greater than 0")
+        return attrs
 
-"""
-Dashboard serializers
-"""
+    def create(self, validated_data):
+        """
+        Create new price
+        """
+        print(validated_data)
+        price_list = validated_data.pop("price_list")
+        price = validated_data.pop("price")
+
+        return ProductPrice.objects.create(
+            price_list=price_list,
+            price=price,
+        )
+
+    def update(self, instance, validated_data):
+        """
+        Update existing price
+        """
+        price = validated_data.pop("price", None)
+        if price is not None:
+            instance.price = price
+        instance.save()
+        return instance
 
 
 class ProductVariantListSerializer(serializers.ListSerializer):
@@ -131,9 +198,7 @@ class ProductVariantSerializer(ModelSerializer):
     """
 
     sku = CharField()
-    prices = ProductPriceSerializer(
-        many=True, read_only=False, source="price", required=False
-    )
+    price = ProductPriceSerializer(many=True, read_only=False, required=False)
 
     class Meta:
         model = ProductVariant
@@ -142,7 +207,7 @@ class ProductVariantSerializer(ModelSerializer):
             "sku",
             "ean",
             "weight",
-            "prices",
+            "price",
             "attributes",
         )
 
@@ -162,23 +227,48 @@ class ProductVariantSerializer(ModelSerializer):
     # overload create method to to save nested prices as well
     # uses update_or_create to update existing SKUs
     def create(self, validated_data):
-        prices = validated_data.pop("price", [])
+        prices_validated_data = validated_data.pop("price", [])
+        attributes = validated_data.pop("attributes", [])
         instance, created = ProductVariant.objects.update_or_create(
             sku=validated_data["sku"], defaults=validated_data
         )
         self.instance = instance
 
-        # print("created", created)
-        # for price in prices:
-        #     ProductPrice.objects.update_or_create(product_variant=instance, **price)
+        # set product attributes
+        if len(attributes) > 0:
+            instance.attributes.set(attributes)
+        else:
+            instance.attributes.clear()
+
+        # create product prices
+        if len(prices_validated_data) > 0:
+            prices_serializer = self.fields["price"]
+            prices = prices_serializer.create(
+                prices_validated_data, product_variant=instance
+            )
+        else:
+            ProductPrice.objects.filter(product_variant=instance).delete()
         return instance
 
     def update(self, instance, validated_data):
-        prices = validated_data.pop("price", [])
+        prices_validated_data = validated_data.pop("price", [])
+        attributes_validated_data = validated_data.pop("attributes", [])
 
-        instance = super().update(instance, validated_data)
-        # for price in prices:
-        #     ProductPrice.objects.update_or_create(product_variant=instance, **price)
+        # instance = super().update(instance, validated_data)
+        if len(attributes_validated_data) > 0:
+            instance.attributes.set(attributes_validated_data)
+        else:
+            instance.attributes.clear()
+
+        # create product prices
+        if len(prices_validated_data) > 0:
+            print(prices_validated_data)
+            prices_serializer = self.fields["price"]
+            prices = prices_serializer.create(
+                prices_validated_data, product_variant=instance
+            )
+        else:
+            ProductPrice.objects.filter(product_variant=instance).delete()
         return instance
 
 
