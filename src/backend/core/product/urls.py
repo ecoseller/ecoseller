@@ -9,4 +9,5 @@ urlpatterns = [
     path("dashboard/detail/<str:id>/", views.ProductDetailDashboard.as_view()),
     path("dashboard/pricelist/", views.PriceListDashboard.as_view()),
     path("dashboard/pricelist/<str:code>/", views.PriceListDashboard.as_view()),
+    path("dashboard/attribute/type/", views.AttributeTypeDashboard.as_view()),
 ]

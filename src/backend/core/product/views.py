@@ -12,12 +12,18 @@ from .models import (
     ProductVariantMedia,
     PriceList,
     ProductPrice,
+    AttributeType,
+    BaseAttribute,
+    ExtAttributeType,
+    ExtensionAttribute,
 )
 from .serializers import (
     ProductSerializer,
     ProductDashboardListSerializer,
     ProductDashboardDetailSerializer,
     PriceListBaseSerializer,
+    BaseAttributeDashboardSerializer,
+    AtrributeTypeDashboardSerializer,
 )
 
 
@@ -78,6 +84,7 @@ class ProductDetailDashboard(APIView):
         raise NotImplementedError("PATCH method not implemented yet")
 
     def post(self, request):
+        print(request.data)
         serializer = ProductDashboardDetailSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -118,6 +125,46 @@ class PriceListDashboard(APIView):
             return Response(status=204)
         except PriceList.DoesNotExist:
             return Response(status=404)
+
+
+class AttributeTypeDashboard(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request):
+        qs = AttributeType.objects.all()
+        serializer = AtrributeTypeDashboardSerializer(qs, many=True)
+        return Response(serializer.data, status=200)
+
+    def post(self, request):
+        raise NotImplementedError("POST method not implemented yet")
+
+    def put(self, request, id):
+        raise NotImplementedError("PUT method not implemented yet")
+
+    def delete(self, request, id):
+        raise NotImplementedError("DELETE method not implemented yet")
+
+    def patch(self, request, id):
+        raise NotImplementedError("PATCH method not implemented yet")
+
+
+class BaseAttributeDashboard(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request):
+        raise NotImplementedError("GET method not implemented yet")
+
+    def post(self, request):
+        raise NotImplementedError("POST method not implemented yet")
+
+    def put(self, request, id):
+        raise NotImplementedError("PUT method not implemented yet")
+
+    def delete(self, request, id):
+        raise NotImplementedError("DELETE method not implemented yet")
+
+    def patch(self, request, id):
+        raise NotImplementedError("PATCH method not implemented yet")
 
 
 """

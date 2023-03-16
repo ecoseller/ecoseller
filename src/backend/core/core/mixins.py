@@ -56,9 +56,9 @@ class TranslatedSerializerMixin(object):
         inst_rep = super().to_representation(instance)
         # request = self.context.get('request')
         # lang_code = request.META.get('HTTP_ACCEPT_LANGUAGE', None)
-        request = self.context.get("request")
-        lang_code = get_language_from_request(request)
-        # lang_code = self.context.get("locale")
+        # request = self.context.get("request")
+        # lang_code = get_language_from_request(request)
+        lang_code = self.context.get("locale")
 
         # Only use the first two chars for language code
         if lang_code and "-" in lang_code:

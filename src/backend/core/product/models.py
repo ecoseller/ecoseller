@@ -18,7 +18,7 @@ class ProductVariant(models.Model):
     weight = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
-    attributes = models.ManyToManyField("BaseAttribute")
+    attributes = models.ManyToManyField("BaseAttribute", blank=True, null=True)
 
     def __str__(self) -> str:
         return "sku: {} ean: {}".format(self.sku, self.ean)
@@ -96,7 +96,9 @@ class AttributeType(models.Model):
 
 
 class BaseAttribute(models.Model):
-    type = models.ForeignKey("AttributeType", on_delete=models.CASCADE)
+    type = models.ForeignKey(
+        "AttributeType", on_delete=models.CASCADE, related_name="base_attributes"
+    )
     value = models.CharField(max_length=200, blank=False, null=False)
     order = models.IntegerField(blank=True, null=True)
     ext_attributes = models.ManyToManyField("ExtensionAttribute", blank=True)
