@@ -36,7 +36,7 @@ class CategoryViewDashboard(APIView):
 @permission_classes([AllowAny])  # TODO: use authentication
 class CategoryDetailViewDashboard(RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
-    serializer_class = CategorySerializer
+    serializer_class = CategoryDetailSerializer
 
 
 # @permission_classes([AllowAny])
