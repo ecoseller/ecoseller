@@ -10,12 +10,12 @@ from rest_framework.generics import (
 )
 from django.contrib.auth.models import User
 from rest_framework.decorators import permission_classes
-from category.serializers import CategorySerializer
+from category.serializers import CategorySerializer, CategoryDetailSerializer
 from category.models import Category
 
 
 @permission_classes([AllowAny])  # TODO: use authentication
-class CategoryView(APIView):
+class CategoryViewDashboard(APIView):
     def get(self, request):
         snippets = Category.objects.all()
         serializer = CategorySerializer(
@@ -26,9 +26,7 @@ class CategoryView(APIView):
     def post(self, request):
         category_to_add = request.data
         category_to_add["parent"] = 1
-        serializer = CategorySerializer(
-            data=category_to_add, context={"request": request}
-        )
+        serializer = CategoryDetailSerializer(data=category_to_add)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=HTTP_201_CREATED)
@@ -36,7 +34,7 @@ class CategoryView(APIView):
 
 
 @permission_classes([AllowAny])  # TODO: use authentication
-class CategoryDetailView(RetrieveUpdateDestroyAPIView):
+class CategoryDetailViewDashboard(RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 

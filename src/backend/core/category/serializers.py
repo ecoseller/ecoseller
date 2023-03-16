@@ -8,6 +8,10 @@ from rest_framework.serializers import (
 from category.models import (
     Category,
 )
+from parler_rest.serializers import (
+    TranslatableModelSerializer,
+    TranslatedFieldsField,
+)
 
 
 class CategorySerializer(TranslatedSerializerMixin, ModelSerializer):
@@ -30,6 +34,14 @@ class CategorySerializer(TranslatedSerializerMixin, ModelSerializer):
             "create_at",
             "update_at",
         )
+
+
+class CategoryDetailSerializer(TranslatableModelSerializer, ModelSerializer):
+    translations = TranslatedFieldsField(shared_model=Category)
+
+    class Meta:
+        model = Category
+        fields = ("id", "published", "translations")
 
 
 class CategoryChildrenSerializer(CategorySerializer):
