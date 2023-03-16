@@ -37,16 +37,21 @@ class CategorySerializer(TranslatedSerializerMixin, ModelSerializer):
 
 
 class CategoryDetailSerializer(TranslatableModelSerializer, ModelSerializer):
+    """
+    Serializer for category detail.
+    Language specific data are present in all languages (in `translations` field).
+    """
+
     translations = TranslatedFieldsField(shared_model=Category)
 
     class Meta:
         model = Category
-        fields = ("id", "published", "translations")
+        fields = ("id", "published", "translations", "update_at", "create_at", "parent")
 
 
-class CategoryChildrenSerializer(CategorySerializer):
+class CategoryWithChildrenSerializer(CategoryDetailSerializer):
     """
-    Extension of CategorySerializer with children field.
+    Extension of CategoryDetailSerializer with children field.
     """
 
     children = SerializerMethodField()
@@ -56,17 +61,14 @@ class CategoryChildrenSerializer(CategorySerializer):
         fields = (
             "id",
             "published",
-            "title",
-            "meta_title",
-            "meta_description",
-            "description",
-            "slug",
+            "translations",
+            "update_at",
+            "create_at",
+            "parent",
+            "children",
         )
 
     def get_children(self, obj):
-        if "locale" in self.context:
-            locale = self.context["locale"]
         return [
-            CategorySerializer(x, context={"locale": locale}).data
-            for x in obj.published_children
+            CategoryDetailSerializer(child).data for child in obj.published_children
         ]

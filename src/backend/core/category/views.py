@@ -6,7 +6,11 @@ from rest_framework.permissions import AllowAny
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from django.contrib.auth.models import User
 from rest_framework.decorators import permission_classes
-from category.serializers import CategorySerializer, CategoryDetailSerializer
+from category.serializers import (
+    CategorySerializer,
+    CategoryDetailSerializer,
+    CategoryWithChildrenSerializer,
+)
 from category.models import Category
 
 
@@ -55,3 +59,18 @@ class CategoryDetailViewDashboard(RetrieveUpdateDestroyAPIView):
         """
         instance.published = False
         instance.save()
+
+
+@permission_classes([AllowAny])  # TODO: use authentication
+class CategoryChildrenViewDashboard(APIView):
+    """
+    View for for getting a category including its children categories
+    """
+
+    def get(self, request, id):
+        """
+        Get a category including its children
+        """
+        category = Category.objects.get(id=id)
+        serializer = CategoryWithChildrenSerializer(category)
+        return Response(serializer.data)
