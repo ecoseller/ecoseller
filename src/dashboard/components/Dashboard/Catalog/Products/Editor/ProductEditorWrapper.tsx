@@ -28,76 +28,33 @@ import Alert from "@mui/material/Alert";
 // types
 import {
   ActionSetProduct,
+  IAttributeType,
   IProduct,
   ISetProductStateData,
 } from "@/types/product";
 import { postProduct, putProduct } from "@/api/country/product/product";
+import { IPriceList } from "@/types/localization";
 
 export interface ISetProductStateAction {
   type: ActionSetProduct;
   payload: ISetProductStateData;
 }
 
-const setProductStateReducer = (
-  state: ISetProductStateData,
-  action: ISetProductStateAction
-): ISetProductStateData => {
-  switch (action.type) {
-    case ActionSetProduct.SETINITIAL:
-      if (!action.payload) {
-        return state;
-      }
-      if (!action.payload.id) {
-        return state;
-      }
-      return action.payload as ISetProductStateData;
-    case ActionSetProduct.SETID:
-      return { ...state, id: action.payload.id };
-    case ActionSetProduct.SETPUBLISHED:
-      return { ...state, published: action.payload.published };
-    case ActionSetProduct.SETCATEGORY:
-      return { ...state, category: action.payload.category };
-    case ActionSetProduct.SETTRANSLATION:
-      if (!action.payload.translation) {
-        return state;
-      }
-
-      console.log("SETTRANSLATION", action.payload, state);
-      return {
-        ...state,
-        translations: {
-          ...state.translations,
-          [action.payload.translation.language]:
-            state.translations &&
-            action.payload.translation.language in state.translations
-              ? {
-                  ...state.translations[action.payload.translation.language],
-                  ...action.payload.translation.data,
-                }
-              : action.payload.translation.data,
-        },
-      };
-    // case ActionSetProduct.SETPRODUCTVARIANTS:
-    case ActionSetProduct.SETPRODUCTVARIANTS:
-      return { ...state, product_variants: action.payload.product_variants };
-    case ActionSetProduct.SETMEDIA:
-      return { ...state, product_media: action.payload.product_media };
-    default:
-      return state;
-  }
-};
-
 interface IProductEditorWrapperProps {
   title: string;
   returnPath: string;
   // productId?: string;
   productData?: IProduct;
+  attributesData: IAttributeType[];
+  pricelistsData: IPriceList[];
 }
 
 const ProductEditorWrapper = ({
   title,
   returnPath,
   productData,
+  attributesData,
+  pricelistsData,
 }: IProductEditorWrapperProps) => {
   /**
    * Product editor wrapper
@@ -108,6 +65,55 @@ const ProductEditorWrapper = ({
    * This component holds the state of the product being edited as reducer state which is passed down to the child components as props.
    * Child components can dispatch actions to the reducer to update the "large" product state.
    */
+  const setProductStateReducer = (
+    state: ISetProductStateData,
+    action: ISetProductStateAction
+  ): ISetProductStateData => {
+    setPreventNavigation(true);
+    switch (action.type) {
+      case ActionSetProduct.SETINITIAL:
+        if (!action.payload) {
+          return state;
+        }
+        if (!action.payload.id) {
+          return state;
+        }
+        return action.payload as ISetProductStateData;
+      case ActionSetProduct.SETID:
+        return { ...state, id: action.payload.id };
+      case ActionSetProduct.SETPUBLISHED:
+        return { ...state, published: action.payload.published };
+      case ActionSetProduct.SETCATEGORY:
+        return { ...state, category: action.payload.category };
+      case ActionSetProduct.SETTRANSLATION:
+        if (!action.payload.translation) {
+          return state;
+        }
+
+        console.log("SETTRANSLATION", action.payload, state);
+        return {
+          ...state,
+          translations: {
+            ...state.translations,
+            [action.payload.translation.language]:
+              state.translations &&
+              action.payload.translation.language in state.translations
+                ? {
+                    ...state.translations[action.payload.translation.language],
+                    ...action.payload.translation.data,
+                  }
+                : action.payload.translation.data,
+          },
+        };
+      case ActionSetProduct.SETPRODUCTVARIANTS:
+        console.log("SETPRODUCTVARIANTS", action.payload.product_variants);
+        return { ...state, product_variants: action.payload.product_variants };
+      case ActionSetProduct.SETMEDIA:
+        return { ...state, product_media: action.payload.product_media };
+      default:
+        return state;
+    }
+  };
 
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
@@ -120,6 +126,7 @@ const ProductEditorWrapper = ({
   const router = useRouter();
 
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
+
   const [productState, dispatchProductState] = useReducer(
     setProductStateReducer,
     productData
@@ -135,16 +142,6 @@ const ProductEditorWrapper = ({
           create_at: undefined,
         }
   );
-
-  useEffect(() => {
-    // set the product state to the product data if it exists
-    if (productData) {
-      dispatchProductState({
-        type: ActionSetProduct.SETINITIAL,
-        payload: productData,
-      });
-    }
-  }, [productData]);
 
   console.log("productState", productState);
 
@@ -165,6 +162,7 @@ const ProductEditorWrapper = ({
         console.log("postProduct", res);
         const { data } = res;
         const { id } = data;
+        setPreventNavigation(false);
         router.replace(
           {
             pathname: `/dashboard/catalog/products/edit/[id]`,
@@ -190,6 +188,7 @@ const ProductEditorWrapper = ({
     putProduct(productState as IProduct)
       .then((res: any) => {
         console.log("putProduct", res);
+        setPreventNavigation(false);
         setSnackbar({
           open: true,
           message: "Product updated",
@@ -206,14 +205,17 @@ const ProductEditorWrapper = ({
       });
   };
 
+  console.log("productState", productState);
+
   return (
     <DashboardContentWithSaveFooter
-      preventNavigation={true}
+      primaryButtonTitle={productData ? "Save" : "Create"} // To distinguish between create and update actions
+      preventNavigation={preventNavigation}
       setPreventNavigation={setPreventNavigation}
       onSave={async () => {
         if (!productData) {
           // save product
-          await saveProductAndRedirect();
+          const resp = await saveProductAndRedirect();
         } else {
           // update product
           await updateProduct();
@@ -237,15 +239,21 @@ const ProductEditorWrapper = ({
           />
           <ProductVariantsEditor
             disabled={false}
-            // state={productState.product_variants}
-            // dispatch={dispatchProductState}
+            state={productState}
+            dispatch={dispatchProductState}
+            attributesData={attributesData}
+            pricelistsData={pricelistsData}
           />
           <ProductMediaEditor
             disabled={false}
             // state={productState.product_media}
             // dispatch={dispatchProductState}
           />
-          <ProductVariantPricesEditor disabled={false} />
+          <ProductVariantPricesEditor
+            disabled={false}
+            state={productState}
+            dispatch={dispatchProductState}
+          />
         </Grid>
         <Grid item md={4} xs={12}>
           <ProductCategorySelect

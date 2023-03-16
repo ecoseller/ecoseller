@@ -21,14 +21,27 @@ import ProductVariantsEditor from "@/components/Dashboard/Catalog/Products/Edito
 import ProductMediaEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductMediaEditor";
 import ProductVariantPricesEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVariantPricesEditor";
 import ProductEditorWrapper from "@/components/Dashboard/Catalog/Products/Editor/ProductEditorWrapper";
+import { IAttributeType } from "@/types/product";
+import { IPriceList } from "@/types/localization";
+import { axiosPrivate } from "@/utils/axiosPrivate";
 
-const DashboardProductsAddPage = () => {
+interface IProps {
+  attributesData: IAttributeType[];
+  pricelistsData: IPriceList[];
+}
+
+const DashboardProductsAddPage = ({
+  attributesData,
+  pricelistsData,
+}: IProps) => {
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
         <ProductEditorWrapper
           title={"Add product"}
           returnPath={"/dashboard/catalog/products"}
+          attributesData={attributesData}
+          pricelistsData={pricelistsData}
         />
       </Container>
     </DashboardLayout>
@@ -43,9 +56,31 @@ DashboardProductsAddPage.getLayout = (page: ReactElement) => {
   );
 };
 
-export const getServersideProps = async (context: any) => {
+export const getServerSideProps = async (context: any) => {
+  /**
+   * Initial data for product editor
+   * - attributes
+   * - pricelists
+   *
+   * We don't fetch product data here because we are creating new product
+   */
+
+  console.log("Dashboard product add");
+  // fetch attributes data
+  const attributesRes = await axiosPrivate.get(
+    "product/dashboard/attribute/type/"
+  );
+  const attributesData = attributesRes.data;
+
+  // fetch pricelists data
+  const pricelistsRes = await axiosPrivate.get("product/dashboard/pricelist/");
+  const pricelistsData = pricelistsRes.data;
+
   return {
-    props: {},
+    props: {
+      attributesData,
+      pricelistsData,
+    },
   };
 };
 

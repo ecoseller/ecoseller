@@ -18,12 +18,14 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import Table from "@mui/material/Table";
 // types
-import { IProductList } from "@/types/product";
+import { IAttributeType, IProductList } from "@/types/product";
 import TablePagination from "@mui/material/TablePagination";
 import TableBody from "@mui/material/TableBody";
 import ProductListBody from "@/components/Dashboard/Catalog/Products/List/ProductListBody";
 import TableFooter from "@mui/material/TableFooter";
 import TableRow from "@mui/material/TableRow";
+import { axiosPrivate } from "@/utils/axiosPrivate";
+import { IPriceList } from "@/types/localization";
 
 const DashboardProductsPage = () => {
   const [page, setPage] = useState(0);
@@ -48,30 +50,7 @@ const DashboardProductsPage = () => {
     <DashboardLayout>
       <Container maxWidth="xl">
         <ProductListTopLine />
-        <Card elevation={0}>
-          <TableContainer sx={{ minWidth: 650 }}>
-            <Table>
-              <ProductListHead
-                rowsCount={products?.data?.length || 0}
-                rowsSelected={0}
-                onSelectAllClick={() => {}}
-              />
-              <ProductListBody products={products?.data} />
-              <TableFooter>
-                <TableRow>
-                  <TablePagination
-                    rowsPerPageOptions={[30, 60, 90, 120, 150]}
-                    count={products?.count || 0}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                  />
-                </TableRow>
-              </TableFooter>
-            </Table>
-          </TableContainer>
-        </Card>
+        <Card elevation={0}>{/* Use data grid */}</Card>
       </Container>
     </DashboardLayout>
   );
@@ -85,10 +64,23 @@ DashboardProductsPage.getLayout = (page: ReactElement) => {
   );
 };
 
-export const getServersideProps = async (context: any) => {
+export const getServerSideProps = async (context: any) => {
   console.log("Dashboard orders");
+  // fetch attributes data
+  const attributesRes = await axiosPrivate.get(
+    "product/dashboard/attribute/type/"
+  );
+  const attributesData = attributesRes.data;
+
+  // fetch pricelists data
+  const pricelistsRes = await axiosPrivate.get("product/dashboard/pricelist/");
+  const pricelistsData = pricelistsRes.data;
+
   return {
-    props: {},
+    props: {
+      attributesData,
+      pricelistsData,
+    },
   };
 };
 

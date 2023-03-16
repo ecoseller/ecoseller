@@ -1,19 +1,20 @@
+/**
+ * Complex table editor for product variants with inline editing and adding new rows.
+ *
+ */
+
+// next.js
+// react
+// libs
+import useSWR from "swr";
+// layout
+// components
 import CollapsableContentWithTitle from "@/components/Dashboard/Generic/CollapsableContentWithTitle";
 import EditorCard from "@/components/Dashboard/Generic/EditorCard";
-import { IProductVariant } from "@/types/product";
-import IconButton from "@mui/material/IconButton";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
+// mui
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { useEffect, useState } from "react";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import Paper from "@mui/material/Paper";
 import {
   DataGrid,
   GridRowsProp,
@@ -27,20 +28,32 @@ import {
   GridEventListener,
   GridRowId,
   GridRowModel,
+  GridColumnGroupingModel,
 } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { randomId } from "@mui/x-data-grid-generator";
 import { useRouter } from "next/router";
 import { Alert, Snackbar } from "@mui/material";
+// types
+import {
+  ActionSetProduct,
+  IAttributeType,
+  IBaseAttributes,
+  IProductPrice,
+  IProductVariant,
+  ISetProductStateData,
+} from "@/types/product";
+import { ISetProductStateAction } from "../ProductEditorWrapper";
+import { Attribution } from "@mui/icons-material";
+import { IPriceList } from "@/types/localization";
+
 interface IProductVariantTable extends IProductVariant {
   id: string;
   isNew: boolean;
-}
-interface IProductVariantsEditorProps {
-  disabled: boolean;
 }
 
 interface EditToolbarProps {
@@ -73,8 +86,21 @@ const EditToolbar = (props: EditToolbarProps) => {
     </GridToolbarContainer>
   );
 };
+interface IProductVariantsEditorProps {
+  disabled: boolean;
+  state: ISetProductStateData;
+  dispatch: React.Dispatch<ISetProductStateAction>;
+  attributesData: IAttributeType[];
+  pricelistsData: IPriceList[];
+}
 
-const ProductVariantsEditor = ({ disabled }: IProductVariantsEditorProps) => {
+const ProductVariantsEditor = ({
+  disabled,
+  state,
+  dispatch,
+  attributesData,
+  pricelistsData,
+}: IProductVariantsEditorProps) => {
   const router = useRouter();
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
@@ -86,14 +112,135 @@ const ProductVariantsEditor = ({ disabled }: IProductVariantsEditorProps) => {
 
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 
+  console.log("pricelistsData", pricelistsData);
   console.log("variants", rows);
+
+  const serializeAttributes = (row: any) => {
+    // since attributes in the row are stored as $ATTRIBUTE_... we need to filter them out and serialize them
+    // into an array of numbers (attribute ids) that the backend expects
+    if (!row) return [];
+    const attributes = Object.entries(row)
+      .filter(([key, value]) => key.startsWith("$ATTRIBUTE_") && value)
+      .map(([key, value]) => value);
+
+    return attributes;
+  };
+
+  const deserializeAttributes = (row: any) => {
+    // since attributes are initialy stored as an array of numbers (attribute ids) we need to firstly
+    // create an object with keys $ATTRIBUTE_... and then assign value to them (item from the array that is also in the base_attributes array (as id))
+    if (!row?.attributes) return {};
+    let attributes: any = {};
+    attributesData?.forEach((attribute: IAttributeType) => {
+      attributes[`$ATTRIBUTE_${attribute.type_name}`] =
+        attribute.base_attributes
+          .map((baseAttribute: IBaseAttributes) => baseAttribute.id)
+          ?.find(
+            (id: number) =>
+              id ===
+              row.attributes.find((attributeId: number) => attributeId === id)
+          );
+    });
+    return attributes;
+  };
+
+  const serializePrices = (row: any) => {
+    // since prices in the row are stored as $PRICE_... we need to filter them out and serialize them
+    // into an array of objects that the backend expects, where expected format is { pricelist: number, price: number }
+    if (!row) return [];
+    const prices = Object.entries(row)
+      .filter(([key, value]) => key.startsWith("$PRICE_") && value)
+      .map(([key, value]) => ({
+        price_list: pricelistsData?.find(
+          (pricelist) => pricelist.code === key.replace("$PRICE_", "")
+        )?.code,
+        price: Number(value),
+      }));
+
+    return prices;
+  };
+
+  const deserializePrices = (row: any) => {
+    // since prices are initialy stored as an array of objects that the backend expects, where expected format is { pricelist: number, price: number }
+    if (!row?.price) return {};
+    let prices: any = {};
+    pricelistsData?.forEach((pricelist: IPriceList) => {
+      prices[`$PRICE_${pricelist.code}`] = row.price.find(
+        (price: any) => price.price_list === pricelist.code
+      )?.price;
+    });
+
+    console.log("deserializePrices", prices, pricelistsData);
+    return prices;
+  };
+
+  console.log("serializeAttributes", serializeAttributes(rows[0]));
+  console.log("serializePrices", serializePrices(rows[0]));
+  console.log("deserializeAttributes", deserializeAttributes(rows[0]));
+  console.log("deserializePrices", deserializePrices(rows[0]));
+
+  useEffect(() => {
+    // when the component is mounted, we need to set the rows to the product_variants from the state
+    // and also deserialize the attributes and prices
+    // we also need to set the id of the row to the sku, because sku is the primary key of the variant
+    // and we need to set isNew to false, because we are not creating a new variant, but editing an existing one
+
+    if (rows?.length > 0) {
+      return;
+    }
+    setRows(
+      state?.product_variants
+        ? state?.product_variants.map((variant: IProductVariant) => ({
+            ...variant,
+            ...deserializeAttributes(variant),
+            ...deserializePrices(variant),
+            id: variant.sku,
+            isNew: false,
+          }))
+        : []
+    );
+  }, [state.product_variants]);
+
+  useEffect(() => {
+    // when the rows change, we need to serialize the attributes and prices and then dispatch the action
+    // to set the product_variants in the state
+    if (!rows || rows?.length == 0) {
+      dispatch({
+        type: ActionSetProduct.SETPRODUCTVARIANTS,
+        payload: { product_variants: [] },
+      });
+      return;
+    }
+
+    const variantsToSet = rows.map(
+      (row) =>
+        ({
+          ...(row as IProductVariant),
+          attributes: serializeAttributes(row),
+          price: serializePrices(row),
+        } as IProductVariant)
+    );
+
+    console.log("variantsToSet", variantsToSet);
+
+    dispatch({
+      type: ActionSetProduct.SETPRODUCTVARIANTS,
+      payload: {
+        product_variants: variantsToSet,
+      },
+    });
+  }, [rows]);
 
   const columns: GridColDef[] = [
     {
       field: "sku",
       headerName: "SKU",
+      description:
+        "If you provide SKU that already exists, it will be updated instead of creating a new one.",
       editable: true,
-      flex: 1,
+      width: 125,
+      minWidth: 150,
+      maxWidth: 200,
       sortable: false,
       disableColumnMenu: true,
     },
@@ -101,7 +248,9 @@ const ProductVariantsEditor = ({ disabled }: IProductVariantsEditorProps) => {
       field: "ean",
       headerName: "EAN",
       editable: true,
-      flex: 1,
+      width: 125,
+      minWidth: 150,
+      maxWidth: 200,
       sortable: false,
       disableColumnMenu: true,
     },
@@ -109,26 +258,58 @@ const ProductVariantsEditor = ({ disabled }: IProductVariantsEditorProps) => {
       field: "weight",
       headerName: "Weight",
       editable: true,
-      flex: 1,
+      width: 125,
+      minWidth: 150,
+      maxWidth: 200,
       sortable: false,
       disableColumnMenu: true,
     },
-    {
-      field: "attributes",
-      headerName: "Attributes",
-      // width: 150,
-      editable: true,
-      sortable: false,
-      flex: 1,
-      disableColumnMenu: true,
-    },
+    ...(pricelistsData
+      ? pricelistsData?.map((pricelist: IPriceList) => ({
+          field: `$PRICE_${pricelist.code}`,
+          headerName: pricelist.code,
+          editable: true,
+          width: 125,
+          minWidth: 150,
+          maxWidth: 200,
+          sortable: false,
+          disableColumnMenu: true,
+        }))
+      : []), // <-- this generates pricelist columns
+    ...(attributesData
+      ? attributesData?.map((attribute) => ({
+          field: `$ATTRIBUTE_${attribute.type_name}`,
+          headerName: attribute.type_name,
+          editable: true,
+          width: 125,
+          minWidth: 150,
+          maxWidth: 200,
+          sortable: false,
+          disableColumnMenu: true,
+          type: "singleSelect",
+          valueOptions: [
+            {
+              value: null,
+              label: "",
+            },
+            ...attribute.base_attributes.map((value: IBaseAttributes) => ({
+              value: value.id,
+              label:
+                value.value + `${attribute.unit ? " " + attribute.unit : ""}`,
+            })),
+          ],
+        }))
+      : []), // <-- this generates attributes columns
+
     {
       field: "actions",
       type: "actions",
       headerName: "Actions",
-      width: 100,
+      width: 125,
+      minWidth: 150,
+      maxWidth: 200,
       cellClassName: "actions",
-      flex: 1,
+
       disableColumnMenu: true,
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
@@ -170,6 +351,24 @@ const ProductVariantsEditor = ({ disabled }: IProductVariantsEditorProps) => {
           />,
         ];
       },
+    },
+  ];
+  const columnGroupingModel: GridColumnGroupingModel = [
+    {
+      groupId: "Prices",
+      children: [
+        ...(pricelistsData?.map((pricelist: IPriceList) => ({
+          field: `$PRICE_${pricelist.code}`,
+        })) || []), // <-- this creates groupping for pricelists
+      ],
+    },
+    {
+      groupId: "Attributes",
+      children: [
+        ...(attributesData?.map((attribute) => ({
+          field: `$ATTRIBUTE_${attribute.type_name}`,
+        })) || []), // <-- this creates groupping for attributes
+      ],
     },
   ];
 
@@ -243,6 +442,13 @@ const ProductVariantsEditor = ({ disabled }: IProductVariantsEditorProps) => {
       throw new Error("SKU is required");
     }
 
+    // check if SKU has changed
+    // if yes, check if SKU already exists
+    // if yes, load existing variant and show warning
+    // if no, save row
+    if (updatedRow.sku !== oldRow.sku) {
+    }
+
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
     return updatedRow;
   };
@@ -289,6 +495,9 @@ const ProductVariantsEditor = ({ disabled }: IProductVariantsEditorProps) => {
             slotProps={{
               toolbar: { setRows, setRowModesModel },
             }}
+            experimentalFeatures={{ columnGrouping: true }}
+            columnGroupingModel={columnGroupingModel}
+            sx={{ overflowX: "scroll" }}
           />
           // </div>
         )}

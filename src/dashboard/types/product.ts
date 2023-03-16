@@ -1,5 +1,5 @@
 import { IPaginated } from "@/types/common";
-import { TLocale } from "./localization";
+import { IPriceList, TLocale } from "./localization";
 
 export interface ISetProductStateData extends Partial<IProduct> {
   translation?: {
@@ -37,7 +37,7 @@ export interface IProduct {
   published: boolean;
   category: number | null;
   translations: IProductTranslations;
-  product_variants: number[];
+  product_variants: IProductVariant[];
   product_media: number[];
   update_at?: string;
   create_at?: string;
@@ -48,6 +48,12 @@ export interface IProductVariant {
   ean: string;
   weight: number;
   attributes: number[];
+  price: IProductPrice[];
+}
+
+export interface IProductPrice {
+  price_list: IPriceList | string;
+  price: number;
 }
 
 export interface IProductListItem {
@@ -60,4 +66,15 @@ export interface IProductListItem {
 
 export interface IProductList extends IPaginated {
   data: IProductListItem[];
+}
+
+export interface IBaseAttributes {
+  id: number;
+  value: string;
+}
+export interface IAttributeType {
+  id: number;
+  type_name: string;
+  unit?: string;
+  base_attributes: IBaseAttributes[];
 }

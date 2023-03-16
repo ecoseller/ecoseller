@@ -17,5 +17,6 @@ export const putProduct = async (data: IProduct) => {
   // Params: data
   // Return: Promise
   if (!data.id) throw new Error("Product id is required to update product");
+  console.log("putProduct", data);
   return await axiosPrivate.put(`/product/dashboard/detail/${data.id}/`, data);
 };

@@ -18,35 +18,38 @@ interface IDashboardContentWithSaveFooter {
   onSave?: () => Promise<void>;
   preventNavigation: boolean;
   setPreventNavigation: (value: boolean) => void;
+  primaryButtonTitle?: string;
 }
 const DashboardContentWithSaveFooter = ({
   children,
   onSave,
   preventNavigation,
   setPreventNavigation,
+  primaryButtonTitle = "Save",
 }: IDashboardContentWithSaveFooter) => {
   const router = useRouter();
 
   const [saveDialogOpen, setSaveDialogOpen] = useState<boolean>(false);
-  const [isSaved, setIsSaved] = useState<boolean>(false);
+  // const [isSaved, setIsSaved] = useState<boolean>(false);
 
-  useEffect(() => {
-    setIsSaved(false);
-  }, [preventNavigation]);
+  // useEffect(() => {
+  //   setIsSaved(false);
+  // }, [preventNavigation]);
 
-  useEffect(() => {
-    setPreventNavigation(!isSaved);
-  }, [isSaved]);
+  // useEffect(() => {
+  //   setPreventNavigation(!isSaved);
+  // }, [isSaved]);
 
   const innerOnSave = async () => {
     if (onSave) {
       await onSave();
+      // setPreventNavigation(false);
     }
-    setIsSaved(true);
+    // setIsSaved(true);
   };
 
   const { navigate, pathToNavigateTo } = useOnLeavePageConfirmation({
-    preventNavigation: !isSaved || false,
+    preventNavigation: preventNavigation,
     onNavigate: () => {
       setSaveDialogOpen(true);
     },
@@ -54,7 +57,7 @@ const DashboardContentWithSaveFooter = ({
 
   const forceClose = () => {
     setPreventNavigation(false);
-    setIsSaved(true);
+    // setIsSaved(true);
     navigate();
     // router.push(pathToNavigateTo);
   };
@@ -98,10 +101,11 @@ const DashboardContentWithSaveFooter = ({
               variant="contained"
               onClick={async () => {
                 await innerOnSave();
-                setIsSaved(true);
+                // setIsSaved(true);
+                // setPreventNavigation(false);
               }}
             >
-              Save
+              {primaryButtonTitle}
             </Button>
           </Stack>
         </Box>

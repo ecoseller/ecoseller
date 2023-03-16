@@ -1,13 +1,19 @@
 import CollapsableContentWithTitle from "@/components/Dashboard/Generic/CollapsableContentWithTitle";
 import EditorCard from "@/components/Dashboard/Generic/EditorCard";
+import { ISetProductStateData } from "@/types/product";
 import Typography from "@mui/material/Typography";
+import { ISetProductStateAction } from "../ProductEditorWrapper";
 
 interface IProductVariantPriceEditorProps {
   disabled: boolean;
+  state: ISetProductStateData;
+  dispatch: React.Dispatch<ISetProductStateAction>;
 }
 
 const ProductVariantPricesEditor = ({
   disabled,
+  state,
+  dispatch,
 }: IProductVariantPriceEditorProps) => {
   return (
     <EditorCard>
