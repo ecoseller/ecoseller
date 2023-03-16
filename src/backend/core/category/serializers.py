@@ -8,6 +8,10 @@ from rest_framework.serializers import (
 from category.models import (
     Category,
 )
+from parler_rest.serializers import (
+    TranslatableModelSerializer,
+    TranslatedFieldsField,
+)
 
 
 class CategorySerializer(TranslatedSerializerMixin, ModelSerializer):
@@ -27,12 +31,27 @@ class CategorySerializer(TranslatedSerializerMixin, ModelSerializer):
             "meta_description",
             "description",
             "slug",
+            "create_at",
+            "update_at",
         )
 
 
-class CategoryChildrenSerializer(CategorySerializer):
+class CategoryDetailSerializer(TranslatableModelSerializer, ModelSerializer):
     """
-    Extension of CategorySerializer with children field.
+    Serializer for category detail.
+    Language specific data are present in all languages (in `translations` field).
+    """
+
+    translations = TranslatedFieldsField(shared_model=Category)
+
+    class Meta:
+        model = Category
+        fields = ("id", "published", "translations", "update_at", "create_at", "parent")
+
+
+class CategoryWithChildrenSerializer(CategoryDetailSerializer):
+    """
+    Extension of CategoryDetailSerializer with children field.
     """
 
     children = SerializerMethodField()
@@ -42,17 +61,14 @@ class CategoryChildrenSerializer(CategorySerializer):
         fields = (
             "id",
             "published",
-            "title",
-            "meta_title",
-            "meta_description",
-            "description",
-            "slug",
+            "translations",
+            "update_at",
+            "create_at",
+            "parent",
+            "children",
         )
 
     def get_children(self, obj):
-        if "locale" in self.context:
-            locale = self.context["locale"]
         return [
-            CategorySerializer(x, context={"locale": locale}).data
-            for x in obj.published_children
+            CategoryDetailSerializer(child).data for child in obj.published_children
         ]
