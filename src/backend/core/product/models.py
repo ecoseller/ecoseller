@@ -64,7 +64,7 @@ class Product(TranslatableModel):
     def get_primary_photo(self):
         from .models import (
             ProductMedia,
-        )  # roductMediaTypes, )
+        )
 
         return (
             ProductMedia.objects.filter(
@@ -185,9 +185,6 @@ class ProductPrice(models.Model):
 
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
-
-    # class Meta:
-    #     unique_together = ("price_list", "product_variant")
 
     def __str__(self) -> str:
         return "{}: {} {}".format(
