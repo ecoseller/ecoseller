@@ -51,6 +51,7 @@ const DashboardContentWithSaveFooter = ({
   const { navigate, pathToNavigateTo } = useOnLeavePageConfirmation({
     preventNavigation: preventNavigation,
     onNavigate: () => {
+      console.log("onNavigate called");
       setSaveDialogOpen(true);
     },
   });
@@ -59,7 +60,7 @@ const DashboardContentWithSaveFooter = ({
     setPreventNavigation(false);
     // setIsSaved(true);
     navigate();
-    // router.push(pathToNavigateTo);
+    router.push(pathToNavigateTo);
   };
 
   return (

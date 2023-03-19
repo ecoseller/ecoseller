@@ -112,9 +112,6 @@ const ProductVariantsEditor = ({
 
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 
-  console.log("pricelistsData", pricelistsData);
-  console.log("variants", rows);
-
   const serializeAttributes = (row: any) => {
     // since attributes in the row are stored as $ATTRIBUTE_... we need to filter them out and serialize them
     // into an array of numbers (attribute ids) that the backend expects
@@ -170,14 +167,8 @@ const ProductVariantsEditor = ({
       )?.price;
     });
 
-    console.log("deserializePrices", prices, pricelistsData);
     return prices;
   };
-
-  console.log("serializeAttributes", serializeAttributes(rows[0]));
-  console.log("serializePrices", serializePrices(rows[0]));
-  console.log("deserializeAttributes", deserializeAttributes(rows[0]));
-  console.log("deserializePrices", deserializePrices(rows[0]));
 
   useEffect(() => {
     // when the component is mounted, we need to set the rows to the product_variants from the state
@@ -199,7 +190,9 @@ const ProductVariantsEditor = ({
           }))
         : []
     );
-  }, [state.product_variants]);
+  }, [state.product_variants?.length]);
+
+  // const setRowsAndDispatch
 
   useEffect(() => {
     // when the rows change, we need to serialize the attributes and prices and then dispatch the action
@@ -211,6 +204,7 @@ const ProductVariantsEditor = ({
       });
       return;
     }
+    console.log("settingrows", rows);
 
     const variantsToSet = rows.map(
       (row) =>
@@ -220,8 +214,7 @@ const ProductVariantsEditor = ({
           price: serializePrices(row),
         } as IProductVariant)
     );
-
-    console.log("variantsToSet", variantsToSet);
+    console.log("settingrows2", rows, variantsToSet);
 
     dispatch({
       type: ActionSetProduct.SETPRODUCTVARIANTS,
@@ -229,7 +222,7 @@ const ProductVariantsEditor = ({
         product_variants: variantsToSet,
       },
     });
-  }, [rows]);
+  }, [rows?.length]);
 
   const columns: GridColDef[] = [
     {

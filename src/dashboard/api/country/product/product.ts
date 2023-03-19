@@ -7,6 +7,7 @@ export const postProduct = async (data: IProduct) => {
   // Method: POST
   // Params: data
   // Return: Promise
+  console.log("postProduct", data);
   return await axiosPrivate.post(`/product/dashboard/detail/`, data);
 };
 

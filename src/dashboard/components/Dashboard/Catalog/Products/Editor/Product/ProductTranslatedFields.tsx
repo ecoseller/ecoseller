@@ -168,8 +168,6 @@ const ProductTranslatedFieldsWrapper = ({
     setLanguage(languages?.find((language) => language.default)?.code || "");
   }, [languages]);
 
-  console.log("languages", languages);
-
   return (
     <EditorCard>
       <CollapsableContentWithTitle title="Translated fields">

@@ -90,7 +90,6 @@ const ProductEditorWrapper = ({
           return state;
         }
 
-        console.log("SETTRANSLATION", action.payload, state);
         return {
           ...state,
           translations: {
@@ -120,8 +119,6 @@ const ProductEditorWrapper = ({
     message: string;
     severity: "success" | "error" | "info" | "warning";
   } | null>(null);
-
-  console.log("productData", productData);
 
   const router = useRouter();
 
@@ -156,7 +153,6 @@ const ProductEditorWrapper = ({
   };
 
   const saveProductAndRedirect = async () => {
-    console.log("saveAction", productState);
     postProduct(productState as IProduct)
       .then((res: any) => {
         console.log("postProduct", res);

@@ -39,7 +39,7 @@ const useOnLeavePageConfirmation = ({
         setPathToNavigateTo(url);
       }
     };
-    console.log("url", nextPath);
+    // console.log("url", nextPath);
 
     router.events.on("routeChangeStart", onRouteChange);
 
@@ -57,7 +57,6 @@ const useOnLeavePageConfirmation = ({
   const navigate = () => {
     router.push(nextPath.current);
   };
-  console.log("pathToNavigateTo", pathToNavigateTo);
   return { navigate, pathToNavigateTo };
 };
 
