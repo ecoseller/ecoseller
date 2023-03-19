@@ -5,19 +5,24 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('product', '0020_alter_productprice_unique_together'),
+        ("product", "0020_alter_productprice_unique_together"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='productprice',
+            name="productprice",
             unique_together=set(),
         ),
         migrations.AlterField(
-            model_name='productprice',
-            name='product_variant',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='price', to='product.productvariant'),
+            model_name="productprice",
+            name="product_variant",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="price",
+                to="product.productvariant",
+            ),
         ),
     ]

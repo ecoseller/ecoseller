@@ -5,38 +5,45 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('product', '0017_merge_20230315_0959'),
+        ("product", "0017_merge_20230315_0959"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='productvariantimage',
+            name="productvariantimage",
             unique_together=None,
         ),
         migrations.RemoveField(
-            model_name='productvariantimage',
-            name='image',
+            model_name="productvariantimage",
+            name="image",
         ),
         migrations.RemoveField(
-            model_name='productvariantimage',
-            name='product_variant',
+            model_name="productvariantimage",
+            name="product_variant",
         ),
         migrations.AlterField(
-            model_name='baseattribute',
-            name='type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='base_attributes', to='product.attributetype'),
+            model_name="baseattribute",
+            name="type",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="base_attributes",
+                to="product.attributetype",
+            ),
         ),
         migrations.AlterField(
-            model_name='productmedia',
-            name='product',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='product_media', to='product.product'),
+            model_name="productmedia",
+            name="product",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="product_media",
+                to="product.product",
+            ),
         ),
         migrations.DeleteModel(
-            name='ProductImage',
+            name="ProductImage",
         ),
         migrations.DeleteModel(
-            name='ProductVariantImage',
+            name="ProductVariantImage",
         ),
     ]
