@@ -13,6 +13,11 @@ from parler_rest.serializers import (
     TranslatedFieldsField,
 )
 
+from django.db.models import (
+    Max,
+)
+
+
 from category.serializers import (
     CategorySerializer,
 )
@@ -33,6 +38,7 @@ from product.models import (
 )
 
 import uuid
+
 
 """
 Common serializers
@@ -302,13 +308,13 @@ class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSeriali
     product_variants = ProductVariantSerializer(
         many=True, read_only=False, required=False
     )
-    id = CharField(required=False)  # for update
+    # id = CharField(required=False)  # for update
 
     # media = ProductMediaSerializer(many=True, read_only=True)
     class Meta:
         model = Product
         fields = (
-            "id",
+            # "id",
             "published",
             "translations",  # translations object with all translations
             "category",  # serialized as id
@@ -318,8 +324,9 @@ class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSeriali
         )
 
     def validate(self, attrs):
-        # validate that product variants have unique SKUs
-        if "id" in attrs:
+        # validate that product has unique id
+        print("VALIDATE", attrs)
+        if "id" in attrs and attrs["id"] is not None:
             # if id is not present in attrs, it means that we are updating the product
             # in this case we need to check if there are any variants with the same SKU
             # as the product itself
@@ -329,6 +336,15 @@ class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSeriali
                 pass
 
             del attrs["id"]
+        # else:
+        #     # if id is not present in attrs, it means that we are creating the product
+        #     # so we take maximum id from all products and add 1 to it
+        #     # this is not the best solution, but it works for now
+        #     max_id = Product.objects.all().aggregate(Max("id"))["id__max"]
+        #     if max_id is None:
+        #         max_id = 0
+        #     attrs["id"] = max_id + 1
+        #     print(attrs["id"])
 
         return attrs
 
@@ -339,7 +355,14 @@ class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSeriali
         id = validated_data.pop("id", None)
 
         if not id:
-            id = str(uuid.uuid4())
+            # if id is not present in attrs, it means that we are creating the product
+            # so we take maximum id from all products and add 1 to it
+            # this is not the best solution, but it works for now
+            max_id = Product.objects.all().aggregate(Max("id"))["id__max"]
+            if max_id is None:
+                max_id = 0
+            id = int(max_id) + 1
+
         # create product
         instance, created = Product.objects.get_or_create(
             id=id, defaults=validated_data

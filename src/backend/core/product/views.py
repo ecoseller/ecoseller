@@ -98,11 +98,10 @@ class ProductDetailDashboard(APIView):
         raise NotImplementedError("PATCH method not implemented yet")
 
     def post(self, request):
-        print(request.data)
         serializer = ProductDashboardDetailSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
+            instance = serializer.save()
+            return Response({**serializer.data, "id": instance.id}, status=201)
         return Response(serializer.errors, status=400)
 
 
