@@ -32,6 +32,8 @@ from product.models import (
     ExtensionAttribute,
 )
 
+import uuid
+
 """
 Common serializers
 """
@@ -334,9 +336,14 @@ class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSeriali
         # overload create method to to save nested product_variants as well
         # uses update_or_create to update existing variants
         product_variants_validated_data = validated_data.pop("product_variants", [])
+        id = validated_data.pop("id", None)
 
+        if not id:
+            id = str(uuid.uuid4())
         # create product
-        instance, created = Product.objects.get_or_create(**validated_data)
+        instance, created = Product.objects.get_or_create(
+            id=id, defaults=validated_data
+        )
 
         if len(product_variants_validated_data) > 0:
             # create product variants
