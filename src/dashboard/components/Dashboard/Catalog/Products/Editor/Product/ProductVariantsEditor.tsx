@@ -222,7 +222,7 @@ const ProductVariantsEditor = ({
         product_variants: variantsToSet,
       },
     });
-  }, [rows?.length]);
+  }, [rows]);
 
   const columns: GridColDef[] = [
     {

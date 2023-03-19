@@ -36,6 +36,7 @@ const ProductBasicInfo = ({ state, dispatch }: IProductBasicInfoProps) => {
             <TextField
               label="ID"
               value={state.id}
+              // disabled={true}
               onChange={(
                 event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
               ) => {

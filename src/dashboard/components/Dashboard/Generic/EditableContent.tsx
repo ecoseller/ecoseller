@@ -43,7 +43,7 @@ const DashboardContentWithSaveFooter = ({
   const innerOnSave = async () => {
     if (onSave) {
       await onSave();
-      // setPreventNavigation(false);
+      setPreventNavigation(false);
     }
     // setIsSaved(true);
   };

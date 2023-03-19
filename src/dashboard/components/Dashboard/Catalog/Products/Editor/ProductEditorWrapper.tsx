@@ -201,7 +201,7 @@ const ProductEditorWrapper = ({
       });
   };
 
-  console.log("productState", productState);
+  // console.log("productState", productState);
 
   return (
     <DashboardContentWithSaveFooter
