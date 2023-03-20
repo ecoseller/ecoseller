@@ -3,7 +3,22 @@ from rest_framework.serializers import (
 )
 from country.models import (
     Country,
+    Currency,
 )
+
+
+class CurrencySerializer(ModelSerializer):
+    """
+    Basic Currency model serializer (see currency/models.py)
+    """
+
+    class Meta:
+        model = Currency
+        fields = (
+            "code",
+            "symbol",
+            "symbol_position",
+        )
 
 
 class CountrySerializer(ModelSerializer):

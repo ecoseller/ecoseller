@@ -18,7 +18,7 @@ class ProductVariant(models.Model):
     weight = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
-    attributes = models.ManyToManyField("BaseAttribute")
+    attributes = models.ManyToManyField("BaseAttribute", blank=True, null=True)
 
     def __str__(self) -> str:
         return "sku: {} ean: {}".format(self.sku, self.ean)
@@ -61,6 +61,20 @@ class Product(TranslatableModel):
     def __str__(self) -> str:
         return "id: {} title: {}".format(self.id, self.title)
 
+    def get_primary_photo(self):
+        from .models import (
+            ProductMedia,
+        )
+
+        return (
+            ProductMedia.objects.filter(
+                product=self,
+                type=ProductMediaTypes.IMAGE,
+            )
+            .order_by("sort_order")
+            .first()
+        )
+
 
 # Attributes
 class AttributeType(models.Model):
@@ -82,7 +96,9 @@ class AttributeType(models.Model):
 
 
 class BaseAttribute(models.Model):
-    type = models.ForeignKey("AttributeType", on_delete=models.CASCADE)
+    type = models.ForeignKey(
+        "AttributeType", on_delete=models.CASCADE, related_name="base_attributes"
+    )
     value = models.CharField(max_length=200, blank=False, null=False)
     order = models.IntegerField(blank=True, null=True)
     ext_attributes = models.ManyToManyField("ExtensionAttribute", blank=True)
@@ -157,7 +173,11 @@ class ProductPrice(models.Model):
         PriceList, on_delete=models.CASCADE, blank=False, null=False
     )
     product_variant = models.ForeignKey(
-        ProductVariant, on_delete=models.CASCADE, blank=False, null=False
+        ProductVariant,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="price",
     )
     price = models.DecimalField(
         max_digits=10, decimal_places=2, blank=False, null=False
@@ -192,7 +212,11 @@ class ProductMedia(SortableModel):
     """
 
     product = models.ForeignKey(
-        Product, on_delete=models.CASCADE, blank=False, null=False
+        Product,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        related_name="product_media",
     )
     media = models.ImageField(upload_to="product_media", blank=False, null=False)
     type = models.CharField(
