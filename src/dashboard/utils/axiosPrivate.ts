@@ -12,6 +12,7 @@ axios.interceptors.request.use(
   async (config) => {
     console.log("axios.interceptors.request.use");
     const accessToken = Cookies.get("accessToken") || null;
+    config.withCredentials = true;
 
     if (accessToken != null) {
       // @ts-expect-error - needed because of https://github.com/axios/axios/issues/5034

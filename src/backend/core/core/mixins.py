@@ -1,7 +1,6 @@
 from rest_framework.serializers import (
     ReadOnlyField,
 )
-
 from core.settings import PARLER_DEFAULT_LANGUAGE_CODE as DEFAULT_LANG
 
 
