@@ -8,6 +8,8 @@ import Head from "next/head";
 import { SWRConfig } from "swr";
 import { axiosPrivate } from "@/utils/axiosPrivate";
 import { useRouter } from "next/router";
+import fetcher from "@/api/fetcher";
+import axiosFetcher from "@/api/fetcher";
 
 const montserrat = Montserrat({
   weight: ["400", "500", "700"],
@@ -77,13 +79,7 @@ const App = ({ Component, pageProps }: AppPropsWithLayout) => {
           value={{
             dedupingInterval: 2000,
             fetcher: (url: string) =>
-              axiosPrivate
-                .get(url, {
-                  withCredentials: true,
-                  headers: {
-                    "Accept-Language": locale,
-                  },
-                })
+              axiosFetcher(url, locale)
                 .then((r: any) => {
                   if (r.data?.error && r.data?.error === "forbidden") {
                     // throw "forbidden";
