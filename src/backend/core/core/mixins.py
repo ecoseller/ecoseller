@@ -1,9 +1,6 @@
 from rest_framework.serializers import (
     ReadOnlyField,
 )
-from django.conf import settings
-from django.utils.translation import get_language_from_request
-
 from core.settings import PARLER_DEFAULT_LANGUAGE_CODE as DEFAULT_LANG
 
 

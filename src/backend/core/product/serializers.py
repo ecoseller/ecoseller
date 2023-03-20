@@ -33,11 +33,7 @@ from product.models import (
     ProductMedia,
     AttributeType,
     BaseAttribute,
-    ExtAttributeType,
-    ExtensionAttribute,
 )
-
-import uuid
 
 
 """
@@ -251,9 +247,7 @@ class ProductVariantSerializer(ModelSerializer):
         # create product prices
         if len(prices_validated_data) > 0:
             prices_serializer = self.fields["price"]
-            prices = prices_serializer.create(
-                prices_validated_data, product_variant=instance
-            )
+            prices_serializer.create(prices_validated_data, product_variant=instance)
         else:
             ProductPrice.objects.filter(product_variant=instance).delete()
         return instance
@@ -272,9 +266,7 @@ class ProductVariantSerializer(ModelSerializer):
         if len(prices_validated_data) > 0:
             print(prices_validated_data)
             prices_serializer = self.fields["price"]
-            prices = prices_serializer.create(
-                prices_validated_data, product_variant=instance
-            )
+            prices_serializer.create(prices_validated_data, product_variant=instance)
         else:
             ProductPrice.objects.filter(product_variant=instance).delete()
         return instance

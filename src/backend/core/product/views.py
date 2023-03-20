@@ -10,21 +10,14 @@ from core.pagination import (
 from .models import (
     Product,
     ProductVariant,
-    ProductMedia,
-    ProductVariantMedia,
     PriceList,
-    ProductPrice,
     AttributeType,
-    BaseAttribute,
-    ExtAttributeType,
-    ExtensionAttribute,
 )
 from .serializers import (
     ProductSerializer,
     ProductDashboardListSerializer,
     ProductDashboardDetailSerializer,
     PriceListBaseSerializer,
-    BaseAttributeDashboardSerializer,
     AtrributeTypeDashboardSerializer,
     ProductVariantSerializer,
 )
