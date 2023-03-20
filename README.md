@@ -11,6 +11,7 @@
 [![Contributors][contributors-shield]][contributors-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
+[![Build][build-shield]][license-url]
 <!-- [![Stargazers][stars-shield]][stars-url] -->
 
 
@@ -153,6 +154,8 @@ TODO
 [stars-url]: https://github.com/ecoseller/ecoseller/stargazers
 [issues-shield]: https://img.shields.io/github/issues/ecoseller/ecoseller.svg?style=flat-square
 [issues-url]: https://github.com/ecoseller/ecoseller/issues
+[build-shield]: https://img.shields.io/github/actions/workflow/status/ecoseller/ecoseller/ci.yml?branch=master&style=flat-square
+[build-url]: https://github.com/ecoseller/ecoseller/actions
 [license-shield]: https://img.shields.io/github/license/ecoseller/ecoseller.svg?style=flat-square
 [license-url]: https://github.com/ecoseller/ecoseller/blob/master/LICENSE.txt
 [product-screenshot]: images/screenshot.png
