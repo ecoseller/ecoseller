@@ -26,7 +26,6 @@ const DashboardProductsEditPage = ({
   attributesData,
   pricelistsData,
 }: IProps) => {
-  const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
   const router = useRouter();
   const { id } = router.query;
 
