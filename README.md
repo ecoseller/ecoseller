@@ -8,7 +8,7 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
-[![Build][build-shield]][license-url]
+[![Build][build-shield]][build-url]
 [![Contributors][contributors-shield]][contributors-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
@@ -79,7 +79,7 @@ TODO:
 
 ### Built With
 
-Whole stack of ecoseller.io is built with multiple technologies. Our goal is to provide a full-stack e-commerce system built with popular technologies. 99% of the code is written with either TypeScript or Python.
+Whole stack of ecoseller.io is built with multiple technologies. Our goal is to provide a full-stack e-commerce system built with popular technologies. ~90% of the code is written with either TypeScript or Python.
 * [![Next][Next.js]][Next-url]
 * [![React][React.js]][React-url]
 * [![DRF][DRF]][DRF-url]
