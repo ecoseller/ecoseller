@@ -1,4 +1,5 @@
 from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import permissions
 from django.conf import settings
@@ -41,21 +42,26 @@ class LanguagesView(APIView):
         return Response(langs, status=200)
 
 
-class CurrencyView(APIView):
+class CurrencyView(GenericAPIView):
     """
     List all products for dashboard
     """
 
-    # TODO: add permissions for dashboard views (only for staff) <- testing purposes
     permission_classes = (permissions.AllowAny,)
+    allowed_methods = ["GET", "POST", "PUT", "DELETE"]
+    authentication_classes = []
+    serializer_class = CurrencySerializer
+
+    def get_queryset(self):
+        return Currency.objects.all()
 
     def get(self, request):
-        qs = Currency.objects.all()
-        serializer = CurrencySerializer(qs, many=True)
+        qs = self.get_queryset()
+        serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data, status=200)
 
     def post(self, request):
-        serializer = CurrencySerializer(data=request.data)
+        serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)
@@ -64,7 +70,7 @@ class CurrencyView(APIView):
     def put(self, request, code):
         try:
             currency = Currency.objects.get(code=code)
-            serializer = CurrencySerializer(currency, data=request.data)
+            serializer = self.get_serializer(currency, data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=200)
