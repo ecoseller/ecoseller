@@ -69,46 +69,49 @@ class ProductListDashboard(APIView, DashboardPagination):
         return self.get_paginated_response(paginated_products)
 
 
-class ProductDetailDashboard(APIView):
+class ProductDashboardView(GenericAPIView):
     permission_classes = (permissions.AllowAny,)
+    allowed_methods = [
+        "GET",
+        "POST",
+    ]
+    authentication_classes = []
+    serializer_class = ProductDashboardDetailSerializer
 
-    def get(self, request, id):
-        try:
-            product = Product.objects.get(id=id)
-        except Product.DoesNotExist:
-            return Response({"error": "Product does not exist"}, status=404)
-        serialized_product = ProductDashboardDetailSerializer(product)
-        return Response(serialized_product.data, status=200)
+    def get_queryset(self):
+        return Product.objects.all()
 
-    def put(self, request, id):
-        try:
-            product = Product.objects.get(id=id)
-            serializer = ProductDashboardDetailSerializer(product, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=200)
-            print(serializer.errors)
-            return Response(serializer.errors, status=400)
-        except Product.DoesNotExist:
-            return Response(status=404)
-
-    def delete(self, request, id):
-        raise NotImplementedError("DELETE method not implemented yet")
-
-    def patch(self, request, id):
-        raise NotImplementedError("PATCH method not implemented yet")
+    def get(self, request):
+        products = self.get_queryset()
+        serializer = self.serializer_class(products, many=True)
+        return Response(serializer.data, status=200)
 
     def post(self, request):
-        serializer = ProductDashboardDetailSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             instance = serializer.save()
             return Response({**serializer.data, "id": instance.id}, status=201)
         return Response(serializer.errors, status=400)
 
 
+class ProductDetailDashboardView(RetrieveUpdateDestroyAPIView):
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = ["GET", "PUT", "DELETE"]
+    authentication_classes = []
+    serializer_class = ProductDashboardDetailSerializer
+    lookup_field = "id"
+    lookup_url_kwarg = "id"
+
+    def get_queryset(self):
+        return Product.objects.all()
+
+
 class PriceListDashboardView(GenericAPIView):
     permission_classes = (permissions.AllowAny,)
-    allowed_methods = ["GET", "POST", "PUT", "DELETE"]
+    allowed_methods = [
+        "GET",
+        "POST",
+    ]
     authentication_classes = []
     serializer_class = PriceListBaseSerializer
 
@@ -130,7 +133,7 @@ class PriceListDashboardView(GenericAPIView):
 
 class PriceListDashboardDetailView(RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
-    allowed_methods = ["GET", "POST", "PUT", "DELETE"]
+    allowed_methods = ["PUT", "DELETE"]
     authentication_classes = []
     serializer_class = PriceListBaseSerializer
     lookup_field = "code"
@@ -138,25 +141,6 @@ class PriceListDashboardDetailView(RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return PriceList.objects.all()
-
-    # def put(self, request, code):
-    #     try:
-    #         price_list = PriceList.objects.get(code=code)
-    #         serializer = PriceListBaseSerializer(price_list, data=request.data)
-    #         if serializer.is_valid():
-    #             serializer.save()
-    #             return Response(serializer.data, status=200)
-    #         return Response(serializer.errors, status=400)
-    #     except PriceList.DoesNotExist:
-    #         return Response(status=404)
-
-    # def delete(self, request, code):
-    #     try:
-    #         price_list = PriceList.objects.get(code=code)
-    #         price_list.delete()
-    #         return Response(status=204)
-    #     except PriceList.DoesNotExist:
-    #         return Response(status=404)
 
 
 class AttributeTypeDashboard(APIView):
