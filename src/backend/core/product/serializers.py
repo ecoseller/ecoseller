@@ -308,13 +308,13 @@ class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSeriali
     product_variants = ProductVariantSerializer(
         many=True, read_only=False, required=False
     )
-    # id = CharField(required=False)  # for update
+    id = CharField(required=False, read_only=True)  # for update
 
     # media = ProductMediaSerializer(many=True, read_only=True)
     class Meta:
         model = Product
         fields = (
-            # "id",
+            "id",
             "published",
             "translations",  # translations object with all translations
             "category",  # serialized as id
