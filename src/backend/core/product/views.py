@@ -1,4 +1,6 @@
 from rest_framework.views import APIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import permissions
 from core.pagination import (
@@ -63,7 +65,6 @@ class ProductListDashboard(APIView, DashboardPagination):
             products, many=True, context={"locale": self.locale}
         )
         # paginate
-        a = "spd"
         paginated_products = self.paginate_queryset(serialized_products.data, request)
         return self.get_paginated_response(paginated_products)
 
@@ -105,39 +106,57 @@ class ProductDetailDashboard(APIView):
         return Response(serializer.errors, status=400)
 
 
-class PriceListDashboard(APIView):
+class PriceListDashboardView(GenericAPIView):
     permission_classes = (permissions.AllowAny,)
+    allowed_methods = ["GET", "POST", "PUT", "DELETE"]
+    authentication_classes = []
+    serializer_class = PriceListBaseSerializer
+
+    def get_queryset(self):
+        return PriceList.objects.all()
 
     def get(self, request):
-        qs = PriceList.objects.all()
-        serializer = PriceListBaseSerializer(qs, many=True)
+        price_lists = self.get_queryset()
+        serializer = self.serializer_class(price_lists, many=True)
         return Response(serializer.data, status=200)
 
     def post(self, request):
-        serializer = PriceListBaseSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
+            instance = serializer.save()
+            return Response({**serializer.data, "code": instance.code}, status=201)
         return Response(serializer.errors, status=400)
 
-    def put(self, request, code):
-        try:
-            price_list = PriceList.objects.get(code=code)
-            serializer = PriceListBaseSerializer(price_list, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=200)
-            return Response(serializer.errors, status=400)
-        except PriceList.DoesNotExist:
-            return Response(status=404)
 
-    def delete(self, request, code):
-        try:
-            price_list = PriceList.objects.get(code=code)
-            price_list.delete()
-            return Response(status=204)
-        except PriceList.DoesNotExist:
-            return Response(status=404)
+class PriceListDashboardDetailView(RetrieveUpdateDestroyAPIView):
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = ["GET", "POST", "PUT", "DELETE"]
+    authentication_classes = []
+    serializer_class = PriceListBaseSerializer
+    lookup_field = "code"
+    lookup_url_kwarg = "code"
+
+    def get_queryset(self):
+        return PriceList.objects.all()
+
+    # def put(self, request, code):
+    #     try:
+    #         price_list = PriceList.objects.get(code=code)
+    #         serializer = PriceListBaseSerializer(price_list, data=request.data)
+    #         if serializer.is_valid():
+    #             serializer.save()
+    #             return Response(serializer.data, status=200)
+    #         return Response(serializer.errors, status=400)
+    #     except PriceList.DoesNotExist:
+    #         return Response(status=404)
+
+    # def delete(self, request, code):
+    #     try:
+    #         price_list = PriceList.objects.get(code=code)
+    #         price_list.delete()
+    #         return Response(status=204)
+    #     except PriceList.DoesNotExist:
+    #         return Response(status=404)
 
 
 class AttributeTypeDashboard(APIView):

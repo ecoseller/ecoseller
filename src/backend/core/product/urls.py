@@ -8,7 +8,9 @@ urlpatterns = [
     path("dashboard/variant/<str:sku>/", views.ProductVariantDashboard.as_view()),
     path("dashboard/detail/", views.ProductDetailDashboard.as_view()),
     path("dashboard/detail/<str:id>/", views.ProductDetailDashboard.as_view()),
-    path("dashboard/pricelist/", views.PriceListDashboard.as_view()),
-    path("dashboard/pricelist/<str:code>/", views.PriceListDashboard.as_view()),
+    path("dashboard/pricelist/", views.PriceListDashboardView.as_view()),
+    path(
+        "dashboard/pricelist/<str:code>/", views.PriceListDashboardDetailView.as_view()
+    ),
     path("dashboard/attribute/type/", views.AttributeTypeDashboard.as_view()),
 ]

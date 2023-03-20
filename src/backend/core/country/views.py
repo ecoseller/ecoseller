@@ -11,6 +11,8 @@ from .serializers import (
     CurrencySerializer,
 )
 
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
+
 
 DEFAULT_LANGUAGE_CODE = settings.PARLER_DEFAULT_LANGUAGE_CODE
 LANGUAGES = settings.PARLER_LANGUAGES[None]
@@ -42,11 +44,7 @@ class LanguagesView(APIView):
         return Response(langs, status=200)
 
 
-class CurrencyView(GenericAPIView):
-    """
-    List all products for dashboard
-    """
-
+class CurrencyListView(GenericAPIView):
     permission_classes = (permissions.AllowAny,)
     allowed_methods = ["GET", "POST", "PUT", "DELETE"]
     authentication_classes = []
@@ -67,21 +65,18 @@ class CurrencyView(GenericAPIView):
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
-    def put(self, request, code):
-        try:
-            currency = Currency.objects.get(code=code)
-            serializer = self.get_serializer(currency, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=200)
-            return Response(serializer.errors, status=400)
-        except Currency.DoesNotExist:
-            return Response(status=404)
 
-    def delete(self, request, code):
-        try:
-            currency = Currency.objects.get(code=code)
-            currency.delete()
-            return Response(status=204)
-        except Currency.DoesNotExist:
-            return Response(status=404)
+class CurrencyDetailView(RetrieveUpdateDestroyAPIView):
+    """
+    List all products for dashboard
+    """
+
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = ["GET", "POST", "PUT", "DELETE"]
+    authentication_classes = []
+    serializer_class = CurrencySerializer
+    lookup_field = "code"
+    lookup_url_kwarg = "code"
+
+    def get_queryset(self):
+        return Currency.objects.all()
