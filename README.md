@@ -8,10 +8,10 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
+[![Build][build-shield]][license-url]
 [![Contributors][contributors-shield]][contributors-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
-[![Build][build-shield]][license-url]
 <!-- [![Stargazers][stars-shield]][stars-url] -->
 
 
@@ -20,9 +20,9 @@
 <div align="center">
   <a href="https://github.com/ecoseller/ecoseller">
     <!-- <img src="images/logo.png" alt="Logo" width="80" height="80"> -->
-    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/ecoseller/ecoseller/blob/master/docs/images/e.io-white.svg"  width="60%">
-    <source media="(prefers-color-scheme: light)" srcset="https://github.com/ecoseller/ecoseller/blob/master/docs/images/e.io-black.svg"  width="60%">
-    <img alt="Shows a logo in light mode or in dark mode." src="https://github.com/ecoseller/ecoseller/blob/master/docs/images/e.io-black.svg" width="60%">
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/ecoseller/ecoseller/blob/master/docs/images/e.io-white.svg"  width="80">
+    <source media="(prefers-color-scheme: light)" srcset="https://github.com/ecoseller/ecoseller/blob/master/docs/images/e.io-black.svg"  width="80">
+    <img alt="Shows a logo in light mode or in dark mode." src="https://github.com/ecoseller/ecoseller/blob/master/docs/images/e.io-black.svg" width="80">
   </a>
 
   <h3 align="center">Full-stack e-commerce system with recommendation system to elevate your sales.</h3>
