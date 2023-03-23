@@ -249,6 +249,7 @@ const ProductEditorWrapper = ({
             disabled={false}
             state={productState}
             dispatch={dispatchProductState}
+            pricelistsData={pricelistsData}
           />
         </Grid>
         <Grid item md={4} xs={12}>

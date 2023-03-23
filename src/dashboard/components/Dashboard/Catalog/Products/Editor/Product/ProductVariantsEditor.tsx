@@ -50,6 +50,12 @@ import {
 import { ISetProductStateAction } from "../ProductEditorWrapper";
 import { Attribution } from "@mui/icons-material";
 import { IPriceList } from "@/types/localization";
+import {
+  deserializeProductVariantAttributesToRow,
+  deserializeProductVariantPricesToRow,
+  serializeProductVariantAttributesFromRow,
+  serializeProductVariantPricesFromRow,
+} from "@/utils/productSerializer";
 
 interface IProductVariantTable extends IProductVariant {
   id: string;
@@ -110,93 +116,44 @@ const ProductVariantsEditor = ({
 
   const [rows, setRows] = useState<IProductVariantTable[]>([]);
 
+  const [updateMainState, setUpdateMainState] = useState<boolean>(false);
+
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
-
-  const serializeAttributes = (row: any) => {
-    // since attributes in the row are stored as $ATTRIBUTE_... we need to filter them out and serialize them
-    // into an array of numbers (attribute ids) that the backend expects
-    if (!row) return [];
-    const attributes = Object.entries(row)
-      .filter(([key, value]) => key.startsWith("$ATTRIBUTE_") && value)
-      .map(([key, value]) => value);
-
-    return attributes;
-  };
-
-  const deserializeAttributes = (row: any) => {
-    // since attributes are initialy stored as an array of numbers (attribute ids) we need to firstly
-    // create an object with keys $ATTRIBUTE_... and then assign value to them (item from the array that is also in the base_attributes array (as id))
-    if (!row?.attributes) return {};
-    let attributes: any = {};
-    attributesData?.forEach((attribute: IAttributeType) => {
-      attributes[`$ATTRIBUTE_${attribute.type_name}`] =
-        attribute.base_attributes
-          .map((baseAttribute: IBaseAttributes) => baseAttribute.id)
-          ?.find(
-            (id: number) =>
-              id ===
-              row.attributes.find((attributeId: number) => attributeId === id)
-          );
-    });
-    return attributes;
-  };
-
-  const serializePrices = (row: any) => {
-    // since prices in the row are stored as $PRICE_... we need to filter them out and serialize them
-    // into an array of objects that the backend expects, where expected format is { pricelist: number, price: number }
-    if (!row) return [];
-    const prices = Object.entries(row)
-      .filter(([key, value]) => key.startsWith("$PRICE_") && value)
-      .map(([key, value]) => ({
-        price_list: pricelistsData?.find(
-          (pricelist) => pricelist.code === key.replace("$PRICE_", "")
-        )?.code,
-        price: Number(value),
-      }));
-
-    return prices;
-  };
-
-  const deserializePrices = (row: any) => {
-    // since prices are initialy stored as an array of objects that the backend expects, where expected format is { pricelist: number, price: number }
-    if (!row?.price) return {};
-    let prices: any = {};
-    pricelistsData?.forEach((pricelist: IPriceList) => {
-      prices[`$PRICE_${pricelist.code}`] = row.price.find(
-        (price: any) => price.price_list === pricelist.code
-      )?.price;
-    });
-
-    return prices;
-  };
 
   useEffect(() => {
     // when the component is mounted, we need to set the rows to the product_variants from the state
     // and also deserialize the attributes and prices
     // we also need to set the id of the row to the sku, because sku is the primary key of the variant
     // and we need to set isNew to false, because we are not creating a new variant, but editing an existing one
-
-    if (rows?.length > 0) {
-      return;
-    }
+    console.log("updateMainState-UpdatingPriceRows", updateMainState);
+    // if (rows?.length > 0) {
+    //   return;
+    // }
     setRows(
       state?.product_variants
         ? state?.product_variants.map((variant: IProductVariant) => ({
             ...variant,
-            ...deserializeAttributes(variant),
-            ...deserializePrices(variant),
+            ...deserializeProductVariantAttributesToRow(
+              variant,
+              attributesData
+            ),
+            ...deserializeProductVariantPricesToRow(variant, pricelistsData),
             id: variant.sku,
             isNew: false,
           }))
         : []
     );
-  }, [state.product_variants?.length]);
-
-  // const setRowsAndDispatch
+  }, [state.product_variants]);
 
   useEffect(() => {
     // when the rows change, we need to serialize the attributes and prices and then dispatch the action
     // to set the product_variants in the state
+    if (!updateMainState) {
+      return;
+    }
+    console.log("updateMainState-Variant", updateMainState);
+    setUpdateMainState(false);
+
     if (!rows || rows?.length == 0) {
       dispatch({
         type: ActionSetProduct.SETPRODUCTVARIANTS,
@@ -210,8 +167,11 @@ const ProductVariantsEditor = ({
       (row) =>
         ({
           ...(row as IProductVariant),
-          attributes: serializeAttributes(row),
-          price: serializePrices(row),
+          attributes: serializeProductVariantAttributesFromRow(
+            row,
+            attributesData
+          ),
+          price: serializeProductVariantPricesFromRow(row, pricelistsData),
         } as IProductVariant)
     );
     console.log("settingrows2", rows, variantsToSet);
@@ -222,7 +182,7 @@ const ProductVariantsEditor = ({
         product_variants: variantsToSet,
       },
     });
-  }, [rows]);
+  }, [updateMainState]);
 
   const columns: GridColDef[] = [
     {
@@ -443,6 +403,8 @@ const ProductVariantsEditor = ({
     }
 
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+    setUpdateMainState(true);
+
     return updatedRow;
   };
 
