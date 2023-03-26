@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("product", "0008_alter_extensionattribute_ext_attributes"),
     ]

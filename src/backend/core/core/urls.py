@@ -15,4 +15,5 @@ urlpatterns = [
     path("product/", include("product.urls")),
     path("review/", include("review.urls")),
     path("user/", include("user.urls")),
+    path("country/", include("country.urls")),
 ]

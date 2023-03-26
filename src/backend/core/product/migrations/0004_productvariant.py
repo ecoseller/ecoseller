@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("product", "0003_remove_product_product_variants_and_more"),
     ]
