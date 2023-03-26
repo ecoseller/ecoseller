@@ -1,6 +1,6 @@
 import os
 
-from server.app import create_app
+from app.app import create_app
 
 
 def run_server() -> None:
