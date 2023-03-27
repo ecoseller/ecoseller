@@ -18,17 +18,30 @@ class ProductVariant(models.Model):
     weight = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
-    attributes = models.ManyToManyField("BaseAttribute", blank=True, null=True)
+    attributes = models.ManyToManyField("BaseAttribute", blank=True)
 
     def __str__(self) -> str:
         return "sku: {} ean: {}".format(self.sku, self.ean)
 
 
+class ProductType(models.Model):
+    name = models.CharField(max_length=200, blank=False, null=False)
+    allowed_attribute_types = models.ManyToManyField("AttributeType", blank=True)
+    update_at = models.DateTimeField(auto_now=True)
+    create_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class Product(TranslatableModel):
     id = models.CharField(primary_key=True, max_length=20, unique=True)
     published = models.BooleanField(default=False)
+    type = models.ForeignKey(
+        "ProductType", on_delete=models.SET_NULL, null=True, blank=True
+    )
     category = models.ForeignKey(
-        Category, null=True, on_delete=models.SET_NULL
+        Category, null=True, on_delete=models.SET_NULL, blank=True
     )  # SET_NULL when category is deleted
     translations = TranslatedFields(
         title=models.CharField(
