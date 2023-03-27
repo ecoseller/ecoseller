@@ -17,6 +17,8 @@ export enum ActionSetProduct {
   SETTRANSLATION = "setTranslation",
   SETPRODUCTVARIANTS = "setVariants",
   SETMEDIA = "setMedia",
+  SETPRODUCTTYPEID = "setProductTypeId",
+  SETPRODUCTTYPE = "setProductType",
 }
 
 export interface IProductTranslation {

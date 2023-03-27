@@ -36,7 +36,7 @@ const DashboardProductsEditPage = ({
           title={`Edit product ${id}`}
           returnPath={"/dashboard/catalog/products"}
           productData={product}
-          attributesData={attributesData}
+          // attributesData={attributesData}
           pricelistsData={pricelistsData}
         />
       </Container>
@@ -76,10 +76,10 @@ export const getServerSideProps = async (context: any) => {
   }
 
   // fetch attributes data
-  const attributesRes = await axiosPrivate.get(
-    "product/dashboard/attribute/type/"
-  );
-  const attributesData = attributesRes.data;
+  // const attributesRes = await axiosPrivate.get(
+  //   "product/dashboard/attribute/type/"
+  // );
+  // const attributesData = attributesRes.data;
 
   // fetch pricelists data
   const pricelistsRes = await axiosPrivate.get("product/dashboard/pricelist/");
@@ -88,7 +88,7 @@ export const getServerSideProps = async (context: any) => {
   return {
     props: {
       product,
-      attributesData,
+      // attributesData,
       pricelistsData,
     },
   };

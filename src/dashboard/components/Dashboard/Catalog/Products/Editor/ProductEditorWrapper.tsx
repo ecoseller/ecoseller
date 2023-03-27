@@ -30,10 +30,12 @@ import {
   ActionSetProduct,
   IAttributeType,
   IProduct,
+  IProductType,
   ISetProductStateData,
 } from "@/types/product";
 import { postProduct, putProduct } from "@/api/country/product/product";
 import { IPriceList } from "@/types/localization";
+import ProductTypeSelect from "./Product/ProductTypeSelect";
 
 export interface ISetProductStateAction {
   type: ActionSetProduct;
@@ -45,8 +47,9 @@ interface IProductEditorWrapperProps {
   returnPath: string;
   // productId?: string;
   productData?: IProduct;
-  attributesData: IAttributeType[];
+  attributesData?: IAttributeType[];
   pricelistsData: IPriceList[];
+  productTypeData?: IProductType[];
 }
 
 const ProductEditorWrapper = ({
@@ -55,6 +58,7 @@ const ProductEditorWrapper = ({
   productData,
   attributesData,
   pricelistsData,
+  productTypeData,
 }: IProductEditorWrapperProps) => {
   /**
    * Product editor wrapper
@@ -109,6 +113,10 @@ const ProductEditorWrapper = ({
         return { ...state, product_variants: action.payload.product_variants };
       case ActionSetProduct.SETMEDIA:
         return { ...state, product_media: action.payload.product_media };
+      case ActionSetProduct.SETPRODUCTTYPEID:
+        return { ...state, type_id: action.payload.type_id };
+      case ActionSetProduct.SETPRODUCTTYPE:
+        return { ...state, type: action.payload.type };
       default:
         return state;
     }
@@ -139,6 +147,21 @@ const ProductEditorWrapper = ({
           create_at: undefined,
         }
   );
+
+  useEffect(() => {
+    if (productData) {
+      return;
+    }
+    // filter out the product type with id = productState.type_id
+    const productType = productTypeData?.find(
+      (productType) => productType.id === productState.type_id
+    );
+    console.log("productType", productType);
+    dispatchProductState({
+      type: ActionSetProduct.SETPRODUCTTYPE,
+      payload: { type: productType },
+    });
+  }, [productState.type_id]);
 
   console.log("productState", productState);
 
@@ -256,6 +279,12 @@ const ProductEditorWrapper = ({
           <ProductCategorySelect
             state={productState}
             dispatch={dispatchProductState}
+          />
+          <ProductTypeSelect
+            types={productTypeData}
+            state={productState}
+            dispatch={dispatchProductState}
+            disabled={productData ? true : false}
           />
           <ProductVisibilitySelect
             state={productState}

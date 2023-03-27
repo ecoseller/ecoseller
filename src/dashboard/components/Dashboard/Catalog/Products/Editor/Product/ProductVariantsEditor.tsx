@@ -245,13 +245,13 @@ const ProductVariantsEditor = ({
               value: null,
               label: "",
             },
-            ...attribute.base_attributes.map((value: IBaseAttributes) => ({
+            ...(attribute?.base_attributes?.map((value: IBaseAttributes) => ({
               value: value.id,
               label:
                 value.value + `${attribute.unit ? " " + attribute.unit : ""}`,
-            })),
+            })) || []),
           ],
-        }))
+        })) || []
       : []), // <-- this generates attributes columns
 
     {
@@ -306,24 +306,29 @@ const ProductVariantsEditor = ({
       },
     },
   ];
-  const columnGroupingModel: GridColumnGroupingModel = [
-    {
-      groupId: "Prices",
-      children: [
-        ...(pricelistsData?.map((pricelist: IPriceList) => ({
-          field: `$PRICE_${pricelist.code}`,
-        })) || []), // <-- this creates groupping for pricelists
-      ],
-    },
-    {
-      groupId: "Attributes",
-      children: [
-        ...(attributesData?.map((attribute) => ({
-          field: `$ATTRIBUTE_${attribute.type_name}`,
-        })) || []), // <-- this creates groupping for attributes
-      ],
-    },
-  ];
+  // TODO: SINCE COLUMN GROUPING IS EXPERIMENTAL, IT IS NOT WORKING PROPERLY
+  // CURRENTLY IT IS NOT POSSIBLE TO GROUP COLUMNS DUE TO PRODUCT TYPES
+
+  // const columnGroupingModel: GridColumnGroupingModel = [
+  //   {
+  //     groupId: "Prices",
+  //     children: [
+  //       ...(pricelistsData?.map((pricelist: IPriceList) => ({
+  //         field: `$PRICE_${pricelist.code}`,
+  //       })) || []), // <-- this creates groupping for pricelists
+  //     ],
+  //   },
+  //   {
+  //     groupId: "Attributes",
+  //     children: attributesData
+  //       ? [
+  //           ...(attributesData?.map((attribute) => ({
+  //             field: `$ATTRIBUTE_${attribute.type_name}`,
+  //           })) || []), // <-- this creates groupping for attributes
+  //         ]
+  //       : [],
+  //   },
+  // ];
 
   const handleRowEditStart = (
     params: GridRowParams,
@@ -450,8 +455,8 @@ const ProductVariantsEditor = ({
             slotProps={{
               toolbar: { setRows, setRowModesModel },
             }}
-            experimentalFeatures={{ columnGrouping: true }}
-            columnGroupingModel={columnGroupingModel}
+            experimentalFeatures={{ columnGrouping: true }} // <-- this enables column grouping (experimental)
+            // columnGroupingModel={columnGroupingModel} // <-- this creates groupping for attributes, but it is not working properly :(
             sx={{ overflowX: "scroll" }}
           />
           // </div>
