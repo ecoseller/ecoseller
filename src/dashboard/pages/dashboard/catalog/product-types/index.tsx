@@ -149,26 +149,6 @@ const DashboardProductTypesPage = () => {
       flex: 1,
       disableColumnMenu: true,
       getActions: ({ id }) => {
-        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-
-        if (isInEditMode) {
-          return [
-            <GridActionsCellItem
-              icon={<SaveIcon />}
-              label="Save"
-              onClick={handleSaveClick(id)}
-              key={"save"}
-            />,
-            <GridActionsCellItem
-              icon={<CancelIcon />}
-              label="Cancel"
-              className="textPrimary"
-              onClick={handleCancelClick(id)}
-              color="inherit"
-              key={"cancel"}
-            />,
-          ];
-        }
         return [
           <GridActionsCellItem
             icon={<EditIcon />}
