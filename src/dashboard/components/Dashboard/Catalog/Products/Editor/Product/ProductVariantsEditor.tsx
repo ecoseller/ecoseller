@@ -113,7 +113,7 @@ const ProductVariantsEditor = ({
     message: string;
     severity: "success" | "error" | "info" | "warning";
   } | null>(null);
-
+  console.log("attribtuesData", attributesData);
   const [rows, setRows] = useState<IProductVariantTable[]>([]);
 
   const [updateMainState, setUpdateMainState] = useState<boolean>(false);

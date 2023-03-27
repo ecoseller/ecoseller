@@ -123,7 +123,7 @@ const ProductEditorWrapper = ({
   const router = useRouter();
 
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
-
+  console.log("productData", productData);
   const [productState, dispatchProductState] = useReducer(
     setProductStateReducer,
     productData
@@ -237,7 +237,7 @@ const ProductEditorWrapper = ({
             disabled={false}
             state={productState}
             dispatch={dispatchProductState}
-            attributesData={attributesData}
+            attributesData={productState?.type?.allowed_attribute_types || []}
             pricelistsData={pricelistsData}
           />
           <ProductMediaEditor

@@ -32,6 +32,12 @@ export interface IProductTranslations {
   [locale: string]: IProductTranslation; // TODO: this needs to be extended according to iso 639 (TLocale)
 }
 
+export interface IProductType {
+  id: number;
+  name: string;
+  allowed_attribute_types: IAttributeType[];
+}
+
 export interface IProduct {
   id: string | null;
   published: boolean;
@@ -41,6 +47,8 @@ export interface IProduct {
   product_media: number[];
   update_at?: string;
   create_at?: string;
+  type?: IProductType;
+  type_id: number;
 }
 
 export interface IProductVariant {
