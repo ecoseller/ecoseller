@@ -35,9 +35,10 @@ export interface IProductTranslations {
 }
 
 export interface IProductType {
-  id: number;
+  id?: number;
   name: string;
-  allowed_attribute_types: IAttributeType[];
+  allowed_attribute_types?: IAttributeType[];
+  allowed_attribute_types_ids?: number[];
 }
 
 export interface IProduct {

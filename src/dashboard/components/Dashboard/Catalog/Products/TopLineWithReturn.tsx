@@ -25,7 +25,7 @@ const TopLineWithReturn = ({ title, returnPath }: ITopLineWithReturnProps) => {
       <Button
         variant="text"
         onClick={() => {
-          router.push("/dashboard/catalog/products");
+          router.push(returnPath ? returnPath : "/dashboard/catalog/products");
         }}
       >
         <ArrowBackIosIcon />
