@@ -299,14 +299,18 @@ class AtrributeTypeDashboardSerializer(ModelSerializer):
 
 
 class ProductTypeSerializer(ModelSerializer):
+    # name = CharField(required=False)
     allowed_attribute_types = AtrributeTypeDashboardSerializer(
         many=True, read_only=True
     )
     allowed_attribute_types_ids = serializers.PrimaryKeyRelatedField(
         many=True,
         queryset=AttributeType.objects.all(),
-        write_only=True,
+        source="allowed_attribute_types",
+        # write_only=True,
     )
+    create_at = serializers.DateTimeField(read_only=True)
+    update_at = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = ProductType
@@ -315,6 +319,8 @@ class ProductTypeSerializer(ModelSerializer):
             "name",
             "allowed_attribute_types",
             "allowed_attribute_types_ids",
+            "create_at",
+            "update_at",
         )
 
 

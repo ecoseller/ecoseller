@@ -25,7 +25,7 @@ class ProductVariant(models.Model):
 
 
 class ProductType(models.Model):
-    name = models.CharField(max_length=200, blank=False, null=False)
+    name = models.CharField(max_length=200, blank=True, null=True)
     allowed_attribute_types = models.ManyToManyField("AttributeType", blank=True)
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
