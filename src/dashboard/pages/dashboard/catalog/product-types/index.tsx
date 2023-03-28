@@ -45,7 +45,7 @@ import {
 } from "@/api/country/product/priceList";
 import { IProductType } from "@/types/product";
 import { Router, useRouter } from "next/router";
-import { postProductType } from "@/api/product/types";
+import { deleteProductType, postProductType } from "@/api/product/types";
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -102,6 +102,22 @@ const DashboardProductTypesPage = () => {
 
   const [rows, setRows] = useState<IProductType[]>([]);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
+
+  const [snackbar, setSnackbar] = useState<{
+    open: boolean;
+    message: string;
+    severity: "success" | "error" | "info" | "warning";
+  } | null>(null);
+
+  const handleSnackbarClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbar(null);
+  };
 
   const router = useRouter();
 
@@ -163,7 +179,24 @@ const DashboardProductTypesPage = () => {
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={handleDeleteClick(id)}
+            onClick={() => {
+              deleteProductType(id)
+                .then((res) => {
+                  productTypesMutate();
+                  setSnackbar({
+                    open: true,
+                    message: "Product type deleted",
+                    severity: "success",
+                  });
+                })
+                .catch((err) => {
+                  setSnackbar({
+                    open: true,
+                    message: "Error deleting product type",
+                    severity: "error",
+                  });
+                });
+            }}
             color="inherit"
             key={"delete"}
           />,

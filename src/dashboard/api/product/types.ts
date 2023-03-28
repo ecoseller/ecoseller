@@ -21,3 +21,13 @@ export const putProductType = async (data: IProductType) => {
   console.log("putProductType", data);
   return await axiosPrivate.put(`/product/dashboard/type/${data.id}/`, data);
 };
+
+export const deleteProductType = async (id: number | string) => {
+  // Delete ProductType
+  // URL: /product/dashboard/type/<id>/
+  // Method: DELETE
+  // Params: id
+  // Return: Promise
+  console.log("deleteProductType", id);
+  return await axiosPrivate.delete(`/product/dashboard/type/${id}/`);
+};
