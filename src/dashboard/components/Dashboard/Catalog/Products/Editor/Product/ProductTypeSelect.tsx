@@ -20,6 +20,7 @@ import {
 } from "@/types/product";
 import { ISetProductStateAction } from "../ProductEditorWrapper";
 import { ICategory } from "@/types/category";
+import Link from "next/link";
 
 interface IProductMediaEditorProps {
   types: IProductType[] | undefined;
@@ -67,7 +68,14 @@ const ProductTypeSelect = ({
       <Typography variant="h6">Product type</Typography>
       <Box mt={2}>
         {disabled ? (
-          <Typography variant="body1">{state?.type?.name}</Typography>
+          <Link
+            href={{
+              pathname: "/dashboard/catalog/product-types/[id]",
+              query: { id: state?.type?.id },
+            }}
+          >
+            <Typography variant="body1">{state?.type?.name}</Typography>
+          </Link>
         ) : (
           <FormControl fullWidth>
             <InputLabel id="category-select-label">Product type</InputLabel>

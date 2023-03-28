@@ -1,4 +1,7 @@
-// /dashboard/products
+// /dashboard/catalog/products-types
+
+// next.js
+import { useRouter } from "next/router";
 
 // libraries
 import useSWR from "swr";
@@ -8,8 +11,6 @@ import DashboardLayout from "@/pages/dashboard/layout"; //react
 import { ReactElement, useEffect, useState } from "react";
 import RootLayout from "@/pages/layout";
 // components
-import ProductListTopLine from "@/components/Dashboard/Catalog/Products/List/TopLine";
-import ProductListHead from "@/components/Dashboard/Catalog/Products/List/ProductListHead";
 // mui
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -25,26 +26,13 @@ import {
   GridRowModes,
   GridRowModesModel,
   GridActionsCellItem,
-  GridRowParams,
-  MuiEvent,
   GridEventListener,
-  GridRowId,
 } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
-import SaveIcon from "@mui/icons-material/Save";
-import CancelIcon from "@mui/icons-material/Cancel";
-import { randomId } from "@mui/x-data-grid-generator";
-import { Alert, Snackbar } from "@mui/material";
 // types
-import { ICurrency, IPriceList } from "@/types/localization";
-import {
-  deletePriceList,
-  postPriceList,
-  putPriceList,
-} from "@/api/country/product/priceList";
 import { IProductType } from "@/types/product";
-import { Router, useRouter } from "next/router";
+// api
 import { deleteProductType, postProductType } from "@/api/product/types";
 
 interface EditToolbarProps {
@@ -204,44 +192,6 @@ const DashboardProductTypesPage = () => {
       },
     },
   ];
-
-  const handleEditClick = (id: GridRowId) => () => {
-    // open edit mode for the row with sku
-    // get row by id
-    const row = rows.find((row) => row.id === id);
-    if (!row) return;
-    const dataToPost: IProductType = {
-      name: row.name,
-      allowed_attribute_types_ids: [],
-    };
-
-    postProductType(dataToPost).then((res) => {
-      const data = res.data;
-      if (data) {
-        productTypesMutate();
-      }
-    });
-
-    // open variant editor page with SKU
-
-    // setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-  };
-  const processRowUpdate = (newRow: IProductType, oldRow: IProductType) => {
-    const updatedRow = { ...newRow };
-
-    // check if row has SKU
-    // if not, show error
-    // if yes, save row
-    console.log("newRow", newRow);
-
-    return updatedRow;
-  };
-
-  const handleDeleteClick = (id: GridRowId) => () => {
-    const deletedRow = rows.find((row) => row.id === id);
-    setRows(rows.filter((row) => row.id !== id));
-  };
-
   const handleRowEditStop: GridEventListener<"rowEditStop"> = (
     params,
     event

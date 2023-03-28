@@ -1,55 +1,27 @@
-// /dashboard/products
-
+// /dashboard/catalog/products-types
+// next.js
 // libraries
 import useSWR from "swr";
-
 // layout
-import DashboardLayout from "@/pages/dashboard/layout"; //react
+import DashboardLayout from "@/pages/dashboard/layout";
+//react
 import { ReactElement, useEffect, useState } from "react";
 import RootLayout from "@/pages/layout";
 // components
-import ProductListTopLine from "@/components/Dashboard/Catalog/Products/List/TopLine";
-import ProductListHead from "@/components/Dashboard/Catalog/Products/List/ProductListHead";
-// mui
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import Card from "@mui/material/Card";
-import Stack from "@mui/material/Stack";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import {
-  DataGrid,
-  GridRowsProp,
-  GridColDef,
-  GridToolbarContainer,
-  GridRowModes,
-  GridRowModesModel,
-  GridActionsCellItem,
-  GridRowParams,
-  MuiEvent,
-  GridEventListener,
-  GridRowId,
-} from "@mui/x-data-grid";
-import Button from "@mui/material/Button";
-import AddIcon from "@mui/icons-material/Add";
-import SaveIcon from "@mui/icons-material/Save";
-import CancelIcon from "@mui/icons-material/Cancel";
-import { randomId } from "@mui/x-data-grid-generator";
-import { Alert, Grid, Snackbar } from "@mui/material";
-// types
-import { ICurrency, IPriceList } from "@/types/localization";
-import {
-  deletePriceList,
-  postPriceList,
-  putPriceList,
-} from "@/api/country/product/priceList";
-import { IAttributeType, IBaseAttributes, IProductType } from "@/types/product";
 import DashboardContentWithSaveFooter from "@/components/Dashboard/Generic/EditableContent";
 import TopLineWithReturn from "@/components/Dashboard/Catalog/Products/TopLineWithReturn";
-import { axiosPrivate } from "@/utils/axiosPrivate";
 import ProductTypeGeneralInformation from "@/components/Dashboard/Catalog/ProducType/ProductTypeGeneralInformation";
 import ProductTypeAllowedAttribtuesSelect from "@/components/Dashboard/Catalog/ProducType/ProductTypeAllowedAttribtuesSelect";
+// mui
+import Container from "@mui/material/Container";
+import Stack from "@mui/material/Stack";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+// types
 import { putProductType } from "@/api/product/types";
+import { IAttributeType, IBaseAttributes, IProductType } from "@/types/product";
+// api
+import { axiosPrivate } from "@/utils/axiosPrivate";
 
 interface IProps {
   productType: IProductType;
