@@ -1,3 +1,5 @@
 black==22.3.0
 flake8==5.0.4
 flask==2.2.3
+dependency-injector==4.41.0
+pydantic==1.10.7
