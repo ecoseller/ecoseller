@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("product", "0015_productmedia_alter_baseattribute_type_and_more"),
     ]
