@@ -8,7 +8,8 @@ from models.attribute import Attribute
 
 class ProductVariant(BaseModel):
     """
-    This model represents product variant as an object that is sent from core to RS component via API.
+    This model represents product variant as an object that is sent from core
+    to RS component via API.
     """
 
     sku: str

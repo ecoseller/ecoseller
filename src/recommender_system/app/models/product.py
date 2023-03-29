@@ -8,7 +8,8 @@ from models.product_variant import ProductVariant
 
 class Product(BaseModel):
     """
-    This model represents product as an object that is sent from core to RS component via API.
+    This model represents product as an object that is sent from core to RS
+    component via API.
     """
 
     id: str
