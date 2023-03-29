@@ -28,6 +28,7 @@ export interface IProductMediaEditorState extends IProductMedia {
   name: string;
   uploading: boolean;
   error: string | null;
+  updated: boolean;
 }
 
 const ProductMediaHolder = ({
@@ -37,6 +38,8 @@ const ProductMediaHolder = ({
   media: IProductMediaEditorState[];
   setMedia: Dispatch<SetStateAction<IProductMediaEditorState[]>>;
 }) => {
+  const [updateMedia, setUpdateMedia] = useState(false);
+
   const removeCard = async (id: number) => {
     await deleteProductMedia(id);
     setMedia((prevMedia: IProductMediaEditorState[]) => {
@@ -46,6 +49,8 @@ const ProductMediaHolder = ({
     });
   };
 
+  console.log("media", media);
+
   const moveCard = useCallback(
     async (dragIndex: number, hoverIndex: number) => {
       const [newDragSortOrder, newHoverSortOrder] = [
@@ -53,19 +58,24 @@ const ProductMediaHolder = ({
         media[dragIndex].sort_order,
       ]; // performs simple swap of sort orders for the server. New sort_order of dragged card is the sort_order of the card it is hovering over, and vice versa
 
+      console.log("mediaMoveCard", media);
+
       // TODO: this will need debouncing implemented
-      await putProductMedia(media[dragIndex].id, {
-        id: media[dragIndex].id,
-        sort_order: media[dragIndex].sort_order,
-      } as IProductMedia);
-      await putProductMedia(media[hoverIndex].id, {
-        id: media[dragIndex].id,
-        sort_order: media[dragIndex].sort_order,
-      } as IProductMedia);
+      // await putProductMedia(media[dragIndex].id, {
+      //   id: media[dragIndex].id,
+      //   sort_order: media[dragIndex].sort_order,
+      // } as IProductMedia);
+      // await putProductMedia(media[hoverIndex].id, {
+      //   id: media[dragIndex].id,
+      //   sort_order: media[dragIndex].sort_order,
+      // } as IProductMedia);
 
       setMedia((prevMedia: IProductMediaEditorState[]) => {
         prevMedia[dragIndex].sort_order = newDragSortOrder;
         prevMedia[hoverIndex].sort_order = newHoverSortOrder;
+        prevMedia[dragIndex].updated = true;
+        prevMedia[hoverIndex].updated = true;
+
         return update(prevMedia, {
           $splice: [
             [dragIndex, 1],
@@ -77,6 +87,20 @@ const ProductMediaHolder = ({
     [media]
   );
 
+  useEffect(() => {
+    if (!media || !updateMedia) return;
+
+    const updatedMedia = media.filter((item) => item.updated);
+    console.log("updatedMedia", updatedMedia);
+    updatedMedia.forEach(async (item) => {
+      await putProductMedia(item.id, {
+        id: item.id,
+        sort_order: item.sort_order,
+      });
+    });
+    setUpdateMedia(false);
+  }, [updateMedia]);
+
   const renderCard = useCallback(
     (item: IProductMediaEditorState, index: number) => {
       return (
@@ -86,6 +110,7 @@ const ProductMediaHolder = ({
           id={item.id}
           url={item.media}
           moveCard={moveCard}
+          updateCard={() => setUpdateMedia(true)}
           removeCard={async () => await removeCard(item.id)}
         />
       );

@@ -108,7 +108,7 @@ const ProductEditorWrapper = ({
         console.log("SETPRODUCTVARIANTS", action.payload.product_variants);
         return { ...state, product_variants: action.payload.product_variants };
       case ActionSetProduct.SETMEDIA:
-        return { ...state, product_media: action.payload.product_media };
+        return { ...state, media: action.payload.media };
       default:
         return state;
     }
@@ -133,10 +133,10 @@ const ProductEditorWrapper = ({
           published: false,
           category: null,
           product_variants: [],
-          product_media: [],
           translations: {},
           update_at: undefined,
           create_at: undefined,
+          media: [],
         }
   );
 

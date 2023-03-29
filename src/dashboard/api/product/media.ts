@@ -17,5 +17,6 @@ export const putProductMedia = async (
   id: number,
   mediaData: Partial<IProductMedia>
 ) => {
+  console.log("mediaData", mediaData);
   return await axiosPrivate.put(`/product/dashboard/media/${id}/`, mediaData);
 };
