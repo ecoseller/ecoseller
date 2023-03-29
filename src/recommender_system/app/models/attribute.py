@@ -7,7 +7,8 @@ from models.attribute_type import AttributeType
 
 class Attribute(BaseModel):
     """
-    This model represents product's attribute as an object that is sent from core to RS component via API.
+    This model represents product's attribute as an object that is sent from
+    core to RS component via API.
     """
 
     type: AttributeType
