@@ -1,13 +1,8 @@
-import CollapsableContentWithTitle from "@/components/Dashboard/Generic/CollapsableContentWithTitle";
-import EditorCard from "@/components/Dashboard/Generic/EditorCard";
-import { IProductMedia, ISetProductStateData } from "@/types/product";
-import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import update from "immutability-helper";
+// next.js
+
+// react
 import {
   ChangeEvent,
-  ChangeEventHandler,
   Dispatch,
   SetStateAction,
   useCallback,
@@ -15,14 +10,29 @@ import {
   useRef,
   useState,
 } from "react";
+// api
 import {
   deleteProductMedia,
   postProductMedia,
   putProductMedia,
 } from "@/api/product/media";
-import ProductMediaCard from "./Media/ProductMediaCard";
+
+// lib
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import update from "immutability-helper";
+
+// components
+import ProductMediaCard from "./Media/ProductMediaCard";
+
+// mui
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import CollapsableContentWithTitle from "@/components/Dashboard/Generic/CollapsableContentWithTitle";
+import EditorCard from "@/components/Dashboard/Generic/EditorCard";
+
+// types
+import { IProductMedia, ISetProductStateData } from "@/types/product";
 
 export interface IProductMediaEditorState extends IProductMedia {
   name: string;
@@ -59,17 +69,6 @@ const ProductMediaHolder = ({
       ]; // performs simple swap of sort orders for the server. New sort_order of dragged card is the sort_order of the card it is hovering over, and vice versa
 
       console.log("mediaMoveCard", media);
-
-      // TODO: this will need debouncing implemented
-      // await putProductMedia(media[dragIndex].id, {
-      //   id: media[dragIndex].id,
-      //   sort_order: media[dragIndex].sort_order,
-      // } as IProductMedia);
-      // await putProductMedia(media[hoverIndex].id, {
-      //   id: media[dragIndex].id,
-      //   sort_order: media[dragIndex].sort_order,
-      // } as IProductMedia);
-
       setMedia((prevMedia: IProductMediaEditorState[]) => {
         prevMedia[dragIndex].sort_order = newDragSortOrder;
         prevMedia[hoverIndex].sort_order = newHoverSortOrder;
@@ -91,7 +90,6 @@ const ProductMediaHolder = ({
     if (!media || !updateMedia) return;
 
     const updatedMedia = media.filter((item) => item.updated);
-    console.log("updatedMedia", updatedMedia);
     updatedMedia.forEach(async (item) => {
       await putProductMedia(item.id, {
         id: item.id,
@@ -174,20 +172,13 @@ const ProductMediaEditor = ({ disabled, state }: IProductMediaEditorProps) => {
           ]);
         })
         .catch((error) => {
-          console.log(error);
-          // setProductMedia((prev) => {
-          //   const newMedia = prev.map((m) => {
-          //     if (m.id === id) {
-          //       return {
-          //         ...m,
-          //         uploading: false,
-          //         error: error.message,
-          //       };
-          //     }
-          //     return m;
-          //   });
-          //   return newMedia;
-          // });
+          setProductMedia([
+            ...productMedia,
+            {
+              uploading: false,
+              error: error.message,
+            } as IProductMediaEditorState,
+          ]);
         });
     }
   };
