@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework.generics import GenericAPIView
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import permissions
 from core.pagination import (
@@ -12,6 +13,7 @@ from .models import (
     ProductVariant,
     PriceList,
     AttributeType,
+    ProductMedia,
 )
 from .serializers import (
     ProductSerializer,
@@ -20,6 +22,12 @@ from .serializers import (
     PriceListBaseSerializer,
     AtrributeTypeDashboardSerializer,
     ProductVariantSerializer,
+    ProductMediaSerializer,
+)
+
+from rest_framework.parsers import (
+    MultiPartParser,
+    FormParser,
 )
 
 
@@ -192,3 +200,19 @@ class ProductDetailStorefront(APIView):
 
         serialized_product = ProductSerializer(product)
         return Response(serialized_product.data, status=200)
+
+
+class ProductMediaUpload(APIView):
+    permission_classes = (permissions.AllowAny,)
+    parser_classes = (MultiPartParser, FormParser)
+    serializer_class = ProductMediaSerializer
+
+    def post(self, request, *args, **kwargs):
+        product_media_serializer = self.serializer_class(
+            data=request.data, context={"request": request}
+        )
+        if product_media_serializer.is_valid():
+            product_media_serializer.save()
+            return Response(product_media_serializer.data, status=201)
+        else:
+            return Response(product_media_serializer.errors, status=400)

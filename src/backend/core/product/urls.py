@@ -13,4 +13,5 @@ urlpatterns = [
         "dashboard/pricelist/<str:code>/", views.PriceListDashboardDetailView.as_view()
     ),
     path("dashboard/attribute/type/", views.AttributeTypeDashboard.as_view()),
+    path("dashboard/media/", views.ProductMediaUpload.as_view()),
 ]

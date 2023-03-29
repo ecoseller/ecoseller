@@ -202,6 +202,11 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+# Directory where uploaded files will be stored
+# this is only for development purposes, in production S3 or similar should be used
+MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "mediafiles")
+MEDIA_URL = "/media/"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
