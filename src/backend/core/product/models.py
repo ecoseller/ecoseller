@@ -209,7 +209,9 @@ class ProductMediaTypes:
 def product_media_upload_path(instance, filename):
     # create path to store product media
     # store it in MEDIA_ROOT/product_media/<product_id>/<filename>
-    return "product_media/{}/{}/{}".format(instance.product.id, instance.type.lower(), filename)
+    return "product_media/{}/{}/{}".format(
+        instance.product.id, instance.type.lower(), filename
+    )
 
 
 class ProductMedia(SortableModel):
