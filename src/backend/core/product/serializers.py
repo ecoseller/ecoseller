@@ -49,9 +49,11 @@ class ProductMediaSerializer(ModelSerializer):
         many=False,
         queryset=Product.objects.all(),
         source="product",
+        required=False,
         # write_only=True,
     )
-    type = serializers.ChoiceField(choices=ProductMediaTypes.CHOICES)
+    type = serializers.ChoiceField(choices=ProductMediaTypes.CHOICES, required=False)
+    sort_order = serializers.IntegerField(required=False)
 
     class Meta:
         model = ProductMedia

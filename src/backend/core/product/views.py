@@ -202,7 +202,8 @@ class ProductDetailStorefront(APIView):
         return Response(serialized_product.data, status=200)
 
 
-class ProductMediaUpload(APIView):
+class ProductMediaUpload(GenericAPIView):
+    allowed_methods = ["POST"]
     permission_classes = (permissions.AllowAny,)
     parser_classes = (MultiPartParser, FormParser)
     serializer_class = ProductMediaSerializer
@@ -216,3 +217,14 @@ class ProductMediaUpload(APIView):
             return Response(product_media_serializer.data, status=201)
         else:
             return Response(product_media_serializer.errors, status=400)
+
+
+class ProductMediaUploadDetailView(RetrieveUpdateDestroyAPIView):
+    allowed_methods = ["GET", "PUT", "DELETE"]
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = ProductMediaSerializer
+    lookup_field = "id"
+    lookup_url_kwarg = "id"
+
+    def get_queryset(self):
+        return ProductMedia.objects.all()

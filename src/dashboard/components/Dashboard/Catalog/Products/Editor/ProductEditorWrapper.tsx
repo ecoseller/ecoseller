@@ -242,7 +242,7 @@ const ProductEditorWrapper = ({
           />
           <ProductMediaEditor
             disabled={false}
-            // state={productState.product_media}
+            state={productState}
             // dispatch={dispatchProductState}
           />
           <ProductVariantPricesEditor

@@ -32,13 +32,21 @@ export interface IProductTranslations {
   [locale: string]: IProductTranslation; // TODO: this needs to be extended according to iso 639 (TLocale)
 }
 
+export interface IProductMedia {
+  id: number;
+  type: "IMAGE" | "VIDEO";
+  product_id: number;
+  media: string;
+  sort_order: number;
+}
+
 export interface IProduct {
   id: string | null;
   published: boolean;
   category: number | null;
   translations: IProductTranslations;
   product_variants: IProductVariant[];
-  product_media: number[];
+  media: IProductMedia[];
   update_at?: string;
   create_at?: string;
 }
