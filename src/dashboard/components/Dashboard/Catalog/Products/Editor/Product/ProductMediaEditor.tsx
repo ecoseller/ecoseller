@@ -4,39 +4,96 @@ import { IProductMedia, ISetProductStateData } from "@/types/product";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import update from "immutability-helper";
 import {
   ChangeEvent,
   ChangeEventHandler,
+  Dispatch,
+  SetStateAction,
+  useCallback,
   useEffect,
   useRef,
   useState,
 } from "react";
-import { postProductMedia } from "@/api/product/media";
+import {
+  deleteProductMedia,
+  postProductMedia,
+  putProductMedia,
+} from "@/api/product/media";
+import ProductMediaCard from "./Media/ProductMediaCard";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
-interface IProductMediaEditorState extends IProductMedia {
+export interface IProductMediaEditorState extends IProductMedia {
   name: string;
   uploading: boolean;
   error: string | null;
 }
-const ProductMediaHolder = ({ media }: { media: IProductMediaEditorState }) => {
-  return (
-    <table>
-      <tbody>
-        <tr>
-          <td>
-            <img
-              src={media.media}
-              alt={media.name}
-              style={{ width: "100px", height: "auto" }}
-            />
-          </td>
-          <td>
-            <Typography variant="body1">{media.media}</Typography>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+
+const ProductMediaHolder = ({
+  media,
+  setMedia,
+}: {
+  media: IProductMediaEditorState[];
+  setMedia: Dispatch<SetStateAction<IProductMediaEditorState[]>>;
+}) => {
+  const removeCard = async (id: number) => {
+    await deleteProductMedia(id);
+    setMedia((prevMedia: IProductMediaEditorState[]) => {
+      return prevMedia.filter(
+        (card: IProductMediaEditorState) => card.id !== id
+      );
+    });
+  };
+
+  const moveCard = useCallback(
+    async (dragIndex: number, hoverIndex: number) => {
+      const [newDragSortOrder, newHoverSortOrder] = [
+        media[hoverIndex].sort_order,
+        media[dragIndex].sort_order,
+      ]; // performs simple swap of sort orders for the server. New sort_order of dragged card is the sort_order of the card it is hovering over, and vice versa
+
+      // TODO: this will need debouncing implemented
+      await putProductMedia(media[dragIndex].id, {
+        id: media[dragIndex].id,
+        sort_order: media[dragIndex].sort_order,
+      } as IProductMedia);
+      await putProductMedia(media[hoverIndex].id, {
+        id: media[dragIndex].id,
+        sort_order: media[dragIndex].sort_order,
+      } as IProductMedia);
+
+      setMedia((prevMedia: IProductMediaEditorState[]) => {
+        prevMedia[dragIndex].sort_order = newDragSortOrder;
+        prevMedia[hoverIndex].sort_order = newHoverSortOrder;
+        return update(prevMedia, {
+          $splice: [
+            [dragIndex, 1],
+            [hoverIndex, 0, prevMedia[dragIndex] as IProductMediaEditorState],
+          ],
+        });
+      });
+    },
+    [media]
   );
+
+  const renderCard = useCallback(
+    (item: IProductMediaEditorState, index: number) => {
+      return (
+        <ProductMediaCard
+          key={item.id}
+          index={index}
+          id={item.id}
+          url={item.media}
+          moveCard={moveCard}
+          removeCard={async () => await removeCard(item.id)}
+        />
+      );
+    },
+    [media]
+  );
+
+  return <div>{media.map((item, i) => renderCard(item, i))}</div>;
 };
 
 interface IProductMediaEditorProps {
@@ -70,19 +127,7 @@ const ProductMediaEditor = ({ disabled, state }: IProductMediaEditorProps) => {
     // upload files to server
     // and then update the state with the new media
     for (let i = 0; i < e.target.files.length; i++) {
-      if (!e.target.files[i]) continue;
-      // create random id which will be replaced with the real id from the server
-      const id = Math.floor(Math.random() * 1000000000);
-      setProductMedia((prev) => [
-        ...prev,
-        {
-          id: id, // just a placeholder for now until we get the real id from the server below
-          name: e.target.files[i].name || "",
-          type: e.target.files[i].type || "",
-          uploading: true,
-          error: null,
-        } as IProductMediaEditorState,
-      ]);
+      if (!e.target.files || (e.target.files && !e.target.files[i])) continue;
       const formData = new FormData();
       formData.append(`media`, e.target.files[i], e.target.files[i].name);
       formData.append("product_id", state.id);
@@ -90,39 +135,34 @@ const ProductMediaEditor = ({ disabled, state }: IProductMediaEditorProps) => {
       await postProductMedia(formData)
         .then((res) => {
           const media = res.data;
-          setProductMedia((prev) => {
-            const newMedia = prev.map((m) => {
-              if (m.id === id) {
-                return {
-                  ...m,
-                  id: media.id,
-                  media: media.media,
-                  name: media.name,
-                  type: media.type,
-                  uploading: false,
-                  error: null,
-                };
-              }
-              return m;
-            });
-            return newMedia;
-          });
+          setProductMedia([
+            ...productMedia,
+            {
+              id: media.id,
+              media: media.media,
+              name: media.name,
+              type: media.type,
+              uploading: false,
+              error: null,
+              sort_order: media.sort_order,
+            } as IProductMediaEditorState,
+          ]);
         })
         .catch((error) => {
           console.log(error);
-          setProductMedia((prev) => {
-            const newMedia = prev.map((m) => {
-              if (m.id === id) {
-                return {
-                  ...m,
-                  uploading: false,
-                  error: error.message,
-                };
-              }
-              return m;
-            });
-            return newMedia;
-          });
+          // setProductMedia((prev) => {
+          //   const newMedia = prev.map((m) => {
+          //     if (m.id === id) {
+          //       return {
+          //         ...m,
+          //         uploading: false,
+          //         error: error.message,
+          //       };
+          //     }
+          //     return m;
+          //   });
+          //   return newMedia;
+          // });
         });
     }
   };
@@ -150,13 +190,15 @@ const ProductMediaEditor = ({ disabled, state }: IProductMediaEditorProps) => {
               onChange={handleFileChange}
               multiple
             />
-
             <Button variant="text" onClick={handleUploadClick}>
               Upload
             </Button>
-            {productMedia.map((file, i) => (
-              <ProductMediaHolder key={i} media={file} />
-            ))}
+            <DndProvider backend={HTML5Backend}>
+              <ProductMediaHolder
+                media={productMedia}
+                setMedia={setProductMedia}
+              />
+            </DndProvider>
           </>
         )}
       </CollapsableContentWithTitle>
