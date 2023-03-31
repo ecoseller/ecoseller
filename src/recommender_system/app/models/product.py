@@ -16,7 +16,7 @@ class Product(BaseModel):
     id: str
     published: bool
     category_id: int
-    product_locales: List[ProductTranslation]
+    product_translations: List[ProductTranslation]
     product_variants: List[ProductVariant]
     update_at: datetime
     create_at: datetime
