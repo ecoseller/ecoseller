@@ -38,6 +38,11 @@ const navigationData: INavigationItem[] = [
         icon: <InventoryIcon />,
       },
       {
+        title: "Product types",
+        path: "/product-types",
+        icon: <InventoryIcon />,
+      },
+      {
         title: "Categories",
         path: "/categories",
         icon: <CategoryIcon />,
