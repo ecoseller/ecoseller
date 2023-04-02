@@ -5,6 +5,7 @@ from rest_framework.serializers import (
     ModelSerializer,
     CharField,
     ValidationError,
+    PrimaryKeyRelatedField,
 )
 from rest_framework import serializers
 
@@ -34,6 +35,7 @@ from product.models import (
     AttributeType,
     BaseAttribute,
     ProductMediaTypes,
+    ProductType,
 )
 
 
@@ -288,6 +290,56 @@ class ProductVariantSerializer(ModelSerializer):
         return instance
 
 
+class BaseAttributeDashboardSerializer(ModelSerializer):
+    class Meta:
+        model = BaseAttribute
+        fields = (
+            "id",
+            "value",
+            # "order",
+            # "ext_attributes",
+        )
+
+
+class AtrributeTypeDashboardSerializer(ModelSerializer):
+    base_attributes = BaseAttributeDashboardSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = AttributeType
+        fields = (
+            "id",
+            "type_name",
+            "unit",
+            "base_attributes",
+        )
+
+
+class ProductTypeSerializer(ModelSerializer):
+    # name = CharField(required=False)
+    allowed_attribute_types = AtrributeTypeDashboardSerializer(
+        many=True, read_only=True
+    )
+    allowed_attribute_types_ids = serializers.PrimaryKeyRelatedField(
+        many=True,
+        queryset=AttributeType.objects.all(),
+        source="allowed_attribute_types",
+        # write_only=True,
+    )
+    create_at = serializers.DateTimeField(read_only=True)
+    update_at = serializers.DateTimeField(read_only=True)
+
+    class Meta:
+        model = ProductType
+        fields = (
+            "id",
+            "name",
+            "allowed_attribute_types",
+            "allowed_attribute_types_ids",
+            "create_at",
+            "update_at",
+        )
+
+
 class ProductDashboardListSerializer(TranslatedSerializerMixin, ModelSerializer):
     """
     Product Dashboard Serializer (see product/models.py)
@@ -318,6 +370,10 @@ class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSeriali
     )
     id = CharField(required=False, read_only=True)  # for update
     media = ProductMediaSerializer(many=True, source="product_media")
+    type_id = PrimaryKeyRelatedField(
+        required=False, write_only=True, queryset=ProductType.objects.all()
+    )  # for update
+    type = ProductTypeSerializer(read_only=True)  # for read
 
     class Meta:
         model = Product
@@ -330,6 +386,8 @@ class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSeriali
             "update_at",
             "create_at",
             "media",
+            "type",
+            "type_id",
         )
 
     def validate(self, attrs):
@@ -439,28 +497,4 @@ class ProductSerializer(TranslatedSerializerMixin, ModelSerializer):
             "description",
             "slug",
             "product_variants",
-        )
-
-
-class BaseAttributeDashboardSerializer(ModelSerializer):
-    class Meta:
-        model = BaseAttribute
-        fields = (
-            "id",
-            "value",
-            # "order",
-            # "ext_attributes",
-        )
-
-
-class AtrributeTypeDashboardSerializer(ModelSerializer):
-    base_attributes = BaseAttributeDashboardSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = AttributeType
-        fields = (
-            "id",
-            "type_name",
-            "unit",
-            "base_attributes",
         )

@@ -17,6 +17,8 @@ export enum ActionSetProduct {
   SETTRANSLATION = "setTranslation",
   SETPRODUCTVARIANTS = "setVariants",
   SETMEDIA = "setMedia",
+  SETPRODUCTTYPEID = "setProductTypeId",
+  SETPRODUCTTYPE = "setProductType",
 }
 
 export interface IProductTranslation {
@@ -39,6 +41,12 @@ export interface IProductMedia {
   media: string;
   sort_order: number;
 }
+export interface IProductType {
+  id?: number;
+  name: string;
+  allowed_attribute_types?: IAttributeType[];
+  allowed_attribute_types_ids?: number[];
+}
 
 export interface IProduct {
   id: string | null;
@@ -49,6 +57,8 @@ export interface IProduct {
   media: IProductMedia[];
   update_at?: string;
   create_at?: string;
+  type?: IProductType;
+  type_id: number;
 }
 
 export interface IProductVariant {

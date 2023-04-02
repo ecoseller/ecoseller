@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import (
     ProductVariant,
     Product,
+    ProductType,
     ProductPrice,
     PriceList,
     AttributeType,
@@ -55,6 +56,14 @@ class ProductAdmin(admin.ModelAdmin):
     #     return {
     #         'slug': ('title',)
     #     }
+
+
+@admin.register(ProductType)
+class ProductTypeAdmin(admin.ModelAdmin):
+    list_display = ("name", "update_at", "create_at")
+    list_filter = ("update_at", "create_at")
+    search_fields = ("name",)
+    filter_horizontal = ("allowed_attribute_types",)
 
 
 @admin.register(PriceList)

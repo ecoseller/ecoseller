@@ -13,6 +13,7 @@ from .models import (
     PriceList,
     AttributeType,
     ProductMedia,
+    ProductType,
 )
 from .serializers import (
     ProductSerializer,
@@ -22,6 +23,7 @@ from .serializers import (
     AtrributeTypeDashboardSerializer,
     ProductVariantSerializer,
     ProductMediaSerializer,
+    ProductTypeSerializer,
 )
 
 from rest_framework.parsers import (
@@ -141,6 +143,80 @@ class PriceListDashboardDetailView(RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return PriceList.objects.all()
+
+
+class ProductTypeDashboardView(GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = [
+        "GET",
+        "POST",
+    ]
+    authentication_classes = []
+    serializer_class = ProductTypeSerializer
+
+    def get_queryset(self):
+        return ProductType.objects.all()
+
+    def get(self, request):
+        product_types = self.get_queryset()
+        serializer = self.serializer_class(product_types, many=True)
+        return Response(serializer.data, status=200)
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            instance = serializer.save()
+            return Response({**serializer.data, "id": instance.id}, status=201)
+        return Response(serializer.errors, status=400)
+
+
+class ProductTypeDashboardDetailView(RetrieveUpdateDestroyAPIView):
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = ["PUT", "DELETE"]
+    authentication_classes = []
+    serializer_class = ProductTypeSerializer
+    lookup_field = "id"
+    lookup_url_kwarg = "id"
+
+    def get_queryset(self):
+        return ProductType.objects.all()
+
+
+class AttributeTypeDashboardView(GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = [
+        "GET",
+        "POST",
+    ]
+    authentication_classes = []
+    serializer_class = AtrributeTypeDashboardSerializer
+
+    def get_queryset(self):
+        return AttributeType.objects.all()
+
+    def get(self, request):
+        attribute_types = self.get_queryset()
+        serializer = self.serializer_class(attribute_types, many=True)
+        return Response(serializer.data, status=200)
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            instance = serializer.save()
+            return Response({**serializer.data, "id": instance.id}, status=201)
+        return Response(serializer.errors, status=400)
+
+
+class AttributeTypeDashboardDetailView(RetrieveUpdateDestroyAPIView):
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = ["PUT", "DELETE"]
+    authentication_classes = []
+    serializer_class = AtrributeTypeDashboardSerializer
+    lookup_field = "id"
+    lookup_url_kwarg = "id"
+
+    def get_queryset(self):
+        return AttributeType.objects.all()
 
 
 class AttributeTypeDashboard(APIView):

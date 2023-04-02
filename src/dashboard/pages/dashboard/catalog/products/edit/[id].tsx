@@ -16,16 +16,11 @@ import { axiosPrivate } from "@/utils/axiosPrivate";
 import { IPriceList } from "@/types/localization";
 
 interface IProps {
-  product: IProduct;
-  attributesData: IAttributeType[];
+  product: IProduct; // atributesData are gotten directly from product: IProduct
   pricelistsData: IPriceList[];
 }
 
-const DashboardProductsEditPage = ({
-  product,
-  attributesData,
-  pricelistsData,
-}: IProps) => {
+const DashboardProductsEditPage = ({ product, pricelistsData }: IProps) => {
   const router = useRouter();
   const { id } = router.query;
 
@@ -36,7 +31,6 @@ const DashboardProductsEditPage = ({
           title={`Edit product ${id}`}
           returnPath={"/dashboard/catalog/products"}
           productData={product}
-          attributesData={attributesData}
           pricelistsData={pricelistsData}
         />
       </Container>
@@ -75,12 +69,6 @@ export const getServerSideProps = async (context: any) => {
     };
   }
 
-  // fetch attributes data
-  const attributesRes = await axiosPrivate.get(
-    "product/dashboard/attribute/type/"
-  );
-  const attributesData = attributesRes.data;
-
   // fetch pricelists data
   const pricelistsRes = await axiosPrivate.get("product/dashboard/pricelist/");
   const pricelistsData = pricelistsRes.data;
@@ -88,7 +76,7 @@ export const getServerSideProps = async (context: any) => {
   return {
     props: {
       product,
-      attributesData,
+      // attributesData,
       pricelistsData,
     },
   };
