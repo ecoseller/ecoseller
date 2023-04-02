@@ -1,19 +1,18 @@
 from datetime import datetime
 from typing import List
 
-from pydantic import BaseModel
+from models.api.base import ApiBaseModel
+from models.api.product_translation import ProductTranslation
+from models.api.product_variant import ProductVariant
 
-from models.product_translation import ProductTranslation
-from models.product_variant import ProductVariant
 
-
-class Product(BaseModel):
+class Product(ApiBaseModel):
     """
     This model represents product as an object that is sent from core to RS
     component via API.
     """
 
-    id: str
+    id: int
     published: bool
     category_id: int
     product_translations: List[ProductTranslation]

@@ -1,12 +1,11 @@
 from datetime import datetime
 from typing import List
 
-from pydantic import BaseModel
+from models.api.attribute import Attribute
+from models.api.base import ApiBaseModel
 
-from models.attribute import Attribute
 
-
-class ProductVariant(BaseModel):
+class ProductVariant(ApiBaseModel):
     """
     This model represents product variant as an object that is sent from core
     to RS component via API.
