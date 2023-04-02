@@ -112,6 +112,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - name: Load .env file
+        uses: xom9ikk/dotenv@v2
+        with:
+          path: ./app/.env
+          mode: development
+          load-mode: strict
       - name: Set up Python 3.9
         uses: actions/setup-python@v4
         with:
@@ -124,6 +130,8 @@ jobs:
         run: black --check $SOURCE_FILES
       - name: Lint with flake8
         run: flake8 $SOURCE_FILES
+      - name: Test
+        run: pytest app/tests
 
   docker-compose:
     runs-on: ubuntu-latest
