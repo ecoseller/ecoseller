@@ -10,7 +10,3 @@ def run_server() -> None:
 
     app = create_app()
     app.run(host=host, port=port, debug=debug, load_dotenv=False)
-
-
-if __name__ == "__main__":
-    run_server()

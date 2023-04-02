@@ -1,5 +1,8 @@
+import argparse
+import os
 from typing import Any, Dict, List, Type
 
+from alembic import command, config
 from sqlalchemy import create_engine, insert, update, and_
 from sqlalchemy.orm import Query, Session
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
@@ -13,12 +16,30 @@ from storage.sqlite.models import Base
 
 
 class SqliteStorage(AbstractStorage):
+    _connection_string: str
+
     def __init__(self, connection_string: str):
+        self._connection_string = connection_string
         self.engine = create_engine(
             url=connection_string,
             isolation_level="AUTOCOMMIT",
         )
         self.session = Session(self.engine)
+
+    def makemigrations(self) -> None:
+        args = argparse.Namespace(db_url=self._connection_string)
+        conf = config.Config("storage/alembic.ini", cmd_opts=args)
+        command.revision(conf, autogenerate=True)
+
+    def mergemigrations(self) -> None:
+        args = argparse.Namespace(db_url=self._connection_string)
+        conf = config.Config("storage/alembic.ini", cmd_opts=args)
+        command.merge(conf, "heads")
+
+    def migrate(self) -> None:
+        args = argparse.Namespace(db_url=self._connection_string)
+        conf = config.Config("storage/alembic.ini", cmd_opts=args)
+        command.upgrade(conf, "heads")
 
     def _filter(
         self, model_class: Type[Base], query: Query, filters: Dict[str, Any]

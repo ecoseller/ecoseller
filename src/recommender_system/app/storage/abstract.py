@@ -12,6 +12,27 @@ class AbstractStorage(ABC):
     """
 
     @abstractmethod
+    def makemigrations(self) -> None:
+        """
+        Creates migrations based on specified DB structure.
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
+    def mergemigrations(self) -> None:
+        """
+        Merges migrations (current heads into one).
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
+    def migrate(self) -> None:
+        """
+        Applies migrations.
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
     def get_object(
         self, model_class: Type[StoredBaseModel], **kwargs
     ) -> StoredBaseModel:
