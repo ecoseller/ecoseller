@@ -3,9 +3,6 @@ from typing import Any, List, Optional, TYPE_CHECKING
 from recommender_system.models.stored.base import StoredBaseModel
 
 if TYPE_CHECKING:
-    from recommender_system.models.stored.attribute_product_variant import (
-        AttributeProductVariantModel,
-    )
     from recommender_system.models.stored.product_variant import (
         ProductVariantModel,
     )

@@ -4,7 +4,9 @@ from recommender_system.models.stored.many_to_many_relation import (
     ManyToManyRelationModel,
 )
 from recommender_system.models.stored.product import ProductModel
-from recommender_system.models.stored.product_variant import ProductVariantModel
+from recommender_system.models.stored.product_variant import (
+    ProductVariantModel,
+)
 
 
 class ProductProductVariantModel(ManyToManyRelationModel):

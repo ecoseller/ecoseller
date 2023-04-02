@@ -2,7 +2,9 @@ from datetime import datetime
 from typing import List
 
 from recommender_system.models.api.base import ApiBaseModel
-from recommender_system.models.api.product_translation import ProductTranslation
+from recommender_system.models.api.product_translation import (
+    ProductTranslation,
+)
 from recommender_system.models.api.product_variant import ProductVariant
 
 

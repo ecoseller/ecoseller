@@ -30,4 +30,6 @@ class ProductVariantModel(StoredBaseModel):
 
     @property
     def products(self) -> List["ProductModel"]:
+        from recommender_system.models.stored.product import ProductModel
+
         return self._storage.get_object(model_class=ProductModel, pk=self.product_id)

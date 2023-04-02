@@ -1,7 +1,5 @@
 from typing import Any, Dict, Type
 
-import pytest
-
 from recommender_system.models.stored.attribute import AttributeModel
 from recommender_system.models.stored.attribute_type import AttributeTypeModel
 from recommender_system.models.stored.base import StoredBaseModel

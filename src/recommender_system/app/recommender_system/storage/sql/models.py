@@ -1,5 +1,11 @@
 from sqlalchemy.sql.schema import Column, ForeignKey
-from sqlalchemy.sql.sqltypes import Boolean, DECIMAL, Integer, String, TIMESTAMP
+from sqlalchemy.sql.sqltypes import (
+    Boolean,
+    DECIMAL,
+    Integer,
+    String,
+    TIMESTAMP,
+)
 from sqlalchemy.orm import declarative_base, DeclarativeBase
 
 from recommender_system.models.stored.attribute import AttributeModel
@@ -18,7 +24,9 @@ from recommender_system.models.stored.product_translation import (
     ProductTranslationModel,
 )
 from recommender_system.models.stored.product_type import ProductTypeModel
-from recommender_system.models.stored.product_variant import ProductVariantModel
+from recommender_system.models.stored.product_variant import (
+    ProductVariantModel,
+)
 from recommender_system.storage.sql.base import SQLBase
 
 

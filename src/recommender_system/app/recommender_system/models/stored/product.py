@@ -5,9 +5,6 @@ from recommender_system.models.stored.base import StoredBaseModel
 from recommender_system.models.stored.product_type import ProductTypeModel
 
 if TYPE_CHECKING:
-    from recommender_system.models.stored.product_product_variant import (
-        ProductProductVariantModel,
-    )
     from recommender_system.models.stored.product_translation import (
         ProductTranslationModel,
     )
@@ -57,9 +54,9 @@ class ProductModel(StoredBaseModel):
     @property
     def variants(self) -> List["ProductVariantModel"]:
         from recommender_system.models.stored.product_product_variant import (
-            ProductProductVaritantModel,
+            ProductProductVariantModel,
         )
 
         return self._storage.get_related_objects(
-            model=self, relation_model_class=ProductProductVaritantModel
+            model=self, relation_model_class=ProductProductVariantModel
         )

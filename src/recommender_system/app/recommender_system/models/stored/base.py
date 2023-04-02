@@ -1,4 +1,3 @@
-from abc import abstractmethod
 from typing import Any, List, TYPE_CHECKING
 
 from dependency_injector.wiring import inject, Provide

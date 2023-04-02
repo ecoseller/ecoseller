@@ -1,4 +1,4 @@
-from dependency_injector import containers, providers
+from dependency_injector import containers
 
 from recommender_system.server.container import Container
 
