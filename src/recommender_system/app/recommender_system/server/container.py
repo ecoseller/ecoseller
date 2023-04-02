@@ -25,6 +25,4 @@ class Container(containers.DeclarativeContainer):
     request_manager = providers.Singleton(RequestManager)
     trainer = providers.Singleton(Trainer)
 
-    storage = providers.Singleton(
-        SQLStorage, connection_string=os.environ["RS_DB_URL"]
-    )
+    storage = providers.Singleton(SQLStorage, connection_string=os.environ["RS_DB_URL"])

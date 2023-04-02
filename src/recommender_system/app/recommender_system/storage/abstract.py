@@ -66,9 +66,7 @@ class AbstractStorage(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def store_object(
-        self, model: StoredBaseModel, create: bool = False
-    ) -> None:
+    def store_object(self, model: StoredBaseModel, create: bool = False) -> None:
         """
         Stores `model` instance in storage.
 

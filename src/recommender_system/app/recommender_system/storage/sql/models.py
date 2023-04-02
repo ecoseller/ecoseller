@@ -35,9 +35,7 @@ class SQLAttribute(Base):
     order = Column(Integer, nullable=True)
 
     attribute_type_id = Column(Integer, ForeignKey("attribute_type.id"))
-    parent_attribute_id = Column(
-        Integer, ForeignKey("attribute.id"), nullable=True
-    )
+    parent_attribute_id = Column(Integer, ForeignKey("attribute.id"), nullable=True)
 
     __tablename__ = "attribute"
 
@@ -105,9 +103,7 @@ class SQLProduct(Base):
     update_at = Column(TIMESTAMP)
     create_at = Column(TIMESTAMP)
 
-    product_type_id = Column(
-        Integer, ForeignKey("product_type.id"), nullable=True
-    )
+    product_type_id = Column(Integer, ForeignKey("product_type.id"), nullable=True)
 
     __tablename__ = "product"
 

@@ -67,9 +67,7 @@ class SQLStorage(AbstractStorage):
         sql_class = SQLModelMapper.map(model_class)
 
         query = self.session.query(sql_class)
-        query = self._filter(
-            model_class=model_class, query=query, filters=kwargs
-        )
+        query = self._filter(model_class=model_class, query=query, filters=kwargs)
 
         try:
             result = query.one()
@@ -86,9 +84,7 @@ class SQLStorage(AbstractStorage):
         sql_class = SQLModelMapper.map(model_class)
 
         query = self.session.query(sql_class)
-        query = self._filter(
-            model_class=model_class, query=query, filters=kwargs
-        )
+        query = self._filter(model_class=model_class, query=query, filters=kwargs)
 
         results = query.all()
 
@@ -107,23 +103,13 @@ class SQLStorage(AbstractStorage):
             target_class,
             source_pk_name,
             target_pk_name,
-        ) = relation_model_class.get_target_model_class(
-            source_class=model.__class__
-        )
+        ) = relation_model_class.get_target_model_class(source_class=model.__class__)
         sql_target_class = SQLModelMapper.map(model_class=target_class)
-        sql_relation_model_class = SQLModelMapper.map(
-            model_class=relation_model_class
-        )
+        sql_relation_model_class = SQLModelMapper.map(model_class=relation_model_class)
 
-        relation_target_pk_column = getattr(
-            sql_relation_model_class, target_pk_name
-        )
-        relation_source_pk_column = getattr(
-            sql_relation_model_class, source_pk_name
-        )
-        target_pk_column = getattr(
-            sql_target_class, target_class.Meta.primary_key
-        )
+        relation_target_pk_column = getattr(sql_relation_model_class, target_pk_name)
+        relation_source_pk_column = getattr(sql_relation_model_class, source_pk_name)
+        target_pk_column = getattr(sql_target_class, target_class.Meta.primary_key)
 
         results = (
             self.session.query(sql_target_class)
@@ -144,9 +130,7 @@ class SQLStorage(AbstractStorage):
 
         return models
 
-    def store_object(
-        self, model: StoredBaseModel, create: bool = False
-    ) -> None:
+    def store_object(self, model: StoredBaseModel, create: bool = False) -> None:
         sql_class = SQLModelMapper.map(model.__class__)
         query = update(sql_class).filter(
             getattr(sql_class, model.Meta.primary_key) == model.pk

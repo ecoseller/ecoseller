@@ -30,6 +30,4 @@ class ProductTranslationModel(StoredBaseModel):
 
     @property
     def product(self) -> ProductModel:
-        return self._storage.get_object(
-            model_class=ProductModel, pk=self.product_id
-        )
+        return self._storage.get_object(model_class=ProductModel, pk=self.product_id)
