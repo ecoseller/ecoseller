@@ -30,10 +30,6 @@ class ProductModel(StoredBaseModel):
         primary_key = "id"
 
     @property
-    def pk(self) -> Any:
-        return self.id
-
-    @property
     def translations(self) -> List["ProductTranslationModel"]:
         from recommender_system.models.stored.product_translation import (
             ProductTranslationModel,

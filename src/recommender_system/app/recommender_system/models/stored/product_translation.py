@@ -25,9 +25,5 @@ class ProductTranslationModel(StoredBaseModel):
         primary_key = "id"
 
     @property
-    def pk(self) -> Any:
-        return self.id
-
-    @property
     def product(self) -> ProductModel:
         return self._storage.get_object(model_class=ProductModel, pk=self.product_id)

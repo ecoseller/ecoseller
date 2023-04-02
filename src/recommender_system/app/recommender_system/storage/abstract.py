@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Type
+from typing import Any, List, Type
 
 from recommender_system.models.stored.base import StoredBaseModel
 from recommender_system.models.stored.many_to_many_relation import (
@@ -66,11 +66,13 @@ class AbstractStorage(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def store_object(self, model: StoredBaseModel, create: bool = False) -> None:
+    def store_object(self, model: StoredBaseModel, create: bool = False) -> Any:
         """
         Stores `model` instance in storage.
 
         Creates instance if `create` is True, updates if `create` is False.
+
+        Returns primary key of stored object.
         """
         raise NotImplementedError()
 

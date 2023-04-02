@@ -7,6 +7,7 @@ if TYPE_CHECKING:
     from recommender_system.models.stored.attribute_type import (
         AttributeTypeModel,
     )
+    from recommender_system.models.stored.product import ProductModel
 
 
 class ProductTypeModel(StoredBaseModel):
@@ -24,10 +25,6 @@ class ProductTypeModel(StoredBaseModel):
         primary_key = "id"
 
     @property
-    def pk(self) -> Any:
-        return self.id
-
-    @property
     def attribute_types(self) -> List["AttributeTypeModel"]:
         from recommender_system.models.stored.attribute_type_product_type import (
             AttributeTypeProductTypeModel,
@@ -36,3 +33,9 @@ class ProductTypeModel(StoredBaseModel):
         return self._storage.get_related_objects(
             model=self, relation_model_class=AttributeTypeProductTypeModel
         )
+
+    @property
+    def products(self) -> List["ProductModel"]:
+        from recommender_system.models.stored.product import ProductModel
+
+        return ProductModel.gets(product_type_id=self.id)

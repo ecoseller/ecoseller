@@ -29,7 +29,7 @@ class StoredBaseModel(BaseModel):
 
     @property
     def pk(self) -> Any:
-        raise NotImplementedError()
+        return getattr(self, self.Meta.primary_key)
 
     @classmethod
     @inject
@@ -46,10 +46,11 @@ class StoredBaseModel(BaseModel):
         return storage.get_objects(model_class=cls, **kwargs)
 
     def create(self) -> None:
-        self._storage.store_object(model=self, create=True)
+        pk = self._storage.store_object(model=self, create=True)
+        setattr(self, self.Meta.primary_key, pk)
 
     def save(self) -> None:
-        self._storage.store_object(model=self, create=False)
+        _ = self._storage.store_object(model=self, create=False)
 
     def refresh(self) -> None:
         self._storage.refresh_object(model=self)

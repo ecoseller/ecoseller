@@ -26,7 +26,3 @@ class AttributeProductVariantModel(ManyToManyRelationModel):
         target_model_class = ProductVariantModel
         source_pk_name = "attribute_id"
         target_pk_name = "product_variant_id"
-
-    @property
-    def pk(self) -> Any:
-        return self.id

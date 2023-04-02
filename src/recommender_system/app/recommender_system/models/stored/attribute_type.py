@@ -21,10 +21,6 @@ class AttributeTypeModel(StoredBaseModel):
         primary_key = "id"
 
     @property
-    def pk(self) -> Any:
-        return self.id
-
-    @property
     def attributes(self) -> List[AttributeModel]:
         return self._storage.get_objects(
             model_class=AttributeModel, attribute_type_id=self.id

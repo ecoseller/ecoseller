@@ -25,10 +25,6 @@ class AttributeModel(StoredBaseModel):
         primary_key = "id"
 
     @property
-    def pk(self) -> Any:
-        return self.id
-
-    @property
     def ext_attributes(self) -> List["AttributeModel"]:
         return self._storage.get_objects(
             model_class=AttributeModel, parent_attribute_id=self.id

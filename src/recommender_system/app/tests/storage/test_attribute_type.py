@@ -5,7 +5,12 @@ import pytest
 from recommender_system.models.stored.attribute import AttributeModel
 from recommender_system.models.stored.attribute_type import AttributeTypeModel
 from recommender_system.storage import ModelNotFoundException
-from tests.storage.tools import create_model, delete_model
+from tests.storage.tools import create_model, delete_model, default_dicts
+
+
+def delete_attributes(attribute_type_id: int) -> None:
+    for attribute in AttributeModel.gets(attribute_type_id=attribute_type_id):
+        attribute.delete()
 
 
 @pytest.fixture
@@ -13,10 +18,12 @@ def clear_attribute_type() -> int:
     attribute_type_id = 0
     attribute_type = create_model(model_class=AttributeTypeModel)
 
+    delete_attributes(attribute_type_id=attribute_type_id)
     delete_model(model_class=AttributeTypeModel, pk=attribute_type_id)
 
     yield attribute_type_id
 
+    delete_attributes(attribute_type_id=attribute_type_id)
     delete_model(model_class=AttributeTypeModel, pk=attribute_type.pk)
 
 
@@ -26,16 +33,14 @@ def create_attribute_type() -> int:
 
     yield attribute_type.pk
 
+    delete_attributes(attribute_type_id=attribute_type.id)
     delete_model(model_class=AttributeTypeModel, pk=attribute_type.pk)
 
 
 def test_attribute_type_create(clear_attribute_type) -> None:
     attribute_type_id = clear_attribute_type
-    attribute_type_dict = {
-        "id": attribute_type_id,
-        "type_name": "weight",
-        "unit": "kg",
-    }
+    attribute_type_dict = default_dicts[AttributeTypeModel]
+    attribute_type_dict["id"] = attribute_type_id
 
     with pytest.raises(ModelNotFoundException):
         _ = AttributeTypeModel.get(pk=attribute_type_id)
@@ -93,12 +98,7 @@ def test_attribute_type_attributes(create_attribute_type):
     attribute_type_id = create_attribute_type
     attribute_type = AttributeTypeModel.get(pk=attribute_type_id)
 
-    attribute_dict = {
-        "id": 0,
-        "value": "1",
-        "attribute_type_id": attribute_type_id,
-        "parent_attribute_id": None,
-    }
+    attribute_dict = default_dicts[AttributeModel]
 
     old_attributes = len(attribute_type.attributes)
 

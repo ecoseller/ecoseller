@@ -32,17 +32,17 @@ class SQLStorage(AbstractStorage):
 
     def makemigrations(self) -> None:
         args = argparse.Namespace(db_url=self._connection_string)
-        conf = config.Config("storage/alembic.ini", cmd_opts=args)
+        conf = config.Config("recommender_system/storage/alembic.ini", cmd_opts=args)
         command.revision(conf, autogenerate=True)
 
     def mergemigrations(self) -> None:
         args = argparse.Namespace(db_url=self._connection_string)
-        conf = config.Config("storage/alembic.ini", cmd_opts=args)
+        conf = config.Config("recommender_system/storage/alembic.ini", cmd_opts=args)
         command.merge(conf, "heads")
 
     def migrate(self) -> None:
         args = argparse.Namespace(db_url=self._connection_string)
-        conf = config.Config("storage/alembic.ini", cmd_opts=args)
+        conf = config.Config("recommender_system/storage/alembic.ini", cmd_opts=args)
         command.upgrade(conf, "heads")
 
     def _filter(
@@ -129,15 +129,18 @@ class SQLStorage(AbstractStorage):
 
         return models
 
-    def store_object(self, model: StoredBaseModel, create: bool = False) -> None:
+    def store_object(self, model: StoredBaseModel, create: bool = False) -> Any:
         sql_class = SQLModelMapper.map(model.__class__)
-        query = update(sql_class).filter(
-            getattr(sql_class, model.Meta.primary_key) == model.pk
-        )
+        pk_column = getattr(sql_class, model.Meta.primary_key)
+        query = update(sql_class).filter(pk_column == model.pk)
         if create:
             query = insert(sql_class)
         query = query.values(model.dict())
         self.session.execute(query)
+        inserted_object = (
+            self.session.query(sql_class).order_by(pk_column.desc()).first()
+        )
+        return getattr(inserted_object, model.Meta.primary_key)
 
     def refresh_object(self, model: StoredBaseModel) -> None:
         result = self.get_object(model_class=model.__class__, pk=model.pk)

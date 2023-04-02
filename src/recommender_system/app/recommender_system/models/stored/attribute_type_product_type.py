@@ -24,7 +24,3 @@ class AttributeTypeProductTypeModel(ManyToManyRelationModel):
         target_model_class = ProductTypeModel
         source_pk_name = "attribute_type_id"
         target_pk_name = "product_type_id"
-
-    @property
-    def pk(self) -> Any:
-        return self.id

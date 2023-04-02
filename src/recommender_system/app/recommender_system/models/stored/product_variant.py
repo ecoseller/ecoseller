@@ -25,10 +25,6 @@ class ProductVariantModel(StoredBaseModel):
         primary_key = "id"
 
     @property
-    def pk(self) -> Any:
-        return self.id
-
-    @property
     def products(self) -> List["ProductModel"]:
         from recommender_system.models.stored.product import ProductModel
 
