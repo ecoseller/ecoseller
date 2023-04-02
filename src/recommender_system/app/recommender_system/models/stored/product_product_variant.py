@@ -1,7 +1,6 @@
-from typing import Any
-
+from recommender_system.models.stored.base import StoredBaseModel
 from recommender_system.models.stored.many_to_many_relation import (
-    ManyToManyRelationModel,
+    ManyToManyRelationMixin,
 )
 from recommender_system.models.stored.product import ProductModel
 from recommender_system.models.stored.product_variant import (
@@ -9,7 +8,7 @@ from recommender_system.models.stored.product_variant import (
 )
 
 
-class ProductProductVariantModel(ManyToManyRelationModel):
+class ProductProductVariantModel(StoredBaseModel, ManyToManyRelationMixin):
     """
     This model represents attribute type and product type relation as an
     object stored in the database.
@@ -22,6 +21,8 @@ class ProductProductVariantModel(ManyToManyRelationModel):
 
     class Meta:
         primary_key = "id"
+
+    class RelationMeta:
         source_model_class = ProductModel
         target_model_class = ProductVariantModel
         source_pk_name = "product_id"

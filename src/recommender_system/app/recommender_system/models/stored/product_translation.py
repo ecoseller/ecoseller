@@ -1,5 +1,3 @@
-from typing import Any
-
 from recommender_system.models.stored.base import StoredBaseModel
 from recommender_system.models.stored.product import ProductModel
 

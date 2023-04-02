@@ -3,7 +3,7 @@ from typing import Any, List, Type
 
 from recommender_system.models.stored.base import StoredBaseModel
 from recommender_system.models.stored.many_to_many_relation import (
-    ManyToManyRelationModel,
+    ManyToManyRelationMixin,
 )
 
 
@@ -57,7 +57,7 @@ class AbstractStorage(ABC):
     def get_related_objects(
         self,
         model: StoredBaseModel,
-        relation_model_class: Type[ManyToManyRelationModel],
+        relation_model_class: Type[ManyToManyRelationMixin],
     ) -> List[StoredBaseModel]:
         """
         Searches for target models of relation `relation_model_class` where

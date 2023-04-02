@@ -5,7 +5,7 @@ import pytest
 from recommender_system.models.stored.attribute import AttributeModel
 from recommender_system.models.stored.attribute_type import AttributeTypeModel
 from recommender_system.storage import ModelNotFoundException
-from tests.storage.tools import create_model, delete_model, default_dicts
+from tests.storage.tools import get_or_create_model, delete_model, default_dicts
 
 
 def delete_ext_attributes(attribute_id: int) -> None:
@@ -16,7 +16,7 @@ def delete_ext_attributes(attribute_id: int) -> None:
 @pytest.fixture
 def clear_attribute() -> int:
     attribute_id = 0
-    attribute_type = create_model(model_class=AttributeTypeModel)
+    attribute_type = get_or_create_model(model_class=AttributeTypeModel)
 
     delete_ext_attributes(attribute_id=attribute_id)
     delete_model(model_class=AttributeModel, pk=attribute_id)
@@ -30,8 +30,8 @@ def clear_attribute() -> int:
 
 @pytest.fixture
 def create_attribute() -> int:
-    attribute_type = create_model(model_class=AttributeTypeModel)
-    attribute = create_model(model_class=AttributeModel)
+    attribute_type = get_or_create_model(model_class=AttributeTypeModel)
+    attribute = get_or_create_model(model_class=AttributeModel)
 
     yield attribute.pk
 

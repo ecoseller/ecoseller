@@ -10,7 +10,7 @@ from recommender_system.models.stored.attribute_type_product_type import (
 from recommender_system.models.stored.product import ProductModel
 from recommender_system.models.stored.product_type import ProductTypeModel
 from recommender_system.storage import ModelNotFoundException
-from tests.storage.tools import create_model, delete_model, default_dicts
+from tests.storage.tools import get_or_create_model, delete_model, default_dicts
 
 
 def delete_products(product_type_id: int) -> None:
@@ -31,24 +31,26 @@ def delete_attribute_types(product_type_id: int) -> None:
 @pytest.fixture
 def clear_product_type() -> int:
     product_type_id = 0
-    product_type = create_model(model_class=ProductTypeModel)
+    product_type = get_or_create_model(model_class=ProductTypeModel)
 
     delete_model(model_class=ProductTypeModel, pk=product_type_id)
 
     yield product_type_id
 
     delete_products(product_type_id=product_type_id)
-    delete_model(model_class=ProductTypeModel, pk=product_type.pk)
+    delete_attribute_types(product_type_id=product_type_id)
+    delete_model(model_class=ProductTypeModel, pk=product_type.id)
 
 
 @pytest.fixture
 def create_product_type() -> int:
-    product_type = create_model(model_class=ProductTypeModel)
+    product_type = get_or_create_model(model_class=ProductTypeModel)
 
     yield product_type.pk
 
     delete_products(product_type_id=product_type.id)
-    delete_model(model_class=ProductTypeModel, pk=product_type.pk)
+    delete_attribute_types(product_type_id=product_type.id)
+    delete_model(model_class=ProductTypeModel, pk=product_type.id)
 
 
 def test_product_type_create(clear_product_type) -> None:

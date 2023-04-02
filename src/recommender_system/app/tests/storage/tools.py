@@ -37,9 +37,12 @@ default_dicts: Dict[Type[StoredBaseModel], Any] = {
 }
 
 
-def create_model(model_class: Type[StoredBaseModel]) -> StoredBaseModel:
+def get_or_create_model(model_class: Type[StoredBaseModel]) -> StoredBaseModel:
     model = model_class.parse_obj(default_dicts[model_class])
-    model.create()
+    try:
+        model = model_class.get(pk=model.pk)
+    except ModelNotFoundException:
+        model.create()
     return model
 
 

@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, List, TYPE_CHECKING
+from typing import List, TYPE_CHECKING
 
 from recommender_system.models.stored.base import StoredBaseModel
 

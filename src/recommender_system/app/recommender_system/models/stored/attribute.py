@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, TYPE_CHECKING
+from typing import List, Optional, TYPE_CHECKING
 
 from recommender_system.models.stored.base import StoredBaseModel
 

@@ -1,11 +1,10 @@
-from abc import ABC
 from typing import Tuple, Type
 
 from recommender_system.models.stored.base import StoredBaseModel
 
 
-class ManyToManyRelationModel(StoredBaseModel, ABC):
-    class Meta(StoredBaseModel.Meta):
+class ManyToManyRelationMixin:
+    class RelationMeta:
         source_model_class: Type[StoredBaseModel]
         target_model_class: Type[StoredBaseModel]
         source_pk_name: str
@@ -20,17 +19,17 @@ class ManyToManyRelationModel(StoredBaseModel, ABC):
         target primary key name.
         """
 
-        if source_class == cls.Meta.source_model_class:
+        if source_class == cls.RelationMeta.source_model_class:
             return (
-                cls.Meta.target_model_class,
-                cls.Meta.source_pk_name,
-                cls.Meta.target_pk_name,
+                cls.RelationMeta.target_model_class,
+                cls.RelationMeta.source_pk_name,
+                cls.RelationMeta.target_pk_name,
             )
-        if source_class == cls.Meta.target_model_class:
+        if source_class == cls.RelationMeta.target_model_class:
             return (
-                cls.Meta.source_model_class,
-                cls.Meta.target_pk_name,
-                cls.Meta.source_pk_name,
+                cls.RelationMeta.source_model_class,
+                cls.RelationMeta.target_pk_name,
+                cls.RelationMeta.source_pk_name,
             )
         raise ValueError(
             f"Unable to get target model class for source class {source_class}"
