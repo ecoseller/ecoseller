@@ -23,7 +23,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import update from "immutability-helper";
 
 // components
-import ProductMediaCard from "./Media/ProductMediaCard";
+import ProductMediaCard from "./ProductMedia/ProductMediaCard";
 
 // mui
 import Button from "@mui/material/Button";
