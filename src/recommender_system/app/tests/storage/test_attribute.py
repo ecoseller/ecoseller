@@ -91,3 +91,23 @@ def test_attribute_delete(create_attribute):
 
     with pytest.raises(ModelNotFoundException):
         _ = AttributeModel.get(pk=attribute_id)
+
+
+def test_attribute_ext_attributes(create_attribute):
+    attribute_id = create_attribute
+    attribute = AttributeModel.get(pk=attribute_id)
+
+    attribute_dict = {
+        "id": 0,
+        "value": "1",
+        "attribute_type_id": attribute.attribute_type_id,
+        "parent_attribute_id": attribute.id,
+    }
+
+    old_ext_attributes = len(attribute.ext_attributes)
+
+    ext_attribute = AttributeModel.parse_obj(attribute_dict)
+    ext_attribute.id = None
+    ext_attribute.create()
+
+    assert len(attribute.ext_attributes) == old_ext_attributes + 1
