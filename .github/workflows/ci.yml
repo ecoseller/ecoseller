@@ -115,8 +115,7 @@ jobs:
       - name: Load .env file
         uses: xom9ikk/dotenv@v2
         with:
-          path: ./app
-          mode:
+          path: src/recommender_system/app
           load-mode: strict
       - name: Set up Python 3.9
         uses: actions/setup-python@v4
