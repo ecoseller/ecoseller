@@ -5,6 +5,7 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { getAllCategories } from "@/api/country/category";
 import { InferGetServerSidePropsType } from "next";
+import CategoriesList from "@/components/Dashboard/Catalog/Categories/CategoriesList";
 
 
 const CategoriesPage = ({ categories }: InferGetServerSidePropsType<typeof getServerSideProps>) =>
@@ -16,13 +17,7 @@ const CategoriesPage = ({ categories }: InferGetServerSidePropsType<typeof getSe
           Categories list
         </Typography>
         <>
-          <table>
-            {categories.map(c => (<tr key={c.id}>
-              <td>{c.id}</td>
-              <td>{c.title}</td>
-              <td>{c.description}</td>
-            </tr>))}
-          </table>
+          <CategoriesList categories={categories} />
         </>
       </Container>
     </DashboardLayout>
@@ -42,7 +37,7 @@ export async function getServerSideProps()
 {
   const res = await getAllCategories();
   const categories = await res.data;
-  
+
   return { props: { categories: categories } };
 }
 
