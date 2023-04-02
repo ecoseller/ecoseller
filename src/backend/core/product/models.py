@@ -219,6 +219,14 @@ class ProductMediaTypes:
     ]
 
 
+def product_media_upload_path(instance, filename):
+    # create path to store product media
+    # store it in MEDIA_ROOT/product_media/<product_id>/<filename>
+    return "product_media/{}/{}/{}".format(
+        instance.product.id, instance.type.lower(), filename
+    )
+
+
 class ProductMedia(SortableModel):
     """
     Model used to store images for products (high level object - not variant)
@@ -227,11 +235,13 @@ class ProductMedia(SortableModel):
     product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
-        blank=False,
-        null=False,
+        blank=True,
+        null=True,
         related_name="product_media",
     )
-    media = models.ImageField(upload_to="product_media", blank=False, null=False)
+    media = models.ImageField(
+        upload_to=product_media_upload_path, blank=False, null=False
+    )
     type = models.CharField(
         max_length=10,
         choices=ProductMediaTypes.CHOICES,
@@ -245,6 +255,11 @@ class ProductMedia(SortableModel):
 
     def __str__(self) -> str:
         return "{}: {} {}".format(self.product, self.type, self.media)
+
+    def get_ordering_queryset(self):
+        if not self.product:
+            return ProductMedia.objects.none()
+        return self.product.product_media.all()
 
 
 class ProductVariantMedia(models.Model):

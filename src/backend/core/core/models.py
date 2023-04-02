@@ -18,6 +18,11 @@ class SortableModel(models.Model):
             qs = self.get_ordering_queryset()
             existing_max = self.get_max_sort_order(qs)
             self.sort_order = 0 if existing_max is None else existing_max + 1
+        # check for sort_order collisions and fix them
+        # this can happen when existing objects are deleted or when
+        # objects simply moved around and their sort_order is not unique
+        # anymore.
+
         super().save(*args, **kwargs)
 
     @transaction.atomic

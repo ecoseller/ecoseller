@@ -34,6 +34,7 @@ from product.models import (
     ProductMedia,
     AttributeType,
     BaseAttribute,
+    ProductMediaTypes,
     ProductType,
 )
 
@@ -44,13 +45,28 @@ Common serializers
 
 
 class ProductMediaSerializer(ModelSerializer):
+    media = serializers.ImageField(required=False, use_url=True)
+    # product_id = serializers.ReadOnlyField(source="product.id")
+    product_id = serializers.PrimaryKeyRelatedField(
+        many=False,
+        queryset=Product.objects.all(),
+        source="product",
+        required=False,
+        # write_only=True,
+    )
+    type = serializers.ChoiceField(choices=ProductMediaTypes.CHOICES, required=False)
+    sort_order = serializers.IntegerField(required=False)
+
     class Meta:
         model = ProductMedia
-        order_by = []
+        order_by = ["sort_order"]
         fields = (
             "id",
-            "image",
+            "media",
+            "type",
             "alt",
+            "product_id",
+            "sort_order",
         )
 
 
@@ -352,12 +368,13 @@ class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSeriali
     product_variants = ProductVariantSerializer(
         many=True, read_only=False, required=False
     )
+    id = CharField(required=False, read_only=True)  # for update
+    media = ProductMediaSerializer(many=True, source="product_media")
     type_id = PrimaryKeyRelatedField(
         required=False, write_only=True, queryset=ProductType.objects.all()
     )  # for update
     type = ProductTypeSerializer(read_only=True)  # for read
 
-    # media = ProductMediaSerializer(many=True, read_only=True)
     class Meta:
         model = Product
         fields = (
@@ -368,6 +385,7 @@ class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSeriali
             "product_variants",  # serialized as list of ids
             "update_at",
             "create_at",
+            "media",
             "type",
             "type_id",
         )

@@ -112,7 +112,7 @@ const ProductEditorWrapper = ({
         console.log("SETPRODUCTVARIANTS", action.payload.product_variants);
         return { ...state, product_variants: action.payload.product_variants };
       case ActionSetProduct.SETMEDIA:
-        return { ...state, product_media: action.payload.product_media };
+        return { ...state, media: action.payload.media };
       case ActionSetProduct.SETPRODUCTTYPEID:
         return { ...state, type_id: action.payload.type_id };
       case ActionSetProduct.SETPRODUCTTYPE:
@@ -141,10 +141,10 @@ const ProductEditorWrapper = ({
           published: false,
           category: null,
           product_variants: [],
-          product_media: [],
           translations: {},
           update_at: undefined,
           create_at: undefined,
+          media: [],
         }
   );
 
@@ -265,7 +265,7 @@ const ProductEditorWrapper = ({
           />
           <ProductMediaEditor
             disabled={false}
-            // state={productState.product_media}
+            state={productState}
             // dispatch={dispatchProductState}
           />
           <ProductVariantPricesEditor
