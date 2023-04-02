@@ -105,10 +105,10 @@ jobs:
   recommender_system:
     runs-on: ubuntu-latest
     env:
-      SOURCE_FILES: ./
+      SOURCE_FILES: ./app
     defaults:
       run:
-        working-directory: src/recommender_system/app
+        working-directory: src/recommender_system
 
     steps:
       - uses: actions/checkout@v3
@@ -127,6 +127,7 @@ jobs:
       - name: Load .env file
         uses: xom9ikk/dotenv@v2
       - name: Test
+        working-directory: src/recommender_system/app
         run: pytest ./tests
 
   docker-compose:
