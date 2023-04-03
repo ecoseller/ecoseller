@@ -7,13 +7,13 @@ import product.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('product', '0019_merge_20230402_0614'),
+        ("product", "0019_merge_20230402_0614"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='productmedia',
-            name='media',
+            model_name="productmedia",
+            name="media",
             field=models.ImageField(upload_to=product.models.product_media_upload_path),
         ),
     ]

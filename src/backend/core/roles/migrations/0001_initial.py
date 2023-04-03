@@ -7,25 +7,30 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='ManagerPermission',
+            name="ManagerPermission",
             fields=[
-                ('name', models.CharField(max_length=200, primary_key=True, serialize=False)),
-                ('model', models.CharField(max_length=200)),
-                ('description', models.CharField(max_length=200)),
-                ('type', models.CharField(max_length=200)),
+                (
+                    "name",
+                    models.CharField(max_length=200, primary_key=True, serialize=False),
+                ),
+                ("model", models.CharField(max_length=200)),
+                ("description", models.CharField(max_length=200)),
+                ("type", models.CharField(max_length=200)),
             ],
         ),
         migrations.CreateModel(
-            name='ManagerGroup',
+            name="ManagerGroup",
             fields=[
-                ('name', models.CharField(max_length=200, primary_key=True, serialize=False)),
-                ('description', models.CharField(max_length=200)),
-                ('permissions', models.ManyToManyField(to='roles.managerpermission')),
+                (
+                    "name",
+                    models.CharField(max_length=200, primary_key=True, serialize=False),
+                ),
+                ("description", models.CharField(max_length=200)),
+                ("permissions", models.ManyToManyField(to="roles.managerpermission")),
             ],
         ),
     ]
