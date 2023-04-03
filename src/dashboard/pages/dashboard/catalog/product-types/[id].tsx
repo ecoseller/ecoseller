@@ -22,6 +22,8 @@ import { putProductType } from "@/api/product/types";
 import { IAttributeType, IBaseAttributes, IProductType } from "@/types/product";
 // api
 import { axiosPrivate } from "@/utils/axiosPrivate";
+import Button from "@mui/material/Button";
+import { GetServerSideProps } from "next";
 
 interface IProps {
   productType: IProductType;
@@ -132,8 +134,10 @@ DashboardProductTypeDetailPage.getLayout = (page: ReactElement) => {
   );
 };
 
-export const getServerSideProps = async (context: any) => {
-  const { id } = context.params;
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const params = context.params;
+  const id = params?.id;
+
   const productTypeRes = await axiosPrivate.get(
     `/product/dashboard/type/${id}/`
   );

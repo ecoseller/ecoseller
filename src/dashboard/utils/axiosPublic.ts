@@ -2,7 +2,7 @@
 import axios from "axios";
 
 export const axiosPublic = axios.create({
-  baseURL: "http://localhost:8000/",
+  baseURL: process.env.API_URL || process.env.NEXT_PUBLIC_API_URL, //"http://backend:8000/",
   headers: {
     "Content-Type": "application/json",
   },

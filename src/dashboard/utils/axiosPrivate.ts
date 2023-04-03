@@ -6,7 +6,9 @@ import Cookies from "js-cookie";
 
 import { memoizedRefreshToken } from "../src/common/refreshToken";
 
-axios.defaults.baseURL = "http://localhost:8000/";
+axios.defaults.baseURL = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL; //"http://backend:8000";
+
+console.log("axios.defaults.baseURL", axios.defaults.baseURL);
 
 axios.interceptors.request.use(
   async (config) => {

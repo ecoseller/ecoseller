@@ -27,9 +27,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 SECRET_KEY = "django-insecure-^2x#dix3t(vd1yt7bdqmhs-*=tf%)td#yxuw6s$pun(#!z=c$@"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG") == "1"
+DEBUG = os.environ.get("DEBUG", 1)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(" ")
 
 # Application definition
 INSTALLED_APPS = [
@@ -70,6 +70,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3030",
     "http://localhost:3000",
     "http://localhost:3031",
+    "http://dashboard:3030",
+    "http://storefront:3031",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
