@@ -1,0 +1,54 @@
+[
+    {
+        "EditorRole": {
+            "permissions": [
+                {
+                    "name": "Product_view_permission",
+                    "description": "Can view product",
+                    "type": "VIEW",
+                    "model": "Product"
+                },
+                {
+                    "name": "Product_change_permission",
+                    "description": "Can change product",
+                    "type": "CHANGE",
+                    "model": "Product"
+                },
+                {
+                    "name": "ProductPrice_view_permission",
+                    "description": "Can view product price",
+                    "type": "VIEW",
+                    "model": "ProductPrice"
+                },
+                {
+                    "name": "ProductPrice_change_permission",
+                    "description": "Can change product price",
+                    "type": "CHANGE",
+                    "model": "ProductPrice"
+                }
+            ],
+            "description": "Editor role",
+            "name": "Editor"
+        }
+    },
+    {
+        "CopywriterRole": {
+            "permissions": [
+                {
+                    "name": "Product_view_permission",
+                    "description": "Can view product",
+                    "type": "VIEW",
+                    "model": "Product"
+                },
+                {
+                    "name": "ProductPrice_view_permission",
+                    "description": "Can view product price",
+                    "type": "VIEW",
+                    "model": "ProductPrice"
+                }
+            ],
+            "description": "Copywriter role",
+            "name": "Copywriter"
+        }
+    }
+]

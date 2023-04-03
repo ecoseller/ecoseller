@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "product.apps.ProductConfig",
     "review.apps.ReviewConfig",
     "user.apps.UserConfig",
+    "roles.apps.RolesConfig",
     "rest_framework_simplejwt",
     "rest_framework.authtoken",
     "rest_framework_simplejwt.token_blacklist",

@@ -17,5 +17,6 @@ urlpatterns = [
     path("product/", include("product.urls")),
     path("review/", include("review.urls")),
     path("user/", include("user.urls")),
+    path("roles/", include("roles.urls")),
     path("country/", include("country.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
