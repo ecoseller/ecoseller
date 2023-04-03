@@ -1,4 +1,4 @@
-from .roles_manager import RolesManager, PermissionType, ManagerPermission, ManagerGroup
+from .roles_manager import ManagerPermission
 from rest_framework import serializers
 
 

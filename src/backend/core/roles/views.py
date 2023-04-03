@@ -1,16 +1,12 @@
-from django.shortcuts import render
 from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
 
-from .roles_manager import RolesManager, PermissionType, ManagerPermission, ManagerGroup
+from .roles_manager import RolesManager, ManagerPermission, ManagerGroup
 from .serializers import (
     ManagerGroupSerializer,
     ManagerPermissionSerializer,
 )
-from .decorator import check_user_access_decorator
-
 
 from user.models import User
 
@@ -47,7 +43,7 @@ class UserGetPermissionsView(APIView):
                     permission = RolesManager.django_permission_to_manager_permission(
                         permission
                     )
-                    if not permission in nonSerializedPermissions:
+                    if permission not in nonSerializedPermissions:
                         nonSerializedPermissions.append(permission)
 
             serializedPermissions = []
