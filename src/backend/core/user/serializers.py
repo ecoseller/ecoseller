@@ -48,3 +48,6 @@ class UserSerializer(serializers.ModelSerializer):
             "is_admin",
             "is_staff",
         )
+
+    def get_user_permissions(self, obj):
+        return list(obj.user_permissions.all())

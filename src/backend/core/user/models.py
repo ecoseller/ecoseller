@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import PermissionsMixin
 
 from cart.models import Cart
 
@@ -42,7 +43,7 @@ class UserManager(BaseUserManager):
 
 
 # User model
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=40, primary_key=True)
     first_name = models.CharField(max_length=40, blank=True)
     last_name = models.CharField(max_length=40, blank=True)
@@ -52,10 +53,6 @@ class User(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
 
     cart = models.ForeignKey(Cart, null=True, on_delete=models.SET_NULL)
-    permission_role = models.ForeignKey(
-        "PermissionRole", null=True, on_delete=models.SET_NULL
-    )
-
     objects = UserManager()
 
     USERNAME_FIELD = "email"
@@ -78,7 +75,11 @@ class User(AbstractBaseUser):
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
         # Simplest possible answer: Yes, always
-        return True
+        if self.is_admin:
+            return True
+        if perm in self.user_permissions.all():
+            return True
+        return False
 
     def has_module_perms(self, app_label):
         "Does the user have permissions to view the app `app_label`?"
@@ -91,13 +92,3 @@ class User(AbstractBaseUser):
         This string is used when a `User` is printed in the console.
         """
         return self.email
-
-
-class Permission(models.Model):
-    permission = models.CharField(max_length=200, unique=True)
-    permission_level = models.IntegerField(default=1)
-
-
-class PermissionRole(models.Model):
-    role = models.CharField(max_length=200, unique=True)
-    permissions = models.ManyToManyField(Permission)
