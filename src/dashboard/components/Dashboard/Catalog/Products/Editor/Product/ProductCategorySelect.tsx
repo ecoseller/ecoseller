@@ -15,7 +15,7 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { ActionSetProduct, ISetProductStateData } from "@/types/product";
 import { ISetProductStateAction } from "../ProductEditorWrapper";
-import { ICategory } from "@/types/category";
+import { ICategoryLocalized } from "@/types/category";
 
 interface IProductMediaEditorProps {
   state: ISetProductStateData;
@@ -56,7 +56,7 @@ const ProductCategorySelect = ({
             label="Category"
             onChange={handleChange}
           >
-            {categories?.map((category: ICategory) => {
+            {categories?.map((category: ICategoryLocalized) => {
               return (
                 <MenuItem key={category.id} value={category.id}>
                   {category.title}

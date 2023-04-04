@@ -8,12 +8,12 @@ import Table from "@mui/material/Table";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 
-interface ICategoriesListProps
+interface ICategoryListProps
 {
   categories: ICategoryLocalized[];
 }
 
-const CategoriesList = ({ categories }: ICategoriesListProps) =>
+const CategoryList = ({ categories }: ICategoryListProps) =>
 {
   return (
     <>
@@ -43,4 +43,4 @@ const CategoriesList = ({ categories }: ICategoriesListProps) =>
   );
 };
 
-export default CategoriesList;
+export default CategoryList;

@@ -8,7 +8,7 @@ import { ReactElement, useState } from "react";
 import RootLayout from "@/pages/layout";
 // components
 import DashboardContentWithSaveFooter from "@/components/Dashboard/Generic/EditableContent";
-import TopLineWithReturn from "@/components/Dashboard/Catalog/Products/TopLineWithReturn";
+import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 // mui
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
