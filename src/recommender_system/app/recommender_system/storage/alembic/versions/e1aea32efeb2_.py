@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: dd1c28c86330
-Revises:
-Create Date: 2023-04-02 17:27:11.758293
+Revision ID: e1aea32efeb2
+Revises: 
+Create Date: 2023-04-04 23:04:20.813284
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = "dd1c28c86330"
+revision = "e1aea32efeb2"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -114,13 +114,13 @@ def upgrade() -> None:
         "attribute_product_variant",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("attribute_id", sa.Integer(), nullable=True),
-        sa.Column("product_variant_id", sa.String(length=255), nullable=True),
+        sa.Column("product_variant_sku", sa.String(length=255), nullable=True),
         sa.ForeignKeyConstraint(
             ["attribute_id"],
             ["attribute.id"],
         ),
         sa.ForeignKeyConstraint(
-            ["product_variant_id"],
+            ["product_variant_sku"],
             ["product_variant.sku"],
         ),
         sa.PrimaryKeyConstraint("id"),
@@ -129,13 +129,13 @@ def upgrade() -> None:
         "product_product_variant",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("product_id", sa.Integer(), nullable=True),
-        sa.Column("product_variant_id", sa.String(length=255), nullable=True),
+        sa.Column("product_variant_sku", sa.String(length=255), nullable=True),
         sa.ForeignKeyConstraint(
             ["product_id"],
             ["product.id"],
         ),
         sa.ForeignKeyConstraint(
-            ["product_variant_id"],
+            ["product_variant_sku"],
             ["product_variant.sku"],
         ),
         sa.PrimaryKeyConstraint("id"),

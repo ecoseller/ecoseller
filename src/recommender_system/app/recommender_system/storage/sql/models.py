@@ -60,7 +60,7 @@ class SQLAttributeProductVariant(Base):
     id = Column(Integer, primary_key=True)
 
     attribute_id = Column(Integer, ForeignKey("attribute.id"))
-    product_variant_id = Column(String(255), ForeignKey("product_variant.sku"))
+    product_variant_sku = Column(String(255), ForeignKey("product_variant.sku"))
 
     __tablename__ = "attribute_product_variant"
 
@@ -128,7 +128,7 @@ class SQLProductProductVariant(Base):
     id = Column(Integer, primary_key=True)
 
     product_id = Column(Integer, ForeignKey("product.id"))
-    product_variant_id = Column(String(255), ForeignKey("product_variant.sku"))
+    product_variant_sku = Column(String(255), ForeignKey("product_variant.sku"))
 
     __tablename__ = "product_product_variant"
 

@@ -19,13 +19,24 @@ class ProductVariantModel(StoredBaseModel):
     update_at: datetime
     create_at: datetime
 
-    product_id: int
-
     class Meta:
-        primary_key = "id"
+        primary_key = "sku"
 
     @property
     def products(self) -> List["ProductModel"]:
-        from recommender_system.models.stored.product import ProductModel
+        from recommender_system.models.stored.product_product_variant import (
+            ProductProductVariantModel,
+        )
 
-        return self._storage.get_object(model_class=ProductModel, pk=self.product_id)
+        return self._storage.get_related_objects(
+            model=self, relation_model_class=ProductProductVariantModel
+        )
+
+    def delete(self) -> None:
+        from recommender_system.models.stored.product_product_variant import (
+            ProductProductVariantModel,
+        )
+
+        super().delete()
+        for ppv in ProductProductVariantModel.gets(product_variant_sku=self.sku):
+            ppv.delete()

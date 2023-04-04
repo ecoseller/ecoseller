@@ -56,3 +56,12 @@ class ProductModel(StoredBaseModel):
         return self._storage.get_related_objects(
             model=self, relation_model_class=ProductProductVariantModel
         )
+
+    def delete(self) -> None:
+        from recommender_system.models.stored.product_product_variant import (
+            ProductProductVariantModel,
+        )
+
+        super().delete()
+        for ppv in ProductProductVariantModel.gets(product_id=self.id):
+            ppv.delete()

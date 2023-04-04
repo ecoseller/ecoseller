@@ -1,3 +1,5 @@
+from typing import Optional
+
 from recommender_system.models.stored.base import StoredBaseModel
 from recommender_system.models.stored.many_to_many_relation import (
     ManyToManyRelationMixin,
@@ -14,10 +16,10 @@ class AttributeProductVariantModel(StoredBaseModel, ManyToManyRelationMixin):
     stored in the database.
     """
 
-    id: int
+    id: Optional[int]
 
     attribute_id: int
-    product_variant_id: int
+    product_variant_sku: int
 
     class Meta:
         primary_key = "id"
@@ -26,4 +28,4 @@ class AttributeProductVariantModel(StoredBaseModel, ManyToManyRelationMixin):
         source_model_class = AttributeModel
         target_model_class = ProductVariantModel
         source_pk_name = "attribute_id"
-        target_pk_name = "product_variant_id"
+        target_pk_name = "product_variant_sku"
