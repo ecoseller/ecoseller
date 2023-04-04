@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6", // changed from es5 to es6 to fix error "Type 'FileList' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher."
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,

@@ -27,9 +27,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 SECRET_KEY = "django-insecure-^2x#dix3t(vd1yt7bdqmhs-*=tf%)td#yxuw6s$pun(#!z=c$@"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", 1)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(" ")
 
 # Application definition
 INSTALLED_APPS = [
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "product.apps.ProductConfig",
     "review.apps.ReviewConfig",
     "user.apps.UserConfig",
+    "roles.apps.RolesConfig",
     "rest_framework_simplejwt",
     "rest_framework.authtoken",
     "rest_framework_simplejwt.token_blacklist",
@@ -69,6 +70,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3030",
     "http://localhost:3000",
     "http://localhost:3031",
+    "http://dashboard:3030",
+    "http://storefront:3031",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -201,6 +204,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = "static/"
+
+# Directory where uploaded files will be stored
+# this is only for development purposes, in production S3 or similar should be used
+MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "mediafiles")
+MEDIA_URL = "/media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

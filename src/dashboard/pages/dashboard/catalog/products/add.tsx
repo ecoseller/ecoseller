@@ -21,18 +21,20 @@ import ProductVariantsEditor from "@/components/Dashboard/Catalog/Products/Edito
 import ProductMediaEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductMediaEditor";
 import ProductVariantPricesEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVariantPricesEditor";
 import ProductEditorWrapper from "@/components/Dashboard/Catalog/Products/Editor/ProductEditorWrapper";
-import { IAttributeType } from "@/types/product";
+import { IAttributeType, IProductType } from "@/types/product";
 import { IPriceList } from "@/types/localization";
 import { axiosPrivate } from "@/utils/axiosPrivate";
 
 interface IProps {
   attributesData: IAttributeType[];
   pricelistsData: IPriceList[];
+  productTypeData: IProductType[];
 }
 
 const DashboardProductsAddPage = ({
   attributesData,
   pricelistsData,
+  productTypeData,
 }: IProps) => {
   return (
     <DashboardLayout>
@@ -42,6 +44,7 @@ const DashboardProductsAddPage = ({
           returnPath={"/dashboard/catalog/products"}
           attributesData={attributesData}
           pricelistsData={pricelistsData}
+          productTypeData={productTypeData}
         />
       </Container>
     </DashboardLayout>
@@ -72,6 +75,9 @@ export const getServerSideProps = async (context: any) => {
   );
   const attributesData = attributesRes.data;
 
+  const productTypeRes = await axiosPrivate.get("product/dashboard/type/");
+  const productTypeData = productTypeRes.data;
+
   // fetch pricelists data
   const pricelistsRes = await axiosPrivate.get("product/dashboard/pricelist/");
   const pricelistsData = pricelistsRes.data;
@@ -80,6 +86,7 @@ export const getServerSideProps = async (context: any) => {
     props: {
       attributesData,
       pricelistsData,
+      productTypeData,
     },
   };
 };

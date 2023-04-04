@@ -19,6 +19,7 @@ interface IDashboardContentWithSaveFooter {
   preventNavigation: boolean;
   setPreventNavigation: (value: boolean) => void;
   primaryButtonTitle?: string;
+  returnPath?: string;
 }
 const DashboardContentWithSaveFooter = ({
   children,
@@ -26,6 +27,7 @@ const DashboardContentWithSaveFooter = ({
   preventNavigation,
   setPreventNavigation,
   primaryButtonTitle = "Save",
+  returnPath,
 }: IDashboardContentWithSaveFooter) => {
   const router = useRouter();
 
@@ -93,7 +95,9 @@ const DashboardContentWithSaveFooter = ({
             <Button
               variant="outlined"
               onClick={() => {
-                router.push("/dashboard/catalog/products");
+                router.push(
+                  returnPath ? returnPath : "/dashboard/catalog/products"
+                );
               }}
             >
               Back

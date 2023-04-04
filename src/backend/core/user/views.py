@@ -3,6 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from .models import User
+
 from .serializers import (
     RegistrationSerializer,
     UserSerializer,
@@ -67,3 +69,17 @@ class UserView(APIView):
 
         serializer = UserSerializer(user)
         return Response(serializer.data)
+
+
+class UsersView(APIView):
+    """
+    View for retrieving all users.
+    """
+
+    permission_classes = (permissions.AllowAny,)
+    # In later phases we will need to restrict this to admins only
+
+    def get(self, request):
+        users = User.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data, status=200)

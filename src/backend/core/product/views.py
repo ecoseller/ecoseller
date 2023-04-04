@@ -12,6 +12,8 @@ from .models import (
     ProductVariant,
     PriceList,
     AttributeType,
+    ProductMedia,
+    ProductType,
 )
 from .serializers import (
     ProductSerializer,
@@ -20,6 +22,13 @@ from .serializers import (
     PriceListBaseSerializer,
     AtrributeTypeDashboardSerializer,
     ProductVariantSerializer,
+    ProductMediaSerializer,
+    ProductTypeSerializer,
+)
+
+from rest_framework.parsers import (
+    MultiPartParser,
+    FormParser,
 )
 
 
@@ -136,6 +145,80 @@ class PriceListDashboardDetailView(RetrieveUpdateDestroyAPIView):
         return PriceList.objects.all()
 
 
+class ProductTypeDashboardView(GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = [
+        "GET",
+        "POST",
+    ]
+    authentication_classes = []
+    serializer_class = ProductTypeSerializer
+
+    def get_queryset(self):
+        return ProductType.objects.all()
+
+    def get(self, request):
+        product_types = self.get_queryset()
+        serializer = self.serializer_class(product_types, many=True)
+        return Response(serializer.data, status=200)
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            instance = serializer.save()
+            return Response({**serializer.data, "id": instance.id}, status=201)
+        return Response(serializer.errors, status=400)
+
+
+class ProductTypeDashboardDetailView(RetrieveUpdateDestroyAPIView):
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = ["PUT", "DELETE"]
+    authentication_classes = []
+    serializer_class = ProductTypeSerializer
+    lookup_field = "id"
+    lookup_url_kwarg = "id"
+
+    def get_queryset(self):
+        return ProductType.objects.all()
+
+
+class AttributeTypeDashboardView(GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = [
+        "GET",
+        "POST",
+    ]
+    authentication_classes = []
+    serializer_class = AtrributeTypeDashboardSerializer
+
+    def get_queryset(self):
+        return AttributeType.objects.all()
+
+    def get(self, request):
+        attribute_types = self.get_queryset()
+        serializer = self.serializer_class(attribute_types, many=True)
+        return Response(serializer.data, status=200)
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            instance = serializer.save()
+            return Response({**serializer.data, "id": instance.id}, status=201)
+        return Response(serializer.errors, status=400)
+
+
+class AttributeTypeDashboardDetailView(RetrieveUpdateDestroyAPIView):
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = ["PUT", "DELETE"]
+    authentication_classes = []
+    serializer_class = AtrributeTypeDashboardSerializer
+    lookup_field = "id"
+    lookup_url_kwarg = "id"
+
+    def get_queryset(self):
+        return AttributeType.objects.all()
+
+
 class AttributeTypeDashboard(APIView):
     permission_classes = (permissions.AllowAny,)
 
@@ -192,3 +275,31 @@ class ProductDetailStorefront(APIView):
 
         serialized_product = ProductSerializer(product)
         return Response(serialized_product.data, status=200)
+
+
+class ProductMediaUpload(GenericAPIView):
+    allowed_methods = ["POST"]
+    permission_classes = (permissions.AllowAny,)
+    parser_classes = (MultiPartParser, FormParser)
+    serializer_class = ProductMediaSerializer
+
+    def post(self, request, *args, **kwargs):
+        product_media_serializer = self.serializer_class(
+            data=request.data, context={"request": request}
+        )
+        if product_media_serializer.is_valid():
+            product_media_serializer.save()
+            return Response(product_media_serializer.data, status=201)
+        else:
+            return Response(product_media_serializer.errors, status=400)
+
+
+class ProductMediaUploadDetailView(RetrieveUpdateDestroyAPIView):
+    allowed_methods = ["GET", "PUT", "DELETE"]
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = ProductMediaSerializer
+    lookup_field = "id"
+    lookup_url_kwarg = "id"
+
+    def get_queryset(self):
+        return ProductMedia.objects.all()

@@ -20,8 +20,13 @@ services:
       target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
     environment:
       CHOKIDAR_USEPOLLING: "true" # https://stackoverflow.com/questions/61576659/how-to-hot-reload-in-reactjs-docker
+      API_URL: "http://backend:8000"
+      NEXT_PUBLIC_API_URL: "http://localhost:8000"
     volumes:
       - ./dashboard/pages:/usr/src/app/pages
+      - ./dashboard/utils:/usr/src/app/utils
+      - ./dashboard/components:/usr/src/app/components
+      - ./dashboard/types:/usr/src/app/types
       - ./dashboard/app:/usr/src/app/app
       - ./dashboard/styles:/usr/src/app/styles
       - ./dashboard/src:/usr/src/app/src
