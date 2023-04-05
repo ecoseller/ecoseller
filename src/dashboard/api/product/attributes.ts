@@ -1,7 +1,12 @@
-import { IAttributeType, IBaseAttribute } from "@/types/product";
+import {
+  IAttributeType,
+  IAttributeTypePostRequest,
+  IBaseAttribute,
+  IBaseAttributePostRequest,
+} from "@/types/product";
 import { axiosPrivate } from "@/utils/axiosPrivate";
 
-export const postAttributeType = async (data: IAttributeType) => {
+export const postAttributeType = async (data: IAttributeTypePostRequest) => {
   // Create new AttributeType
   // URL: /product/dashboard/attribute/type
   // Method: POST
@@ -36,7 +41,7 @@ export const deleteAttribtueType = async (id: number | string) => {
   return await axiosPrivate.delete(`/product/dashboard/attribute/type/${id}/`);
 };
 
-export const postBaseAttribute = async (data: IBaseAttribute) => {
+export const postBaseAttribute = async (data: IBaseAttributePostRequest) => {
   // Create new BaseAttribute
   // URL: /product/dashboard/attribute/
   // Method: POST

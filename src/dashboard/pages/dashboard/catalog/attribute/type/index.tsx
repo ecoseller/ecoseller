@@ -30,7 +30,7 @@ import {
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 // types
-import { IAttributeType } from "@/types/product";
+import { IAttributeType, IAttributeTypePostRequest } from "@/types/product";
 // api
 import { postAttributeType } from "@/api/product/attributes";
 
@@ -51,7 +51,10 @@ const EditToolbar = (props: EditToolbarProps) => {
       type_name: "",
       base_attributes: [],
     };
-    postAttributeType(newRow)
+    postAttributeType({
+      type_name: newRow.type_name,
+      base_attributes: [],
+    } as IAttributeTypePostRequest)
       .then((res) => {
         setRows((oldRows) => [
           ...oldRows,

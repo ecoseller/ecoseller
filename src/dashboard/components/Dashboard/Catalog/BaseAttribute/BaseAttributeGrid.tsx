@@ -37,7 +37,7 @@ import {
   putBaseAttribute,
 } from "@/api/product/attributes";
 // types
-import { IBaseAttribute } from "@/types/product";
+import { IBaseAttribute, IBaseAttributePostRequest } from "@/types/product";
 
 interface IBaseAttributeTable extends IBaseAttribute {
   id: number;
@@ -124,7 +124,7 @@ const BaseAttributeGrid = ({
       postBaseAttribute({
         value: newRow.value,
         type: newRow.type,
-      } as IBaseAttribute)
+      } as IBaseAttributePostRequest)
         .then((res) => res.data)
         .then((data) => {
           setSnackbar({

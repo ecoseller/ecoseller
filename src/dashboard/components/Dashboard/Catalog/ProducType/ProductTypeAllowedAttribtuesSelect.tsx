@@ -74,6 +74,7 @@ const ProductTypeAllowedAttribtuesSelect = ({
             input={<OutlinedInput label="Allowed attributes" />}
             renderValue={(selected) =>
               attributeTypes
+
                 ?.filter((attribute: IAttributeType) =>
                   selected?.includes(attribute.id)
                 )
