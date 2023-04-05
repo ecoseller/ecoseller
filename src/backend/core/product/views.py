@@ -12,6 +12,7 @@ from .models import (
     ProductVariant,
     PriceList,
     AttributeType,
+    BaseAttribute,
     ProductMedia,
     ProductType,
 )
@@ -21,6 +22,7 @@ from .serializers import (
     ProductDashboardDetailSerializer,
     PriceListBaseSerializer,
     AtrributeTypeDashboardSerializer,
+    BaseAttributeDashboardSerializer,
     ProductVariantSerializer,
     ProductMediaSerializer,
     ProductTypeSerializer,
@@ -220,44 +222,41 @@ class AttributeTypeDashboardDetailView(RetrieveUpdateDestroyAPIView):
         return AttributeType.objects.all()
 
 
-class AttributeTypeDashboard(APIView):
+class BaseAttributeDashboardView(GenericAPIView):
     permission_classes = (permissions.AllowAny,)
+    allowed_methods = [
+        "GET",
+        "POST",
+    ]
+    authentication_classes = []
+    serializer_class = BaseAttributeDashboardSerializer
+
+    def get_queryset(self):
+        return BaseAttribute.objects.all()
 
     def get(self, request):
-        qs = AttributeType.objects.all()
-        serializer = AtrributeTypeDashboardSerializer(qs, many=True)
+        attribute_types = self.get_queryset()
+        serializer = self.serializer_class(attribute_types, many=True)
         return Response(serializer.data, status=200)
 
     def post(self, request):
-        raise NotImplementedError("POST method not implemented yet")
-
-    def put(self, request, id):
-        raise NotImplementedError("PUT method not implemented yet")
-
-    def delete(self, request, id):
-        raise NotImplementedError("DELETE method not implemented yet")
-
-    def patch(self, request, id):
-        raise NotImplementedError("PATCH method not implemented yet")
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            instance = serializer.save()
+            return Response({**serializer.data, "id": instance.id}, status=201)
+        return Response(serializer.errors, status=400)
 
 
-class BaseAttributeDashboard(APIView):
+class BaseAttributeDashboardDetailView(RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
+    allowed_methods = ["PUT", "DELETE"]
+    authentication_classes = []
+    serializer_class = BaseAttributeDashboardSerializer
+    lookup_field = "id"
+    lookup_url_kwarg = "id"
 
-    def get(self, request):
-        raise NotImplementedError("GET method not implemented yet")
-
-    def post(self, request):
-        raise NotImplementedError("POST method not implemented yet")
-
-    def put(self, request, id):
-        raise NotImplementedError("PUT method not implemented yet")
-
-    def delete(self, request, id):
-        raise NotImplementedError("DELETE method not implemented yet")
-
-    def patch(self, request, id):
-        raise NotImplementedError("PATCH method not implemented yet")
+    def get_queryset(self):
+        return BaseAttribute.objects.all()
 
 
 """
