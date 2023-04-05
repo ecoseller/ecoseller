@@ -10,36 +10,44 @@ import { getLanguages } from "@/api/country/country";
 import { InferGetServerSidePropsType } from "next";
 import React, { useEffect, useState } from "react";
 import { ILanguage } from "@/types/localization";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import slugify from "slugify";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import SyncDisabledIcon from "@mui/icons-material/SyncDisabled";
+import SyncIcon from "@mui/icons-material/Sync";
+import FormControl from "@mui/material/FormControl";
 
-const CategoryTranslatedFields = () =>
+interface ICategoryTranslatedFieldsProps
 {
-  const [languages, setLanguages] = useState<ILanguage[]>();
-  const [defaultLanguageCode, setDefaultLanguageCode] = useState<string>("");
+  languages: ILanguage[];
+}
+
+const CategoryTranslatedFields = ({ languages }: ICategoryTranslatedFieldsProps) =>
+{
+  const [currentLanguage, setCurrentLanguage] = useState<string>("");
 
   const handleLanguageChange = (
     event: React.SyntheticEvent,
     newValue: string
   ) =>
   {
-    setDefaultLanguageCode(newValue);
+    setCurrentLanguage(newValue);
   };
 
   useEffect(() =>
   {
-    getLanguages().then((langs) =>
-    {
-      setLanguages(langs.data);
-      
-      const defaultLang = langs.data.find((l) => l.default);
-      setDefaultLanguageCode(defaultLang?.code || "");
-    });
-  }, []);
+    const defaultLang = languages.find((l) => l.default);
+    setCurrentLanguage(defaultLang?.code || "");
+  }, [languages]);
 
   return (
     <EditorCard>
       <CollapsableContentWithTitle title="Translated fields">
         <Box>
-          <TabContext value={defaultLanguageCode}>
+          <TabContext value={currentLanguage}>
             <Box>
               <TabList
                 onChange={handleLanguageChange}
@@ -59,16 +67,54 @@ const CategoryTranslatedFields = () =>
                 key={l.code}
                 value={l.code}
               >
-                {/*<ProductTranslatedFields*/}
-                {/*  language={language.code}*/}
-                {/*  state={*/}
-                {/*    state?.translations*/}
-                {/*      ? state?.translations[language.code]*/}
-                {/*      : ({} as IProductTranslation)*/}
-                {/*  }*/}
-                {/*  dispatch={dispatch}*/}
-                {/*/>*/}
-                <>Dummy text... {l.code}</>
+                <FormControl fullWidth margin={"normal"}>
+                  <Stack spacing={2}>
+                    <TextField
+                      label="Title"
+                      // value={state?.title || ""}
+                      // onChange={(
+                      //   e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+                      // ) =>
+                      // {
+                      //   setTitle(e.target.value);
+                      // }}
+                    />
+                    <TextField
+                      label="Slug"
+                      // value={state?.slug || ""}
+                      // disabled={!editSlug}
+                      // onChange={(
+                      //   e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+                      // ) =>
+                      // {
+                      //   const slugiffied = slugify(e.target.value, {
+                      //     lower: true,
+                      //     locale: language,
+                      //     strict: true
+                      //   });
+                      //   setSlug(slugiffied);
+                      // }}
+                      // InputProps={{
+                      //   endAdornment: (
+                      //     <InputAdornment position="end">
+                      //       <IconButton onClick={() => setEditSlug(!editSlug)}>
+                      //         {!editSlug ? (
+                      //           <Tooltip title={"Don't synchronize slug with title"}>
+                      //             <SyncDisabledIcon />
+                      //           </Tooltip>
+                      //         ) : (
+                      //           <Tooltip title={"Synchronize slug with title"}>
+                      //             <SyncIcon />
+                      //           </Tooltip>
+                      //         )}
+                      //       </IconButton>
+                      //     </InputAdornment>
+                      //   )
+                      // }}
+                    />
+                    <TextField label="Description" />
+                  </Stack>
+                </FormControl>
               </TabPanel>
             ))}
           </TabContext>

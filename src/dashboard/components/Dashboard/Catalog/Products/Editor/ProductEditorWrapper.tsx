@@ -52,6 +52,15 @@ interface IProductEditorWrapperProps {
   productTypeData?: IProductType[];
 }
 
+/**
+ * Product editor wrapper
+ * @param title - title of the page
+ * @param returnPath - path to return to
+ * @param product - initial product data to edit (if any)
+ *
+ * This component holds the state of the product being edited as reducer state which is passed down to the child components as props.
+ * Child components can dispatch actions to the reducer to update the "large" product state.
+ */
 const ProductEditorWrapper = ({
   title,
   returnPath,
@@ -60,15 +69,7 @@ const ProductEditorWrapper = ({
   pricelistsData,
   productTypeData,
 }: IProductEditorWrapperProps) => {
-  /**
-   * Product editor wrapper
-   * @param title - title of the page
-   * @param returnPath - path to return to
-   * @param product - initial product data to edit (if any)
-   *
-   * This component holds the state of the product being edited as reducer state which is passed down to the child components as props.
-   * Child components can dispatch actions to the reducer to update the "large" product state.
-   */
+
   const setProductStateReducer = (
     state: ISetProductStateData,
     action: ISetProductStateAction
