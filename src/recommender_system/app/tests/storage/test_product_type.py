@@ -135,8 +135,6 @@ def test_product_type_attribute_types(create_product_type):
     attribute_type.id = None
     attribute_type.create()
 
-    AttributeTypeProductTypeModel(
-        attribute_type_id=attribute_type.id, product_type_id=product_type.id
-    ).create()
+    product_type.add_attribute_type(attribute_type=attribute_type)
 
     assert len(product_type.attribute_types) == old_attribute_types + 1

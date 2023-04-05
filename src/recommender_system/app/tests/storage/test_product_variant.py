@@ -2,6 +2,10 @@ from unittest import TestCase
 
 import pytest
 
+from recommender_system.models.stored.attribute import AttributeModel
+from recommender_system.models.stored.attribute_product_variant import (
+    AttributeProductVariantModel,
+)
 from recommender_system.models.stored.product import ProductModel
 from recommender_system.models.stored.product_product_variant import (
     ProductProductVariantModel,
@@ -9,6 +13,17 @@ from recommender_system.models.stored.product_product_variant import (
 from recommender_system.models.stored.product_variant import ProductVariantModel
 from recommender_system.storage import ModelNotFoundException
 from tests.storage.tools import get_or_create_model, delete_model, default_dicts
+
+
+def delete_attributes(product_variant_pk: str):
+    for apv in AttributeProductVariantModel.gets(
+        product_variant_sku=product_variant_pk
+    ):
+        try:
+            AttributeModel.get(pk=apv.attribute_id).delete()
+        except ModelNotFoundException:
+            pass
+        apv.delete()
 
 
 def delete_products(product_variant_pk: str):
@@ -29,6 +44,7 @@ def clear_product_variant():
 
     yield product_variant_sku, product.pk
 
+    delete_attributes(product_variant_pk=product_variant_sku)
     delete_products(product_variant_pk=product_variant_sku)
     delete_model(model_class=ProductVariantModel, pk=product_variant_sku)
     delete_model(model_class=ProductModel, pk=product.pk)
@@ -41,6 +57,7 @@ def create_product_variant():
 
     yield product_variant.pk
 
+    delete_attributes(product_variant_pk=product_variant.sku)
     delete_products(product_variant_pk=product_variant.pk)
     delete_model(model_class=ProductVariantModel, pk=product_variant.pk)
     delete_model(model_class=ProductModel, pk=product.pk)
@@ -102,6 +119,23 @@ def test_product_variant_delete(create_product_variant):
         _ = ProductVariantModel.get(pk=product_variant_sku)
 
 
+def test_product_variant_attributes(create_product_variant):
+    product_variant_pk = create_product_variant
+    product_variant = ProductVariantModel.get(pk=product_variant_pk)
+
+    attribute_dict = default_dicts[AttributeModel]
+
+    old_attributes = len(product_variant.attributes)
+
+    attribute = AttributeModel.parse_obj(attribute_dict)
+    attribute.id = None
+    attribute.create()
+
+    product_variant.add_attribute(attribute=attribute)
+
+    assert len(product_variant.attributes) == old_attributes + 1
+
+
 def test_product_variant_products(create_product_variant):
     product_variant_pk = create_product_variant
     product_variant = ProductVariantModel.get(pk=product_variant_pk)
@@ -114,8 +148,6 @@ def test_product_variant_products(create_product_variant):
     product.id = None
     product.create()
 
-    ProductProductVariantModel(
-        product_id=product.id, product_variant_sku=product_variant.sku
-    ).create()
+    product_variant.add_product(product=product)
 
     assert len(product_variant.products) == old_products + 1

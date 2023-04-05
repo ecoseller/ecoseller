@@ -19,7 +19,7 @@ class AttributeProductVariantModel(StoredBaseModel, ManyToManyRelationMixin):
     id: Optional[int]
 
     attribute_id: int
-    product_variant_sku: int
+    product_variant_sku: str
 
     class Meta:
         primary_key = "id"

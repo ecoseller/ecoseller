@@ -38,4 +38,15 @@ class ProductTypeModel(StoredBaseModel):
     def products(self) -> List["ProductModel"]:
         from recommender_system.models.stored.product import ProductModel
 
-        return ProductModel.gets(product_type_id=self.id)
+        return self._storage.get_objects(
+            model_class=ProductModel, product_type_id=self.id
+        )
+
+    def add_attribute_type(self, attribute_type: "AttributeTypeModel") -> None:
+        from recommender_system.models.stored.attribute_type_product_type import (
+            AttributeTypeProductTypeModel,
+        )
+
+        AttributeTypeProductTypeModel(
+            attribute_type_id=attribute_type.id, product_type_id=self.id
+        ).create()

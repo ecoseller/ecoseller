@@ -30,6 +30,14 @@ class ProductModel(StoredBaseModel):
         primary_key = "id"
 
     @property
+    def product_type(self) -> Optional[ProductTypeModel]:
+        if self.product_type_id is None:
+            return None
+        return self._storage.get_object(
+            model_class=ProductTypeModel, pk=self.product_type_id
+        )
+
+    @property
     def translations(self) -> List["ProductTranslationModel"]:
         from recommender_system.models.stored.product_translation import (
             ProductTranslationModel,
@@ -48,7 +56,7 @@ class ProductModel(StoredBaseModel):
         )
 
     @property
-    def variants(self) -> List["ProductVariantModel"]:
+    def product_variants(self) -> List["ProductVariantModel"]:
         from recommender_system.models.stored.product_product_variant import (
             ProductProductVariantModel,
         )
@@ -65,3 +73,12 @@ class ProductModel(StoredBaseModel):
         super().delete()
         for ppv in ProductProductVariantModel.gets(product_id=self.id):
             ppv.delete()
+
+    def add_product_variant(self, product_variant: "ProductVariantModel") -> None:
+        from recommender_system.models.stored.product_product_variant import (
+            ProductProductVariantModel,
+        )
+
+        ProductProductVariantModel(
+            product_id=self.id, product_variant_sku=product_variant.sku
+        ).create()

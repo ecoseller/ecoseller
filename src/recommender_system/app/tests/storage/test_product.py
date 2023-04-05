@@ -12,18 +12,18 @@ from recommender_system.storage import ModelNotFoundException
 from tests.storage.tools import get_or_create_model, delete_model, default_dicts
 
 
-def delete_translations(product_pk: int):
-    for product_translation in ProductTranslationModel.gets(product_id=product_pk):
-        product_translation.delete()
-
-
-def delete_variants(product_pk: int):
+def delete_product_variants(product_pk: int):
     for ppv in ProductProductVariantModel.gets(product_id=product_pk):
         try:
             ProductVariantModel.get(pk=ppv.product_variant_sku).delete()
         except ModelNotFoundException:
             pass
         ppv.delete()
+
+
+def delete_translations(product_pk: int):
+    for product_translation in ProductTranslationModel.gets(product_id=product_pk):
+        product_translation.delete()
 
 
 @pytest.fixture
@@ -43,7 +43,7 @@ def create_product():
 
     yield product.pk
 
-    delete_variants(product_pk=product.pk)
+    delete_product_variants(product_pk=product.pk)
     delete_translations(product_pk=product.pk)
     delete_model(model_class=ProductModel, pk=product.pk)
 
@@ -103,7 +103,7 @@ def test_product_delete(create_product):
         _ = ProductModel.get(pk=product_pk)
 
 
-def test_product_translations(create_product):
+def test_product_product_translations(create_product):
     product_pk = create_product
     product = ProductModel.get(pk=product_pk)
 
@@ -119,20 +119,18 @@ def test_product_translations(create_product):
     assert len(product.translations) == old_translations + 1
 
 
-def test_product_variants(create_product):
+def test_product_product_variants(create_product):
     product_pk = create_product
     product = ProductModel.get(pk=product_pk)
 
     variant_dict = default_dicts[ProductVariantModel]
 
-    old_variants = len(product.variants)
+    old_variants = len(product.product_variants)
 
-    variant = ProductVariantModel.parse_obj(variant_dict)
-    variant.sku = "new_sku"
-    variant.create()
+    product_variant = ProductVariantModel.parse_obj(variant_dict)
+    product_variant.sku = "new_sku"
+    product_variant.create()
 
-    ProductProductVariantModel(
-        product_id=product.id, product_variant_sku=variant.sku
-    ).create()
+    product.add_product_variant(product_variant=product_variant)
 
-    assert len(product.variants) == old_variants + 1
+    assert len(product.product_variants) == old_variants + 1

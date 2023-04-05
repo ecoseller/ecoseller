@@ -1,5 +1,6 @@
 from typing import List, Optional, TYPE_CHECKING
 
+from recommender_system.models.stored.attribute_type import AttributeTypeModel
 from recommender_system.models.stored.base import StoredBaseModel
 
 if TYPE_CHECKING:
@@ -25,6 +26,20 @@ class AttributeModel(StoredBaseModel):
         primary_key = "id"
 
     @property
+    def attribute_type(self) -> AttributeTypeModel:
+        return self._storage.get_object(
+            model_class=AttributeTypeModel, pk=self.attribute_type_id
+        )
+
+    @property
+    def parent_attribute(self) -> Optional["AttributeModel"]:
+        if self.parent_attribute_id is None:
+            return None
+        return self._storage.get_object(
+            model_class=AttributeModel, pk=self.parent_attribute_id
+        )
+
+    @property
     def ext_attributes(self) -> List["AttributeModel"]:
         return self._storage.get_objects(
             model_class=AttributeModel, parent_attribute_id=self.id
@@ -39,3 +54,12 @@ class AttributeModel(StoredBaseModel):
         return self._storage.get_related_objects(
             model=self, relation_model_class=AttributeProductVariantModel
         )
+
+    def add_product_variant(self, product_variant: "ProductVariantModel") -> None:
+        from recommender_system.models.stored.attribute_product_variant import (
+            AttributeProductVariantModel,
+        )
+
+        AttributeProductVariantModel(
+            attribute_id=self.id, product_variant_sku=product_variant.sku
+        ).create()
