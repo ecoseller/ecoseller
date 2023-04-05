@@ -102,7 +102,7 @@ const CategoryEditorWrapper = () =>
           {/*  state={productState}*/}
           {/*  dispatch={dispatchProductState}*/}
           {/*/>*/}
-          yyy
+          TODO: add published field & Parent category HERE
         </Grid>
       </Grid>
       <Button onClick={() =>

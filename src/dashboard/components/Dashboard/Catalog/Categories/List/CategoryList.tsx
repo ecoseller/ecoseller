@@ -36,7 +36,7 @@ const CategoryList = ({ categories }: ICategoryListProps) =>
                 </TableCell>
                 <TableCell>{c.description}</TableCell>
                 <TableCell>{c.slug}</TableCell>
-                <TableCell><Link href={`/categories/edit/${c.id}`}>Details</Link></TableCell>
+                <TableCell><Link href={`/dashboard/catalog/categories/edit/${c.id}`}>Details</Link></TableCell>
               </TableRow>
             ))}
           </TableBody>
