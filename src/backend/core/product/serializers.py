@@ -369,7 +369,7 @@ class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSeriali
         many=True, read_only=False, required=False
     )
     id = CharField(required=False, read_only=True)  # for update
-    media = ProductMediaSerializer(many=True, source="product_media")
+    media = ProductMediaSerializer(many=True, source="product_media", read_only=True)
     type_id = PrimaryKeyRelatedField(
         required=False, write_only=True, queryset=ProductType.objects.all()
     )  # for update
