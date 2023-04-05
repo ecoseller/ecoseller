@@ -24,6 +24,9 @@ const nextConfig = {
     // Will only be available on the server side
     apiUrl: process.env.NEXT_PUBLIC_BACKEND_API || "http://localhost:8000",
   },
+  images: {
+    domains: ["localhost", "127.0.0.1"],
+  },
   // output: "standalone",
 };
 

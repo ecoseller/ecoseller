@@ -62,7 +62,10 @@ const DashboardContentWithSaveFooter = ({
     setPreventNavigation(false);
     // setIsSaved(true);
     navigate();
-    router.push(pathToNavigateTo);
+
+    // this was probably causing that weird interpolation bug on next/router.
+    // I'll leave it here for now, but I think it's safe to remove it in future.
+    // router.push(pathToNavigateTo);
   };
 
   return (
@@ -96,7 +99,10 @@ const DashboardContentWithSaveFooter = ({
               variant="outlined"
               onClick={() => {
                 router.push(
-                  returnPath ? returnPath : "/dashboard/catalog/products"
+                  // returnPath ? returnPath : "/dashboard/catalog/products"
+                  {
+                    pathname: returnPath ? returnPath : PRODUCTLIST_PATH,
+                  }
                 );
               }}
             >

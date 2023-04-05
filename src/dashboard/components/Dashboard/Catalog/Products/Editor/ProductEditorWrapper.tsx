@@ -240,6 +240,7 @@ const ProductEditorWrapper = ({
           await updateProduct();
         }
       }}
+      returnPath={"/dashboard/catalog/products"}
     >
       <TopLineWithReturn
         title={"Add product"}

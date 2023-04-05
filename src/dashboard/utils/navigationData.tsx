@@ -43,6 +43,11 @@ const navigationData: INavigationItem[] = [
         icon: <InventoryIcon />,
       },
       {
+        title: "Attributes",
+        path: "/attribute/type",
+        icon: undefined,
+      },
+      {
         title: "Categories",
         path: "/categories",
         icon: <CategoryIcon />,
