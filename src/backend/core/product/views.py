@@ -64,7 +64,7 @@ class ProductListDashboard(APIView, DashboardPagination):
         self.locale = request.GET.get("locale", "en")
         products = Product.objects.all()
         serialized_products = ProductDashboardListSerializer(
-            products, many=True, context={"locale": self.locale}
+            products, many=True, context={"locale": self.locale, "request": request}
         )
         # paginate
         paginated_products = self.paginate_queryset(serialized_products.data, request)

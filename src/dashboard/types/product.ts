@@ -49,7 +49,7 @@ export interface IProductType {
 }
 
 export interface IProduct {
-  id: string | null;
+  id: number | null;
   published: boolean;
   category: number | null;
   translations: IProductTranslations;

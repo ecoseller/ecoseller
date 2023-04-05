@@ -35,7 +35,6 @@ class ProductType(models.Model):
 
 
 class Product(TranslatableModel):
-    id = models.CharField(primary_key=True, max_length=20, unique=True)
     published = models.BooleanField(default=False)
     type = models.ForeignKey(
         "ProductType", on_delete=models.SET_NULL, null=True, blank=True

@@ -42,7 +42,7 @@ const ProductBasicInfo = ({ state, dispatch }: IProductBasicInfoProps) => {
               ) => {
                 dispatch({
                   type: ActionSetProduct.SETID,
-                  payload: { id: event.target.value },
+                  payload: { id: Number(event.target.value) },
                 });
               }}
               InputLabelProps={{

@@ -8,8 +8,6 @@ import DashboardLayout from "@/pages/dashboard/layout"; //react
 import { ReactElement, useEffect, useState } from "react";
 import RootLayout from "@/pages/layout";
 // components
-import ProductListTopLine from "@/components/Dashboard/Catalog/Products/List/TopLine";
-import ProductListHead from "@/components/Dashboard/Catalog/Products/List/ProductListHead";
 // mui
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
