@@ -6,13 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('product', '0021_alter_product_id'),
+        ("product", "0021_alter_product_id"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='attributetype',
-            name='type_name',
-            field=models.CharField(blank=True, help_text='Type name of attribute (e.g. weight, size)', max_length=200, null=True),
+            model_name="attributetype",
+            name="type_name",
+            field=models.CharField(
+                blank=True,
+                help_text="Type name of attribute (e.g. weight, size)",
+                max_length=200,
+                null=True,
+            ),
         ),
     ]
