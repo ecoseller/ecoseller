@@ -1,7 +1,7 @@
 /**
  * Interface representing set of translatable fields of a category
  */
-interface ICategoryTranslation {
+export interface ICategoryTranslation {
   title: string;
   meta_title: string;
   meta_description: string;

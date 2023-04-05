@@ -5,27 +5,23 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import Tab from "@mui/material/Tab";
 import TabPanel from "@mui/lab/TabPanel";
-import { IProductTranslation } from "@/types/product";
-import { getLanguages } from "@/api/country/country";
-import { InferGetServerSidePropsType } from "next";
 import React, { useEffect, useState } from "react";
 import { ILanguage } from "@/types/localization";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import slugify from "slugify";
-import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import SyncDisabledIcon from "@mui/icons-material/SyncDisabled";
-import SyncIcon from "@mui/icons-material/Sync";
 import FormControl from "@mui/material/FormControl";
+import { ICategoryCreateUpdate } from "@/types/category";
+import { Action } from "@/components/Dashboard/Catalog/Categories/Editor/CategoryEditorWrapper";
+import { ActionSetProduct } from "@/types/product";
 
 interface ICategoryTranslatedFieldsProps
 {
   languages: ILanguage[];
+  category: ICategoryCreateUpdate;
+  dispatch: React.Dispatch<Action>;
 }
 
-const CategoryTranslatedFields = ({ languages }: ICategoryTranslatedFieldsProps) =>
+const CategoryTranslatedFields = ({ languages, category, dispatch }: ICategoryTranslatedFieldsProps) =>
 {
   const [currentLanguage, setCurrentLanguage] = useState<string>("");
 
@@ -42,6 +38,51 @@ const CategoryTranslatedFields = ({ languages }: ICategoryTranslatedFieldsProps)
     const defaultLang = languages.find((l) => l.default);
     setCurrentLanguage(defaultLang?.code || "");
   }, [languages]);
+
+  const setTitle = (title: string) =>
+  {
+    dispatch({
+      type: "translation",
+      payload: {
+        translation: {
+          language: currentLanguage,
+          data: {
+            title: title
+          }
+        }
+      }
+    });
+  };
+
+  const setSlug = (slug: string) =>
+  {
+    dispatch({
+      type: "translation",
+      payload: {
+        translation: {
+          language: currentLanguage,
+          data: {
+            slug: slug
+          }
+        }
+      }
+    });
+  };
+
+  const setDescription = (description: string) =>
+  {
+    dispatch({
+      type: "translation",
+      payload: {
+        translation: {
+          language: currentLanguage,
+          data: {
+            description: description
+          }
+        }
+      }
+    });
+  };
 
   return (
     <EditorCard>
@@ -71,29 +112,28 @@ const CategoryTranslatedFields = ({ languages }: ICategoryTranslatedFieldsProps)
                   <Stack spacing={2}>
                     <TextField
                       label="Title"
-                      // value={state?.title || ""}
-                      // onChange={(
-                      //   e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-                      // ) =>
-                      // {
-                      //   setTitle(e.target.value);
-                      // }}
+                      value={category.translations[l.code].title || ""}
+                      onChange={(
+                        e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+                      ) =>
+                      {
+                        setTitle(e.target.value);
+                      }}
                     />
                     <TextField
                       label="Slug"
-                      // value={state?.slug || ""}
-                      // disabled={!editSlug}
-                      // onChange={(
-                      //   e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-                      // ) =>
-                      // {
-                      //   const slugiffied = slugify(e.target.value, {
-                      //     lower: true,
-                      //     locale: language,
-                      //     strict: true
-                      //   });
-                      //   setSlug(slugiffied);
-                      // }}
+                      value={category.translations[l.code].slug || ""}
+                      onChange={(
+                        e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+                      ) =>
+                      {
+                        // const slugiffied = slugify(e.target.value, {
+                        //   lower: true,
+                        //   locale: language,
+                        //   strict: true
+                        // });
+                        setSlug(e.target.value);
+                      }}
                       // InputProps={{
                       //   endAdornment: (
                       //     <InputAdornment position="end">
@@ -112,7 +152,16 @@ const CategoryTranslatedFields = ({ languages }: ICategoryTranslatedFieldsProps)
                       //   )
                       // }}
                     />
-                    <TextField label="Description" />
+                    <TextField
+                      label="Description"
+                      value={category.translations[l.code].description || ""}
+                      onChange={(
+                        e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+                      ) =>
+                      {
+                        setDescription(e.target.value);
+                      }}
+                    />
                   </Stack>
                 </FormControl>
               </TabPanel>
