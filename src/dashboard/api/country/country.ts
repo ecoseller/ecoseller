@@ -1,4 +1,4 @@
-import { ICurrency } from "@/types/localization";
+import { ICurrency, ILanguage } from "@/types/localization";
 import { axiosPrivate } from "@/utils/axiosPrivate";
 
 export const deleteCurrency = async (code: string) => {
@@ -26,4 +26,11 @@ export const putCurrency = async (data: ICurrency) => {
   // Params: data
   // Return: Promise
   return await axiosPrivate.put(`/country/currency/${data.code}/`, data);
+};
+
+/**
+ * Get all available app languages
+ */
+export const getLanguages = async () => {
+  return await axiosPrivate.get<ILanguage[]>("/country/languages/");
 };

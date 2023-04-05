@@ -8,13 +8,11 @@ import Table from "@mui/material/Table";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 
-interface ICategoryListProps
-{
+interface ICategoryListProps {
   categories: ICategoryLocalized[];
 }
 
-const CategoryList = ({ categories }: ICategoryListProps) =>
-{
+const CategoryList = ({ categories }: ICategoryListProps) => {
   return (
     <>
       <TableContainer component={Paper}>

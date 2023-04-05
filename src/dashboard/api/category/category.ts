@@ -4,12 +4,10 @@ import { ICategoryLocalized, ICategoryCreateUpdate } from "@/types/category";
 /**
  * Get list of all categories
  */
-export const getAllCategories = async () =>
-{
+export const getAllCategories = async () => {
   return await axiosPrivate.get<ICategoryLocalized[]>(`/category/`);
 };
 
-export const addCategory = async (categoryToAdd: ICategoryCreateUpdate) =>
-{
+export const addCategory = async (categoryToAdd: ICategoryCreateUpdate) => {
   return await axiosPrivate.post(`/category/`, categoryToAdd);
 };

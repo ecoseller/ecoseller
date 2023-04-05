@@ -15,3 +15,11 @@ export interface IPriceList {
   includes_vat: boolean;
   update_at: string;
 }
+
+/**
+ * Interface representing language of an app
+ */
+export interface ILanguage {
+  code: string;
+  default: boolean;
+}

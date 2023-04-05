@@ -1,8 +1,7 @@
 /**
  * Interface representing set of translatable fields of a category
  */
-interface ICategoryTranslation
-{
+interface ICategoryTranslation {
   title: string;
   meta_title: string;
   meta_description: string;
@@ -13,8 +12,7 @@ interface ICategoryTranslation
 /**
  * Interface used for creating or updating a Category
  */
-export interface ICategoryCreateUpdate
-{
+export interface ICategoryCreateUpdate {
   published: boolean;
 
   translations: { [locale: string]: ICategoryTranslation };
@@ -24,8 +22,7 @@ export interface ICategoryCreateUpdate
  * Interface containing detailed info about a Category
  * (including all available translations of localized fields)
  */
-export interface ICategoryDetail extends ICategoryCreateUpdate
-{
+export interface ICategoryDetail extends ICategoryCreateUpdate {
   id: number;
   create_at: string;
   update_at: string;
@@ -35,8 +32,7 @@ export interface ICategoryDetail extends ICategoryCreateUpdate
  * Interface containing info about a Category.
  * Localized fields are present only in 1 language.
  */
-export interface ICategoryLocalized extends ICategoryTranslation
-{
+export interface ICategoryLocalized extends ICategoryTranslation {
   id: number;
   published: boolean;
   create_at: string;
