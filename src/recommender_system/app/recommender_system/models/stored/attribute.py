@@ -1,5 +1,6 @@
-from typing import List, Optional, TYPE_CHECKING
+from typing import Any, List, Optional, TYPE_CHECKING
 
+from recommender_system.models.api.base import ApiBaseModel
 from recommender_system.models.stored.attribute_type import AttributeTypeModel
 from recommender_system.models.stored.base import StoredBaseModel
 
@@ -24,6 +25,26 @@ class AttributeModel(StoredBaseModel):
 
     class Meta:
         primary_key = "id"
+
+    @classmethod
+    def from_api_model(
+        cls, model: ApiBaseModel, **kwargs: Any
+    ) -> List["StoredBaseModel"]:
+        attribute_type = AttributeTypeModel.from_api_model(model=model.type)[0]
+        stored = super().from_api_model(
+            model=model, attribute_type_id=attribute_type.id, **kwargs
+        )[0]
+
+        result = [attribute_type, stored]
+
+        for attribute in model.ext_attributes:
+            result.extend(
+                AttributeModel.from_api_model(
+                    model=attribute, parent_attribute_id=stored.id
+                )
+            )
+
+        return result
 
     @property
     def attribute_type(self) -> AttributeTypeModel:

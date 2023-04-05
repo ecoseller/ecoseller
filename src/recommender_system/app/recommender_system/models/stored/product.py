@@ -1,6 +1,7 @@
 from datetime import datetime
-from typing import List, Optional, TYPE_CHECKING
+from typing import Any, List, Optional, TYPE_CHECKING
 
+from recommender_system.models.api.base import ApiBaseModel
 from recommender_system.models.stored.base import StoredBaseModel
 from recommender_system.models.stored.product_type import ProductTypeModel
 
@@ -28,6 +29,45 @@ class ProductModel(StoredBaseModel):
 
     class Meta:
         primary_key = "id"
+
+    @classmethod
+    def from_api_model(
+        cls, model: ApiBaseModel, **kwargs: Any
+    ) -> List["StoredBaseModel"]:
+        from recommender_system.models.stored.product_product_variant import (
+            ProductProductVariantModel,
+        )
+        from recommender_system.models.stored.product_translation import (
+            ProductTranslationModel,
+        )
+        from recommender_system.models.stored.product_variant import (
+            ProductVariantModel,
+        )
+
+        result = []
+
+        stored = super().from_api_model(
+            model=model, product_type_id=model.type_id, **kwargs
+        )[0]
+
+        result.append(stored)
+
+        for product_translation in model.product_translations:
+            result.extend(
+                ProductTranslationModel.from_api_model(
+                    model=product_translation, product_id=stored.id
+                )
+            )
+
+        for product_variant in model.product_variants:
+            result.extend(ProductVariantModel.from_api_model(model=product_variant))
+            result.append(
+                ProductProductVariantModel(
+                    product_id=stored.id, product_variant_sku=product_variant.sku
+                )
+            )
+
+        return result
 
     @property
     def product_type(self) -> Optional[ProductTypeModel]:

@@ -3,6 +3,8 @@ from typing import Any, List, TYPE_CHECKING
 from dependency_injector.wiring import inject, Provide
 from pydantic import BaseModel
 
+from recommender_system.models.api.base import ApiBaseModel
+
 if TYPE_CHECKING:
     from recommender_system.storage.abstract import AbstractStorage
 
@@ -26,6 +28,14 @@ class StoredBaseModel(BaseModel):
     ):
         self._storage = _storage
         super().__init__(*args, **kwargs)
+
+    @classmethod
+    def from_api_model(
+        cls, model: ApiBaseModel, **kwargs: Any
+    ) -> List["StoredBaseModel"]:
+        data = model.dict()
+        data.update(kwargs)
+        return [cls.parse_obj(data)]
 
     @property
     def pk(self) -> Any:
