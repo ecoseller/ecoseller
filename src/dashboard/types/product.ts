@@ -86,13 +86,14 @@ export interface IProductList extends IPaginated {
   data: IProductListItem[];
 }
 
-export interface IBaseAttributes {
-  id: number;
+export interface IBaseAttribute {
+  id?: number;
   value: string;
+  type: number;
 }
 export interface IAttributeType {
-  id: number;
+  id?: number;
   type_name: string;
   unit?: string;
-  base_attributes: IBaseAttributes[];
+  base_attributes: IBaseAttribute[];
 }

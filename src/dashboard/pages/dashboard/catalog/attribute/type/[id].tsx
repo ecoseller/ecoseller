@@ -1,7 +1,6 @@
-// /dashboard/catalog/products-types
+// /dashboard/catalog/attribute/type/[id].tsx
 // next.js
 // libraries
-import useSWR from "swr";
 // layout
 import DashboardLayout from "@/pages/dashboard/layout";
 //react
@@ -10,32 +9,28 @@ import RootLayout from "@/pages/layout";
 // components
 import DashboardContentWithSaveFooter from "@/components/Dashboard/Generic/EditableContent";
 import TopLineWithReturn from "@/components/Dashboard/Catalog/Products/TopLineWithReturn";
-import ProductTypeGeneralInformation from "@/components/Dashboard/Catalog/ProducType/ProductTypeGeneralInformation";
-import ProductTypeAllowedAttribtuesSelect from "@/components/Dashboard/Catalog/ProducType/ProductTypeAllowedAttribtuesSelect";
 // mui
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 // types
-import { putProductType } from "@/api/product/types";
-import { IAttributeType, IBaseAttribute, IProductType } from "@/types/product";
+import { IAttributeType, IBaseAttribute } from "@/types/product";
 // api
 import { axiosPrivate } from "@/utils/axiosPrivate";
-import Button from "@mui/material/Button";
 import { GetServerSideProps } from "next";
+import { putAttributeType } from "@/api/product/attributes";
+import AttributeTypeGeneralInformation from "@/components/Dashboard/Catalog/AttributeType/AttributeTypeGeneralInformation";
+import BaseAttributeGrid from "@/components/Dashboard/Catalog/BaseAttribute/BaseAttributeGrid";
+import DeleteAttributeType from "@/components/Dashboard/Catalog/AttributeType/DeleteAttributeType";
 
 interface IProps {
-  productType: IProductType;
-  attributesData: IAttributeType[];
+  attributeType: IAttributeType;
 }
 
-const DashboardProductTypeDetailPage = ({
-  productType,
-  attributesData,
-}: IProps) => {
+const DashboardAttributeTypeDetailPage = ({ attributeType }: IProps) => {
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
-  const [state, setState] = useState<IProductType>(productType);
+  const [state, setState] = useState<IAttributeType>(attributeType);
 
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
@@ -53,7 +48,7 @@ const DashboardProductTypeDetailPage = ({
     setSnackbar(null);
   };
 
-  console.log("productType", productType);
+  console.log("attributeType", attributeType);
 
   useEffect(() => {
     if (!preventNavigation) {
@@ -66,11 +61,11 @@ const DashboardProductTypeDetailPage = ({
       <Container maxWidth="xl">
         <Stack>
           <DashboardContentWithSaveFooter
-            primaryButtonTitle={productType ? "Save" : "Create"} // To distinguish between create and update actions
+            primaryButtonTitle={attributeType ? "Save" : "Create"} // To distinguish between create and update actions
             preventNavigation={preventNavigation}
             setPreventNavigation={setPreventNavigation}
             onSave={async () => {
-              await putProductType(state)
+              await putAttributeType(state)
                 .then((res: any) => {
                   setSnackbar({
                     open: true,
@@ -89,21 +84,27 @@ const DashboardProductTypeDetailPage = ({
 
               setPreventNavigation(false);
             }}
-            returnPath={"/dashboard/catalog/product-types"}
+            returnPath={"/dashboard/catalog/attribute/type"}
           >
             <TopLineWithReturn
-              title={`Edit product type`}
-              returnPath={"/dashboard/catalog/product-types"}
+              title={`Edit attribute type`}
+              returnPath={"/dashboard/catalog/attribute/type"}
             />
-            <ProductTypeGeneralInformation
+            <AttributeTypeGeneralInformation
               state={state}
-              setState={(v: IProductType) => setState(v)}
+              setState={(v: IAttributeType) => setState(v)}
             />
-            <ProductTypeAllowedAttribtuesSelect
-              state={state}
-              setState={(v: IProductType) => setState(v)}
-              attributeTypes={attributesData}
+            <BaseAttributeGrid
+              attributeTypeId={state.id}
+              baseAttributes={state?.base_attributes}
+              setState={(v: IBaseAttribute[]) =>
+                setState({
+                  ...state,
+                  base_attributes: v,
+                })
+              }
             />
+            {state.id ? <DeleteAttributeType id={state.id} /> : null}
             {snackbar ? (
               <Snackbar
                 open={snackbar.open}
@@ -126,7 +127,7 @@ const DashboardProductTypeDetailPage = ({
   );
 };
 
-DashboardProductTypeDetailPage.getLayout = (page: ReactElement) => {
+DashboardAttributeTypeDetailPage.getLayout = (page: ReactElement) => {
   return (
     <RootLayout>
       <DashboardLayout>{page}</DashboardLayout>
@@ -138,23 +139,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const params = context.params;
   const id = params?.id;
 
-  const productTypeRes = await axiosPrivate.get(
-    `/product/dashboard/type/${id}/`
+  const attributeTypeRequest = await axiosPrivate.get(
+    `/product/dashboard/attribute/type/${id}/`
   );
-  const productType = productTypeRes.data;
-
-  const attributesRes = await axiosPrivate.get(
-    `/product/dashboard/attribute/type/`
-  );
-  const attributesData = attributesRes.data;
-  console.log("attributes", attributesData);
+  const attributeType = attributeTypeRequest.data;
 
   return {
     props: {
-      productType,
-      attributesData,
+      attributeType,
     },
   };
 };
 
-export default DashboardProductTypeDetailPage;
+export default DashboardAttributeTypeDetailPage;
