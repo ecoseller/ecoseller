@@ -153,7 +153,7 @@ const ProductMediaEditor = ({ disabled, state }: IProductMediaEditorProps) => {
       if (!e.target.files || (e.target.files && !e.target.files[i])) continue;
       const formData = new FormData();
       formData.append(`media`, e.target.files[i], e.target.files[i].name);
-      formData.append("product_id", state.id);
+      formData.append("product_id", `${state.id}`);
       formData.append("type", "IMAGE");
       await postProductMedia(formData)
         .then((res) => {
