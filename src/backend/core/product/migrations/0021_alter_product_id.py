@@ -6,15 +6,25 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
+<<<<<<< HEAD
         ("product", "0020_alter_productmedia_media"),
+=======
+        ('product', '0020_alter_productmedia_media'),
+>>>>>>> 774a350 (db merge)
     ]
 
     operations = [
         migrations.AlterField(
+<<<<<<< HEAD
             model_name="product",
             name="id",
             field=models.BigAutoField(
                 auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
             ),
+=======
+            model_name='product',
+            name='id',
+            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+>>>>>>> 774a350 (db merge)
         ),
     ]
