@@ -1,5 +1,5 @@
 import { IPriceList } from "@/types/localization";
-import { IAttributeType, IBaseAttributes } from "@/types/product";
+import { IAttributeType, IBaseAttribute } from "@/types/product";
 
 /** Price */
 
@@ -50,7 +50,7 @@ export const deserializeProductVariantAttributesToRow = (
   let attributes: any = {};
   attributesData?.forEach((attribute: IAttributeType) => {
     attributes[`$ATTRIBUTE_${attribute.type_name}`] = attribute.base_attributes
-      .map((baseAttribute: IBaseAttributes) => baseAttribute.id)
+      .map((baseAttribute: IBaseAttribute) => baseAttribute.id)
       ?.find(
         (id: number) =>
           id ===

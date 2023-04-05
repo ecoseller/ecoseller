@@ -92,9 +92,11 @@ class Product(TranslatableModel):
 class AttributeType(models.Model):
     type_name = models.CharField(
         max_length=200,
-        blank=False,
-        null=False,
         help_text="Type name of attribute (e.g. weight, size)",
+        blank=True,  # both blank and null must be True to allow empty string because of initial POST
+        null=True,
+        # blank=False,
+        # null=False,
     )
     unit = models.CharField(
         max_length=200,
@@ -111,7 +113,9 @@ class BaseAttribute(models.Model):
     type = models.ForeignKey(
         "AttributeType", on_delete=models.CASCADE, related_name="base_attributes"
     )
-    value = models.CharField(max_length=200, blank=False, null=False)
+    value = models.CharField(
+        max_length=200, blank=True, null=True
+    )  # it must be set to blank=True, null=True to allow empty string because of initial POST
     order = models.IntegerField(blank=True, null=True)
     ext_attributes = models.ManyToManyField("ExtensionAttribute", blank=True)
 

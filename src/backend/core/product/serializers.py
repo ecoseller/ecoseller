@@ -296,6 +296,7 @@ class BaseAttributeDashboardSerializer(ModelSerializer):
         fields = (
             "id",
             "value",
+            "type",
             # "order",
             # "ext_attributes",
         )

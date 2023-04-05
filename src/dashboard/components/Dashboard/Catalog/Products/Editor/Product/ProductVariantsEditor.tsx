@@ -42,7 +42,7 @@ import { Alert, Snackbar } from "@mui/material";
 import {
   ActionSetProduct,
   IAttributeType,
-  IBaseAttributes,
+  IBaseAttribute,
   IProductPrice,
   IProductVariant,
   ISetProductStateData,
@@ -245,7 +245,7 @@ const ProductVariantsEditor = ({
               value: null,
               label: "",
             },
-            ...(attribute?.base_attributes?.map((value: IBaseAttributes) => ({
+            ...(attribute?.base_attributes?.map((value: IBaseAttribute) => ({
               value: value.id,
               label:
                 value.value + `${attribute.unit ? " " + attribute.unit : ""}`,
