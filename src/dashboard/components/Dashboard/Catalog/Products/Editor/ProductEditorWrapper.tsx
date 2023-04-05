@@ -69,7 +69,6 @@ const ProductEditorWrapper = ({
   pricelistsData,
   productTypeData,
 }: IProductEditorWrapperProps) => {
-
   const setProductStateReducer = (
     state: ISetProductStateData,
     action: ISetProductStateAction

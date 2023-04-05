@@ -7,19 +7,17 @@ import CategoryTranslatedFields from "@/components/Dashboard/Catalog/Categories/
 import Container from "@mui/material/Container";
 import CategoryEditorWrapper from "@/components/Dashboard/Catalog/Categories/Editor/CategoryEditorWrapper";
 
-const CategoryAddPage = () =>
-{
+const CategoryAddPage = () => {
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
-        <CategoryEditorWrapper/>
+        <CategoryEditorWrapper />
       </Container>
     </DashboardLayout>
   );
 };
 
-CategoryAddPage.getLayout = (page: ReactElement) =>
-{
+CategoryAddPage.getLayout = (page: ReactElement) => {
   return (
     <RootLayout>
       <DashboardLayout>{page}</DashboardLayout>

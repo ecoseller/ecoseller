@@ -10,28 +10,27 @@ import { useRouter } from "next/router";
 import Button from "@mui/material/Button";
 import { ICategoryCreateUpdate, ICategoryTranslation } from "@/types/category";
 
-export interface Action
-{
+export interface Action {
   type: string;
   payload: any;
 }
 
 // TODO: use enums & typing
-function reducer(state: ICategoryCreateUpdate, action: Action): ICategoryCreateUpdate
-{
-  switch (action.type)
-  {
-    case "translation":
-    {
+function reducer(
+  state: ICategoryCreateUpdate,
+  action: Action
+): ICategoryCreateUpdate {
+  switch (action.type) {
+    case "translation": {
       return {
         ...state,
-        translations:{
+        translations: {
           ...state.translations,
           [action.payload.translation.language]: {
             ...state.translations[action.payload.translation.language],
-            ...action.payload.translation.data 
-          }
-        }
+            ...action.payload.translation.data,
+          },
+        },
       };
     }
     default:
@@ -39,27 +38,26 @@ function reducer(state: ICategoryCreateUpdate, action: Action): ICategoryCreateU
   }
 }
 
-const CategoryEditorWrapper = () =>
-{
+const CategoryEditorWrapper = () => {
   // TODO: load dynamically
   const emptyCategory: ICategoryCreateUpdate = {
     published: true,
     translations: {
-      "en": {
+      en: {
         slug: "",
         title: "",
         description: "",
         meta_description: "",
-        meta_title: ""
+        meta_title: "",
       },
-      "cs": {
+      cs: {
         slug: "",
         title: "",
         description: "",
         meta_description: "",
-        meta_title: ""
-      }
-    }
+        meta_title: "",
+      },
+    },
   };
 
   const [languages, setLanguages] = useState<ILanguage[]>([]);
@@ -67,18 +65,14 @@ const CategoryEditorWrapper = () =>
 
   const router = useRouter();
 
-  useEffect(() =>
-  {
-    getLanguages().then((langs) =>
-    {
+  useEffect(() => {
+    getLanguages().then((langs) => {
       setLanguages(langs.data);
     });
   }, []);
 
-  const save = () =>
-  {
-    addCategory(category).then(() =>
-    {
+  const save = () => {
+    addCategory(category).then(() => {
       router.push("/dashboard/catalog/categories");
     });
   };
@@ -95,7 +89,11 @@ const CategoryEditorWrapper = () =>
           {/*  state={productState}*/}
           {/*  dispatch={dispatchProductState}*/}
           {/*/>*/}
-          <CategoryTranslatedFields languages={languages} category={category} dispatch={dispatch}/>
+          <CategoryTranslatedFields
+            languages={languages}
+            category={category}
+            dispatch={dispatch}
+          />
         </Grid>
         <Grid item md={4} xs={12}>
           {/*<ProductCategorySelect*/}
@@ -105,10 +103,13 @@ const CategoryEditorWrapper = () =>
           TODO: add published field & Parent category HERE
         </Grid>
       </Grid>
-      <Button onClick={() =>
-      {
-        save();
-      }}>Save</Button>
+      <Button
+        onClick={() => {
+          save();
+        }}
+      >
+        Save
+      </Button>
     </>
   );
 };

@@ -9,13 +9,11 @@ import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import Link from "next/link";
 
-interface ICategoryListProps
-{
+interface ICategoryListProps {
   categories: ICategoryLocalized[];
 }
 
-const CategoryList = ({ categories }: ICategoryListProps) =>
-{
+const CategoryList = ({ categories }: ICategoryListProps) => {
   return (
     <>
       <TableContainer component={Paper}>
@@ -36,7 +34,11 @@ const CategoryList = ({ categories }: ICategoryListProps) =>
                 </TableCell>
                 <TableCell>{c.description}</TableCell>
                 <TableCell>{c.slug}</TableCell>
-                <TableCell><Link href={`/dashboard/catalog/categories/edit/${c.id}`}>Details</Link></TableCell>
+                <TableCell>
+                  <Link href={`/dashboard/catalog/categories/edit/${c.id}`}>
+                    Details
+                  </Link>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
