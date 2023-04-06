@@ -8,6 +8,7 @@ services:
       target: development
     volumes:
       - ./backend/core:/usr/src/app/
+      - ./backend/mediafiles:/usr/src/mediafiles
     ports:
       - 8000:8000
       - 8001:8001

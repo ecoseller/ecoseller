@@ -91,16 +91,20 @@ const ProductGrid = () => {
             alignItems: "center",
           }}
         >
-          <Image
-            src={params.row.primary_image?.media}
+          <img
+            src={params.row.primary_image?.media?.replace(
+              "backend",
+              "127.0.0.1"
+            )}
             alt={params.row.primary_image?.alt}
-            quality={60}
-            width={100}
-            height={200}
+            // quality={60}
+            // width={100}
+            // height={200}
             style={{
               objectFit: "contain",
               position: "relative",
-              height: "auto",
+              height: "85px",
+              width: "auto",
             }}
           />
         </div>

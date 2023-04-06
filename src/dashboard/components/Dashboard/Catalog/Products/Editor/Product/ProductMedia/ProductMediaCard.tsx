@@ -158,7 +158,10 @@ const ProductMediaCard = ({
             textAlign: "left",
           }}
         >
-          <img src={url} style={{ width: "auto", height: "125px" }} />
+          <img
+            src={url?.replace("backend", "127.0.0.1")}
+            style={{ width: "auto", height: "125px" }}
+          />
         </div>
         <div>
           <Button
