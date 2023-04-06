@@ -34,6 +34,7 @@ import {
   ISetProductStateData,
 } from "@/types/product";
 import { ISetProductStateAction } from "../ProductEditorWrapper";
+import { ILanguage } from "@/types/localization";
 
 interface IProductTranslatedFieldsProps {
   language: string;
@@ -151,9 +152,9 @@ const ProductTranslatedFieldsWrapper = ({
   state,
   dispatch,
 }: IProductTranslatedFieldsWrapperProps) => {
-  const { data: languages } = useSWRImmutable<
-    { code: string; default: boolean }[]
-  >("/country/languages/");
+  const { data: languages } = useSWRImmutable<ILanguage[]>(
+    "/country/languages/"
+  );
 
   const [language, setLanguage] = useState<string>("");
 

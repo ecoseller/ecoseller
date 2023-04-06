@@ -13,6 +13,12 @@ interface ICollapsableContentWithTitleProps {
   children: React.ReactNode;
 }
 
+/**
+ * Component containing title and collapsible content below it
+ * @param title Title of the component
+ * @param children Elements located in the collapsible part
+ * @constructor
+ */
 const CollapsableContentWithTitle = ({
   title,
   children,

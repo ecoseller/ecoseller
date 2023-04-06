@@ -1,29 +1,29 @@
-// /dashboard/orders
-
-// layout
 import DashboardLayout from "@/pages/dashboard/layout";
-//react
 import { ReactElement } from "react";
 import RootLayout from "@/pages/layout";
-// components
-
-// mui
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
+import { getAllCategories } from "@/api/category/category";
+import { InferGetServerSidePropsType } from "next";
+import CategoryList from "@/components/Dashboard/Catalog/Categories/List/CategoryList";
+import CategoryListTopLine from "@/components/Dashboard/Catalog/Categories/List/TopLine";
 
-const DashboardCategoriesPage = () => {
+const CategoriesPage = ({
+  categories,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
-        <Typography variant="h4" sx={{ mb: 5 }}>
-          Categories list
-        </Typography>
+        <CategoryListTopLine />
+        <>
+          <CategoryList categories={categories} />
+        </>
       </Container>
     </DashboardLayout>
   );
 };
 
-DashboardCategoriesPage.getLayout = (page: ReactElement) => {
+CategoriesPage.getLayout = (page: ReactElement) => {
   return (
     <RootLayout>
       <DashboardLayout>{page}</DashboardLayout>
@@ -31,11 +31,11 @@ DashboardCategoriesPage.getLayout = (page: ReactElement) => {
   );
 };
 
-export const getServersideProps = async (context: any) => {
-  console.log("Dashboard orders");
-  return {
-    props: {},
-  };
-};
+export async function getServerSideProps() {
+  const res = await getAllCategories();
+  const categories = res.data;
 
-export default DashboardCategoriesPage;
+  return { props: { categories: categories } };
+}
+
+export default CategoriesPage;
