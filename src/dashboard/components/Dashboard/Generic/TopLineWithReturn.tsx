@@ -12,6 +12,12 @@ interface ITopLineWithReturnProps {
   returnPath: string;
 }
 
+/**
+ * Component displaying top line with `Return` button and title
+ * @param title Title displayed
+ * @param returnPath URL where to navigate when `Return` button is clicked
+ * @constructor
+ */
 const TopLineWithReturn = ({ title, returnPath }: ITopLineWithReturnProps) => {
   const router = useRouter();
   return (
@@ -25,7 +31,7 @@ const TopLineWithReturn = ({ title, returnPath }: ITopLineWithReturnProps) => {
       <Button
         variant="text"
         onClick={() => {
-          router.push(returnPath ? returnPath : "/dashboard/catalog/products");
+          router.push(returnPath);
         }}
       >
         <ArrowBackIosIcon />

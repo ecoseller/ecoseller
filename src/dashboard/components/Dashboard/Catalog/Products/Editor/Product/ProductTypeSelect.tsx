@@ -19,7 +19,6 @@ import {
   ISetProductStateData,
 } from "@/types/product";
 import { ISetProductStateAction } from "../ProductEditorWrapper";
-import { ICategory } from "@/types/category";
 import Link from "next/link";
 
 interface IProductMediaEditorProps {

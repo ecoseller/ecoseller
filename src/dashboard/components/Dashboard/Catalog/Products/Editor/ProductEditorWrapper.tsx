@@ -12,7 +12,7 @@ import { ReactElement, useEffect, useReducer, useState } from "react";
 import RootLayout from "@/pages/layout";
 // components
 import DashboardContentWithSaveFooter from "@/components/Dashboard/Generic/EditableContent";
-import TopLineWithReturn from "@/components/Dashboard/Catalog/Products/TopLineWithReturn";
+import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 import ProductVariantsEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVariantsEditor";
 import ProductMediaEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductMediaEditor";
 import ProductVariantPricesEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVariantPricesEditor";
@@ -52,6 +52,15 @@ interface IProductEditorWrapperProps {
   productTypeData?: IProductType[];
 }
 
+/**
+ * Product editor wrapper
+ * @param title - title of the page
+ * @param returnPath - path to return to
+ * @param product - initial product data to edit (if any)
+ *
+ * This component holds the state of the product being edited as reducer state which is passed down to the child components as props.
+ * Child components can dispatch actions to the reducer to update the "large" product state.
+ */
 const ProductEditorWrapper = ({
   title,
   returnPath,
@@ -60,15 +69,6 @@ const ProductEditorWrapper = ({
   pricelistsData,
   productTypeData,
 }: IProductEditorWrapperProps) => {
-  /**
-   * Product editor wrapper
-   * @param title - title of the page
-   * @param returnPath - path to return to
-   * @param product - initial product data to edit (if any)
-   *
-   * This component holds the state of the product being edited as reducer state which is passed down to the child components as props.
-   * Child components can dispatch actions to the reducer to update the "large" product state.
-   */
   const setProductStateReducer = (
     state: ISetProductStateData,
     action: ISetProductStateAction

@@ -40,7 +40,7 @@ import {
   deleteCurrency,
   postCurrency,
   putCurrency,
-} from "@/api/country/currency";
+} from "@/api/country/country";
 
 interface ICurrencyTable extends ICurrency {
   isNew?: boolean;
