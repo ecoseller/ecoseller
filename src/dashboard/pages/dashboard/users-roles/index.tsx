@@ -13,29 +13,29 @@ import Typography from "@mui/material/Typography";
 import DashboardContentWithSaveFooter from "@/components/Dashboard/Generic/EditableContent";
 import { Stack } from "@mui/material";
 import TopLineWithReturn from "@/components/Dashboard/Catalog/Products/TopLineWithReturn";
+import { axiosPrivate } from "@/utils/axiosPrivate";
+import { IUser } from "@/types/user";
+import { GetServerSideProps } from "next";
 
-const DashboardRolesAndUsersPage = () => {
+import UsersGeneralInformation from "@/components/Dashboard/Roles/UsersGeneralInformation";
+
+interface IProps {
+  users: IUser[];
+}
+
+const DashboardRolesAndUsersPage = ({
+  users,
+}: IProps) => {
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
+  const [state, setState] = useState<IUser[]>(users);
+  console.log("users", users);
 
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
-        <Stack>
-          <DashboardContentWithSaveFooter
-            primaryButtonTitle="" // To distinguish between create and update actions
-            preventNavigation={preventNavigation}
-            setPreventNavigation={setPreventNavigation}
-            onSave={async () => {
-            }}
-            returnPath={"/dashboard/catalog/product-types"}
-          >
-            <TopLineWithReturn
-              title={`Users and roles`}
-              returnPath={"/dashboard/catalog/product-types"}
-            />
-          </DashboardContentWithSaveFooter>
-        </Stack>
-      </Container>
+      <UsersGeneralInformation
+        state={users}
+        setState={(users: IUser[]) => setState(users)}
+      />
     </DashboardLayout>
   );
 };
@@ -48,10 +48,33 @@ DashboardRolesAndUsersPage.getLayout = (page: ReactElement) => {
   );
 };
 
-export const getServersideProps = async (context: any) => {
-  console.log("Dashboard orders");
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  console.log("Get server side props users and roles");
+
+  const users: IUser[] = [];
+  const usrs = await axiosPrivate.get(
+    `/user/users`
+  );
+  // console.log(users.data);
+  for (const user of usrs.data) {
+    users.push({
+      email: user['email'],
+      first_name: user['first_name'],
+      last_name: user['last_name'],
+      is_admin: user['is_admin'],
+      roles: []
+    });
+    console.log(user['email']);
+    const userRoles = await axiosPrivate.get(
+      `roles/get-groups/${user['email']}`
+    );
+    for (const role of userRoles.data) {
+      users[users.length - 1].roles.push(role.name);
+    }
+  }
+  console.log(users);
   return {
-    props: {},
+    props: { users },
   };
 };
 
