@@ -11,6 +11,8 @@ import {
     IUser,
 } from "@/types/user";
 
+import OverflowTip from "@/components/Dashboard/Roles/OverflowTip";
+
 interface IUserProps {
     state: IUser[];
     setState: (data: IUser[]) => void;
@@ -45,7 +47,11 @@ const UsersGeneralInformation = ({
                             <TableCell align="right">{state.first_name}</TableCell>
                             <TableCell align="right">{state.last_name}</TableCell>
                             <TableCell align="right">{state.is_admin ? "True" : "False"}</TableCell>
-                            <TableCell align="right">{state.roles}</TableCell>
+                            <OverflowTip>
+                                <TableCell align="right" style={{ maxWidth: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                    {state.roles.map((role) => (role)).join(", ")}
+                                </TableCell>
+                            </OverflowTip>
                         </TableRow>
                     ))}
                 </TableBody>

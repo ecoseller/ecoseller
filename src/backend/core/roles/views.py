@@ -1,3 +1,4 @@
+from django.contrib.auth.models import Group, Permission
 from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -308,9 +309,48 @@ class CreateGroupView(APIView):
 
             for permission in groupPermissions:
                 permission = ManagerPermission.objects.get(name=permission)
+                if permission is None:
+                    return Response("Permission doesnt exist", status=400)
                 group.permissions.add(permission)
 
             group.save()
+
+            drfGroup = Group.objects.create(name=groupName)
+            for permission in groupPermissions:
+                permission = RolesManager.manager_permission_to_django_permission(
+                    permission
+                )
+                drfGroup.permissions.add(permission)
+
+            return Response(status=201)
+        except Exception as e:
+            print("Error", e)
+            return Response(status=400)
+
+
+class DeleteGroupView(APIView):
+    """
+    View for deleting a group.
+    """
+
+    permission_classes = (permissions.AllowAny,)
+    # In later phases we will need to restrict this to admins only
+
+    """
+    Delete a group
+    """
+
+    def post(self, request):
+        groupName = request.data["group_name"]
+
+        try:
+            group = ManagerGroup.objects.get(name=groupName)
+            group.delete()
+
+            print("Manager group deleted")
+
+            drfGroup = Group.objects.get(name=groupName)
+            drfGroup.delete()
 
             return Response(status=201)
         except Exception as e:

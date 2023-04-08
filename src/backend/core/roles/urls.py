@@ -24,4 +24,6 @@ urlpatterns = [
     path("get-groups/<str:id>", views.UserGetGroupsView.as_view()),
     path("set-group", views.UserAddGroupView.as_view()),
     path("remove-group", views.UserRemoveGroupView.as_view()),
+    path("create-group", views.CreateGroupView.as_view()),
+    path("delete-group", views.DeleteGroupView.as_view()),
 ]
