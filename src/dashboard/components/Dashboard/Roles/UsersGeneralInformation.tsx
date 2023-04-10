@@ -73,13 +73,7 @@ const UsersGrid = () => {
             console.log("data: ", data);
             setUsers(data.users);
         })
-    });
-    // let users: IUser[] = [];
-    // useUsers().then((data) => {
-    //     console.log("data: ", data);
-    //     users = data.users;
-    // });
-    console.log("users in grid: ", users);
+    }, []);
 
     const columns: GridColDef[] = [
         {
