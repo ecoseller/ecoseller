@@ -1,50 +1,49 @@
 import React, { useRef, useEffect, useState } from 'react';
 import Tooltip from '@mui/material/Tooltip';
-const OverflowTip = (props: any) => {
-    // Create Ref
-    const textElementRef = useRef<HTMLInputElement>();
+
+interface Props {
+    tooltip: string;
+    text: string;
+}
+
+const OverflowTooltip = (props: Props) => {
+
+    const textElementRef: any = useRef(null);
 
     const compareSize = () => {
         const compare =
-            (textElementRef.current != null) ?
-                textElementRef.current.scrollWidth > textElementRef.current.clientWidth
-                : false;
-        console.log('compare: ', compare);
+            textElementRef.current.scrollWidth > textElementRef.current.clientWidth;
         setHover(compare);
     };
 
-    // compare once and add resize listener on "componentDidMount"
     useEffect(() => {
         compareSize();
         window.addEventListener('resize', compareSize);
     }, []);
 
-    // remove resize listener again on "componentWillUnmount"
     useEffect(() => () => {
         window.removeEventListener('resize', compareSize);
     }, []);
 
-    // Define state and function to update the value
     const [hoverStatus, setHover] = useState(false);
 
     return (
         <Tooltip
-            title={props.value}
+            title={props.tooltip}
             disableHoverListener={!hoverStatus}
-            style={{ fontSize: '2em' }}
         >
             <div
                 ref={textElementRef}
                 style={{
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
-                    textOverflow: 'ellipsis'
+                    textOverflow: 'ellipsis',
                 }}
             >
-                {props.someLongText}
+                {props.text}
             </div>
         </Tooltip>
     );
 };
 
-export default OverflowTip;
+export default OverflowTooltip;

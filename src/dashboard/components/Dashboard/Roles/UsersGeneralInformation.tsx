@@ -11,7 +11,8 @@ import {
     IUser,
 } from "@/types/user";
 
-import OverflowTip from "@/components/Dashboard/Roles/OverflowTip";
+import OverflowTooltip from "@/components/Dashboard/Roles/OverflowTip";
+import { Tooltip } from '@mui/material';
 
 interface IUserProps {
     state: IUser[];
@@ -24,6 +25,8 @@ const UsersGeneralInformation = ({
 }: IUserProps) => {
 
     return (
+        console.log(state.map((state) => (state.roles.map((role) => (role)).join(", ")).length)),
+        console.log(TableCell.length),
         <TableContainer component={Paper} >
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
@@ -47,11 +50,12 @@ const UsersGeneralInformation = ({
                             <TableCell align="right">{state.first_name}</TableCell>
                             <TableCell align="right">{state.last_name}</TableCell>
                             <TableCell align="right">{state.is_admin ? "True" : "False"}</TableCell>
-                            <OverflowTip>
+                            <Tooltip title={state.roles.map((role) => (role)).join(", ")}
+                                disableHoverListener={(state.roles.map((role) => (role)).join(", ")).length < 20}>
                                 <TableCell align="right" style={{ maxWidth: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                     {state.roles.map((role) => (role)).join(", ")}
                                 </TableCell>
-                            </OverflowTip>
+                            </Tooltip>
                         </TableRow>
                     ))}
                 </TableBody>
