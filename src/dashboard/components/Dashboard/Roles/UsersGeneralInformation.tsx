@@ -6,6 +6,19 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import useSWR from "swr";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
+import {
+    DataGrid,
+    GridColDef,
+    GridActionsCellItem,
+    GridRenderCellParams,
+} from "@mui/x-data-grid";
 
 import {
     IUser,
@@ -13,54 +26,149 @@ import {
 
 import OverflowTooltip from "@/components/Dashboard/Roles/OverflowTip";
 import { Tooltip } from '@mui/material';
+import { axiosPrivate } from '@/utils/axiosPrivate';
 
-interface IUserProps {
-    state: IUser[];
-    setState: (data: IUser[]) => void;
-}
+const PAGE_SIZE = 30;
 
-const UsersGeneralInformation = ({
-    state,
-    setState,
-}: IUserProps) => {
+const useUsers = async () => {
+    const users: IUser[] = [];
+    const usrs = await axiosPrivate.get(
+        `/user/users`
+    );
+
+    // console.log(users.data);
+    for (const user of usrs.data) {
+        users.push({
+            email: user['email'],
+            first_name: user['first_name'],
+            last_name: user['last_name'],
+            is_admin: user['is_admin'],
+            roles: []
+        });
+        const userRoles = await axiosPrivate.get(
+            `roles/get-groups/${user['email']}`
+        );
+        for (const role of userRoles.data) {
+            users[users.length - 1].roles.push(role.name);
+        }
+    }
+    return {
+        users: users || []
+    };
+};
+
+const UsersGrid = () => {
+    const router = useRouter();
+    const [users, setUsers] = useState<IUser[]>([]);
+    const [paginationModel, setPaginationModel] = useState<{
+        page: number;
+        pageSize: number;
+    }>({
+        page: 0,
+        pageSize: PAGE_SIZE,
+    });
+
+    React.useEffect(() => {
+        useUsers().then((data) => {
+            console.log("data: ", data);
+            setUsers(data.users);
+        })
+    });
+    // let users: IUser[] = [];
+    // useUsers().then((data) => {
+    //     console.log("data: ", data);
+    //     users = data.users;
+    // });
+    console.log("users in grid: ", users);
+
+    const columns: GridColDef[] = [
+        {
+            field: "email",
+            headerName: "Email",
+            editable: false,
+            maxWidth: 200,
+            sortable: false,
+            disableColumnMenu: true,
+            flex: 1,
+        },
+        {
+            field: "first_name",
+            headerName: "First Name",
+            editable: false,
+            flex: 1,
+            sortable: false,
+            disableColumnMenu: true,
+        },
+        {
+            field: "last_name",
+            headerName: "Last Name",
+            editable: false,
+            flex: 1,
+            type: "image",
+            sortable: false,
+            disableColumnMenu: true,
+        },
+        {
+            field: "is_admin",
+            headerName: "Is Admin",
+            editable: false,
+            maxWidth: 100,
+            sortable: false,
+            disableColumnMenu: true,
+            renderCell: (params: GridRenderCellParams) =>
+                params?.row?.is_admin ? (
+                    <CheckCircleRoundedIcon />
+                ) : (
+                    <CancelRoundedIcon />
+                ),
+        },
+        {
+            field: "roles",
+            headerName: "Roles",
+            editable: false,
+            flex: 1,
+            sortable: false,
+            disableColumnMenu: true,
+            valueParser: (params) => {
+                console.log("params", params);
+                return params.value.join(", ");
+            },
+        },
+        {
+            field: "actions",
+            type: "actions",
+            headerName: "Actions",
+            width: 100,
+            cellClassName: "actions",
+            flex: 1,
+            disableColumnMenu: true,
+            getActions: ({ id }) => {
+                return [
+                    <GridActionsCellItem
+                        icon={<EditIcon />}
+                        label="Edit"
+                        className="textPrimary"
+                        onClick={() => {
+                            router.push(`/dashboard/catalog/products/edit/${id}`);
+                        }}
+                        color="inherit"
+                        key={"edit"}
+                    />,
+                ];
+            },
+        },
+    ];
 
     return (
-        console.log(state.map((state) => (state.roles.map((role) => (role)).join(", ")).length)),
-        console.log(TableCell.length),
-        <TableContainer component={Paper} >
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Email</TableCell>
-                        <TableCell align="right">First Name</TableCell>
-                        <TableCell align="right">Last Name</TableCell>
-                        <TableCell align="right">Is Admin</TableCell>
-                        <TableCell align="right">Roles</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {state.map((state) => (
-                        <TableRow
-                            key={state.email}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                            <TableCell component="th" scope="row">
-                                {state.email}
-                            </TableCell>
-                            <TableCell align="right">{state.first_name}</TableCell>
-                            <TableCell align="right">{state.last_name}</TableCell>
-                            <TableCell align="right">{state.is_admin ? "True" : "False"}</TableCell>
-                            <Tooltip title={state.roles.map((role) => (role)).join(", ")}
-                                disableHoverListener={(state.roles.map((role) => (role)).join(", ")).length < 20}>
-                                <TableCell align="right" style={{ maxWidth: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                    {state.roles.map((role) => (role)).join(", ")}
-                                </TableCell>
-                            </Tooltip>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer >
+        <DataGrid
+            rows={users}
+            columns={columns}
+            autoHeight={true}
+            disableRowSelectionOnClick
+            getRowHeight={() => "auto"}
+            getRowId={(row) => row.email}
+        />
     );
 };
-export default UsersGeneralInformation;
+
+export default UsersGrid;
