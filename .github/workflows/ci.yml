@@ -124,6 +124,13 @@ jobs:
         run: black --check $SOURCE_FILES
       - name: Lint with flake8
         run: flake8 $SOURCE_FILES
+      - name: Load .env file
+        uses: xom9ikk/dotenv@v2
+        with:
+          path: src/recommender_system
+      - name: Test
+        working-directory: src/recommender_system/app
+        run: pytest ./tests
 
   docker-compose:
     runs-on: ubuntu-latest
