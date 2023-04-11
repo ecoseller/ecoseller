@@ -8,6 +8,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
+import InfoIcon from '@mui/icons-material/Info';
 import useSWR from "swr";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -18,6 +20,7 @@ import {
     GridColDef,
     GridActionsCellItem,
     GridRenderCellParams,
+    GridToolbarContainer,
 } from "@mui/x-data-grid";
 
 import {
@@ -25,11 +28,22 @@ import {
 } from "@/types/user";
 
 import OverflowTooltip from "@/components/Dashboard/Roles/OverflowTip";
-import { Tooltip } from '@mui/material';
+import { Button, Tooltip } from '@mui/material';
 import { axiosPrivate } from '@/utils/axiosPrivate';
 import { createUser, deleteUser } from "@/api/users-roles/users";
 
 const PAGE_SIZE = 30;
+
+const EditToolbar = (props: any) => {
+
+    return (
+        <GridToolbarContainer>
+            <Button color="primary" startIcon={<AddIcon />}>
+                Add new
+            </Button>
+        </GridToolbarContainer>
+    );
+};
 
 const useUsers = async () => {
     const users: IUser[] = [];
@@ -149,7 +163,7 @@ const UsersGrid = () => {
                         label="Edit"
                         className="textPrimary"
                         onClick={() => {
-                            router.push(`/dashboard/catalog/products/edit/`);
+                            router.push(`/dashboard/user/edit/${row.email}`);
                         }}
                         color="inherit"
                         key={"edit"}
@@ -177,6 +191,15 @@ const UsersGrid = () => {
                         color="inherit"
                         key={"delete"}
                     />,
+                    <GridActionsCellItem
+                        icon={<InfoIcon />}
+                        label="Info"
+                        onClick={() => {
+                            router.push(`/dashboard/user/info/${row.email}`);
+                        }}
+                        color="inherit"
+                        key={"info"}
+                    />
                 ];
             },
         },
@@ -190,6 +213,9 @@ const UsersGrid = () => {
             disableRowSelectionOnClick
             getRowHeight={() => "auto"}
             getRowId={(row) => row.email}
+            slots={{
+                toolbar: EditToolbar,
+            }}
         />
     );
 };

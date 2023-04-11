@@ -17,7 +17,7 @@ import { axiosPrivate } from "@/utils/axiosPrivate";
 import { IUser } from "@/types/user";
 import { GetServerSideProps } from "next";
 
-import UsersGeneralInformation from "@/components/Dashboard/Roles/UsersGeneralInformation";
+import UserGrid from "@/components/Dashboard/Roles/UsersGeneralInformation";
 
 interface IProps {
   users: IUser[];
@@ -32,10 +32,10 @@ const DashboardRolesAndUsersPage = ({
 
   return (
     <DashboardLayout>
-      <UsersGeneralInformation
-        state={users}
-        setState={(users: IUser[]) => setState(users)}
-      />
+      <Typography variant="h4" gutterBottom>
+        Users and roles
+      </Typography>
+      <UserGrid />
     </DashboardLayout>
   );
 };
