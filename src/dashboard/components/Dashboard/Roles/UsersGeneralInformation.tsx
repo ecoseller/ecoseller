@@ -35,10 +35,15 @@ import { createUser, deleteUser } from "@/api/users-roles/users";
 const PAGE_SIZE = 30;
 
 const EditToolbar = (props: any) => {
+    const router = useRouter();
+
+    const handleClick = () => {
+        router.push(`/dashboard/users-roles/add-user`);
+    }
 
     return (
         <GridToolbarContainer>
-            <Button color="primary" startIcon={<AddIcon />}>
+            <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
                 Add new
             </Button>
         </GridToolbarContainer>
@@ -163,7 +168,7 @@ const UsersGrid = () => {
                         label="Edit"
                         className="textPrimary"
                         onClick={() => {
-                            router.push(`/dashboard/user/edit/${row.email}`);
+                            router.push(`/dashboard/users-roles/edit-user/${row.email}`);
                         }}
                         color="inherit"
                         key={"edit"}
@@ -195,7 +200,7 @@ const UsersGrid = () => {
                         icon={<InfoIcon />}
                         label="Info"
                         onClick={() => {
-                            router.push(`/dashboard/user/info/${row.email}`);
+                            router.push(`/dashboard/users-roles/info-user/${row.email}`);
                         }}
                         color="inherit"
                         key={"info"}
