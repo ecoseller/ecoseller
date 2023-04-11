@@ -27,6 +27,7 @@ import {
 import OverflowTooltip from "@/components/Dashboard/Roles/OverflowTip";
 import { Tooltip } from '@mui/material';
 import { axiosPrivate } from '@/utils/axiosPrivate';
+import { createUser, deleteUser } from "@/api/users-roles/users";
 
 const PAGE_SIZE = 30;
 
@@ -67,6 +68,11 @@ const UsersGrid = () => {
         page: 0,
         pageSize: PAGE_SIZE,
     });
+    const [snackbar, setSnackbar] = useState<{
+        open: boolean;
+        message: string;
+        severity: "success" | "error" | "info" | "warning";
+    } | null>(null);
 
     React.useEffect(() => {
         useUsers().then((data) => {
@@ -136,17 +142,40 @@ const UsersGrid = () => {
             cellClassName: "actions",
             flex: 1,
             disableColumnMenu: true,
-            getActions: ({ id }) => {
+            getActions: ({ row }) => {
                 return [
                     <GridActionsCellItem
                         icon={<EditIcon />}
                         label="Edit"
                         className="textPrimary"
                         onClick={() => {
-                            router.push(`/dashboard/catalog/products/edit/${id}`);
+                            router.push(`/dashboard/catalog/products/edit/`);
                         }}
                         color="inherit"
                         key={"edit"}
+                    />,
+                    <GridActionsCellItem
+                        icon={<DeleteIcon />}
+                        label="Delete"
+                        onClick={() => {
+                            deleteUser(row)
+                                .then((res) => {
+                                    setSnackbar({
+                                        open: true,
+                                        message: "User deleted",
+                                        severity: "success",
+                                    });
+                                })
+                                .catch((err) => {
+                                    setSnackbar({
+                                        open: true,
+                                        message: "Error deleting user",
+                                        severity: "error",
+                                    });
+                                });
+                        }}
+                        color="inherit"
+                        key={"delete"}
                     />,
                 ];
             },
