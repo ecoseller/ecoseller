@@ -1,12 +1,13 @@
-from pydantic import BaseModel
+from recommender_system.models.api.base import ApiBaseModel
 
 
-class ProductTranslation(BaseModel):
+class ProductTranslation(ApiBaseModel):
     """
-    This model represents product's translation as an object that is sent from
+    This model represents product translation as an object that is sent from
     core to RS component via API.
     """
 
+    id: int
     language_code: str
     title: str
     meta_title: str

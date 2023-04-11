@@ -1,6 +1,6 @@
 from flask import Flask
 
-from server.views import view_index
+from recommender_system.server.views import view_index
 
 
 def add_routes(app: Flask) -> None:
