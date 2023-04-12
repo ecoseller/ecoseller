@@ -11,7 +11,7 @@ import RootLayout from "@/pages/layout";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import DashboardContentWithSaveFooter from "@/components/Dashboard/Generic/EditableContent";
-import { Stack } from "@mui/material";
+import { Grid, Stack } from "@mui/material";
 import TopLineWithReturn from "@/components/Dashboard/Catalog/Products/TopLineWithReturn";
 import { axiosPrivate } from "@/utils/axiosPrivate";
 import { IUser } from "@/types/user";
@@ -36,7 +36,7 @@ const DashboardRolesAndUsersPage = ({
         Users and roles
       </Typography>
       <UserGrid />
-
+      <Grid item xs={12} md={6} lg={8} sx={{ paddingTop: 2 }}></Grid>
       <GroupsGrid />
     </DashboardLayout>
   );

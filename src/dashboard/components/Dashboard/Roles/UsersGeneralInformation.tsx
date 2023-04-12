@@ -155,9 +155,10 @@ const UsersGrid = () => {
         },
         {
             field: "actions",
+            align: "right",
+            headerAlign: "right",
             type: "actions",
             headerName: "Actions",
-            width: 100,
             cellClassName: "actions",
             flex: 1,
             disableColumnMenu: true,
