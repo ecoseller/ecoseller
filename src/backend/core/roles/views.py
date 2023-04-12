@@ -356,3 +356,20 @@ class DeleteGroupView(APIView):
         except Exception as e:
             print("Error", e)
             return Response(status=400)
+
+
+class GetGroupsView(APIView):
+    """
+    View for getting all groups and their info
+    """
+
+    permission_classes = (permissions.AllowAny,)
+    # In later phases we will need to restrict this to admins only
+
+    def get(self, request):
+        groups = ManagerGroup.objects.all()
+        serializedGroups = []
+        for group in groups:
+            serializedGroups.append(ManagerGroupSerializer(group).data)
+
+        return Response(serializedGroups, status=200)

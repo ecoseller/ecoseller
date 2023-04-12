@@ -1,9 +1,9 @@
-import { IUser } from "@/types/user";
+import { IUser, IGroup } from "@/types/user";
 import { axiosPrivate } from "@/utils/axiosPrivate";
 
 export const deleteUser = async (data: IUser) => {
     // Delete existing user
-    // URL: /user
+    // URL: /user/delete-user
     // Method: POST
     // Params: data
     // Return: Promise
@@ -29,4 +29,14 @@ export const updateUser = async (data: IUser) => {
     // Return: Promise
     console.log("updateUser", data);
     return await axiosPrivate.put(`/user/`, data);
+}
+
+export const deleteGroup = async (data: IGroup) => {
+    // Delete existing group
+    // URL: /roles/delete-group
+    // Method: POST
+    // Params: data
+    // Return: Promise
+    console.log("deleteGroup", data);
+    return await axiosPrivate.post(`/roles/delete-group`, data);
 }

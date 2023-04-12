@@ -18,7 +18,7 @@ import { IUser } from "@/types/user";
 import { GetServerSideProps } from "next";
 
 import UserGrid from "@/components/Dashboard/Roles/UsersGeneralInformation";
-
+import GroupsGrid from "@/components/Dashboard/Roles/RolesGenerealInformation";
 interface IProps {
   users: IUser[];
 }
@@ -36,6 +36,8 @@ const DashboardRolesAndUsersPage = ({
         Users and roles
       </Typography>
       <UserGrid />
+
+      <GroupsGrid />
     </DashboardLayout>
   );
 };
