@@ -1,16 +1,8 @@
 import * as React from "react";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import InfoIcon from "@mui/icons-material/Info";
-import useSWR from "swr";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
@@ -25,10 +17,9 @@ import {
 
 import { IUser } from "@/types/user";
 
-import OverflowTooltip from "@/components/Dashboard/Roles/OverflowTip";
 import { Button, Tooltip } from "@mui/material";
 import { axiosPrivate } from "@/utils/axiosPrivate";
-import { createUser, deleteUser } from "@/api/users-roles/users";
+import { deleteUser } from "@/api/users-roles/users";
 
 const PAGE_SIZE = 30;
 
