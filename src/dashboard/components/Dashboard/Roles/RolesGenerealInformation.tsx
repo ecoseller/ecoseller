@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
@@ -11,12 +11,10 @@ import {
   GridToolbarContainer,
 } from "@mui/x-data-grid";
 
-import {
-  IGroup,
-} from "@/types/user";
+import { IGroup } from "@/types/user";
 
-import { Button, Tooltip } from '@mui/material';
-import { axiosPrivate } from '@/utils/axiosPrivate';
+import { Button, Tooltip } from "@mui/material";
+import { axiosPrivate } from "@/utils/axiosPrivate";
 import { deleteGroup } from "@/api/users-roles/users";
 
 const PAGE_SIZE = 30;
@@ -26,7 +24,7 @@ const EditToolbar = (props: any) => {
 
   const handleClick = () => {
     router.push(`/dashboard/users-roles/add-group`);
-  }
+  };
 
   return (
     <GridToolbarContainer>
@@ -39,20 +37,18 @@ const EditToolbar = (props: any) => {
 
 const getGroups = async () => {
   const groups: IGroup[] = [];
-  const grps = await axiosPrivate.get(
-    `/roles/get-all-groups-detail`
-  );
+  const grps = await axiosPrivate.get(`/roles/get-all-groups-detail`);
 
   for (const group of grps.data) {
     groups.push({
-      group_name: group['name'],
-      description: group['description'],
-      permissions: group['permissions'],
+      group_name: group["name"],
+      description: group["description"],
+      permissions: group["permissions"],
     });
   }
 
   return {
-    groups: groups || []
+    groups: groups || [],
   };
 };
 
@@ -76,7 +72,7 @@ const GroupsGrid = () => {
     getGroups().then((data) => {
       console.log("groups data: ", data);
       setGroups(data.groups);
-    })
+    });
   }, []);
 
   const columns: GridColDef[] = [
@@ -113,7 +109,9 @@ const GroupsGrid = () => {
             label="Edit"
             className="textPrimary"
             onClick={() => {
-              router.push(`/dashboard/users-roles/edit-group/${row.group_name}`);
+              router.push(
+                `/dashboard/users-roles/edit-group/${row.group_name}`
+              );
             }}
             color="inherit"
             key={"edit"}
