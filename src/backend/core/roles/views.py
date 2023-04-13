@@ -316,11 +316,11 @@ class CreateGroupView(APIView):
             group.save()
 
             drfGroup = Group.objects.create(name=groupName)
-            for permission in groupPermissions:
-                permission = RolesManager.manager_permission_to_django_permission(
+            for permission in group.permissions.all():
+                drfPerm = RolesManager.manager_permission_to_django_permission(
                     permission
                 )
-                drfGroup.permissions.add(permission)
+                drfGroup.permissions.add(drfPerm)
 
             return Response(status=201)
         except Exception as e:

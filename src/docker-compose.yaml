@@ -31,6 +31,7 @@ services:
       - ./dashboard/styles:/usr/src/app/styles
       - ./dashboard/src:/usr/src/app/src
       - ./dashboard/public:/usr/src/app/public
+      - ./dashboard/api:/usr/src/app/api
       - ./http-library/src:/usr/src/http-library/src
     ports:
       - 3030:3000

@@ -13,9 +13,10 @@ import {
 
 import { IGroup } from "@/types/user";
 
-import { Button, Card, Tooltip } from "@mui/material";
+import { Alert, Button, Card, Snackbar, Tooltip } from "@mui/material";
 import { axiosPrivate } from "@/utils/axiosPrivate";
 import { deleteGroup } from "@/api/users-roles/users";
+import { handleClientScriptLoad } from "next/script";
 
 const PAGE_SIZE = 30;
 
@@ -68,11 +69,25 @@ const GroupsGrid = () => {
     severity: "success" | "error" | "info" | "warning";
   } | null>(null);
 
-  React.useEffect(() => {
+  const handleSnackbarClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbar(null);
+  };
+
+  const fetchGroups = async () => {
     getGroups().then((data) => {
       console.log("groups data: ", data);
       setGroups(data.groups);
     });
+  };
+
+  React.useEffect(() => {
+    fetchGroups();
   }, []);
 
   const columns: GridColDef[] = [
@@ -127,6 +142,7 @@ const GroupsGrid = () => {
                     message: "Group deleted",
                     severity: "success",
                   });
+                  fetchGroups();
                 })
                 .catch((err) => {
                   setSnackbar({
@@ -157,6 +173,22 @@ const GroupsGrid = () => {
           toolbar: EditToolbar,
         }}
       />
+      {
+        snackbar ? (
+          <Snackbar
+            open={snackbar.open}
+            autoHideDuration={6000}
+            onClose={handleSnackbarClose}
+          >
+            <Alert
+              onClose={handleSnackbarClose}
+              severity={snackbar.severity}
+              sx={{ width: "100%" }}
+            >
+              {snackbar.message}
+            </Alert>
+          </Snackbar>
+        ) : null}
     </Card>
   );
 };

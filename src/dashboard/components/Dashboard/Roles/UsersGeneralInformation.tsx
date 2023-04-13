@@ -17,7 +17,7 @@ import {
 
 import { IUser } from "@/types/user";
 
-import { Button, Card, Tooltip } from "@mui/material";
+import { Alert, Button, Card, Snackbar, Tooltip } from "@mui/material";
 import { axiosPrivate } from "@/utils/axiosPrivate";
 import { deleteUser } from "@/api/users-roles/users";
 
@@ -90,11 +90,16 @@ const UsersGrid = () => {
     setSnackbar(null);
   };
 
-  React.useEffect(() => {
+  const fetchUsers = async () => {
     getUsers().then((data) => {
       console.log("data: ", data);
       setUsers(data.users);
     });
+  };
+
+
+  React.useEffect(() => {
+    fetchUsers();
   }, []);
 
   const columns: GridColDef[] = [
@@ -182,6 +187,7 @@ const UsersGrid = () => {
                     message: "User deleted",
                     severity: "success",
                   });
+                  fetchUsers();
                 })
                 .catch((err) => {
                   setSnackbar({
@@ -221,6 +227,22 @@ const UsersGrid = () => {
           toolbar: EditToolbar,
         }}
       />
+      {
+        snackbar ? (
+          <Snackbar
+            open={snackbar.open}
+            autoHideDuration={6000}
+            onClose={handleSnackbarClose}
+          >
+            <Alert
+              onClose={handleSnackbarClose}
+              severity={snackbar.severity}
+              sx={{ width: "100%" }}
+            >
+              {snackbar.message}
+            </Alert>
+          </Snackbar>
+        ) : null}
     </Card>
   );
 };
