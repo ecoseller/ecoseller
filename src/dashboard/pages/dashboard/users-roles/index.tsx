@@ -23,9 +23,7 @@ interface IProps {
   users: IUser[];
 }
 
-const DashboardRolesAndUsersPage = ({
-  users,
-}: IProps) => {
+const DashboardRolesAndUsersPage = ({ users }: IProps) => {
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
   const [state, setState] = useState<IUser[]>(users);
   console.log("users", users);
@@ -54,21 +52,19 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   console.log("Get server side props users and roles");
 
   const users: IUser[] = [];
-  const usrs = await axiosPrivate.get(
-    `/user/users`
-  );
+  const usrs = await axiosPrivate.get(`/user/users`);
   // console.log(users.data);
   for (const user of usrs.data) {
     users.push({
-      email: user['email'],
-      first_name: user['first_name'],
-      last_name: user['last_name'],
-      is_admin: user['is_admin'],
-      roles: []
+      email: user["email"],
+      first_name: user["first_name"],
+      last_name: user["last_name"],
+      is_admin: user["is_admin"],
+      roles: [],
     });
-    console.log(user['email']);
+    console.log(user["email"]);
     const userRoles = await axiosPrivate.get(
-      `roles/get-groups/${user['email']}`
+      `roles/get-groups/${user["email"]}`
     );
     for (const role of userRoles.data) {
       users[users.length - 1].roles.push(role.name);

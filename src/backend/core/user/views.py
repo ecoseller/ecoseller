@@ -8,7 +8,6 @@ from .models import User
 from .serializers import (
     RegistrationSerializer,
     UserSerializer,
-    UpdateUserSerializer,
 )
 
 

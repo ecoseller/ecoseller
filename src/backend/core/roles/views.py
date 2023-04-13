@@ -1,4 +1,4 @@
-from django.contrib.auth.models import Group, Permission
+from django.contrib.auth.models import Group
 from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
