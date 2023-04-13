@@ -173,22 +173,21 @@ const GroupsGrid = () => {
           toolbar: EditToolbar,
         }}
       />
-      {
-        snackbar ? (
-          <Snackbar
-            open={snackbar.open}
-            autoHideDuration={6000}
+      {snackbar ? (
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={6000}
+          onClose={handleSnackbarClose}
+        >
+          <Alert
             onClose={handleSnackbarClose}
+            severity={snackbar.severity}
+            sx={{ width: "100%" }}
           >
-            <Alert
-              onClose={handleSnackbarClose}
-              severity={snackbar.severity}
-              sx={{ width: "100%" }}
-            >
-              {snackbar.message}
-            </Alert>
-          </Snackbar>
-        ) : null}
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
+      ) : null}
     </Card>
   );
 };
