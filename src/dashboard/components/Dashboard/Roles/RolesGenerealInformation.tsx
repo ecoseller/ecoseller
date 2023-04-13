@@ -13,7 +13,7 @@ import {
 
 import { IGroup } from "@/types/user";
 
-import { Button, Tooltip } from "@mui/material";
+import { Button, Card, Tooltip } from "@mui/material";
 import { axiosPrivate } from "@/utils/axiosPrivate";
 import { deleteGroup } from "@/api/users-roles/users";
 
@@ -145,17 +145,19 @@ const GroupsGrid = () => {
   ];
 
   return (
-    <DataGrid
-      rows={groups}
-      columns={columns}
-      autoHeight={true}
-      disableRowSelectionOnClick
-      getRowHeight={() => "auto"}
-      getRowId={(row) => row.group_name}
-      slots={{
-        toolbar: EditToolbar,
-      }}
-    />
+    <Card elevation={0}>
+      <DataGrid
+        rows={groups}
+        columns={columns}
+        autoHeight={true}
+        disableRowSelectionOnClick
+        getRowHeight={() => "auto"}
+        getRowId={(row) => row.group_name}
+        slots={{
+          toolbar: EditToolbar,
+        }}
+      />
+    </Card>
   );
 };
 

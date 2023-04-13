@@ -17,7 +17,7 @@ import {
 
 import { IUser } from "@/types/user";
 
-import { Button, Tooltip } from "@mui/material";
+import { Button, Card, Tooltip } from "@mui/material";
 import { axiosPrivate } from "@/utils/axiosPrivate";
 import { deleteUser } from "@/api/users-roles/users";
 
@@ -79,6 +79,16 @@ const UsersGrid = () => {
     message: string;
     severity: "success" | "error" | "info" | "warning";
   } | null>(null);
+
+  const handleSnackbarClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbar(null);
+  };
 
   React.useEffect(() => {
     getUsers().then((data) => {
@@ -199,17 +209,19 @@ const UsersGrid = () => {
   ];
 
   return (
-    <DataGrid
-      rows={users}
-      columns={columns}
-      autoHeight={true}
-      disableRowSelectionOnClick
-      getRowHeight={() => "auto"}
-      getRowId={(row) => row.email}
-      slots={{
-        toolbar: EditToolbar,
-      }}
-    />
+    <Card elevation={0}>
+      <DataGrid
+        rows={users}
+        columns={columns}
+        autoHeight={true}
+        disableRowSelectionOnClick
+        getRowHeight={() => "auto"}
+        getRowId={(row) => row.email}
+        slots={{
+          toolbar: EditToolbar,
+        }}
+      />
+    </Card>
   );
 };
 
