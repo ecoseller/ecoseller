@@ -28,7 +28,7 @@ const DashboardProductsEditPage = ({ product, pricelistsData }: IProps) => {
     <DashboardLayout>
       <Container maxWidth="xl">
         <ProductEditorWrapper
-          title={`Edit product ${id}`}
+          title={`Edit product #${id}`}
           returnPath={"/dashboard/catalog/products"}
           productData={product}
           pricelistsData={pricelistsData}

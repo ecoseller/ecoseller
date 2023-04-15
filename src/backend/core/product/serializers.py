@@ -1,3 +1,4 @@
+import re
 from core.mixins import (
     TranslatedSerializerMixin,
 )
@@ -238,9 +239,12 @@ class ProductVariantSerializer(ModelSerializer):
         Validate SKU
         """
         sku = attrs.get("sku", None)
+        sku_re = re.compile("^[a-zA-Z0-9-_]+$")
+
         if not sku:
             raise ValidationError("SKU is required")
-        if not sku.isalnum():
+        # validate sku contains only allowed chars
+        if not sku_re.match(sku):
             raise ValidationError("SKU can only contain letters and numbers")
         self.instance, created = ProductVariant.objects.get_or_create(sku=sku)
 

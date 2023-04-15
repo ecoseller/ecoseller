@@ -243,16 +243,12 @@ const ProductEditorWrapper = ({
       returnPath={"/dashboard/catalog/products"}
     >
       <TopLineWithReturn
-        title={"Add product"}
+        title={title}
         returnPath={"/dashboard/catalog/products"}
       />
 
       <Grid container spacing={2}>
         <Grid item md={8} xs={12}>
-          <ProductBasicInfo
-            state={productState}
-            dispatch={dispatchProductState}
-          />
           <ProductTranslatedFieldsWrapper
             state={productState}
             dispatch={dispatchProductState}
