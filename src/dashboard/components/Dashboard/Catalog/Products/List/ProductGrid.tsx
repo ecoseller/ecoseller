@@ -20,6 +20,7 @@ import {
 } from "@mui/x-data-grid";
 // types
 import { IProductList } from "@/types/product";
+import imgPath from "@/utils/imgPath";
 
 const PAGE_SIZE = 30;
 
@@ -92,10 +93,7 @@ const ProductGrid = () => {
           }}
         >
           <img
-            src={params.row.primary_image?.media?.replace(
-              "backend",
-              "127.0.0.1"
-            )}
+            src={imgPath(params.row.primary_image?.media)}
             alt={params.row.primary_image?.alt}
             // quality={60}
             // width={100}

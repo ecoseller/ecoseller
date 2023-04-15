@@ -11,6 +11,7 @@ import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import imgPath from "@/utils/imgPath";
 // types
 
 export interface CardProps {
@@ -158,10 +159,7 @@ const ProductMediaCard = ({
             textAlign: "left",
           }}
         >
-          <img
-            src={url?.replace("backend", "127.0.0.1")}
-            style={{ width: "auto", height: "125px" }}
-          />
+          <img src={imgPath(url)} style={{ width: "auto", height: "125px" }} />
         </div>
         <div>
           <Button
