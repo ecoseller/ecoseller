@@ -344,6 +344,8 @@ const ProductVariantsEditor = ({
     event.defaultMuiPrevented = true;
   };
 
+  const skuRegex = "^[a-zA-Z0-9-_]+$";
+
   const handleEditClick = (id: GridRowId) => () => {
     // open edit mode for the row with sku
     // get row by id
@@ -358,6 +360,7 @@ const ProductVariantsEditor = ({
       });
       return;
     }
+
     router.push(`/products/variants/${row.sku}`);
     // setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
@@ -398,6 +401,15 @@ const ProductVariantsEditor = ({
         severity: "error",
       });
       throw new Error("SKU is required");
+    }
+    if (!updatedRow.sku.match(skuRegex)) {
+      setSnackbar({
+        open: true,
+        message:
+          "SKU can only contain letters, numbers, dashes and underscores",
+        severity: "error",
+      });
+      throw new Error("SKU does not match regex");
     }
 
     // check if SKU has changed
