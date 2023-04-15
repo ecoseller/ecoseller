@@ -1,5 +1,4 @@
 import re
-import string
 from core.mixins import (
     TranslatedSerializerMixin,
 )
