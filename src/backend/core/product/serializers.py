@@ -240,7 +240,7 @@ class ProductVariantSerializer(ModelSerializer):
         Validate SKU
         """
         sku = attrs.get("sku", None)
-        sku_re = re.compile("^[a-z0-9-_]+$")
+        sku_re = re.compile("^[a-zA-Z0-9-_]+$")
 
         if not sku:
             raise ValidationError("SKU is required")
