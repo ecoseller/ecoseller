@@ -36,12 +36,4 @@ DashboardRolesAndUsersPage.getLayout = (page: ReactElement) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  console.log("Get server side props users and roles");
-
-  return {
-    props: {},
-  };
-};
-
 export default DashboardRolesAndUsersPage;
