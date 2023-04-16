@@ -53,7 +53,7 @@ const getUsers = async () => {
       roles: [],
     });
     const userRoles = await axiosPrivate.get(
-      `roles/get-groups/${user["email"]}`
+      `roles/user-groups/${user["email"]}`
     );
     for (const role of userRoles.data) {
       users[users.length - 1].roles.push(role.name);

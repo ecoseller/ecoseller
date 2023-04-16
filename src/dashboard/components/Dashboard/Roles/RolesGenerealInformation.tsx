@@ -38,7 +38,7 @@ const EditToolbar = (props: any) => {
 
 const getGroups = async () => {
   const groups: IGroup[] = [];
-  const grps = await axiosPrivate.get(`/roles/get-all-groups-detail`);
+  const grps = await axiosPrivate.get(`/roles/groups`);
 
   for (const group of grps.data) {
     groups.push({

@@ -38,5 +38,5 @@ export const deleteGroup = async (data: IGroup) => {
   // Params: data
   // Return: Promise
   console.log("deleteGroup", data);
-  return await axiosPrivate.post(`/roles/delete-group`, data);
+  return await axiosPrivate.delete(`/roles/groups/${data.group_name}`);
 };

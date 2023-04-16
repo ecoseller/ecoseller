@@ -135,7 +135,8 @@ class GroupDetailView(GenericAPIView):
 
             serGroup = self.serializer_class(group)
             return Response(serGroup.data, status=200)
-        except Exception:
+        except Exception as e:
+            print(e)
             return Response(status=400)
 
     def delete(self, request, id):
