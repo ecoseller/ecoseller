@@ -14,6 +14,7 @@ class ProductDetailEnter(ApiBaseModel):
     session_id: str
     user_id: Optional[int]
     product_id: int
+    product_variant_sku: str
     recommendation_type: Optional[str]
     position: Optional[int]
     create_at: datetime

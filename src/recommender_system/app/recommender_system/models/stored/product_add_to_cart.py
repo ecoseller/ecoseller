@@ -17,6 +17,7 @@ class ProductAddToCartModel(ImmutableFeedbackStoredModel):
     session_id: str
     user_id: Optional[int]
     product_id: int
+    product_variant_sku: str
     create_at: datetime
 
     class Meta:

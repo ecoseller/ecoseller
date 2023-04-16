@@ -17,6 +17,7 @@ class ReviewModel(ImmutableFeedbackStoredModel):
     session_id: str
     user_id: int
     product_id: int
+    product_variant_sku: str
     rating: int
     update_at: datetime
     create_at: datetime

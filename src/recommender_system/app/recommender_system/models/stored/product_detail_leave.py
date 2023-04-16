@@ -17,6 +17,7 @@ class ProductDetailLeaveModel(ImmutableFeedbackStoredModel):
     session_id: str
     user_id: Optional[int]
     product_id: int
+    product_variant_sku: str
     time_spent: float
     create_at: datetime
 

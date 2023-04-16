@@ -200,12 +200,14 @@ def _product_add_to_cart(
     session_id: str = "session",
     user_id: Optional[int] = 0,
     product_id: int = 0,
+    product_variant_sku: str = "sku",
 ) -> Dict[str, Any]:
     return {
         "id": id,
         "session_id": session_id,
         "user_id": user_id,
         "product_id": product_id,
+        "product_variant_sku": product_variant_sku,
         "create_at": _now,
     }
 
@@ -215,12 +217,14 @@ def _product_detail_enter(
     session_id: str = "session",
     user_id: Optional[int] = 0,
     product_id: int = 0,
+    product_variant_sku: str = "sku",
 ) -> Dict[str, Any]:
     return {
         "id": id,
         "session_id": session_id,
         "user_id": user_id,
         "product_id": product_id,
+        "product_variant_sku": product_variant_sku,
         "recommendation_type": "cart",
         "position": 1,
         "create_at": _now,
@@ -232,12 +236,14 @@ def _product_detail_leave(
     session_id: str = "session",
     user_id: Optional[int] = 0,
     product_id: int = 0,
+    product_variant_sku: str = "sku",
 ) -> Dict[str, Any]:
     return {
         "id": id,
         "session_id": session_id,
         "user_id": user_id,
         "product_id": product_id,
+        "product_variant_sku": product_variant_sku,
         "time_spent": 13.5,
         "create_at": _now,
     }
@@ -248,12 +254,14 @@ def _recommendation_view(
     session_id: str = "session",
     user_id: Optional[int] = 0,
     product_id: int = 0,
+    product_variant_sku: str = "sku",
 ) -> Dict[str, Any]:
     return {
         "id": id,
         "session_id": session_id,
         "user_id": user_id,
         "product_id": product_id,
+        "product_variant_sku": product_variant_sku,
         "recommendation_type": "cart",
         "position": 1,
         "create_at": _now,
@@ -261,13 +269,18 @@ def _recommendation_view(
 
 
 def _review(
-    id: int = 0, session_id: str = "session", user_id: int = 0, product_id: int = 0
+    id: int = 0,
+    session_id: str = "session",
+    user_id: int = 0,
+    product_id: int = 0,
+    product_variant_sku: str = "sku",
 ) -> Dict[str, Any]:
     return {
         "id": id,
         "session_id": session_id,
         "user_id": user_id,
         "product_id": product_id,
+        "product_variant_sku": product_variant_sku,
         "rating": 4,
         "update_at": _now,
         "create_at": _now,

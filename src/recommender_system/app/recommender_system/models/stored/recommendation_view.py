@@ -17,6 +17,7 @@ class RecommendationViewModel(ImmutableFeedbackStoredModel):
     session_id: str
     user_id: Optional[int]
     product_id: int
+    product_variant_sku: str
     recommendation_type: str
     position: Optional[int]
     create_at: datetime
