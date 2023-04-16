@@ -77,9 +77,9 @@ class RolesManager:
         return group
 
     @staticmethod
-    def manager_group_to_django_group(managerGroup):
+    def manager_group_to_django_group(managerGroupName):
         try:
-            group = Group.objects.get(name=managerGroup.name)
+            group = Group.objects.get(name=managerGroupName)
         except Group.DoesNotExist:
             return None
 
