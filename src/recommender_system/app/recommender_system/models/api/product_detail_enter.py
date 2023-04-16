@@ -4,7 +4,7 @@ from typing import Optional
 from recommender_system.models.api.base import ApiBaseModel
 
 
-class ProductDetailView(ApiBaseModel):
+class ProductDetailEnter(ApiBaseModel):
     """
     This model represents the event of user viewing a possibly recommended
     product's detail (clicking a product) as an object that is sent from core

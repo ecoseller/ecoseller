@@ -5,19 +5,35 @@ from recommender_system.models.api.attribute import Attribute
 from recommender_system.models.api.attribute_type import AttributeType
 from recommender_system.models.api.base import ApiBaseModel
 from recommender_system.models.api.product import Product
+from recommender_system.models.api.product_added_to_cart import ProductAddedToCart
+from recommender_system.models.api.product_detail_enter import ProductDetailEnter
+from recommender_system.models.api.product_detail_leave import ProductDetailLeave
 from recommender_system.models.api.product_translation import ProductTranslation
 from recommender_system.models.api.product_type import ProductType
 from recommender_system.models.api.product_variant import ProductVariant
+from recommender_system.models.api.recommendation_view import RecommendationView
+from recommender_system.models.api.review import Review
 from recommender_system.models.stored.attribute import AttributeModel
 from recommender_system.models.stored.attribute_type import AttributeTypeModel
 from recommender_system.models.stored.base import StoredBaseModel
 from recommender_system.models.stored.product import ProductModel
+from recommender_system.models.stored.product_added_to_cart import (
+    ProductAddedToCartModel,
+)
+from recommender_system.models.stored.product_detail_enter import (
+    ProductDetailEnterModel,
+)
+from recommender_system.models.stored.product_detail_leave import (
+    ProductDetailLeaveModel,
+)
 from recommender_system.models.stored.product_translation import ProductTranslationModel
 from recommender_system.models.stored.product_type import ProductTypeModel
 from recommender_system.models.stored.product_variant import ProductVariantModel
+from recommender_system.models.stored.recommendation_view import RecommendationViewModel
+from recommender_system.models.stored.review import ReviewModel
 
 
-_now = datetime.now()
+_now = datetime.now().isoformat()
 
 
 def _attribute_type(id: int = 0) -> Dict[str, Any]:
@@ -179,13 +195,81 @@ def _product_model_related(product_id: int = 0) -> List[Dict[str, Any]]:
     ]
 
 
+def _product_added_to_cart(
+    session_id: str = "session", user_id: Optional[int] = 0, product_id: int = 0
+) -> Dict[str, Any]:
+    return {
+        "session_id": session_id,
+        "user_id": user_id,
+        "product_id": product_id,
+        "create_at": _now,
+    }
+
+
+def _product_detail_enter(
+    session_id: str = "session", user_id: Optional[int] = 0, product_id: int = 0
+) -> Dict[str, Any]:
+    return {
+        "session_id": session_id,
+        "user_id": user_id,
+        "product_id": product_id,
+        "recommendation_type": "cart",
+        "position": 1,
+        "create_at": _now,
+    }
+
+
+def _product_detail_leave(
+    session_id: str = "session", user_id: Optional[int] = 0, product_id: int = 0
+) -> Dict[str, Any]:
+    return {
+        "session_id": session_id,
+        "user_id": user_id,
+        "product_id": product_id,
+        "time_spent": 13.5,
+        "create_at": _now,
+    }
+
+
+def _recommendation_view(
+    session_id: str = "session", user_id: Optional[int] = 0, product_id: int = 0
+) -> Dict[str, Any]:
+    return {
+        "session_id": session_id,
+        "user_id": user_id,
+        "product_id": product_id,
+        "recommendation_type": "cart",
+        "position": 1,
+        "create_at": _now,
+    }
+
+
+def _review(
+    id: int = 0, session_id: str = "session", user_id: int = 0, product_id: int = 0
+) -> Dict[str, Any]:
+    return {
+        "id": id,
+        "session_id": session_id,
+        "user_id": user_id,
+        "product_id": product_id,
+        "rating": 4,
+        "update_at": _now,
+        "create_at": _now,
+    }
+
+
 api_data: Dict[Type[ApiBaseModel], Any] = {
     Attribute: _root_attribute(),
     AttributeType: _attribute_type(),
     Product: _product(),
+    ProductAddedToCart: _product_added_to_cart(),
+    ProductDetailEnter: _product_detail_enter(),
+    ProductDetailLeave: _product_detail_leave(),
     ProductTranslation: _product_translation(),
     ProductType: _product_type(),
     ProductVariant: _product_variant(),
+    RecommendationView: _recommendation_view(),
+    Review: _review(),
 }
 
 
@@ -200,6 +284,9 @@ stored_data: Dict[Type[StoredBaseModel], Any] = {
     ],
     AttributeTypeModel: [_attribute_type()],
     ProductModel: [_product_model(), *_product_model_related()],
+    ProductAddedToCartModel: [_product_added_to_cart()],
+    ProductDetailEnterModel: [_product_detail_enter()],
+    ProductDetailLeaveModel: [_product_detail_leave()],
     ProductTypeModel: [
         _product_type_empty(),
         _product_model(1),
@@ -213,4 +300,6 @@ stored_data: Dict[Type[StoredBaseModel], Any] = {
     ],
     ProductTranslationModel: [_product_translation_model()],
     ProductVariantModel: [_product_variant_model(), *_product_variant_model_related()],
+    RecommendationViewModel: [_recommendation_view()],
+    ReviewModel: [_review()],
 }

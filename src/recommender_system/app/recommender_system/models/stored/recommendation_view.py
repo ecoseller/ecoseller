@@ -10,7 +10,6 @@ class RecommendationViewModel(StoredBaseModel):
     (appearing on screen) as an object that is stored in the database.
     """
 
-    id: int
     session_id: str
     user_id: Optional[int]
     product_id: int
