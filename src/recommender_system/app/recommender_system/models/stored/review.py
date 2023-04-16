@@ -1,9 +1,13 @@
 from datetime import datetime
+from typing import TYPE_CHECKING
 
-from recommender_system.models.stored.base import StoredBaseModel
+from recommender_system.models.stored.immutable import ImmutableFeedbackStoredModel
+
+if TYPE_CHECKING:
+    from recommender_system.models.stored.session import SessionModel
 
 
-class ReviewModel(StoredBaseModel):
+class ReviewModel(ImmutableFeedbackStoredModel):
     """
     This model represents user's review of a product as an object that is
     stored in the database.
@@ -19,3 +23,18 @@ class ReviewModel(StoredBaseModel):
 
     class Meta:
         primary_key = "id"
+
+    @property
+    def session(self) -> "SessionModel":
+        from recommender_system.models.stored.session import SessionModel
+
+        return SessionModel.get(pk=self.session_id)
+
+    def create(self) -> None:
+        from recommender_system.models.stored.session import SessionModel
+
+        super().create()
+        try:
+            SessionModel.get(pk=self.session_id)
+        except SessionModel.DoesNotExist:
+            SessionModel(id=self.session_id, user_id=self.user_id).create()

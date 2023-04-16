@@ -1,6 +1,6 @@
 from typing import Optional
 
-from recommender_system.models.stored.base import StoredBaseModel
+from recommender_system.models.stored.base import ProductStoredBaseModel
 from recommender_system.models.stored.many_to_many_relation import (
     ManyToManyRelationMixin,
 )
@@ -10,7 +10,7 @@ from recommender_system.models.stored.product_variant import (
 )
 
 
-class AttributeProductVariantModel(StoredBaseModel, ManyToManyRelationMixin):
+class AttributeProductVariantModel(ProductStoredBaseModel, ManyToManyRelationMixin):
     """
     This model represents attribute and product variant relation as an object
     stored in the database.

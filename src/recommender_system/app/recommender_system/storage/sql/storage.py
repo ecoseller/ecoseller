@@ -10,10 +10,7 @@ from recommender_system.models.stored.base import StoredBaseModel
 from recommender_system.models.stored.many_to_many_relation import (
     ManyToManyRelationMixin,
 )
-from recommender_system.storage import (
-    ModelNotFoundException,
-    MultipleModelsFoundException,
-)
+from recommender_system.storage import MultipleObjectsReturned
 from recommender_system.storage.abstract import AbstractStorage
 from recommender_system.storage.sql.mapper import SQLModelMapper
 from recommender_system.storage.sql.models.feedback import FeedbackBase
@@ -77,9 +74,9 @@ class SQLStorage(AbstractStorage):
         try:
             result = query.one()
         except NoResultFound:
-            raise ModelNotFoundException()
+            raise model_class.DoesNotExist()
         except MultipleResultsFound:
-            raise MultipleModelsFoundException()
+            raise MultipleObjectsReturned()
 
         return model_class(**result.__dict__)
 

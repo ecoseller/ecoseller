@@ -8,7 +8,6 @@ from recommender_system.models.stored.attribute_type_product_type import (
     AttributeTypeProductTypeModel,
 )
 from recommender_system.models.stored.product_type import ProductTypeModel
-from recommender_system.storage import ModelNotFoundException
 from tests.storage.tools import get_or_create_model, delete_model, default_dicts
 
 
@@ -21,7 +20,7 @@ def delete_product_types(attribute_type_pk: int):
     for atpt in AttributeTypeProductTypeModel.gets(attribute_type_id=attribute_type_pk):
         try:
             ProductTypeModel.get(pk=atpt.product_type_id).delete()
-        except ModelNotFoundException:
+        except ProductTypeModel.DoesNotExist:
             pass
         atpt.delete()
 
@@ -57,7 +56,7 @@ def test_attribute_type_create(clear_attribute_type):
     attribute_type_dict = default_dicts[AttributeTypeModel]
     attribute_type_dict["id"] = attribute_type_pk
 
-    with pytest.raises(ModelNotFoundException):
+    with pytest.raises(AttributeTypeModel.DoesNotExist):
         _ = AttributeTypeModel.get(pk=attribute_type_pk)
 
     attribute_type = AttributeTypeModel.parse_obj(attribute_type_dict)
@@ -105,7 +104,7 @@ def test_attribute_type_delete(create_attribute_type):
 
     attribute_type.delete()
 
-    with pytest.raises(ModelNotFoundException):
+    with pytest.raises(AttributeTypeModel.DoesNotExist):
         _ = AttributeTypeModel.get(pk=attribute_type_pk)
 
 

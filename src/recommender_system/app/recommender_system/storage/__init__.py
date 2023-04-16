@@ -1,6 +1,2 @@
-class ModelNotFoundException(Exception):
-    pass
-
-
-class MultipleModelsFoundException(Exception):
+class MultipleObjectsReturned(Exception):
     pass

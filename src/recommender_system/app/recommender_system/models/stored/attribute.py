@@ -2,7 +2,10 @@ from typing import Any, List, Optional, TYPE_CHECKING
 
 from recommender_system.models.api.base import ApiBaseModel
 from recommender_system.models.stored.attribute_type import AttributeTypeModel
-from recommender_system.models.stored.base import StoredBaseModel
+from recommender_system.models.stored.base import (
+    StoredBaseModel,
+    ProductStoredBaseModel,
+)
 
 if TYPE_CHECKING:
     from recommender_system.models.stored.product_variant import (
@@ -10,7 +13,7 @@ if TYPE_CHECKING:
     )
 
 
-class AttributeModel(StoredBaseModel):
+class AttributeModel(ProductStoredBaseModel):
     """
     This model represents product's attribute as an object that is stored in
     the database.
@@ -29,7 +32,7 @@ class AttributeModel(StoredBaseModel):
     @classmethod
     def from_api_model(
         cls, model: ApiBaseModel, **kwargs: Any
-    ) -> List["StoredBaseModel"]:
+    ) -> List[StoredBaseModel]:
         attribute_type = AttributeTypeModel.from_api_model(model=model.type)[0]
         stored = super().from_api_model(
             model=model, attribute_type_id=attribute_type.id, **kwargs

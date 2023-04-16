@@ -5,7 +5,7 @@ from unittest import TestCase
 from recommender_system.models.api.attribute import Attribute
 from recommender_system.models.api.attribute_type import AttributeType
 from recommender_system.models.api.product import Product
-from recommender_system.models.api.product_added_to_cart import ProductAddedToCart
+from recommender_system.models.api.product_add_to_cart import ProductAddToCart
 from recommender_system.models.api.product_detail_enter import ProductDetailEnter
 from recommender_system.models.api.product_detail_leave import ProductDetailLeave
 from recommender_system.models.api.product_translation import ProductTranslation
@@ -16,8 +16,8 @@ from recommender_system.models.api.review import Review
 from recommender_system.models.stored.attribute import AttributeModel
 from recommender_system.models.stored.attribute_type import AttributeTypeModel
 from recommender_system.models.stored.product import ProductModel
-from recommender_system.models.stored.product_added_to_cart import (
-    ProductAddedToCartModel,
+from recommender_system.models.stored.product_add_to_cart import (
+    ProductAddToCartModel,
 )
 from recommender_system.models.stored.product_detail_enter import (
     ProductDetailEnterModel,
@@ -74,11 +74,11 @@ def test_product():
         TestCase().assertDictEqual(created.dict(), expected)
 
 
-def test_product_added_to_cart():
-    patc = ProductAddedToCart.parse_obj(api_data[ProductAddedToCart])
-    models = ProductAddedToCartModel.from_api_model(model=patc)
+def test_product_add_to_cart():
+    patc = ProductAddToCart.parse_obj(api_data[ProductAddToCart])
+    models = ProductAddToCartModel.from_api_model(model=patc)
 
-    expected_dicts = str_to_datetime(stored_data[ProductAddedToCartModel])
+    expected_dicts = str_to_datetime(stored_data[ProductAddToCartModel])
     assert len(models) == len(expected_dicts)
 
     for created, expected in zip(models, expected_dicts):

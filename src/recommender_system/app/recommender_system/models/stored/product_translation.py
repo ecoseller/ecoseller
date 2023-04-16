@@ -1,8 +1,8 @@
-from recommender_system.models.stored.base import StoredBaseModel
+from recommender_system.models.stored.base import ProductStoredBaseModel
 from recommender_system.models.stored.product import ProductModel
 
 
-class ProductTranslationModel(StoredBaseModel):
+class ProductTranslationModel(ProductStoredBaseModel):
     """
     This model represents product translation as an object that is stored in
     the database.

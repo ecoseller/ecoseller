@@ -1,13 +1,13 @@
 from typing import List, TYPE_CHECKING
 
-from recommender_system.models.stored.base import StoredBaseModel
+from recommender_system.models.stored.base import ProductStoredBaseModel
 
 if TYPE_CHECKING:
     from recommender_system.models.stored.attribute import AttributeModel
     from recommender_system.models.stored.product_type import ProductTypeModel
 
 
-class AttributeTypeModel(StoredBaseModel):
+class AttributeTypeModel(ProductStoredBaseModel):
     """
     This model represents product's attribute type as an object that is stored
     in the database.

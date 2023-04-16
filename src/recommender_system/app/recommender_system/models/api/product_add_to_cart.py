@@ -4,7 +4,7 @@ from typing import Optional
 from recommender_system.models.api.base import ApiBaseModel
 
 
-class ProductAddedToCart(ApiBaseModel):
+class ProductAddToCart(ApiBaseModel):
     """
     This model represents the event of user adding a product to cart as an
     object that is sent from core to RS component via API.

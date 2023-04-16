@@ -7,18 +7,16 @@ if TYPE_CHECKING:
     from recommender_system.models.stored.session import SessionModel
 
 
-class RecommendationViewModel(ImmutableFeedbackStoredModel):
+class ProductAddToCartModel(ImmutableFeedbackStoredModel):
     """
-    This model represents the event of user viewing a recommended product
-    (appearing on screen) as an object that is stored in the database.
+    This model represents the event of user adding a product to cart as an
+    object that is stored in the database.
     """
 
     id: Optional[int]
     session_id: str
     user_id: Optional[int]
     product_id: int
-    recommendation_type: str
-    position: Optional[int]
     create_at: datetime
 
     class Meta:
