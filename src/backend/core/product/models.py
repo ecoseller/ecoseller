@@ -1,6 +1,7 @@
 from django.db import models
 from parler.models import TranslatableModel, TranslatedFields
 from ckeditor.fields import RichTextField
+from django_editorjs_fields import EditorJsJSONField
 from core.models import (
     SortableModel,
 )
@@ -59,6 +60,11 @@ class Product(TranslatableModel):
             blank=True,
             null=True,
             help_text="Main product description in given language",
+        ),
+        description_editorjs=EditorJsJSONField(
+            blank=True,
+            null=True,
+            help_text="Main product description in given language in EditorJS format",
         ),
         slug=models.SlugField(
             max_length=200, null=False, help_text="Slug in given language"
