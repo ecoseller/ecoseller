@@ -8,3 +8,11 @@ class SQLBase:
 
     class Meta:
         origin_model: Type[StoredBaseModel]
+
+
+class SQLProductBase(SQLBase):
+    pass
+
+
+class SQLFeedbackBase(SQLBase):
+    pass

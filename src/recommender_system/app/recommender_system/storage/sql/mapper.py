@@ -1,12 +1,13 @@
-from typing import ClassVar, Dict, Type
+from typing import ClassVar, Dict, Type, Union
 
 from recommender_system.models.stored.base import StoredBaseModel
-from recommender_system.storage.sql.models import (
+from recommender_system.storage.sql.models.feedback import FeedbackBase, SQLReview
+from recommender_system.storage.sql.models.products import (
     SQLAttribute,
     SQLAttributeProductVariant,
     SQLAttributeType,
     SQLAttributeTypeProductType,
-    Base,
+    ProductBase,
     SQLProduct,
     SQLProductProductVariant,
     SQLProductTranslation,
@@ -15,7 +16,11 @@ from recommender_system.storage.sql.models import (
 )
 
 
+Base = Union[Type[FeedbackBase], Type[ProductBase]]
+
+
 _sql_models = [
+    SQLReview,
     SQLAttribute,
     SQLAttributeProductVariant,
     SQLAttributeType,

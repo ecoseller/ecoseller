@@ -24,7 +24,7 @@ class StoredBaseModel(BaseModel):
 
     @inject
     def __init__(
-        self, _storage: "AbstractStorage" = Provide["storage"], *args, **kwargs
+        self, _storage: "AbstractStorage" = Provide["product_storage"], *args, **kwargs
     ):
         self._storage = _storage
         super().__init__(*args, **kwargs)
@@ -44,14 +44,14 @@ class StoredBaseModel(BaseModel):
     @classmethod
     @inject
     def get(
-        cls, storage: "AbstractStorage" = Provide["storage"], **kwargs
+        cls, storage: "AbstractStorage" = Provide["product_storage"], **kwargs
     ) -> "StoredBaseModel":
         return storage.get_object(model_class=cls, **kwargs)
 
     @classmethod
     @inject
     def gets(
-        cls, storage: "AbstractStorage" = Provide["storage"], **kwargs
+        cls, storage: "AbstractStorage" = Provide["product_storage"], **kwargs
     ) -> List["StoredBaseModel"]:
         return storage.get_objects(model_class=cls, **kwargs)
 
