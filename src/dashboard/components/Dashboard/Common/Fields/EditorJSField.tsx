@@ -1,8 +1,40 @@
 import dynamic from "next/dynamic";
 import React, { useEffect, useRef, useState } from "react";
 import EditorJS from "@editorjs/editorjs";
-// import { IEditorJSData } from "@/types/common";
 import { OutputData as IEditorJSData } from "@editorjs/editorjs";
+const Delimiter = require("@editorjs/delimiter");
+const Embed = require("@editorjs/embed");
+const Header = require("@editorjs/header");
+const Image = require("@editorjs/image");
+const Link = require("@editorjs/link");
+const List = require("@editorjs/list");
+const Marker = require("@editorjs/marker");
+const Paragraph = require("@editorjs/paragraph");
+const Quote = require("@editorjs/quote");
+const Checklist = require("@editorjs/checklist");
+const Underline = require("@editorjs/underline");
+const Warning = require("@editorjs/warning");
+const Table = require("@editorjs/table");
+const Raw = require("@editorjs/raw");
+
+export const EDITOR_TOOLS = {
+  header: Header,
+  paragraph: {
+    class: Paragraph,
+    inlineToolbar: true,
+  },
+  list: List,
+  image: Image,
+  embed: Embed,
+  linkTool: Link,
+  delimiter: Delimiter,
+  marker: Marker,
+  quote: Quote,
+  checklist: Checklist,
+  warning: Warning,
+  table: Table,
+  raw: Raw,
+};
 
 interface IEditorJSFieldProps {
   data: IEditorJSData;
@@ -22,6 +54,7 @@ const EditorJSField = ({
   const initEditor = () => {
     const editor = new EditorJS({
       holder: "editorjs",
+
       onReady: () => {
         ejInstance.current = editor;
       },
@@ -32,9 +65,7 @@ const EditorJSField = ({
         console.log(content);
         onChange(content);
       },
-      tools: {
-        // header: Header,
-      },
+      tools: EDITOR_TOOLS,
     });
   };
 
