@@ -1,4 +1,5 @@
 import { IPaginated } from "@/types/common";
+import { OutputData as IEditorJSData } from "@editorjs/editorjs";
 import { IPriceList, TLocale } from "./localization";
 
 export interface ISetProductStateData extends Partial<IProduct> {
@@ -24,6 +25,7 @@ export enum ActionSetProduct {
 export interface IProductTranslation {
   title?: string;
   description?: string;
+  description_editorjs?: IEditorJSData;
   short_description?: string;
   slug?: string;
   meta_title?: string;
