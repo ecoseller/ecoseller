@@ -2,7 +2,10 @@ from datetime import datetime
 from typing import Any, List, Optional, TYPE_CHECKING
 
 from recommender_system.models.api.base import ApiBaseModel
-from recommender_system.models.stored.base import StoredBaseModel
+from recommender_system.models.stored.base import (
+    StoredBaseModel,
+    ProductStoredBaseModel,
+)
 from recommender_system.models.stored.product_type import ProductTypeModel
 
 if TYPE_CHECKING:
@@ -14,7 +17,7 @@ if TYPE_CHECKING:
     )
 
 
-class ProductModel(StoredBaseModel):
+class ProductModel(ProductStoredBaseModel):
     """
     This model represents product as an object that is stored in the database.
     """
@@ -33,7 +36,7 @@ class ProductModel(StoredBaseModel):
     @classmethod
     def from_api_model(
         cls, model: ApiBaseModel, **kwargs: Any
-    ) -> List["StoredBaseModel"]:
+    ) -> List[StoredBaseModel]:
         from recommender_system.models.stored.product_product_variant import (
             ProductProductVariantModel,
         )

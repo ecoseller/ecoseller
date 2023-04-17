@@ -8,7 +8,6 @@ from recommender_system.models.stored.attribute_product_variant import (
 )
 from recommender_system.models.stored.attribute_type import AttributeTypeModel
 from recommender_system.models.stored.product_variant import ProductVariantModel
-from recommender_system.storage import ModelNotFoundException
 from tests.storage.tools import get_or_create_model, delete_model, default_dicts
 
 
@@ -21,7 +20,7 @@ def delete_product_variants(attribute_pk: int):
     for apv in AttributeProductVariantModel.gets(attribute_id=attribute_pk):
         try:
             ProductVariantModel.get(pk=apv.product_variant_sku).delete()
-        except ModelNotFoundException:
+        except ProductVariantModel.DoesNotExist:
             pass
         apv.delete()
 
@@ -57,7 +56,7 @@ def test_attribute_create(clear_attribute):
     attribute_dict = default_dicts[AttributeModel]
     attribute_dict["id"] = attribute_pk
 
-    with pytest.raises(ModelNotFoundException):
+    with pytest.raises(AttributeModel.DoesNotExist):
         _ = AttributeModel.get(pk=attribute_pk)
 
     attribute = AttributeModel.parse_obj(attribute_dict)
@@ -105,7 +104,7 @@ def test_attribute_delete(create_attribute):
 
     attribute.delete()
 
-    with pytest.raises(ModelNotFoundException):
+    with pytest.raises(AttributeModel.DoesNotExist):
         _ = AttributeModel.get(pk=attribute_pk)
 
 

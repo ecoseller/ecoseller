@@ -1,5 +1,5 @@
 import argparse
-from typing import Any, Dict, List, Type
+from typing import Any, Dict, List, Type, Union
 
 from alembic import command, config
 from sqlalchemy import create_engine, insert, update, and_
@@ -10,20 +10,23 @@ from recommender_system.models.stored.base import StoredBaseModel
 from recommender_system.models.stored.many_to_many_relation import (
     ManyToManyRelationMixin,
 )
-from recommender_system.storage import (
-    ModelNotFoundException,
-    MultipleModelsFoundException,
-)
 from recommender_system.storage.abstract import AbstractStorage
+from recommender_system.storage.exceptions import MultipleObjectsReturned
 from recommender_system.storage.sql.mapper import SQLModelMapper
-from recommender_system.storage.sql.models import Base
+from recommender_system.storage.sql.models.feedback import FeedbackBase
+from recommender_system.storage.sql.models.products import ProductBase
+
+
+Base = Union[Type[ProductBase], Type[FeedbackBase]]
 
 
 class SQLStorage(AbstractStorage):
     _connection_string: str
+    _alembic_location: str
 
-    def __init__(self, connection_string: str):
+    def __init__(self, connection_string: str, alembic_location: str):
         self._connection_string = connection_string
+        self._alembic_location = alembic_location
         self.engine = create_engine(
             url=connection_string,
             isolation_level="AUTOCOMMIT",
@@ -32,17 +35,17 @@ class SQLStorage(AbstractStorage):
 
     def makemigrations(self) -> None:
         args = argparse.Namespace(db_url=self._connection_string)
-        conf = config.Config("recommender_system/storage/alembic.ini", cmd_opts=args)
+        conf = config.Config(self._alembic_location, cmd_opts=args)
         command.revision(conf, autogenerate=True)
 
     def mergemigrations(self) -> None:
         args = argparse.Namespace(db_url=self._connection_string)
-        conf = config.Config("recommender_system/storage/alembic.ini", cmd_opts=args)
+        conf = config.Config(self._alembic_location, cmd_opts=args)
         command.merge(conf, "heads")
 
     def migrate(self) -> None:
         args = argparse.Namespace(db_url=self._connection_string)
-        conf = config.Config("recommender_system/storage/alembic.ini", cmd_opts=args)
+        conf = config.Config(self._alembic_location, cmd_opts=args)
         command.upgrade(conf, "heads")
 
     def _filter(
@@ -71,9 +74,9 @@ class SQLStorage(AbstractStorage):
         try:
             result = query.one()
         except NoResultFound:
-            raise ModelNotFoundException()
+            raise model_class.DoesNotExist()
         except MultipleResultsFound:
-            raise MultipleModelsFoundException()
+            raise MultipleObjectsReturned()
 
         return model_class(**result.__dict__)
 
