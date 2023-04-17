@@ -10,8 +10,8 @@ from recommender_system.models.stored.base import StoredBaseModel
 from recommender_system.models.stored.many_to_many_relation import (
     ManyToManyRelationMixin,
 )
-from recommender_system.storage import MultipleObjectsReturned
 from recommender_system.storage.abstract import AbstractStorage
+from recommender_system.storage.exceptions import MultipleObjectsReturned
 from recommender_system.storage.sql.mapper import SQLModelMapper
 from recommender_system.storage.sql.models.feedback import FeedbackBase
 from recommender_system.storage.sql.models.products import ProductBase
