@@ -1,6 +1,8 @@
+from django.contrib.auth.models import Group
 from rest_framework import permissions
-from rest_framework.views import APIView
 from rest_framework.response import Response
+
+from rest_framework.generics import GenericAPIView
 
 from .roles_manager import RolesManager, ManagerPermission, ManagerGroup
 from .serializers import (
@@ -13,31 +15,31 @@ from user.models import User
 # Create your views here.
 
 
-class UserGetPermissionsView(APIView):
-    """
-    View for getting user permissions.
-    """
-
+class UserPermissionView(GenericAPIView):
     permission_classes = (permissions.AllowAny,)
-    # In later phases we will need to restrict this to admins only
-
-    """
-    Get all permissions for a user send in request body
-    """
+    allowed_methods = [
+        "GET",
+    ]
+    authentication_classes = []
+    serializer_class = ManagerPermissionSerializer
 
     def get(self, request, id):
+        userPerms = self.get_queryset()
+        if userPerms is None:
+            return Response(status=400)
+        serializedPermissions = []
+        for permission in userPerms:
+            serializedPerm = self.serializer_class(permission)
+            serializedPermissions.append(serializedPerm.data)
+        return Response(serializedPermissions, status=200)
+
+    def get_queryset(self):
         try:
-            user = User.objects.get(email=id)
-            permissions = user.user_permissions.all()
+            user = User.objects.get(email=self.kwargs["id"])
             groups = user.groups.all()
 
             # Transform drf permission to RolesManager permission
             nonSerializedPermissions = []
-            for permission in permissions:
-                permission = RolesManager.django_permission_to_manager_permission(
-                    permission
-                )
-                nonSerializedPermissions.append(permission)
             for group in groups:
                 for permission in group.permissions.all():
                     permission = RolesManager.django_permission_to_manager_permission(
@@ -45,108 +47,26 @@ class UserGetPermissionsView(APIView):
                     )
                     if permission not in nonSerializedPermissions:
                         nonSerializedPermissions.append(permission)
-
-            serializedPermissions = []
-            for permission in nonSerializedPermissions:
-                serializedPerm = ManagerPermissionSerializer(permission)
-                serializedPermissions.append(serializedPerm.data)
-
-            return Response(serializedPermissions, status=200)
+            return nonSerializedPermissions
         except Exception as e:
             print("Error", e)
-            return Response(status=400)
+            return None
 
 
-class UserAddPermissionView(APIView):
-    """
-    View for adding user permissions.
-    """
-
+class UserGroupView(GenericAPIView):
     permission_classes = (permissions.AllowAny,)
-    # In later phases we will need to restrict this to admins only
-
-    """
-    Add a permission to a user
-    """
-
-    def post(self, request):
-        userEmail = request.data["user"]
-        permissionName = request.data["permission_name"]
-
-        try:
-            permission = ManagerPermission.objects.get(name=permissionName)
-            user = User.objects.get(email=userEmail)
-            # Tranform permission string to permission object
-            drfPermission = RolesManager.manager_permission_to_django_permission(
-                permission
-            )
-            if drfPermission is None:
-                return Response("Permission doesnt exist", status=400)
-
-            user.user_permissions.add(drfPermission)
-            user.save()
-            return Response(status=201)
-        except Exception as e:
-            print("Error", e)
-            return Response(status=400)
-
-
-class UserRemovePermissionView(APIView):
-    """
-    View for removing user permissions.
-    """
-
-    permission_classes = (permissions.AllowAny,)
-    # In later phases we will need to restrict this to admins only
-
-    """
-    Remove a permission from a user
-    """
-
-    def post(self, request):
-        userEmail = request.data["user"]
-        permission_name = request.data["permission_name"]
-
-        try:
-            permission = ManagerPermission.objects.get(name=permission_name)
-            user = User.objects.get(email=userEmail)
-
-            # Tranform permission string to permission object
-            drfPermission = RolesManager.manager_permission_to_django_permission(
-                permission
-            )
-            if drfPermission is None:
-                return Response("Permission doesnt exist", status=400)
-
-            if not user.has_perm(drfPermission):
-                return Response("User doesnt have permission", status=400)
-
-            user.user_permissions.remove(drfPermission)
-            user.save()
-            return Response(status=201)
-        except ManagerPermission.DoesNotExist:
-            return Response("Permission doesnt exist", status=400)
-        except Exception as e:
-            print("Error", e)
-            return Response(status=400)
-
-
-class UserGetGroupsView(APIView):
-    """
-    View for getting user groups.
-    """
-
-    permission_classes = (permissions.AllowAny,)
-    # In later phases we will need to restrict this to admins only
-
-    """
-    Get all groups for a user send in request body
-    """
+    allowed_methods = [
+        "GET",
+        "PUT",
+    ]
+    authentication_classes = []
+    serializer_class = ManagerGroupSerializer
 
     def get(self, request, id):
         try:
-            user = User.objects.get(email=id)
-            groups = user.groups.all()
+            groups = self.get_queryset()
+            if groups is None:
+                return Response(statu=400)
 
             # Transform drf groups to RolesManager groups
             nonSerializedGroups = []
@@ -156,7 +76,7 @@ class UserGetGroupsView(APIView):
 
             serializedGroups = []
             for group in nonSerializedGroups:
-                serializedGroup = ManagerGroupSerializer(group)
+                serializedGroup = self.serializer_class(group)
                 serializedGroups.append(serializedGroup.data)
 
             return Response(serializedGroups, status=200)
@@ -164,140 +84,134 @@ class UserGetGroupsView(APIView):
             print("Error", e)
             return Response(status=400)
 
+    def put(self, request, id):
+        user = User.objects.get(email=id)
+        userGroups = user.groups.all()
+        userManagerGroups = []
+        for group in userGroups:
+            group = RolesManager.django_group_to_manager_group(group)
+            userManagerGroups.append(group)
 
-class UserAddGroupView(APIView):
-    """
-    View for adding user groups.
-    """
+        user.groups.clear()
+        newGroups = request.data["groups"]
 
-    permission_classes = (permissions.AllowAny,)
-    # In later phases we will need to restrict this to admins only
-
-    """
-    Add a group to a user
-    """
-
-    def post(self, request):
-        userEmail = request.data["user"]
-        groupName = request.data["group_name"]
-
-        try:
-
-            user = User.objects.get(email=userEmail)
-            group = ManagerGroup.objects.get(name=groupName)
-            # Tranform group string to group object
+        for group in newGroups:
             drfGroup = RolesManager.manager_group_to_django_group(group)
             if drfGroup is None:
-                return Response("Group doesnt exist", status=400)
-
+                for grp in userManagerGroups:
+                    grp = RolesManager.manager_group_to_django_group(grp.name)
+                    if grp is None:
+                        return Response(status=400)
+                    user.groups.add(grp)
+                user.save()
+                return Response(status=400)
             user.groups.add(drfGroup)
-            user.save()
-            return Response(status=201)
-        except Exception as e:
-            print("Error", e)
-            return Response(status=400)
 
+        user.save()
+        return Response(status=200)
 
-class UserRemoveGroupView(APIView):
-    """
-    View for removing user groups.
-    """
-
-    permission_classes = (permissions.AllowAny,)
-    # In later phases we will need to restrict this to admins only
-
-    """
-    Remove a group from a user
-    """
-
-    def post(self, request):
-        userEmail = request.data["user"]
-        groupName = request.data["group_name"]
-
+    def get_queryset(self):
         try:
-            group = ManagerGroup.objects.get(name=groupName)
-            user = User.objects.get(email=userEmail)
-
-            # Tranform group string to group object
-            drfGroup = RolesManager.manager_group_to_django_group(group)
-            if drfGroup is None:
-                return Response("Group doesnt exist", status=400)
-
-            if not user.groups.filter(name=drfGroup.name).exists():
-                return Response("User doesnt have group", status=400)
-
-            user.groups.remove(drfGroup)
-            user.save()
-            return Response(status=201)
-        except ManagerGroup.DoesNotExist:
-            return Response("Group doesnt exist", status=400)
-        except Exception as e:
-            print("Error", e)
-            return Response(status=400)
+            user = User.objects.get(email=self.kwargs["id"])
+            return user.groups.all()
+        except Exception:
+            return None
 
 
-class GetPermissionDetailView(APIView):
-    """
-    View for getting permission details.
-    """
-
+class GroupDetailView(GenericAPIView):
     permission_classes = (permissions.AllowAny,)
-    # In later phases we will need to restrict this to admins only
-
-    """
-    Get all permissions for a user send in request body
-    """
+    allowed_methods = [
+        "GET",
+        "DELETE",
+    ]
+    authentication_classes = []
+    serializer_class = ManagerGroupSerializer
 
     def get(self, request, id):
+        groups = self.get_queryset()
         try:
-            permission = ManagerPermission.objects.get(name=id)
-            serializedPermission = ManagerPermissionSerializer(permission)
+            group = groups.get(name=id)
 
-            return Response(serializedPermission.data, status=200)
+            serGroup = self.serializer_class(group)
+            return Response(serGroup.data, status=200)
         except Exception as e:
-            print("Error", e)
+            print(e)
             return Response(status=400)
 
+    def delete(self, request, id):
+        groups = self.get_queryset()
+        try:
+            group = groups.get(name=id)
+            group.delete()
+            return Response(status=200)
+        except Exception:
+            return Response(status=400)
 
-class GetGroupDetailView(APIView):
-    """
-    View for getting group permissions.
-    """
+    def get_queryset(self):
+        return ManagerGroup.objects.all()
 
+
+class PermissionDetailView(GenericAPIView):
     permission_classes = (permissions.AllowAny,)
-    # In later phases we will need to restrict this to admins only
-
-    """
-    Get all permissions for a group send in request body
-    """
+    allowed_methods = [
+        "GET",
+        "DELETE",
+    ]
+    authentication_classes = []
+    serializer_class = ManagerPermissionSerializer
 
     def get(self, request, id):
+        permissions = self.get_queryset()
         try:
-            group = ManagerGroup.objects.get(name=id)
-            serializedGroup = ManagerGroupSerializer(group)
+            permission = permissions.get(name=id)
 
-            return Response(serializedGroup.data, status=200)
-        except Exception as e:
-            print("Error", e)
+            serPermission = self.serializer_class(permission)
+            return Response(serPermission.data, status=200)
+        except Exception:
             return Response(status=400)
 
+    def delete(self, request, id):
+        permissions = self.get_queryset()
+        try:
+            permission = permissions.get(name=id)
+            groups = ManagerGroup.objects.all()
+            for group in groups:
+                if group.permissions.filter(name=permission.name).exists():
+                    return Response(
+                        "Permission exists in group {}, cannot be deleted".format(
+                            group.name
+                        ),
+                        status=400,
+                    )
+            permission.delete()
+            return Response(status=200)
+        except Exception:
+            return Response(status=400)
 
-class CreateGroupView(APIView):
-    """
-    View for creating a group.
-    """
+    def get_queryset(self):
+        return ManagerPermission.objects.all()
 
+
+class GroupView(GenericAPIView):
     permission_classes = (permissions.AllowAny,)
-    # In later phases we will need to restrict this to admins only
+    allowed_methods = [
+        "GET",
+        "POST",
+    ]
+    authentication_classes = []
+    serializer_class = ManagerGroupSerializer
 
-    """
-    Create a group
-    """
+    def get(self, request):
+        groups = self.get_queryset()
+        serGroups = []
+        for group in groups:
+            serGroups.append(self.serializer_class(group).data)
+        return Response(serGroups, status=200)
 
     def post(self, request):
-        groupName = request.data["group_name"]
-        groupPermissions = request.data["group_permissions"]
-        groupDescription = request.data["group_description"]
+        groupName = request.data["name"]
+        groupPermissions = request.data["permissions"]
+        groupDescription = request.data["description"]
 
         try:
             if ManagerGroup.objects.filter(name=groupName).exists():
@@ -308,11 +222,45 @@ class CreateGroupView(APIView):
 
             for permission in groupPermissions:
                 permission = ManagerPermission.objects.get(name=permission)
+                if permission is None:
+                    return Response("Permission doesnt exist", status=400)
                 group.permissions.add(permission)
 
+            drfGroup = Group.objects.create(name=groupName)
+            for permission in group.permissions.all():
+                drfPerm = RolesManager.manager_permission_to_django_permission(
+                    permission
+                )
+                drfGroup.permissions.add(drfPerm)
+
             group.save()
+            drfGroup.save()
 
             return Response(status=201)
         except Exception as e:
             print("Error", e)
+            group = ManagerGroup.objects.get(name=groupName)
+            group.delete()
             return Response(status=400)
+
+    def get_queryset(self):
+        return ManagerGroup.objects.all()
+
+
+class PermissionView(GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = [
+        "GET",
+    ]
+    authentication_classes = []
+    serializer_class = ManagerPermissionSerializer
+
+    def get(self, request):
+        permissions = self.get_queryset()
+        serPermissions = []
+        for permission in permissions:
+            serPermissions.append(self.serializer_class(permission).data)
+        return Response(serPermissions, status=200)
+
+    def get_queryset(self):
+        return ManagerPermission.objects.all()

@@ -3,22 +3,27 @@
 // layout
 import DashboardLayout from "@/pages/dashboard/layout";
 //react
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import RootLayout from "@/pages/layout";
 // components
 
 // mui
-import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
+import { Grid } from "@mui/material";
+import { GetServerSideProps } from "next";
+
+import UserGrid from "@/components/Dashboard/Roles/UsersGeneralInformation";
+import GroupsGrid from "@/components/Dashboard/Roles/RolesGenerealInformation";
 
 const DashboardRolesAndUsersPage = () => {
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
-        <Typography variant="h4" sx={{ mb: 5 }}>
-          Roles & Users
-        </Typography>
-      </Container>
+      <Typography variant="h4" gutterBottom>
+        Users and roles
+      </Typography>
+      <UserGrid />
+      <Grid item xs={12} md={6} lg={8} sx={{ paddingTop: 2 }}></Grid>
+      <GroupsGrid />
     </DashboardLayout>
   );
 };
@@ -29,13 +34,6 @@ DashboardRolesAndUsersPage.getLayout = (page: ReactElement) => {
       <DashboardLayout>{page}</DashboardLayout>
     </RootLayout>
   );
-};
-
-export const getServersideProps = async (context: any) => {
-  console.log("Dashboard orders");
-  return {
-    props: {},
-  };
 };
 
 export default DashboardRolesAndUsersPage;

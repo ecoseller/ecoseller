@@ -51,3 +51,19 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_user_permissions(self, obj):
         return list(obj.user_permissions.all())
+
+
+class UpdateUserSerializer(serializers.ModelSerializer):
+    """
+    Serialize user update data
+    """
+
+    class Meta:
+        model = User
+        fields = (
+            "email",
+            "first_name",
+            "last_name",
+            "is_admin",
+            "roles",
+        )
