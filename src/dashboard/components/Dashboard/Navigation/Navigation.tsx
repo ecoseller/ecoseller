@@ -32,10 +32,14 @@ const Navigation = ({ data = [], ...other }: INavigationProps) => {
 export default Navigation;
 
 const StyledNavigationItem = styled((props: any) => (
-  <ListItemButton disableGutters {...props} />
+  <ListItemButton
+    sx={{ height: props?.dense ? 32 : 48 }}
+    disableGutters
+    {...props}
+  />
 ))(({ theme }) => ({
   ...theme.typography.body2,
-  height: 48,
+  // height: props.dense? 20: 48,
   position: "relative",
   textTransform: "capitalize",
   color: theme.palette.text.primary,
@@ -59,9 +63,10 @@ interface INavigationItemProps {
   item: INavigationItem;
   sx?: any;
   onClick?: () => void;
+  dense?: boolean;
 }
 
-function NavigationItem({ item, sx, onClick }: INavigationItemProps) {
+function NavigationItem({ item, sx, onClick, dense }: INavigationItemProps) {
   /**
    * Main Navigation Item divided into 2 parts - main-item and sub-navigation where sub-navigation is a list of children
    * @param item - navigation item - see utils/navigationData.ts
@@ -89,6 +94,7 @@ function NavigationItem({ item, sx, onClick }: INavigationItemProps) {
     return (
       <>
         <StyledNavigationItem
+          dense={dense ? true : false}
           onClick={() => {
             setOpen(!open);
             // onClick && onClick();
@@ -119,6 +125,7 @@ function NavigationItem({ item, sx, onClick }: INavigationItemProps) {
           <List component="div" disablePadding>
             {children.map((child) => (
               <NavigationItem
+                dense={true}
                 onClick={() => {
                   setTimeout(0);
                 }}
@@ -141,6 +148,7 @@ function NavigationItem({ item, sx, onClick }: INavigationItemProps) {
   return (
     <StyledNavigationItem
       component={Link}
+      dense={dense}
       to={path}
       selected={pathname === path}
       sx={{
