@@ -14,7 +14,6 @@ from rest_framework.parsers import (
 )
 import os
 from django.conf import settings
-import requests
 
 import urllib.request
 
