@@ -5,12 +5,13 @@ import React, { useEffect, useReducer, useState } from "react";
 import { getLanguages } from "@/api/country/country";
 import { ILanguage } from "@/types/localization";
 import DashboardContentWithSaveFooter from "@/components/Dashboard/Generic/EditableContent";
-import { addCategory } from "@/api/category/category";
+import { addCategory, updateCategory } from "@/api/category/category";
 import { useRouter } from "next/router";
 import Button from "@mui/material/Button";
 import { ICategoryCreateUpdate, ICategoryTranslation } from "@/types/category";
 
-export interface Action {
+export interface Action
+{
   type: string;
   payload: any;
 }
@@ -19,62 +20,72 @@ export interface Action {
 function reducer(
   state: ICategoryCreateUpdate,
   action: Action
-): ICategoryCreateUpdate {
-  switch (action.type) {
-    case "translation": {
+): ICategoryCreateUpdate
+{
+  switch (action.type)
+  {
+    case "translation":
+    {
       return {
         ...state,
         translations: {
           ...state.translations,
           [action.payload.translation.language]: {
             ...state.translations[action.payload.translation.language],
-            ...action.payload.translation.data,
-          },
-        },
+            ...action.payload.translation.data
+          }
+        }
       };
     }
+    case "recreate":
+      return action.payload;
     default:
       return state;
   }
 }
 
-const CategoryEditorWrapper = () => {
-  // TODO: load dynamically
-  const emptyCategory: ICategoryCreateUpdate = {
-    published: true,
-    translations: {
-      en: {
-        slug: "",
-        title: "",
-        description: "",
-        meta_description: "",
-        meta_title: "",
-      },
-      cs: {
-        slug: "",
-        title: "",
-        description: "",
-        meta_description: "",
-        meta_title: "",
-      },
-    },
-  };
+interface ICategoryEditorWrapperProps
+{
+  initialCategory: ICategoryCreateUpdate;
+  creatingNew: boolean;
+}
+
+const CategoryEditorWrapper = ({ initialCategory, creatingNew }: ICategoryEditorWrapperProps) =>
+{
 
   const [languages, setLanguages] = useState<ILanguage[]>([]);
-  const [category, dispatch] = useReducer(reducer, emptyCategory);
+  const [category, dispatch] = useReducer(reducer, initialCategory);
 
   const router = useRouter();
 
-  useEffect(() => {
-    getLanguages().then((langs) => {
+  useEffect(() =>
+  {
+    getLanguages().then((langs) =>
+    {
       setLanguages(langs.data);
     });
   }, []);
 
-  const save = () => {
-    addCategory(category).then(() => {
-      router.push("/dashboard/catalog/categories");
-    });
+  useEffect(() =>
+  {
+    dispatch({ type: "recreate", payload: initialCategory });
+  }, [initialCategory]);
+
+  const save = () =>
+  {
+    if (creatingNew)
+    {
+      addCategory(category).then(() =>
+      {
+        router.push("/dashboard/catalog/categories");
+      });
+    } else
+    {
+      updateCategory("1", category).then(() =>
+      {
+        router.push("/dashboard/catalog/categories");
+      });
+    }
   };
 
   return (
@@ -104,7 +115,8 @@ const CategoryEditorWrapper = () => {
         </Grid>
       </Grid>
       <Button
-        onClick={() => {
+        onClick={() =>
+        {
           save();
         }}
       >
