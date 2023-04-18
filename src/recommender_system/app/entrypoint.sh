@@ -1,3 +1,3 @@
 #!/bin/sh
-python3 scripts/migrate.py
-python3 server/run.py
+python3 recommender_system/scripts/migrate.py
+python3 recommender_system/scripts/run_server.py
