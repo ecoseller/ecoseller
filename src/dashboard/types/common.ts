@@ -1,5 +1,4 @@
 type TLink = string | null;
-
 export interface IPaginated {
   links: {
     next: TLink;

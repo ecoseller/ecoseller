@@ -35,12 +35,12 @@ const navigationData: INavigationItem[] = [
       {
         title: "Products",
         path: "/products",
-        icon: <InventoryIcon />,
+        icon: undefined,
       },
       {
         title: "Product types",
         path: "/product-types",
-        icon: <InventoryIcon />,
+        icon: undefined,
       },
       {
         title: "Attributes",
@@ -50,7 +50,7 @@ const navigationData: INavigationItem[] = [
       {
         title: "Categories",
         path: "/categories",
-        icon: <CategoryIcon />,
+        icon: undefined,
       },
     ],
   },
@@ -62,12 +62,12 @@ const navigationData: INavigationItem[] = [
       {
         title: "Price lists",
         path: "/price-lists",
-        icon: <MoneyIcon />,
+        icon: undefined,
       },
       {
         title: "Currency",
         path: "/currencies",
-        icon: <AttachMoneyIcon />,
+        icon: undefined,
       },
     ],
   },

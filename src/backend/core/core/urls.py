@@ -19,4 +19,5 @@ urlpatterns = [
     path("user/", include("user.urls")),
     path("roles/", include("roles.urls")),
     path("country/", include("country.urls")),
+    path("editorjs/", include("cms.editorjs.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

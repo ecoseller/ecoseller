@@ -1,6 +1,7 @@
 from django.db import models
 from ckeditor.fields import RichTextField
 from parler.models import TranslatableModel, TranslatedFields
+from django_editorjs_fields import EditorJsJSONField
 from mptt.models import MPTTModel
 from mptt.fields import TreeForeignKey
 
@@ -21,6 +22,11 @@ class Category(MPTTModel, TranslatableModel):
         ),
         description=RichTextField(
             blank=True, null=True, help_text="Category description in given language"
+        ),
+        description_editorjs=EditorJsJSONField(
+            blank=True,
+            null=True,
+            help_text="Main product description in given language in EditorJS format",
         ),
         slug=models.SlugField(
             max_length=200, null=False, help_text="Slug in given language"

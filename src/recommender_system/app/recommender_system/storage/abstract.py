@@ -40,7 +40,10 @@ class AbstractStorage(ABC):
     ) -> StoredBaseModel:
         """
         Searches for model of type `model_class` and returns it if found.
-        Raises ModelNotFoundException if model is not found in storage.
+
+        Raises model_class.DoesNotExist if model is not found in storage.
+        Raises MultipleObjectsReturned if multiple models are found in
+        storage.
         """
         raise NotImplementedError()
 

@@ -8,7 +8,6 @@ from recommender_system.models.stored.product_product_variant import (
 )
 from recommender_system.models.stored.product_translation import ProductTranslationModel
 from recommender_system.models.stored.product_variant import ProductVariantModel
-from recommender_system.storage import ModelNotFoundException
 from tests.storage.tools import get_or_create_model, delete_model, default_dicts
 
 
@@ -16,7 +15,7 @@ def delete_product_variants(product_pk: int):
     for ppv in ProductProductVariantModel.gets(product_id=product_pk):
         try:
             ProductVariantModel.get(pk=ppv.product_variant_sku).delete()
-        except ModelNotFoundException:
+        except ProductVariantModel.DoesNotExist:
             pass
         ppv.delete()
 
@@ -52,7 +51,7 @@ def test_product_create(clear_product):
     product_pk = clear_product
     product_dict = default_dicts[ProductModel]
 
-    with pytest.raises(ModelNotFoundException):
+    with pytest.raises(ProductModel.DoesNotExist):
         _ = ProductModel.get(pk=product_pk)
 
     product = ProductModel.parse_obj(product_dict)
@@ -99,7 +98,7 @@ def test_product_delete(create_product):
 
     product.delete()
 
-    with pytest.raises(ModelNotFoundException):
+    with pytest.raises(ProductModel.DoesNotExist):
         _ = ProductModel.get(pk=product_pk)
 
 

@@ -25,4 +25,13 @@ class Container(containers.DeclarativeContainer):
     request_manager = providers.Singleton(RequestManager)
     trainer = providers.Singleton(Trainer)
 
-    storage = providers.Singleton(SQLStorage, connection_string=os.environ["RS_DB_URL"])
+    feedback_storage = providers.Singleton(
+        SQLStorage,
+        connection_string=os.environ["RS_FEEDBACK_DB_URL"],
+        alembic_location="recommender_system/storage/feedback/alembic.ini",
+    )
+    product_storage = providers.Singleton(
+        SQLStorage,
+        connection_string=os.environ["RS_PRODUCT_DB_URL"],
+        alembic_location="recommender_system/storage/product/alembic.ini",
+    )

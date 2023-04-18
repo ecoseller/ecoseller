@@ -8,7 +8,6 @@ from recommender_system.models.stored.attribute_type_product_type import (
 )
 from recommender_system.models.stored.product import ProductModel
 from recommender_system.models.stored.product_translation import ProductTranslationModel
-from recommender_system.storage import ModelNotFoundException
 from tests.storage.tools import get_or_create_model, delete_model, default_dicts
 
 
@@ -22,7 +21,7 @@ def delete_attribute_types(product_type_pk: int):
         try:
             attribute_type = AttributeTypeModel.get(pk=atpt.attribute_type_pk)
             attribute_type.delete()
-        except ModelNotFoundException:
+        except AttributeTypeModel.DoesNotExist:
             pass
         atpt.delete()
 
@@ -55,7 +54,7 @@ def test_product_translation_create(clear_product_translation):
     product_translation_pk, product_pk = clear_product_translation
     product_translation_dict = default_dicts[ProductTranslationModel]
 
-    with pytest.raises(ModelNotFoundException):
+    with pytest.raises(ProductTranslationModel.DoesNotExist):
         _ = ProductTranslationModel.get(pk=product_translation_pk)
 
     product_translation = ProductTranslationModel.parse_obj(product_translation_dict)
@@ -105,5 +104,5 @@ def test_product_translation_delete(create_product_translation):
 
     product_translation.delete()
 
-    with pytest.raises(ModelNotFoundException):
+    with pytest.raises(ProductTranslationModel.DoesNotExist):
         _ = ProductTranslationModel.get(pk=product_translation_pk)

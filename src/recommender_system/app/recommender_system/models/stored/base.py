@@ -17,16 +17,16 @@ class StoredBaseModel(BaseModel):
     _storage: "AbstractStorage"
 
     class Meta:
-        primary_key: str = ""
+        primary_key: str
 
     class Config:
         underscore_attrs_are_private = True
 
-    @inject
-    def __init__(
-        self, _storage: "AbstractStorage" = Provide["storage"], *args, **kwargs
-    ):
-        self._storage = _storage
+    class DoesNotExist(Exception):
+        pass
+
+    def __init__(self, *args, **kwargs):
+        self._storage = kwargs.pop("_storage")
         super().__init__(*args, **kwargs)
 
     @classmethod
@@ -42,18 +42,12 @@ class StoredBaseModel(BaseModel):
         return getattr(self, self.Meta.primary_key)
 
     @classmethod
-    @inject
-    def get(
-        cls, storage: "AbstractStorage" = Provide["storage"], **kwargs
-    ) -> "StoredBaseModel":
-        return storage.get_object(model_class=cls, **kwargs)
+    def get(cls, **kwargs) -> "StoredBaseModel":
+        return kwargs.pop("storage").get_object(model_class=cls, **kwargs)
 
     @classmethod
-    @inject
-    def gets(
-        cls, storage: "AbstractStorage" = Provide["storage"], **kwargs
-    ) -> List["StoredBaseModel"]:
-        return storage.get_objects(model_class=cls, **kwargs)
+    def gets(cls, **kwargs) -> List["StoredBaseModel"]:
+        return kwargs.pop("storage").get_objects(model_class=cls, **kwargs)
 
     def create(self) -> None:
         pk = self._storage.store_object(model=self, create=True)
@@ -67,3 +61,56 @@ class StoredBaseModel(BaseModel):
 
     def delete(self) -> None:
         self._storage.delete_object(model=self)
+
+
+class FeedbackStoredBaseModel(StoredBaseModel):
+    """
+    This model represents base class for all models stored in the feedback database.
+    """
+
+    @inject
+    def __init__(
+        self, _storage: "AbstractStorage" = Provide["feedback_storage"], *args, **kwargs
+    ):
+        self._storage = _storage
+        super().__init__(_storage=_storage, *args, **kwargs)
+
+    @classmethod
+    @inject
+    def get(
+        cls, storage: "AbstractStorage" = Provide["feedback_storage"], **kwargs
+    ) -> "StoredBaseModel":
+        return super().get(storage=storage, **kwargs)
+
+    @classmethod
+    @inject
+    def gets(
+        cls, storage: "AbstractStorage" = Provide["feedback_storage"], **kwargs
+    ) -> List["StoredBaseModel"]:
+        return super().gets(storage=storage, **kwargs)
+
+
+class ProductStoredBaseModel(StoredBaseModel):
+    """
+    This model represents base class for all models stored in the product database.
+    """
+
+    @inject
+    def __init__(
+        self, _storage: "AbstractStorage" = Provide["product_storage"], *args, **kwargs
+    ):
+        super().__init__(_storage=_storage, *args, **kwargs)
+
+    @classmethod
+    @inject
+    def get(
+        cls, storage: "AbstractStorage" = Provide["product_storage"], **kwargs
+    ) -> "StoredBaseModel":
+        return super().get(storage=storage, **kwargs)
+
+    @classmethod
+    @inject
+    def gets(
+        cls, storage: "AbstractStorage" = Provide["product_storage"], **kwargs
+    ) -> List["StoredBaseModel"]:
+        return super().gets(storage=storage, **kwargs)
