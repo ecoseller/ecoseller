@@ -8,6 +8,7 @@ import { deleteCategory, getCategory } from "@/api/category/category";
 import { useRouter } from "next/router";
 import Button from "@mui/material/Button";
 
+
 const CategoryEditPage = () => {
   const emptyCategory: ICategoryDetail = {
     published: true,
@@ -38,9 +39,13 @@ const CategoryEditPage = () => {
   const categoryId = id?.toString() || "";
 
   useEffect(() => {
-    getCategory(categoryId).then((c) => {
-      setCategory(c.data);
-    });
+    if (categoryId.length > 0)
+    {
+      getCategory(categoryId).then((c) =>
+      {
+        setCategory(c.data);
+      });
+    }
   }, [categoryId]);
 
   function deleteCat() {

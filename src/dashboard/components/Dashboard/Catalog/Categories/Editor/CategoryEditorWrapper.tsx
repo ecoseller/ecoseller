@@ -30,12 +30,12 @@ function reducer(
   switch (action.type) {
     case SetCategoryAction.SetTranslation: {
       return {
-        ...state,
-        translations: {
-          ...state.translations,
-          [action.payload.translation.language]: {
-            ...state.translations[action.payload.translation.language],
-            ...action.payload.translation.data,
+        ...state, // use the previous state as a base
+        translations: { // update `translations` field
+          ...state.translations, // use the previous `translations` state as a base
+          [action.payload.translation.language]: { // update `translations[language]` field
+            ...state.translations[action.payload.translation.language], // use the previous `translations[language]` state as a base
+            ...action.payload.translation.data, // use the data from payload
           },
         },
       };
