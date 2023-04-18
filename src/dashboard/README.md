@@ -6,7 +6,16 @@ This project is bootstrapped with [`create-next-app`](https://github.com/vercel/
 ## Dev tools
 
 ### Debugging
-- TODO
+
+#### Webstorm
+1. Run dashboard app using `docker compose` or locally
+2. Open [dashboard](.) folder in Webstorm
+3. Select Run/debug configuration > Add New > Select *JavaScript Debug*
+4. Use the URL, where the dashboard is running (see the example below)
+    ![](doc_images/configuration.png)
+5. Then, run debuging using *Debug* button in menu.   
+(Also note that this way, you'll be able to debug client-side code 
+only - therefore not e.g. `getServerSideProps` method)
 
 ### `eslint`
 We use [ESLint integrated in Next.js](https://nextjs.org/docs/basic-features/eslint) for linting
