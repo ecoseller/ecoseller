@@ -35,6 +35,15 @@ import {
 } from "@/types/product";
 import { ISetProductStateAction } from "../ProductEditorWrapper";
 import { ILanguage } from "@/types/localization";
+import dynamic from "next/dynamic";
+import { OutputData as IEditorJSData } from "@editorjs/editorjs";
+
+let EditorJSField = dynamic(
+  () => import("@/components/Dashboard/Common/Fields/EditorJSField"),
+  {
+    ssr: false,
+  }
+);
 
 interface IProductTranslatedFieldsProps {
   language: string;
@@ -93,6 +102,23 @@ const ProductTranslatedFields = ({
     });
   };
 
+  const setDescriptionEditorJs = (data: IEditorJSData) => {
+    console.log("Setting description");
+    dispatch({
+      type: ActionSetProduct.SETTRANSLATION,
+      payload: {
+        translation: {
+          language,
+          data: {
+            description_editorjs: data,
+          },
+        },
+      },
+    });
+  };
+
+  console.log("state", state);
+
   return (
     <FormControl fullWidth margin={"normal"}>
       <Stack spacing={2}>
@@ -137,7 +163,12 @@ const ProductTranslatedFields = ({
             ),
           }}
         />
-        <TextField label="Description" />
+        <EditorJSField
+          data={state?.description_editorjs || ({} as IEditorJSData)}
+          onChange={(data: IEditorJSData) => {
+            setDescriptionEditorJs(data);
+          }}
+        />
       </Stack>
     </FormControl>
   );

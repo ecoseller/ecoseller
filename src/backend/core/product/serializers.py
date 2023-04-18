@@ -500,6 +500,7 @@ class ProductSerializer(TranslatedSerializerMixin, ModelSerializer):
             "meta_description",
             "short_description",
             "description",
+            "description_editorjs",
             "slug",
             "product_variants",
         )
