@@ -16,7 +16,7 @@ import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn"
 import ProductVariantsEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVariantsEditor";
 import ProductMediaEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductMediaEditor";
 import ProductVariantPricesEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVariantPricesEditor";
-import ProductVisibilitySelect from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVisibilitySelect";
+import EntityVisibilityForm from "@/components/Dashboard/Generic/EntityVisibilityForm";
 import ProductCategorySelect from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductCategorySelect";
 import ProductBasicInfo from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductBasicInfo";
 import ProductTranslatedFieldsWrapper from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductTranslatedFields";
@@ -283,9 +283,10 @@ const ProductEditorWrapper = ({
             dispatch={dispatchProductState}
             disabled={productData ? true : false}
           />
-          <ProductVisibilitySelect
-            state={productState}
+          <EntityVisibilityForm
+            isPublished={productState.published || false}
             dispatch={dispatchProductState}
+            dispatchType={ActionSetProduct.SETPUBLISHED}
           />
         </Grid>
       </Grid>

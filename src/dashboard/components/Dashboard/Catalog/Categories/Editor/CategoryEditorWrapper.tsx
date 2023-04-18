@@ -9,10 +9,16 @@ import { addCategory, updateCategory } from "@/api/category/category";
 import { useRouter } from "next/router";
 import Button from "@mui/material/Button";
 import { ICategoryCreateUpdate, ICategoryTranslation } from "@/types/category";
+import EntityVisibilityForm from "@/components/Dashboard/Generic/EntityVisibilityForm";
 
-export interface Action
-{
-  type: string;
+export enum SetCategoryAction {
+  SetTranslation,
+  RecreateInitState,
+  SetPublished,
+}
+
+export interface Action {
+  type: SetCategoryAction;
   payload: any;
 }
 
@@ -20,69 +26,65 @@ export interface Action
 function reducer(
   state: ICategoryCreateUpdate,
   action: Action
-): ICategoryCreateUpdate
-{
-  switch (action.type)
-  {
-    case "translation":
-    {
+): ICategoryCreateUpdate {
+  switch (action.type) {
+    case SetCategoryAction.SetTranslation: {
       return {
         ...state,
         translations: {
           ...state.translations,
           [action.payload.translation.language]: {
             ...state.translations[action.payload.translation.language],
-            ...action.payload.translation.data
-          }
-        }
+            ...action.payload.translation.data,
+          },
+        },
       };
     }
-    case "recreate":
+    case SetCategoryAction.RecreateInitState:
       return action.payload;
+    case SetCategoryAction.SetPublished:
+      return { ...state, published: action.payload.published };
     default:
       return state;
   }
 }
 
-interface ICategoryEditorWrapperProps
-{
+interface ICategoryEditorWrapperProps {
   initialCategory: ICategoryCreateUpdate;
   creatingNew: boolean;
+  title: string;
 }
 
-const CategoryEditorWrapper = ({ initialCategory, creatingNew }: ICategoryEditorWrapperProps) =>
-{
-
+const CategoryEditorWrapper = ({
+  initialCategory,
+  creatingNew,
+  title,
+}: ICategoryEditorWrapperProps) => {
   const [languages, setLanguages] = useState<ILanguage[]>([]);
   const [category, dispatch] = useReducer(reducer, initialCategory);
 
   const router = useRouter();
 
-  useEffect(() =>
-  {
-    getLanguages().then((langs) =>
-    {
+  useEffect(() => {
+    getLanguages().then((langs) => {
       setLanguages(langs.data);
     });
   }, []);
 
-  useEffect(() =>
-  {
-    dispatch({ type: "recreate", payload: initialCategory });
+  useEffect(() => {
+    dispatch({
+      type: SetCategoryAction.RecreateInitState,
+      payload: initialCategory,
+    });
   }, [initialCategory]);
 
-  const save = () =>
-  {
-    if (creatingNew)
-    {
-      addCategory(category).then(() =>
-      {
+  const save = () => {
+    if (creatingNew) {
+      addCategory(category).then(() => {
         router.push("/dashboard/catalog/categories");
       });
-    } else
-    {
-      updateCategory("1", category).then(() =>
-      {
+    } else {
+      updateCategory("1", category).then(() => {
         router.push("/dashboard/catalog/categories");
       });
     }
@@ -91,15 +93,11 @@ const CategoryEditorWrapper = ({ initialCategory, creatingNew }: ICategoryEditor
   return (
     <>
       <TopLineWithReturn
-        title="Add category"
+        title={title}
         returnPath="/dashboard/catalog/categories"
       />
       <Grid container spacing={2}>
         <Grid item md={8} xs={12}>
-          {/*<ProductTranslatedFieldsWrapper*/}
-          {/*  state={productState}*/}
-          {/*  dispatch={dispatchProductState}*/}
-          {/*/>*/}
           <CategoryTranslatedFields
             languages={languages}
             category={category}
@@ -107,16 +105,15 @@ const CategoryEditorWrapper = ({ initialCategory, creatingNew }: ICategoryEditor
           />
         </Grid>
         <Grid item md={4} xs={12}>
-          {/*<ProductCategorySelect*/}
-          {/*  state={productState}*/}
-          {/*  dispatch={dispatchProductState}*/}
-          {/*/>*/}
-          TODO: add published field & Parent category HERE
+          <EntityVisibilityForm
+            isPublished={category.published}
+            dispatch={dispatch}
+            dispatchType={SetCategoryAction.SetPublished}
+          />
         </Grid>
       </Grid>
       <Button
-        onClick={() =>
-        {
+        onClick={() => {
           save();
         }}
       >

@@ -9,7 +9,6 @@ import CategoryEditorWrapper from "@/components/Dashboard/Catalog/Categories/Edi
 import { ICategoryCreateUpdate, ICategoryDetail } from "@/types/category";
 
 const CategoryAddPage = () => {
-
   const emptyCategory: ICategoryCreateUpdate = {
     published: true,
     translations: {
@@ -29,11 +28,15 @@ const CategoryAddPage = () => {
       },
     },
   };
-  
+
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
-        <CategoryEditorWrapper initialCategory={emptyCategory} creatingNew={false}/>
+        <CategoryEditorWrapper
+          initialCategory={emptyCategory}
+          creatingNew={false}
+          title="Add category"
+        />
       </Container>
     </DashboardLayout>
   );

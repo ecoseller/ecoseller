@@ -1,18 +1,14 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import RootLayout from "@/pages/layout";
 import DashboardLayout from "@/pages/dashboard/layout";
-import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
-import Grid from "@mui/material/Grid";
-import CategoryTranslatedFields from "@/components/Dashboard/Catalog/Categories/Editor/CategoryTranslatedFields";
 import Container from "@mui/material/Container";
 import CategoryEditorWrapper from "@/components/Dashboard/Catalog/Categories/Editor/CategoryEditorWrapper";
-import { ILanguage } from "@/types/localization";
-import { ICategoryCreateUpdate, ICategoryDetail } from "@/types/category";
-import { getCategory } from "@/api/category/category";
+import { ICategoryDetail } from "@/types/category";
+import { deleteCategory, getCategory } from "@/api/category/category";
 import { useRouter } from "next/router";
+import Button from "@mui/material/Button";
 
-const CategoryEditPage = () =>
-{
+const CategoryEditPage = () => {
   const emptyCategory: ICategoryDetail = {
     published: true,
     translations: {
@@ -21,19 +17,19 @@ const CategoryEditPage = () =>
         title: "",
         description: "",
         meta_description: "",
-        meta_title: ""
+        meta_title: "",
       },
       cs: {
         slug: "",
         title: "",
         description: "",
         meta_description: "",
-        meta_title: ""
-      }
+        meta_title: "",
+      },
     },
     id: 0,
     create_at: "",
-    update_at: ""
+    update_at: "",
   };
 
   const [category, setCategory] = useState<ICategoryDetail>(emptyCategory);
@@ -41,27 +37,37 @@ const CategoryEditPage = () =>
   const { id } = router.query;
   const categoryId = id?.toString() || "";
 
-
-  useEffect(() =>
-  {
-    getCategory(categoryId)
-      .then((c) =>
-      {
-        setCategory(c.data);
-      });
+  useEffect(() => {
+    getCategory(categoryId).then((c) => {
+      setCategory(c.data);
+    });
   }, [categoryId]);
+
+  function deleteCat() {
+    deleteCategory(categoryId).then(() => {
+      router.push("/dashboard/catalog/categories");
+    });
+  }
 
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
-        <CategoryEditorWrapper initialCategory={category} creatingNew={false} />
+        <CategoryEditorWrapper
+          initialCategory={category}
+          creatingNew={false}
+          title={`Edit category #${id}`}
+        />
+        <>
+          <Button variant="contained" onClick={deleteCat}>
+            Delete
+          </Button>
+        </>
       </Container>
     </DashboardLayout>
   );
 };
 
-CategoryEditPage.getLayout = (page: ReactElement) =>
-{
+CategoryEditPage.getLayout = (page: ReactElement) => {
   return (
     <RootLayout>
       <DashboardLayout>{page}</DashboardLayout>

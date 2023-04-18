@@ -1,5 +1,9 @@
 import { axiosPrivate } from "@/utils/axiosPrivate";
-import { ICategoryLocalized, ICategoryCreateUpdate, ICategoryDetail } from "@/types/category";
+import {
+  ICategoryLocalized,
+  ICategoryCreateUpdate,
+  ICategoryDetail,
+} from "@/types/category";
 
 /**
  * Get list of all categories
@@ -25,10 +29,21 @@ export const getCategory = async (id: string) => {
 };
 
 /**
- * 
+ *
  * @param id
  * @param updatedCategory
  */
-export const updateCategory = async (id: string, updatedCategory: ICategoryCreateUpdate) => {
+export const updateCategory = async (
+  id: string,
+  updatedCategory: ICategoryCreateUpdate
+) => {
   return await axiosPrivate.put(`/category/${id}`, updatedCategory);
+};
+
+/**
+ *
+ * @param id
+ */
+export const deleteCategory = async (id: string) => {
+  return await axiosPrivate.delete(`/category/${id}`);
 };
