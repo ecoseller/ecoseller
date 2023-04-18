@@ -1,7 +1,7 @@
 import { axiosPrivate } from "@/utils/axiosPrivate";
 import {
   ICategoryLocalized,
-  ICategoryCreateUpdate,
+  ICategoryEditable,
   ICategoryDetail,
 } from "@/types/category";
 
@@ -16,7 +16,7 @@ export const getAllCategories = async () => {
  * Create new category
  * @param categoryToAdd
  */
-export const addCategory = async (categoryToAdd: ICategoryCreateUpdate) => {
+export const addCategory = async (categoryToAdd: ICategoryEditable) => {
   return await axiosPrivate.post(`/category/`, categoryToAdd);
 };
 
@@ -35,7 +35,7 @@ export const getCategory = async (id: string) => {
  */
 export const updateCategory = async (
   id: string,
-  updatedCategory: ICategoryCreateUpdate
+  updatedCategory: ICategoryEditable
 ) => {
   return await axiosPrivate.put(`/category/${id}`, updatedCategory);
 };

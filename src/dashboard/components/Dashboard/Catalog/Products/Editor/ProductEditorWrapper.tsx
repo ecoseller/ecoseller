@@ -17,7 +17,7 @@ import ProductVariantsEditor from "@/components/Dashboard/Catalog/Products/Edito
 import ProductMediaEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductMediaEditor";
 import ProductVariantPricesEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVariantPricesEditor";
 import EntityVisibilityForm from "@/components/Dashboard/Generic/EntityVisibilityForm";
-import ProductCategorySelect from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductCategorySelect";
+import CategorySelectForm from "@/components/Dashboard/Generic/CategorySelectForm";
 import ProductBasicInfo from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductBasicInfo";
 import ProductTranslatedFieldsWrapper from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductTranslatedFields";
 // mui
@@ -231,6 +231,13 @@ const ProductEditorWrapper = ({
       payload: { published: published },
     });
   };
+
+  const setCategoryId = (categoryId: number) => {
+    dispatchProductState({
+       type: ActionSetProduct.SETCATEGORY,
+       payload: { category: categoryId },
+    });
+  };
   
   // console.log("productState", productState);
 
@@ -281,9 +288,9 @@ const ProductEditorWrapper = ({
           />
         </Grid>
         <Grid item md={4} xs={12}>
-          <ProductCategorySelect
-            state={productState}
-            dispatch={dispatchProductState}
+          <CategorySelectForm
+            categoryId={productState.category}
+            setCategoryId={setCategoryId}
           />
           <ProductTypeSelect
             types={productTypeData}

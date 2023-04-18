@@ -6,10 +6,10 @@ import Grid from "@mui/material/Grid";
 import CategoryTranslatedFields from "@/components/Dashboard/Catalog/Categories/Editor/CategoryTranslatedFields";
 import Container from "@mui/material/Container";
 import CategoryEditorWrapper from "@/components/Dashboard/Catalog/Categories/Editor/CategoryEditorWrapper";
-import { ICategoryCreateUpdate, ICategoryDetail } from "@/types/category";
+import { ICategoryEditable, ICategoryDetail } from "@/types/category";
 
 const CategoryAddPage = () => {
-  const emptyCategory: ICategoryCreateUpdate = {
+  const emptyCategory: ICategoryEditable = {
     published: true,
     translations: {
       en: {
@@ -27,6 +27,7 @@ const CategoryAddPage = () => {
         meta_title: "",
       },
     },
+    parent: null
   };
 
   return (
@@ -34,7 +35,7 @@ const CategoryAddPage = () => {
       <Container maxWidth="xl">
         <CategoryEditorWrapper
           initialCategory={emptyCategory}
-          creatingNew={false}
+          creatingNew={true}
           title="Add category"
         />
       </Container>

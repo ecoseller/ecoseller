@@ -10,7 +10,7 @@ import { ILanguage } from "@/types/localization";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
-import { ICategoryCreateUpdate } from "@/types/category";
+import { ICategoryEditable } from "@/types/category";
 import {
   Action,
   SetCategoryAction,
@@ -18,7 +18,7 @@ import {
 
 interface ICategoryTranslatedFieldsProps {
   languages: ILanguage[];
-  category: ICategoryCreateUpdate;
+  category: ICategoryEditable;
   dispatch: React.Dispatch<Action>;
 }
 

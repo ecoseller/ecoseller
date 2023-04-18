@@ -31,6 +31,7 @@ const CategoryEditPage = () => {
     id: 0,
     create_at: "",
     update_at: "",
+    parent: null
   };
 
   const [category, setCategory] = useState<ICategoryDetail>(emptyCategory);
@@ -60,7 +61,8 @@ const CategoryEditPage = () => {
         <CategoryEditorWrapper
           initialCategory={category}
           creatingNew={false}
-          title={`Edit category #${id}`}
+          title={`Edit category #${categoryId}`}
+          categoryId={categoryId}
         />
         <>
           <Button variant="contained" onClick={deleteCat}>

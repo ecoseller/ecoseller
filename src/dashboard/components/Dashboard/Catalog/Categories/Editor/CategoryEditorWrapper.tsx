@@ -8,14 +8,16 @@ import DashboardContentWithSaveFooter from "@/components/Dashboard/Generic/Edita
 import { addCategory, updateCategory } from "@/api/category/category";
 import { useRouter } from "next/router";
 import Button from "@mui/material/Button";
-import { ICategoryCreateUpdate, ICategoryTranslation } from "@/types/category";
+import { ICategoryEditable, ICategoryTranslation } from "@/types/category";
 import EntityVisibilityForm from "@/components/Dashboard/Generic/EntityVisibilityForm";
-import ProductCategorySelect from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductCategorySelect";
+import CategorySelectForm from "@/components/Dashboard/Generic/CategorySelectForm";
+import { ActionSetProduct } from "@/types/product";
 
 export enum SetCategoryAction {
   SetTranslation,
   RecreateInitState,
   SetPublished,
+  SetParentCategory
 }
 
 export interface Action {
@@ -25,9 +27,9 @@ export interface Action {
 
 // TODO: use enums & typing
 function reducer(
-  state: ICategoryCreateUpdate,
+  state: ICategoryEditable,
   action: Action
-): ICategoryCreateUpdate {
+): ICategoryEditable {
   switch (action.type) {
     case SetCategoryAction.SetTranslation: {
       return {
@@ -45,21 +47,25 @@ function reducer(
       return action.payload;
     case SetCategoryAction.SetPublished:
       return { ...state, published: action.payload.published };
+    case SetCategoryAction.SetParentCategory:
+      return { ...state, parent: action.payload.parent };
     default:
       return state;
   }
 }
 
 interface ICategoryEditorWrapperProps {
-  initialCategory: ICategoryCreateUpdate;
+  initialCategory: ICategoryEditable;
   creatingNew: boolean;
   title: string;
+  categoryId?: string;
 }
 
 const CategoryEditorWrapper = ({
   initialCategory,
   creatingNew,
   title,
+  categoryId = "",
 }: ICategoryEditorWrapperProps) => {
   const [languages, setLanguages] = useState<ILanguage[]>([]);
   const [category, dispatch] = useReducer(reducer, initialCategory);
@@ -85,7 +91,7 @@ const CategoryEditorWrapper = ({
         router.push("/dashboard/catalog/categories");
       });
     } else {
-      updateCategory("1", category).then(() => {
+      updateCategory(categoryId, category).then(() => {
         router.push("/dashboard/catalog/categories");
       });
     }
@@ -97,7 +103,14 @@ const CategoryEditorWrapper = ({
       payload: { published: published },
     });
   };
-  
+
+  const setParentCategory = (categoryId: number) => {
+    dispatch({
+      type: SetCategoryAction.SetParentCategory,
+      payload: { parent: categoryId },
+    });
+  };
+
   return (
     <>
       <TopLineWithReturn
@@ -113,10 +126,11 @@ const CategoryEditorWrapper = ({
           />
         </Grid>
         <Grid item md={4} xs={12}>
-          {/*<ProductCategorySelect*/}
-          {/*  state={}*/}
-          {/*  dispatch={}*/}
-          {/*/>*/}
+          <CategorySelectForm
+            categoryId={category.parent}
+            setCategoryId={setParentCategory}
+            title="Parent category"
+          />
           <EntityVisibilityForm
             isPublished={category.published}
             setValue={setPublished}
