@@ -10,8 +10,7 @@ import React from "react";
 
 interface IEntityVisibilityFormProps {
   isPublished: boolean;
-  dispatch: React.Dispatch<{ type: any; payload: { published: boolean } }>;
-  dispatchType: any;
+  setValue: (isPublished: boolean) => void
 }
 
 /**
@@ -22,14 +21,12 @@ interface IEntityVisibilityFormProps {
  * - single checkbox with `Published` label 
  *
  * @param isPublished determines if the entity is currently published
- * @param dispatch dispatch function to call when state changes
- * @param dispatchType type property that is passed to `dispatch` function when it's called
+ * @param setValue function to call when checkbox value changes
  * @constructor
  */
 const EntityVisibilityForm = ({
   isPublished,
-  dispatch,
-  dispatchType,
+  setValue
 }: IEntityVisibilityFormProps) => {
   return (
     <EditorCard>
@@ -40,10 +37,7 @@ const EntityVisibilityForm = ({
             <Checkbox
               checked={isPublished}
               onClick={() => {
-                dispatch({
-                  type: dispatchType,
-                  payload: { published: !isPublished },
-                });
+                setValue(!isPublished);
               }}
             />
           }

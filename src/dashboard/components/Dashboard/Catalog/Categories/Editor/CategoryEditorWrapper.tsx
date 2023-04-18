@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import Button from "@mui/material/Button";
 import { ICategoryCreateUpdate, ICategoryTranslation } from "@/types/category";
 import EntityVisibilityForm from "@/components/Dashboard/Generic/EntityVisibilityForm";
+import ProductCategorySelect from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductCategorySelect";
 
 export enum SetCategoryAction {
   SetTranslation,
@@ -90,6 +91,13 @@ const CategoryEditorWrapper = ({
     }
   };
 
+  const setPublished = (published: boolean) => {
+    dispatch({
+      type: SetCategoryAction.SetPublished,
+      payload: { published: published },
+    });
+  };
+  
   return (
     <>
       <TopLineWithReturn
@@ -105,10 +113,13 @@ const CategoryEditorWrapper = ({
           />
         </Grid>
         <Grid item md={4} xs={12}>
+          {/*<ProductCategorySelect*/}
+          {/*  state={}*/}
+          {/*  dispatch={}*/}
+          {/*/>*/}
           <EntityVisibilityForm
             isPublished={category.published}
-            dispatch={dispatch}
-            dispatchType={SetCategoryAction.SetPublished}
+            setValue={setPublished}
           />
         </Grid>
       </Grid>

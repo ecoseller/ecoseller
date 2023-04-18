@@ -36,6 +36,7 @@ import {
 import { postProduct, putProduct } from "@/api/country/product/product";
 import { IPriceList } from "@/types/localization";
 import ProductTypeSelect from "./Product/ProductTypeSelect";
+import { SetCategoryAction } from "@/components/Dashboard/Catalog/Categories/Editor/CategoryEditorWrapper";
 
 export interface ISetProductStateAction {
   type: ActionSetProduct;
@@ -224,6 +225,13 @@ const ProductEditorWrapper = ({
       });
   };
 
+  const setPublished = (published: boolean) => {
+    dispatchProductState({
+      type: ActionSetProduct.SETPUBLISHED,
+      payload: { published: published },
+    });
+  };
+  
   // console.log("productState", productState);
 
   return (
@@ -285,8 +293,7 @@ const ProductEditorWrapper = ({
           />
           <EntityVisibilityForm
             isPublished={productState.published || false}
-            dispatch={dispatchProductState}
-            dispatchType={ActionSetProduct.SETPUBLISHED}
+            setValue={setPublished}
           />
         </Grid>
       </Grid>

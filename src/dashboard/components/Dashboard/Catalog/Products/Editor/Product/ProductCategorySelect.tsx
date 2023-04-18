@@ -29,7 +29,7 @@ const ProductCategorySelect = ({
   // simple select with categories
   // const [categoryId, setCategoryId] = useState<string>("");
 
-  const { data: categories } = useSWRImmutable("/category/list");
+  const { data: categories } = useSWRImmutable("/category/");
 
   const setCategoryId = (id: number) => {
     dispatch({
