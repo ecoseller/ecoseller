@@ -10,12 +10,7 @@ import EditorCard from "@/components/Dashboard/Generic/EditorCard";
 import CollapsableContentWithTitle from "@/components/Dashboard/Generic/CollapsableContentWithTitle";
 // mui
 import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import Typography from "@mui/material/Typography";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
@@ -58,7 +53,6 @@ const ProductTranslatedFields = ({
   // const [title, setTitle] = useState<string>("");
   // const [slug, setSlug] = useState<string>("");
   const [editSlug, setEditSlug] = useState<boolean>(false);
-  const [description, setDescription] = useState<string>("");
 
   useEffect(() => {
     if (!editSlug && state?.title != undefined) {
@@ -96,6 +90,20 @@ const ProductTranslatedFields = ({
           language,
           data: {
             slug: slug,
+          },
+        },
+      },
+    });
+  };
+
+  const setShortDescription = (text: string) => {
+    dispatch({
+      type: ActionSetProduct.SETTRANSLATION,
+      payload: {
+        translation: {
+          language,
+          data: {
+            short_description: text,
           },
         },
       },
@@ -161,6 +169,16 @@ const ProductTranslatedFields = ({
                 </IconButton>
               </InputAdornment>
             ),
+          }}
+        />
+        <TextField
+          label="Short description"
+          value={state?.short_description || ""}
+          multiline
+          onChange={(
+            e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+          ) => {
+            setShortDescription(e.target.value);
           }}
         />
         <EditorJSField
