@@ -29,8 +29,8 @@ export const getCategory = async (id: string) => {
 };
 
 /**
- *
- * @param id
+ * Update properties of the selected category
+ * @param id id of the category to update
  * @param updatedCategory
  */
 export const updateCategory = async (
@@ -41,7 +41,7 @@ export const updateCategory = async (
 };
 
 /**
- *
+ * Delete category by its id
  * @param id
  */
 export const deleteCategory = async (id: string) => {

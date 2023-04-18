@@ -11,7 +11,6 @@ import Button from "@mui/material/Button";
 import { ICategoryEditable, ICategoryTranslation } from "@/types/category";
 import EntityVisibilityForm from "@/components/Dashboard/Generic/EntityVisibilityForm";
 import CategorySelectForm from "@/components/Dashboard/Generic/CategorySelectForm";
-import { ActionSetProduct } from "@/types/product";
 
 export enum SetCategoryAction {
   SetTranslation,
