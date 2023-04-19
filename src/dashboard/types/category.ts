@@ -12,17 +12,17 @@ export interface ICategoryTranslation {
 /**
  * Interface used for creating or updating a Category
  */
-export interface ICategoryCreateUpdate {
+export interface ICategoryEditable {
   published: boolean;
-
   translations: { [locale: string]: ICategoryTranslation };
+  parent: number | null;
 }
 
 /**
  * Interface containing detailed info about a Category
  * (including all available translations of localized fields)
  */
-export interface ICategoryDetail extends ICategoryCreateUpdate {
+export interface ICategoryDetail extends ICategoryEditable {
   id: number;
   create_at: string;
   update_at: string;

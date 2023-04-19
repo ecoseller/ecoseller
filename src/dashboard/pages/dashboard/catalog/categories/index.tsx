@@ -7,6 +7,7 @@ import { getAllCategories } from "@/api/category/category";
 import { InferGetServerSidePropsType } from "next";
 import CategoryList from "@/components/Dashboard/Catalog/Categories/List/CategoryList";
 import CategoryListTopLine from "@/components/Dashboard/Catalog/Categories/List/TopLine";
+import Card from "@mui/material/Card";
 
 const CategoriesPage = ({
   categories,
@@ -15,9 +16,9 @@ const CategoriesPage = ({
     <DashboardLayout>
       <Container maxWidth="xl">
         <CategoryListTopLine />
-        <>
+        <Card elevation={0}>
           <CategoryList categories={categories} />
-        </>
+        </Card>
       </Container>
     </DashboardLayout>
   );

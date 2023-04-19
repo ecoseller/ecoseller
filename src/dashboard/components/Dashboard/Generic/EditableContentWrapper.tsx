@@ -9,26 +9,43 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Stack from "@mui/material/Stack";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import footerStyles from "./Footer.module.scss";
 
-const PRODUCTLIST_PATH = "/dashboard/catalog/products";
+export enum PrimaryButtonAction {
+  Save = "Save",
+  Create = "Create",
+}
 
-interface IDashboardContentWithSaveFooter {
+interface IEditableContentWrapperProps {
   children: React.ReactNode;
-  onSave?: () => Promise<void>;
+  onButtonClick: () => Promise<void>;
   preventNavigation: boolean;
   setPreventNavigation: (value: boolean) => void;
-  primaryButtonTitle?: string;
-  returnPath?: string;
+  primaryButtonTitle?: PrimaryButtonAction;
+  returnPath: string;
 }
-const DashboardContentWithSaveFooter = ({
+
+/**
+ * Wrapper for editable content (such as forms)
+ *
+ * Contains footer with 2 buttons - primary button (whose title can be configured) and `Back` button
+ *
+ * @param children children components
+ * @param onButtonClick function to call when primary button is clicked
+ * @param preventNavigation When this variable is set to `true`, the user is prevented from navigating to another page
+ * Furthermore, a form showing that there are unsaved changes is displayed.
+ * @param setPreventNavigation function for setting `preventNavigation`
+ * @param primaryButtonTitle label of the primary button
+ * @param returnPath Path where to return when `Back` button is clicked
+ * @constructor
+ */
+const EditableContentWrapper = ({
   children,
-  onSave,
+  onButtonClick,
   preventNavigation,
   setPreventNavigation,
-  primaryButtonTitle = "Save",
+  primaryButtonTitle = PrimaryButtonAction.Save,
   returnPath,
-}: IDashboardContentWithSaveFooter) => {
+}: IEditableContentWrapperProps) => {
   const router = useRouter();
 
   const [saveDialogOpen, setSaveDialogOpen] = useState<boolean>(false);
@@ -43,8 +60,8 @@ const DashboardContentWithSaveFooter = ({
   // }, [isSaved]);
 
   const innerOnSave = async () => {
-    if (onSave) {
-      await onSave();
+    if (onButtonClick) {
+      await onButtonClick();
       setPreventNavigation(false);
     }
     // setIsSaved(true);
@@ -98,12 +115,9 @@ const DashboardContentWithSaveFooter = ({
             <Button
               variant="outlined"
               onClick={() => {
-                router.push(
-                  // returnPath ? returnPath : "/dashboard/catalog/products"
-                  {
-                    pathname: returnPath ? returnPath : PRODUCTLIST_PATH,
-                  }
-                );
+                router.push({
+                  pathname: returnPath,
+                });
               }}
             >
               Back
@@ -168,4 +182,4 @@ const DashboardContentWithSaveFooter = ({
   );
 };
 
-export default DashboardContentWithSaveFooter;
+export default EditableContentWrapper;

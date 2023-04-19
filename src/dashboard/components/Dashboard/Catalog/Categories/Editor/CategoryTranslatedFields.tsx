@@ -10,13 +10,15 @@ import { ILanguage } from "@/types/localization";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
-import { ICategoryCreateUpdate } from "@/types/category";
-import { Action } from "@/components/Dashboard/Catalog/Categories/Editor/CategoryEditorWrapper";
-import { ActionSetProduct } from "@/types/product";
+import { ICategoryEditable } from "@/types/category";
+import {
+  Action,
+  SetCategoryAction,
+} from "@/components/Dashboard/Catalog/Categories/Editor/CategoryEditorWrapper";
 
 interface ICategoryTranslatedFieldsProps {
   languages: ILanguage[];
-  category: ICategoryCreateUpdate;
+  category: ICategoryEditable;
   dispatch: React.Dispatch<Action>;
 }
 
@@ -41,7 +43,7 @@ const CategoryTranslatedFields = ({
 
   const setTitle = (title: string) => {
     dispatch({
-      type: "translation",
+      type: SetCategoryAction.SetTranslation,
       payload: {
         translation: {
           language: currentLanguage,
@@ -55,7 +57,7 @@ const CategoryTranslatedFields = ({
 
   const setSlug = (slug: string) => {
     dispatch({
-      type: "translation",
+      type: SetCategoryAction.SetTranslation,
       payload: {
         translation: {
           language: currentLanguage,
@@ -69,7 +71,7 @@ const CategoryTranslatedFields = ({
 
   const setDescription = (description: string) => {
     dispatch({
-      type: "translation",
+      type: SetCategoryAction.SetTranslation,
       payload: {
         translation: {
           language: currentLanguage,

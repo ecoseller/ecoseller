@@ -4,64 +4,76 @@ import CategoryTranslatedFields from "@/components/Dashboard/Catalog/Categories/
 import React, { useEffect, useReducer, useState } from "react";
 import { getLanguages } from "@/api/country/country";
 import { ILanguage } from "@/types/localization";
-import DashboardContentWithSaveFooter from "@/components/Dashboard/Generic/EditableContent";
-import { addCategory } from "@/api/category/category";
+import EditableContentWrapper, {
+  PrimaryButtonAction,
+} from "@/components/Dashboard/Generic/EditableContentWrapper";
+import { addCategory, updateCategory } from "@/api/category/category";
 import { useRouter } from "next/router";
 import Button from "@mui/material/Button";
-import { ICategoryCreateUpdate, ICategoryTranslation } from "@/types/category";
+import { ICategoryEditable } from "@/types/category";
+import EntityVisibilityForm from "@/components/Dashboard/Generic/Forms/EntityVisibilityForm";
+import CategorySelectForm from "@/components/Dashboard/Generic/Forms/CategorySelectForm";
+
+interface ICategoryEditorWrapperProps {
+  initialCategory: ICategoryEditable;
+  creatingNew: boolean;
+  title: string;
+  categoryId?: string;
+}
+
+export enum SetCategoryAction {
+  SetTranslation,
+  RecreateInitState,
+  SetPublished,
+  SetParentCategory,
+}
 
 export interface Action {
-  type: string;
+  type: SetCategoryAction;
   payload: any;
 }
 
-// TODO: use enums & typing
-function reducer(
-  state: ICategoryCreateUpdate,
-  action: Action
-): ICategoryCreateUpdate {
-  switch (action.type) {
-    case "translation": {
-      return {
-        ...state,
-        translations: {
-          ...state.translations,
-          [action.payload.translation.language]: {
-            ...state.translations[action.payload.translation.language],
-            ...action.payload.translation.data,
+const CategoryEditorWrapper = ({
+  initialCategory,
+  creatingNew,
+  title,
+  categoryId = "",
+}: ICategoryEditorWrapperProps) => {
+  function reducer(
+    state: ICategoryEditable,
+    action: Action
+  ): ICategoryEditable {
+    switch (action.type) {
+      case SetCategoryAction.SetTranslation:
+        setPreventNavigation(true);
+        return {
+          ...state, // use the previous state as a base
+          translations: {
+            // update `translations` field
+            ...state.translations, // use the previous `translations` state as a base
+            [action.payload.translation.language]: {
+              // update `translations[language]` field
+              ...state.translations[action.payload.translation.language], // use the previous `translations[language]` state as a base
+              ...action.payload.translation.data, // use the data from payload
+            },
           },
-        },
-      };
+        };
+      case SetCategoryAction.SetPublished:
+        setPreventNavigation(true);
+        return { ...state, published: action.payload.published };
+      case SetCategoryAction.SetParentCategory:
+        setPreventNavigation(true);
+        return { ...state, parent: action.payload.parent };
+      case SetCategoryAction.RecreateInitState:
+        return action.payload;
+      default:
+        return state;
     }
-    default:
-      return state;
   }
-}
-
-const CategoryEditorWrapper = () => {
-  // TODO: load dynamically
-  const emptyCategory: ICategoryCreateUpdate = {
-    published: true,
-    translations: {
-      en: {
-        slug: "",
-        title: "",
-        description: "",
-        meta_description: "",
-        meta_title: "",
-      },
-      cs: {
-        slug: "",
-        title: "",
-        description: "",
-        meta_description: "",
-        meta_title: "",
-      },
-    },
-  };
 
   const [languages, setLanguages] = useState<ILanguage[]>([]);
-  const [category, dispatch] = useReducer(reducer, emptyCategory);
+  const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
+  const [category, dispatch] = useReducer(reducer, initialCategory);
 
   const router = useRouter();
 
@@ -71,24 +83,57 @@ const CategoryEditorWrapper = () => {
     });
   }, []);
 
-  const save = () => {
-    addCategory(category).then(() => {
-      router.push("/dashboard/catalog/categories");
+  useEffect(() => {
+    dispatch({
+      type: SetCategoryAction.RecreateInitState,
+      payload: initialCategory,
+    });
+  }, [initialCategory]);
+
+  const save = async () => {
+    if (creatingNew) {
+      addCategory(category).then(() => {
+        router.push("/dashboard/catalog/categories");
+      });
+    } else {
+      updateCategory(categoryId, category).then(() => {
+        router.push("/dashboard/catalog/categories");
+      });
+    }
+  };
+
+  const setPublished = (published: boolean) => {
+    dispatch({
+      type: SetCategoryAction.SetPublished,
+      payload: { published: published },
+    });
+  };
+
+  const setParentCategory = (categoryId: number) => {
+    dispatch({
+      type: SetCategoryAction.SetParentCategory,
+      payload: { parent: categoryId },
     });
   };
 
   return (
-    <>
+    <EditableContentWrapper
+      primaryButtonTitle={
+        creatingNew ? PrimaryButtonAction.Create : PrimaryButtonAction.Save
+      } // To distinguish between create and update actions
+      preventNavigation={preventNavigation}
+      setPreventNavigation={setPreventNavigation}
+      onButtonClick={async () => {
+        await save();
+      }}
+      returnPath={"/dashboard/catalog/categories"}
+    >
       <TopLineWithReturn
-        title="Add category"
+        title={title}
         returnPath="/dashboard/catalog/categories"
       />
       <Grid container spacing={2}>
         <Grid item md={8} xs={12}>
-          {/*<ProductTranslatedFieldsWrapper*/}
-          {/*  state={productState}*/}
-          {/*  dispatch={dispatchProductState}*/}
-          {/*/>*/}
           <CategoryTranslatedFields
             languages={languages}
             category={category}
@@ -96,21 +141,18 @@ const CategoryEditorWrapper = () => {
           />
         </Grid>
         <Grid item md={4} xs={12}>
-          {/*<ProductCategorySelect*/}
-          {/*  state={productState}*/}
-          {/*  dispatch={dispatchProductState}*/}
-          {/*/>*/}
-          TODO: add published field & Parent category HERE
+          <CategorySelectForm
+            categoryId={category.parent}
+            setCategoryId={setParentCategory}
+            title="Parent category"
+          />
+          <EntityVisibilityForm
+            isPublished={category.published}
+            setValue={setPublished}
+          />
         </Grid>
       </Grid>
-      <Button
-        onClick={() => {
-          save();
-        }}
-      >
-        Save
-      </Button>
-    </>
+    </EditableContentWrapper>
   );
 };
 

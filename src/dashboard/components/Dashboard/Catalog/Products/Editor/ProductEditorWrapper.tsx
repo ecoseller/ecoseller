@@ -3,22 +3,18 @@
 // next.js
 import { useRouter } from "next/router";
 // libs
-import useSWR from "swr";
-import useSWRImmutable from "swr/immutable";
-
 // layout
-import DashboardLayout from "@/pages/dashboard/layout"; //react
-import { ReactElement, useEffect, useReducer, useState } from "react";
-import RootLayout from "@/pages/layout";
+import { useEffect, useReducer, useState } from "react";
 // components
-import DashboardContentWithSaveFooter from "@/components/Dashboard/Generic/EditableContent";
+import EditableContentWrapper, {
+  PrimaryButtonAction,
+} from "@/components/Dashboard/Generic/EditableContentWrapper";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 import ProductVariantsEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVariantsEditor";
 import ProductMediaEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductMediaEditor";
 import ProductVariantPricesEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVariantPricesEditor";
-import ProductVisibilitySelect from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVisibilitySelect";
-import ProductCategorySelect from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductCategorySelect";
-import ProductBasicInfo from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductBasicInfo";
+import EntityVisibilityForm from "@/components/Dashboard/Generic/Forms/EntityVisibilityForm";
+import CategorySelectForm from "@/components/Dashboard/Generic/Forms/CategorySelectForm";
 import ProductTranslatedFieldsWrapper from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductTranslatedFields";
 // mui
 import Grid from "@mui/material/Grid";
@@ -224,14 +220,30 @@ const ProductEditorWrapper = ({
       });
   };
 
+  const setPublished = (published: boolean) => {
+    dispatchProductState({
+      type: ActionSetProduct.SETPUBLISHED,
+      payload: { published: published },
+    });
+  };
+
+  const setCategoryId = (categoryId: number) => {
+    dispatchProductState({
+      type: ActionSetProduct.SETCATEGORY,
+      payload: { category: categoryId },
+    });
+  };
+
   // console.log("productState", productState);
 
   return (
-    <DashboardContentWithSaveFooter
-      primaryButtonTitle={productData ? "Save" : "Create"} // To distinguish between create and update actions
+    <EditableContentWrapper
+      primaryButtonTitle={
+        productData ? PrimaryButtonAction.Save : PrimaryButtonAction.Create
+      } // To distinguish between create and update actions
       preventNavigation={preventNavigation}
       setPreventNavigation={setPreventNavigation}
-      onSave={async () => {
+      onButtonClick={async () => {
         if (!productData) {
           // save product
           const resp = await saveProductAndRedirect();
@@ -273,9 +285,9 @@ const ProductEditorWrapper = ({
           />
         </Grid>
         <Grid item md={4} xs={12}>
-          <ProductCategorySelect
-            state={productState}
-            dispatch={dispatchProductState}
+          <CategorySelectForm
+            categoryId={productState.category}
+            setCategoryId={setCategoryId}
           />
           <ProductTypeSelect
             types={productTypeData}
@@ -283,9 +295,9 @@ const ProductEditorWrapper = ({
             dispatch={dispatchProductState}
             disabled={productData ? true : false}
           />
-          <ProductVisibilitySelect
-            state={productState}
-            dispatch={dispatchProductState}
+          <EntityVisibilityForm
+            isPublished={productState.published || false}
+            setValue={setPublished}
           />
         </Grid>
       </Grid>
@@ -304,7 +316,7 @@ const ProductEditorWrapper = ({
           </Alert>
         </Snackbar>
       ) : null}
-    </DashboardContentWithSaveFooter>
+    </EditableContentWrapper>
   );
 };
 
