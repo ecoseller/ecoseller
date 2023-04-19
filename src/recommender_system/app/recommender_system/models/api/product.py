@@ -5,7 +5,7 @@ from recommender_system.models.api.base import ApiBaseModel
 from recommender_system.models.api.product_translation import (
     ProductTranslation,
 )
-from recommender_system.models.api.product_variant import ProductVariant
+from recommender_system.models.stored.product import ProductModel
 
 
 class Product(ApiBaseModel):
@@ -16,9 +16,12 @@ class Product(ApiBaseModel):
 
     id: int
     published: bool
-    category_id: int
+    category_id: Optional[int]
     type_id: Optional[int]
     product_translations: List[ProductTranslation]
-    product_variants: List[ProductVariant]
+    product_variants: List[str]
     update_at: datetime
     create_at: datetime
+
+    class Meta:
+        stored_model_class = ProductModel

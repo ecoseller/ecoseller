@@ -20,7 +20,7 @@ class AttributeModel(ProductStoredBaseModel):
     """
 
     id: int
-    value: str
+    value: Optional[str]
     order: Optional[int]
 
     attribute_type_id: int

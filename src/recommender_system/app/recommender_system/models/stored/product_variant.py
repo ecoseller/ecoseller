@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, List, TYPE_CHECKING
+from typing import Any, List, Optional, TYPE_CHECKING
 
 from recommender_system.models.api.base import ApiBaseModel
 from recommender_system.models.stored.base import (
@@ -20,7 +20,7 @@ class ProductVariantModel(ProductStoredBaseModel):
 
     sku: str
     ean: str
-    weight: float
+    weight: Optional[float]
     update_at: datetime
     create_at: datetime
 

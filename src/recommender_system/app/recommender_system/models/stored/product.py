@@ -24,7 +24,7 @@ class ProductModel(ProductStoredBaseModel):
 
     id: int
     published: bool
-    category_id: int
+    category_id: Optional[int]
     update_at: datetime
     create_at: datetime
 

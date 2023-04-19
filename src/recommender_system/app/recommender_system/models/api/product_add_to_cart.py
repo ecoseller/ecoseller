@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Optional
 
 from recommender_system.models.api.base import ApiBaseModel
+from recommender_system.models.stored.product_add_to_cart import ProductAddToCartModel
 
 
 class ProductAddToCart(ApiBaseModel):
@@ -15,3 +16,6 @@ class ProductAddToCart(ApiBaseModel):
     product_id: int
     product_variant_sku: str
     create_at: datetime
+
+    class Meta:
+        stored_model_class = ProductAddToCartModel

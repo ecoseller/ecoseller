@@ -2,6 +2,7 @@ from django.db import models
 from parler.models import TranslatableModel, TranslatedFields
 from ckeditor.fields import RichTextField
 from django_editorjs_fields import EditorJsJSONField
+from api.recommender_system import RecommenderSystemApi
 from core.models import (
     SortableModel,
 )
@@ -24,6 +25,26 @@ class ProductVariant(models.Model):
     def __str__(self) -> str:
         return "sku: {} ean: {}".format(self.sku, self.ean)
 
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )
+        data = {
+            "_model_class": self.__class__.__name__,
+            "sku": self.sku,
+            "ean": self.ean,
+            "weight": self.weight,
+            "update_at": self.update_at.isoformat(),
+            "create_at": self.create_at.isoformat(),
+            "attributes": [attribute.id for attribute in self.attributes.all()],
+        }
+        RecommenderSystemApi.store_object(data=data)
+
 
 class ProductType(models.Model):
     name = models.CharField(max_length=200, blank=True, null=True)
@@ -33,6 +54,27 @@ class ProductType(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )
+        data = {
+            "_model_class": self.__class__.__name__,
+            "id": self.id,
+            "name": self.name,
+            "allowed_attribute_types": [
+                type.id for type in self.allowed_attribute_types.all()
+            ],
+            "update_at": self.update_at.isoformat(),
+            "create_at": self.create_at.isoformat(),
+        }
+        RecommenderSystemApi.store_object(data=data)
 
 
 class Product(TranslatableModel):
@@ -93,6 +135,40 @@ class Product(TranslatableModel):
             .first()
         )
 
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )
+        data = {
+            "_model_class": self.__class__.__name__,
+            "id": self.id,
+            "published": self.published,
+            "type": self.type.id,
+            "category": self.category.id,
+            "product_translations": [
+                {
+                    "id": translation.id,
+                    "language_code": translation.language_code,
+                    "title": translation.title,
+                    "meta_title": translation.meta_title,
+                    "description": translation.description,
+                    "meta_description": translation.meta_description,
+                    "short_description": translation.short_description,
+                    "slug": translation.slug,
+                }
+                for translation in self.translations
+            ],
+            "product_variants": [variant.id for variant in self.product_variants.all()],
+            "update_at": self.create_at.isoformat(),
+            "create_at": self.create_at.isoformat(),
+        }
+        RecommenderSystemApi.store_object(data=data)
+
 
 # Attributes
 class AttributeType(models.Model):
@@ -114,6 +190,23 @@ class AttributeType(models.Model):
     def __str__(self) -> str:
         return "{} ({})".format(self.type_name, self.unit)
 
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )
+        data = {
+            "_model_class": "AttributeType",  # Until Base and Extension attributes are joined
+            "id": self.id,
+            "type_name": self.type_name,
+            "unit": self.unit,
+        }
+        RecommenderSystemApi.store_object(data=data)
+
 
 class BaseAttribute(models.Model):
     type = models.ForeignKey(
@@ -127,6 +220,25 @@ class BaseAttribute(models.Model):
 
     def __str__(self) -> str:
         return "{}: {}".format(self.type.type_name, self.value)
+
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )
+        data = {
+            "_model_class": "Attribute",  # Until Base and Extension attributes are joined
+            "id": self.id,
+            "type": self.type.id,
+            "value": self.value,
+            "order": self.order,
+            "attributes": [attribute.id for attribute in self.ext_attributes.all()],
+        }
+        RecommenderSystemApi.store_object(data=data)
 
 
 class ExtAttributeType(models.Model):
@@ -146,6 +258,23 @@ class ExtAttributeType(models.Model):
     def __str__(self) -> str:
         return "{} ({})".format(self.type_name, self.unit)
 
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )
+        data = {
+            "_model_class": "AttributeType",  # Until Base and Extension attributes are joined
+            "id": self.id,
+            "type_name": self.type_name,
+            "unit": self.unit,
+        }
+        RecommenderSystemApi.store_object(data=data)
+
 
 class ExtensionAttribute(models.Model):
     type = models.ForeignKey("ExtAttributeType", on_delete=models.CASCADE)
@@ -154,6 +283,25 @@ class ExtensionAttribute(models.Model):
 
     def __str__(self) -> str:
         return "{}: {}".format(self.type.type_name, self.value)
+
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )
+        data = {
+            "_model_class": "Attribute",  # Until Base and Extension attributes are joined
+            "id": self.id,
+            "type": self.type.id,
+            "value": self.value,
+            "order": self.order,
+            "attributes": [attribute.id for attribute in self.ext_attributes.all()],
+        }
+        RecommenderSystemApi.store_object(data=data)
 
 
 # Prices

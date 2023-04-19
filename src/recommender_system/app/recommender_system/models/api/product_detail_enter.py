@@ -2,6 +2,9 @@ from datetime import datetime
 from typing import Optional
 
 from recommender_system.models.api.base import ApiBaseModel
+from recommender_system.models.stored.product_detail_enter import (
+    ProductDetailEnterModel,
+)
 
 
 class ProductDetailEnter(ApiBaseModel):
@@ -18,3 +21,6 @@ class ProductDetailEnter(ApiBaseModel):
     recommendation_type: Optional[str]
     position: Optional[int]
     create_at: datetime
+
+    class Meta:
+        stored_model_class = ProductDetailEnterModel
