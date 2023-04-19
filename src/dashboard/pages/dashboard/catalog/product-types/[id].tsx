@@ -1,17 +1,17 @@
 // /dashboard/catalog/products-types
 // next.js
 // libraries
-import useSWR from "swr";
 // layout
 import DashboardLayout from "@/pages/dashboard/layout";
 //react
 import { ReactElement, useEffect, useState } from "react";
 import RootLayout from "@/pages/layout";
 // components
-import EditableContentWrapper from "@/components/Dashboard/Generic/EditableContentWrapper";
+import EditableContentWrapper, { PrimaryButtonAction } from "@/components/Dashboard/Generic/EditableContentWrapper";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 import ProductTypeGeneralInformation from "@/components/Dashboard/Catalog/ProducType/ProductTypeGeneralInformation";
-import ProductTypeAllowedAttribtuesSelect from "@/components/Dashboard/Catalog/ProducType/ProductTypeAllowedAttribtuesSelect";
+import ProductTypeAllowedAttribtuesSelect
+  from "@/components/Dashboard/Catalog/ProducType/ProductTypeAllowedAttribtuesSelect";
 // mui
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
@@ -19,10 +19,9 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 // types
 import { putProductType } from "@/api/product/types";
-import { IAttributeType, IBaseAttribute, IProductType } from "@/types/product";
+import { IAttributeType, IProductType } from "@/types/product";
 // api
 import { axiosPrivate } from "@/utils/axiosPrivate";
-import Button from "@mui/material/Button";
 import { GetServerSideProps } from "next";
 
 interface IProps {
@@ -66,7 +65,7 @@ const DashboardProductTypeDetailPage = ({
       <Container maxWidth="xl">
         <Stack>
           <EditableContentWrapper
-            primaryButtonTitle={productType ? "Save" : "Create"} // To distinguish between create and update actions
+            primaryButtonTitle={productType ? PrimaryButtonAction.Save : PrimaryButtonAction.Create} // To distinguish between create and update actions
             preventNavigation={preventNavigation}
             setPreventNavigation={setPreventNavigation}
             onButtonClick={async () => {

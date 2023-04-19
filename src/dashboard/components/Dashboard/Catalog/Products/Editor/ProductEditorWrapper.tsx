@@ -12,8 +12,8 @@ import ProductVariantsEditor from "@/components/Dashboard/Catalog/Products/Edito
 import ProductMediaEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductMediaEditor";
 import ProductVariantPricesEditor
   from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVariantPricesEditor";
-import EntityVisibilityForm from "@/components/Dashboard/Generic/EntityVisibilityForm";
-import CategorySelectForm from "@/components/Dashboard/Generic/CategorySelectForm";
+import EntityVisibilityForm from "@/components/Dashboard/Generic/Forms/EntityVisibilityForm";
+import CategorySelectForm from "@/components/Dashboard/Generic/Forms/CategorySelectForm";
 import ProductTranslatedFieldsWrapper
   from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductTranslatedFields";
 // mui

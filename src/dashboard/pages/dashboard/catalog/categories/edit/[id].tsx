@@ -49,7 +49,7 @@ const CategoryEditPage = () => {
     }
   }, [categoryId]);
 
-  function deleteCat() {
+  async function deleteCat() {
     deleteCategory(categoryId).then(() => {
       router.push("/dashboard/catalog/categories");
     });

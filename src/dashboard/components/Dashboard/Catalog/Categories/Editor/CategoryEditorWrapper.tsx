@@ -9,8 +9,8 @@ import { addCategory, updateCategory } from "@/api/category/category";
 import { useRouter } from "next/router";
 import Button from "@mui/material/Button";
 import { ICategoryEditable } from "@/types/category";
-import EntityVisibilityForm from "@/components/Dashboard/Generic/EntityVisibilityForm";
-import CategorySelectForm from "@/components/Dashboard/Generic/CategorySelectForm";
+import EntityVisibilityForm from "@/components/Dashboard/Generic/Forms/EntityVisibilityForm";
+import CategorySelectForm from "@/components/Dashboard/Generic/Forms/CategorySelectForm";
 
 interface ICategoryEditorWrapperProps {
   initialCategory: ICategoryEditable;

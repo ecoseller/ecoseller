@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Typography from "@mui/material/Typography";
-import { ISetProductStateAction } from "../Catalog/Products/Editor/ProductEditorWrapper";
+import { ISetProductStateAction } from "../../Catalog/Products/Editor/ProductEditorWrapper";
 import React from "react";
 
 interface IEntityVisibilityFormProps {
