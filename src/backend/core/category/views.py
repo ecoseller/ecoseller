@@ -26,7 +26,7 @@ class CategoryViewDashboard(APIView):
         Language-specific data are returned only in the selected language (set in `Accept-Language` header).
         If this header isn't present, Django app language is used instead.
         """
-        categories = Category.objects.filter(published=True)
+        categories = Category.objects.all()  # filter(published=True)
         serializer = CategorySerializer(
             categories, many=True, context={"request": request}
         )
@@ -52,13 +52,13 @@ class CategoryDetailViewDashboard(RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryDetailSerializer
 
-    def perform_destroy(self, instance):
-        """
-        Custom method for deletion.
-        Marks the selected category as "not published".
-        """
-        instance.published = False
-        instance.save()
+    # def perform_destroy(self, instance):
+    #     """
+    #     Custom method for deletion.
+    #     Marks the selected category as "not published".
+    #     """
+    #     instance.published = False
+    #     instance.save()
 
 
 @permission_classes([AllowAny])  # TODO: use authentication
