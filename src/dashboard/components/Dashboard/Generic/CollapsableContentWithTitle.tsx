@@ -11,6 +11,7 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 interface ICollapsableContentWithTitleProps {
   title: string;
   children: React.ReactNode;
+  defaultOpen?: boolean;
 }
 
 /**
@@ -22,8 +23,9 @@ interface ICollapsableContentWithTitleProps {
 const CollapsableContentWithTitle = ({
   title,
   children,
+  defaultOpen = true,
 }: ICollapsableContentWithTitleProps) => {
-  const [open, setOpen] = useState<boolean>(true);
+  const [open, setOpen] = useState<boolean>(defaultOpen);
 
   return (
     <>

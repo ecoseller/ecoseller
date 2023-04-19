@@ -32,6 +32,7 @@ import {
 import { postProduct, putProduct } from "@/api/country/product/product";
 import { IPriceList } from "@/types/localization";
 import ProductTypeSelect from "./Product/ProductTypeSelect";
+import ProductTranslatedSEOFieldsWrapper from "./Product/ProductTranslatedSEOFields";
 
 export interface ISetProductStateAction {
   type: ActionSetProduct;
@@ -262,6 +263,10 @@ const ProductEditorWrapper = ({
       <Grid container spacing={2}>
         <Grid item md={8} xs={12}>
           <ProductTranslatedFieldsWrapper
+            state={productState}
+            dispatch={dispatchProductState}
+          />
+          <ProductTranslatedSEOFieldsWrapper
             state={productState}
             dispatch={dispatchProductState}
           />
