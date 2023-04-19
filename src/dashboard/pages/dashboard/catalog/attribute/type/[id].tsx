@@ -7,7 +7,9 @@ import DashboardLayout from "@/pages/dashboard/layout";
 import { ReactElement, useEffect, useState } from "react";
 import RootLayout from "@/pages/layout";
 // components
-import EditableContentWrapper, { PrimaryButtonAction } from "@/components/Dashboard/Generic/EditableContentWrapper";
+import EditableContentWrapper, {
+  PrimaryButtonAction,
+} from "@/components/Dashboard/Generic/EditableContentWrapper";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 // mui
 import Container from "@mui/material/Container";
@@ -20,8 +22,7 @@ import { IAttributeType, IBaseAttribute } from "@/types/product";
 import { axiosPrivate } from "@/utils/axiosPrivate";
 import { GetServerSideProps } from "next";
 import { putAttributeType } from "@/api/product/attributes";
-import AttributeTypeGeneralInformation
-  from "@/components/Dashboard/Catalog/AttributeType/AttributeTypeGeneralInformation";
+import AttributeTypeGeneralInformation from "@/components/Dashboard/Catalog/AttributeType/AttributeTypeGeneralInformation";
 import BaseAttributeGrid from "@/components/Dashboard/Catalog/BaseAttribute/BaseAttributeGrid";
 import DeleteAttributeType from "@/components/Dashboard/Catalog/AttributeType/DeleteAttributeType";
 
@@ -62,7 +63,11 @@ const DashboardAttributeTypeDetailPage = ({ attributeType }: IProps) => {
       <Container maxWidth="xl">
         <Stack>
           <EditableContentWrapper
-            primaryButtonTitle={attributeType ? PrimaryButtonAction.Save : PrimaryButtonAction.Create} // To distinguish between create and update actions
+            primaryButtonTitle={
+              attributeType
+                ? PrimaryButtonAction.Save
+                : PrimaryButtonAction.Create
+            } // To distinguish between create and update actions
             preventNavigation={preventNavigation}
             setPreventNavigation={setPreventNavigation}
             onButtonClick={async () => {

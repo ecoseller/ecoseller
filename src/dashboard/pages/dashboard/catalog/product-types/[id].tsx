@@ -7,11 +7,12 @@ import DashboardLayout from "@/pages/dashboard/layout";
 import { ReactElement, useEffect, useState } from "react";
 import RootLayout from "@/pages/layout";
 // components
-import EditableContentWrapper, { PrimaryButtonAction } from "@/components/Dashboard/Generic/EditableContentWrapper";
+import EditableContentWrapper, {
+  PrimaryButtonAction,
+} from "@/components/Dashboard/Generic/EditableContentWrapper";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 import ProductTypeGeneralInformation from "@/components/Dashboard/Catalog/ProducType/ProductTypeGeneralInformation";
-import ProductTypeAllowedAttribtuesSelect
-  from "@/components/Dashboard/Catalog/ProducType/ProductTypeAllowedAttribtuesSelect";
+import ProductTypeAllowedAttribtuesSelect from "@/components/Dashboard/Catalog/ProducType/ProductTypeAllowedAttribtuesSelect";
 // mui
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
@@ -65,7 +66,11 @@ const DashboardProductTypeDetailPage = ({
       <Container maxWidth="xl">
         <Stack>
           <EditableContentWrapper
-            primaryButtonTitle={productType ? PrimaryButtonAction.Save : PrimaryButtonAction.Create} // To distinguish between create and update actions
+            primaryButtonTitle={
+              productType
+                ? PrimaryButtonAction.Save
+                : PrimaryButtonAction.Create
+            } // To distinguish between create and update actions
             preventNavigation={preventNavigation}
             setPreventNavigation={setPreventNavigation}
             onButtonClick={async () => {

@@ -27,7 +27,7 @@ const CategoryAddPage = () => {
         meta_title: "",
       },
     },
-    parent: null
+    parent: null,
   };
 
   return (

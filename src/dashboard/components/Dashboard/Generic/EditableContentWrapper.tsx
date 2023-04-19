@@ -10,9 +10,9 @@ import Stack from "@mui/material/Stack";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-export enum PrimaryButtonAction{
+export enum PrimaryButtonAction {
   Save = "Save",
-  Create = "Create"
+  Create = "Create",
 }
 
 interface IEditableContentWrapperProps {
@@ -26,14 +26,14 @@ interface IEditableContentWrapperProps {
 
 /**
  * Wrapper for editable content (such as forms)
- * 
+ *
  * Contains footer with 2 buttons - primary button (whose title can be configured) and `Back` button
- * 
+ *
  * @param children children components
  * @param onButtonClick function to call when primary button is clicked
- * @param preventNavigation When this variable is set to `true`, the user is prevented from navigating to another page 
+ * @param preventNavigation When this variable is set to `true`, the user is prevented from navigating to another page
  * Furthermore, a form showing that there are unsaved changes is displayed.
- * @param setPreventNavigation function for setting `preventNavigation` 
+ * @param setPreventNavigation function for setting `preventNavigation`
  * @param primaryButtonTitle label of the primary button
  * @param returnPath Path where to return when `Back` button is clicked
  * @constructor
@@ -115,11 +115,9 @@ const EditableContentWrapper = ({
             <Button
               variant="outlined"
               onClick={() => {
-                router.push(
-                  {
-                    pathname: returnPath,
-                  }
-                );
+                router.push({
+                  pathname: returnPath,
+                });
               }}
             >
               Back

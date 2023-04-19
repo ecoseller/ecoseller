@@ -4,7 +4,9 @@ import CategoryTranslatedFields from "@/components/Dashboard/Catalog/Categories/
 import React, { useEffect, useReducer, useState } from "react";
 import { getLanguages } from "@/api/country/country";
 import { ILanguage } from "@/types/localization";
-import EditableContentWrapper, { PrimaryButtonAction } from "@/components/Dashboard/Generic/EditableContentWrapper";
+import EditableContentWrapper, {
+  PrimaryButtonAction,
+} from "@/components/Dashboard/Generic/EditableContentWrapper";
 import { addCategory, updateCategory } from "@/api/category/category";
 import { useRouter } from "next/router";
 import Button from "@mui/material/Button";
@@ -23,7 +25,7 @@ export enum SetCategoryAction {
   SetTranslation,
   RecreateInitState,
   SetPublished,
-  SetParentCategory
+  SetParentCategory,
 }
 
 export interface Action {
@@ -37,7 +39,6 @@ const CategoryEditorWrapper = ({
   title,
   categoryId = "",
 }: ICategoryEditorWrapperProps) => {
-
   function reducer(
     state: ICategoryEditable,
     action: Action
@@ -47,9 +48,11 @@ const CategoryEditorWrapper = ({
         setPreventNavigation(true);
         return {
           ...state, // use the previous state as a base
-          translations: { // update `translations` field
+          translations: {
+            // update `translations` field
             ...state.translations, // use the previous `translations` state as a base
-            [action.payload.translation.language]: { // update `translations[language]` field
+            [action.payload.translation.language]: {
+              // update `translations[language]` field
               ...state.translations[action.payload.translation.language], // use the previous `translations[language]` state as a base
               ...action.payload.translation.data, // use the data from payload
             },
@@ -67,7 +70,7 @@ const CategoryEditorWrapper = ({
         return state;
     }
   }
-  
+
   const [languages, setLanguages] = useState<ILanguage[]>([]);
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
   const [category, dispatch] = useReducer(reducer, initialCategory);
@@ -115,7 +118,9 @@ const CategoryEditorWrapper = ({
 
   return (
     <EditableContentWrapper
-      primaryButtonTitle={creatingNew ? PrimaryButtonAction.Create : PrimaryButtonAction.Save} // To distinguish between create and update actions
+      primaryButtonTitle={
+        creatingNew ? PrimaryButtonAction.Create : PrimaryButtonAction.Save
+      } // To distinguish between create and update actions
       preventNavigation={preventNavigation}
       setPreventNavigation={setPreventNavigation}
       onButtonClick={async () => {

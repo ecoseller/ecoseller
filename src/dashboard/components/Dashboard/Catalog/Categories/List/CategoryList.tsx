@@ -1,21 +1,24 @@
 import { ICategoryLocalized } from "@/types/category";
 import React from "react";
-import { DataGrid, GridActionsCellItem, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridActionsCellItem,
+  GridColDef,
+  GridRenderCellParams,
+} from "@mui/x-data-grid";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 import EditIcon from "@mui/icons-material/Edit";
 import { useRouter } from "next/router";
 
-interface ICategoryListProps
-{
+interface ICategoryListProps {
   categories: ICategoryLocalized[];
 }
 
 const PAGE_SIZE = 30;
 const ROW_HEIGHT = 50;
 
-const CategoryList = ({ categories }: ICategoryListProps) =>
-{
+const CategoryList = ({ categories }: ICategoryListProps) => {
   const router = useRouter();
 
   const columns: GridColDef[] = [
@@ -25,7 +28,7 @@ const CategoryList = ({ categories }: ICategoryListProps) =>
       editable: false,
       maxWidth: 100,
       sortable: false,
-      disableColumnMenu: true
+      disableColumnMenu: true,
     },
     {
       field: "title",
@@ -33,7 +36,7 @@ const CategoryList = ({ categories }: ICategoryListProps) =>
       editable: false,
       flex: 1,
       sortable: false,
-      disableColumnMenu: true
+      disableColumnMenu: true,
     },
     {
       field: "published",
@@ -47,7 +50,7 @@ const CategoryList = ({ categories }: ICategoryListProps) =>
           <CheckCircleRoundedIcon />
         ) : (
           <CancelRoundedIcon />
-        )
+        ),
     },
     {
       field: "update_at",
@@ -55,7 +58,7 @@ const CategoryList = ({ categories }: ICategoryListProps) =>
       editable: false,
       flex: 1,
       sortable: false,
-      disableColumnMenu: true
+      disableColumnMenu: true,
     },
     {
       field: "actions",
@@ -65,25 +68,22 @@ const CategoryList = ({ categories }: ICategoryListProps) =>
       cellClassName: "actions",
       flex: 1,
       disableColumnMenu: true,
-      getActions: ({ id }) =>
-      {
+      getActions: ({ id }) => {
         return [
           <GridActionsCellItem
             icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
-            onClick={() =>
-            {
+            onClick={() => {
               router.push(`/dashboard/catalog/categories/edit/${id}`);
             }}
             color="inherit"
             key={"edit"}
-          />
+          />,
         ];
-      }
-    }
+      },
+    },
   ];
-
 
   return (
     <DataGrid
@@ -93,9 +93,9 @@ const CategoryList = ({ categories }: ICategoryListProps) =>
       initialState={{
         pagination: {
           paginationModel: {
-            pageSize: PAGE_SIZE
-          }
-        }
+            pageSize: PAGE_SIZE,
+          },
+        },
       }}
       autoHeight={true}
       disableRowSelectionOnClick

@@ -12,9 +12,7 @@ import EditorCard from "@/components/Dashboard/Generic/EditorCard";
 import CollapsableContentWithTitle from "@/components/Dashboard/Generic/CollapsableContentWithTitle";
 import Box from "@mui/material/Box";
 
-
-const CategoryEditPage = () =>
-{
+const CategoryEditPage = () => {
   const emptyCategory: ICategoryDetail = {
     published: true,
     translations: {
@@ -23,20 +21,20 @@ const CategoryEditPage = () =>
         title: "",
         description: "",
         meta_description: "",
-        meta_title: ""
+        meta_title: "",
       },
       cs: {
         slug: "",
         title: "",
         description: "",
         meta_description: "",
-        meta_title: ""
-      }
+        meta_title: "",
+      },
     },
     id: 0,
     create_at: "",
     update_at: "",
-    parent: null
+    parent: null,
   };
 
   const [category, setCategory] = useState<ICategoryDetail>(emptyCategory);
@@ -44,21 +42,16 @@ const CategoryEditPage = () =>
   const { id } = router.query;
   const categoryId = id?.toString() || "";
 
-  useEffect(() =>
-  {
-    if (categoryId.length > 0)
-    {
-      getCategory(categoryId).then((c) =>
-      {
+  useEffect(() => {
+    if (categoryId.length > 0) {
+      getCategory(categoryId).then((c) => {
         setCategory(c.data);
       });
     }
   }, [categoryId]);
 
-  async function deleteCat()
-  {
-    deleteCategory(categoryId).then(() =>
-    {
+  async function deleteCat() {
+    deleteCategory(categoryId).then(() => {
       router.push("/dashboard/catalog/categories");
     });
   }
@@ -90,8 +83,7 @@ const CategoryEditPage = () =>
   );
 };
 
-CategoryEditPage.getLayout = (page: ReactElement) =>
-{
+CategoryEditPage.getLayout = (page: ReactElement) => {
   return (
     <RootLayout>
       <DashboardLayout>{page}</DashboardLayout>

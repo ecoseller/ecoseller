@@ -13,27 +13,22 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { ICategoryLocalized } from "@/types/category";
 import { getAllCategories } from "@/api/category/category";
 
-interface ICategorySelectProps
-{
+interface ICategorySelectProps {
   categoryId: number | null | undefined;
   setCategoryId: (categoryId: number) => void;
   title?: string;
 }
 
 const CategorySelectForm = ({
-                              categoryId,
-                              setCategoryId,
-                              title = "Category"
-                            }: ICategorySelectProps) =>
-{
-
+  categoryId,
+  setCategoryId,
+  title = "Category",
+}: ICategorySelectProps) => {
   const [categories, setCategories] = useState<ICategoryLocalized[]>([]);
 
   // load categories from API
-  useEffect(() =>
-  {
-    getAllCategories().then((categories) =>
-    {
+  useEffect(() => {
+    getAllCategories().then((categories) => {
       setCategories(categories.data);
     });
   }, []);
@@ -45,13 +40,13 @@ const CategorySelectForm = ({
   //   });
   // };
 
-  const handleChange = (event: SelectChangeEvent) =>
-  {
-    const category = categories.find((c) => c.id.toString() === event.target.value);
+  const handleChange = (event: SelectChangeEvent) => {
+    const category = categories.find(
+      (c) => c.id.toString() === event.target.value
+    );
 
-    if (category !== undefined)
-    {
-      console.log(category.id)
+    if (category !== undefined) {
+      console.log(category.id);
       setCategoryId(category.id);
     }
   };
@@ -69,8 +64,7 @@ const CategorySelectForm = ({
             label="Category"
             onChange={handleChange}
           >
-            {categories?.map((category: ICategoryLocalized) =>
-            {
+            {categories?.map((category: ICategoryLocalized) => {
               return (
                 <MenuItem key={category.id} value={category.id.toString()}>
                   {category.title}

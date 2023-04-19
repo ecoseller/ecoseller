@@ -10,15 +10,15 @@ import React from "react";
 
 interface IEntityVisibilityFormProps {
   isPublished: boolean;
-  setValue: (isPublished: boolean) => void
+  setValue: (isPublished: boolean) => void;
 }
 
 /**
  * Component containing form used for entity visibility.
- * 
- * It contains 
+ *
+ * It contains
  * - `Visibility` heading
- * - single checkbox with `Published` label 
+ * - single checkbox with `Published` label
  *
  * @param isPublished determines if the entity is currently published
  * @param setValue function to call when checkbox value changes
@@ -26,7 +26,7 @@ interface IEntityVisibilityFormProps {
  */
 const EntityVisibilityForm = ({
   isPublished,
-  setValue
+  setValue,
 }: IEntityVisibilityFormProps) => {
   return (
     <EditorCard>

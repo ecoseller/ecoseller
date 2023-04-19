@@ -12,8 +12,7 @@ export interface ICategoryTranslation {
 /**
  * Interface used for creating or updating a Category
  */
-export interface ICategoryEditable
-{
+export interface ICategoryEditable {
   published: boolean;
   translations: { [locale: string]: ICategoryTranslation };
   parent: number | null;

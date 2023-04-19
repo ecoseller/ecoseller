@@ -6,23 +6,29 @@ import { useRouter } from "next/router";
 // layout
 import { useEffect, useReducer, useState } from "react";
 // components
-import EditableContentWrapper, { PrimaryButtonAction } from "@/components/Dashboard/Generic/EditableContentWrapper";
+import EditableContentWrapper, {
+  PrimaryButtonAction,
+} from "@/components/Dashboard/Generic/EditableContentWrapper";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 import ProductVariantsEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVariantsEditor";
 import ProductMediaEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductMediaEditor";
-import ProductVariantPricesEditor
-  from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVariantPricesEditor";
+import ProductVariantPricesEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVariantPricesEditor";
 import EntityVisibilityForm from "@/components/Dashboard/Generic/Forms/EntityVisibilityForm";
 import CategorySelectForm from "@/components/Dashboard/Generic/Forms/CategorySelectForm";
-import ProductTranslatedFieldsWrapper
-  from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductTranslatedFields";
+import ProductTranslatedFieldsWrapper from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductTranslatedFields";
 // mui
 import Grid from "@mui/material/Grid";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 
 // types
-import { ActionSetProduct, IAttributeType, IProduct, IProductType, ISetProductStateData } from "@/types/product";
+import {
+  ActionSetProduct,
+  IAttributeType,
+  IProduct,
+  IProductType,
+  ISetProductStateData,
+} from "@/types/product";
 import { postProduct, putProduct } from "@/api/country/product/product";
 import { IPriceList } from "@/types/localization";
 import ProductTypeSelect from "./Product/ProductTypeSelect";
@@ -223,16 +229,18 @@ const ProductEditorWrapper = ({
 
   const setCategoryId = (categoryId: number) => {
     dispatchProductState({
-       type: ActionSetProduct.SETCATEGORY,
-       payload: { category: categoryId },
+      type: ActionSetProduct.SETCATEGORY,
+      payload: { category: categoryId },
     });
   };
-  
+
   // console.log("productState", productState);
 
   return (
     <EditableContentWrapper
-      primaryButtonTitle={productData ? PrimaryButtonAction.Save : PrimaryButtonAction.Create} // To distinguish between create and update actions
+      primaryButtonTitle={
+        productData ? PrimaryButtonAction.Save : PrimaryButtonAction.Create
+      } // To distinguish between create and update actions
       preventNavigation={preventNavigation}
       setPreventNavigation={setPreventNavigation}
       onButtonClick={async () => {
