@@ -1,50 +1,106 @@
 import { ICategoryLocalized } from "@/types/category";
-import TableContainer from "@mui/material/TableContainer";
-import Paper from "@mui/material/Paper";
 import React from "react";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Table from "@mui/material/Table";
-import TableCell from "@mui/material/TableCell";
-import TableBody from "@mui/material/TableBody";
-import Link from "next/link";
+import { DataGrid, GridActionsCellItem, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
+import EditIcon from "@mui/icons-material/Edit";
+import { useRouter } from "next/router";
 
-interface ICategoryListProps {
+interface ICategoryListProps
+{
   categories: ICategoryLocalized[];
 }
 
-const CategoryList = ({ categories }: ICategoryListProps) => {
+const PAGE_SIZE = 30;
+const ROW_HEIGHT = 50;
+
+const CategoryList = ({ categories }: ICategoryListProps) =>
+{
+  const router = useRouter();
+
+  const columns: GridColDef[] = [
+    {
+      field: "id",
+      headerName: "#",
+      editable: false,
+      maxWidth: 100,
+      sortable: false,
+      disableColumnMenu: true
+    },
+    {
+      field: "title",
+      headerName: "Title",
+      editable: false,
+      flex: 1,
+      sortable: false,
+      disableColumnMenu: true
+    },
+    {
+      field: "published",
+      headerName: "Published",
+      editable: false,
+      maxWidth: 100,
+      sortable: false,
+      disableColumnMenu: true,
+      renderCell: (params: GridRenderCellParams) =>
+        params?.row?.published ? (
+          <CheckCircleRoundedIcon />
+        ) : (
+          <CancelRoundedIcon />
+        )
+    },
+    {
+      field: "update_at",
+      headerName: "Updated at",
+      editable: false,
+      flex: 1,
+      sortable: false,
+      disableColumnMenu: true
+    },
+    {
+      field: "actions",
+      type: "actions",
+      headerName: "Actions",
+      width: 100,
+      cellClassName: "actions",
+      flex: 1,
+      disableColumnMenu: true,
+      getActions: ({ id }) =>
+      {
+        return [
+          <GridActionsCellItem
+            icon={<EditIcon />}
+            label="Edit"
+            className="textPrimary"
+            onClick={() =>
+            {
+              router.push(`/dashboard/catalog/categories/edit/${id}`);
+            }}
+            color="inherit"
+            key={"edit"}
+          />
+        ];
+      }
+    }
+  ];
+
+
   return (
-    <>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Title</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>Slug</TableCell>
-              <TableCell />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {categories.map((c) => (
-              <TableRow key={c.id}>
-                <TableCell component="th" scope="row">
-                  {c.title}
-                </TableCell>
-                <TableCell>{c.description}</TableCell>
-                <TableCell>{c.slug}</TableCell>
-                <TableCell>
-                  <Link href={`/dashboard/catalog/categories/edit/${c.id}`}>
-                    Details
-                  </Link>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </>
+    <DataGrid
+      rows={categories}
+      columns={columns}
+      pageSizeOptions={[PAGE_SIZE, 60, 90]}
+      initialState={{
+        pagination: {
+          paginationModel: {
+            pageSize: PAGE_SIZE
+          }
+        }
+      }}
+      autoHeight={true}
+      disableRowSelectionOnClick
+      getRowHeight={() => ROW_HEIGHT}
+    />
   );
 };
 

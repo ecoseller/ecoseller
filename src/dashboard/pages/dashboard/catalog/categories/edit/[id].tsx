@@ -7,9 +7,14 @@ import { ICategoryDetail } from "@/types/category";
 import { deleteCategory, getCategory } from "@/api/category/category";
 import { useRouter } from "next/router";
 import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import EditorCard from "@/components/Dashboard/Generic/EditorCard";
+import CollapsableContentWithTitle from "@/components/Dashboard/Generic/CollapsableContentWithTitle";
+import Box from "@mui/material/Box";
 
 
-const CategoryEditPage = () => {
+const CategoryEditPage = () =>
+{
   const emptyCategory: ICategoryDetail = {
     published: true,
     translations: {
@@ -18,15 +23,15 @@ const CategoryEditPage = () => {
         title: "",
         description: "",
         meta_description: "",
-        meta_title: "",
+        meta_title: ""
       },
       cs: {
         slug: "",
         title: "",
         description: "",
         meta_description: "",
-        meta_title: "",
-      },
+        meta_title: ""
+      }
     },
     id: 0,
     create_at: "",
@@ -39,7 +44,8 @@ const CategoryEditPage = () => {
   const { id } = router.query;
   const categoryId = id?.toString() || "";
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     if (categoryId.length > 0)
     {
       getCategory(categoryId).then((c) =>
@@ -49,8 +55,10 @@ const CategoryEditPage = () => {
     }
   }, [categoryId]);
 
-  async function deleteCat() {
-    deleteCategory(categoryId).then(() => {
+  async function deleteCat()
+  {
+    deleteCategory(categoryId).then(() =>
+    {
       router.push("/dashboard/catalog/categories");
     });
   }
@@ -64,17 +72,26 @@ const CategoryEditPage = () => {
           title={`Edit category #${categoryId}`}
           categoryId={categoryId}
         />
-        <>
-          <Button variant="contained" onClick={deleteCat}>
-            Delete
-          </Button>
-        </>
+        <Grid container spacing={2}>
+          <Grid item md={8} xs={12}>
+            <EditorCard>
+              <CollapsableContentWithTitle title="Delete">
+                <Box>
+                  <Button variant="contained" onClick={deleteCat}>
+                    Delete
+                  </Button>
+                </Box>
+              </CollapsableContentWithTitle>
+            </EditorCard>
+          </Grid>
+        </Grid>
       </Container>
     </DashboardLayout>
   );
 };
 
-CategoryEditPage.getLayout = (page: ReactElement) => {
+CategoryEditPage.getLayout = (page: ReactElement) =>
+{
   return (
     <RootLayout>
       <DashboardLayout>{page}</DashboardLayout>

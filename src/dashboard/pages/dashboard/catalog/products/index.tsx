@@ -1,9 +1,6 @@
 // /dashboard/products
 // next.js
-import Image from "next/image";
-import { useRouter } from "next/router";
 // libraries
-import useSWR from "swr";
 
 // layout
 import DashboardLayout from "@/pages/dashboard/layout"; //react
