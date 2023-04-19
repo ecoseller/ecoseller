@@ -3,40 +3,29 @@
 // next.js
 import { useRouter } from "next/router";
 // libs
-import useSWR from "swr";
-import useSWRImmutable from "swr/immutable";
-
 // layout
-import DashboardLayout from "@/pages/dashboard/layout"; //react
-import { ReactElement, useEffect, useReducer, useState } from "react";
-import RootLayout from "@/pages/layout";
+import { useEffect, useReducer, useState } from "react";
 // components
-import DashboardContentWithSaveFooter from "@/components/Dashboard/Generic/EditableContent";
+import EditableContentWrapper, { PrimaryButtonAction } from "@/components/Dashboard/Generic/EditableContentWrapper";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 import ProductVariantsEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVariantsEditor";
 import ProductMediaEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductMediaEditor";
-import ProductVariantPricesEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVariantPricesEditor";
+import ProductVariantPricesEditor
+  from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVariantPricesEditor";
 import EntityVisibilityForm from "@/components/Dashboard/Generic/EntityVisibilityForm";
 import CategorySelectForm from "@/components/Dashboard/Generic/CategorySelectForm";
-import ProductBasicInfo from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductBasicInfo";
-import ProductTranslatedFieldsWrapper from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductTranslatedFields";
+import ProductTranslatedFieldsWrapper
+  from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductTranslatedFields";
 // mui
 import Grid from "@mui/material/Grid";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 
 // types
-import {
-  ActionSetProduct,
-  IAttributeType,
-  IProduct,
-  IProductType,
-  ISetProductStateData,
-} from "@/types/product";
+import { ActionSetProduct, IAttributeType, IProduct, IProductType, ISetProductStateData } from "@/types/product";
 import { postProduct, putProduct } from "@/api/country/product/product";
 import { IPriceList } from "@/types/localization";
 import ProductTypeSelect from "./Product/ProductTypeSelect";
-import { SetCategoryAction } from "@/components/Dashboard/Catalog/Categories/Editor/CategoryEditorWrapper";
 
 export interface ISetProductStateAction {
   type: ActionSetProduct;
@@ -242,11 +231,11 @@ const ProductEditorWrapper = ({
   // console.log("productState", productState);
 
   return (
-    <DashboardContentWithSaveFooter
-      primaryButtonTitle={productData ? "Save" : "Create"} // To distinguish between create and update actions
+    <EditableContentWrapper
+      primaryButtonTitle={productData ? PrimaryButtonAction.Save : PrimaryButtonAction.Create} // To distinguish between create and update actions
       preventNavigation={preventNavigation}
       setPreventNavigation={setPreventNavigation}
-      onSave={async () => {
+      onButtonClick={async () => {
         if (!productData) {
           // save product
           const resp = await saveProductAndRedirect();
@@ -319,7 +308,7 @@ const ProductEditorWrapper = ({
           </Alert>
         </Snackbar>
       ) : null}
-    </DashboardContentWithSaveFooter>
+    </EditableContentWrapper>
   );
 };
 

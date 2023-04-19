@@ -7,7 +7,7 @@ import DashboardLayout from "@/pages/dashboard/layout"; //react
 import { ReactElement, useState } from "react";
 import RootLayout from "@/pages/layout";
 // components
-import DashboardContentWithSaveFooter from "@/components/Dashboard/Generic/EditableContent";
+import EditableContentWrapper from "@/components/Dashboard/Generic/EditableContentWrapper";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 // mui
 import Container from "@mui/material/Container";

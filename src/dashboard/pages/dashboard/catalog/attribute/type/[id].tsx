@@ -7,7 +7,7 @@ import DashboardLayout from "@/pages/dashboard/layout";
 import { ReactElement, useEffect, useState } from "react";
 import RootLayout from "@/pages/layout";
 // components
-import DashboardContentWithSaveFooter from "@/components/Dashboard/Generic/EditableContent";
+import EditableContentWrapper from "@/components/Dashboard/Generic/EditableContentWrapper";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 // mui
 import Container from "@mui/material/Container";
@@ -60,11 +60,11 @@ const DashboardAttributeTypeDetailPage = ({ attributeType }: IProps) => {
     <DashboardLayout>
       <Container maxWidth="xl">
         <Stack>
-          <DashboardContentWithSaveFooter
+          <EditableContentWrapper
             primaryButtonTitle={attributeType ? "Save" : "Create"} // To distinguish between create and update actions
             preventNavigation={preventNavigation}
             setPreventNavigation={setPreventNavigation}
-            onSave={async () => {
+            onButtonClick={async () => {
               await putAttributeType(state)
                 .then((res: any) => {
                   setSnackbar({
@@ -120,7 +120,7 @@ const DashboardAttributeTypeDetailPage = ({ attributeType }: IProps) => {
                 </Alert>
               </Snackbar>
             ) : null}
-          </DashboardContentWithSaveFooter>
+          </EditableContentWrapper>
         </Stack>
       </Container>
     </DashboardLayout>

@@ -8,7 +8,7 @@ import DashboardLayout from "@/pages/dashboard/layout";
 import { ReactElement, useEffect, useState } from "react";
 import RootLayout from "@/pages/layout";
 // components
-import DashboardContentWithSaveFooter from "@/components/Dashboard/Generic/EditableContent";
+import EditableContentWrapper from "@/components/Dashboard/Generic/EditableContentWrapper";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 import ProductTypeGeneralInformation from "@/components/Dashboard/Catalog/ProducType/ProductTypeGeneralInformation";
 import ProductTypeAllowedAttribtuesSelect from "@/components/Dashboard/Catalog/ProducType/ProductTypeAllowedAttribtuesSelect";
@@ -65,11 +65,11 @@ const DashboardProductTypeDetailPage = ({
     <DashboardLayout>
       <Container maxWidth="xl">
         <Stack>
-          <DashboardContentWithSaveFooter
+          <EditableContentWrapper
             primaryButtonTitle={productType ? "Save" : "Create"} // To distinguish between create and update actions
             preventNavigation={preventNavigation}
             setPreventNavigation={setPreventNavigation}
-            onSave={async () => {
+            onButtonClick={async () => {
               await putProductType(state)
                 .then((res: any) => {
                   setSnackbar({
@@ -119,7 +119,7 @@ const DashboardProductTypeDetailPage = ({
                 </Alert>
               </Snackbar>
             ) : null}
-          </DashboardContentWithSaveFooter>
+          </EditableContentWrapper>
         </Stack>
       </Container>
     </DashboardLayout>

@@ -4,13 +4,20 @@ import CategoryTranslatedFields from "@/components/Dashboard/Catalog/Categories/
 import React, { useEffect, useReducer, useState } from "react";
 import { getLanguages } from "@/api/country/country";
 import { ILanguage } from "@/types/localization";
-import DashboardContentWithSaveFooter from "@/components/Dashboard/Generic/EditableContent";
+import EditableContentWrapper, { PrimaryButtonAction } from "@/components/Dashboard/Generic/EditableContentWrapper";
 import { addCategory, updateCategory } from "@/api/category/category";
 import { useRouter } from "next/router";
 import Button from "@mui/material/Button";
-import { ICategoryEditable, ICategoryTranslation } from "@/types/category";
+import { ICategoryEditable } from "@/types/category";
 import EntityVisibilityForm from "@/components/Dashboard/Generic/EntityVisibilityForm";
 import CategorySelectForm from "@/components/Dashboard/Generic/CategorySelectForm";
+
+interface ICategoryEditorWrapperProps {
+  initialCategory: ICategoryEditable;
+  creatingNew: boolean;
+  title: string;
+  categoryId?: string;
+}
 
 export enum SetCategoryAction {
   SetTranslation,
@@ -24,49 +31,45 @@ export interface Action {
   payload: any;
 }
 
-// TODO: use enums & typing
-function reducer(
-  state: ICategoryEditable,
-  action: Action
-): ICategoryEditable {
-  switch (action.type) {
-    case SetCategoryAction.SetTranslation: {
-      return {
-        ...state, // use the previous state as a base
-        translations: { // update `translations` field
-          ...state.translations, // use the previous `translations` state as a base
-          [action.payload.translation.language]: { // update `translations[language]` field
-            ...state.translations[action.payload.translation.language], // use the previous `translations[language]` state as a base
-            ...action.payload.translation.data, // use the data from payload
-          },
-        },
-      };
-    }
-    case SetCategoryAction.RecreateInitState:
-      return action.payload;
-    case SetCategoryAction.SetPublished:
-      return { ...state, published: action.payload.published };
-    case SetCategoryAction.SetParentCategory:
-      return { ...state, parent: action.payload.parent };
-    default:
-      return state;
-  }
-}
-
-interface ICategoryEditorWrapperProps {
-  initialCategory: ICategoryEditable;
-  creatingNew: boolean;
-  title: string;
-  categoryId?: string;
-}
-
 const CategoryEditorWrapper = ({
   initialCategory,
   creatingNew,
   title,
   categoryId = "",
 }: ICategoryEditorWrapperProps) => {
+
+  function reducer(
+    state: ICategoryEditable,
+    action: Action
+  ): ICategoryEditable {
+    switch (action.type) {
+      case SetCategoryAction.SetTranslation:
+        setPreventNavigation(true);
+        return {
+          ...state, // use the previous state as a base
+          translations: { // update `translations` field
+            ...state.translations, // use the previous `translations` state as a base
+            [action.payload.translation.language]: { // update `translations[language]` field
+              ...state.translations[action.payload.translation.language], // use the previous `translations[language]` state as a base
+              ...action.payload.translation.data, // use the data from payload
+            },
+          },
+        };
+      case SetCategoryAction.SetPublished:
+        setPreventNavigation(true);
+        return { ...state, published: action.payload.published };
+      case SetCategoryAction.SetParentCategory:
+        setPreventNavigation(true);
+        return { ...state, parent: action.payload.parent };
+      case SetCategoryAction.RecreateInitState:
+        return action.payload;
+      default:
+        return state;
+    }
+  }
+  
   const [languages, setLanguages] = useState<ILanguage[]>([]);
+  const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
   const [category, dispatch] = useReducer(reducer, initialCategory);
 
   const router = useRouter();
@@ -84,7 +87,7 @@ const CategoryEditorWrapper = ({
     });
   }, [initialCategory]);
 
-  const save = () => {
+  const save = async () => {
     if (creatingNew) {
       addCategory(category).then(() => {
         router.push("/dashboard/catalog/categories");
@@ -111,7 +114,15 @@ const CategoryEditorWrapper = ({
   };
 
   return (
-    <>
+    <EditableContentWrapper
+      primaryButtonTitle={creatingNew ? PrimaryButtonAction.Create : PrimaryButtonAction.Save} // To distinguish between create and update actions
+      preventNavigation={preventNavigation}
+      setPreventNavigation={setPreventNavigation}
+      onButtonClick={async () => {
+        await save();
+      }}
+      returnPath={"/dashboard/catalog/categories"}
+    >
       <TopLineWithReturn
         title={title}
         returnPath="/dashboard/catalog/categories"
@@ -136,14 +147,7 @@ const CategoryEditorWrapper = ({
           />
         </Grid>
       </Grid>
-      <Button
-        onClick={() => {
-          save();
-        }}
-      >
-        Save
-      </Button>
-    </>
+    </EditableContentWrapper>
   );
 };
 
