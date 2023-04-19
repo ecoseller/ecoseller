@@ -165,7 +165,9 @@ const ProductGrid = () => {
       onPaginationModelChange={setPaginationModel}
       paginationModel={paginationModel}
       loading={isLoading}
+      autoHeight={true}
       disableRowSelectionOnClick
+      getRowHeight={() => "auto"}
     />
   );
 };
