@@ -4,13 +4,12 @@ import { ReactElement, useEffect, useState } from "react";
 import DashboardLayout from "@/pages/dashboard/layout"; //react
 import { Container, Typography } from "@mui/material";
 import CreateUser from "@/components/Dashboard/UsersRoles/Users/CreateUser"
-import DashboardContentWithSaveFooter from "@/components/Dashboard/Generic/EditableContent";
+import EditableContentWrapper, { PrimaryButtonAction } from "@/components/Dashboard/Generic/EditableContentWrapper";
 import { createUser } from "@/api/users-roles/users";
 
 const DashboardUserAddPage = () => {
   const router = useRouter();
   const { id } = router.query;
-  console.log(router.query);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
@@ -35,16 +34,18 @@ const DashboardUserAddPage = () => {
     if (!preventNavigation) {
       setPreventNavigation(true);
     }
-  }, [true]);
+  }, [email, password]);
 
+
+  //setPreventNavigation(false);
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
-        <DashboardContentWithSaveFooter
-          primaryButtonTitle={"Create"} // To distinguish between create and update actions
+        <EditableContentWrapper
+          primaryButtonTitle={PrimaryButtonAction.Create} // To distinguish between create and update actions
           preventNavigation={preventNavigation}
           setPreventNavigation={setPreventNavigation}
-          onSave={async () => {
+          onButtonClick={async () => {
             await createUser(email, password)
               .then((res: any) => {
                 setSnackbar({
@@ -55,14 +56,12 @@ const DashboardUserAddPage = () => {
                 router.push("/dashboard/users-roles");
               })
               .catch((err: any) => {
-                console.log("postUsers", err);
                 setSnackbar({
                   open: true,
                   message: "Something went wrong",
                   severity: "error",
                 });
               });
-
             setPreventNavigation(false);
           }}
           returnPath={"/dashboard/users-roles"}
@@ -72,9 +71,9 @@ const DashboardUserAddPage = () => {
             setEmail={setEmail}
             password={password}
             setPassword={setPassword} />
-        </DashboardContentWithSaveFooter>
+        </EditableContentWrapper>
       </Container>
-    </DashboardLayout>
+    </DashboardLayout >
   );
 };
 
