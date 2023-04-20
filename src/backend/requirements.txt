@@ -19,6 +19,7 @@ django-parler==2.3
 django-parler-rest==2.2
 django-rq==2.5.1
 djangorestframework==3.13.1
+djangorestframework-recursive==0.1.2
 drf-yasg==1.20.0
 flake8==5.0.4
 idna==3.4

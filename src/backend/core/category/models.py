@@ -40,3 +40,7 @@ class Category(MPTTModel, TranslatableModel):
     @property
     def published_children(self):
         return self.get_children().filter(published=True)
+
+    @property
+    def all_children(self):
+        return self.get_children()

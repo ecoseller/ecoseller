@@ -10,6 +10,7 @@ from category.serializers import (
     CategorySerializer,
     CategoryDetailSerializer,
     CategoryWithChildrenSerializer,
+    CategoryRecoursiveSerializer,
 )
 from category.models import Category
 
@@ -26,8 +27,10 @@ class CategoryViewDashboard(APIView):
         Language-specific data are returned only in the selected language (set in `Accept-Language` header).
         If this header isn't present, Django app language is used instead.
         """
-        categories = Category.objects.all()  # filter(published=True)
-        serializer = CategorySerializer(
+        categories = Category.objects.filter(
+            parent=None
+        )  # .all()  # filter(published=True)
+        serializer = CategoryRecoursiveSerializer(
             categories, many=True, context={"request": request}
         )
         return Response(serializer.data)

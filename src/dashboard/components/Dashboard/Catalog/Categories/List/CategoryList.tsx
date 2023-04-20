@@ -10,16 +10,23 @@ import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 import EditIcon from "@mui/icons-material/Edit";
 import { useRouter } from "next/router";
+import { flattenCategory } from "@/utils/category";
 
 interface ICategoryListProps {
   categories: ICategoryLocalized[];
 }
 
-const PAGE_SIZE = 30;
+// const PAGE_SIZE = 30;
 const ROW_HEIGHT = 50;
 
 const CategoryList = ({ categories }: ICategoryListProps) => {
   const router = useRouter();
+
+  const rows = categories.flatMap((category) => {
+    return flattenCategory(category);
+  });
+
+  console.log(rows);
 
   const columns: GridColDef[] = [
     {
@@ -87,16 +94,17 @@ const CategoryList = ({ categories }: ICategoryListProps) => {
 
   return (
     <DataGrid
-      rows={categories}
+      rows={rows}
       columns={columns}
-      pageSizeOptions={[PAGE_SIZE, 60, 90]}
-      initialState={{
-        pagination: {
-          paginationModel: {
-            pageSize: PAGE_SIZE,
-          },
-        },
-      }}
+      hideFooter
+      // pageSizeOptions={[PAGE_SIZE, 60, 90]}
+      // initialState={{
+      //   pagination: {
+      //     paginationModel: {
+      //       pageSize: PAGE_SIZE,
+      //     },
+      //   },
+      // }}
       autoHeight={true}
       disableRowSelectionOnClick
       getRowHeight={() => ROW_HEIGHT}

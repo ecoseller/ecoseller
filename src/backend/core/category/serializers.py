@@ -1,3 +1,4 @@
+from rest_framework_recursive.fields import RecursiveField
 from core.mixins import (
     TranslatedSerializerMixin,
 )
@@ -33,6 +34,27 @@ class CategorySerializer(TranslatedSerializerMixin, ModelSerializer):
             "slug",
             "create_at",
             "update_at",
+        )
+
+
+class CategoryRecoursiveSerializer(CategorySerializer):
+    """
+    Extension of CategorySerializer with children field.
+    """
+
+    children = RecursiveField(many=True, required=False, source="all_children")
+
+    class Meta:
+        model = Category
+        fields = (
+            "id",
+            "published",
+            "title",
+            "meta_title",
+            "slug",
+            "create_at",
+            "update_at",
+            "children",
         )
 
 

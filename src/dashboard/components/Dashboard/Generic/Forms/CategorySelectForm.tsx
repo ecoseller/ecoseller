@@ -12,6 +12,7 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { ICategoryLocalized } from "@/types/category";
 import { getAllCategories } from "@/api/category/category";
+import { flattenCategory } from "@/utils/category";
 
 interface ICategorySelectProps {
   categoryId: number | null | undefined;
@@ -28,9 +29,14 @@ const CategorySelectForm = ({
 
   // load categories from API
   useEffect(() => {
-    getAllCategories().then((categories) => {
-      setCategories(categories.data);
-    });
+    getAllCategories()
+      .then((categories) => categories.data)
+      .then((categories) => {
+        const rows = categories.flatMap((category) => {
+          return flattenCategory(category);
+        });
+        setCategories(rows);
+      });
   }, []);
 
   // const setCategory = (id: number) => {
