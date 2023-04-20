@@ -34,9 +34,7 @@ class ProductModel(ProductStoredBaseModel):
         primary_key = "id"
 
     @classmethod
-    def from_api_model(
-        cls, model: ApiBaseModel, **kwargs: Any
-    ) -> List[StoredBaseModel]:
+    def from_api_model(cls, model: ApiBaseModel, **kwargs: Any) -> StoredBaseModel:
         stored = super().from_api_model(
             model=model, product_type_id=model.type_id, **kwargs
         )
