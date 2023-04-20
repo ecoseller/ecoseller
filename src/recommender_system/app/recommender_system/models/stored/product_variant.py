@@ -1,11 +1,7 @@
 from datetime import datetime
-from typing import Any, List, Optional, TYPE_CHECKING
+from typing import List, Optional, TYPE_CHECKING
 
-from recommender_system.models.api.base import ApiBaseModel
-from recommender_system.models.stored.base import (
-    StoredBaseModel,
-    ProductStoredBaseModel,
-)
+from recommender_system.models.stored.base import ProductStoredBaseModel
 
 if TYPE_CHECKING:
     from recommender_system.models.stored.attribute import AttributeModel
@@ -26,29 +22,6 @@ class ProductVariantModel(ProductStoredBaseModel):
 
     class Meta:
         primary_key = "sku"
-
-    @classmethod
-    def from_api_model(
-        cls, model: ApiBaseModel, **kwargs: Any
-    ) -> List[StoredBaseModel]:
-        from recommender_system.models.stored.attribute import AttributeModel
-        from recommender_system.models.stored.attribute_product_variant import (
-            AttributeProductVariantModel,
-        )
-
-        stored = super().from_api_model(model=model, **kwargs)[0]
-
-        result = [stored]
-
-        for attribute in model.attributes:
-            result.extend(AttributeModel.from_api_model(model=attribute))
-            result.append(
-                AttributeProductVariantModel(
-                    attribute_id=attribute.id, product_variant_sku=stored.sku
-                )
-            )
-
-        return result
 
     @property
     def attributes(self) -> List["AttributeModel"]:

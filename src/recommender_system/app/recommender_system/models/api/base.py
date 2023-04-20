@@ -16,7 +16,7 @@ class ApiBaseModel(BaseModel):
         return super().dict(*args, **kwargs)
 
     def save(self) -> None:
-        stored_model = self.Meta.stored_model_class.parse_obj(self.dict())
+        stored_model = self.Meta.stored_model_class.from_api_model(self)
         try:
             stored_model.create()
         except:

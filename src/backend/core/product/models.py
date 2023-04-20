@@ -38,7 +38,7 @@ class ProductVariant(models.Model):
             "_model_class": self.__class__.__name__,
             "sku": self.sku,
             "ean": self.ean,
-            "weight": self.weight,
+            "weight": float(self.weight) if self.weight is not None else None,
             "update_at": self.update_at.isoformat(),
             "create_at": self.create_at.isoformat(),
             "attributes": [attribute.id for attribute in self.attributes.all()],
@@ -68,9 +68,8 @@ class ProductType(models.Model):
             "_model_class": self.__class__.__name__,
             "id": self.id,
             "name": self.name,
-            "allowed_attribute_types": [
-                type.id for type in self.allowed_attribute_types.all()
-            ],
+            "attribute_types": [type.id for type in self.allowed_attribute_types.all()],
+            "products": [product.id for product in self.product_set.all()],
             "update_at": self.update_at.isoformat(),
             "create_at": self.create_at.isoformat(),
         }
@@ -148,8 +147,8 @@ class Product(TranslatableModel):
             "_model_class": self.__class__.__name__,
             "id": self.id,
             "published": self.published,
-            "type": self.type.id,
-            "category": self.category.id,
+            "type": self.type.id if self.type is not None else None,
+            "category": self.category.id if self.category is not None else None,
             "product_translations": [
                 {
                     "id": translation.id,
@@ -161,9 +160,11 @@ class Product(TranslatableModel):
                     "short_description": translation.short_description,
                     "slug": translation.slug,
                 }
-                for translation in self.translations
+                for translation in self.translations.all()
             ],
-            "product_variants": [variant.id for variant in self.product_variants.all()],
+            "product_variants": [
+                variant.sku for variant in self.product_variants.all()
+            ],
             "update_at": self.create_at.isoformat(),
             "create_at": self.create_at.isoformat(),
         }
@@ -236,7 +237,7 @@ class BaseAttribute(models.Model):
             "type": self.type.id,
             "value": self.value,
             "order": self.order,
-            "attributes": [attribute.id for attribute in self.ext_attributes.all()],
+            "ext_attributes": [attribute.id for attribute in self.ext_attributes.all()],
         }
         RecommenderSystemApi.store_object(data=data)
 
@@ -299,7 +300,7 @@ class ExtensionAttribute(models.Model):
             "type": self.type.id,
             "value": self.value,
             "order": self.order,
-            "attributes": [attribute.id for attribute in self.ext_attributes.all()],
+            "ext_attributes": [attribute.id for attribute in self.ext_attributes.all()],
         }
         RecommenderSystemApi.store_object(data=data)
 

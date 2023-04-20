@@ -1,6 +1,5 @@
 from typing import List, Optional
 
-from recommender_system.models.api.attribute_type import AttributeType
 from recommender_system.models.api.base import ApiBaseModel
 from recommender_system.models.stored.attribute import AttributeModel
 
@@ -12,10 +11,10 @@ class Attribute(ApiBaseModel):
     """
 
     id: int
-    type: AttributeType
+    type: int
     value: Optional[str]
     order: Optional[int]
-    ext_attributes: List["Attribute"]
+    ext_attributes: List[int]
 
     class Meta:
         stored_model_class = AttributeModel

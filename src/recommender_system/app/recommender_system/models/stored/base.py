@@ -30,12 +30,10 @@ class StoredBaseModel(BaseModel):
         super().__init__(*args, **kwargs)
 
     @classmethod
-    def from_api_model(
-        cls, model: ApiBaseModel, **kwargs: Any
-    ) -> List["StoredBaseModel"]:
+    def from_api_model(cls, model: ApiBaseModel, **kwargs: Any) -> "StoredBaseModel":
         data = model.dict()
         data.update(kwargs)
-        return [cls.parse_obj(data)]
+        return cls.parse_obj(data)
 
     @property
     def pk(self) -> Any:

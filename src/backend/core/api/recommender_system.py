@@ -9,6 +9,7 @@ class RecommenderSystemApi:
 
     @classmethod
     def store_object(cls, data: Dict[str, Any]) -> None:
+        print(data)
         response = requests.request(
             method="POST", url=cls.server_url + "/store_object", json=data
         )
