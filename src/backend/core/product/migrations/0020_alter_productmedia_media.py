@@ -5,7 +5,6 @@ import product.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("product", "0019_merge_20230402_0614"),
     ]
