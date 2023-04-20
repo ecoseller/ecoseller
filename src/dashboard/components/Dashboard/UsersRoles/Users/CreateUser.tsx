@@ -70,6 +70,11 @@ const CreateUser = ({
                     <OutlinedInput
                         id="outlined-adornment-password"
                         type={showPassword ? 'text' : 'password'}
+                        value={password}
+                        onChange={(
+                            event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+                        ) => { setPassword(event.target.value) }}
+
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton
