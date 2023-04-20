@@ -38,8 +38,18 @@ export const getUserData = async (email: string) => {
   // Params: email
   // Return: Promise
   console.log("getUserData", email);
-  return await axiosPrivate.get(`/users/${email}`);
+  return await axiosPrivate.get(`/user/users/${email}`);
 };
+
+export const getUserGroups = async (email: string) => {
+  // Get user groups
+  // URL: /roles
+  // Method: GET
+  // Params: email
+  // Return: Promise
+  console.log("getUserGroups", email);
+  return await axiosPrivate.get(`/roles/user-groups/${email}`);
+}
 
 export const deleteGroup = async (data: IGroup) => {
   // Delete existing group

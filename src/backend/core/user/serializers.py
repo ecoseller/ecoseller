@@ -48,18 +48,17 @@ class UserSerializer(serializers.ModelSerializer):
             "is_admin",
             "is_staff",
         )
+        extra_kwargs = {
+            "email": {"read_only": True},
+            "is_admin": {"read_only": True},
+        }
 
     def get_user_permissions(self, obj):
         return list(obj.user_permissions.all())
 
-
-class UpdateUserSerializer(serializers.Serializer):
-    """
-    Serialize user update data
-    """
-
-    email = serializers.CharField()
-    first_name = serializers.CharField()
-    last_name = serializers.CharField()
-    is_admin = serializers.BooleanField()
-    groups = serializers.ListField(child=serializers.CharField(), default=[])
+    # def update(self, instance, validated_data):
+    #     email = validated_data.pop("email")
+    #     user = User.objects.filter(email=email).first()
+    #     if user:
+    #         instance.user = user
+    #     return super().update(instance, validated_data)

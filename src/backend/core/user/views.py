@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
 
 from .models import User
 from roles.roles_manager import RolesManager, ManagerPermission, ManagerGroup
@@ -10,7 +11,6 @@ from roles.roles_manager import RolesManager, ManagerPermission, ManagerGroup
 from .serializers import (
     RegistrationSerializer,
     UserSerializer,
-    UpdateUserSerializer,
 )
 
 
@@ -39,35 +39,15 @@ class UserView(GenericAPIView):
         return User.objects.all()
 
 
-class UserDetailView(GenericAPIView):
+class UserDetailView(RetrieveUpdateDestroyAPIView):
+    allowed_methods = ["GET", "PUT", "DELETE"]
     permission_classes = (permissions.AllowAny,)
-    allowed_methods = [
-        "GET",
-        "PUT",
-    ]
-    authentication_classes = []
-    serializer_class = UpdateUserSerializer
-
-    def get(self, request, id):
-        pass
-        # user = self.get_queryset()
-        # if User is None:
-        #     return Response(status=400)
-
-        # serUser = self.serializer_class(
-        #     email=user.email, first_name=user.first_name, last_name=user.last_name
-        # )
-        # return Response(status=200)
-
-    def put(self, request, id):
-        pass
+    serializer_class = UserSerializer
+    lookup_field = "email"
+    lookup_url_kwarg = "id"
 
     def get_queryset(self):
-        try:
-            user = User.objects.get(email=self.kwargs["id"])
-            return user
-        except Exception:
-            return None
+        return User.objects.all()
 
 
 class RegistrationView(APIView):

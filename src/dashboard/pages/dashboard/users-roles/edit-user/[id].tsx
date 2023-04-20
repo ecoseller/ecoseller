@@ -5,7 +5,8 @@ import DashboardLayout from "@/pages/dashboard/layout"; //react
 import { Container, Typography } from "@mui/material";
 import { IUser } from "@/types/user";
 import { GetServerSideProps } from "next";
-import { getUserData } from "@/api/users-roles/users";
+import { getUserData, getUserGroups } from "@/api/users-roles/users";
+import { getgroups } from "process";
 
 const DashboardUserEditPage = (userData: IUser) => {
   const router = useRouter();
@@ -33,7 +34,18 @@ DashboardUserEditPage.getLayout = (page: ReactElement) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const email = context.params?.id;
-  const userData = await getUserData(email as string)
+  const userDataRet = await getUserData(email as string)
+  const userData: IUser = {
+    email: userDataRet.data.email,
+    first_name: userDataRet.data.first_name,
+    last_name: userDataRet.data.last_name,
+    is_admin: userDataRet.data.is_admin,
+    roles: []
+  }
+  const userRolesData = await getUserGroups(email as string)
+  for (let i = 0; i < userRolesData.data.length; i++) {
+    userData.roles.push(userRolesData.data[i].name)
+  }
 
   return {
     props: { userData: userData }

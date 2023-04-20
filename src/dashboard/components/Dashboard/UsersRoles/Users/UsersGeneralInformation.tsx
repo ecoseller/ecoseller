@@ -52,6 +52,7 @@ const getUsers = async () => {
       is_admin: user["is_admin"],
       roles: [],
     });
+    console.log(user["email"])
     const userRoles = await axiosPrivate.get(
       `roles/user-groups/${user["email"]}`
     );
