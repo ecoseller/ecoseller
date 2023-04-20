@@ -10,7 +10,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import EditorCard from "@/components/Dashboard/Generic/EditorCard";
-import { TextField } from "@mui/material";
+import { IconButton, InputAdornment, OutlinedInput, TextField } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import {
     ActionSetProduct,
@@ -18,6 +18,7 @@ import {
     IProductType,
     ISetProductStateData,
 } from "@/types/product";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 interface ICreateUserProps {
     email: string;
@@ -33,6 +34,12 @@ const CreateUser = ({
     setPassword,
 }: ICreateUserProps) => {
     // simple select with categories
+
+    const [showPassword, setShowPassword] = useState(false);
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+    };
 
     return (
         <EditorCard>
@@ -58,21 +65,25 @@ const CreateUser = ({
                 </FormControl>
             </Box>
             <Box mt={2}>
-                <FormControl fullWidth>
-                    <Stack spacing={2}>
-                        <TextField
-                            label="Password"
-                            value={password}
-                            // disabled={true}
-                            onChange={(
-                                event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-                            ) => {
-                                setPassword(
-                                    event.target.value
-                                );
-                            }}
-                        />
-                    </Stack>
+                <FormControl fullWidth variant="outlined">
+                    <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                    <OutlinedInput
+                        id="outlined-adornment-password"
+                        type={showPassword ? 'text' : 'password'}
+                        endAdornment={
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={handleClickShowPassword}
+                                    onMouseDown={handleMouseDownPassword}
+                                    edge="end"
+                                >
+                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                            </InputAdornment>
+                        }
+                        label="Password"
+                    />
                 </FormControl>
             </Box>
         </EditorCard>
