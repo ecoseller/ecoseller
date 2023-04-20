@@ -18,7 +18,7 @@ export const createUser = async (email: string, password: string) => {
   // Params: email, password
   // Return: Promise
   console.log("createUser", email, password);
-  return await axiosPrivate.post(`/user/register`, { email, password });
+  return await axiosPrivate.post(`user/users`, { email, password });
 };
 
 export const updateUser = async (data: IUser) => {
@@ -29,6 +29,16 @@ export const updateUser = async (data: IUser) => {
   // Return: Promise
   console.log("updateUser", data);
   return await axiosPrivate.put(`/user/`, data);
+};
+
+export const getUserData = async (email: string) => {
+  // Get user data
+  // URL: /user
+  // Method: GET
+  // Params: email
+  // Return: Promise
+  console.log("getUserData", email);
+  return await axiosPrivate.get(`/users/${email}`);
 };
 
 export const deleteGroup = async (data: IGroup) => {

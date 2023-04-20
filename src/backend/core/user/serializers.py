@@ -53,17 +53,13 @@ class UserSerializer(serializers.ModelSerializer):
         return list(obj.user_permissions.all())
 
 
-class UpdateUserSerializer(serializers.ModelSerializer):
+class UpdateUserSerializer(serializers.Serializer):
     """
     Serialize user update data
     """
 
-    class Meta:
-        model = User
-        fields = (
-            "email",
-            "first_name",
-            "last_name",
-            "is_admin",
-            "roles",
-        )
+    email = serializers.CharField()
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    is_admin = serializers.BooleanField()
+    groups = serializers.ListField(child=serializers.CharField(), default=[])

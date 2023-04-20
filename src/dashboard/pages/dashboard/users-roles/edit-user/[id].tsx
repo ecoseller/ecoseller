@@ -3,11 +3,15 @@ import RootLayout from "@/pages/layout";
 import { ReactElement } from "react";
 import DashboardLayout from "@/pages/dashboard/layout"; //react
 import { Container, Typography } from "@mui/material";
+import { IUser } from "@/types/user";
+import { GetServerSideProps } from "next";
+import { getUserData } from "@/api/users-roles/users";
 
-const DashboardUserEditPage = () => {
+const DashboardUserEditPage = (userData: IUser) => {
   const router = useRouter();
   const { id } = router.query;
   console.log(router.query);
+  console.log(userData)
 
   return (
     <DashboardLayout>
@@ -26,4 +30,13 @@ DashboardUserEditPage.getLayout = (page: ReactElement) => {
   );
 };
 
+export const getServerSideProps: GetServerSideProps = async (context) => {
+
+  const email = context.params?.id;
+  const userData = await getUserData(email as string)
+
+  return {
+    props: { userData: userData }
+  }
+}
 export default DashboardUserEditPage;

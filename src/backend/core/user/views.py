@@ -1,14 +1,73 @@
 from rest_framework import permissions
 from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import User
+from roles.roles_manager import RolesManager, ManagerPermission, ManagerGroup
 
 from .serializers import (
     RegistrationSerializer,
     UserSerializer,
+    UpdateUserSerializer,
 )
+
+
+class UserView(GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = [
+        "GET",
+        "POST",
+    ]
+    authentication_classes = []
+    serializer_class = RegistrationSerializer
+
+    def get(self, request):
+        users = self.get_queryset()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data, status=200)
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=400)
+        serializer.save()
+        return Response(serializer.data, status=201)
+
+    def get_queryset(self):
+        return User.objects.all()
+
+
+class UserDetailView(GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = [
+        "GET",
+        "PUT",
+    ]
+    authentication_classes = []
+    serializer_class = UpdateUserSerializer
+
+    def get(self, request, id):
+        pass
+        # user = self.get_queryset()
+        # if User is None:
+        #     return Response(status=400)
+
+        # serUser = self.serializer_class(
+        #     email=user.email, first_name=user.first_name, last_name=user.last_name
+        # )
+        # return Response(status=200)
+
+    def put(self, request, id):
+        pass
+
+    def get_queryset(self):
+        try:
+            user = User.objects.get(email=self.kwargs["id"])
+            return user
+        except Exception:
+            return None
 
 
 class RegistrationView(APIView):
@@ -48,7 +107,7 @@ class BlacklistTokenView(APIView):
 
 
 # create view that returns user data from token
-class UserView(APIView):
+class UserViewObs(APIView):
     """
     View for testing purposes.
     Print user data from token passed in header.

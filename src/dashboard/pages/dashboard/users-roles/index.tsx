@@ -12,8 +12,8 @@ import Typography from "@mui/material/Typography";
 import { Grid } from "@mui/material";
 import { GetServerSideProps } from "next";
 
-import UserGrid from "@/components/Dashboard/Roles/UsersGeneralInformation";
-import GroupsGrid from "@/components/Dashboard/Roles/RolesGenerealInformation";
+import UserGrid from "@/components/Dashboard/UsersRoles/Users/UsersGeneralInformation";
+import GroupsGrid from "@/components/Dashboard/UsersRoles/Roles/RolesGenerealInformation";
 
 const DashboardRolesAndUsersPage = () => {
   return (
