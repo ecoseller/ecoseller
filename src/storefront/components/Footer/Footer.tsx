@@ -31,13 +31,12 @@ const MAXWIDTH = 1620;
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   minHeight: HEADER_MOBILE,
-  width: "100%",
+  width: "100vw",
   [theme.breakpoints.up("lg")]: {
     minHeight: HEADER_DESKTOP,
     maxWidth: MAXWIDTH,
   },
-  marginRight: "auto",
-  marginLeft: "auto",
+  margin: "0px auto",
 }));
 
 const Footer = () => {

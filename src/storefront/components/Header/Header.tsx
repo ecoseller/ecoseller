@@ -45,19 +45,19 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     minHeight: HEADER_DESKTOP,
     maxWidth: MAXWIDTH,
   },
-  marginRight: "auto",
-  marginLeft: "auto",
+  margin: "0px auto",
 }));
 
 const StyledInfoToolbar = styled(Toolbar)(({ theme }) => ({
   width: "100%",
-
   backgroundColor: "#f5f5f5",
   [theme.breakpoints.up("lg")]: {
     height: "20px",
   },
-  marginRight: "auto",
-  marginLeft: "auto",
+}));
+
+const InfoToolBarNarrow = styled(Toolbar)(({ theme }) => ({
+  maxWidth: MAXWIDTH,
 }));
 
 interface IDashboardHeaderProps {}
@@ -76,45 +76,47 @@ const DashboardHeader = ({}: IDashboardHeaderProps) => {
   return (
     <StyledRoot>
       <StyledInfoToolbar>
-        <Stack
-          direction="row"
-          alignItems="center"
-          spacing={{
-            xs: 5,
-            sm: 5,
-          }}
-        >
-          <Typography
-            variant="subtitle2"
-            sx={{ flexGrow: 1 }}
-            component={Link}
-            href="/contact"
-            shallow={false}
-            prefetch={false}
-            style={{
-              textDecoration: "none",
-              color: "inherit",
-              cursor: "pointer",
+        <InfoToolBarNarrow sx={{}}>
+          <Stack
+            direction="row"
+            alignItems="left"
+            spacing={{
+              xs: 5,
+              sm: 5,
             }}
           >
-            Contact
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            sx={{ flexGrow: 1 }}
-            component={Link}
-            href="/category"
-            shallow={false}
-            prefetch={false}
-            style={{
-              textDecoration: "none",
-              color: "inherit",
-              cursor: "pointer",
-            }}
-          >
-            Return & Exchange
-          </Typography>
-        </Stack>
+            <Typography
+              variant="subtitle2"
+              sx={{ flexGrow: 1 }}
+              component={Link}
+              href="/contact"
+              shallow={false}
+              prefetch={false}
+              style={{
+                textDecoration: "none",
+                color: "inherit",
+                cursor: "pointer",
+              }}
+            >
+              Contact
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              sx={{ flexGrow: 1 }}
+              component={Link}
+              href="/category"
+              shallow={false}
+              prefetch={false}
+              style={{
+                textDecoration: "none",
+                color: "inherit",
+                cursor: "pointer",
+              }}
+            >
+              Return & Exchange
+            </Typography>
+          </Stack>
+        </InfoToolBarNarrow>
       </StyledInfoToolbar>
       <StyledToolbar>
         <IconButton
