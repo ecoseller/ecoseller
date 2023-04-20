@@ -7,7 +7,6 @@ from rest_framework.generics import RetrieveUpdateDestroyAPIView
 # from django.contrib.auth.models import User
 from rest_framework.decorators import permission_classes
 from category.serializers import (
-    CategorySerializer,
     CategoryDetailSerializer,
     CategoryWithChildrenSerializer,
     CategoryRecoursiveSerializer,
