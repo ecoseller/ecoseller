@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import RootLayout from "@/pages/layout";
 import { ReactElement, useEffect, useState } from "react";
 import DashboardLayout from "@/pages/dashboard/layout"; //react
-import { Container, Typography } from "@mui/material";
+import { Alert, Container, Snackbar, Typography } from "@mui/material";
 import CreateUser from "@/components/Dashboard/UsersRoles/Users/CreateUser"
 import EditableContentWrapper, { PrimaryButtonAction } from "@/components/Dashboard/Generic/EditableContentWrapper";
 import { createUser } from "@/api/users-roles/users";
@@ -36,8 +36,8 @@ const DashboardUserAddPage = () => {
     }
   }, [email, password]);
 
-
-  //setPreventNavigation(false);
+  console.log(email, password);
+  console.log(preventNavigation);
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
@@ -46,8 +46,11 @@ const DashboardUserAddPage = () => {
           preventNavigation={preventNavigation}
           setPreventNavigation={setPreventNavigation}
           onButtonClick={async () => {
+            await setPreventNavigation(false);
             await createUser(email, password)
               .then((res: any) => {
+                setPreventNavigation(false);
+                console.log(preventNavigation);
                 setSnackbar({
                   open: true,
                   message: "User created successfully",
@@ -62,7 +65,6 @@ const DashboardUserAddPage = () => {
                   severity: "error",
                 });
               });
-            setPreventNavigation(false);
           }}
           returnPath={"/dashboard/users-roles"}
         >
@@ -71,6 +73,21 @@ const DashboardUserAddPage = () => {
             setEmail={setEmail}
             password={password}
             setPassword={setPassword} />
+          {snackbar ? (
+            <Snackbar
+              open={snackbar.open}
+              autoHideDuration={6000}
+              onClose={handleSnackbarClose}
+            >
+              <Alert
+                onClose={handleSnackbarClose}
+                severity={snackbar.severity}
+                sx={{ width: "100%" }}
+              >
+                {snackbar.message}
+              </Alert>
+            </Snackbar>
+          ) : null}
         </EditableContentWrapper>
       </Container>
     </DashboardLayout >
