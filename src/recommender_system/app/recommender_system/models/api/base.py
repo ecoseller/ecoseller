@@ -19,5 +19,5 @@ class ApiBaseModel(BaseModel):
         stored_model = self.Meta.stored_model_class.from_api_model(self)
         try:
             stored_model.create()
-        except:
+        except Exception:
             stored_model.save()

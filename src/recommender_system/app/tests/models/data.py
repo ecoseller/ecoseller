@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Type
+from typing import Any, Dict, Optional, Type
 
 from recommender_system.models.api.attribute import Attribute
 from recommender_system.models.api.attribute_type import AttributeType

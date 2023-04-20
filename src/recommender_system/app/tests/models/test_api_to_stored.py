@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any, Dict
 from unittest import TestCase
 
 from recommender_system.models.api.attribute import Attribute
