@@ -1,3 +1,5 @@
+import FooterWrapper from "@/components/Footer/FooterWrapper";
+import Header from "@/components/Header/Header";
 import ThemeProvider from "@mui/material/styles/ThemeProvider";
 import createTheme from "@mui/material/styles/createTheme";
 
@@ -33,7 +35,19 @@ const RootLayout = ({
 
   return (
     <>
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      <ThemeProvider theme={theme}>
+        <Header />
+        <main
+          style={{
+            maxWidth: 1620,
+            marginRight: "auto",
+            marginLeft: "auto",
+          }}
+        >
+          {children}
+        </main>
+        <FooterWrapper />
+      </ThemeProvider>
     </>
   );
 };
