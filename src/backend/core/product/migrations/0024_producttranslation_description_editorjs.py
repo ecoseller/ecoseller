@@ -5,7 +5,6 @@ import django_editorjs_fields.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("product", "0023_alter_baseattribute_value"),
     ]

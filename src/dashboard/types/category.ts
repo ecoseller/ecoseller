@@ -37,4 +37,5 @@ export interface ICategoryLocalized extends ICategoryTranslation {
   published: boolean;
   create_at: string;
   update_at: string;
+  children: ICategoryLocalized[];
 }

@@ -5,7 +5,6 @@ import django_editorjs_fields.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("category", "0002_category_create_at_category_published_and_more"),
     ]
