@@ -91,7 +91,7 @@ def _product_variant_model(sku: str = "sku") -> Dict[str, Any]:
 
 def _product_variant(sku: str = "sku") -> Dict[str, Any]:
     result = _product_variant_model(sku=sku)
-    result["attributes"] = [_root_attribute()]
+    result["attributes"] = [_root_attribute()["id"]]
     return result
 
 
