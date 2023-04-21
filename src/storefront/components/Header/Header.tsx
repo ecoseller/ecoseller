@@ -1,8 +1,11 @@
+/**
+ * /components/Header/Header.tsx
+ * Header component for the main layout
+ */
+
 // react
-import { useEffect, useState } from "react";
+import { useState } from "react";
 //next.js
-import { useRouter } from "next/router";
-import Image from "next/image";
 // mui
 import styled from "@mui/material/styles/styled";
 import AppBar from "@mui/material/AppBar";
@@ -12,16 +15,17 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import MenuIcon from "@mui/icons-material/Menu";
 import Typography from "@mui/material/Typography";
-import Badge from "@mui/material/Badge";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import PersonIcon from "@mui/icons-material/Person";
-import SearchIcon from "@mui/icons-material/Search";
 import Link from "next/link";
-import Logo from "../Logo";
+import Logo from "./Logo";
 import useTheme from "@mui/material/styles/useTheme";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Drawer from "@mui/material/Drawer";
+import TopLine from "./TopLine";
+import InfoBar from "./InfoBar";
 // components
+import User from "./Icons/User";
+import Cart from "./Icons/Cart";
+import Search from "./Icons/Search";
 // utils
 
 const HEADER_MOBILE = 64;
@@ -48,14 +52,6 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   margin: "0px auto",
 }));
 
-const StyledInfoToolbar = styled(Toolbar)(({ theme }) => ({
-  width: "100%",
-  backgroundColor: "#f5f5f5",
-  [theme.breakpoints.up("lg")]: {
-    height: "20px",
-  },
-}));
-
 const InfoToolBarNarrow = styled(Toolbar)(({ theme }) => ({
   maxWidth: MAXWIDTH,
 }));
@@ -73,51 +69,12 @@ const DashboardHeader = ({}: IDashboardHeaderProps) => {
     setOpenMobileMenu(false);
   };
 
+  const user = null; //{};
+
   return (
     <StyledRoot>
-      <StyledInfoToolbar>
-        <InfoToolBarNarrow sx={{}}>
-          <Stack
-            direction="row"
-            alignItems="left"
-            spacing={{
-              xs: 5,
-              sm: 5,
-            }}
-          >
-            <Typography
-              variant="subtitle2"
-              sx={{ flexGrow: 1 }}
-              component={Link}
-              href="/contact"
-              shallow={false}
-              prefetch={false}
-              style={{
-                textDecoration: "none",
-                color: "inherit",
-                cursor: "pointer",
-              }}
-            >
-              Contact
-            </Typography>
-            <Typography
-              variant="subtitle2"
-              sx={{ flexGrow: 1 }}
-              component={Link}
-              href="/category"
-              shallow={false}
-              prefetch={false}
-              style={{
-                textDecoration: "none",
-                color: "inherit",
-                cursor: "pointer",
-              }}
-            >
-              Return & Exchange
-            </Typography>
-          </Stack>
-        </InfoToolBarNarrow>
-      </StyledInfoToolbar>
+      <InfoBar text="Free shipping on all orders over $100" />
+      <TopLine />
       <StyledToolbar>
         <IconButton
           onClick={onOpenMobileMenu}
@@ -128,29 +85,7 @@ const DashboardHeader = ({}: IDashboardHeaderProps) => {
         >
           <MenuIcon />
         </IconButton>
-        <Link href="/" shallow={false} prefetch={false}>
-          <div
-            style={{
-              width: largeScreen ? `150px` : `100px`,
-              height: `40px`,
-              flexShrink: 0,
-              cursor: `pointer`,
-              position: `relative`,
-            }}
-          >
-            <Image
-              alt={`logo`}
-              src={`/logo/main.svg`}
-              style={{
-                objectFit: `contain`,
-                objectPosition: `left center`,
-              }}
-              fill
-              sizes="100vw"
-              priority
-            />
-          </div>
-        </Link>
+        <Logo />
         {largeScreen ? (
           <>
             <Box sx={{ mr: 5 }} />
@@ -234,11 +169,9 @@ const DashboardHeader = ({}: IDashboardHeaderProps) => {
             sm: 5,
           }}
         >
-          <SearchIcon />
-          <PersonIcon />
-          <Badge badgeContent={0} color="primary">
-            <ShoppingCartIcon />
-          </Badge>
+          <Search />
+          <User user={user} />
+          <Cart />
         </Stack>
       </StyledToolbar>
       {largeScreen ? null : (

@@ -1,4 +1,4 @@
-import Footer from "@/components/Footer/Footer";
+import FooterWrapper from "@/components/Footer/FooterWrapper";
 import Header from "@/components/Header/Header";
 import ThemeProvider from "@mui/material/styles/ThemeProvider";
 import createTheme from "@mui/material/styles/createTheme";
@@ -46,7 +46,7 @@ const RootLayout = ({
         >
           {children}
         </main>
-        <Footer />
+        <FooterWrapper />
       </ThemeProvider>
     </>
   );

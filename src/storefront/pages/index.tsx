@@ -1,17 +1,14 @@
+/**
+ * /pages/index.tsx
+ * This is the home page of the site
+ */
+
+// react
 import React from "react";
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  IconButton,
-  Menu,
-  MenuItem,
-  Box,
-} from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
+// mui
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 // components
-import Header from "@/components/Header/Header";
 
 const HomePage = () => {
   return (
