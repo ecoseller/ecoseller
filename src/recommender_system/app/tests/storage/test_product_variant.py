@@ -150,3 +150,17 @@ def test_product_variant_products(create_product_variant):
     product_variant.add_product(product=product)
 
     assert len(product_variant.products) == old_products + 1
+
+
+def test_product_variant_get_attribute(create_product_variant):
+    _ = create_product_variant
+    product_variants = ProductVariantModel.gets()
+
+    skus = {product_variant.sku for product_variant in product_variants}
+    found_skus = set(
+        product_variants[0]._storage.get_objects_attribute(
+            model_class=ProductVariantModel, attribute="sku"
+        )
+    )
+
+    assert skus == found_skus

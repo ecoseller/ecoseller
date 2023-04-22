@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, List, Type
+from typing import Any, List, Set, Type
 
 from recommender_system.models.stored.base import StoredBaseModel
 from recommender_system.models.stored.many_to_many_relation import (
@@ -53,6 +53,16 @@ class AbstractStorage(ABC):
     ) -> List[StoredBaseModel]:
         """
         Searches for models of type `model_class` and returns them.
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
+    def get_objects_attribute(
+        self, model_class: Type[StoredBaseModel], attribute: str, **kwargs
+    ) -> List[Any]:
+        """
+        Searches for models of type `model_class` and returns their attribute
+        `attribute`.
         """
         raise NotImplementedError()
 

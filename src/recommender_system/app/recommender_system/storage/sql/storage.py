@@ -96,6 +96,16 @@ class SQLStorage(AbstractStorage):
 
         return models
 
+    def get_objects_attribute(
+        self, model_class: Type[StoredBaseModel], attribute: str, **kwargs
+    ) -> List[Any]:
+        sql_class = SQLModelMapper.map(model_class)
+
+        query = self.session.query(getattr(sql_class, attribute))
+        query = self._filter(model_class=model_class, query=query, filters=kwargs)
+
+        return list(map(lambda row: row[0], query.all()))
+
     def get_related_objects(
         self,
         model: StoredBaseModel,
