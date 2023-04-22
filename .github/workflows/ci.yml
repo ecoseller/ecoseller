@@ -141,11 +141,7 @@ jobs:
         with:
           path: src/recommender_system
       - name: Setup database
-        run: |
-          psql -v ON_ERROR_STOP=1 <<-EOSQL
-	      CREATE DATABASE products;
-	      CREATE DATABASE products;
-          EOSQL
+        run: psql -f setup_database.sql
       - name: Test
         working-directory: src/recommender_system/app
         run: pytest ./tests
