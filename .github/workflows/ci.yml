@@ -113,12 +113,8 @@ jobs:
     services:
       postgres_rs:
         image: postgres:13.0-alpine
-        env:
-          POSTGRES_PASSWORD: zZvyAvzG2O5gfr5
         ports:
           - 5432:5432
-#        volumes:
-#          - setup_database.sql:/docker-entrypoint-initdb.d/setup_database.sql
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
@@ -144,6 +140,12 @@ jobs:
         uses: xom9ikk/dotenv@v2
         with:
           path: src/recommender_system
+      - name: Setup database
+        run: |
+          psql -v ON_ERROR_STOP=1 <<-EOSQL
+	      CREATE DATABASE products;
+	      CREATE DATABASE products;
+          EOSQL
       - name: Test
         working-directory: src/recommender_system/app
         run: pytest ./tests
