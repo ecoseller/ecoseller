@@ -110,6 +110,20 @@ jobs:
       run:
         working-directory: src/recommender_system
 
+    services:
+      postgres:
+        image: postgres:13.0-alpine
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python 3.9
@@ -128,6 +142,11 @@ jobs:
         uses: xom9ikk/dotenv@v2
         with:
           path: src/recommender_system
+      - name: Setup database
+        run: psql -h localhost -U postgres -f setup_database.sql
+      - name: Migrate database
+        working-directory: src/recommender_system/app
+        run: python -m recommender_system.scripts.migrate
       - name: Test
         working-directory: src/recommender_system/app
         run: pytest ./tests

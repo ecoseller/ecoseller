@@ -60,6 +60,20 @@ services:
       - 3031:3000
     depends_on:
       - backend
+  postgres_rs:
+    image: postgres:13.0-alpine
+    container_name: postgres_rs
+    volumes:
+      - ./recommender_system/setup_database.sql:/docker-entrypoint-initdb.d/setup_database.sql
+    ports:
+      - 5432:5432
+    env_file:
+      - ./recommender_system/docker-compose.env
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   recommender_system:
     container_name: recommender_system
     build:
@@ -71,3 +85,6 @@ services:
       - 8086:8086
     env_file:
       - ./recommender_system/docker-compose.env
+    depends_on:
+      postgres_rs:
+        condition: service_healthy

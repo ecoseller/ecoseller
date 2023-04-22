@@ -127,6 +127,13 @@ def get_or_create_model(model_class: Type[StoredBaseModel]) -> StoredBaseModel:
     try:
         model = model_class.get(pk=model.pk)
     except model_class.DoesNotExist:
+        parent = None
+        if isinstance(model, ProductModel):
+            parent = ProductTypeModel
+        elif isinstance(model, AttributeModel):
+            parent = AttributeTypeModel
+        if parent is not None:
+            get_or_create_model(parent)
         model.create()
     return model
 
