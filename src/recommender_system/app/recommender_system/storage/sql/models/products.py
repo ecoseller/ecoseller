@@ -43,9 +43,7 @@ class SQLAttribute(ProductBase):
     value = Column(String(200), nullable=True)
     order = Column(Integer(), nullable=True)
 
-    attribute_type_id = Column(
-        Integer(), nullable=False
-    )
+    attribute_type_id = Column(Integer(), nullable=False)
     parent_attribute_id = Column(Integer(), nullable=True)
 
     __tablename__ = "attribute"
@@ -63,9 +61,7 @@ class SQLAttributeProductVariant(ProductBase):
     id = Column(Integer(), primary_key=True)
 
     attribute_id = Column(Integer(), nullable=False)
-    product_variant_sku = Column(
-        String(255), nullable=False
-    )
+    product_variant_sku = Column(String(255), nullable=False)
 
     __tablename__ = "attribute_product_variant"
 
@@ -96,10 +92,8 @@ class SQLAttributeTypeProductType(ProductBase):
 
     id = Column(Integer(), primary_key=True)
 
-    attribute_type_id = Column(
-        Integer(), ForeignKey("attribute_type.id"), nullable=False
-    )
-    product_type_id = Column(Integer(), ForeignKey("product_type.id"), nullable=False)
+    attribute_type_id = Column(Integer(), nullable=False)
+    product_type_id = Column(Integer(), nullable=False)
 
     __tablename__ = "attribute_type_product_type"
 
@@ -137,9 +131,7 @@ class SQLProductPrice(ProductBase):
     update_at = Column(TIMESTAMP(), nullable=False)
     create_at = Column(TIMESTAMP(), nullable=False)
 
-    product_variant_sku = Column(
-        String(255), ForeignKey("product_variant.sku"), nullable=True
-    )
+    product_variant_sku = Column(String(255), nullable=True)
 
     __tablename__ = "product_price"
 
@@ -156,9 +148,7 @@ class SQLProductProductVariant(ProductBase):
     id = Column(Integer(), primary_key=True)
 
     product_id = Column(Integer(), nullable=False)
-    product_variant_sku = Column(
-        String(255), nullable=False
-    )
+    product_variant_sku = Column(String(255), nullable=False)
 
     __tablename__ = "product_product_variant"
 
