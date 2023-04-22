@@ -111,7 +111,7 @@ jobs:
         working-directory: src/recommender_system
 
     services:
-      postgres_rs:
+      postgres:
         image: postgres:13.0-alpine
         env:
           POSTGRES_HOST_AUTH_METHOD: trust
@@ -143,7 +143,7 @@ jobs:
         with:
           path: src/recommender_system
       - name: Setup database
-        run: psql -h postgres_rs -U postgres -f setup_database.sql
+        run: psql -h postgres -U postgres -f setup_database.sql
       - name: Test
         working-directory: src/recommender_system/app
         run: pytest ./tests
