@@ -36,7 +36,7 @@ class SQLProductAddToCart(FeedbackBase):
     product_variant_sku = Column(String(255))
     create_at = Column(TIMESTAMP())
 
-    session_id = Column(String(100), ForeignKey("session.id"))
+    session_id = Column(String(100))
 
     __tablename__ = "product_add_to_cart"
 
@@ -57,7 +57,7 @@ class SQLProductDetailEnter(FeedbackBase):
     position = Column(Integer(), nullable=True)
     create_at = Column(TIMESTAMP())
 
-    session_id = Column(String(100), ForeignKey("session.id"))
+    session_id = Column(String(100))
 
     __tablename__ = "product_detail_enter"
 
@@ -77,7 +77,7 @@ class SQLProductDetailLeave(FeedbackBase):
     time_spent = Column(Float())
     create_at = Column(TIMESTAMP())
 
-    session_id = Column(String(100), ForeignKey("session.id"))
+    session_id = Column(String(100))
 
     __tablename__ = "product_detail_leave"
 
@@ -98,7 +98,7 @@ class SQLRecommendationView(FeedbackBase):
     position = Column(Integer(), nullable=True)
     create_at = Column(TIMESTAMP())
 
-    session_id = Column(String(100), ForeignKey("session.id"))
+    session_id = Column(String(100))
 
     __tablename__ = "recommendation_view"
 
@@ -119,7 +119,7 @@ class SQLReview(FeedbackBase):
     update_at = Column(TIMESTAMP())
     create_at = Column(TIMESTAMP())
 
-    session_id = Column(String(100), ForeignKey("session.id"))
+    session_id = Column(String(100))
 
     __tablename__ = "review"
 

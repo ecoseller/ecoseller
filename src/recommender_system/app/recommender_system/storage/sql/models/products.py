@@ -42,8 +42,8 @@ class SQLAttribute(ProductBase):
     value = Column(String(200), nullable=True)
     order = Column(Integer(), nullable=True)
 
-    attribute_type_id = Column(Integer(), ForeignKey("attribute_type.id"))
-    parent_attribute_id = Column(Integer(), ForeignKey("attribute.id"), nullable=True)
+    attribute_type_id = Column(Integer())
+    parent_attribute_id = Column(Integer(), nullable=True)
 
     __tablename__ = "attribute"
 
@@ -59,8 +59,8 @@ class SQLAttributeProductVariant(ProductBase):
 
     id = Column(Integer(), primary_key=True)
 
-    attribute_id = Column(Integer(), ForeignKey("attribute.id"))
-    product_variant_sku = Column(String(255), ForeignKey("product_variant.sku"))
+    attribute_id = Column(Integer())
+    product_variant_sku = Column(String(255))
 
     __tablename__ = "attribute_product_variant"
 
@@ -91,8 +91,8 @@ class SQLAttributeTypeProductType(ProductBase):
 
     id = Column(Integer(), primary_key=True)
 
-    attribute_type_id = Column(Integer(), ForeignKey("attribute_type.id"))
-    product_type_id = Column(Integer(), ForeignKey("product_type.id"))
+    attribute_type_id = Column(Integer())
+    product_type_id = Column(Integer())
 
     __tablename__ = "attribute_type_product_type"
 
@@ -111,7 +111,7 @@ class SQLProduct(ProductBase):
     update_at = Column(TIMESTAMP())
     create_at = Column(TIMESTAMP())
 
-    product_type_id = Column(Integer(), ForeignKey("product_type.id"), nullable=True)
+    product_type_id = Column(Integer(), nullable=True)
 
     __tablename__ = "product"
 
@@ -127,8 +127,8 @@ class SQLProductProductVariant(ProductBase):
 
     id = Column(Integer(), primary_key=True)
 
-    product_id = Column(Integer(), ForeignKey("product.id"))
-    product_variant_sku = Column(String(255), ForeignKey("product_variant.sku"))
+    product_id = Column(Integer())
+    product_variant_sku = Column(String(255))
 
     __tablename__ = "product_product_variant"
 
@@ -150,7 +150,7 @@ class SQLProductTranslation(ProductBase):
     description = Column(String(), nullable=True)
     slug = Column(String(200))
 
-    product_id = Column(Integer(), ForeignKey("product.id"))
+    product_id = Column(Integer())
 
     __tablename__ = "product_translation"
 
@@ -185,7 +185,7 @@ class SQLProductVariant(ProductBase):
     update_at = Column(TIMESTAMP())
     create_at = Column(TIMESTAMP())
 
-    product_id = Column(Integer(), ForeignKey("product.id"))
+    product_id = Column(Integer())
 
     __tablename__ = "product_variant"
 

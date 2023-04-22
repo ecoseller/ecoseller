@@ -2,7 +2,8 @@ import argparse
 from typing import Any, Dict, List, Type, Union
 
 from alembic import command, config
-from sqlalchemy import create_engine, insert, update, and_
+from sqlalchemy import create_engine, and_
+from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Query, Session
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 
@@ -135,15 +136,21 @@ class SQLStorage(AbstractStorage):
     def store_object(self, model: StoredBaseModel, create: bool = False) -> Any:
         sql_class = SQLModelMapper.map(model.__class__)
         pk_column = getattr(sql_class, model.Meta.primary_key)
-        query = update(sql_class).filter(pk_column == model.pk)
-        if create:
-            query = insert(sql_class)
-        query = query.values(model.dict())
-        self.session.execute(query)
-        inserted_object = (
-            self.session.query(sql_class).order_by(pk_column.desc()).first()
-        )
-        return getattr(inserted_object, model.Meta.primary_key)
+        values = model.dict()
+        if getattr(model, model.Meta.primary_key) is None:
+            values.pop(model.Meta.primary_key)
+        query = insert(sql_class).values(values)
+        if create is False:
+            update_set = {
+                c.key: getattr(query.excluded, c.key) for c in sql_class.__table__.c
+            }
+            update_set.pop(model.Meta.primary_key)
+            query = query.on_conflict_do_update(
+                constraint=f"{sql_class.__tablename__}_pkey",
+                set_=update_set,
+            )
+        result = self.session.execute(query.returning(pk_column))
+        return result.fetchone()[0]
 
     def refresh_object(self, model: StoredBaseModel) -> None:
         result = self.get_object(model_class=model.__class__, pk=model.pk)
