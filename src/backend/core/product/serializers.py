@@ -284,6 +284,8 @@ class ProductVariantSerializer(ModelSerializer):
         else:
             instance.attributes.clear()
 
+        instance = super().update(instance, validated_data)
+
         # create product prices
         if len(prices_validated_data) > 0:
             print(prices_validated_data)
@@ -472,6 +474,8 @@ class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSeriali
             instance.product_variants.set(product_variants)
         else:
             instance.product_variants.clear()
+
+        instance = super().update(instance, validated_data)
 
         instance.save()
 
