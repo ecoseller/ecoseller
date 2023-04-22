@@ -57,6 +57,16 @@ class AbstractStorage(ABC):
         raise NotImplementedError()
 
     @abstractmethod
+    def get_objects_attribute(
+        self, model_class: Type[StoredBaseModel], attribute: str, **kwargs
+    ) -> List[Any]:
+        """
+        Searches for models of type `model_class` and returns their attribute
+        `attribute`.
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
     def get_related_objects(
         self,
         model: StoredBaseModel,
