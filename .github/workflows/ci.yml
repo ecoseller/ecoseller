@@ -146,7 +146,9 @@ jobs:
         run: psql -h localhost -U postgres -f setup_database.sql
       - name: Migrate database
         working-directory: src/recommender_system/app
-        run: python recommender_system/scripts/migrate.py
+        run: |
+          PYTHONPATH="/home/runner/work/ecoseller/ecoseller/src/recommender_system/app"
+          python recommender_system/scripts/migrate.py
       - name: Test
         working-directory: src/recommender_system/app
         run: pytest ./tests
