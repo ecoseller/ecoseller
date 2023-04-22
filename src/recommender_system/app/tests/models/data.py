@@ -8,6 +8,7 @@ from recommender_system.models.api.product import Product
 from recommender_system.models.api.product_add_to_cart import ProductAddToCart
 from recommender_system.models.api.product_detail_enter import ProductDetailEnter
 from recommender_system.models.api.product_detail_leave import ProductDetailLeave
+from recommender_system.models.api.product_price import ProductPrice
 from recommender_system.models.api.product_translation import ProductTranslation
 from recommender_system.models.api.product_type import ProductType
 from recommender_system.models.api.product_variant import ProductVariant
@@ -26,6 +27,7 @@ from recommender_system.models.stored.product_detail_enter import (
 from recommender_system.models.stored.product_detail_leave import (
     ProductDetailLeaveModel,
 )
+from recommender_system.models.stored.product_price import ProductPriceModel
 from recommender_system.models.stored.product_translation import ProductTranslationModel
 from recommender_system.models.stored.product_type import ProductTypeModel
 from recommender_system.models.stored.product_variant import ProductVariantModel
@@ -184,6 +186,20 @@ def _product_detail_leave(
     }
 
 
+def _product_price(
+    id: int = 0,
+    product_variant_sku: str = "sku",
+) -> Dict[str, Any]:
+    return {
+        "id": id,
+        "price_list_code": "CZK_maloobchod",
+        "product_variant_sku": product_variant_sku,
+        "price": 100.0,
+        "update_at": _now,
+        "create_at": _now,
+    }
+
+
 def _recommendation_view(
     id: Optional[int] = None,
     session_id: str = "session",
@@ -229,6 +245,7 @@ api_data: Dict[Type[ApiBaseModel], Any] = {
     ProductAddToCart: _product_add_to_cart(),
     ProductDetailEnter: _product_detail_enter(),
     ProductDetailLeave: _product_detail_leave(),
+    ProductPrice: _product_price(),
     ProductTranslation: _product_translation(),
     ProductType: _product_type(),
     ProductVariant: _product_variant(),
@@ -244,6 +261,7 @@ stored_data: Dict[Type[StoredBaseModel], Any] = {
     ProductAddToCartModel: _product_add_to_cart(),
     ProductDetailEnterModel: _product_detail_enter(),
     ProductDetailLeaveModel: _product_detail_leave(),
+    ProductPriceModel: _product_price(),
     ProductTypeModel: _product_type_empty(),
     ProductTranslationModel: _product_translation_model(),
     ProductVariantModel: _product_variant_model(),

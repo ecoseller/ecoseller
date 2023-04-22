@@ -17,6 +17,7 @@ from recommender_system.models.stored.attribute_product_variant import (
 )
 from recommender_system.models.stored.attribute_type import AttributeTypeModel
 from recommender_system.models.stored.product import ProductModel
+from recommender_system.models.stored.product_price import ProductPriceModel
 from recommender_system.models.stored.product_product_variant import (
     ProductProductVariantModel,
 )
@@ -117,6 +118,27 @@ class SQLProduct(ProductBase):
 
     class Meta:
         origin_model = ProductModel
+
+
+class SQLProductPrice(ProductBase):
+    """
+    This model represents product price table in SQL database.
+    """
+
+    id = Column(Integer(), primary_key=True)
+    price_list_code = Column(String(200))
+    price = Column(DECIMAL())
+    update_at = Column(TIMESTAMP())
+    create_at = Column(TIMESTAMP())
+
+    product_variant_sku = Column(
+        String(255), ForeignKey("product_variant.sku"), nullable=True
+    )
+
+    __tablename__ = "product_price"
+
+    class Meta:
+        origin_model = ProductPriceModel
 
 
 class SQLProductProductVariant(ProductBase):
