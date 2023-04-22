@@ -2,28 +2,9 @@ from unittest import TestCase
 
 import pytest
 
-from recommender_system.models.stored.attribute_type import AttributeTypeModel
-from recommender_system.models.stored.attribute_type_product_type import (
-    AttributeTypeProductTypeModel,
-)
 from recommender_system.models.stored.product import ProductModel
 from recommender_system.models.stored.product_translation import ProductTranslationModel
 from tests.storage.tools import get_or_create_model, delete_model, default_dicts
-
-
-def delete_products(product_type_pk: int):
-    for product in ProductModel.gets(product_type_pk=product_type_pk):
-        product.delete()
-
-
-def delete_attribute_types(product_type_pk: int):
-    for atpt in AttributeTypeProductTypeModel.gets(product_type_pk=product_type_pk):
-        try:
-            attribute_type = AttributeTypeModel.get(pk=atpt.attribute_type_pk)
-            attribute_type.delete()
-        except AttributeTypeModel.DoesNotExist:
-            pass
-        atpt.delete()
 
 
 @pytest.fixture

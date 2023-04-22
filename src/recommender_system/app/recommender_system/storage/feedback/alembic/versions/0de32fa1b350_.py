@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 9134449c5629
+Revision ID: 0de32fa1b350
 Revises: 
-Create Date: 2023-04-16 22:04:13.393678
+Create Date: 2023-04-22 15:19:32.510454
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = "9134449c5629"
+revision = "0de32fa1b350"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -28,9 +28,10 @@ def upgrade() -> None:
         "product_add_to_cart",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("user_id", sa.Integer(), nullable=True),
-        sa.Column("product_id", sa.Integer(), nullable=True),
-        sa.Column("create_at", sa.TIMESTAMP(), nullable=True),
-        sa.Column("session_id", sa.String(length=100), nullable=True),
+        sa.Column("product_id", sa.Integer(), nullable=False),
+        sa.Column("product_variant_sku", sa.String(length=255), nullable=False),
+        sa.Column("create_at", sa.TIMESTAMP(), nullable=False),
+        sa.Column("session_id", sa.String(length=100), nullable=False),
         sa.ForeignKeyConstraint(
             ["session_id"],
             ["session.id"],
@@ -41,11 +42,12 @@ def upgrade() -> None:
         "product_detail_enter",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("user_id", sa.Integer(), nullable=True),
-        sa.Column("product_id", sa.Integer(), nullable=True),
+        sa.Column("product_id", sa.Integer(), nullable=False),
+        sa.Column("product_variant_sku", sa.String(length=255), nullable=False),
         sa.Column("recommendation_type", sa.String(length=100), nullable=True),
         sa.Column("position", sa.Integer(), nullable=True),
-        sa.Column("create_at", sa.TIMESTAMP(), nullable=True),
-        sa.Column("session_id", sa.String(length=100), nullable=True),
+        sa.Column("create_at", sa.TIMESTAMP(), nullable=False),
+        sa.Column("session_id", sa.String(length=100), nullable=False),
         sa.ForeignKeyConstraint(
             ["session_id"],
             ["session.id"],
@@ -56,10 +58,11 @@ def upgrade() -> None:
         "product_detail_leave",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("user_id", sa.Integer(), nullable=True),
-        sa.Column("product_id", sa.Integer(), nullable=True),
-        sa.Column("time_spent", sa.Float(), nullable=True),
-        sa.Column("create_at", sa.TIMESTAMP(), nullable=True),
-        sa.Column("session_id", sa.String(length=100), nullable=True),
+        sa.Column("product_id", sa.Integer(), nullable=False),
+        sa.Column("product_variant_sku", sa.String(length=255), nullable=False),
+        sa.Column("time_spent", sa.Float(), nullable=False),
+        sa.Column("create_at", sa.TIMESTAMP(), nullable=False),
+        sa.Column("session_id", sa.String(length=100), nullable=False),
         sa.ForeignKeyConstraint(
             ["session_id"],
             ["session.id"],
@@ -70,11 +73,12 @@ def upgrade() -> None:
         "recommendation_view",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("user_id", sa.Integer(), nullable=True),
-        sa.Column("product_id", sa.Integer(), nullable=True),
-        sa.Column("recommendation_type", sa.String(length=100), nullable=True),
+        sa.Column("product_id", sa.Integer(), nullable=False),
+        sa.Column("product_variant_sku", sa.String(length=255), nullable=False),
+        sa.Column("recommendation_type", sa.String(length=100), nullable=False),
         sa.Column("position", sa.Integer(), nullable=True),
-        sa.Column("create_at", sa.TIMESTAMP(), nullable=True),
-        sa.Column("session_id", sa.String(length=100), nullable=True),
+        sa.Column("create_at", sa.TIMESTAMP(), nullable=False),
+        sa.Column("session_id", sa.String(length=100), nullable=False),
         sa.ForeignKeyConstraint(
             ["session_id"],
             ["session.id"],
@@ -84,12 +88,13 @@ def upgrade() -> None:
     op.create_table(
         "review",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("user_id", sa.Integer(), nullable=True),
-        sa.Column("product_id", sa.Integer(), nullable=True),
-        sa.Column("rating", sa.Integer(), nullable=True),
-        sa.Column("update_at", sa.TIMESTAMP(), nullable=True),
-        sa.Column("create_at", sa.TIMESTAMP(), nullable=True),
-        sa.Column("session_id", sa.String(length=100), nullable=True),
+        sa.Column("user_id", sa.Integer(), nullable=False),
+        sa.Column("product_id", sa.Integer(), nullable=False),
+        sa.Column("product_variant_sku", sa.String(length=255), nullable=False),
+        sa.Column("rating", sa.Integer(), nullable=False),
+        sa.Column("update_at", sa.TIMESTAMP(), nullable=False),
+        sa.Column("create_at", sa.TIMESTAMP(), nullable=False),
+        sa.Column("session_id", sa.String(length=100), nullable=False),
         sa.ForeignKeyConstraint(
             ["session_id"],
             ["session.id"],

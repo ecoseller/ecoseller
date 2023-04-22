@@ -366,6 +366,28 @@ class ProductPrice(models.Model):
     def formatted_price(self):
         return self.price_list.format_price(self.price)
 
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )
+        data = {
+            "_model_class": self.__class__.__name__,
+            "id": self.id,
+            "price_list_code": self.price_list.code,
+            "product_variant_sku": self.product_variant.sku
+            if self.product_variant is not None
+            else None,
+            "price": float(self.price),
+            "update_at": self.update_at.isoformat(),
+            "create_at": self.create_at.isoformat(),
+        }
+        RecommenderSystemApi.store_object(data=data)
+
 
 class ProductMediaTypes:
     IMAGE = "IMAGE"

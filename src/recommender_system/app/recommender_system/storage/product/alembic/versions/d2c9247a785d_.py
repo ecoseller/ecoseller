@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: e1aea32efeb2
-Revises:
-Create Date: 2023-04-04 23:04:20.813284
+Revision ID: d2c9247a785d
+Revises: 
+Create Date: 2023-04-22 15:19:34.505887
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = "e1aea32efeb2"
+revision = "d2c9247a785d"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -28,17 +28,26 @@ def upgrade() -> None:
     op.create_table(
         "product_type",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("name", sa.String(length=200), nullable=True),
-        sa.Column("update_at", sa.TIMESTAMP(), nullable=True),
-        sa.Column("create_at", sa.TIMESTAMP(), nullable=True),
+        sa.Column("name", sa.String(length=200), nullable=False),
+        sa.Column("update_at", sa.TIMESTAMP(), nullable=False),
+        sa.Column("create_at", sa.TIMESTAMP(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
+    )
+    op.create_table(
+        "product_variant",
+        sa.Column("sku", sa.String(length=255), nullable=False),
+        sa.Column("ean", sa.String(length=13), nullable=False),
+        sa.Column("weight", sa.DECIMAL(), nullable=False),
+        sa.Column("update_at", sa.TIMESTAMP(), nullable=False),
+        sa.Column("create_at", sa.TIMESTAMP(), nullable=False),
+        sa.PrimaryKeyConstraint("sku"),
     )
     op.create_table(
         "attribute",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("value", sa.String(length=200), nullable=True),
         sa.Column("order", sa.Integer(), nullable=True),
-        sa.Column("attribute_type_id", sa.Integer(), nullable=True),
+        sa.Column("attribute_type_id", sa.Integer(), nullable=False),
         sa.Column("parent_attribute_id", sa.Integer(), nullable=True),
         sa.ForeignKeyConstraint(
             ["attribute_type_id"],
@@ -53,8 +62,8 @@ def upgrade() -> None:
     op.create_table(
         "attribute_type_product_type",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("attribute_type_id", sa.Integer(), nullable=True),
-        sa.Column("product_type_id", sa.Integer(), nullable=True),
+        sa.Column("attribute_type_id", sa.Integer(), nullable=False),
+        sa.Column("product_type_id", sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(
             ["attribute_type_id"],
             ["attribute_type.id"],
@@ -68,10 +77,10 @@ def upgrade() -> None:
     op.create_table(
         "product",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("published", sa.Boolean(), nullable=True),
+        sa.Column("published", sa.Boolean(), nullable=False),
         sa.Column("category_id", sa.Integer(), nullable=True),
-        sa.Column("update_at", sa.TIMESTAMP(), nullable=True),
-        sa.Column("create_at", sa.TIMESTAMP(), nullable=True),
+        sa.Column("update_at", sa.TIMESTAMP(), nullable=False),
+        sa.Column("create_at", sa.TIMESTAMP(), nullable=False),
         sa.Column("product_type_id", sa.Integer(), nullable=True),
         sa.ForeignKeyConstraint(
             ["product_type_id"],
@@ -80,41 +89,24 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
-        "product_translation",
+        "product_price",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("language_code", sa.String(length=10), nullable=True),
-        sa.Column("title", sa.String(length=200), nullable=True),
-        sa.Column("meta_title", sa.String(length=200), nullable=True),
-        sa.Column("meta_description", sa.String(), nullable=True),
-        sa.Column("short_description", sa.String(), nullable=True),
-        sa.Column("description", sa.String(), nullable=True),
-        sa.Column("slug", sa.String(length=200), nullable=True),
-        sa.Column("product_id", sa.Integer(), nullable=True),
+        sa.Column("price_list_code", sa.String(length=200), nullable=False),
+        sa.Column("price", sa.DECIMAL(), nullable=False),
+        sa.Column("update_at", sa.TIMESTAMP(), nullable=False),
+        sa.Column("create_at", sa.TIMESTAMP(), nullable=False),
+        sa.Column("product_variant_sku", sa.String(length=255), nullable=True),
         sa.ForeignKeyConstraint(
-            ["product_id"],
-            ["product.id"],
+            ["product_variant_sku"],
+            ["product_variant.sku"],
         ),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
-        "product_variant",
-        sa.Column("sku", sa.String(length=255), nullable=False),
-        sa.Column("ean", sa.String(length=13), nullable=True),
-        sa.Column("weight", sa.DECIMAL(), nullable=True),
-        sa.Column("update_at", sa.TIMESTAMP(), nullable=True),
-        sa.Column("create_at", sa.TIMESTAMP(), nullable=True),
-        sa.Column("product_id", sa.Integer(), nullable=True),
-        sa.ForeignKeyConstraint(
-            ["product_id"],
-            ["product.id"],
-        ),
-        sa.PrimaryKeyConstraint("sku"),
-    )
-    op.create_table(
         "attribute_product_variant",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("attribute_id", sa.Integer(), nullable=True),
-        sa.Column("product_variant_sku", sa.String(length=255), nullable=True),
+        sa.Column("attribute_id", sa.Integer(), nullable=False),
+        sa.Column("product_variant_sku", sa.String(length=255), nullable=False),
         sa.ForeignKeyConstraint(
             ["attribute_id"],
             ["attribute.id"],
@@ -128,8 +120,8 @@ def upgrade() -> None:
     op.create_table(
         "product_product_variant",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("product_id", sa.Integer(), nullable=True),
-        sa.Column("product_variant_sku", sa.String(length=255), nullable=True),
+        sa.Column("product_id", sa.Integer(), nullable=False),
+        sa.Column("product_variant_sku", sa.String(length=255), nullable=False),
         sa.ForeignKeyConstraint(
             ["product_id"],
             ["product.id"],
@@ -140,18 +132,36 @@ def upgrade() -> None:
         ),
         sa.PrimaryKeyConstraint("id"),
     )
+    op.create_table(
+        "product_translation",
+        sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("language_code", sa.String(length=10), nullable=False),
+        sa.Column("title", sa.String(length=200), nullable=False),
+        sa.Column("meta_title", sa.String(length=200), nullable=False),
+        sa.Column("meta_description", sa.String(), nullable=False),
+        sa.Column("short_description", sa.String(), nullable=True),
+        sa.Column("description", sa.String(), nullable=True),
+        sa.Column("slug", sa.String(length=200), nullable=False),
+        sa.Column("product_id", sa.Integer(), nullable=False),
+        sa.ForeignKeyConstraint(
+            ["product_id"],
+            ["product.id"],
+        ),
+        sa.PrimaryKeyConstraint("id"),
+    )
     # ### end Alembic commands ###
 
 
 def downgrade() -> None:
     # ### commands auto generated by Alembic - please adjust! ###
+    op.drop_table("product_translation")
     op.drop_table("product_product_variant")
     op.drop_table("attribute_product_variant")
-    op.drop_table("product_variant")
-    op.drop_table("product_translation")
+    op.drop_table("product_price")
     op.drop_table("product")
     op.drop_table("attribute_type_product_type")
     op.drop_table("attribute")
+    op.drop_table("product_variant")
     op.drop_table("product_type")
     op.drop_table("attribute_type")
     # ### end Alembic commands ###

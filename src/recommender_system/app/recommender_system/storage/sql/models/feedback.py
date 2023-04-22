@@ -32,11 +32,11 @@ class SQLProductAddToCart(FeedbackBase):
 
     id = Column(Integer(), primary_key=True)
     user_id = Column(Integer(), nullable=True)
-    product_id = Column(Integer())
-    product_variant_sku = Column(String(255))
-    create_at = Column(TIMESTAMP())
+    product_id = Column(Integer(), nullable=False)
+    product_variant_sku = Column(String(255), nullable=False)
+    create_at = Column(TIMESTAMP(), nullable=False)
 
-    session_id = Column(String(100), ForeignKey("session.id"))
+    session_id = Column(String(100), ForeignKey("session.id"), nullable=False)
 
     __tablename__ = "product_add_to_cart"
 
@@ -51,13 +51,13 @@ class SQLProductDetailEnter(FeedbackBase):
 
     id = Column(Integer(), primary_key=True)
     user_id = Column(Integer(), nullable=True)
-    product_id = Column(Integer())
-    product_variant_sku = Column(String(255))
+    product_id = Column(Integer(), nullable=False)
+    product_variant_sku = Column(String(255), nullable=False)
     recommendation_type = Column(String(100), nullable=True)
     position = Column(Integer(), nullable=True)
-    create_at = Column(TIMESTAMP())
+    create_at = Column(TIMESTAMP(), nullable=False)
 
-    session_id = Column(String(100), ForeignKey("session.id"))
+    session_id = Column(String(100), ForeignKey("session.id"), nullable=False)
 
     __tablename__ = "product_detail_enter"
 
@@ -72,12 +72,12 @@ class SQLProductDetailLeave(FeedbackBase):
 
     id = Column(Integer(), primary_key=True)
     user_id = Column(Integer(), nullable=True)
-    product_id = Column(Integer())
-    product_variant_sku = Column(String(255))
-    time_spent = Column(Float())
-    create_at = Column(TIMESTAMP())
+    product_id = Column(Integer(), nullable=False)
+    product_variant_sku = Column(String(255), nullable=False)
+    time_spent = Column(Float(), nullable=False)
+    create_at = Column(TIMESTAMP(), nullable=False)
 
-    session_id = Column(String(100), ForeignKey("session.id"))
+    session_id = Column(String(100), ForeignKey("session.id"), nullable=False)
 
     __tablename__ = "product_detail_leave"
 
@@ -92,13 +92,13 @@ class SQLRecommendationView(FeedbackBase):
 
     id = Column(Integer(), primary_key=True)
     user_id = Column(Integer(), nullable=True)
-    product_id = Column(Integer())
-    product_variant_sku = Column(String(255))
-    recommendation_type = Column(String(100))
+    product_id = Column(Integer(), nullable=False)
+    product_variant_sku = Column(String(255), nullable=False)
+    recommendation_type = Column(String(100), nullable=False)
     position = Column(Integer(), nullable=True)
-    create_at = Column(TIMESTAMP())
+    create_at = Column(TIMESTAMP(), nullable=False)
 
-    session_id = Column(String(100), ForeignKey("session.id"))
+    session_id = Column(String(100), ForeignKey("session.id"), nullable=False)
 
     __tablename__ = "recommendation_view"
 
@@ -112,14 +112,14 @@ class SQLReview(FeedbackBase):
     """
 
     id = Column(Integer(), primary_key=True)
-    user_id = Column(Integer())
-    product_id = Column(Integer())
-    product_variant_sku = Column(String(255))
-    rating = Column(Integer())
-    update_at = Column(TIMESTAMP())
-    create_at = Column(TIMESTAMP())
+    user_id = Column(Integer(), nullable=False)
+    product_id = Column(Integer(), nullable=False)
+    product_variant_sku = Column(String(255), nullable=False)
+    rating = Column(Integer(), nullable=False)
+    update_at = Column(TIMESTAMP(), nullable=False)
+    create_at = Column(TIMESTAMP(), nullable=False)
 
-    session_id = Column(String(100), ForeignKey("session.id"))
+    session_id = Column(String(100), ForeignKey("session.id"), nullable=False)
 
     __tablename__ = "review"
 

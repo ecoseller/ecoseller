@@ -8,6 +8,7 @@ from recommender_system.models.api.product import Product
 from recommender_system.models.api.product_add_to_cart import ProductAddToCart
 from recommender_system.models.api.product_detail_enter import ProductDetailEnter
 from recommender_system.models.api.product_detail_leave import ProductDetailLeave
+from recommender_system.models.api.product_price import ProductPrice
 from recommender_system.models.api.product_translation import ProductTranslation
 from recommender_system.models.api.product_type import ProductType
 from recommender_system.models.api.product_variant import ProductVariant
@@ -25,6 +26,7 @@ from recommender_system.models.stored.product_detail_enter import (
 from recommender_system.models.stored.product_detail_leave import (
     ProductDetailLeaveModel,
 )
+from recommender_system.models.stored.product_price import ProductPriceModel
 from recommender_system.models.stored.product_translation import ProductTranslationModel
 from recommender_system.models.stored.product_type import ProductTypeModel
 from recommender_system.models.stored.product_variant import ProductVariantModel
@@ -89,6 +91,15 @@ def test_product_detail_leave():
     model = ProductDetailLeaveModel.from_api_model(model=pdl)
 
     expected = str_to_datetime(stored_data[ProductDetailLeaveModel])
+
+    TestCase().assertDictEqual(model.dict(), expected)
+
+
+def test_product_price():
+    pdl = ProductPrice.parse_obj(api_data[ProductPrice])
+    model = ProductPriceModel.from_api_model(model=pdl)
+
+    expected = str_to_datetime(stored_data[ProductPriceModel])
 
     TestCase().assertDictEqual(model.dict(), expected)
 

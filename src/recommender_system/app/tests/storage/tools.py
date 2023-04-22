@@ -12,6 +12,7 @@ from recommender_system.models.stored.product_detail_enter import (
 from recommender_system.models.stored.product_detail_leave import (
     ProductDetailLeaveModel,
 )
+from recommender_system.models.stored.product_price import ProductPriceModel
 from recommender_system.models.stored.product_translation import ProductTranslationModel
 from recommender_system.models.stored.product_type import ProductTypeModel
 from recommender_system.models.stored.product_variant import ProductVariantModel
@@ -69,6 +70,14 @@ default_dicts: Dict[Type[StoredBaseModel], Any] = {
         "product_id": 0,
         "product_variant_sku": "sku",
         "time_spent": 13.5,
+        "create_at": datetime.now(),
+    },
+    ProductPriceModel: {
+        "id": 0,
+        "price_list_code": "CZK_maloobchod",
+        "product_variant_sku": "sku",
+        "price": 100.0,
+        "update_at": datetime.now(),
         "create_at": datetime.now(),
     },
     ProductTranslationModel: {

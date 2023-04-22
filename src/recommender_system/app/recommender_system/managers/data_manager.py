@@ -7,6 +7,7 @@ from recommender_system.models.api.product import Product
 from recommender_system.models.api.product_add_to_cart import ProductAddToCart
 from recommender_system.models.api.product_detail_enter import ProductDetailEnter
 from recommender_system.models.api.product_detail_leave import ProductDetailLeave
+from recommender_system.models.api.product_price import ProductPrice
 from recommender_system.models.api.product_translation import ProductTranslation
 from recommender_system.models.api.product_type import ProductType
 from recommender_system.models.api.product_variant import ProductVariant
@@ -22,6 +23,7 @@ class DataManager:
         "ProductAddToCart": ProductAddToCart,
         "ProductDetailEnter": ProductDetailEnter,
         "ProductDetailLeave": ProductDetailLeave,
+        "ProductPrice": ProductPrice,
         "ProductTranslation": ProductTranslation,
         "ProductType": ProductType,
         "ProductVariant": ProductVariant,
