@@ -117,8 +117,8 @@ jobs:
           POSTGRES_PASSWORD: zZvyAvzG2O5gfr5
         ports:
           - 5432:5432
-        volumes:
-          - setup_database.sql:/docker-entrypoint-initdb.d/setup_database.sql
+#        volumes:
+#          - setup_database.sql:/docker-entrypoint-initdb.d/setup_database.sql
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
