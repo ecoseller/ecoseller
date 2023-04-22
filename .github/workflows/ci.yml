@@ -144,6 +144,8 @@ jobs:
           path: src/recommender_system
       - name: Setup database
         run: psql -h localhost -U postgres -f setup_database.sql
+      - name: Migrate database
+        run: python app/recommender_system/scripts/migrate.py
       - name: Test
         working-directory: src/recommender_system/app
         run: pytest ./tests
