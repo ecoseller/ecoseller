@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, List, Type
+from typing import Any, List, Set, Type
 
 from recommender_system.models.stored.base import StoredBaseModel
 from recommender_system.models.stored.many_to_many_relation import (
