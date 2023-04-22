@@ -1,4 +1,4 @@
-from sqlalchemy.sql.schema import Column, ForeignKey
+from sqlalchemy.sql.schema import Column
 from sqlalchemy.sql.sqltypes import (
     Float,
     Integer,
