@@ -43,7 +43,9 @@ class SQLAttribute(ProductBase):
     value = Column(String(200), nullable=True)
     order = Column(Integer(), nullable=True)
 
-    attribute_type_id = Column(Integer(), ForeignKey("attribute_type.id"))
+    attribute_type_id = Column(
+        Integer(), ForeignKey("attribute_type.id"), nullable=False
+    )
     parent_attribute_id = Column(Integer(), ForeignKey("attribute.id"), nullable=True)
 
     __tablename__ = "attribute"
@@ -60,8 +62,10 @@ class SQLAttributeProductVariant(ProductBase):
 
     id = Column(Integer(), primary_key=True)
 
-    attribute_id = Column(Integer(), ForeignKey("attribute.id"))
-    product_variant_sku = Column(String(255), ForeignKey("product_variant.sku"))
+    attribute_id = Column(Integer(), ForeignKey("attribute.id"), nullable=False)
+    product_variant_sku = Column(
+        String(255), ForeignKey("product_variant.sku"), nullable=False
+    )
 
     __tablename__ = "attribute_product_variant"
 
@@ -92,8 +96,10 @@ class SQLAttributeTypeProductType(ProductBase):
 
     id = Column(Integer(), primary_key=True)
 
-    attribute_type_id = Column(Integer(), ForeignKey("attribute_type.id"))
-    product_type_id = Column(Integer(), ForeignKey("product_type.id"))
+    attribute_type_id = Column(
+        Integer(), ForeignKey("attribute_type.id"), nullable=False
+    )
+    product_type_id = Column(Integer(), ForeignKey("product_type.id"), nullable=False)
 
     __tablename__ = "attribute_type_product_type"
 
@@ -107,10 +113,10 @@ class SQLProduct(ProductBase):
     """
 
     id = Column(Integer(), primary_key=True)
-    published = Column(Boolean)
+    published = Column(Boolean(), nullable=False)
     category_id = Column(Integer(), nullable=True)
-    update_at = Column(TIMESTAMP())
-    create_at = Column(TIMESTAMP())
+    update_at = Column(TIMESTAMP(), nullable=False)
+    create_at = Column(TIMESTAMP(), nullable=False)
 
     product_type_id = Column(Integer(), ForeignKey("product_type.id"), nullable=True)
 
@@ -126,10 +132,10 @@ class SQLProductPrice(ProductBase):
     """
 
     id = Column(Integer(), primary_key=True)
-    price_list_code = Column(String(200))
-    price = Column(DECIMAL())
-    update_at = Column(TIMESTAMP())
-    create_at = Column(TIMESTAMP())
+    price_list_code = Column(String(200), nullable=False)
+    price = Column(DECIMAL(), nullable=False)
+    update_at = Column(TIMESTAMP(), nullable=False)
+    create_at = Column(TIMESTAMP(), nullable=False)
 
     product_variant_sku = Column(
         String(255), ForeignKey("product_variant.sku"), nullable=True
@@ -149,8 +155,10 @@ class SQLProductProductVariant(ProductBase):
 
     id = Column(Integer(), primary_key=True)
 
-    product_id = Column(Integer(), ForeignKey("product.id"))
-    product_variant_sku = Column(String(255), ForeignKey("product_variant.sku"))
+    product_id = Column(Integer(), ForeignKey("product.id"), nullable=False)
+    product_variant_sku = Column(
+        String(255), ForeignKey("product_variant.sku"), nullable=False
+    )
 
     __tablename__ = "product_product_variant"
 
@@ -164,15 +172,15 @@ class SQLProductTranslation(ProductBase):
     """
 
     id = Column(Integer(), primary_key=True)
-    language_code = Column(String(10))
-    title = Column(String(200))
-    meta_title = Column(String(200))
-    meta_description = Column(String())
+    language_code = Column(String(10), nullable=False)
+    title = Column(String(200), nullable=False)
+    meta_title = Column(String(200), nullable=False)
+    meta_description = Column(String(), nullable=False)
     short_description = Column(String(), nullable=True)
     description = Column(String(), nullable=True)
-    slug = Column(String(200))
+    slug = Column(String(200), nullable=False)
 
-    product_id = Column(Integer(), ForeignKey("product.id"))
+    product_id = Column(Integer(), ForeignKey("product.id"), nullable=False)
 
     __tablename__ = "product_translation"
 
@@ -186,9 +194,9 @@ class SQLProductType(ProductBase):
     """
 
     id = Column(Integer(), primary_key=True)
-    name = Column(String(200))
-    update_at = Column(TIMESTAMP())
-    create_at = Column(TIMESTAMP())
+    name = Column(String(200), nullable=False)
+    update_at = Column(TIMESTAMP(), nullable=False)
+    create_at = Column(TIMESTAMP(), nullable=False)
 
     __tablename__ = "product_type"
 
@@ -202,12 +210,10 @@ class SQLProductVariant(ProductBase):
     """
 
     sku = Column(String(255), primary_key=True)
-    ean = Column(String(13))
-    weight = Column(DECIMAL())
-    update_at = Column(TIMESTAMP())
-    create_at = Column(TIMESTAMP())
-
-    product_id = Column(Integer(), ForeignKey("product.id"))
+    ean = Column(String(13), nullable=False)
+    weight = Column(DECIMAL(), nullable=False)
+    update_at = Column(TIMESTAMP(), nullable=False)
+    create_at = Column(TIMESTAMP(), nullable=False)
 
     __tablename__ = "product_variant"
 
