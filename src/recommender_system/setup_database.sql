@@ -1,0 +1,2 @@
+CREATE DATABASE products;
+CREATE DATABASE feedback;
