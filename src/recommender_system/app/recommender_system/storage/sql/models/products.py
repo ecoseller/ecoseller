@@ -39,7 +39,7 @@ class SQLAttribute(ProductBase):
     """
 
     id = Column(Integer(), primary_key=True)
-    value = Column(String(200))
+    value = Column(String(200), nullable=True)
     order = Column(Integer(), nullable=True)
 
     attribute_type_id = Column(Integer(), ForeignKey("attribute_type.id"))
@@ -74,8 +74,8 @@ class SQLAttributeType(ProductBase):
     """
 
     id = Column(Integer(), primary_key=True)
-    type_name = Column(String(200))
-    unit = Column(String(200))
+    type_name = Column(String(200), nullable=True)
+    unit = Column(String(200), nullable=True)
 
     __tablename__ = "attribute_type"
 
@@ -145,9 +145,9 @@ class SQLProductTranslation(ProductBase):
     language_code = Column(String(10))
     title = Column(String(200))
     meta_title = Column(String(200))
-    meta_description = Column(String)
-    short_description = Column(String)
-    description = Column(String)
+    meta_description = Column(String())
+    short_description = Column(String(), nullable=True)
+    description = Column(String(), nullable=True)
     slug = Column(String(200))
 
     product_id = Column(Integer(), ForeignKey("product.id"))

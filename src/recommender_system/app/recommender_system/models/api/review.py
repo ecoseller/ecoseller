@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from recommender_system.models.api.base import ApiBaseModel
+from recommender_system.models.stored.review import ReviewModel
 
 
 class Review(ApiBaseModel):
@@ -17,3 +18,6 @@ class Review(ApiBaseModel):
     rating: int
     update_at: datetime
     create_at: datetime
+
+    class Meta:
+        stored_model_class = ReviewModel

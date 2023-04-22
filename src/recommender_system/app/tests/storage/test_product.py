@@ -1,3 +1,4 @@
+from datetime import datetime
 from unittest import TestCase
 
 import pytest
@@ -127,7 +128,7 @@ def test_product_product_variants(create_product):
     old_variants = len(product.product_variants)
 
     product_variant = ProductVariantModel.parse_obj(variant_dict)
-    product_variant.sku = "new_sku"
+    product_variant.sku = datetime.now().isoformat()
     product_variant.create()
 
     product.add_product_variant(product_variant=product_variant)

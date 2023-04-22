@@ -1,4 +1,7 @@
+from typing import Optional
+
 from recommender_system.models.api.base import ApiBaseModel
+from recommender_system.models.stored.product_translation import ProductTranslationModel
 
 
 class ProductTranslation(ApiBaseModel):
@@ -12,6 +15,9 @@ class ProductTranslation(ApiBaseModel):
     title: str
     meta_title: str
     meta_description: str
-    short_description: str
-    description: str
+    short_description: Optional[str]
+    description: Optional[str]
     slug: str
+
+    class Meta:
+        stored_model_class = ProductTranslationModel

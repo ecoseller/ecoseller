@@ -20,7 +20,7 @@ class AttributeModel(ProductStoredBaseModel):
     """
 
     id: int
-    value: str
+    value: Optional[str]
     order: Optional[int]
 
     attribute_type_id: int
@@ -30,24 +30,10 @@ class AttributeModel(ProductStoredBaseModel):
         primary_key = "id"
 
     @classmethod
-    def from_api_model(
-        cls, model: ApiBaseModel, **kwargs: Any
-    ) -> List[StoredBaseModel]:
-        attribute_type = AttributeTypeModel.from_api_model(model=model.type)[0]
-        stored = super().from_api_model(
-            model=model, attribute_type_id=attribute_type.id, **kwargs
-        )[0]
-
-        result = [attribute_type, stored]
-
-        for attribute in model.ext_attributes:
-            result.extend(
-                AttributeModel.from_api_model(
-                    model=attribute, parent_attribute_id=stored.id
-                )
-            )
-
-        return result
+    def from_api_model(cls, model: ApiBaseModel, **kwargs: Any) -> StoredBaseModel:
+        return super().from_api_model(
+            model=model, attribute_type_id=model.type, **kwargs
+        )
 
     @property
     def attribute_type(self) -> AttributeTypeModel:

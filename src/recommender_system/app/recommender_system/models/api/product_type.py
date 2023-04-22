@@ -1,9 +1,8 @@
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
-from recommender_system.models.api.attribute_type import AttributeType
 from recommender_system.models.api.base import ApiBaseModel
-from recommender_system.models.api.product import Product
+from recommender_system.models.stored.product_type import ProductTypeModel
 
 
 class ProductType(ApiBaseModel):
@@ -13,8 +12,11 @@ class ProductType(ApiBaseModel):
     """
 
     id: int
-    name: str
+    name: Optional[str]
     update_at: datetime
     create_at: datetime
-    products: List[Product] = []
-    attribute_types: List[AttributeType] = []
+    products: List[int]
+    attribute_types: List[int]
+
+    class Meta:
+        stored_model_class = ProductTypeModel

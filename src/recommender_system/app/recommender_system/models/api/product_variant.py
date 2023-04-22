@@ -1,8 +1,8 @@
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
-from recommender_system.models.api.attribute import Attribute
 from recommender_system.models.api.base import ApiBaseModel
+from recommender_system.models.stored.product_variant import ProductVariantModel
 
 
 class ProductVariant(ApiBaseModel):
@@ -13,7 +13,10 @@ class ProductVariant(ApiBaseModel):
 
     sku: str
     ean: str
-    weight: float
+    weight: Optional[float]
     update_at: datetime
     create_at: datetime
-    attributes: List[Attribute]
+    attributes: List[int]
+
+    class Meta:
+        stored_model_class = ProductVariantModel

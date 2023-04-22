@@ -1,11 +1,7 @@
 from datetime import datetime
-from typing import Any, List, TYPE_CHECKING
+from typing import List, TYPE_CHECKING
 
-from recommender_system.models.api.base import ApiBaseModel
-from recommender_system.models.stored.base import (
-    StoredBaseModel,
-    ProductStoredBaseModel,
-)
+from recommender_system.models.stored.base import ProductStoredBaseModel
 
 if TYPE_CHECKING:
     from recommender_system.models.stored.attribute_type import (
@@ -27,37 +23,6 @@ class ProductTypeModel(ProductStoredBaseModel):
 
     class Meta:
         primary_key = "id"
-
-    @classmethod
-    def from_api_model(
-        cls, model: ApiBaseModel, **kwargs: Any
-    ) -> List[StoredBaseModel]:
-        from recommender_system.models.stored.attribute_type import (
-            AttributeTypeModel,
-        )
-        from recommender_system.models.stored.attribute_type_product_type import (
-            AttributeTypeProductTypeModel,
-        )
-        from recommender_system.models.stored.product import ProductModel
-
-        stored = super().from_api_model(model=model, **kwargs)[0]
-
-        result = [stored]
-
-        for product in model.products:
-            if product.type_id is None:
-                product.type_id = stored.id
-            result.extend(ProductModel.from_api_model(model=product))
-
-        for attribute_type in model.attribute_types:
-            result.extend(AttributeTypeModel.from_api_model(model=attribute_type))
-            result.append(
-                AttributeTypeProductTypeModel(
-                    attribute_type_id=attribute_type.id, product_type_id=stored.id
-                )
-            )
-
-        return result
 
     @property
     def attribute_types(self) -> List["AttributeTypeModel"]:

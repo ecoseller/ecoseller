@@ -1,3 +1,5 @@
+from typing import Optional
+
 from recommender_system.models.stored.base import ProductStoredBaseModel
 from recommender_system.models.stored.product import ProductModel
 
@@ -13,8 +15,8 @@ class ProductTranslationModel(ProductStoredBaseModel):
     title: str
     meta_title: str
     meta_description: str
-    short_description: str
-    description: str
+    short_description: Optional[str]
+    description: Optional[str]
     slug: str
 
     product_id: int

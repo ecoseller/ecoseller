@@ -1,4 +1,4 @@
-from typing import List, TYPE_CHECKING
+from typing import List, Optional, TYPE_CHECKING
 
 from recommender_system.models.stored.base import ProductStoredBaseModel
 
@@ -14,8 +14,8 @@ class AttributeTypeModel(ProductStoredBaseModel):
     """
 
     id: int
-    type_name: str
-    unit: str
+    type_name: Optional[str]
+    unit: Optional[str]
 
     class Meta:
         primary_key = "id"

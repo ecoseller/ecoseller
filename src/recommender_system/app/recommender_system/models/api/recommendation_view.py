@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Optional
 
 from recommender_system.models.api.base import ApiBaseModel
+from recommender_system.models.stored.recommendation_view import RecommendationViewModel
 
 
 class RecommendationView(ApiBaseModel):
@@ -18,3 +19,6 @@ class RecommendationView(ApiBaseModel):
     recommendation_type: str
     position: Optional[int]
     create_at: datetime
+
+    class Meta:
+        stored_model_class = RecommendationViewModel

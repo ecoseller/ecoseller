@@ -2,6 +2,9 @@ from datetime import datetime
 from typing import Optional
 
 from recommender_system.models.api.base import ApiBaseModel
+from recommender_system.models.stored.product_detail_leave import (
+    ProductDetailLeaveModel,
+)
 
 
 class ProductDetailLeave(ApiBaseModel):
@@ -16,3 +19,6 @@ class ProductDetailLeave(ApiBaseModel):
     product_variant_sku: str
     time_spent: float
     create_at: datetime
+
+    class Meta:
+        stored_model_class = ProductDetailLeaveModel

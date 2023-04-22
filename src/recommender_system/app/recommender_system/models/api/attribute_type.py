@@ -1,4 +1,7 @@
+from typing import Optional
+
 from recommender_system.models.api.base import ApiBaseModel
+from recommender_system.models.stored.attribute_type import AttributeTypeModel
 
 
 class AttributeType(ApiBaseModel):
@@ -8,5 +11,8 @@ class AttributeType(ApiBaseModel):
     """
 
     id: int
-    type_name: str
-    unit: str
+    type_name: Optional[str]
+    unit: Optional[str]
+
+    class Meta:
+        stored_model_class = AttributeTypeModel
