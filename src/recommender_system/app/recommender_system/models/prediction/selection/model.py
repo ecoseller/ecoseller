@@ -7,7 +7,7 @@ from recommender_system.models.stored.product_variant import ProductVariantModel
 from recommender_system.storage.abstract import AbstractStorage
 
 
-class DummyPredictionModel(AbstractPredictionModel):
+class SelectionPredictionModel(AbstractPredictionModel):
     @inject
     def predict(
         self,
@@ -18,7 +18,8 @@ class DummyPredictionModel(AbstractPredictionModel):
     ) -> List[str]:
         if variants is not None:
             return variants
-        return storage.get_objects_attribute(
+        return storage.get_random_weighted_attribute(
             model_class=ProductVariantModel,
             attribute=ProductVariantModel.Meta.primary_key,
+            weight="recommendation_weight",
         )

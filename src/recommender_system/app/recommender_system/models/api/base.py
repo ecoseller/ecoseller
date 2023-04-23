@@ -17,7 +17,4 @@ class ApiBaseModel(BaseModel):
 
     def save(self) -> None:
         stored_model = self.Meta.stored_model_class.from_api_model(self)
-        try:
-            stored_model.create()
-        except Exception:
-            stored_model.save()
+        stored_model.save()

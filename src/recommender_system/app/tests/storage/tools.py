@@ -94,7 +94,8 @@ default_dicts: Dict[Type[StoredBaseModel], Any] = {
     ProductVariantModel: {
         "sku": "sku",
         "ean": "ean",
-        "weight": 0,
+        "weight": 0.0,
+        "recommendation_weight": 1.0,
         "update_at": datetime.now(),
         "create_at": datetime.now(),
         "product_id": 0,
@@ -127,13 +128,6 @@ def get_or_create_model(model_class: Type[StoredBaseModel]) -> StoredBaseModel:
     try:
         model = model_class.get(pk=model.pk)
     except model_class.DoesNotExist:
-        parent = None
-        if isinstance(model, ProductModel):
-            parent = ProductTypeModel
-        elif isinstance(model, AttributeModel):
-            parent = AttributeTypeModel
-        if parent is not None:
-            get_or_create_model(parent)
         model.create()
     return model
 

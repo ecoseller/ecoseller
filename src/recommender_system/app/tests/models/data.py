@@ -85,7 +85,8 @@ def _product_variant_model(sku: str = "sku") -> Dict[str, Any]:
     return {
         "sku": sku,
         "ean": "ean",
-        "weight": 0,
+        "weight": 0.0,
+        "recommendation_weight": 1.0,
         "update_at": _now,
         "create_at": _now,
     }

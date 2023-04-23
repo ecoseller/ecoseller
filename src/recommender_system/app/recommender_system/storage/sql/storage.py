@@ -6,6 +6,7 @@ from sqlalchemy import create_engine, and_
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Query, Session
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
+from sqlalchemy.sql.functions import random
 
 from recommender_system.models.stored.base import StoredBaseModel
 from recommender_system.models.stored.many_to_many_relation import (
@@ -104,6 +105,19 @@ class SQLStorage(AbstractStorage):
 
         query = self.session.query(getattr(sql_class, attribute))
         query = self._filter(model_class=model_class, query=query, filters=kwargs)
+
+        return list(map(lambda row: row[0], query.all()))
+
+    def get_random_weighted_attribute(
+        self, model_class: Type[StoredBaseModel], attribute: str, weight: str, **kwargs
+    ) -> List[Any]:
+        sql_class = SQLModelMapper.map(model_class)
+
+        priority = random() * getattr(sql_class, weight)
+
+        query = self.session.query(getattr(sql_class, attribute), priority)
+        query = self._filter(model_class=model_class, query=query, filters=kwargs)
+        query = query.order_by(priority.desc())
 
         return list(map(lambda row: row[0], query.all()))
 
