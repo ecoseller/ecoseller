@@ -81,8 +81,8 @@ class AbstractStorage(ABC):
     @abstractmethod
     def get_popular_product_variant_pks(self) -> List[Any]:
         """
-        Searches for product variants and returns them ordered by the number
-        of ordered items.
+        Searches for product variants and returns their primary key randomly
+        sampled by number of their orders.
         """
         raise NotImplementedError()
 
