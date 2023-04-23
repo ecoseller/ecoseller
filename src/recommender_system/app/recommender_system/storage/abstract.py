@@ -90,6 +90,14 @@ class AbstractStorage(ABC):
         raise NotImplementedError()
 
     @abstractmethod
+    def get_popular_product_variant_pks(self) -> List[Any]:
+        """
+        Searches for product variants and returns them ordered by the number
+        of ordered items.
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
     def store_object(self, model: StoredBaseModel, create: bool = False) -> Any:
         """
         Stores `model` instance in storage.

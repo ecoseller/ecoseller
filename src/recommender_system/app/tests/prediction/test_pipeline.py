@@ -6,13 +6,17 @@ from recommender_system.managers.model_manager import ModelManager
 from recommender_system.managers.prediction_pipeline import PredictionPipeline
 from recommender_system.models.prediction.abstract import AbstractPredictionModel
 from recommender_system.models.prediction.dummy.model import DummyPredictionModel
+from recommender_system.models.prediction.popularity.model import (
+    PopularityPredictionModel,
+)
 from recommender_system.models.prediction.selection.model import (
     SelectionPredictionModel,
 )
+from recommender_system.models.stored.order import OrderModel
 from recommender_system.models.stored.product import ProductModel
 from recommender_system.models.stored.product_variant import ProductVariantModel
 from recommender_system.utils.recommendation_type import RecommendationType
-from tests.storage.tools import get_or_create_model, delete_model
+from tests.storage.tools import get_or_create_model, delete_model, default_dicts
 
 
 class MockModelManager(ModelManager):
@@ -60,6 +64,10 @@ def create_product_variants():
     for variant in variants:
         variant.save()
 
+    variants[0].add_order(
+        order=OrderModel.parse_obj(default_dicts[OrderModel]), amount=1
+    )
+
     yield [variant.pk for variant in variants]
 
     for variant in variants:
@@ -92,6 +100,24 @@ def test_dummy(app, create_product_variants, prediction_pipeline):
         for found_index in indices:
             assert index < found_index
             index = found_index
+
+
+def test_popularity(app, create_product_variants, prediction_pipeline):
+    with app.container.model_manager.override(
+        MockModelManager(model=PopularityPredictionModel())
+    ):
+        variant_skus = create_product_variants
+
+        predictions = prediction_pipeline.run(
+            recommendation_type=RecommendationType.HOMEPAGE,
+            session_id="unittest",
+            user_id=None,
+        )
+
+        for sku in variant_skus:
+            assert sku in predictions
+
+        assert len(predictions) == len(ProductVariantModel.gets())
 
 
 def test_selection(app, create_product_variants, prediction_pipeline):

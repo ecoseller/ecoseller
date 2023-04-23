@@ -11,11 +11,13 @@ from recommender_system.storage.sql.models.feedback import (
     SQLSession,
 )
 from recommender_system.storage.sql.models.products import (
+    ProductBase,
     SQLAttribute,
     SQLAttributeProductVariant,
     SQLAttributeType,
     SQLAttributeTypeProductType,
-    ProductBase,
+    SQLOrder,
+    SQLOrderProductVariant,
     SQLProduct,
     SQLProductPrice,
     SQLProductProductVariant,
@@ -39,6 +41,8 @@ _sql_models = [
     SQLAttributeProductVariant,
     SQLAttributeType,
     SQLAttributeTypeProductType,
+    SQLOrder,
+    SQLOrderProductVariant,
     SQLProduct,
     SQLProductPrice,
     SQLProductProductVariant,
