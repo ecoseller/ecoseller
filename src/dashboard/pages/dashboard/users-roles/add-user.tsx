@@ -42,7 +42,7 @@ const DashboardUserAddPage = () => {
     <DashboardLayout>
       <Container maxWidth="xl">
         <EditableContentWrapper
-          primaryButtonTitle={PrimaryButtonAction.Create} // To distinguish between create and update actions
+          primaryButtonTitle={PrimaryButtonAction.Create}
           preventNavigation={preventNavigation}
           setPreventNavigation={setPreventNavigation}
           onButtonClick={async () => {

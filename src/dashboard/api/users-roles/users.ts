@@ -60,3 +60,12 @@ export const deleteGroup = async (data: IGroup) => {
   console.log("deleteGroup", data);
   return await axiosPrivate.delete(`/roles/groups/${data.group_name}`);
 };
+
+export const getGroups = async () => {
+  // Get all groups
+  // URL: /roles/groups
+  // Method: GET
+  // Return: Promise
+  console.log("getGroups");
+  return await axiosPrivate.get(`/roles/groups`);
+}

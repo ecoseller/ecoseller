@@ -13,7 +13,7 @@ export interface IPermission {
   type: string;
 }
 export interface IGroup {
-  group_name: string;
+  name: string;
   description: string;
   permissions: IPermission[];
 }
