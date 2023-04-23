@@ -2,7 +2,7 @@ import argparse
 from typing import Any, Dict, List, Type, Union
 
 from alembic import command, config
-from sqlalchemy import create_engine, and_
+from sqlalchemy import create_engine, and_, func, case
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Query, Session
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
@@ -16,7 +16,11 @@ from recommender_system.storage.abstract import AbstractStorage
 from recommender_system.storage.exceptions import MultipleObjectsReturned
 from recommender_system.storage.sql.mapper import SQLModelMapper
 from recommender_system.storage.sql.models.feedback import FeedbackBase
-from recommender_system.storage.sql.models.products import ProductBase
+from recommender_system.storage.sql.models.products import (
+    ProductBase,
+    SQLOrderProductVariant,
+    SQLProductVariant,
+)
 
 
 Base = Union[Type[ProductBase], Type[FeedbackBase]]
@@ -156,6 +160,43 @@ class SQLStorage(AbstractStorage):
             models.append(target_class(**result.__dict__))
 
         return models
+
+    def get_popular_product_variant_pks(self) -> List[Any]:
+        amount = case(
+            (
+                SQLOrderProductVariant.product_variant_sku.isnot(None),
+                SQLOrderProductVariant.amount,
+            ),
+            else_=0,
+        ).label("amount")
+
+        number_of_orders = (
+            self.session.query(
+                SQLProductVariant.sku,
+                amount,
+            )
+            .select_from(SQLProductVariant)
+            .outerjoin(
+                SQLOrderProductVariant,
+                SQLOrderProductVariant.product_variant_sku == SQLProductVariant.sku,
+            )
+            .subquery()
+        )
+
+        priority = func.sum(random() * number_of_orders.c.amount)
+
+        query = (
+            self.session.query(SQLProductVariant.sku, priority)
+            .select_from(SQLProductVariant)
+            .join(
+                number_of_orders,
+                number_of_orders.c.sku == SQLProductVariant.sku,
+            )
+            .group_by(SQLProductVariant.sku)
+        )
+        query = query.order_by(priority.desc())
+
+        return list(map(lambda row: row[0], query.all()))
 
     def store_object(self, model: StoredBaseModel, create: bool = False) -> Any:
         sql_class = SQLModelMapper.map(model.__class__)

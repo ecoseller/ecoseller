@@ -6,6 +6,10 @@ from recommender_system.models.stored.attribute import AttributeModel
 from recommender_system.models.stored.attribute_product_variant import (
     AttributeProductVariantModel,
 )
+from recommender_system.models.stored.order import OrderModel
+from recommender_system.models.stored.order_product_variant import (
+    OrderProductVariantModel,
+)
 from recommender_system.models.stored.product import ProductModel
 from recommender_system.models.stored.product_product_variant import (
     ProductProductVariantModel,
@@ -23,6 +27,15 @@ def delete_attributes(product_variant_pk: str):
         except AttributeModel.DoesNotExist:
             pass
         apv.delete()
+
+
+def delete_orders(product_variant_pk: str):
+    for opv in OrderProductVariantModel.gets(product_variant_sku=product_variant_pk):
+        try:
+            OrderModel.get(pk=opv.order_id).delete()
+        except OrderModel.DoesNotExist:
+            pass
+        opv.delete()
 
 
 def delete_products(product_variant_pk: str):
@@ -44,6 +57,7 @@ def clear_product_variant():
     yield product_variant_sku, product.pk
 
     delete_attributes(product_variant_pk=product_variant_sku)
+    delete_orders(product_variant_pk=product_variant_sku)
     delete_products(product_variant_pk=product_variant_sku)
     delete_model(model_class=ProductVariantModel, pk=product_variant_sku)
     delete_model(model_class=ProductModel, pk=product.pk)
@@ -56,7 +70,8 @@ def create_product_variant():
 
     yield product_variant.pk
 
-    delete_attributes(product_variant_pk=product_variant.sku)
+    delete_attributes(product_variant_pk=product_variant.pk)
+    delete_orders(product_variant_pk=product_variant.pk)
     delete_products(product_variant_pk=product_variant.pk)
     delete_model(model_class=ProductVariantModel, pk=product_variant.pk)
     delete_model(model_class=ProductModel, pk=product.pk)
@@ -133,6 +148,23 @@ def test_product_variant_attributes(create_product_variant):
     product_variant.add_attribute(attribute=attribute)
 
     assert len(product_variant.attributes) == old_attributes + 1
+
+
+def test_product_variant_orders(create_product_variant):
+    product_variant_pk = create_product_variant
+    product_variant = ProductVariantModel.get(pk=product_variant_pk)
+
+    order_dict = default_dicts[OrderModel]
+
+    old_orders = len(product_variant.orders)
+
+    order = OrderModel.parse_obj(order_dict)
+    order.id = None
+    order.create()
+
+    product_variant.add_order(order=order, amount=1)
+
+    assert len(product_variant.orders) == old_orders + 1
 
 
 def test_product_variant_products(create_product_variant):
