@@ -92,10 +92,8 @@ class PageFrontend(Page, TranslatableModel):
     translations = TranslatedFields(
         title=models.CharField(max_length=250),
     )
-    frontend_path = (
-        models.CharField(
-            max_length=250,
-        ),
+    frontend_path = models.CharField(
+        max_length=250,
     )
 
     class Meta:
