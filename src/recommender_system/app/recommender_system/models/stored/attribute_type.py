@@ -45,4 +45,4 @@ class AttributeTypeModel(ProductStoredBaseModel):
 
         AttributeTypeProductTypeModel(
             attribute_type_id=self.id, product_type_id=product_type.id
-        ).create()
+        ).save()

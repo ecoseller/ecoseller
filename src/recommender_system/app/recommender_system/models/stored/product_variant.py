@@ -17,6 +17,7 @@ class ProductVariantModel(ProductStoredBaseModel):
     sku: str
     ean: str
     weight: Optional[float]
+    recommendation_weight: float
     update_at: datetime
     create_at: datetime
 

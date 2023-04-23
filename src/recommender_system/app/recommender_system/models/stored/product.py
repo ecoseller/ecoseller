@@ -92,4 +92,4 @@ class ProductModel(ProductStoredBaseModel):
 
         ProductProductVariantModel(
             product_id=self.id, product_variant_sku=product_variant.sku
-        ).create()
+        ).save()
