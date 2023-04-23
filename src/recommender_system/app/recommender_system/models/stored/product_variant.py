@@ -5,6 +5,7 @@ from recommender_system.models.stored.base import ProductStoredBaseModel
 
 if TYPE_CHECKING:
     from recommender_system.models.stored.attribute import AttributeModel
+    from recommender_system.models.stored.order import OrderModel
     from recommender_system.models.stored.product import ProductModel
 
 
@@ -34,6 +35,16 @@ class ProductVariantModel(ProductStoredBaseModel):
         )
 
     @property
+    def orders(self) -> List["OrderModel"]:
+        from recommender_system.models.stored.order_product_variant import (
+            OrderProductVariantModel,
+        )
+
+        return self._storage.get_related_objects(
+            model=self, relation_model_class=OrderProductVariantModel
+        )
+
+    @property
     def products(self) -> List["ProductModel"]:
         from recommender_system.models.stored.product_product_variant import (
             ProductProductVariantModel,
@@ -47,6 +58,9 @@ class ProductVariantModel(ProductStoredBaseModel):
         from recommender_system.models.stored.attribute_product_variant import (
             AttributeProductVariantModel,
         )
+        from recommender_system.models.stored.order_product_variant import (
+            OrderProductVariantModel,
+        )
         from recommender_system.models.stored.product_product_variant import (
             ProductProductVariantModel,
         )
@@ -54,6 +68,8 @@ class ProductVariantModel(ProductStoredBaseModel):
         super().delete()
         for apv in AttributeProductVariantModel.gets(product_variant_sku=self.sku):
             apv.delete()
+        for opv in OrderProductVariantModel.gets(product_variant_sku=self.sku):
+            opv.delete()
         for ppv in ProductProductVariantModel.gets(product_variant_sku=self.sku):
             ppv.delete()
 
@@ -64,6 +80,15 @@ class ProductVariantModel(ProductStoredBaseModel):
 
         AttributeProductVariantModel(
             attribute_id=attribute.id, product_variant_sku=self.sku
+        ).create()
+
+    def add_order(self, order: "OrderModel", amount: int) -> None:
+        from recommender_system.models.stored.order_product_variant import (
+            OrderProductVariantModel,
+        )
+
+        OrderProductVariantModel(
+            order_id=order.id, product_variant_sku=self.sku, amount=amount
         ).create()
 
     def add_product(self, product: "ProductModel") -> None:

@@ -16,6 +16,10 @@ from recommender_system.models.stored.attribute_product_variant import (
     AttributeProductVariantModel,
 )
 from recommender_system.models.stored.attribute_type import AttributeTypeModel
+from recommender_system.models.stored.order import OrderModel
+from recommender_system.models.stored.order_product_variant import (
+    OrderProductVariantModel,
+)
 from recommender_system.models.stored.product import ProductModel
 from recommender_system.models.stored.product_price import ProductPriceModel
 from recommender_system.models.stored.product_product_variant import (
@@ -99,6 +103,40 @@ class SQLAttributeTypeProductType(ProductBase):
 
     class Meta:
         origin_model = AttributeTypeProductTypeModel
+
+
+class SQLOrder(ProductBase):
+    """
+    This model represents order table in SQL database.
+    """
+
+    id = Column(Integer(), primary_key=True)
+    update_at = Column(TIMESTAMP(), nullable=False)
+    create_at = Column(TIMESTAMP(), nullable=False)
+
+    session_id = Column(String(100), nullable=False)
+
+    __tablename__ = "order"
+
+    class Meta:
+        origin_model = OrderModel
+
+
+class SQLOrderProductVariant(ProductBase):
+    """
+    This model represents order and product variant relation in SQL database.
+    """
+
+    id = Column(Integer(), primary_key=True)
+    amount = Column(Integer(), nullable=False)
+
+    order_id = Column(Integer(), nullable=False)
+    product_variant_sku = Column(String(255), nullable=False)
+
+    __tablename__ = "order_product_variant"
+
+    class Meta:
+        origin_model = OrderProductVariantModel
 
 
 class SQLProduct(ProductBase):

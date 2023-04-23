@@ -4,6 +4,7 @@ from typing import Any, Dict, Type
 from recommender_system.models.stored.attribute import AttributeModel
 from recommender_system.models.stored.attribute_type import AttributeTypeModel
 from recommender_system.models.stored.base import StoredBaseModel
+from recommender_system.models.stored.order import OrderModel
 from recommender_system.models.stored.product import ProductModel
 from recommender_system.models.stored.product_add_to_cart import ProductAddToCartModel
 from recommender_system.models.stored.product_detail_enter import (
@@ -32,9 +33,9 @@ default_dicts: Dict[Type[StoredBaseModel], Any] = {
         "attribute_type_id": 0,
         "parent_attribute_id": None,
     },
-    ProductTypeModel: {
+    OrderModel: {
         "id": 0,
-        "name": "1",
+        "session_id": "session",
         "update_at": datetime.now(),
         "create_at": datetime.now(),
     },
@@ -90,6 +91,12 @@ default_dicts: Dict[Type[StoredBaseModel], Any] = {
         "description": "description",
         "slug": "slug",
         "product_id": 0,
+    },
+    ProductTypeModel: {
+        "id": 0,
+        "name": "1",
+        "update_at": datetime.now(),
+        "create_at": datetime.now(),
     },
     ProductVariantModel: {
         "sku": "sku",
