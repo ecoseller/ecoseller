@@ -143,7 +143,7 @@ class PageFrontendDashboardSerializer(
     TranslatableModelSerializer,
     serializers.ModelSerializer,
 ):
-    translations = TranslatedFieldsField(shared_model=PageFrontend, required=False)
+    translations = TranslatedFieldsField(shared_model=PageFrontend)
 
     class Meta:
         model = PageFrontend

@@ -6,13 +6,21 @@ from rest_framework.generics import RetrieveUpdateDestroyAPIView
 
 # from django.contrib.auth.models import User
 from rest_framework.decorators import permission_classes
-from .models import PageCategoryType, PageCategory, Page
+from .models import (
+    PageCategoryType,
+    PageCategory,
+    Page,
+    PageFrontend,
+    PageCMS,
+)
 
 from .serializers import (
     PagePolymorphicSerializer,
     PagePolymorphicPreviewSerializer,
     PageCategoryPreviewSerializer,
     PagePolymorphicDashboardSerializer,
+    PageCMSDashboardSerializer,
+    PageFrontendDashboardSerializer,
 )
 
 
@@ -44,7 +52,7 @@ class PageDashboardView(APIView):
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 
-class PageDashboardDetailView(RetrieveUpdateDestroyAPIView):
+class PageFrontendDashboardDetailView(RetrieveUpdateDestroyAPIView):
     """
     View for getting (by ID), updating and deleting pages.
     """
@@ -52,5 +60,17 @@ class PageDashboardDetailView(RetrieveUpdateDestroyAPIView):
     permission_classes = (AllowAny,)
     authentication_classes = []
 
-    queryset = Page.objects.all()
-    serializer_class = PagePolymorphicDashboardSerializer
+    queryset = PageFrontend.objects.all()
+    serializer_class = PageFrontendDashboardSerializer
+
+
+class PageCMSDashboardDetailView(RetrieveUpdateDestroyAPIView):
+    """
+    View for getting (by ID), updating and deleting pages.
+    """
+
+    permission_classes = (AllowAny,)
+    authentication_classes = []
+
+    queryset = PageCMS.objects.all()
+    serializer_class = PageCMSDashboardSerializer
