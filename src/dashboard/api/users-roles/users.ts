@@ -28,7 +28,7 @@ export const updateUser = async (data: IUser) => {
   // Params: data
   // Return: Promise
   console.log("updateUser", data);
-  return await axiosPrivate.put(`/user/`, data);
+  return await axiosPrivate.put(`/user/users/${data.email}`, data);
 };
 
 export const getUserData = async (email: string) => {
@@ -58,7 +58,7 @@ export const deleteGroup = async (data: IGroup) => {
   // Params: data
   // Return: Promise
   console.log("deleteGroup", data);
-  return await axiosPrivate.delete(`/roles/groups/${data.group_name}`);
+  return await axiosPrivate.delete(`/roles/groups/${data.name}`);
 };
 
 export const getGroups = async () => {
@@ -68,4 +68,14 @@ export const getGroups = async () => {
   // Return: Promise
   console.log("getGroups");
   return await axiosPrivate.get(`/roles/groups`);
+}
+
+export const updateRoles = async (email: string, data: string[]) => {
+  // Update existing group
+  // URL: /roles
+  // Method: PUT
+  // Params: data
+  // Return: Promise
+  console.log("updateGroups", data);
+  return await axiosPrivate.put(`/roles/user-groups/${email}`, { groups: data });
 }

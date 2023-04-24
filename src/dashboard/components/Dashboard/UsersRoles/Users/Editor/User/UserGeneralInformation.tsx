@@ -10,7 +10,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import EditorCard from "@/components/Dashboard/Generic/EditorCard";
-import { TextField } from "@mui/material";
+import { Checkbox, FormControlLabel, TextField } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import {
     ActionSetProduct,
@@ -30,7 +30,6 @@ const UserGeneralInformation = ({
     setState,
 }: IUserProps) => {
     // simple select with categories
-    console.log("GENERAL INFORMATION", state);
 
     return (
         <EditorCard>
@@ -49,6 +48,13 @@ const UserGeneralInformation = ({
                         <TextField
                             label="First Name"
                             value={state?.first_name}
+                            disabled={false}
+                            onChange={(e) => {
+                                setState({
+                                    ...state,
+                                    first_name: e.target.value,
+                                });
+                            }}
                             InputLabelProps={{
                                 shrink: Boolean(true),
                             }}
@@ -56,16 +62,31 @@ const UserGeneralInformation = ({
                         <TextField
                             label="Last Name"
                             value={state?.last_name}
+                            disabled={false}
+                            onChange={(e) => {
+                                setState({
+                                    ...state,
+                                    last_name: e.target.value,
+                                });
+                            }}
                             InputLabelProps={{
                                 shrink: Boolean(true),
                             }}
                         />
-                        <TextField
+                        <FormControlLabel
                             label="Is Admin"
-                            value={state?.is_admin ? "Yes" : "No"}
-                            InputLabelProps={{
-                                shrink: Boolean(true),
-                            }}
+                            control={
+                                <Checkbox
+                                    checked={state.is_admin}
+                                    onChange={(e) => {
+                                        setState({
+                                            ...state,
+                                            is_admin: e.target.checked,
+                                        });
+
+                                    }}
+                                />
+                            }
                         />
                         {/* <TextField label="Name" /> */}
                     </Stack>

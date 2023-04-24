@@ -33,8 +33,24 @@ const UserGroupsInformation = ({
     setState,
     groups,
 }: IGroupsProps) => {
-    // simple select with categories
-    console.log("GROUPS", groups);
+
+    const handleCheckChange = (event: ChangeEvent<HTMLInputElement>) => {
+        if (event.target.checked) {
+            setState({
+                ...state,
+                roles: [...state.roles, event.target.id],
+            });
+        }
+        else {
+            setState({
+                ...state,
+                roles: state.roles.filter(
+                    (role) => role !== event.target.id
+                ),
+            });
+        }
+    };
+
 
     return (
         <EditorCard>
@@ -49,28 +65,12 @@ const UserGroupsInformation = ({
                                         label={group.name}
                                         control={
                                             <Checkbox
-                                            // checked={checked[0] && checked[1]}
-                                            // indeterminate={checked[0] !== checked[1]}
-                                            // onChange={handleChange1}
+                                                id={group.name}
+                                                checked={state.roles.includes(group.name)}
+                                                onChange={handleCheckChange}
                                             />
                                         }
                                     />
-                                    //     onChange={(event) => {
-                                    //         if (event.target.checked) {
-                                    //             setState({
-                                    //                 ...state,
-                                    //                 groups: [...state.groups, group.id],
-                                    //             });
-                                    //         } else {
-                                    //             setState({
-                                    //                 ...state,
-                                    //                 groups: state.groups.filter(
-                                    //                     (groupId) => groupId !== group.id
-                                    //                 ),
-                                    //             });
-                                    //         }
-                                    //     }}
-
                                 );
                             }
                             )}

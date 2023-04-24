@@ -47,10 +47,10 @@ class UserSerializer(serializers.ModelSerializer):
             "is_active",
             "is_admin",
             "is_staff",
+            "is_admin",
         )
         extra_kwargs = {
             "email": {"read_only": True},
-            "is_admin": {"read_only": True},
         }
 
     def get_user_permissions(self, obj):

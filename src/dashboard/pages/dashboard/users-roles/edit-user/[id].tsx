@@ -5,7 +5,7 @@ import DashboardLayout from "@/pages/dashboard/layout"; //react
 import { Alert, Container, Snackbar, Stack, Typography } from "@mui/material";
 import { IGroup, IUser } from "@/types/user";
 import { GetServerSideProps } from "next";
-import { getUserData, getUserGroups, updateUser, getGroups } from "@/api/users-roles/users";
+import { getUserData, getUserGroups, updateUser, getGroups, updateRoles } from "@/api/users-roles/users";
 import { getgroups } from "process";
 import EditableContentWrapper, { PrimaryButtonAction } from "@/components/Dashboard/Generic/EditableContentWrapper";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
@@ -25,9 +25,6 @@ const DashboardUserEditPage = (
   }: IUserEditProps) => {
   const router = useRouter();
   const { id } = router.query;
-  console.log(router.query);
-  console.log(userData);
-  console.log(groups);
 
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
   const [state, setState] = useState<IUser>(userData);
@@ -67,12 +64,23 @@ const DashboardUserEditPage = (
           onButtonClick={async () => {
             await setPreventNavigation(false);
             await updateUser(state)
-              .then((res: any) => {
-                setSnackbar({
-                  open: true,
-                  message: "User updated",
-                  severity: "success",
-                });
+              .then(async (res: any) => {
+                await updateRoles(state.email, state.roles)
+                  .then((res: any) => {
+                    setSnackbar({
+                      open: true,
+                      message: "User updated",
+                      severity: "success",
+                    });
+                  })
+                  .catch((err: any) => {
+                    console.log("updateUser", err);
+                    setSnackbar({
+                      open: true,
+                      message: "Something went wrong",
+                      severity: "error",
+                    });
+                  });
               })
               .catch((err: any) => {
                 console.log("updateUser", err);
@@ -99,6 +107,21 @@ const DashboardUserEditPage = (
             setState={(v: IUser) => setState(v)}
             groups={groups}
           />
+          {snackbar ? (
+            <Snackbar
+              open={snackbar.open}
+              autoHideDuration={6000}
+              onClose={handleSnackbarClose}
+            >
+              <Alert
+                onClose={handleSnackbarClose}
+                severity={snackbar.severity}
+                sx={{ width: "100%" }}
+              >
+                {snackbar.message}
+              </Alert>
+            </Snackbar>
+          ) : null}
         </EditableContentWrapper>
       </Container>
     </DashboardLayout>

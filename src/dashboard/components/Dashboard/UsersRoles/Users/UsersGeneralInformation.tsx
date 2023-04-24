@@ -43,7 +43,6 @@ const getUsers = async () => {
   const users: IUser[] = [];
   const usrs = await axiosPrivate.get(`/user/users`);
 
-  // console.log(users.data);
   for (const user of usrs.data) {
     users.push({
       email: user["email"],
@@ -52,7 +51,6 @@ const getUsers = async () => {
       is_admin: user["is_admin"],
       roles: [],
     });
-    console.log(user["email"])
     const userRoles = await axiosPrivate.get(
       `roles/user-groups/${user["email"]}`
     );
@@ -93,7 +91,6 @@ const UsersGrid = () => {
 
   const fetchUsers = async () => {
     getUsers().then((data) => {
-      console.log("data: ", data);
       setUsers(data.users);
     });
   };
@@ -151,7 +148,6 @@ const UsersGrid = () => {
       sortable: false,
       disableColumnMenu: true,
       valueParser: (params) => {
-        console.log("params", params);
         return params.value.join(", ");
       },
     },
