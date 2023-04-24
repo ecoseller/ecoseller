@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import RootLayout from "@/pages/layout";
 import { ReactElement, useEffect, useState } from "react";
 import DashboardLayout from "@/pages/dashboard/layout"; //react
-import { Alert, Container, Snackbar, Stack, Typography } from "@mui/material";
+import { Alert, Container, Snackbar } from "@mui/material";
 import { IGroup, IUser } from "@/types/user";
 import { GetServerSideProps } from "next";
 import {
@@ -12,13 +12,11 @@ import {
   getGroups,
   updateRoles,
 } from "@/api/users-roles/users";
-import { getgroups } from "process";
 import EditableContentWrapper, {
   PrimaryButtonAction,
 } from "@/components/Dashboard/Generic/EditableContentWrapper";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 import UserGeneralInformation from "@/components/Dashboard/UsersRoles/Users/Editor/User/UserGeneralInformation";
-import CreateUser from "@/components/Dashboard/UsersRoles/Users/CreateUser";
 import UserGroupsInformation from "@/components/Dashboard/UsersRoles/Users/Editor/User/UserGroupsInformation";
 
 interface IUserEditProps {

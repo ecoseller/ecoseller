@@ -2,7 +2,6 @@ import * as React from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
-import InfoIcon from "@mui/icons-material/Info";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
@@ -17,7 +16,7 @@ import {
 
 import { IUser } from "@/types/user";
 
-import { Alert, Button, Card, Snackbar, Tooltip } from "@mui/material";
+import { Alert, Button, Card, Snackbar } from "@mui/material";
 import { axiosPrivate } from "@/utils/axiosPrivate";
 import { deleteUser } from "@/api/users-roles/users";
 

@@ -3,31 +3,13 @@
 import { ChangeEvent, useState } from "react";
 // mui
 import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
 import EditorCard from "@/components/Dashboard/Generic/EditorCard";
-import {
-  FormControlLabel,
-  FormGroup,
-  FormHelperText,
-  FormLabel,
-  Input,
-  TextField,
-} from "@mui/material";
+import { FormControlLabel, FormGroup, FormHelperText } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Checkbox from "@mui/material/Checkbox";
-import {
-  ActionSetProduct,
-  IProduct,
-  IProductType,
-  ISetProductStateData,
-} from "@/types/product";
 import { IGroup, IUser } from "@/types/user";
-import { CheckBox } from "@mui/icons-material";
 
 interface IGroupsProps {
   state: IUser;

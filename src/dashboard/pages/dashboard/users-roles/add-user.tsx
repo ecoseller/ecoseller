@@ -11,7 +11,6 @@ import { createUser } from "@/api/users-roles/users";
 
 const DashboardUserAddPage = () => {
   const router = useRouter();
-  const { id } = router.query;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
@@ -38,8 +37,6 @@ const DashboardUserAddPage = () => {
     }
   }, [email, password]);
 
-  console.log(email, password);
-  console.log(preventNavigation);
   return (
     <DashboardLayout>
       <Container maxWidth="xl">

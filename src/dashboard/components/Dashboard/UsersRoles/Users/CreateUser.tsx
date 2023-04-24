@@ -3,12 +3,9 @@
 import { ChangeEvent, useState } from "react";
 // mui
 import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
 import EditorCard from "@/components/Dashboard/Generic/EditorCard";
 import {
   IconButton,
@@ -17,12 +14,6 @@ import {
   TextField,
 } from "@mui/material";
 import Stack from "@mui/material/Stack";
-import {
-  ActionSetProduct,
-  IProduct,
-  IProductType,
-  ISetProductStateData,
-} from "@/types/product";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 interface ICreateUserProps {
