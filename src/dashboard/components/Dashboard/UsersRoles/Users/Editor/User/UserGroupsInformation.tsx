@@ -10,7 +10,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import EditorCard from "@/components/Dashboard/Generic/EditorCard";
-import { FormControlLabel, FormGroup, TextField } from "@mui/material";
+import { FormControlLabel, FormGroup, FormHelperText, FormLabel, Input, TextField } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Checkbox from '@mui/material/Checkbox';
 import {
@@ -33,6 +33,7 @@ const UserGroupsInformation = ({
     setState,
     groups,
 }: IGroupsProps) => {
+    console.log(groups);
 
     const handleCheckChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
@@ -61,16 +62,19 @@ const UserGroupsInformation = ({
                         <FormGroup>
                             {groups?.map((group: IGroup) => {
                                 return (
-                                    <FormControlLabel
-                                        label={group.name}
-                                        control={
-                                            <Checkbox
-                                                id={group.name}
-                                                checked={state.roles.includes(group.name)}
-                                                onChange={handleCheckChange}
-                                            />
-                                        }
-                                    />
+                                    <Box mt={2}>
+                                        <FormControlLabel
+                                            label={group.name}
+                                            control={
+                                                <Checkbox
+                                                    id={group.name}
+                                                    checked={state.roles.includes(group.name)}
+                                                    onChange={handleCheckChange}
+                                                />
+                                            }
+                                        />
+                                        <FormHelperText>{group.description}</FormHelperText>
+                                    </Box>
                                 );
                             }
                             )}

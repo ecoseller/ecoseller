@@ -196,15 +196,6 @@ const UsersGrid = () => {
             color="inherit"
             key={"delete"}
           />,
-          <GridActionsCellItem
-            icon={<InfoIcon />}
-            label="Info"
-            onClick={() => {
-              router.push(`/dashboard/users-roles/info-user/${row.email}`);
-            }}
-            color="inherit"
-            key={"info"}
-          />,
         ];
       },
     },
@@ -216,6 +207,8 @@ const UsersGrid = () => {
         rows={users}
         columns={columns}
         autoHeight={true}
+        onPaginationModelChange={setPaginationModel}
+        paginationModel={paginationModel}
         disableRowSelectionOnClick
         getRowHeight={() => "auto"}
         getRowId={(row) => row.email}
