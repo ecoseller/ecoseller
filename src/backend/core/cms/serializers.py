@@ -2,11 +2,9 @@ from parler_rest.serializers import TranslatableModelSerializer
 from core.mixins import TranslatedSerializerMixin
 
 from rest_polymorphic.serializers import PolymorphicSerializer
-from rest_framework_recursive.fields import RecursiveField
 from rest_framework import serializers
 from parler_rest.fields import TranslatedFieldsField
 from .models import (
-    Page,
     PageCMS,
     PageFrontend,
     PageCategory,

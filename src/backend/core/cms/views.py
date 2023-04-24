@@ -5,7 +5,6 @@ from rest_framework.permissions import AllowAny
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 
 # from django.contrib.auth.models import User
-from rest_framework.decorators import permission_classes
 from .models import (
     PageCategoryType,
     PageCategory,
@@ -15,9 +14,6 @@ from .models import (
 )
 
 from .serializers import (
-    PagePolymorphicSerializer,
-    PagePolymorphicPreviewSerializer,
-    PageCategoryPreviewSerializer,
     PagePolymorphicDashboardSerializer,
     PageCMSDashboardSerializer,
     PageFrontendDashboardSerializer,

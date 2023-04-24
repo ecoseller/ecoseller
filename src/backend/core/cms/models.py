@@ -1,7 +1,4 @@
 from django.db import models
-from ckeditor.fields import RichTextField
-from parler.models import TranslatableModel, TranslatedFields
-from django.utils.html import mark_safe
 from polymorphic.models import PolymorphicModel
 from parler.models import TranslatableModel, TranslatedFields
 from django_editorjs_fields import EditorJsJSONField
