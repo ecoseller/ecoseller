@@ -5,7 +5,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 
 // components
 import EditorCard from "@/components/Dashboard/Generic/EditorCard";
-import PageCategoryTypeSetter from "./CateogryTypeSetter";
+import PageCategoryTypeSetter from "./CategoryTypeSetter";
 // mui
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";

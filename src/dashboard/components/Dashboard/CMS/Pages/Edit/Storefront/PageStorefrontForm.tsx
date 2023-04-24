@@ -125,11 +125,11 @@ const PageStorefrontForm = ({ storefrontPageData }: IPageFrontendFormProps) => {
             });
           });
       }}
-      returnPath={"/dashboard/cms/page"}
+      returnPath={"/dashboard/cms/pages"}
     >
       <TopLineWithReturn
         title={`Edit storefront page #${storefrontPageData.id}`}
-        returnPath={"/dashboard/cms/page"}
+        returnPath={"/dashboard/cms/pages"}
       />
 
       <Grid container spacing={2}>

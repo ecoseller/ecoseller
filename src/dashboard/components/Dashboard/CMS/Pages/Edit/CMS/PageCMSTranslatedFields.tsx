@@ -117,6 +117,7 @@ const PageCMSTranslatedFields = ({
       <Stack spacing={2}>
         <TextField
           label="Title"
+          error={!Boolean(state?.title)}
           value={state?.title || ""}
           onChange={(
             e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
@@ -126,6 +127,7 @@ const PageCMSTranslatedFields = ({
         />
         <TextField
           label="Slug"
+          error={!Boolean(state?.slug)}
           value={state?.slug || ""}
           disabled={!editSlug}
           onChange={(

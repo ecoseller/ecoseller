@@ -57,6 +57,7 @@ const PageCategoryTranslatedFields = ({
       <Stack spacing={2}>
         <TextField
           label="Title"
+          error={!Boolean(state?.title)}
           value={state?.title || ""}
           onChange={(
             e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>

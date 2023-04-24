@@ -7,7 +7,7 @@ export const getAllPageCategories = async () => {
 };
 
 export const createPageCategory = async () => {
-  const { data } = await axiosPrivate.post("/cms/category/");
+  const { data } = await axiosPrivate.post("/cms/category/", { type: [] });
   return data;
 };
 
