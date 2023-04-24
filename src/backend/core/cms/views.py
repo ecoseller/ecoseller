@@ -22,6 +22,7 @@ from .serializers import (
     PageCMSDashboardSerializer,
     PageFrontendDashboardSerializer,
     PageCategoryDashboardSerializer,
+    PageCateogryTypeDashboardSerializer,
 )
 
 
@@ -133,7 +134,61 @@ class PageCategoryPagesDashboardView(APIView):
         """
         Gets all pages in a category.
         """
-        pages = PageCategory.objects.get(id=pk).filtered_page.all()
-        serializer = PagePolymorphicDashboardSerializer(pages, many=True)
+        raise NotImplementedError
+
+
+class PageCategoryTypeDashboardView(APIView):
+    """
+    View for listing all page types
+    """
+
+    permission_classes = (AllowAny,)
+    authentication_classes = []
+
+    def get(self, request):
+        """
+        Gets all page types.
+        """
+        pages = PageCategoryType.objects.all()
+        serializer = PageCateogryTypeDashboardSerializer(pages, many=True)
         print(serializer.data)
         return Response(serializer.data)
+
+    def post(self, request):
+        """
+        Adds a new page type.
+        """
+        print(request.data)
+        serializer = PageCateogryTypeDashboardSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=HTTP_201_CREATED)
+        print(serializer.errors)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+
+class PageTypeDashboardDetailView(RetrieveUpdateDestroyAPIView):
+    """
+    View for getting (by ID), updating and deleting page types.
+    """
+
+    permission_classes = (AllowAny,)
+    authentication_classes = []
+
+    queryset = PageCategoryType.objects.all()
+    serializer_class = PageCateogryTypeDashboardSerializer
+
+
+class PageTypePagesDashboardView(APIView):
+    """
+    View for listing all pages in a type
+    """
+
+    permission_classes = (AllowAny,)
+    authentication_classes = []
+
+    def get(self, request, pk):
+        """
+        Gets all pages in a type.
+        """
+        raise NotImplementedError

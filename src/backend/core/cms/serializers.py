@@ -174,7 +174,18 @@ class PageCategoryDashboardSerializer(
     serializers.ModelSerializer,
 ):
     translations = TranslatedFieldsField(shared_model=PageCategory, required=False)
+    code = serializers.CharField(required=False)
 
     class Meta:
         model = PageCategory
-        fields = ("id", "translations", "published", "code")
+        fields = ("id", "translations", "published", "code", "type")
+
+
+class PageCateogryTypeDashboardSerializer(
+    serializers.ModelSerializer,
+):
+    identifier = serializers.CharField(required=False)
+
+    class Meta:
+        model = PageCategoryType
+        fields = ("id", "identifier")
