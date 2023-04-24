@@ -29,8 +29,10 @@ class PageCategoryType(models.Model):
 
 class PageCategory(TranslatableModel, SortableModel):
     published = models.BooleanField(default=False)
-    type = models.ManyToManyField(PageCategoryType, blank=False)
-    code = models.CharField(max_length=20)
+    type = models.ManyToManyField(PageCategoryType, blank=True)
+    code = models.CharField(
+        max_length=20,
+    )
     translations = TranslatedFields(
         title=models.CharField(max_length=250),
     )
