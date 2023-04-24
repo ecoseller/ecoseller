@@ -23,6 +23,8 @@ const PAGE_SIZE = 30;
 const ROW_HEIGHT = 50;
 
 const PagesList = ({ pages }: PagesListProps) => {
+  const router = useRouter();
+
   const rows = pages?.map((page) => {
     const translation = Object.values(page.translations);
     let title = "";
@@ -80,14 +82,18 @@ const PagesList = ({ pages }: PagesListProps) => {
       cellClassName: "actions",
       flex: 1,
       disableColumnMenu: true,
-      getActions: ({ id }) => {
+      getActions: ({ id, row }) => {
         return [
           <GridActionsCellItem
             icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
             onClick={() => {
-              // router.push(`/dashboard/catalog/categories/edit/${id}`);
+              if (row?.resourcetype == "PageCMS") {
+                router.push(`/dashboard/cms/pages/cms/${id}`);
+              } else if (row?.resourcetype == "PageFrontend") {
+                router.push(`/dashboard/cms/pages/storefront/${id}`);
+              }
             }}
             color="inherit"
             key={"edit"}
