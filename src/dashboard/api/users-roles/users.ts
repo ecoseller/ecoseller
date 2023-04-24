@@ -1,14 +1,14 @@
 import { IUser, IGroup } from "@/types/user";
 import { axiosPrivate } from "@/utils/axiosPrivate";
 
-export const deleteUser = async (data: IUser) => {
+export const deleteUser = async (email: string) => {
   // Delete existing user
   // URL: /user/delete-user
   // Method: POST
   // Params: data
   // Return: Promise
-  console.log("deleteUser", data);
-  return await axiosPrivate.post(`/user/delete-user`, data);
+  console.log("deleteUser", email);
+  return await axiosPrivate.delete(`/user/users/${email}`);
 };
 
 export const createUser = async (email: string, password: string) => {
@@ -49,7 +49,7 @@ export const getUserGroups = async (email: string) => {
   // Return: Promise
   console.log("getUserGroups", email);
   return await axiosPrivate.get(`/roles/user-groups/${email}`);
-}
+};
 
 export const deleteGroup = async (data: IGroup) => {
   // Delete existing group
@@ -68,7 +68,7 @@ export const getGroups = async () => {
   // Return: Promise
   console.log("getGroups");
   return await axiosPrivate.get(`/roles/groups`);
-}
+};
 
 export const updateRoles = async (email: string, data: string[]) => {
   // Update existing group
@@ -77,5 +77,7 @@ export const updateRoles = async (email: string, data: string[]) => {
   // Params: data
   // Return: Promise
   console.log("updateGroups", data);
-  return await axiosPrivate.put(`/roles/user-groups/${email}`, { groups: data });
-}
+  return await axiosPrivate.put(`/roles/user-groups/${email}`, {
+    groups: data,
+  });
+};

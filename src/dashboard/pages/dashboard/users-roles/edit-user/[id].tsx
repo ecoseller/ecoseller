@@ -5,24 +5,28 @@ import DashboardLayout from "@/pages/dashboard/layout"; //react
 import { Alert, Container, Snackbar, Stack, Typography } from "@mui/material";
 import { IGroup, IUser } from "@/types/user";
 import { GetServerSideProps } from "next";
-import { getUserData, getUserGroups, updateUser, getGroups, updateRoles } from "@/api/users-roles/users";
+import {
+  getUserData,
+  getUserGroups,
+  updateUser,
+  getGroups,
+  updateRoles,
+} from "@/api/users-roles/users";
 import { getgroups } from "process";
-import EditableContentWrapper, { PrimaryButtonAction } from "@/components/Dashboard/Generic/EditableContentWrapper";
+import EditableContentWrapper, {
+  PrimaryButtonAction,
+} from "@/components/Dashboard/Generic/EditableContentWrapper";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 import UserGeneralInformation from "@/components/Dashboard/UsersRoles/Users/Editor/User/UserGeneralInformation";
 import CreateUser from "@/components/Dashboard/UsersRoles/Users/CreateUser";
 import UserGroupsInformation from "@/components/Dashboard/UsersRoles/Users/Editor/User/UserGroupsInformation";
 
 interface IUserEditProps {
-  userData: IUser,
-  groups: IGroup[],
-};
+  userData: IUser;
+  groups: IGroup[];
+}
 
-const DashboardUserEditPage = (
-  {
-    userData,
-    groups,
-  }: IUserEditProps) => {
+const DashboardUserEditPage = ({ userData, groups }: IUserEditProps) => {
   const router = useRouter();
   const { id } = router.query;
 
@@ -44,7 +48,6 @@ const DashboardUserEditPage = (
     }
     setSnackbar(null);
   };
-
 
   useEffect(() => {
     if (!preventNavigation) {
@@ -90,7 +93,6 @@ const DashboardUserEditPage = (
                   severity: "error",
                 });
               });
-
           }}
           returnPath={"/dashboard/users-roles"}
         >
@@ -137,7 +139,6 @@ DashboardUserEditPage.getLayout = (page: ReactElement) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-
   const email = context.params?.id;
   const userDataRet = await getUserData(email as string);
   const userData: IUser = {
@@ -145,7 +146,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     first_name: userDataRet.data.first_name,
     last_name: userDataRet.data.last_name,
     is_admin: userDataRet.data.is_admin,
-    roles: []
+    roles: [],
   };
   const userRolesData = await getUserGroups(email as string);
   for (let i = 0; i < userRolesData.data.length; i++) {
@@ -155,9 +156,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const groups = await getGroups();
 
   return {
-    props: { userData: userData, groups: groups.data, }
-  }
+    props: { userData: userData, groups: groups.data },
+  };
 };
-
 
 export default DashboardUserEditPage;

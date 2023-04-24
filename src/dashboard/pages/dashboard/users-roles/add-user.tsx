@@ -3,8 +3,10 @@ import RootLayout from "@/pages/layout";
 import { ReactElement, useEffect, useState } from "react";
 import DashboardLayout from "@/pages/dashboard/layout"; //react
 import { Alert, Container, Snackbar, Typography } from "@mui/material";
-import CreateUser from "@/components/Dashboard/UsersRoles/Users/CreateUser"
-import EditableContentWrapper, { PrimaryButtonAction } from "@/components/Dashboard/Generic/EditableContentWrapper";
+import CreateUser from "@/components/Dashboard/UsersRoles/Users/CreateUser";
+import EditableContentWrapper, {
+  PrimaryButtonAction,
+} from "@/components/Dashboard/Generic/EditableContentWrapper";
 import { createUser } from "@/api/users-roles/users";
 
 const DashboardUserAddPage = () => {
@@ -72,7 +74,8 @@ const DashboardUserAddPage = () => {
             email={email}
             setEmail={setEmail}
             password={password}
-            setPassword={setPassword} />
+            setPassword={setPassword}
+          />
           {snackbar ? (
             <Snackbar
               open={snackbar.open}
@@ -90,7 +93,7 @@ const DashboardUserAddPage = () => {
           ) : null}
         </EditableContentWrapper>
       </Container>
-    </DashboardLayout >
+    </DashboardLayout>
   );
 };
 

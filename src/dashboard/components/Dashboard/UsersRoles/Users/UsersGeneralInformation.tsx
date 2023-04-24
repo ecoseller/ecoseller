@@ -176,7 +176,7 @@ const UsersGrid = () => {
             icon={<DeleteIcon />}
             label="Delete"
             onClick={() => {
-              deleteUser(row)
+              deleteUser(row.email)
                 .then((res) => {
                   setSnackbar({
                     open: true,
