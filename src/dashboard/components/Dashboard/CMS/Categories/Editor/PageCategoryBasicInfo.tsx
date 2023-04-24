@@ -17,20 +17,21 @@ import Checkbox from "@mui/material/Checkbox";
 
 // types
 import {
+  ActionSetPageCategory,
   ActionSetPageStorefront,
+  ISetPageCategoryStateData,
   ISetPageStorefrontStateData,
 } from "@/types/cms";
-import { ISetPageStorefrontStateAction } from "./PageStorefrontForm";
-import PageCategorySetter from "../PageCategorySetter";
-interface IPageStorefrontBasicInfoProps {
-  state: ISetPageStorefrontStateData;
-  dispatch: React.Dispatch<ISetPageStorefrontStateAction>;
+import { ISetPageCategoryStateAction } from "./Form";
+interface IPageCategoryBasicInfoProps {
+  state: ISetPageCategoryStateData;
+  dispatch: React.Dispatch<ISetPageCategoryStateAction>;
 }
 
-const PageStorefrontBasicInfo = ({
+const PageCategoryBasicInfo = ({
   state,
   dispatch,
-}: IPageStorefrontBasicInfoProps) => {
+}: IPageCategoryBasicInfoProps) => {
   // simple select with categories
 
   return (
@@ -40,20 +41,20 @@ const PageStorefrontBasicInfo = ({
         <FormControl fullWidth>
           <Stack spacing={2}>
             <TextField
-              label="Storefront path"
-              value={state.frontend_path}
-              // disabled={true}
+              label="Code"
+              value={state.code}
               onChange={(
                 event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
               ) => {
                 dispatch({
-                  type: ActionSetPageStorefront.SETFRONTENDPATH,
-                  payload: { frontend_path: event.target.value },
+                  type: ActionSetPageCategory.SETCODE,
+                  payload: { code: event.target.value },
                 });
               }}
               InputLabelProps={{
                 shrink: Boolean(state.id),
               }}
+              helperText="Code is used for internal purposes and should be unique. It is used in the URL for fetching list of pages under this category."
             />
             <Box mt={2}>
               <FormControlLabel
@@ -62,7 +63,7 @@ const PageStorefrontBasicInfo = ({
                     checked={state.published}
                     onClick={() => {
                       dispatch({
-                        type: ActionSetPageStorefront.SETPUBLISHED,
+                        type: ActionSetPageCategory.SETPUBLISHED,
                         payload: { published: !state.published },
                       });
                     }}
@@ -71,15 +72,6 @@ const PageStorefrontBasicInfo = ({
                 label="Published"
               />
             </Box>
-            <PageCategorySetter
-              state={state?.categories || []}
-              set={(categoryIds: number[]) => {
-                dispatch({
-                  type: ActionSetPageStorefront.SETCATEGORIES,
-                  payload: { categories: categoryIds },
-                });
-              }}
-            />
             {/* <TextField label="Name" /> */}
           </Stack>
         </FormControl>
@@ -87,4 +79,4 @@ const PageStorefrontBasicInfo = ({
     </EditorCard>
   );
 };
-export default PageStorefrontBasicInfo;
+export default PageCategoryBasicInfo;

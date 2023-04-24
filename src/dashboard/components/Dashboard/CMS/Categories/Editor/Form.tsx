@@ -11,7 +11,6 @@ import EditableContentWrapper, {
   PrimaryButtonAction,
 } from "@/components/Dashboard/Generic/EditableContentWrapper";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
-import PageStorefrontBasicInfo from "./PageStorefrontBasicInfo";
 
 // mui
 import Snackbar from "@mui/material/Snackbar";
@@ -20,41 +19,44 @@ import Grid from "@mui/material/Grid";
 
 // types
 import {
-  ActionSetPageStorefront,
-  IPageFrontend,
-  ISetPageStorefrontStateData,
+  ActionSetPageCategory,
+  IPageCategory,
+  ISetPageCategoryStateData,
 } from "@/types/cms";
-import PageStorefrontTranslatedFieldsWrapper from "./PageStorefrontTranslatedFields";
+import { putPageCategory } from "@/api/cms/category/category";
+import PageCategoryTranslatedFieldsWrapper from "./PageCategoryTranslatedFieldsWrapper";
+import PageCategoryBasicInfo from "./PageCategoryBasicInfo";
 
-interface IPageFrontendFormProps {
-  storefrontPageData: IPageFrontend;
+interface IPageCategoryFormProps {
+  pageCategoryData: IPageCategory;
 }
 
-export interface ISetPageStorefrontStateAction {
-  type: ActionSetPageStorefront;
-  payload: ISetPageStorefrontStateData;
+export interface ISetPageCategoryStateAction {
+  type: ActionSetPageCategory;
+  payload: ISetPageCategoryStateData;
 }
 
-const PageStorefrontForm = ({ storefrontPageData }: IPageFrontendFormProps) => {
+const PageCategoryForm = ({ pageCategoryData }: IPageCategoryFormProps) => {
+  console.log("pageCategoryData", pageCategoryData);
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
 
-  const setPageStorefrontStateReducer = (
-    state: ISetPageStorefrontStateData,
+  const setPageCategoryStateReducer = (
+    state: ISetPageCategoryStateData,
     action: any
-  ): ISetPageStorefrontStateData => {
+  ): ISetPageCategoryStateData => {
     setPreventNavigation(true);
     switch (action.type) {
-      case ActionSetPageStorefront.SETINITIAL:
+      case ActionSetPageCategory.SETINITIAL:
         if (!action.payload) {
           return state;
         }
         if (!action.payload.id) {
           return state;
         }
-        return action.payload as ISetPageStorefrontStateData;
-      case ActionSetPageStorefront.SETPUBLISHED:
+        return action.payload as ISetPageCategoryStateData;
+      case ActionSetPageCategory.SETPUBLISHED:
         return { ...state, published: action.payload.published };
-      case ActionSetPageStorefront.SETTRANSLATION:
+      case ActionSetPageCategory.SETTRANSLATION:
         if (!action.payload.translation) {
           return state;
         }
@@ -72,10 +74,6 @@ const PageStorefrontForm = ({ storefrontPageData }: IPageFrontendFormProps) => {
                 : action.payload.translation.data,
           },
         };
-      case ActionSetPageStorefront.SETFRONTENDPATH:
-        return { ...state, frontend_path: action.payload.frontend_path };
-      case ActionSetPageStorefront.SETCATEGORIES:
-        return { ...state, categories: action.payload.categories };
       default:
         return state;
     }
@@ -87,10 +85,12 @@ const PageStorefrontForm = ({ storefrontPageData }: IPageFrontendFormProps) => {
     severity: "success" | "error" | "info" | "warning";
   } | null>(null);
 
-  const [pageStorefrontState, dispatchPageStorefrontState] = useReducer(
-    setPageStorefrontStateReducer,
-    storefrontPageData
+  const [pageCateogryState, dispatchPageCategoryState] = useReducer(
+    setPageCategoryStateReducer,
+    pageCategoryData
   );
+
+  console.log("pageCateogryState", pageCateogryState);
 
   return (
     <EditableContentWrapper
@@ -98,51 +98,52 @@ const PageStorefrontForm = ({ storefrontPageData }: IPageFrontendFormProps) => {
       preventNavigation={preventNavigation}
       setPreventNavigation={setPreventNavigation}
       onButtonClick={async () => {
-        console.log(pageStorefrontState);
+        console.log(pageCategoryData);
 
-        if (!pageStorefrontState.id) {
+        if (!pageCategoryData.id) {
           setSnackbar({
             open: true,
-            message: "Page could not be created, it does not have an ID",
+            message:
+              "Page category could not be created, it does not have an ID",
             severity: "error",
           });
           return;
         }
 
-        await putFrontendPage(pageStorefrontState.id, pageStorefrontState)
+        await putPageCategory(pageCategoryData.id, pageCategoryData)
           .then((resp) => {
             setSnackbar({
               open: true,
-              message: "Page updated successfully",
+              message: "Category updated successfully",
               severity: "success",
             });
           })
           .catch((err) => {
             setSnackbar({
               open: true,
-              message: "Page could not be created",
+              message: "Category could not be created",
               severity: "error",
             });
           });
       }}
-      returnPath={"/dashboard/cms/page"}
+      returnPath={"/dashboard/cms/categories"}
     >
       <TopLineWithReturn
-        title={`Edit storefront page #${storefrontPageData.id}`}
-        returnPath={"/dashboard/cms/page"}
+        title={`Edit page category #${pageCategoryData?.id}`}
+        returnPath={"/dashboard/cms/categories"}
       />
 
       <Grid container spacing={2}>
         <Grid item md={8} xs={12}>
-          <PageStorefrontTranslatedFieldsWrapper
-            state={pageStorefrontState}
-            dispatch={dispatchPageStorefrontState}
+          <PageCategoryTranslatedFieldsWrapper
+            state={pageCategoryData}
+            dispatch={dispatchPageCategoryState}
           />
         </Grid>
         <Grid item md={4} xs={12}>
-          <PageStorefrontBasicInfo
-            state={pageStorefrontState}
-            dispatch={dispatchPageStorefrontState}
+          <PageCategoryBasicInfo
+            state={pageCategoryData}
+            dispatch={dispatchPageCategoryState}
           />
         </Grid>
       </Grid>
@@ -157,4 +158,4 @@ const PageStorefrontForm = ({ storefrontPageData }: IPageFrontendFormProps) => {
   );
 };
 
-export default PageStorefrontForm;
+export default PageCategoryForm;

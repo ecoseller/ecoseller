@@ -19,6 +19,7 @@ export enum ActionSetPageStorefront {
   SETTRANSLATIONS = "setTranslations",
   SETTRANSLATION = "setTranslation",
   SETFRONTENDPATH = "setFrontendPath",
+  SETCATEGORIES = "setCategories",
 }
 
 export enum ActionSetPageCMS {
@@ -26,6 +27,7 @@ export enum ActionSetPageCMS {
   SETPUBLISHED = "setPublished",
   SETTRANSLATIONS = "setTranslations",
   SETTRANSLATION = "setTranslation",
+  SETCATEGORIES = "setCategories",
 }
 
 type TPageResource = "PageCMS" | "PageFrontend";
@@ -44,6 +46,7 @@ export interface IPageCMS {
   translations: IPageCMSTranslation;
   resourcetype: TPageResource;
   published: boolean;
+  categories?: number[];
 }
 
 export interface IPageFrontendTranslationFields {
@@ -60,6 +63,41 @@ export interface IPageFrontend {
   frontend_path: string;
   resourcetype: TPageResource;
   published: boolean;
+  categories?: number[];
 }
 
 export type TPage = IPageCMS | IPageFrontend;
+
+/**
+ * Category
+ */
+
+export enum ActionSetPageCategory {
+  SETINITIAL = "setInitial",
+  SETPUBLISHED = "setPublished",
+  SETCODE = "setCode",
+  SETTRANSLATIONS = "setTranslations",
+  SETTRANSLATION = "setTranslation",
+}
+
+export interface ISetPageCategoryStateData extends Partial<IPageCategory> {
+  translation?: {
+    language: string;
+    data: Partial<IPageCategoryTranslationFields>;
+  };
+}
+
+export interface IPageCategoryTranslationFields {
+  title: string;
+}
+
+export interface IPageCategoryTranslation {
+  [locale: string]: IPageCategoryTranslationFields;
+}
+
+export interface IPageCategory {
+  id: number;
+  published: boolean;
+  code: string;
+  translations: IPageCategoryTranslation;
+}

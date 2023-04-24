@@ -81,6 +81,11 @@ const navigationData: INavigationItem[] = [
         path: "/pages",
         icon: undefined,
       },
+      {
+        title: "Categories",
+        path: "/categories",
+        icon: undefined,
+      },
     ],
   },
   {

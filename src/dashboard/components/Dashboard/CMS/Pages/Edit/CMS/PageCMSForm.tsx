@@ -57,6 +57,8 @@ const PageCMSForm = ({ CMSPageData }: IPageCMSFormProps) => {
                 : action.payload.translation.data,
           },
         };
+      case ActionSetPageCMS.SETCATEGORIES:
+        return { ...state, categories: action.payload.categories };
       default:
         return state;
     }

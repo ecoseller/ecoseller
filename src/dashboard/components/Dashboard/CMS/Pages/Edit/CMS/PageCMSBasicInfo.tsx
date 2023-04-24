@@ -36,6 +36,7 @@ import {
 import Typography from "@mui/material/Typography";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import PageCategorySetter from "../PageCategorySetter";
 
 interface IPageCMSBasicInfoProps {
   state: ISetPageCMSStateData;
@@ -63,6 +64,15 @@ const PageCMSBasicInfo = ({ state, dispatch }: IPageCMSBasicInfoProps) => {
                   />
                 }
                 label="Published"
+              />
+              <PageCategorySetter
+                state={state?.categories || []}
+                set={(categoryIds: number[]) => {
+                  dispatch({
+                    type: ActionSetPageCMS.SETCATEGORIES,
+                    payload: { categories: categoryIds },
+                  });
+                }}
               />
             </Box>
           </Stack>
