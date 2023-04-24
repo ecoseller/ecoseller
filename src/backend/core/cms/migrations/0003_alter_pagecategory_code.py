@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cms', '0002_pagefrontend_frontend_path'),
+        ("cms", "0002_pagefrontend_frontend_path"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='pagecategory',
-            name='code',
+            model_name="pagecategory",
+            name="code",
             field=models.CharField(blank=True, max_length=20, null=True),
         ),
     ]

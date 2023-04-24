@@ -13,136 +13,269 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('contenttypes', '0002_remove_content_type_name'),
+        ("contenttypes", "0002_remove_content_type_name"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Page',
+            name="Page",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('published', models.BooleanField(default=False)),
-                ('ordering', models.IntegerField(default=0)),
-                ('recommended', models.BooleanField(default=False)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("published", models.BooleanField(default=False)),
+                ("ordering", models.IntegerField(default=0)),
+                ("recommended", models.BooleanField(default=False)),
             ],
             options={
-                'abstract': False,
-                'base_manager_name': 'objects',
+                "abstract": False,
+                "base_manager_name": "objects",
             },
         ),
         migrations.CreateModel(
-            name='PageCategoryType',
+            name="PageCategoryType",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('identifier', models.CharField(max_length=100, unique=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("identifier", models.CharField(max_length=100, unique=True)),
             ],
             options={
-                'verbose_name': 'Page category type',
-                'verbose_name_plural': 'Page category types',
+                "verbose_name": "Page category type",
+                "verbose_name_plural": "Page category types",
             },
         ),
         migrations.CreateModel(
-            name='PageCMS',
+            name="PageCMS",
             fields=[
-                ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='cms.page')),
+                (
+                    "page_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="cms.page",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'PageCMS',
-                'verbose_name_plural': 'PagesCMS',
+                "verbose_name": "PageCMS",
+                "verbose_name_plural": "PagesCMS",
             },
-            bases=('cms.page', parler.models.TranslatableModelMixin, models.Model),
+            bases=("cms.page", parler.models.TranslatableModelMixin, models.Model),
         ),
         migrations.CreateModel(
-            name='PageFrontend',
+            name="PageFrontend",
             fields=[
-                ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='cms.page')),
+                (
+                    "page_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="cms.page",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'PageFrontend',
-                'verbose_name_plural': 'PagesFrontend',
+                "verbose_name": "PageFrontend",
+                "verbose_name_plural": "PagesFrontend",
             },
-            bases=('cms.page', parler.models.TranslatableModelMixin, models.Model),
+            bases=("cms.page", parler.models.TranslatableModelMixin, models.Model),
         ),
         migrations.CreateModel(
-            name='PageCategory',
+            name="PageCategory",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('sort_order', models.IntegerField(db_index=True, editable=False, null=True)),
-                ('published', models.BooleanField(default=False)),
-                ('code', models.CharField(max_length=20)),
-                ('ordering', models.IntegerField(default=0)),
-                ('image', models.FileField(blank=True, null=True, upload_to=cms.models.upload_page_category_image_location)),
-                ('type', models.ManyToManyField(to='cms.pagecategorytype')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "sort_order",
+                    models.IntegerField(db_index=True, editable=False, null=True),
+                ),
+                ("published", models.BooleanField(default=False)),
+                ("code", models.CharField(max_length=20)),
+                ("ordering", models.IntegerField(default=0)),
+                (
+                    "image",
+                    models.FileField(
+                        blank=True,
+                        null=True,
+                        upload_to=cms.models.upload_page_category_image_location,
+                    ),
+                ),
+                ("type", models.ManyToManyField(to="cms.pagecategorytype")),
             ],
             options={
-                'verbose_name': 'Page Category',
-                'verbose_name_plural': 'Page Category',
+                "verbose_name": "Page Category",
+                "verbose_name_plural": "Page Category",
             },
             bases=(parler.models.TranslatableModelMixin, models.Model),
         ),
         migrations.AddField(
-            model_name='page',
-            name='categories',
-            field=models.ManyToManyField(blank=True, related_name='page', to='cms.pagecategory'),
+            model_name="page",
+            name="categories",
+            field=models.ManyToManyField(
+                blank=True, related_name="page", to="cms.pagecategory"
+            ),
         ),
         migrations.AddField(
-            model_name='page',
-            name='polymorphic_ctype',
-            field=models.ForeignKey(editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='polymorphic_%(app_label)s.%(class)s_set+', to='contenttypes.contenttype'),
+            model_name="page",
+            name="polymorphic_ctype",
+            field=models.ForeignKey(
+                editable=False,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="polymorphic_%(app_label)s.%(class)s_set+",
+                to="contenttypes.contenttype",
+            ),
         ),
         migrations.CreateModel(
-            name='PageCategoryTranslation',
+            name="PageCategoryTranslation",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('language_code', models.CharField(db_index=True, max_length=15, verbose_name='Language')),
-                ('title', models.CharField(max_length=250)),
-                ('master', parler.fields.TranslationsForeignKey(editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='translations', to='cms.pagecategory')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "language_code",
+                    models.CharField(
+                        db_index=True, max_length=15, verbose_name="Language"
+                    ),
+                ),
+                ("title", models.CharField(max_length=250)),
+                (
+                    "master",
+                    parler.fields.TranslationsForeignKey(
+                        editable=False,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="translations",
+                        to="cms.pagecategory",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Page Category Translation',
-                'db_table': 'cms_pagecategory_translation',
-                'db_tablespace': '',
-                'managed': True,
-                'default_permissions': (),
-                'unique_together': {('language_code', 'master')},
+                "verbose_name": "Page Category Translation",
+                "db_table": "cms_pagecategory_translation",
+                "db_tablespace": "",
+                "managed": True,
+                "default_permissions": (),
+                "unique_together": {("language_code", "master")},
             },
             bases=(parler.models.TranslatedFieldsModelMixin, models.Model),
         ),
         migrations.CreateModel(
-            name='PageFrontendTranslation',
+            name="PageFrontendTranslation",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('language_code', models.CharField(db_index=True, max_length=15, verbose_name='Language')),
-                ('title', models.CharField(max_length=250)),
-                ('master', parler.fields.TranslationsForeignKey(editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='translations', to='cms.pagefrontend')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "language_code",
+                    models.CharField(
+                        db_index=True, max_length=15, verbose_name="Language"
+                    ),
+                ),
+                ("title", models.CharField(max_length=250)),
+                (
+                    "master",
+                    parler.fields.TranslationsForeignKey(
+                        editable=False,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="translations",
+                        to="cms.pagefrontend",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'PageFrontend Translation',
-                'db_table': 'cms_pagefrontend_translation',
-                'db_tablespace': '',
-                'managed': True,
-                'default_permissions': (),
-                'unique_together': {('language_code', 'master')},
+                "verbose_name": "PageFrontend Translation",
+                "db_table": "cms_pagefrontend_translation",
+                "db_tablespace": "",
+                "managed": True,
+                "default_permissions": (),
+                "unique_together": {("language_code", "master")},
             },
             bases=(parler.models.TranslatedFieldsModelMixin, models.Model),
         ),
         migrations.CreateModel(
-            name='PageCMSTranslation',
+            name="PageCMSTranslation",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('language_code', models.CharField(db_index=True, max_length=15, verbose_name='Language')),
-                ('slug', models.SlugField(max_length=255)),
-                ('title', models.CharField(max_length=250)),
-                ('content', django_editorjs_fields.fields.EditorJsJSONField(blank=True, null=True)),
-                ('master', parler.fields.TranslationsForeignKey(editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='translations', to='cms.pagecms')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "language_code",
+                    models.CharField(
+                        db_index=True, max_length=15, verbose_name="Language"
+                    ),
+                ),
+                ("slug", models.SlugField(max_length=255)),
+                ("title", models.CharField(max_length=250)),
+                (
+                    "content",
+                    django_editorjs_fields.fields.EditorJsJSONField(
+                        blank=True, null=True
+                    ),
+                ),
+                (
+                    "master",
+                    parler.fields.TranslationsForeignKey(
+                        editable=False,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="translations",
+                        to="cms.pagecms",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'PageCMS Translation',
-                'db_table': 'cms_pagecms_translation',
-                'db_tablespace': '',
-                'managed': True,
-                'default_permissions': (),
-                'unique_together': {('language_code', 'master')},
+                "verbose_name": "PageCMS Translation",
+                "db_table": "cms_pagecms_translation",
+                "db_tablespace": "",
+                "managed": True,
+                "default_permissions": (),
+                "unique_together": {("language_code", "master")},
             },
             bases=(parler.models.TranslatedFieldsModelMixin, models.Model),
         ),

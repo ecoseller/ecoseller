@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cms', '0003_alter_pagecategory_code'),
+        ("cms", "0003_alter_pagecategory_code"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='pagecategory',
-            name='type',
-            field=models.ManyToManyField(blank=True, to='cms.pagecategorytype'),
+            model_name="pagecategory",
+            name="type",
+            field=models.ManyToManyField(blank=True, to="cms.pagecategorytype"),
         ),
     ]
