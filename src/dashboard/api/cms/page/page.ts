@@ -11,6 +11,18 @@ export const getAllPages = async (): Promise<TPage[]> => {
   return data;
 };
 
+export const createNewFrontendPage = async () => {
+  // Create new CMS Page
+  // URL: /cms/
+  // Method: POST
+  // Return: Promise
+  const response = await axiosPrivate.post("/cms/", {
+    resourcetype: "PageFrontend",
+    frontend_path: "/",
+  });
+  return response.data;
+};
+
 export const putFrontendPage = async (
   id: number,
   data: Partial<IPageFrontend>
@@ -38,6 +50,17 @@ export const getFrontendPage = async (id: number): Promise<IPageFrontend> => {
   // Params: id
   // Return: Promise<IPageFrontend>
   const response = await axiosPrivate.get(`/cms/page/frontend/${id}/`);
+  return response.data;
+};
+
+export const createNewCMSPage = async () => {
+  // Create new CMS Page
+  // URL: /cms/
+  // Method: POST
+  // Return: Promise
+  const response = await axiosPrivate.post("/cms/", {
+    resourcetype: "PageCMS",
+  });
   return response.data;
 };
 

@@ -1,12 +1,17 @@
-import EditableContentWrapper, {
-  PrimaryButtonAction,
-} from "@/components/Dashboard/Generic/EditableContentWrapper";
-import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
-import { IPageCMS, IPageFrontend } from "@/types/cms";
-import Grid from "@mui/material/Grid";
-import { useReducer, useState } from "react";
-import PageCMSForm from "./CMS/PageCMSForm";
+// next
+
+// react
+
+// libs
+
+// components
 import PageFrontendForm from "./Storefront/PageStorefrontForm";
+import PageCMSForm from "./CMS/PageCMSForm";
+
+// mui
+
+// types
+import { IPageCMS, IPageFrontend } from "@/types/cms";
 
 interface IPageEditorWrapperProps {
   storefrontPageData?: IPageFrontend;

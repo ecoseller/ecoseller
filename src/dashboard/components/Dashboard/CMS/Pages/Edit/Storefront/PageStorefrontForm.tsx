@@ -1,20 +1,30 @@
+// next
+
+// react
+import { useReducer, useState } from "react";
+
+// libs
+import { putFrontendPage } from "@/api/cms/page/page";
+
+// components
+import EditableContentWrapper, {
+  PrimaryButtonAction,
+} from "@/components/Dashboard/Generic/EditableContentWrapper";
+import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
+import PageStorefrontBasicInfo from "./PageStorefrontBasicInfo";
+
+// mui
+import Snackbar from "@mui/material/Snackbar";
+import { Alert } from "@mui/material";
+import Grid from "@mui/material/Grid";
+
+// types
 import {
   ActionSetPageStorefront,
   IPageFrontend,
   ISetPageStorefrontStateData,
 } from "@/types/cms";
-import EditableContentWrapper, {
-  PrimaryButtonAction,
-} from "@/components/Dashboard/Generic/EditableContentWrapper";
-import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
-import { IPageCMS } from "@/types/cms";
-import Grid from "@mui/material/Grid";
-import { useReducer, useState } from "react";
 import PageStorefrontTranslatedFieldsWrapper from "./PageStorefrontTranslatedFields";
-import PageStorefrontBasicInfo from "./PageStorefrontBasicInfo";
-import { putFrontendPage } from "@/api/cms/page/page";
-import Snackbar from "@mui/material/Snackbar";
-import { Alert } from "@mui/material";
 
 interface IPageFrontendFormProps {
   storefrontPageData: IPageFrontend;
