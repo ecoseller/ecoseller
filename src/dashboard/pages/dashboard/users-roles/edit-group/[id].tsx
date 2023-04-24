@@ -6,8 +6,6 @@ import { Container, Typography } from "@mui/material";
 
 const DashboardGroupEditPage = () => {
   const router = useRouter();
-  const { id } = router.query;
-  console.log(router.query);
 
   return (
     <DashboardLayout>

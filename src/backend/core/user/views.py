@@ -1,7 +1,9 @@
 from rest_framework import permissions
 from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
 
 from .models import User
 
@@ -9,6 +11,42 @@ from .serializers import (
     RegistrationSerializer,
     UserSerializer,
 )
+
+
+class UserView(GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = [
+        "GET",
+        "POST",
+    ]
+    authentication_classes = []
+    serializer_class = RegistrationSerializer
+
+    def get(self, request):
+        users = self.get_queryset()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data, status=200)
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=400)
+        serializer.save()
+        return Response(serializer.data, status=201)
+
+    def get_queryset(self):
+        return User.objects.all()
+
+
+class UserDetailView(RetrieveUpdateDestroyAPIView):
+    allowed_methods = ["GET", "PUT", "DELETE"]
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = UserSerializer
+    lookup_field = "email"
+    lookup_url_kwarg = "id"
+
+    def get_queryset(self):
+        return User.objects.all()
 
 
 class RegistrationView(APIView):
@@ -48,7 +86,7 @@ class BlacklistTokenView(APIView):
 
 
 # create view that returns user data from token
-class UserView(APIView):
+class UserViewObs(APIView):
     """
     View for testing purposes.
     Print user data from token passed in header.
@@ -69,64 +107,3 @@ class UserView(APIView):
 
         serializer = UserSerializer(user)
         return Response(serializer.data)
-
-
-class UsersView(APIView):
-    """
-    View for retrieving all users.
-    """
-
-    permission_classes = (permissions.AllowAny,)
-    # In later phases we will need to restrict this to admins only
-
-    def get(self, request):
-        users = User.objects.all()
-        serializer = UserSerializer(users, many=True)
-        return Response(serializer.data, status=200)
-
-
-class DeleteUserView(APIView):
-    """
-    View for deleting a user.
-    """
-
-    permission_classes = (permissions.AllowAny,)
-    # In later phases we will need to restrict this to admins only
-
-    def post(self, request):
-        try:
-            user = User.objects.get(email=request.data["email"])
-            user.delete()
-            return Response(status=200)
-        except Exception as e:
-            print("DELETE USER Error", e)
-            return Response(status=400)
-
-
-class CreateUserView(APIView):
-    """
-    View for creating a user.
-    """
-
-    permission_classes = (permissions.AllowAny,)
-    # In later phases we will need to restrict this to admins only
-
-    def post(self, request):
-        try:
-            serializer = RegistrationSerializer(data=request.data)
-            if not serializer.is_valid():
-                return Response(serializer.errors, status=400)
-            serializer.save()
-            return Response(serializer.data, status=201)
-        except Exception as e:
-            print("CREATE USER Error", e)
-            return Response(status=400)
-
-
-class UpdateUserView(APIView):
-    """
-    View for updating a user.
-    """
-
-    def post(self, request):
-        pass

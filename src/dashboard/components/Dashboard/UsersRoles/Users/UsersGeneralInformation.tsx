@@ -2,7 +2,6 @@ import * as React from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
-import InfoIcon from "@mui/icons-material/Info";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
@@ -17,7 +16,7 @@ import {
 
 import { IUser } from "@/types/user";
 
-import { Alert, Button, Card, Snackbar, Tooltip } from "@mui/material";
+import { Alert, Button, Card, Snackbar } from "@mui/material";
 import { axiosPrivate } from "@/utils/axiosPrivate";
 import { deleteUser } from "@/api/users-roles/users";
 
@@ -43,7 +42,6 @@ const getUsers = async () => {
   const users: IUser[] = [];
   const usrs = await axiosPrivate.get(`/user/users`);
 
-  // console.log(users.data);
   for (const user of usrs.data) {
     users.push({
       email: user["email"],
@@ -92,7 +90,6 @@ const UsersGrid = () => {
 
   const fetchUsers = async () => {
     getUsers().then((data) => {
-      console.log("data: ", data);
       setUsers(data.users);
     });
   };
@@ -150,7 +147,6 @@ const UsersGrid = () => {
       sortable: false,
       disableColumnMenu: true,
       valueParser: (params) => {
-        console.log("params", params);
         return params.value.join(", ");
       },
     },
@@ -179,7 +175,7 @@ const UsersGrid = () => {
             icon={<DeleteIcon />}
             label="Delete"
             onClick={() => {
-              deleteUser(row)
+              deleteUser(row.email)
                 .then((res) => {
                   setSnackbar({
                     open: true,
@@ -199,15 +195,6 @@ const UsersGrid = () => {
             color="inherit"
             key={"delete"}
           />,
-          <GridActionsCellItem
-            icon={<InfoIcon />}
-            label="Info"
-            onClick={() => {
-              router.push(`/dashboard/users-roles/info-user/${row.email}`);
-            }}
-            color="inherit"
-            key={"info"}
-          />,
         ];
       },
     },
@@ -219,6 +206,8 @@ const UsersGrid = () => {
         rows={users}
         columns={columns}
         autoHeight={true}
+        onPaginationModelChange={setPaginationModel}
+        paginationModel={paginationModel}
         disableRowSelectionOnClick
         getRowHeight={() => "auto"}
         getRowId={(row) => row.email}

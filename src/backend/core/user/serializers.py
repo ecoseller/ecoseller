@@ -47,23 +47,18 @@ class UserSerializer(serializers.ModelSerializer):
             "is_active",
             "is_admin",
             "is_staff",
+            "is_admin",
         )
+        extra_kwargs = {
+            "email": {"read_only": True},
+        }
 
     def get_user_permissions(self, obj):
         return list(obj.user_permissions.all())
 
-
-class UpdateUserSerializer(serializers.ModelSerializer):
-    """
-    Serialize user update data
-    """
-
-    class Meta:
-        model = User
-        fields = (
-            "email",
-            "first_name",
-            "last_name",
-            "is_admin",
-            "roles",
-        )
+    # def update(self, instance, validated_data):
+    #     email = validated_data.pop("email")
+    #     user = User.objects.filter(email=email).first()
+    #     if user:
+    #         instance.user = user
+    #     return super().update(instance, validated_data)

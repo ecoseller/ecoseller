@@ -42,7 +42,7 @@ const getGroups = async () => {
 
   for (const group of grps.data) {
     groups.push({
-      group_name: group["name"],
+      name: group["name"],
       description: group["description"],
       permissions: group["permissions"],
     });
@@ -92,7 +92,7 @@ const GroupsGrid = () => {
 
   const columns: GridColDef[] = [
     {
-      field: "group_name",
+      field: "name",
       headerName: "Group Name",
       editable: false,
       maxWidth: 200,
@@ -168,7 +168,7 @@ const GroupsGrid = () => {
         autoHeight={true}
         disableRowSelectionOnClick
         getRowHeight={() => "auto"}
-        getRowId={(row) => row.group_name}
+        getRowId={(row) => row.name}
         slots={{
           toolbar: EditToolbar,
         }}
