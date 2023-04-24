@@ -129,13 +129,14 @@ class PageCategoryPreviewSerializer(
 class PageCMSDashboardSerializer(
     TranslatableModelSerializer, serializers.ModelSerializer
 ):
-    translations = TranslatedFieldsField(shared_model=PageCMS)
+    translations = TranslatedFieldsField(shared_model=PageCMS, required=False)
 
     class Meta:
         model = PageCMS
         fields = (
             "id",
             "translations",
+            "published",
         )
 
 
@@ -143,7 +144,7 @@ class PageFrontendDashboardSerializer(
     TranslatableModelSerializer,
     serializers.ModelSerializer,
 ):
-    translations = TranslatedFieldsField(shared_model=PageFrontend)
+    translations = TranslatedFieldsField(shared_model=PageFrontend, required=False)
 
     class Meta:
         model = PageFrontend
@@ -151,6 +152,7 @@ class PageFrontendDashboardSerializer(
             "id",
             "translations",
             "frontend_path",
+            "published",
         )
 
 
