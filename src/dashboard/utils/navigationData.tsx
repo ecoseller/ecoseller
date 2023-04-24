@@ -82,7 +82,7 @@ const navigationData: INavigationItem[] = [
         icon: undefined,
       },
       {
-        title: "Categories",
+        title: "Categories & Types",
         path: "/categories",
         icon: undefined,
       },

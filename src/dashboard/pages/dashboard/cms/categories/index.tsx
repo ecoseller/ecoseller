@@ -11,13 +11,16 @@ import Card from "@mui/material/Card";
 // api
 // components
 import DashboardLayout from "@/pages/dashboard/layout";
-import PagesList from "@/components/Dashboard/CMS/Pages/List/PagesList";
 import { getAllPageCategories } from "@/api/cms/category/category";
 import PageCategoriesListTopLine from "@/components/Dashboard/CMS/Categories/List/PageCategoriesListTopLine";
 import PageCategoriesList from "@/components/Dashboard/CMS/Categories/List/PageCategoriesList";
+import { getAllPageCategoryTypes } from "@/api/cms/category/type/type";
+import PageCategoryTypeListTopLine from "@/components/Dashboard/CMS/Categories/List/PageCategoryTypeListTopLine";
+import PageCategoryTypeList from "@/components/Dashboard/CMS/Categories/List/PageCategoryTypeList";
 
 const PageCategoriesPage = ({
   categories,
+  types,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <DashboardLayout>
@@ -26,6 +29,8 @@ const PageCategoriesPage = ({
         <Card elevation={0}>
           <PageCategoriesList categories={categories} />
         </Card>
+        <PageCategoryTypeListTopLine />
+        <PageCategoryTypeList types={types} />
       </Container>
     </DashboardLayout>
   );
@@ -43,7 +48,12 @@ export async function getServerSideProps() {
   const res = await getAllPageCategories();
   const categories = res;
 
-  return { props: { categories: categories } };
+  const resTypes = await getAllPageCategoryTypes();
+  const types = resTypes;
+
+  console.log("types", types);
+
+  return { props: { categories: categories, types: types } };
 }
 
 export default PageCategoriesPage;

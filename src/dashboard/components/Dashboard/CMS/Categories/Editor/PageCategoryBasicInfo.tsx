@@ -5,6 +5,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 
 // components
 import EditorCard from "@/components/Dashboard/Generic/EditorCard";
+import PageCategoryTypeSetter from "./CateogryTypeSetter";
 // mui
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
@@ -16,12 +17,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 
 // types
-import {
-  ActionSetPageCategory,
-  ActionSetPageStorefront,
-  ISetPageCategoryStateData,
-  ISetPageStorefrontStateData,
-} from "@/types/cms";
+import { ActionSetPageCategory, ISetPageCategoryStateData } from "@/types/cms";
 import { ISetPageCategoryStateAction } from "./Form";
 interface IPageCategoryBasicInfoProps {
   state: ISetPageCategoryStateData;
@@ -43,6 +39,7 @@ const PageCategoryBasicInfo = ({
             <TextField
               label="Code"
               value={state.code}
+              error={!Boolean(state.code)}
               onChange={(
                 event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
               ) => {
@@ -72,6 +69,15 @@ const PageCategoryBasicInfo = ({
                 label="Published"
               />
             </Box>
+            <PageCategoryTypeSetter
+              state={state?.type || []}
+              set={(typeIds: number[]) => {
+                dispatch({
+                  type: ActionSetPageCategory.SETTYPE,
+                  payload: { type: typeIds },
+                });
+              }}
+            />
             {/* <TextField label="Name" /> */}
           </Stack>
         </FormControl>

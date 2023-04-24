@@ -10,10 +10,12 @@ import {
   GridRenderCellParams,
 } from "@mui/x-data-grid";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
-import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
+import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+
 // types
 import { IPageCategory } from "@/types/cms";
+import { deletePageCategory } from "@/api/cms/category/category";
 
 interface PagesListProps {
   categories: IPageCategory[];
@@ -24,6 +26,10 @@ const ROW_HEIGHT = 50;
 
 const PageCategoriesList = ({ categories }: PagesListProps) => {
   const router = useRouter();
+
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
 
   const rows = categories?.map((category) => {
     const translation = Object.values(category.translations);
@@ -77,10 +83,22 @@ const PageCategoriesList = ({ categories }: PagesListProps) => {
             color="inherit"
             key={"edit"}
           />,
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label="Delete"
+            onClick={handleDeleteClick(id as number)}
+            color="inherit"
+            key={"delete"}
+          />,
         ];
       },
     },
   ];
+
+  const handleDeleteClick = (id: number) => () => {
+    deletePageCategory(id);
+    refreshData();
+  };
 
   return (
     <DataGrid

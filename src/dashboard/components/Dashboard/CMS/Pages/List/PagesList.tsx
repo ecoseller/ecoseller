@@ -9,11 +9,11 @@ import {
   GridColDef,
   GridRenderCellParams,
 } from "@mui/x-data-grid";
-import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
-import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 // types
 import { TPage } from "@/types/cms";
+import { deleteCMSPage, deleteFrontendPage } from "@/api/cms/page/page";
 
 interface PagesListProps {
   pages: TPage[];
@@ -24,6 +24,10 @@ const ROW_HEIGHT = 50;
 
 const PagesList = ({ pages }: PagesListProps) => {
   const router = useRouter();
+
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
 
   const rows = pages?.map((page) => {
     const translation = Object.values(page.translations);
@@ -98,10 +102,29 @@ const PagesList = ({ pages }: PagesListProps) => {
             color="inherit"
             key={"edit"}
           />,
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label="Delete"
+            onClick={handleDeleteClick(id as number)}
+            color="inherit"
+            key={"delete"}
+          />,
         ];
       },
     },
   ];
+
+  const handleDeleteClick = (id: number) => () => {
+    const item = pages.find((page) => page.id === id);
+    if (!item) return;
+    if (item.resourcetype == "PageCMS") {
+      deleteCMSPage(id);
+    } else if (item.resourcetype == "PageFrontend") {
+      deleteFrontendPage(id);
+    }
+
+    refreshData();
+  };
 
   return (
     <DataGrid

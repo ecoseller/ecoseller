@@ -20,3 +20,8 @@ export const putPageCategory = async (id: number, body: IPageCategory) => {
   const { data } = await axiosPrivate.put(`/cms/category/${id}/`, body);
   return data;
 };
+
+export const deletePageCategory = async (id: number) => {
+  const { data } = await axiosPrivate.delete(`/cms/category/${id}/`);
+  return data;
+};

@@ -54,12 +54,17 @@ const PageCategoryForm = ({ pageCategoryData }: IPageCategoryFormProps) => {
           return state;
         }
         return action.payload as ISetPageCategoryStateData;
+      case ActionSetPageCategory.SETCODE:
+        return { ...state, code: action.payload.code };
       case ActionSetPageCategory.SETPUBLISHED:
         return { ...state, published: action.payload.published };
+      case ActionSetPageCategory.SETTYPE:
+        return { ...state, type: action.payload.type };
       case ActionSetPageCategory.SETTRANSLATION:
         if (!action.payload.translation) {
           return state;
         }
+        console.log("action.payload.translation", action.payload.translation);
         return {
           ...state,
           translations: {
@@ -110,7 +115,10 @@ const PageCategoryForm = ({ pageCategoryData }: IPageCategoryFormProps) => {
           return;
         }
 
-        await putPageCategory(pageCategoryData.id, pageCategoryData)
+        await putPageCategory(
+          pageCategoryData.id,
+          pageCateogryState as IPageCategory
+        )
           .then((resp) => {
             setSnackbar({
               open: true,
@@ -136,13 +144,13 @@ const PageCategoryForm = ({ pageCategoryData }: IPageCategoryFormProps) => {
       <Grid container spacing={2}>
         <Grid item md={8} xs={12}>
           <PageCategoryTranslatedFieldsWrapper
-            state={pageCategoryData}
+            state={pageCateogryState}
             dispatch={dispatchPageCategoryState}
           />
         </Grid>
         <Grid item md={4} xs={12}>
           <PageCategoryBasicInfo
-            state={pageCategoryData}
+            state={pageCateogryState}
             dispatch={dispatchPageCategoryState}
           />
         </Grid>

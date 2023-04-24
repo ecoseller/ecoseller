@@ -5,6 +5,7 @@ import AddIcon from "@mui/icons-material/Add";
 import SettingsPopover from "@/components/Dashboard/Generic/SettingsPopover";
 import { useRouter } from "next/router";
 import { createPageCategory } from "@/api/cms/category/category";
+import Box from "@mui/material/Box";
 
 const PageCategoriesListTopLine = () => {
   const router = useRouter();
@@ -15,9 +16,18 @@ const PageCategoriesListTopLine = () => {
       justifyContent="space-between"
       mb={5}
     >
-      <Typography variant="h4" gutterBottom>
-        Page categories
-      </Typography>
+      <Box>
+        <Box>
+          <Typography variant="h4" gutterBottom>
+            Page category
+          </Typography>
+        </Box>
+        <Box mr={10}>
+          <Typography variant="caption" gutterBottom>
+            Page category are used to group pages together.
+          </Typography>
+        </Box>
+      </Box>
       <Stack
         direction="row"
         alignItems="center"

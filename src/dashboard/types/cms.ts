@@ -78,6 +78,7 @@ export enum ActionSetPageCategory {
   SETCODE = "setCode",
   SETTRANSLATIONS = "setTranslations",
   SETTRANSLATION = "setTranslation",
+  SETTYPE = "setType",
 }
 
 export interface ISetPageCategoryStateData extends Partial<IPageCategory> {
@@ -100,4 +101,10 @@ export interface IPageCategory {
   published: boolean;
   code: string;
   translations: IPageCategoryTranslation;
+  type: number[];
+}
+
+export interface IPageCategoryType {
+  id: number;
+  identifier: string;
 }
