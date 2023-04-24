@@ -137,6 +137,7 @@ class PageCMSDashboardSerializer(
             "id",
             "translations",
             "published",
+            "categories",
         )
 
 
@@ -153,6 +154,7 @@ class PageFrontendDashboardSerializer(
             "translations",
             "frontend_path",
             "published",
+            "categories",
         )
 
 
@@ -165,3 +167,14 @@ class PagePolymorphicDashboardSerializer(PolymorphicSerializer):
         PageCMS: PageCMSDashboardSerializer,
         PageFrontend: PageFrontendDashboardSerializer,
     }
+
+
+class PageCategoryDashboardSerializer(
+    TranslatableModelSerializer,
+    serializers.ModelSerializer,
+):
+    translations = TranslatedFieldsField(shared_model=PageCategory, required=False)
+
+    class Meta:
+        model = PageCategory
+        fields = ("id", "translations", "published", "code")

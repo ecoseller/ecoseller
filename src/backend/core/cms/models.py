@@ -43,6 +43,9 @@ class PageCategory(TranslatableModel, SortableModel):
         verbose_name = "Page Category"
         verbose_name_plural = "Page Category"
 
+    def get_ordering_queryset(self):
+        return PageCategory.objects.none()
+
     # def __str__(self):
     #     return self.safe_translation_getter("title", any_language=True)
 
