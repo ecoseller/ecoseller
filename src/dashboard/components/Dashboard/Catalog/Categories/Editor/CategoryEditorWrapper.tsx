@@ -13,6 +13,8 @@ import Button from "@mui/material/Button";
 import { ICategoryEditable } from "@/types/category";
 import EntityVisibilityForm from "@/components/Dashboard/Generic/Forms/EntityVisibilityForm";
 import CategorySelectForm from "@/components/Dashboard/Generic/Forms/CategorySelectForm";
+import TranslatedSEOFieldsWrapper from "@/components/Dashboard/Generic/TranslatedSEOFields";
+import { IDispatchWrapper } from "@/components/Dashboard/Common/IDispatchWrapper";
 
 interface ICategoryEditorWrapperProps {
   initialCategory: ICategoryEditable;
@@ -116,6 +118,35 @@ const CategoryEditorWrapper = ({
     });
   };
 
+  const dispatchWrapper: IDispatchWrapper = {
+    setMetaTitle(language: string, metaTitle: string) {
+      dispatch({
+        type: SetCategoryAction.SetTranslation,
+        payload: {
+          translation: {
+            language: language,
+            data: {
+              meta_title: metaTitle,
+            },
+          },
+        },
+      });
+    },
+    setMetaDescription(language: string, metaDescription: string) {
+      dispatch({
+        type: SetCategoryAction.SetTranslation,
+        payload: {
+          translation: {
+            language: language,
+            data: {
+              meta_description: metaDescription,
+            },
+          },
+        },
+      });
+    },
+  };
+
   return (
     <EditableContentWrapper
       primaryButtonTitle={
@@ -138,6 +169,10 @@ const CategoryEditorWrapper = ({
             languages={languages}
             category={category}
             dispatch={dispatch}
+          />
+          <TranslatedSEOFieldsWrapper
+            state={category.translations}
+            dispatchWrapper={dispatchWrapper}
           />
         </Grid>
         <Grid item md={4} xs={12}>

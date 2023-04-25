@@ -26,13 +26,16 @@ import {
   ActionSetProduct,
   IAttributeType,
   IProduct,
+  IProductTranslations,
   IProductType,
   ISetProductStateData,
 } from "@/types/product";
 import { postProduct, putProduct } from "@/api/country/product/product";
 import { IPriceList } from "@/types/localization";
 import ProductTypeSelect from "./Product/ProductTypeSelect";
-import ProductTranslatedSEOFieldsWrapper from "./Product/ProductTranslatedSEOFields";
+import TranslatedSEOFieldsWrapper from "../../../Generic/TranslatedSEOFields";
+import { IDispatchWrapper } from "@/components/Dashboard/Common/IDispatchWrapper";
+import { IEntityTranslations } from "@/types/common";
 
 export interface ISetProductStateAction {
   type: ActionSetProduct;
@@ -144,6 +147,35 @@ const ProductEditorWrapper = ({
           media: [],
         }
   );
+
+  const dispatchWrapper: IDispatchWrapper = {
+    setMetaDescription(language: string, metaDescription: string) {
+      dispatchProductState({
+        type: ActionSetProduct.SETTRANSLATION,
+        payload: {
+          translation: {
+            language,
+            data: {
+              meta_description: metaDescription,
+            },
+          },
+        },
+      });
+    },
+    setMetaTitle(language: string, metaTitle: string) {
+      dispatchProductState({
+        type: ActionSetProduct.SETTRANSLATION,
+        payload: {
+          translation: {
+            language,
+            data: {
+              meta_title: metaTitle,
+            },
+          },
+        },
+      });
+    },
+  };
 
   useEffect(() => {
     if (productData) {
@@ -266,9 +298,9 @@ const ProductEditorWrapper = ({
             state={productState}
             dispatch={dispatchProductState}
           />
-          <ProductTranslatedSEOFieldsWrapper
-            state={productState}
-            dispatch={dispatchProductState}
+          <TranslatedSEOFieldsWrapper
+            state={productState.translations || ({} as IEntityTranslations)}
+            dispatchWrapper={dispatchWrapper}
           />
           <ProductVariantsEditor
             disabled={false}
