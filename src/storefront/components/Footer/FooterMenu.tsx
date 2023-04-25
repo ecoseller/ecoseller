@@ -58,6 +58,9 @@ const FooterMenu = () => {
           sx={{
             p: 2,
           }}
+          style={{
+            width: "100%",
+          }}
         >
           <Grid xs={12} md={5} lg={4}>
             <Logo />
