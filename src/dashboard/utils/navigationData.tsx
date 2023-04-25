@@ -75,6 +75,18 @@ const navigationData: INavigationItem[] = [
     title: "CMS",
     path: "/dashboard/cms",
     icon: <ArticleIcon />,
+    children: [
+      {
+        title: "Pages",
+        path: "/pages",
+        icon: undefined,
+      },
+      {
+        title: "Categories & Types",
+        path: "/categories",
+        icon: undefined,
+      },
+    ],
   },
   {
     title: "Users & Roles",
