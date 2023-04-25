@@ -45,13 +45,8 @@ PageCategoriesPage.getLayout = (page: ReactElement) => {
 };
 
 export async function getServerSideProps() {
-  const res = await getAllPageCategories();
-  const categories = res;
-
-  const resTypes = await getAllPageCategoryTypes();
-  const types = resTypes;
-
-  console.log("types", types);
+  const categories = await getAllPageCategories();
+  const types = await getAllPageCategoryTypes();
 
   return { props: { categories: categories, types: types } };
 }

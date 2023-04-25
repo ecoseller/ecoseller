@@ -1,3 +1,4 @@
+import { getAllPageCategories } from "@/api/cms/category/category";
 import PageCategoryForm from "@/components/Dashboard/CMS/Categories/Editor/Form";
 import PageEditorWrapper from "@/components/Dashboard/CMS/Pages/Edit/Editor";
 import DashboardLayout from "@/pages/dashboard/layout";
@@ -38,10 +39,8 @@ PageCategoryEdit.getLayout = (page: ReactElement) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const params = context.params;
-  const id = params?.id;
 
-  const pageCategoryDetailRes = await axiosPrivate.get(`/cms/category/${id}/`);
-  const pageCategoryDetail = pageCategoryDetailRes.data;
+  const pageCategoryDetail = await getAllPageCategories();
 
   return {
     props: {

@@ -1,3 +1,4 @@
+import { getFrontendPage } from "@/api/cms/page/page";
 import PageEditorWrapper from "@/components/Dashboard/CMS/Pages/Edit/Editor";
 import DashboardLayout from "@/pages/dashboard/layout";
 import RootLayout from "@/pages/layout";
@@ -39,8 +40,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const params = context.params;
   const id = params?.id;
 
-  const pageDetailRes = await axiosPrivate.get(`/cms/page/frontend/${id}/`);
-  const pageDetail = pageDetailRes.data;
+  const pageDetail = await getFrontendPage(Number(id));
 
   return {
     props: {
