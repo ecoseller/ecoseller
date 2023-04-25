@@ -256,9 +256,26 @@ class PermissionView(GenericAPIView):
     serializer_class = ManagerPermissionSerializer
 
     def get(self, request):
+        # return just a few permissions that actually makes sense
+        # maybe put in some config in the future
+        filterModels = ["category", "productprice", "user", "product"]
         permissions = self.get_queryset()
+        perms = []
+        for model in filterModels:
+            perms = perms + list(
+                permissions.filter(name__icontains=model).all().values()
+            )
+
+        print("PERMS!", perms)
+
+        filteredPerms = [
+            x for x in perms if "change" in x["name"] or "add" in x["name"]
+        ]
+
+        print("PERMS", filteredPerms)
+
         serPermissions = []
-        for permission in permissions:
+        for permission in filteredPerms:
             serPermissions.append(self.serializer_class(permission).data)
         return Response(serPermissions, status=200)
 
