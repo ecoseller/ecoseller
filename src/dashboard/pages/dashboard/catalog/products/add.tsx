@@ -14,7 +14,7 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import CategorySelectForm from "@/components/Dashboard/Generic/Forms/CategorySelectForm";
 import ProductBasicInfo from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductBasicInfo";
-import ProductTranslatedFieldsWrapper from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductTranslatedFields";
+import ProductTranslatedFieldsWrapper from "@/components/Dashboard/Generic/TranslatedFieldsTabList";
 import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import ProductVariantsEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVariantsEditor";

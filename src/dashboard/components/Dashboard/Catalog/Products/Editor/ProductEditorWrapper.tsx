@@ -15,7 +15,7 @@ import ProductMediaEditor from "@/components/Dashboard/Catalog/Products/Editor/P
 import ProductVariantPricesEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVariantPricesEditor";
 import EntityVisibilityForm from "@/components/Dashboard/Generic/Forms/EntityVisibilityForm";
 import CategorySelectForm from "@/components/Dashboard/Generic/Forms/CategorySelectForm";
-import ProductTranslatedFieldsWrapper from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductTranslatedFields";
+import ProductTranslatedFieldsWrapper from "@/components/Dashboard/Generic/TranslatedFieldsTabList";
 // mui
 import Grid from "@mui/material/Grid";
 import Snackbar from "@mui/material/Snackbar";
@@ -33,9 +33,10 @@ import {
 import { postProduct, putProduct } from "@/api/country/product/product";
 import { IPriceList } from "@/types/localization";
 import ProductTypeSelect from "./Product/ProductTypeSelect";
-import TranslatedSEOFieldsWrapper from "../../../Generic/TranslatedSEOFields";
+import TranslatedSEOFieldsTabList from "../../../Generic/TranslatedSEOFieldsTabList";
 import { IDispatchWrapper } from "@/components/Dashboard/Common/IDispatchWrapper";
 import { IEntityTranslations } from "@/types/common";
+import { OutputData } from "@editorjs/editorjs";
 
 export interface ISetProductStateAction {
   type: ActionSetProduct;
@@ -149,6 +150,45 @@ const ProductEditorWrapper = ({
   );
 
   const dispatchWrapper: IDispatchWrapper = {
+    setDescription(language: string, description: OutputData): void {
+      dispatchProductState({
+        type: ActionSetProduct.SETTRANSLATION,
+        payload: {
+          translation: {
+            language,
+            data: {
+              description_editorjs: description,
+            },
+          },
+        },
+      });
+    },
+    setSlug(language: string, slug: string): void {
+      dispatchProductState({
+        type: ActionSetProduct.SETTRANSLATION,
+        payload: {
+          translation: {
+            language,
+            data: {
+              slug: slug,
+            },
+          },
+        },
+      });
+    },
+    setTitle(language: string, title: string): void {
+      dispatchProductState({
+        type: ActionSetProduct.SETTRANSLATION,
+        payload: {
+          translation: {
+            language,
+            data: {
+              title: title,
+            },
+          },
+        },
+      });
+    },
     setMetaDescription(language: string, metaDescription: string) {
       dispatchProductState({
         type: ActionSetProduct.SETTRANSLATION,
@@ -295,10 +335,10 @@ const ProductEditorWrapper = ({
       <Grid container spacing={2}>
         <Grid item md={8} xs={12}>
           <ProductTranslatedFieldsWrapper
-            state={productState}
-            dispatch={dispatchProductState}
+            state={productState.translations || ({} as IEntityTranslations)}
+            dispatchWrapper={dispatchWrapper}
           />
-          <TranslatedSEOFieldsWrapper
+          <TranslatedSEOFieldsTabList
             state={productState.translations || ({} as IEntityTranslations)}
             dispatchWrapper={dispatchWrapper}
           />

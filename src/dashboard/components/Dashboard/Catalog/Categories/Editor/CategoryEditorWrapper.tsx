@@ -1,6 +1,5 @@
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 import Grid from "@mui/material/Grid";
-import CategoryTranslatedFields from "@/components/Dashboard/Catalog/Categories/Editor/CategoryTranslatedFields";
 import React, { useEffect, useReducer, useState } from "react";
 import { getLanguages } from "@/api/country/country";
 import { ILanguage } from "@/types/localization";
@@ -9,12 +8,13 @@ import EditableContentWrapper, {
 } from "@/components/Dashboard/Generic/EditableContentWrapper";
 import { addCategory, updateCategory } from "@/api/category/category";
 import { useRouter } from "next/router";
-import Button from "@mui/material/Button";
 import { ICategoryEditable } from "@/types/category";
 import EntityVisibilityForm from "@/components/Dashboard/Generic/Forms/EntityVisibilityForm";
 import CategorySelectForm from "@/components/Dashboard/Generic/Forms/CategorySelectForm";
-import TranslatedSEOFieldsWrapper from "@/components/Dashboard/Generic/TranslatedSEOFields";
+import TranslatedSEOFieldsTabList from "@/components/Dashboard/Generic/TranslatedSEOFieldsTabList";
 import { IDispatchWrapper } from "@/components/Dashboard/Common/IDispatchWrapper";
+import { OutputData } from "@editorjs/editorjs";
+import TranslatedFieldsTabList from "@/components/Dashboard/Generic/TranslatedFieldsTabList";
 
 interface ICategoryEditorWrapperProps {
   initialCategory: ICategoryEditable;
@@ -119,6 +119,45 @@ const CategoryEditorWrapper = ({
   };
 
   const dispatchWrapper: IDispatchWrapper = {
+    setDescription(language: string, description: OutputData): void {
+      dispatch({
+        type: SetCategoryAction.SetTranslation,
+        payload: {
+          translation: {
+            language: language,
+            data: {
+              description_editorjs: description,
+            },
+          },
+        },
+      });
+    },
+    setSlug(language: string, slug: string): void {
+      dispatch({
+        type: SetCategoryAction.SetTranslation,
+        payload: {
+          translation: {
+            language: language,
+            data: {
+              slug: slug,
+            },
+          },
+        },
+      });
+    },
+    setTitle(language: string, title: string): void {
+      dispatch({
+        type: SetCategoryAction.SetTranslation,
+        payload: {
+          translation: {
+            language: language,
+            data: {
+              title: title,
+            },
+          },
+        },
+      });
+    },
     setMetaTitle(language: string, metaTitle: string) {
       dispatch({
         type: SetCategoryAction.SetTranslation,
@@ -165,12 +204,11 @@ const CategoryEditorWrapper = ({
       />
       <Grid container spacing={2}>
         <Grid item md={8} xs={12}>
-          <CategoryTranslatedFields
-            languages={languages}
-            category={category}
-            dispatch={dispatch}
+          <TranslatedFieldsTabList
+            state={category.translations}
+            dispatchWrapper={dispatchWrapper}
           />
-          <TranslatedSEOFieldsWrapper
+          <TranslatedSEOFieldsTabList
             state={category.translations}
             dispatchWrapper={dispatchWrapper}
           />

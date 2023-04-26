@@ -26,17 +26,17 @@ import { ILanguage } from "@/types/localization";
 import { IDispatchWrapper } from "@/components/Dashboard/Common/IDispatchWrapper";
 import { IEntityTranslation, IEntityTranslations } from "@/types/common";
 
-interface IProductTranslatedSEOFieldsProps {
+interface ITranslatedSEOFieldsTab {
   language: string;
   state: IEntityTranslation;
   dispatchWrapper: IDispatchWrapper;
 }
 
-const TranslatedSEOFieldsForm = ({
+const TranslatedSEOFieldsTab = ({
   language,
   state,
   dispatchWrapper,
-}: IProductTranslatedSEOFieldsProps) => {
+}: ITranslatedSEOFieldsTab) => {
   return (
     <FormControl fullWidth margin={"normal"}>
       <Stack spacing={2}>
@@ -64,7 +64,7 @@ const TranslatedSEOFieldsForm = ({
   );
 };
 
-interface IProductTranslatedSEOFieldsWrapperProps {
+interface ITranslatedSEOFieldsTabList {
   state: IEntityTranslations;
   dispatchWrapper: IDispatchWrapper;
 }
@@ -75,10 +75,10 @@ interface IProductTranslatedSEOFieldsWrapperProps {
  * @param dispatchWrapper wrapper around `dispatch` function that allows us to call setXXX methods
  * @constructor
  */
-const TranslatedSEOFieldsWrapper = ({
+const TranslatedSEOFieldsTabList = ({
   state,
   dispatchWrapper,
-}: IProductTranslatedSEOFieldsWrapperProps) => {
+}: ITranslatedSEOFieldsTabList) => {
   const { data: languages } = useSWRImmutable<ILanguage[]>(
     "/country/languages/"
   );
@@ -121,7 +121,7 @@ const TranslatedSEOFieldsWrapper = ({
                 key={language.code}
                 value={language.code}
               >
-                <TranslatedSEOFieldsForm
+                <TranslatedSEOFieldsTab
                   language={language.code}
                   state={state[language.code]}
                   dispatchWrapper={dispatchWrapper}
@@ -134,4 +134,4 @@ const TranslatedSEOFieldsWrapper = ({
     </EditorCard>
   );
 };
-export default TranslatedSEOFieldsWrapper;
+export default TranslatedSEOFieldsTabList;

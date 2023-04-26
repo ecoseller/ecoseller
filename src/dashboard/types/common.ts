@@ -1,3 +1,5 @@
+import { OutputData } from "@editorjs/editorjs";
+
 type TLink = string | null;
 export interface IPaginated {
   links: {
@@ -12,6 +14,11 @@ export interface IPaginated {
 export interface IEntityTranslation {
   meta_title?: string;
   meta_description?: string;
+  title?: string;
+  description?: string;
+  description_editorjs?: OutputData;
+  short_description?: string;
+  slug?: string;
 }
 
 export interface IEntityTranslations {
