@@ -9,7 +9,6 @@ class RecommenderSystemApi:
 
     @classmethod
     def store_object(cls, data: Dict[str, Any]) -> None:
-        # _ = requests.request(
-        #     method="POST", url=cls.server_url + "/store_object", json=data
-        # )
-        pass  # TODO: remove in future
+        _ = requests.request(
+            method="POST", url=cls.server_url + "/store_object", json=data
+        )
