@@ -2,6 +2,7 @@
 // call the cart api in the backend
 import type { NextApiRequest, NextApiResponse } from "next";
 import { api } from "@/utils/api";
+
 export const categoryAPI = async (
   req: NextApiRequest,
   res: NextApiResponse,

@@ -1,0 +1,19 @@
+.rmm__root {
+  top: 0;
+  left: 0;
+  height: 8rem;
+  display: flex;
+  justify-content: flex-start;
+  align-content: center;
+  flex-direction: row;
+  background-color: #fff;
+  width: 100%;
+  padding-top: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 1rem;
+
+  @include respond-to('large') {
+    height: 4rem;
+  }
+}

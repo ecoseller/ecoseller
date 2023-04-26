@@ -44,50 +44,52 @@ const TopLine = () => {
           flexDirection={{ xs: "column", sm: "row" }}
           sx={{ fontSize: "12px" }}
         >
-          <Grid
-            container
-            columnSpacing={1}
-            sx={{ pr: 2, order: { xs: 2, sm: 1 } }}
-          >
-            <Grid>
-              <Item>
-                <Typography
-                  variant="subtitle2"
-                  sx={{ flexGrow: 1 }}
-                  component={Link}
-                  href="/contact"
-                  shallow={false}
-                  prefetch={false}
-                  style={{
-                    textDecoration: "none",
-                    color: "inherit",
-                    cursor: "pointer",
-                  }}
-                >
-                  Contact
-                </Typography>
-              </Item>
+          <div className="container">
+            <Grid
+              container
+              columnSpacing={1}
+              sx={{ pr: 2, order: { xs: 2, sm: 1 } }}
+            >
+              <Grid>
+                <Item>
+                  <Typography
+                    variant="subtitle2"
+                    sx={{ flexGrow: 1 }}
+                    component={Link}
+                    href="/contact"
+                    shallow={false}
+                    prefetch={false}
+                    style={{
+                      textDecoration: "none",
+                      color: "inherit",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Contact
+                  </Typography>
+                </Item>
+              </Grid>
+              <Grid>
+                <Item>
+                  <Typography
+                    variant="subtitle2"
+                    sx={{ flexGrow: 1 }}
+                    component={Link}
+                    href="/category"
+                    shallow={false}
+                    prefetch={false}
+                    style={{
+                      textDecoration: "none",
+                      color: "inherit",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Return & Exchange
+                  </Typography>
+                </Item>
+              </Grid>
             </Grid>
-            <Grid>
-              <Item>
-                <Typography
-                  variant="subtitle2"
-                  sx={{ flexGrow: 1 }}
-                  component={Link}
-                  href="/category"
-                  shallow={false}
-                  prefetch={false}
-                  style={{
-                    textDecoration: "none",
-                    color: "inherit",
-                    cursor: "pointer",
-                  }}
-                >
-                  Return & Exchange
-                </Typography>
-              </Item>
-            </Grid>
-          </Grid>
+          </div>
         </Grid>
       </MaxWidthWrapper>
     </TopLineContainer>

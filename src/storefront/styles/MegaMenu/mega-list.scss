@@ -1,0 +1,62 @@
+.rmm__mega-list {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  // left: calc(-50vw + 50%);
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-content: center;
+  width: 100%;
+  height: calc(100vh - 4rem);
+  padding-top: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 1rem;
+  background-color: #fff;
+
+  @include respond-to('large') {
+    position: absolute;
+    top: 5rem;
+    display: flex;
+    flex-direction: row;
+    flex-direction: row;
+    height: auto;
+    opacity: 0;
+  }
+}
+
+.rmm__mega-list--open {
+  @include slideOpen;
+
+  @media (prefers-reduced-motion: reduce) {
+    transform: translate3d(100%, 0, 0);
+  }
+
+  @include respond-to('large') {
+    animation: none;
+    display: flex;
+    opacity: 1;
+    @media (prefers-reduced-motion: reduce) {
+      transform: none;
+    }
+  }
+}
+
+.rmm__mega-list--closed {
+  @include slideClosed;
+
+  @media (prefers-reduced-motion: reduce) {
+    transform: translate3d(-100%, 0, 0);
+  }
+
+  @include respond-to('large') {
+    animation: none;
+    display: none;
+    opacity: 0;
+    @media (prefers-reduced-motion: reduce) {
+      transform: none;
+    }
+  }
+}
