@@ -4,6 +4,7 @@ import { classNames } from "../utils/css";
 import Link from "next/link";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 interface IMainNavItemLink {
   id: string;
   role?: string;
@@ -26,6 +27,7 @@ interface IMainNavItemLink {
     | "true";
   ariaControls?: string;
   children: React.ReactNode;
+  isMobile?: boolean;
 }
 
 const MainNavItemLink = ({
@@ -42,6 +44,7 @@ const MainNavItemLink = ({
   ariaHaspopup,
   ariaControls,
   children,
+  isMobile,
 }: IMainNavItemLink) => {
   const rootClasses = classNames(
     "rmm__main-nav-item-link",
@@ -50,21 +53,51 @@ const MainNavItemLink = ({
     isActive && "rmm__main-nav-item-link--active",
     className && className
   );
+  console.log(
+    "MainNavItemLink",
+    id,
+    role,
+    href,
+    isBack,
+    isForward,
+    isActive,
+    className,
+    onMouseEnter,
+    onClick,
+    onKeyDown,
+    ariaHaspopup,
+    ariaControls,
+    children,
+    isMobile
+  );
   return (
     <Link
       id={id}
       role={role}
       href={href}
       className={rootClasses}
-      onClick={onClick}
-      onMouseEnter={onMouseEnter}
+      onClick={!isMobile ? undefined : onClick}
+      onMouseEnter={!isMobile ? onMouseEnter : undefined}
       onKeyDown={onKeyDown}
       aria-haspopup={ariaHaspopup}
       aria-controls={ariaControls}
     >
-      {children}
-
-      {isActive ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          flexWrap: "wrap",
+        }}
+      >
+        {children}
+        {isMobile && isForward ? (
+          <NavigateNextIcon fontSize="small" />
+        ) : isActive ? (
+          <ExpandLessIcon fontSize="small" />
+        ) : (
+          <ExpandMoreIcon fontSize="small" />
+        )}
+      </div>
     </Link>
   );
 };

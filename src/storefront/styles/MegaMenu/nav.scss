@@ -7,22 +7,22 @@
   display: flex;
   flex-direction: column;
   background-color: #fff;
-  border-top: 0.0625rem solid grey;
+  border-top: 0.0625rem solid #E0E0E0;
   padding-top: 1rem;
   padding-right: 1rem;
   padding-bottom: 1rem;
   padding-left: 1rem;
-  border-right: 0.25rem solid #000;
   overflow-y: scroll;
 
   @include respond-to('large') {
-    top: 4rem;
+    position: relative;
+    padding-top: 0rem;
+    top: 0;
     left: 0;
     border-top: none;
     height: 4rem;
     flex-direction: row;
     border-right: none;
-    border-bottom: 0.0625rem solid #000;
     overflow-y: initial;
   }
 

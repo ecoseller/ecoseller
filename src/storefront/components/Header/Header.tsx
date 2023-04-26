@@ -50,6 +50,8 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     maxWidth: MAXWIDTH,
   },
   margin: "0px auto",
+  paddingLeft: "1rem",
+  paddingRight: 0,
 }));
 
 const InfoToolBarNarrow = styled(Toolbar)(({ theme }) => ({
@@ -75,22 +77,26 @@ const DashboardHeader = ({}: IDashboardHeaderProps) => {
     <StyledRoot>
       <InfoBar text="Free shipping on all orders over $100" />
       <TopLine />
-      <StyledToolbar>
-        <Menu logoImage="/logo/main.svg" />
-        <Box sx={{ flexGrow: 1 }} />
-        <Stack
-          direction="row"
-          alignItems="center"
-          spacing={{
-            xs: 5,
-            sm: 5,
-          }}
-        >
-          <Search />
-          <User user={user} />
-          <Cart />
-        </Stack>
-      </StyledToolbar>
+      <div className={"container"}>
+        <Box>
+          <StyledToolbar disableGutters>
+            <Menu />
+            <Box sx={{ flexGrow: 1 }} />
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={{
+                xs: 5,
+                sm: 5,
+              }}
+            >
+              <Search />
+              <User user={user} />
+              <Cart />
+            </Stack>
+          </StyledToolbar>
+        </Box>
+      </div>
       {/* {largeScreen ? null : (
         <Drawer
           open={openMobileMenu}

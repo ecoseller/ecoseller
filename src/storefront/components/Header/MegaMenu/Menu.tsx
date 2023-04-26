@@ -5,7 +5,6 @@ import React, {
   RefObject,
   useCallback,
 } from "react";
-import PropTypes from "prop-types";
 
 // utils
 import useSWR from "swr";
@@ -17,45 +16,61 @@ import MenuIcon from "@mui/icons-material/Menu";
 
 // Components
 import Logo from "../Logo";
-import TopBar from "./components/TopBar";
-import TopBarTitle from "./components/TopBarTitle";
-import Hamburger from "./components/Hamburger";
 import Nav from "./components/Nav";
 import MainList from "./components/MainList";
-import MegaList from "./components/MegaList";
-import MainNavItem from "./components/MainNavItem";
-import MainNavItemLink from "./components/MainNavItemLink";
-import NavItem from "./components/NavItem";
-import NavItemLink from "./components/NavItemLink";
-import NavList from "./components/NavList";
-import NavItemDescription from "./components/NavItemDescription";
 
 // State Machines
 import { TMenuState, MenuStateMachine } from "./utils/MenuStateMachine";
 import { ICategoryMenu } from "@/types/category";
+import Stack from "@mui/material/Stack";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
+import { useRouter } from "next/router";
 
-interface IMenu {
-  logoImage: string;
-}
+interface IMenu {}
 
-const Menu = ({ logoImage }: IMenu) => {
+const Menu = ({}: IMenu) => {
+  /**
+   * This component is highly inspired by the react mega menu by @james-priest
+   * https://github.com/jasonrundell/react-mega-menu
+   *
+   * The main difference is that this component is built for dynamic data with quite a lot changes to the styles and structure.
+   * Also it's all rewritten in typescript and somewhere uses mui components.
+   */
+
+  const router = useRouter();
   const [megaTMenuState, setMegaTMenuState] = useState<TMenuState>("");
   const [subTMenuState, setSubTMenuState] = useState<TMenuState>("");
   const [subSubTMenuState, setSubSubTMenuState] = useState<TMenuState>("");
   const [activeMenus, setActiveMenus] = useState<string[]>([]); // array that captures the ids of active menus
-  const [isMobile, setIsMobile] = useState(true); // array that captures the ids of active menus
   const wrapperRef = useRef<HTMLDivElement>(null); // used to detect clicks outside of component
 
-  const viewportLarge = 1024;
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
+  console.log("isMobile", isMobile);
 
   const { data: categories, error: isError } = useSWR<ICategoryMenu[]>(
     "/api/category",
     (url: string) => fetch(url).then((res) => res.json())
   );
 
+  useEffect(() => {
+    // Reset menu if route changes
+    resetMenus();
+    setMegaTMenuState("closed");
+  }, [router.asPath]);
+
   const categoryGenerator = useCallback(
     (categories: ICategoryMenu[], level: number = 0) =>
-      MenuGenerator(categories, level, activeMenus, toggleSubMenu, a11yClick),
+      MenuGenerator(
+        categories,
+        level,
+        activeMenus,
+        toggleSubMenu,
+        toggleSubSubMenu,
+        a11yClick,
+        isMobile
+      ),
     [categories, activeMenus]
   );
 
@@ -104,6 +119,7 @@ const Menu = ({ logoImage }: IMenu) => {
     e: MouseEvent | KeyboardEvent | React.MouseEvent,
     menuId: string
   ) => {
+    console.log("toggleMegaMenu");
     e.preventDefault();
 
     const nextState = MenuStateMachine(megaTMenuState);
@@ -111,10 +127,11 @@ const Menu = ({ logoImage }: IMenu) => {
     setMegaTMenuState(nextState);
 
     updateActiveMenus(nextState, menuId);
-
     if (megaTMenuState === "open") {
       resetMenus();
+      console.log("toggleMegaMenu-open");
     }
+    console.log("setMegaTMenuState", megaTMenuState);
   };
 
   const toggleSubMenu = (
@@ -126,11 +143,7 @@ const Menu = ({ logoImage }: IMenu) => {
     const nextState = MenuStateMachine(subTMenuState);
 
     setSubTMenuState(MenuStateMachine(subTMenuState));
-    /*
-      I haven't come up with single solution (yet) that takes care of
-      opening and closing menus for both small and large screens, so for
-      now I fork the logic based on viewport size.
-      */
+
     if (!isMobile) {
       if (activeMenus.includes(menuId)) {
         // menu is already open, remove it from activeMenus to close it
@@ -158,20 +171,6 @@ const Menu = ({ logoImage }: IMenu) => {
     updateActiveMenus(nextState, menuId);
   };
 
-  useEffect(() => {
-    if (window.innerWidth >= viewportLarge) {
-      setIsMobile(false);
-    } else {
-      setIsMobile(true);
-    }
-  }, [activeMenus, isMobile]);
-
-  const doEscape = (e: KeyboardEvent | React.KeyboardEvent) => {
-    if (e.key === "Escape") {
-      resetMenus();
-    }
-  };
-
   const a11yClick = (e: KeyboardEvent | React.KeyboardEvent) => {
     const key = e.key || e.key;
     if (key === " " || key === "Enter") {
@@ -179,40 +178,50 @@ const Menu = ({ logoImage }: IMenu) => {
     }
   };
 
-  // useEffect(() => {
-  //   document.addEventListener("keydown", doEscape, false);
-
-  //   return () => {
-  //     document.removeEventListener("keydown", doEscape, false);
-  //   };
-  // });
-
   useOutsideAlerter(wrapperRef); // create bindings for closing menu from outside events
 
   return (
     <div role="navigation" className="rmm__root" ref={wrapperRef}>
-      {/* <IconButton
-        onClick={onOpenMobileMenu}
-        sx={{
-          color: "text.primary",
-          display: { lg: "none" },
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={{
+          xs: 5,
+          sm: 5,
         }}
       >
-        <MenuIcon />
-      </IconButton> */}
-      <Hamburger
+        <IconButton
+          // onClick={onOpenMobileMenu}
+          onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+            toggleMegaMenu(e, "menubar-main-categories")
+          }
+          sx={{
+            color: "text.primary",
+            display: { lg: "none" },
+          }}
+        >
+          <MenuIcon />
+        </IconButton>
+        {/* <Hamburger
         label="Menu"
         state={megaTMenuState}
         onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
           toggleMegaMenu(e, "menubar-main-categories")
         }
-      />
-      <Logo />
-      <MainList id="menubar-main-categories" ariaLabel="Main Menu Category">
-        {categories && categories.length > 0
-          ? categoryGenerator(categories, 0)
-          : null}
-      </MainList>
+      /> */}
+        <Logo />
+      </Stack>
+      <Nav
+        id="site-nav"
+        activeState={megaTMenuState}
+        ariaLabel="Main Navigation"
+      >
+        <MainList id="menubar-main-categories" ariaLabel="Main Menu Category">
+          {categories && categories.length > 0
+            ? categoryGenerator(categories, 0)
+            : null}
+        </MainList>
+      </Nav>
     </div>
   );
 };

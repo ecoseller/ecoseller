@@ -15,8 +15,6 @@ const MegaList = ({ id, activeState = "", children }: IMegaListProps) => {
     activeState && `rmm__mega-list--${activeState}`
   );
 
-  const wrapperClasses = classNames("rmm__mega-list__wrapper");
-
   return (
     <ul role="menu" className={rootClasses} id={id} aria-labelledby={id}>
       {children}

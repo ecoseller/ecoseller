@@ -15,6 +15,19 @@ $breakpoints: (
   ),
 ) !default;
 
+$breakpoints_num: (
+  'small': 600px,
+
+  'medium':
+    900px,
+  
+  'large': 
+    1200px,
+  
+  'xlarge': 
+    1536px,
+) !default;
+
 /// Mixin to manage responsive breakpoints
 /// @author Hugo Giraudel
 /// @param {String} $breakpoint - Breakpoint name
@@ -32,5 +45,26 @@ $breakpoints: (
   @else {
     @warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
         + "Available breakpoints are: #{map-keys($breakpoints)}.";
+  }
+}
+
+@mixin respond-below($breakpoint) {
+
+  // If the breakpoint exists in the map.
+  @if map-has-key($breakpoints_num, $breakpoint) {
+
+    // Get the breakpoint value.
+    $breakpoint-value: map-get($breakpoints_num, $breakpoint);
+
+    // Write the media query.
+    @media (max-width: ($breakpoint-value - 1)) {
+      @content;
+    }
+
+  // If the breakpoint doesn't exist in the map.
+  } @else {
+
+    // Log a warning.
+    @warn 'Invalid breakpoint: #{$breakpoint}.';
   }
 }

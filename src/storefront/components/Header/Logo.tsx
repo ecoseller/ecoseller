@@ -13,10 +13,12 @@ const Logo = () => {
       <div
         style={{
           width: largeScreen ? `150px` : `100px`,
-          height: `40px`,
+          height: `30px`,
           flexShrink: 0,
           cursor: `pointer`,
           position: `relative`,
+          display: "flex",
+          alignItems: "center",
         }}
       >
         <Image
@@ -25,6 +27,8 @@ const Logo = () => {
           style={{
             objectFit: `contain`,
             objectPosition: `left center`,
+            margin: "0 auto",
+            display: "block",
           }}
           fill
           sizes="100vw"

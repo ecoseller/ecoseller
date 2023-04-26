@@ -6,6 +6,7 @@ import NavList from "../components/NavList";
 import NavItem from "../components/NavItem";
 import NavItemLink from "../components/NavItemLink";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Typography } from "@mui/material";
 
 export const MenuGenerator = (
   categories: ICategoryMenu[],
@@ -15,7 +16,12 @@ export const MenuGenerator = (
     e: MouseEvent | KeyboardEvent | React.MouseEvent | React.KeyboardEvent,
     id: string
   ) => void,
-  a11yClick: (e: KeyboardEvent | React.KeyboardEvent) => boolean | undefined
+  toggleSubSubMenu: (
+    e: MouseEvent | KeyboardEvent | React.MouseEvent | React.KeyboardEvent,
+    id: string
+  ) => void,
+  a11yClick: (e: KeyboardEvent | React.KeyboardEvent) => boolean | undefined,
+  isMobile: boolean = false
 ): JSX.Element[] => {
   let categoryList: JSX.Element[] = [];
 
@@ -27,7 +33,9 @@ export const MenuGenerator = (
         level + 1,
         activeMenus,
         toggleSubMenu,
-        a11yClick
+        toggleSubSubMenu,
+        a11yClick,
+        isMobile
       );
     }
     let cat = null;
@@ -36,7 +44,11 @@ export const MenuGenerator = (
         console.log("level 0 has children", category.title, children);
         // create top level category nav item
         cat = (
-          <MainNavItem id={`nav-${category.id}`} role="none" isChildren>
+          <MainNavItem
+            id={`nav-${category.id}`}
+            role="none"
+            isChildren={children && children?.length > 0 ? true : false}
+          >
             <MainNavItemLink
               id={`nav-item-${category.id}`}
               role="menuitem"
@@ -54,19 +66,21 @@ export const MenuGenerator = (
                   ? (e) => toggleSubMenu(e, `nav-mega-${category.id}`)
                   : undefined
               }
-              // onKeyDown={
-              //   children && children?.length > 0
-              //     ? (e) =>
-              //         a11yClick(e) &&
-              //         toggleSubMenu(e, `nav-mega-${category.id}`)
-              //     : undefined
-              // }
+              onMouseEnter={
+                children && children?.length > 0
+                  ? (e) => toggleSubMenu(e, `nav-mega-${category.id}`)
+                  : undefined
+              }
               ariaHaspopup={
                 children && children?.length > 0 ? "menu" : undefined
               }
               ariaControls="nav-menu"
+              isMobile={isMobile}
+              isBack
             >
-              {category.title}
+              <Typography variant={"h3"} fontSize={"1.0rem"} fontWeight={600}>
+                {category.title}
+              </Typography>
             </MainNavItemLink>
             {children && children?.length > 0 ? (
               <MegaList
@@ -77,6 +91,28 @@ export const MenuGenerator = (
                     : "closed"
                 }
               >
+                <NavItem id="nav-Mega-Menu-back" isHeading={true}>
+                  <NavItemLink
+                    id="menuitem-Mega-Menu-back"
+                    href={`/category/${category.id}/${category.slug}`}
+                    onClick={(e) => toggleSubMenu(e, `nav-mega-${category.id}`)}
+                    onKeyDown={(e) =>
+                      a11yClick(e) &&
+                      toggleSubMenu(e, `nav-mega-${category.id}`)
+                    }
+                    ariaControls="nav-main-Mega-Menu"
+                    isMobile={isMobile}
+                    isBack
+                  >
+                    <Typography
+                      variant={"h3"}
+                      fontSize={"1.0rem"}
+                      fontWeight={600}
+                    >
+                      {category.title}
+                    </Typography>
+                  </NavItemLink>
+                </NavItem>
                 {children}
               </MegaList>
             ) : null}
@@ -94,16 +130,68 @@ export const MenuGenerator = (
                   id={`navitem-mega-${category.id}-Sub-menu-item`}
                   role="menuitem"
                   href={`/category/${category.id}/${category.slug}`}
-                  // onClick={(e: any) => toggleSubMenu(e, `nav-${category.id}`)}
+                  onClick={(e: any) =>
+                    toggleSubSubMenu(e, `subsubmenu-${category.id}`)
+                  }
                   // onKeyDown={(e: any) =>
                   //   a11yClick(e) && toggleSubMenu(e, `nav-${category.id}`)
                   // }
                   ariaHaspopup="true"
-                  isHeading
+                  isMobile={isMobile}
+                  isForward
                 >
-                  {category.title}
+                  <Typography
+                    variant={"h6"}
+                    fontSize={"0.85rem"}
+                    fontWeight={600}
+                  >
+                    {category.title}
+                  </Typography>
                 </NavItemLink>
-                {children}
+                <NavList
+                  id={`subsubmenu-${category.id}`}
+                  role="menu"
+                  isSub
+                  isSubSub
+                  activeState={
+                    activeMenus.includes(`subsubmenu-${category.id}`)
+                      ? "open"
+                      : "closed"
+                  }
+                  ariaLabelledby={`menuitem-menu-Mega-Menu-Sub-menu-item-${category.id}`}
+                >
+                  <NavItem
+                    id={`nav-Mega-Menu-Sub-menu-item-${category.id}`}
+                    role="none"
+                    isHeading
+                  >
+                    <NavItemLink
+                      id={`menuitem-Mega-Menu-Sub-menu-item-${category.id}`}
+                      role="menuitem"
+                      href={`/category/${category.id}/${category.slug}`}
+                      isBack
+                      onClick={(e: any) =>
+                        toggleSubSubMenu(e, `subsubmenu-${category.id}`)
+                      }
+                      onKeyDown={(e) =>
+                        a11yClick(e) &&
+                        toggleSubSubMenu(e, `subsubmenu-${category.id}`)
+                      }
+                      ariaHaspopup="true"
+                      ariaControls={`subsubmenu-${category.id}`}
+                      isMobile={isMobile}
+                    >
+                      <Typography
+                        variant={"h6"}
+                        fontSize={"0.85rem"}
+                        fontWeight={600}
+                      >
+                        {category.title}
+                      </Typography>
+                    </NavItemLink>
+                  </NavItem>
+                  {children}
+                </NavList>
               </NavItem>
             </>
           );
@@ -118,7 +206,13 @@ export const MenuGenerator = (
                 ariaHaspopup="false"
                 isHeading
               >
-                {category.title}
+                <Typography
+                  variant={"h6"}
+                  fontSize={"0.85rem"}
+                  fontWeight={600}
+                >
+                  {category.title}
+                </Typography>
               </NavItemLink>
             </NavItem>
           );
@@ -137,7 +231,9 @@ export const MenuGenerator = (
               // }
               ariaHaspopup="false"
             >
-              {category.title}
+              <Typography variant={"h6"} fontSize={"0.85rem"} fontWeight={400}>
+                {category.title}
+              </Typography>
             </NavItemLink>
           </NavItem>
         );
