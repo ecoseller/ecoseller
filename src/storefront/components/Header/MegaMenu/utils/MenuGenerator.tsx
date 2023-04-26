@@ -133,9 +133,6 @@ export const MenuGenerator = (
                   onClick={(e: any) =>
                     toggleSubSubMenu(e, `subsubmenu-${category.id}`)
                   }
-                  // onKeyDown={(e: any) =>
-                  //   a11yClick(e) && toggleSubMenu(e, `nav-${category.id}`)
-                  // }
                   ariaHaspopup="true"
                   isMobile={isMobile}
                   isForward
@@ -219,25 +216,120 @@ export const MenuGenerator = (
         }
         break;
       default:
-        cat = (
-          <NavItem id={`nav-mega-${category.id}-Sub-menu-item`} role="none">
-            <NavItemLink
-              id={`navitem-mega-${category.id}-Sub-menu-item`}
-              role="menuitem"
-              href={`/category/${category.id}/${category.slug}`}
-              // onClick={(e: any) => toggleSubMenu(e, `nav-${category.id}`)}
-              // onKeyDown={(e: any) =>
-              //   a11yClick(e) && toggleSubMenu(e, `nav-${category.id}`)
-              // }
-              ariaHaspopup="false"
-            >
-              <Typography variant={"h6"} fontSize={"0.85rem"} fontWeight={400}>
-                {category.title}
-              </Typography>
-            </NavItemLink>
-          </NavItem>
-        );
+        // create sub level category nav item
+        if (children && children?.length > 0) {
+          // with children (so we create <NavList>)
+          cat = (
+            <>
+              <NavItem id={`nav-mega-${category.id}-Sub-menu-item`} role="none">
+                <NavItemLink
+                  id={`navitem-mega-${category.id}-Sub-menu-item`}
+                  role="menuitem"
+                  href={`/category/${category.id}/${category.slug}`}
+                  onClick={(e: any) =>
+                    toggleSubSubMenu(e, `subsubmenu-${category.id}`)
+                  }
+                  ariaHaspopup="true"
+                  isMobile={isMobile}
+                  isForward
+                >
+                  <Typography
+                    variant={"h6"}
+                    fontSize={"0.85rem"}
+                    fontWeight={400}
+                  >
+                    {category.title}
+                  </Typography>
+                </NavItemLink>
+                <NavList
+                  id={`subsubmenu-${category.id}`}
+                  role="menu"
+                  isSub
+                  isSubSub
+                  activeState={
+                    activeMenus.includes(`subsubmenu-${category.id}`)
+                      ? "open"
+                      : "closed"
+                  }
+                  ariaLabelledby={`menuitem-menu-Mega-Menu-Sub-menu-item-${category.id}`}
+                >
+                  <NavItem
+                    id={`nav-Mega-Menu-Sub-menu-item-${category.id}`}
+                    role="none"
+                    isHeading
+                  >
+                    <NavItemLink
+                      id={`menuitem-Mega-Menu-Sub-menu-item-${category.id}`}
+                      role="menuitem"
+                      href={`/category/${category.id}/${category.slug}`}
+                      isBack
+                      onClick={(e: any) =>
+                        toggleSubSubMenu(e, `subsubmenu-${category.id}`)
+                      }
+                      onKeyDown={(e) =>
+                        a11yClick(e) &&
+                        toggleSubSubMenu(e, `subsubmenu-${category.id}`)
+                      }
+                      ariaHaspopup="true"
+                      ariaControls={`subsubmenu-${category.id}`}
+                      isMobile={isMobile}
+                    >
+                      <Typography
+                        variant={"h6"}
+                        fontSize={"0.85rem"}
+                        fontWeight={400}
+                      >
+                        {category.title}
+                      </Typography>
+                    </NavItemLink>
+                  </NavItem>
+                  {children}
+                </NavList>
+              </NavItem>
+            </>
+          );
+        } else {
+          // has no children, so we don't create a <NavList>
+          cat = (
+            <NavItem id={`nav-mega-${category.id}-Sub-menu-item`} role="none">
+              <NavItemLink
+                id={`navitem-mega-${category.id}-Sub-menu-item`}
+                role="menuitem"
+                href={`/category/${category.id}/${category.slug}`}
+                ariaHaspopup="false"
+                isHeading
+              >
+                <Typography
+                  variant={"h6"}
+                  fontSize={"0.85rem"}
+                  fontWeight={300}
+                >
+                  {category.title}
+                </Typography>
+              </NavItemLink>
+            </NavItem>
+          );
+        }
         break;
+      // cat = (
+      //   <NavItem id={`nav-mega-${category.id}-Sub-menu-item`} role="none">
+      //     <NavItemLink
+      //       id={`navitem-mega-${category.id}-Sub-menu-item`}
+      //       role="menuitem"
+      //       href={`/category/${category.id}/${category.slug}`}
+      //       onClick={(e: any) => toggleSubMenu(e, `nav-${category.id}`)}
+      //       onKeyDown={(e: any) =>
+      //         a11yClick(e) && toggleSubMenu(e, `nav-${category.id}`)
+      //       }
+      //       ariaHaspopup="false"
+      //     >
+      //       <Typography variant={"h6"} fontSize={"0.85rem"} fontWeight={400}>
+      //         {category.title}
+      //       </Typography>
+      //     </NavItemLink>
+      //   </NavItem>
+      // );
+      // break;
     }
     categoryList.push(cat);
   });
