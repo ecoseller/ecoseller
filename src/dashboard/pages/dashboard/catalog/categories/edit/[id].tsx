@@ -1,9 +1,9 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement } from "react";
 import RootLayout from "@/pages/layout";
 import DashboardLayout from "@/pages/dashboard/layout";
 import Container from "@mui/material/Container";
 import CategoryEditorWrapper from "@/components/Dashboard/Catalog/Categories/Editor/CategoryEditorWrapper";
-import { ICategoryDetail, ICategoryEditable } from "@/types/category";
+import { ICategoryDetail } from "@/types/category";
 import { deleteCategory, getCategory } from "@/api/category/category";
 import { useRouter } from "next/router";
 import Button from "@mui/material/Button";
@@ -11,19 +11,15 @@ import Grid from "@mui/material/Grid";
 import EditorCard from "@/components/Dashboard/Generic/EditorCard";
 import CollapsableContentWithTitle from "@/components/Dashboard/Generic/CollapsableContentWithTitle";
 import Box from "@mui/material/Box";
-import { OutputData } from "@editorjs/editorjs";
-import { IProduct } from "@/types/product";
-import { axiosPrivate } from "@/utils/axiosPrivate";
 
-interface ICategoryEditPageProps{
-  category: ICategoryDetail
+interface ICategoryEditPageProps {
+  category: ICategoryDetail;
 }
 
-const CategoryEditPage = ({category} : ICategoryEditPageProps) => {
-
+const CategoryEditPage = ({ category }: ICategoryEditPageProps) => {
   const router = useRouter();
   const categoryId = category.id.toString();
-  
+
   async function deleteCat() {
     deleteCategory(categoryId).then(() => {
       router.push("/dashboard/catalog/categories");
@@ -59,7 +55,7 @@ const CategoryEditPage = ({category} : ICategoryEditPageProps) => {
 
 export const getServerSideProps = async (context: any) => {
   const { id } = context.params;
-  
+
   const categoryRes = await getCategory(id);
   const category = categoryRes.data;
 

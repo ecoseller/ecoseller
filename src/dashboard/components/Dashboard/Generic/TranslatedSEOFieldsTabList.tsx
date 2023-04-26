@@ -26,7 +26,7 @@ import { ILanguage } from "@/types/localization";
 import { IDispatchWrapper } from "@/components/Dashboard/Common/IDispatchWrapper";
 import { IEntityTranslation, IEntityTranslations } from "@/types/common";
 
-interface ITranslatedSEOFieldsTab {
+interface ITranslatedSEOFieldsTabProps {
   language: string;
   state: IEntityTranslation;
   dispatchWrapper: IDispatchWrapper;
@@ -36,7 +36,7 @@ const TranslatedSEOFieldsTab = ({
   language,
   state,
   dispatchWrapper,
-}: ITranslatedSEOFieldsTab) => {
+}: ITranslatedSEOFieldsTabProps) => {
   return (
     <FormControl fullWidth margin={"normal"}>
       <Stack spacing={2}>
@@ -64,7 +64,7 @@ const TranslatedSEOFieldsTab = ({
   );
 };
 
-interface ITranslatedSEOFieldsTabList {
+interface ITranslatedSEOFieldsTabListProps {
   state: IEntityTranslations;
   dispatchWrapper: IDispatchWrapper;
 }
@@ -78,7 +78,7 @@ interface ITranslatedSEOFieldsTabList {
 const TranslatedSEOFieldsTabList = ({
   state,
   dispatchWrapper,
-}: ITranslatedSEOFieldsTabList) => {
+}: ITranslatedSEOFieldsTabListProps) => {
   const { data: languages } = useSWRImmutable<ILanguage[]>(
     "/country/languages/"
   );

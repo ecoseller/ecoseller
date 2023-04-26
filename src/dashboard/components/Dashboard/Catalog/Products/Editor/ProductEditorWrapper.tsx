@@ -15,7 +15,7 @@ import ProductMediaEditor from "@/components/Dashboard/Catalog/Products/Editor/P
 import ProductVariantPricesEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVariantPricesEditor";
 import EntityVisibilityForm from "@/components/Dashboard/Generic/Forms/EntityVisibilityForm";
 import CategorySelectForm from "@/components/Dashboard/Generic/Forms/CategorySelectForm";
-import ProductTranslatedFieldsWrapper from "@/components/Dashboard/Generic/TranslatedFieldsTabList";
+import TranslatedFieldsTabList from "@/components/Dashboard/Generic/TranslatedFieldsTabList";
 // mui
 import Grid from "@mui/material/Grid";
 import Snackbar from "@mui/material/Snackbar";
@@ -334,7 +334,7 @@ const ProductEditorWrapper = ({
 
       <Grid container spacing={2}>
         <Grid item md={8} xs={12}>
-          <ProductTranslatedFieldsWrapper
+          <TranslatedFieldsTabList
             state={productState.translations || ({} as IEntityTranslations)}
             dispatchWrapper={dispatchWrapper}
           />

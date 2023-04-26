@@ -111,10 +111,6 @@ const EditorJSField = ({
     };
   }, []);
 
-  useEffect(()=>{
-    
-  });
-  
   return (
     <div
       style={{

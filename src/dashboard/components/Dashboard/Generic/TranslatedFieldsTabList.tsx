@@ -30,17 +30,17 @@ let EditorJSField = dynamic(
   }
 );
 
-interface IProductTranslatedFieldsProps {
+interface ITranslatedFieldsTabProps {
   language: string;
   state: IEntityTranslation;
   dispatchWrapper: IDispatchWrapper;
 }
 
-const TranslatedFieldsTabList = ({
+const TranslatedFieldsTab = ({
   language,
   state,
   dispatchWrapper,
-}: IProductTranslatedFieldsProps) => {
+}: ITranslatedFieldsTabProps) => {
   // const [title, setTitle] = useState<string>("");
   // const [slug, setSlug] = useState<string>("");
   const [editSlug, setEditSlug] = useState<boolean>(false);
@@ -59,7 +59,7 @@ const TranslatedFieldsTabList = ({
       );
     }
   }, [state?.title]);
-  
+
   console.log("Tab rendered");
 
   return (
@@ -108,8 +108,7 @@ const TranslatedFieldsTabList = ({
         />
         <EditorJSField
           data={state?.description_editorjs || ({} as IEditorJSData)}
-          onChange={(data: IEditorJSData) =>
-          {
+          onChange={(data: IEditorJSData) => {
             dispatchWrapper.setDescription(language, data);
           }}
         />
@@ -118,15 +117,21 @@ const TranslatedFieldsTabList = ({
   );
 };
 
-interface IProductTranslatedFieldsWrapperProps {
+interface ITranslatedFieldsTabListProps {
   state: IEntityTranslations;
   dispatchWrapper: IDispatchWrapper;
 }
 
-const ProductTranslatedFieldsWrapper = ({
+/**
+ * Tab list containing translated fields form for each language
+ * @param state state of the translated fields
+ * @param dispatchWrapper wrapper around `dispatch` function that allows us to call setXXX methods
+ * @constructor
+ */
+const TranslatedFieldsTabList = ({
   state,
   dispatchWrapper,
-}: IProductTranslatedFieldsWrapperProps) => {
+}: ITranslatedFieldsTabListProps) => {
   const { data: languages } = useSWRImmutable<ILanguage[]>(
     "/country/languages/"
   );
@@ -169,7 +174,7 @@ const ProductTranslatedFieldsWrapper = ({
                 key={language.code}
                 value={language.code}
               >
-                <TranslatedFieldsTabList
+                <TranslatedFieldsTab
                   language={language.code}
                   state={state[language.code]}
                   dispatchWrapper={dispatchWrapper}
@@ -182,4 +187,4 @@ const ProductTranslatedFieldsWrapper = ({
     </EditorCard>
   );
 };
-export default ProductTranslatedFieldsWrapper;
+export default TranslatedFieldsTabList;
