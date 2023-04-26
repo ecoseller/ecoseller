@@ -109,7 +109,7 @@ const EditorJSField = ({
       ejInstance?.current?.destroy();
       ejInstance.current = null;
     };
-  }, );
+  }, []);
 
   useEffect(()=>{
     

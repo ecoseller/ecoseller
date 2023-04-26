@@ -186,8 +186,6 @@ const CategoryEditorWrapper = ({
     },
   };
 
-  console.log(category)
-  
   return (
     <EditableContentWrapper
       primaryButtonTitle={
