@@ -11,6 +11,7 @@ import Grid from "@mui/material/Grid";
 import EditorCard from "@/components/Dashboard/Generic/EditorCard";
 import CollapsableContentWithTitle from "@/components/Dashboard/Generic/CollapsableContentWithTitle";
 import Box from "@mui/material/Box";
+import { OutputData } from "@editorjs/editorjs";
 
 const CategoryEditPage = () => {
   const emptyCategory: ICategoryDetail = {
@@ -20,6 +21,7 @@ const CategoryEditPage = () => {
         slug: "",
         title: "",
         description: "",
+        description_editorjs: {} as OutputData,
         meta_description: "",
         meta_title: "",
       },
@@ -28,6 +30,7 @@ const CategoryEditPage = () => {
         title: "",
         description: "",
         meta_description: "",
+        description_editorjs: {} as OutputData,
         meta_title: "",
       },
     },

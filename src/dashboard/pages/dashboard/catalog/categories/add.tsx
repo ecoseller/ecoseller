@@ -4,6 +4,7 @@ import DashboardLayout from "@/pages/dashboard/layout";
 import Container from "@mui/material/Container";
 import CategoryEditorWrapper from "@/components/Dashboard/Catalog/Categories/Editor/CategoryEditorWrapper";
 import { ICategoryEditable } from "@/types/category";
+import { OutputData } from "@editorjs/editorjs";
 
 const CategoryAddPage = () => {
   const emptyCategory: ICategoryEditable = {
@@ -14,6 +15,7 @@ const CategoryAddPage = () => {
         title: "",
         description: "",
         meta_description: "",
+        description_editorjs: {} as OutputData,
         meta_title: "",
       },
       cs: {
@@ -21,6 +23,7 @@ const CategoryAddPage = () => {
         title: "",
         description: "",
         meta_description: "",
+        description_editorjs: {} as OutputData,
         meta_title: "",
       },
     },

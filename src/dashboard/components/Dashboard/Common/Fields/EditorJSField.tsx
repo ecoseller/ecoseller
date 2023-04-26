@@ -89,7 +89,6 @@ const EditorJSField = ({
       onReady: () => {
         ejInstance.current = editor;
       },
-      autofocus: true,
       data: data,
       onChange: async () => {
         let content = await editor.saver.save();
@@ -110,8 +109,12 @@ const EditorJSField = ({
       ejInstance?.current?.destroy();
       ejInstance.current = null;
     };
-  }, []);
+  }, );
 
+  useEffect(()=>{
+    
+  });
+  
   return (
     <div
       style={{

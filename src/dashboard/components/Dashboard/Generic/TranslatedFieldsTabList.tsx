@@ -58,7 +58,9 @@ const TranslatedFieldsTabList = ({
         })
       );
     }
-  }, [dispatchWrapper, editSlug, language, state?.title]);
+  }, [state?.title]);
+  
+  console.log("Tab rendered");
 
   return (
     <FormControl fullWidth margin={"normal"}>
@@ -104,13 +106,13 @@ const TranslatedFieldsTabList = ({
             ),
           }}
         />
-        {/*<EditorJSField*/}
-        {/*  data={state?.description_editorjs || ({} as IEditorJSData)}*/}
-        {/*  onChange={(data: IEditorJSData) =>*/}
-        {/*  {*/}
-        {/*    dispatchWrapper.setDescription(language, data);*/}
-        {/*  }}*/}
-        {/*/>*/}
+        <EditorJSField
+          data={state?.description_editorjs || ({} as IEditorJSData)}
+          onChange={(data: IEditorJSData) =>
+          {
+            dispatchWrapper.setDescription(language, data);
+          }}
+        />
       </Stack>
     </FormControl>
   );

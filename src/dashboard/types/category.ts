@@ -1,4 +1,4 @@
-import { OutputData } from "@editorjs/editorjs";
+import { OutputData as IEditorJSData } from "@editorjs/editorjs";
 
 /**
  * Interface representing set of translatable fields of a category
@@ -8,7 +8,7 @@ export interface ICategoryTranslation {
   meta_title: string;
   meta_description: string;
   description: string;
-  description_editorjs?: OutputData;
+  description_editorjs?: IEditorJSData;
   slug: string;
 }
 
