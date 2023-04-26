@@ -3,7 +3,7 @@
   position: relative;
   height: 2rem;
   margin-right: 1rem;
-  @include respond-to('large') {
+  @include respond-to("large") {
     align-items: center;
   }
 }

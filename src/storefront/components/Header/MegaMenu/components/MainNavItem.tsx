@@ -1,20 +1,20 @@
-import React from 'react'
+import React from "react";
 // Utils
-import { classNames } from '../utils/css'
+import { classNames } from "../utils/css";
 
 interface IMainNavItemProps {
-  id: string
-  role?: string
-  isHeading?: boolean
-  isChildren?: boolean
-  isForward?: boolean
-  className?: string
-  children: React.ReactNode
+  id: string;
+  role?: string;
+  isHeading?: boolean;
+  isChildren?: boolean;
+  isForward?: boolean;
+  className?: string;
+  children: React.ReactNode;
 }
 
 const MainNavItem = ({
   id,
-  role = 'none',
+  role = "none",
   isHeading = false,
   isChildren = false,
   isForward = false,
@@ -22,17 +22,17 @@ const MainNavItem = ({
   children,
 }: IMainNavItemProps) => {
   const rootClasses = classNames(
-    'rmm__main-nav-item',
-    isHeading && 'rmm__main-nav-item--heading',
-    isChildren && 'rmm__main-nav-item--children',
-    isForward && 'rmm__main-nav-item--forward',
+    "rmm__main-nav-item",
+    isHeading && "rmm__main-nav-item--heading",
+    isChildren && "rmm__main-nav-item--children",
+    isForward && "rmm__main-nav-item--forward",
     className && className
-  )
+  );
   return (
     <li id={id} role={role} className={rootClasses}>
       {children}
     </li>
-  )
-}
+  );
+};
 
-export default MainNavItem
+export default MainNavItem;

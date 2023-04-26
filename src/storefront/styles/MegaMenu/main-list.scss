@@ -9,8 +9,8 @@
   padding-bottom: 1rem;
   width: 100%;
   z-index: 1;
-  
-  @include respond-to('large') {
+
+  @include respond-to("large") {
     flex-direction: row;
     padding-left: 3rem;
   }

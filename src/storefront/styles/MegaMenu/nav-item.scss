@@ -4,9 +4,8 @@
   margin-right: 0;
   margin-bottom: 1rem;
   margin-left: 0;
-  
 
-  @include respond-to('large') {
+  @include respond-to("large") {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -19,19 +18,17 @@
     // padding-left: 1rem;
     padding-right: 1rem;
   }
-   
 }
 
 .rmm__nav-item--heading {
   font-weight: 700;
-  @include respond-to('large') {
+  @include respond-to("large") {
     display: none;
   }
-  
 }
 
 .rmm__nav-item--forward {
-  @include respond-to('large') {
+  @include respond-to("large") {
     margin-right: 1rem;
   }
 }

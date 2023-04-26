@@ -10,7 +10,7 @@
   align-items: center;
   z-index: 1000;
 
-  @include respond-to('large') {
+  @include respond-to("large") {
     display: none;
   }
 }
@@ -72,7 +72,7 @@
 
 .rmm__hamburger--closed {
   display: flex;
-  @include respond-to('large') {
+  @include respond-to("large") {
     display: none;
   }
 }

@@ -1,31 +1,28 @@
 /* all those breakpoints are take from MUI https://mui.com/material-ui/customization/breakpoints/ */
 
 $breakpoints: (
-  'small': (
+  "small": (
     min-width: 600px,
   ),
-  'medium': (
+  "medium": (
     min-width: 900px,
   ),
-  'large': (
+  "large": (
     min-width: 1200px,
   ),
-  'xlarge': (
+  "xlarge": (
     min-width: 1536px,
   ),
 ) !default;
 
 $breakpoints_num: (
-  'small': 600px,
+  "small": 600px,
 
-  'medium':
-    900px,
-  
-  'large': 
-    1200px,
-  
-  'xlarge': 
-    1536px,
+  "medium": 900px,
+
+  "large": 1200px,
+
+  "xlarge": 1536px,
 ) !default;
 
 /// Mixin to manage responsive breakpoints
@@ -49,10 +46,8 @@ $breakpoints_num: (
 }
 
 @mixin respond-below($breakpoint) {
-
   // If the breakpoint exists in the map.
   @if map-has-key($breakpoints_num, $breakpoint) {
-
     // Get the breakpoint value.
     $breakpoint-value: map-get($breakpoints_num, $breakpoint);
 
@@ -61,9 +56,8 @@ $breakpoints_num: (
       @content;
     }
 
-  // If the breakpoint doesn't exist in the map.
+    // If the breakpoint doesn't exist in the map.
   } @else {
-
     // Log a warning.
     @warn 'Invalid breakpoint: #{$breakpoint}.';
   }

@@ -17,7 +17,7 @@
   border-right: 0.25rem solid #000;
   overflow: hidden;
 
-  @include respond-to('large') {
+  @include respond-to("large") {
     left: 0;
     border-top: none;
     flex-direction: row;

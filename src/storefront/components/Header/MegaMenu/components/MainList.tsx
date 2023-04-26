@@ -1,11 +1,11 @@
-import React from 'react'
+import React from "react";
 interface IMainList {
-  id: string
-  ariaLabel?: string
-  children: React.ReactNode
+  id: string;
+  ariaLabel?: string;
+  children: React.ReactNode;
 }
 
-const MainList = ({ id, children, ariaLabel = 'Main menu' }: IMainList) => {
+const MainList = ({ id, children, ariaLabel = "Main menu" }: IMainList) => {
   return (
     <ul
       id={id}
@@ -15,7 +15,7 @@ const MainList = ({ id, children, ariaLabel = 'Main menu' }: IMainList) => {
     >
       {children}
     </ul>
-  )
-}
+  );
+};
 
-export default MainList
+export default MainList;
