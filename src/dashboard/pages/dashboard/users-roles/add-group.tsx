@@ -46,7 +46,7 @@ const DashboardGroupAddPage = ({ permissions }: IPermissionsProps) => {
     }
   }, [group]);
 
-  console.log("PERMISSIONS", permissions)
+  console.log("GROUP", group)
 
   return (
     <DashboardLayout>
@@ -57,7 +57,7 @@ const DashboardGroupAddPage = ({ permissions }: IPermissionsProps) => {
           setPreventNavigation={setPreventNavigation}
           onButtonClick={async () => {
             await setPreventNavigation(false);
-            await createGroup(group)
+            await createGroup(group.name, group.description, group.permissions.map((p) => { return p.name }))
               .then((res: any) => {
                 setPreventNavigation(false);
                 console.log(preventNavigation);
