@@ -259,23 +259,21 @@ class PermissionView(GenericAPIView):
         # return just a few permissions that actually makes sense
         # maybe put in some config in the future
         filterModels = ["category", "productprice", "user", "product"]
-        permissions = self.get_queryset()
+        filterActions = ["change", "add"]
+        permissions = self.get_queryset().values()
         perms = []
-        for model in filterModels:
-            perms = perms + list(
-                permissions.filter(name__icontains=model).all().values()
-            )
-
-        print("PERMS!", perms)
-
-        filteredPerms = [
-            x for x in perms if "change" in x["name"] or "add" in x["name"]
-        ]
-
-        print("PERMS", filteredPerms)
+        for permission in permissions:
+            for action in filterActions:
+                for model in filterModels:
+                    if (
+                        action in permission["name"]
+                        and model in permission["name"]
+                        and permission not in perms
+                    ):
+                        perms.append(permission)
 
         serPermissions = []
-        for permission in filteredPerms:
+        for permission in perms:
             serPermissions.append(self.serializer_class(permission).data)
         return Response(serPermissions, status=200)
 

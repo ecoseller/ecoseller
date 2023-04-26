@@ -15,25 +15,22 @@ import {
 } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { IPermission } from "@/types/user";
+import { IPermission, IGroup } from "@/types/user";
+import CheckboxList from "./RolesList";
 
 interface ICreateRoleProps {
-    name: string;
-    description: string;
+    group: IGroup;
+    setGroup: (group: IGroup) => void;
     permissions: IPermission[];
-    setName: (name: string) => void;
-    setDescription: (description: string) => void;
-    setPermissions: (permissions: IPermission[]) => void;
 }
 
 const CreateRole = ({
-    name,
-    description,
-    permissions,
-    setName,
-    setDescription,
-    setPermissions,
+    group,
+    setGroup,
+    permissions
 }: ICreateRoleProps) => {
+
+    console.log("GROUP", group);
 
     return (
         <EditorCard>
@@ -42,12 +39,15 @@ const CreateRole = ({
                 <Stack spacing={2}>
                     <TextField
                         label="Name"
-                        value={name}
+                        value={group.name}
                         // disabled={true}
                         onChange={(
                             event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
                         ) => {
-                            setName(event.target.value);
+                            setGroup({
+                                ...group,
+                                name: event.target.value
+                            })
                         }}
                     />
                     {/* <TextField label="Name" /> */}
@@ -57,15 +57,23 @@ const CreateRole = ({
                 <Stack spacing={2}>
                     <TextField
                         label="Description"
-                        value={description}
+                        value={group.description}
                         // disabled={true}
                         onChange={(
                             event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
                         ) => {
-                            setDescription(event.target.value);
+                            setGroup({
+                                ...group,
+                                description: event.target.value
+                            })
                         }}
                     />
                     {/* <TextField label="Name" /> */}
+                </Stack>
+            </Box>
+            <Box mt={2}>
+                <Stack spacing={2}>
+                    <CheckboxList group={group} setGroup={setGroup} permissions={permissions} />
                 </Stack>
             </Box>
         </EditorCard>

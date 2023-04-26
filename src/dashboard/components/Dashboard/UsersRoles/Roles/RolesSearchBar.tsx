@@ -8,6 +8,9 @@ interface IPermissionsProps {
 const SearchBar = ({ permissions }: IPermissionsProps) => {
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResults, setSearchResults] = useState([]);
+
+    const [state, setState] = useState<IPermission[]>(permissions);
+
     const handleChange = event => {
         setSearchTerm(event.target.value);
     };

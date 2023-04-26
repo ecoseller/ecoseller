@@ -6,7 +6,7 @@ import { Container, Typography } from "@mui/material";
 import EditableContentWrapper, { PrimaryButtonAction } from "@/components/Dashboard/Generic/EditableContentWrapper";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 import { createGroup, getPermissions } from "@/api/users-roles/users";
-import { IPermission } from "@/types/user";
+import { IPermission, IGroup } from "@/types/user";
 import CreateRole from "@/components/Dashboard/UsersRoles/Roles/CreateRole";
 
 interface IPermissionsProps {
@@ -16,9 +16,11 @@ interface IPermissionsProps {
 const DashboardGroupAddPage = ({ permissions }: IPermissionsProps) => {
   const router = useRouter();
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [permissionsState, setPermissionsState] = useState<IPermission[]>(permissions);
+  const [group, setGroup] = useState<IGroup>({
+    name: "",
+    description: "",
+    permissions: [],
+  });
 
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
 
@@ -42,9 +44,9 @@ const DashboardGroupAddPage = ({ permissions }: IPermissionsProps) => {
     if (!preventNavigation) {
       setPreventNavigation(true);
     }
-  }, [name, description, permissions]);
+  }, [group]);
 
-  console.log(permissionsState);
+  console.log("PERMISSIONS", permissions)
 
   return (
     <DashboardLayout>
@@ -55,7 +57,7 @@ const DashboardGroupAddPage = ({ permissions }: IPermissionsProps) => {
           setPreventNavigation={setPreventNavigation}
           onButtonClick={async () => {
             await setPreventNavigation(false);
-            await createGroup({ name, description, permissions })
+            await createGroup(group)
               .then((res: any) => {
                 setPreventNavigation(false);
                 console.log(preventNavigation);
@@ -83,12 +85,9 @@ const DashboardGroupAddPage = ({ permissions }: IPermissionsProps) => {
             returnPath="/dashboard/users-roles"
           />
           <CreateRole
-            name={name}
-            description={description}
-            permissions={permissionsState}
-            setName={setName}
-            setDescription={setDescription}
-            setPermissions={setPermissionsState}
+            group={group}
+            setGroup={setGroup}
+            permissions={permissions}
           />
         </EditableContentWrapper>
       </Container>
