@@ -24,3 +24,5 @@ export interface IEntityTranslation {
 export interface IEntityTranslations {
   [locale: string]: IEntityTranslation; // TODO: this needs to be extended according to iso 639 (TLocale)
 }
+
+export type HTTPMETHOD = "GET" | "POST" | "PUT" | "DELETE";

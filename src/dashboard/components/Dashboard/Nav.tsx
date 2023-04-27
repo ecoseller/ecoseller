@@ -15,6 +15,7 @@ import navigationData from "../../utils/navigationData";
 import Navigation from "./Navigation/Navigation";
 import Logo from "../Logo";
 import Scrollbar from "./Navigation/Scrollbar";
+import { useUser } from "@/utils/context/user";
 
 const NAV_WIDTH = 280;
 
@@ -32,6 +33,8 @@ interface IDashboardNavProps {
 }
 const DashboardNav = ({ openNav, onCloseNav }: IDashboardNavProps) => {
   const { pathname } = useRouter();
+
+  const { user } = useUser();
 
   const isDesktop = useResponsive("up", "lg", "lg");
 
@@ -65,7 +68,7 @@ const DashboardNav = ({ openNav, onCloseNav }: IDashboardNavProps) => {
           <AccountCircleIcon />
           <Box sx={{ ml: 2 }}>
             <Typography variant="subtitle2" sx={{ color: "text.primary" }}>
-              John Doe
+              {user?.email}
             </Typography>
 
             <Typography variant="body2" sx={{ color: "text.secondary" }}>
