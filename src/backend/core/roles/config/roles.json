@@ -3,28 +3,28 @@
         "EditorRole": {
             "permissions": [
                 {
-                    "name": "Product_view_permission",
+                    "name": "product_view_permission",
                     "description": "Can view product",
                     "type": "VIEW",
-                    "model": "Product"
+                    "model": "product"
                 },
                 {
-                    "name": "Product_change_permission",
+                    "name": "product_change_permission",
                     "description": "Can change product",
                     "type": "CHANGE",
-                    "model": "Product"
+                    "model": "product"
                 },
                 {
-                    "name": "ProductPrice_view_permission",
+                    "name": "productprice_view_permission",
                     "description": "Can view product price",
                     "type": "VIEW",
-                    "model": "ProductPrice"
+                    "model": "productprice"
                 },
                 {
-                    "name": "ProductPrice_change_permission",
+                    "name": "productprice_change_permission",
                     "description": "Can change product price",
                     "type": "CHANGE",
-                    "model": "ProductPrice"
+                    "model": "productprice"
                 }
             ],
             "description": "Editor role",
@@ -35,16 +35,16 @@
         "CopywriterRole": {
             "permissions": [
                 {
-                    "name": "Product_view_permission",
+                    "name": "product_view_permission",
                     "description": "Can view product",
                     "type": "VIEW",
-                    "model": "Product"
+                    "model": "product"
                 },
                 {
-                    "name": "ProductPrice_view_permission",
+                    "name": "productprice_view_permission",
                     "description": "Can view product price",
                     "type": "VIEW",
-                    "model": "ProductPrice"
+                    "model": "productprice"
                 }
             ],
             "description": "Copywriter role",

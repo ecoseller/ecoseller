@@ -123,6 +123,7 @@ class GroupDetailView(GenericAPIView):
     allowed_methods = [
         "GET",
         "DELETE",
+        "PUT",
     ]
     authentication_classes = []
     serializer_class = ManagerGroupSerializer
@@ -145,6 +146,38 @@ class GroupDetailView(GenericAPIView):
             group.delete()
             return Response(status=200)
         except Exception:
+            return Response(status=400)
+
+    def put(self, request, id):
+        group = self.serializer_class(data=request.data)
+        if not group.is_valid():
+            return Response(status=400)
+        try:
+            existingGroup = ManagerGroup.objects.get(name=group.data["name"])
+            existingGroup.description = group.data["description"]
+            existingGroup.permissions.clear()
+            for permission in group.data["permissions"]:
+                perm = ManagerPermission.objects.get(name=permission["name"])
+                existingGroup.permissions.add(perm)
+
+            existingGroup.save()
+
+            drfGroup = RolesManager.manager_group_to_django_group(group.data["name"])
+            if drfGroup is None:
+                return Response(status=400)
+            drfGroup.permissions.clear()
+            for managerPermission in group.data["permissions"]:
+                perm = ManagerPermission.objects.get(name=managerPermission["name"])
+                drfPermission = RolesManager.manager_permission_to_django_permission(
+                    perm
+                )
+                if drfPermission is None:
+                    return Response(status=400)
+                drfGroup.permissions.add(drfPermission)
+
+            return Response(status=200)
+        except Exception as e:
+            print(e)
             return Response(status=400)
 
     def get_queryset(self):
@@ -256,9 +289,24 @@ class PermissionView(GenericAPIView):
     serializer_class = ManagerPermissionSerializer
 
     def get(self, request):
-        permissions = self.get_queryset()
-        serPermissions = []
+        # return just a few permissions that actually makes sense
+        # maybe put in some config in the future
+        filterModels = ["category", "productprice", "user", "product"]
+        filterActions = ["change", "add"]
+        permissions = self.get_queryset().values()
+        perms = []
         for permission in permissions:
+            for action in filterActions:
+                for model in filterModels:
+                    if (
+                        action in permission["name"]
+                        and model in permission["name"]
+                        and permission not in perms
+                    ):
+                        perms.append(permission)
+
+        serPermissions = []
+        for permission in perms:
             serPermissions.append(self.serializer_class(permission).data)
         return Response(serPermissions, status=200)
 

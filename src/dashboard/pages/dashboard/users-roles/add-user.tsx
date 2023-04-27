@@ -8,6 +8,7 @@ import EditableContentWrapper, {
   PrimaryButtonAction,
 } from "@/components/Dashboard/Generic/EditableContentWrapper";
 import { createUser } from "@/api/users-roles/users";
+import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 
 const DashboardUserAddPage = () => {
   const router = useRouter();
@@ -67,6 +68,10 @@ const DashboardUserAddPage = () => {
           }}
           returnPath={"/dashboard/users-roles"}
         >
+          <TopLineWithReturn
+            title="Create User"
+            returnPath={"/dashboard/users-roles"}
+          />
           <CreateUser
             email={email}
             setEmail={setEmail}
