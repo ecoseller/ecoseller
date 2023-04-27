@@ -3,7 +3,9 @@ import RootLayout from "@/pages/layout";
 import { ReactElement, useEffect, useState } from "react";
 import DashboardLayout from "@/pages/dashboard/layout"; //react
 import { Alert, Container, Snackbar, Typography } from "@mui/material";
-import EditableContentWrapper, { PrimaryButtonAction } from "@/components/Dashboard/Generic/EditableContentWrapper";
+import EditableContentWrapper, {
+  PrimaryButtonAction,
+} from "@/components/Dashboard/Generic/EditableContentWrapper";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 import { createGroup, getPermissions } from "@/api/users-roles/users";
 import { IPermission, IGroup } from "@/types/user";
@@ -46,7 +48,7 @@ const DashboardGroupAddPage = ({ permissions }: IPermissionsProps) => {
     }
   }, [group]);
 
-  console.log("GROUP", group)
+  console.log("GROUP", group);
 
   return (
     <DashboardLayout>
@@ -57,7 +59,13 @@ const DashboardGroupAddPage = ({ permissions }: IPermissionsProps) => {
           setPreventNavigation={setPreventNavigation}
           onButtonClick={async () => {
             await setPreventNavigation(false);
-            await createGroup(group.name, group.description, group.permissions.map((p) => { return p.name }))
+            await createGroup(
+              group.name,
+              group.description,
+              group.permissions.map((p) => {
+                return p.name;
+              })
+            )
               .then((res: any) => {
                 setPreventNavigation(false);
                 console.log(preventNavigation);
@@ -106,7 +114,7 @@ const DashboardGroupAddPage = ({ permissions }: IPermissionsProps) => {
           ) : null}
         </EditableContentWrapper>
       </Container>
-    </DashboardLayout >
+    </DashboardLayout>
   );
 };
 
@@ -119,7 +127,6 @@ DashboardGroupAddPage.getLayout = (page: ReactElement) => {
 };
 
 export const getServerSideProps = async (context: any) => {
-
   const permissions = await getPermissions();
 
   return {

@@ -3,9 +3,16 @@ import RootLayout from "@/pages/layout";
 import { ReactElement, useEffect, useState } from "react";
 import DashboardLayout from "@/pages/dashboard/layout"; //react
 import { Alert, Container, Snackbar, Typography } from "@mui/material";
-import EditableContentWrapper, { PrimaryButtonAction } from "@/components/Dashboard/Generic/EditableContentWrapper";
+import EditableContentWrapper, {
+  PrimaryButtonAction,
+} from "@/components/Dashboard/Generic/EditableContentWrapper";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
-import { createGroup, getGroup, getPermissions, updateGroup } from "@/api/users-roles/users";
+import {
+  createGroup,
+  getGroup,
+  getPermissions,
+  updateGroup,
+} from "@/api/users-roles/users";
 import { IPermission, IGroup } from "@/types/user";
 import CreateRole from "@/components/Dashboard/UsersRoles/Roles/CreateRole";
 import EditRole from "@/components/Dashboard/UsersRoles/Roles/EditRole";
@@ -52,7 +59,11 @@ const DashboardGroupEditPage = ({ group, permissions }: IEditGroupProps) => {
           setPreventNavigation={setPreventNavigation}
           onButtonClick={async () => {
             await setPreventNavigation(false);
-            await updateGroup(groupState.name, groupState.description, groupState.permissions)
+            await updateGroup(
+              groupState.name,
+              groupState.description,
+              groupState.permissions
+            )
               .then((res: any) => {
                 setPreventNavigation(false);
                 console.log(preventNavigation);
@@ -101,7 +112,7 @@ const DashboardGroupEditPage = ({ group, permissions }: IEditGroupProps) => {
           ) : null}
         </EditableContentWrapper>
       </Container>
-    </DashboardLayout >
+    </DashboardLayout>
   );
 };
 
@@ -114,7 +125,6 @@ DashboardGroupEditPage.getLayout = (page: ReactElement) => {
 };
 
 export const getServerSideProps = async (context: any) => {
-
   const groupId = context?.params?.id;
   const group = await getGroup(groupId);
 
@@ -122,7 +132,7 @@ export const getServerSideProps = async (context: any) => {
   return {
     props: {
       group: group.data,
-      permissions: permissions.data
+      permissions: permissions.data,
     },
   };
 };

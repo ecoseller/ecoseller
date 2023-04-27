@@ -92,25 +92,41 @@ export const updateRoles = async (email: string, data: string[]) => {
   });
 };
 
-export const createGroup = async (name: string, description: string, permissions: string[]) => {
+export const createGroup = async (
+  name: string,
+  description: string,
+  permissions: string[]
+) => {
   // Create new group
   // URL: /roles/groups
   // Method: POST
   // Params: data
   // Return: Promise
   console.log("createGroup", { name, description, permissions });
-  return await axiosPrivate.post(`/roles/groups`, { name, description, permissions });
-}
+  return await axiosPrivate.post(`/roles/groups`, {
+    name,
+    description,
+    permissions,
+  });
+};
 
-export const updateGroup = async (name: string, description: string, permissions: IPermission[]) => {
+export const updateGroup = async (
+  name: string,
+  description: string,
+  permissions: IPermission[]
+) => {
   // Update existing group
   // URL: /roles/groups
   // Method: PUT
   // Params: data
   // Return: Promise
   console.log("updateGroup", { name, description, permissions });
-  return await axiosPrivate.put(`/roles/groups/${name}`, { name, description, permissions });
-}
+  return await axiosPrivate.put(`/roles/groups/${name}`, {
+    name,
+    description,
+    permissions,
+  });
+};
 
 export const getPermissions = async () => {
   // Get all permissions
@@ -119,4 +135,4 @@ export const getPermissions = async () => {
   // Return: Promise
   console.log("getPermissions");
   return await axiosPrivate.get(`/roles/permissions`);
-}
+};
