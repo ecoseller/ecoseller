@@ -23,15 +23,15 @@ interface ICategoryEditorWrapperProps {
   categoryId?: string;
 }
 
-export enum SetCategoryAction {
+export enum SetCategoryActionType {
   SetTranslation,
   RecreateInitState,
   SetPublished,
   SetParentCategory,
 }
 
-export interface Action {
-  type: SetCategoryAction;
+export interface ISetCategoryAction {
+  type: SetCategoryActionType;
   payload: any;
 }
 
@@ -43,10 +43,10 @@ const CategoryEditorWrapper = ({
 }: ICategoryEditorWrapperProps) => {
   function reducer(
     state: ICategoryEditable,
-    action: Action
+    action: ISetCategoryAction
   ): ICategoryEditable {
     switch (action.type) {
-      case SetCategoryAction.SetTranslation:
+      case SetCategoryActionType.SetTranslation:
         setPreventNavigation(true);
         return {
           ...state, // use the previous state as a base
@@ -60,13 +60,13 @@ const CategoryEditorWrapper = ({
             },
           },
         };
-      case SetCategoryAction.SetPublished:
+      case SetCategoryActionType.SetPublished:
         setPreventNavigation(true);
         return { ...state, published: action.payload.published };
-      case SetCategoryAction.SetParentCategory:
+      case SetCategoryActionType.SetParentCategory:
         setPreventNavigation(true);
         return { ...state, parent: action.payload.parent };
-      case SetCategoryAction.RecreateInitState:
+      case SetCategoryActionType.RecreateInitState:
         return action.payload;
       default:
         return state;
@@ -75,7 +75,10 @@ const CategoryEditorWrapper = ({
 
   const [languages, setLanguages] = useState<ILanguage[]>([]);
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
-  const [category, dispatchCategoryState] = useReducer(reducer, initialCategory);
+  const [category, dispatchCategoryState] = useReducer(
+    reducer,
+    initialCategory
+  );
 
   const router = useRouter();
 
@@ -87,7 +90,7 @@ const CategoryEditorWrapper = ({
 
   useEffect(() => {
     dispatchCategoryState({
-      type: SetCategoryAction.RecreateInitState,
+      type: SetCategoryActionType.RecreateInitState,
       payload: initialCategory,
     });
   }, [initialCategory]);
@@ -106,14 +109,14 @@ const CategoryEditorWrapper = ({
 
   const setPublished = (published: boolean) => {
     dispatchCategoryState({
-      type: SetCategoryAction.SetPublished,
+      type: SetCategoryActionType.SetPublished,
       payload: { published: published },
     });
   };
 
   const setParentCategory = (categoryId: number) => {
     dispatchCategoryState({
-      type: SetCategoryAction.SetParentCategory,
+      type: SetCategoryActionType.SetParentCategory,
       payload: { parent: categoryId },
     });
   };
@@ -121,7 +124,7 @@ const CategoryEditorWrapper = ({
   const dispatchWrapper: IDispatchWrapper = {
     setDescription(language: string, description: OutputData): void {
       dispatchCategoryState({
-        type: SetCategoryAction.SetTranslation,
+        type: SetCategoryActionType.SetTranslation,
         payload: {
           translation: {
             language: language,
@@ -134,7 +137,7 @@ const CategoryEditorWrapper = ({
     },
     setSlug(language: string, slug: string): void {
       dispatchCategoryState({
-        type: SetCategoryAction.SetTranslation,
+        type: SetCategoryActionType.SetTranslation,
         payload: {
           translation: {
             language: language,
@@ -147,7 +150,7 @@ const CategoryEditorWrapper = ({
     },
     setTitle(language: string, title: string): void {
       dispatchCategoryState({
-        type: SetCategoryAction.SetTranslation,
+        type: SetCategoryActionType.SetTranslation,
         payload: {
           translation: {
             language: language,
@@ -160,7 +163,7 @@ const CategoryEditorWrapper = ({
     },
     setMetaTitle(language: string, metaTitle: string) {
       dispatchCategoryState({
-        type: SetCategoryAction.SetTranslation,
+        type: SetCategoryActionType.SetTranslation,
         payload: {
           translation: {
             language: language,
@@ -173,7 +176,7 @@ const CategoryEditorWrapper = ({
     },
     setMetaDescription(language: string, metaDescription: string) {
       dispatchCategoryState({
-        type: SetCategoryAction.SetTranslation,
+        type: SetCategoryActionType.SetTranslation,
         payload: {
           translation: {
             language: language,
