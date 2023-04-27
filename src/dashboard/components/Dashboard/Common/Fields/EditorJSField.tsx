@@ -89,7 +89,6 @@ const EditorJSField = ({
       onReady: () => {
         ejInstance.current = editor;
       },
-      autofocus: true,
       data: data,
       onChange: async () => {
         let content = await editor.saver.save();

@@ -21,47 +21,22 @@ import {
   IProductTranslation,
   ISetProductStateData,
 } from "@/types/product";
-import { ISetProductStateAction } from "../ProductEditorWrapper";
+import { ISetProductStateAction } from "../Catalog/Products/Editor/ProductEditorWrapper";
 import { ILanguage } from "@/types/localization";
+import { IDispatchWrapper } from "@/components/Dashboard/Common/IDispatchWrapper";
+import { IEntityTranslation, IEntityTranslations } from "@/types/common";
 
-interface IProductTranslatedSEOFieldsProps {
+interface ITranslatedSEOFieldsTabProps {
   language: string;
-  state: IProductTranslation;
-  dispatch: React.Dispatch<ISetProductStateAction>;
+  state: IEntityTranslation;
+  dispatchWrapper: IDispatchWrapper;
 }
-const ProductTranslatedFields = ({
+
+const TranslatedSEOFieldsTab = ({
   language,
   state,
-  dispatch,
-}: IProductTranslatedSEOFieldsProps) => {
-  const setMetaTitle = (title: string) => {
-    dispatch({
-      type: ActionSetProduct.SETTRANSLATION,
-      payload: {
-        translation: {
-          language,
-          data: {
-            meta_title: title,
-          },
-        },
-      },
-    });
-  };
-
-  const setMetaDescription = (text: string) => {
-    dispatch({
-      type: ActionSetProduct.SETTRANSLATION,
-      payload: {
-        translation: {
-          language,
-          data: {
-            meta_description: text,
-          },
-        },
-      },
-    });
-  };
-
+  dispatchWrapper,
+}: ITranslatedSEOFieldsTabProps) => {
   return (
     <FormControl fullWidth margin={"normal"}>
       <Stack spacing={2}>
@@ -71,7 +46,7 @@ const ProductTranslatedFields = ({
           onChange={(
             e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
           ) => {
-            setMetaTitle(e.target.value);
+            dispatchWrapper.setMetaTitle(language, e.target.value);
           }}
         />
         <TextField
@@ -81,7 +56,7 @@ const ProductTranslatedFields = ({
           onChange={(
             e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
           ) => {
-            setMetaDescription(e.target.value);
+            dispatchWrapper.setMetaDescription(language, e.target.value);
           }}
         />
       </Stack>
@@ -89,15 +64,21 @@ const ProductTranslatedFields = ({
   );
 };
 
-interface IProductTranslatedSEOFieldsWrapperProps {
-  state: ISetProductStateData;
-  dispatch: React.Dispatch<ISetProductStateAction>;
+interface ITranslatedSEOFieldsTabListProps {
+  state: IEntityTranslations;
+  dispatchWrapper: IDispatchWrapper;
 }
 
-const ProductTranslatedSEOFieldsWrapper = ({
+/**
+ * Tab list containing SEO fields form for each language
+ * @param state state of the translated SEO fields
+ * @param dispatchWrapper wrapper around `dispatch` function that allows us to call setXXX methods
+ * @constructor
+ */
+const TranslatedSEOFieldsTabList = ({
   state,
-  dispatch,
-}: IProductTranslatedSEOFieldsWrapperProps) => {
+  dispatchWrapper,
+}: ITranslatedSEOFieldsTabListProps) => {
   const { data: languages } = useSWRImmutable<ILanguage[]>(
     "/country/languages/"
   );
@@ -140,14 +121,10 @@ const ProductTranslatedSEOFieldsWrapper = ({
                 key={language.code}
                 value={language.code}
               >
-                <ProductTranslatedFields
+                <TranslatedSEOFieldsTab
                   language={language.code}
-                  state={
-                    state?.translations
-                      ? state?.translations[language.code]
-                      : ({} as IProductTranslation)
-                  }
-                  dispatch={dispatch}
+                  state={state[language.code]}
+                  dispatchWrapper={dispatchWrapper}
                 />
               </TabPanel>
             ))}
@@ -157,4 +134,4 @@ const ProductTranslatedSEOFieldsWrapper = ({
     </EditorCard>
   );
 };
-export default ProductTranslatedSEOFieldsWrapper;
+export default TranslatedSEOFieldsTabList;

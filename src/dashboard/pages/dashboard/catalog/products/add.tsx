@@ -1,25 +1,10 @@
-// /dashboard/product/add
-// react
-// next.js
-import { useRouter } from "next/router";
 // layout
 import DashboardLayout from "@/pages/dashboard/layout"; //react
-import { ReactElement, useState } from "react";
+import { ReactElement } from "react";
 import RootLayout from "@/pages/layout";
 // components
-import EditableContentWrapper from "@/components/Dashboard/Generic/EditableContentWrapper";
-import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 // mui
 import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import CategorySelectForm from "@/components/Dashboard/Generic/Forms/CategorySelectForm";
-import ProductBasicInfo from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductBasicInfo";
-import ProductTranslatedFieldsWrapper from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductTranslatedFields";
-import { Typography } from "@mui/material";
-import Box from "@mui/material/Box";
-import ProductVariantsEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVariantsEditor";
-import ProductMediaEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductMediaEditor";
-import ProductVariantPricesEditor from "@/components/Dashboard/Catalog/Products/Editor/Product/ProductVariantPricesEditor";
 import ProductEditorWrapper from "@/components/Dashboard/Catalog/Products/Editor/ProductEditorWrapper";
 import { IAttributeType, IProductType } from "@/types/product";
 import { IPriceList } from "@/types/localization";

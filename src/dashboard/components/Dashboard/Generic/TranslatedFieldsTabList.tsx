@@ -1,14 +1,8 @@
-// next.js
-// react
 import { useEffect, useState } from "react";
-// libs
 import slugify from "slugify";
 import useSWRImmutable from "swr/immutable";
-
-// components
 import EditorCard from "@/components/Dashboard/Generic/EditorCard";
 import CollapsableContentWithTitle from "@/components/Dashboard/Generic/CollapsableContentWithTitle";
-// mui
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
@@ -23,15 +17,11 @@ import IconButton from "@mui/material/IconButton";
 
 import SyncDisabledIcon from "@mui/icons-material/SyncDisabled";
 import SyncIcon from "@mui/icons-material/Sync";
-import {
-  ActionSetProduct,
-  IProductTranslation,
-  ISetProductStateData,
-} from "@/types/product";
-import { ISetProductStateAction } from "../ProductEditorWrapper";
 import { ILanguage } from "@/types/localization";
 import dynamic from "next/dynamic";
 import { OutputData as IEditorJSData } from "@editorjs/editorjs";
+import { IEntityTranslation, IEntityTranslations } from "@/types/common";
+import { IDispatchWrapper } from "@/components/Dashboard/Common/IDispatchWrapper";
 
 let EditorJSField = dynamic(
   () => import("@/components/Dashboard/Common/Fields/EditorJSField"),
@@ -40,16 +30,17 @@ let EditorJSField = dynamic(
   }
 );
 
-interface IProductTranslatedFieldsProps {
+interface ITranslatedFieldsTabProps {
   language: string;
-  state: IProductTranslation;
-  dispatch: React.Dispatch<ISetProductStateAction>;
+  state: IEntityTranslation;
+  dispatchWrapper: IDispatchWrapper;
 }
-const ProductTranslatedFields = ({
+
+const TranslatedFieldsTab = ({
   language,
   state,
-  dispatch,
-}: IProductTranslatedFieldsProps) => {
+  dispatchWrapper,
+}: ITranslatedFieldsTabProps) => {
   // const [title, setTitle] = useState<string>("");
   // const [slug, setSlug] = useState<string>("");
   const [editSlug, setEditSlug] = useState<boolean>(false);
@@ -58,7 +49,8 @@ const ProductTranslatedFields = ({
     if (!editSlug && state?.title != undefined) {
       // set slug from title
       // but only if slug is empty
-      setSlug(
+      dispatchWrapper.setSlug(
+        language,
         slugify(state?.title || "", {
           lower: true,
           strict: true,
@@ -68,64 +60,7 @@ const ProductTranslatedFields = ({
     }
   }, [state?.title]);
 
-  const setTitle = (title: string) => {
-    dispatch({
-      type: ActionSetProduct.SETTRANSLATION,
-      payload: {
-        translation: {
-          language,
-          data: {
-            title: title,
-          },
-        },
-      },
-    });
-  };
-
-  const setSlug = (slug: string) => {
-    dispatch({
-      type: ActionSetProduct.SETTRANSLATION,
-      payload: {
-        translation: {
-          language,
-          data: {
-            slug: slug,
-          },
-        },
-      },
-    });
-  };
-
-  const setShortDescription = (text: string) => {
-    dispatch({
-      type: ActionSetProduct.SETTRANSLATION,
-      payload: {
-        translation: {
-          language,
-          data: {
-            short_description: text,
-          },
-        },
-      },
-    });
-  };
-
-  const setDescriptionEditorJs = (data: IEditorJSData) => {
-    console.log("Setting description");
-    dispatch({
-      type: ActionSetProduct.SETTRANSLATION,
-      payload: {
-        translation: {
-          language,
-          data: {
-            description_editorjs: data,
-          },
-        },
-      },
-    });
-  };
-
-  console.log("state", state);
+  console.log("Tab rendered");
 
   return (
     <FormControl fullWidth margin={"normal"}>
@@ -136,7 +71,7 @@ const ProductTranslatedFields = ({
           onChange={(
             e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
           ) => {
-            setTitle(e.target.value);
+            dispatchWrapper.setTitle(language, e.target.value);
           }}
         />
         <TextField
@@ -151,7 +86,7 @@ const ProductTranslatedFields = ({
               locale: language,
               strict: true,
             });
-            setSlug(slugiffied);
+            dispatchWrapper.setSlug(language, slugiffied);
           }}
           InputProps={{
             endAdornment: (
@@ -171,20 +106,10 @@ const ProductTranslatedFields = ({
             ),
           }}
         />
-        <TextField
-          label="Short description"
-          value={state?.short_description || ""}
-          multiline
-          onChange={(
-            e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-          ) => {
-            setShortDescription(e.target.value);
-          }}
-        />
         <EditorJSField
           data={state?.description_editorjs || ({} as IEditorJSData)}
           onChange={(data: IEditorJSData) => {
-            setDescriptionEditorJs(data);
+            dispatchWrapper.setDescription(language, data);
           }}
         />
       </Stack>
@@ -192,15 +117,21 @@ const ProductTranslatedFields = ({
   );
 };
 
-interface IProductTranslatedFieldsWrapperProps {
-  state: ISetProductStateData;
-  dispatch: React.Dispatch<ISetProductStateAction>;
+interface ITranslatedFieldsTabListProps {
+  state: IEntityTranslations;
+  dispatchWrapper: IDispatchWrapper;
 }
 
-const ProductTranslatedFieldsWrapper = ({
+/**
+ * Tab list containing translated fields form for each language
+ * @param state state of the translated fields
+ * @param dispatchWrapper wrapper around `dispatch` function that allows us to call setXXX methods
+ * @constructor
+ */
+const TranslatedFieldsTabList = ({
   state,
-  dispatch,
-}: IProductTranslatedFieldsWrapperProps) => {
+  dispatchWrapper,
+}: ITranslatedFieldsTabListProps) => {
   const { data: languages } = useSWRImmutable<ILanguage[]>(
     "/country/languages/"
   );
@@ -243,14 +174,10 @@ const ProductTranslatedFieldsWrapper = ({
                 key={language.code}
                 value={language.code}
               >
-                <ProductTranslatedFields
+                <TranslatedFieldsTab
                   language={language.code}
-                  state={
-                    state?.translations
-                      ? state?.translations[language.code]
-                      : ({} as IProductTranslation)
-                  }
-                  dispatch={dispatch}
+                  state={state[language.code]}
+                  dispatchWrapper={dispatchWrapper}
                 />
               </TabPanel>
             ))}
@@ -260,4 +187,4 @@ const ProductTranslatedFieldsWrapper = ({
     </EditorCard>
   );
 };
-export default ProductTranslatedFieldsWrapper;
+export default TranslatedFieldsTabList;
