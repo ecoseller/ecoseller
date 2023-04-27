@@ -10,16 +10,16 @@ const isServer = () => {
   return typeof window === "undefined";
 };
 
-let accessToken = "";
+// let accessToken = "";
 let req = <NextApiRequest>{};
 let res = <NextApiResponse>{};
 const baseURL = process.env.API_URL! || process.env.NEXT_PUBLIC_API_URL!;
 
 export const setAccessToken = (_accessToken: string) => {
-  accessToken = _accessToken;
+  // accessToken = _accessToken;
 };
 
-export const getAccessToken = () => accessToken;
+export const getAccessToken = () => getCookie("accessToken", { req, res });
 
 export const setRequestResponse = (
   _req: NextApiRequest,
@@ -38,6 +38,8 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
+  let accessToken = getAccessToken();
+
   let access = "";
   if (isServer()) {
     access = getCookie("accessToken", { req, res }) as string;
