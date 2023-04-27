@@ -1,8 +1,9 @@
-import { IPermission, IUser } from "@/types/user";
+import { IGroup, IPermission, IUser } from "@/types/user";
 import { useState, createContext, useContext, useEffect } from "react";
 
 interface IUserContextProps {
   user: IUser | null;
+  roles: IGroup[] | [];
 }
 
 interface IUserProviderProps {
@@ -13,11 +14,15 @@ const UserContext = createContext<Partial<IUserContextProps>>({});
 
 export const UserProvider = ({ children }: IUserProviderProps): JSX.Element => {
   const [user, setUser] = useState<IUser | null>(null);
-  const [permissions, setPermissions] = useState<IPermission[]>([]);
+  const [roles, setRoles] = useState<IGroup[]>([]);
 
   useEffect(() => {
     getUser();
   }, []);
+
+  useEffect(() => {
+    getRoles();
+  }, [user]);
 
   const getUser = async () => {
     await fetch(`/api/user/detail`)
@@ -28,9 +33,20 @@ export const UserProvider = ({ children }: IUserProviderProps): JSX.Element => {
         setUser(null);
       });
   };
+  const getRoles = async () => {
+    if (!user) return;
+    await fetch(`/api/roles/user/${user.email}`)
+      .then((res) => res.json())
+      .then((data) => setRoles(data))
+      .catch((error) => {
+        console.log(error);
+        setRoles([]);
+      });
+  };
 
   const value = {
     user,
+    roles,
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
