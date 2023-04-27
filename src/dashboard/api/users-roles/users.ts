@@ -1,9 +1,9 @@
-import { IUser, IGroup } from "@/types/user";
+import { IUser, IGroup, IPermission } from "@/types/user";
 import { axiosPrivate } from "@/utils/axiosPrivate";
 
 export const deleteUser = async (email: string) => {
   // Delete existing user
-  // URL: /user/delete-user
+  // URL: /user/users
   // Method: POST
   // Params: data
   // Return: Promise
@@ -13,7 +13,7 @@ export const deleteUser = async (email: string) => {
 
 export const createUser = async (email: string, password: string) => {
   // Create new user
-  // URL: /user/register
+  // URL: /user/users
   // Method: POST
   // Params: email, password
   // Return: Promise
@@ -23,7 +23,7 @@ export const createUser = async (email: string, password: string) => {
 
 export const updateUser = async (data: IUser) => {
   // Update existing user
-  // URL: /user
+  // URL: /user/users
   // Method: PUT
   // Params: data
   // Return: Promise
@@ -33,7 +33,7 @@ export const updateUser = async (data: IUser) => {
 
 export const getUserData = async (email: string) => {
   // Get user data
-  // URL: /user
+  // URL: /user/users
   // Method: GET
   // Params: email
   // Return: Promise
@@ -43,7 +43,7 @@ export const getUserData = async (email: string) => {
 
 export const getUserGroups = async (email: string) => {
   // Get user groups
-  // URL: /roles
+  // URL: /roles/user-groups
   // Method: GET
   // Params: email
   // Return: Promise
@@ -53,7 +53,7 @@ export const getUserGroups = async (email: string) => {
 
 export const deleteGroup = async (data: IGroup) => {
   // Delete existing group
-  // URL: /roles/delete-group
+  // URL: /roles/groups
   // Method: POST
   // Params: data
   // Return: Promise
@@ -70,9 +70,19 @@ export const getGroups = async () => {
   return await axiosPrivate.get(`/roles/groups`);
 };
 
+export const getGroup = async (name: string) => {
+  // Get group
+  // URL: /roles/groups
+  // Method: GET
+  // Params: name
+  // Return: Promise
+  console.log("getGroup", name);
+  return await axiosPrivate.get(`/roles/groups/${name}`);
+};
+
 export const updateRoles = async (email: string, data: string[]) => {
   // Update existing group
-  // URL: /roles
+  // URL: /roles/user-groups
   // Method: PUT
   // Params: data
   // Return: Promise
@@ -84,12 +94,22 @@ export const updateRoles = async (email: string, data: string[]) => {
 
 export const createGroup = async (name: string, description: string, permissions: string[]) => {
   // Create new group
-  // URL: /roles/create-group
+  // URL: /roles/groups
   // Method: POST
   // Params: data
   // Return: Promise
   console.log("createGroup", { name, description, permissions });
   return await axiosPrivate.post(`/roles/groups`, { name, description, permissions });
+}
+
+export const updateGroup = async (name: string, description: string, permissions: IPermission[]) => {
+  // Update existing group
+  // URL: /roles/groups
+  // Method: PUT
+  // Params: data
+  // Return: Promise
+  console.log("updateGroup", { name, description, permissions });
+  return await axiosPrivate.put(`/roles/groups/${name}`, { name, description, permissions });
 }
 
 export const getPermissions = async () => {

@@ -1,5 +1,5 @@
 import { IPermission } from "@/types/user";
-import { useEffect, useState } from "react";
+import { useEffect, useState, ChangeEvent } from "react";
 
 interface IPermissionsProps {
     permissions: IPermission[];
@@ -7,11 +7,9 @@ interface IPermissionsProps {
 
 const SearchBar = ({ permissions }: IPermissionsProps) => {
     const [searchTerm, setSearchTerm] = useState("");
-    const [searchResults, setSearchResults] = useState([]);
+    const [searchResults, setSearchResults] = useState([] as IPermission[]);
 
-    const [state, setState] = useState<IPermission[]>(permissions);
-
-    const handleChange = event => {
+    const handleChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
     useEffect(() => {
@@ -31,7 +29,7 @@ const SearchBar = ({ permissions }: IPermissionsProps) => {
             />
             <ul>
                 {searchResults.map(permission => (
-                    <li key={permission}>{permissions}</li>
+                    <li key={permission.name}>{permissions}</li>
                 ))}
             </ul>
         </div>

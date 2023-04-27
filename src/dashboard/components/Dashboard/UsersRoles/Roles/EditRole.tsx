@@ -1,20 +1,14 @@
 // next.js
 // react
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent } from "react";
 // mui
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
 import EditorCard from "@/components/Dashboard/Generic/EditorCard";
 import {
-    IconButton,
-    InputAdornment,
-    OutlinedInput,
     TextField,
 } from "@mui/material";
 import Stack from "@mui/material/Stack";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { IPermission, IGroup } from "@/types/user";
 import CheckboxList from "./RolesList";
 
@@ -24,7 +18,7 @@ interface ICreateRoleProps {
     permissions: IPermission[];
 }
 
-const CreateRole = ({
+const EditRole = ({
     group,
     setGroup,
     permissions
@@ -32,21 +26,13 @@ const CreateRole = ({
 
     return (
         <EditorCard>
-            <Typography variant="h6">Create new group</Typography>
+            <Typography variant="h6">Edit role {group.name}</Typography>
             <Box mt={2}>
                 <Stack spacing={2}>
                     <TextField
                         label="Name"
                         value={group.name}
-                        // disabled={true}
-                        onChange={(
-                            event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-                        ) => {
-                            setGroup({
-                                ...group,
-                                name: event.target.value
-                            })
-                        }}
+                        disabled={true}
                     />
                     {/* <TextField label="Name" /> */}
                 </Stack>
@@ -56,7 +42,6 @@ const CreateRole = ({
                     <TextField
                         label="Description"
                         value={group.description}
-                        // disabled={true}
                         onChange={(
                             event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
                         ) => {
@@ -77,4 +62,4 @@ const CreateRole = ({
         </EditorCard>
     );
 };
-export default CreateRole;
+export default EditRole;

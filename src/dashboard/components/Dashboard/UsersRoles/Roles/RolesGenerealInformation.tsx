@@ -125,7 +125,7 @@ const GroupsGrid = () => {
             className="textPrimary"
             onClick={() => {
               router.push(
-                `/dashboard/users-roles/edit-group/${row.group_name}`
+                `/dashboard/users-roles/edit-group/${row.name}`
               );
             }}
             color="inherit"

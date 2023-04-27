@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import RootLayout from "@/pages/layout";
 import { ReactElement, useEffect, useState } from "react";
 import DashboardLayout from "@/pages/dashboard/layout"; //react
-import { Container, Typography } from "@mui/material";
+import { Alert, Container, Snackbar, Typography } from "@mui/material";
 import EditableContentWrapper, { PrimaryButtonAction } from "@/components/Dashboard/Generic/EditableContentWrapper";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 import { createGroup, getPermissions } from "@/api/users-roles/users";
@@ -89,6 +89,21 @@ const DashboardGroupAddPage = ({ permissions }: IPermissionsProps) => {
             setGroup={setGroup}
             permissions={permissions}
           />
+          {snackbar ? (
+            <Snackbar
+              open={snackbar.open}
+              autoHideDuration={6000}
+              onClose={handleSnackbarClose}
+            >
+              <Alert
+                onClose={handleSnackbarClose}
+                severity={snackbar.severity}
+                sx={{ width: "100%" }}
+              >
+                {snackbar.message}
+              </Alert>
+            </Snackbar>
+          ) : null}
         </EditableContentWrapper>
       </Container>
     </DashboardLayout >
