@@ -10,6 +10,7 @@ import { axiosPrivate } from "@/utils/axiosPrivate";
 import { useRouter } from "next/router";
 import fetcher from "@/api/fetcher";
 import axiosFetcher from "@/api/fetcher";
+import { UserProvider } from "@/utils/context/user";
 
 const montserrat = Montserrat({
   weight: ["400", "500", "700"],
@@ -90,7 +91,9 @@ const App = ({ Component, pageProps }: AppPropsWithLayout) => {
                 .catch((err: any) => console.log("fetcher err")),
           }}
         >
-          <Component {...pageProps} />
+          <UserProvider>
+            <Component {...pageProps} />
+          </UserProvider>
         </SWRConfig>
       </main>
     </>
