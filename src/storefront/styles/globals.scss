@@ -1,3 +1,5 @@
+@import "styles/MegaMenu";
+
 html,
 body {
   padding: 0;
@@ -13,6 +15,12 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+.container {
+  width: 100%;
+  max-width: 1620px;
+  margin: 0px auto;
 }
 
 /* @media (prefers-color-scheme: dark) {

@@ -10,23 +10,23 @@ import { useState } from "react";
 import styled from "@mui/material/styles/styled";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import MenuIcon from "@mui/icons-material/Menu";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
-import Logo from "./Logo";
 import useTheme from "@mui/material/styles/useTheme";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Drawer from "@mui/material/Drawer";
 import TopLine from "./TopLine";
 import InfoBar from "./InfoBar";
 // components
+import Menu from "./MegaMenu/Menu";
 import User from "./Icons/User";
 import Cart from "./Icons/Cart";
 import Search from "./Icons/Search";
 // utils
+// styles
+import styles from "@/styles/Header.module.scss";
 
 const HEADER_MOBILE = 64;
 const HEADER_DESKTOP = 100;
@@ -50,6 +50,8 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     maxWidth: MAXWIDTH,
   },
   margin: "0px auto",
+  paddingLeft: "1rem",
+  paddingRight: 0,
 }));
 
 const InfoToolBarNarrow = styled(Toolbar)(({ theme }) => ({
@@ -75,106 +77,27 @@ const DashboardHeader = ({}: IDashboardHeaderProps) => {
     <StyledRoot>
       <InfoBar text="Free shipping on all orders over $100" />
       <TopLine />
-      <StyledToolbar>
-        <IconButton
-          onClick={onOpenMobileMenu}
-          sx={{
-            color: "text.primary",
-            display: { lg: "none" },
-          }}
-        >
-          <MenuIcon />
-        </IconButton>
-        <Logo />
-        {largeScreen ? (
-          <>
-            <Box sx={{ mr: 5 }} />
+      <div className={"container"}>
+        <Box>
+          <StyledToolbar disableGutters>
+            <Menu />
+            <Box sx={{ flexGrow: 1 }} />
             <Stack
               direction="row"
               alignItems="center"
               spacing={{
-                xs: 0.5,
+                xs: 5,
                 sm: 5,
               }}
             >
-              <Typography
-                variant="body1"
-                sx={{ flexGrow: 1 }}
-                component={Link}
-                href="/category"
-                shallow={false}
-                prefetch={false}
-                style={{
-                  textDecoration: "none",
-                  color: "inherit",
-                  cursor: "pointer",
-                }}
-              >
-                Category 1
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{ flexGrow: 1 }}
-                component={Link}
-                href="/category"
-                shallow={false}
-                prefetch={false}
-                style={{
-                  textDecoration: "none",
-                  color: "inherit",
-                  cursor: "pointer",
-                }}
-              >
-                Category 2
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{ flexGrow: 1 }}
-                component={Link}
-                href="/category"
-                shallow={false}
-                prefetch={false}
-                style={{
-                  textDecoration: "none",
-                  color: "inherit",
-                  cursor: "pointer",
-                }}
-              >
-                Category 3
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{ flexGrow: 1 }}
-                component={Link}
-                href="/category"
-                shallow={false}
-                prefetch={false}
-                style={{
-                  textDecoration: "none",
-                  color: "inherit",
-                  cursor: "pointer",
-                }}
-              >
-                Category 4
-              </Typography>
+              <Search />
+              <User user={user} />
+              <Cart />
             </Stack>
-          </>
-        ) : null}
-        <Box sx={{ flexGrow: 1 }} />
-        <Stack
-          direction="row"
-          alignItems="center"
-          spacing={{
-            xs: 5,
-            sm: 5,
-          }}
-        >
-          <Search />
-          <User user={user} />
-          <Cart />
-        </Stack>
-      </StyledToolbar>
-      {largeScreen ? null : (
+          </StyledToolbar>
+        </Box>
+      </div>
+      {/* {largeScreen ? null : (
         <Drawer
           open={openMobileMenu}
           onClose={onCloseMobileMenu}
@@ -186,7 +109,7 @@ const DashboardHeader = ({}: IDashboardHeaderProps) => {
             },
           }}
         ></Drawer>
-      )}
+      )} */}
     </StyledRoot>
   );
 };

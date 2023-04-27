@@ -12,7 +12,7 @@ import Box from "@mui/material/Box";
 
 const HomePage = () => {
   return (
-    <>
+    <div className={`container`}>
       <Box sx={{ p: 5, height: "400px", backgroundColor: "#f2f2f2" }}></Box>
       <Box sx={{ p: 5 }}>
         <Typography variant="h4" gutterBottom>
@@ -126,7 +126,7 @@ const HomePage = () => {
           We offer a wide selection of products for all your needs.
         </Typography>
       </Box>
-    </>
+    </div>
   );
 };
 
