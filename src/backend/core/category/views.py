@@ -1,27 +1,25 @@
-from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
-from rest_framework.generics import (
-    RetrieveUpdateDestroyAPIView,
-    ListAPIView,
-    RetrieveAPIView,
-)
-
 # from django.contrib.auth.models import User
 from rest_framework.decorators import permission_classes
-from category.serializers import (
-    CategoryDetailSerializer,
-    CategoryWithChildrenSerializer,
-    CategoryRecoursiveSerializer,
+from rest_framework.generics import (
+    RetrieveUpdateDestroyAPIView, RetrieveAPIView,
 )
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
+from rest_framework.views import APIView
+
 from category.models import Category
+from category.serializers import (
+    CategoryDetailDashboardSerializer,
+    CategoryRecursiveDashboardSerializer, CategoryRecursiveStorefrontSerializer, CategoryDetailStorefrontSerializer,
+)
 
 
 @permission_classes([AllowAny])  # TODO: use authentication
-class CategoryViewDashboard(APIView):
+class CategoryDashboardView(APIView):
     """
-    View for listing all categories and adding new ones
+    View for listing all categories and adding new ones.
+    Used for dashboard.
     """
 
     def get(self, request):
@@ -33,7 +31,7 @@ class CategoryViewDashboard(APIView):
         categories = Category.objects.filter(
             parent=None
         )  # .all()  # filter(published=True)
-        serializer = CategoryRecoursiveSerializer(
+        serializer = CategoryRecursiveDashboardSerializer(
             categories, many=True, context={"request": request}
         )
         return Response(serializer.data)
@@ -42,7 +40,7 @@ class CategoryViewDashboard(APIView):
         """
         Adds a new category
         """
-        serializer = CategoryDetailSerializer(data=request.data)
+        serializer = CategoryDetailDashboardSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=HTTP_201_CREATED)
@@ -50,13 +48,13 @@ class CategoryViewDashboard(APIView):
 
 
 @permission_classes([AllowAny])  # TODO: use authentication
-class CategoryDetailViewDashboard(RetrieveUpdateDestroyAPIView):
+class CategoryDetailDashboardView(RetrieveUpdateDestroyAPIView):
     """
     View for getting (by ID), updating and deleting categories.
     """
 
     queryset = Category.objects.all()
-    serializer_class = CategoryDetailSerializer
+    serializer_class = CategoryDetailDashboardSerializer
 
     # def perform_destroy(self, instance):
     #     """
@@ -67,26 +65,48 @@ class CategoryDetailViewDashboard(RetrieveUpdateDestroyAPIView):
     #     instance.save()
 
 
-@permission_classes([AllowAny])  # TODO: use authentication
-class CategoryTopLevelViewStorefront(ListAPIView):
+@permission_classes([AllowAny])
+class CategoryStorefrontView(APIView):
     """
-    View for getting category for storefront
-    """
-
-    queryset = Category.objects.filter(published=True, parent=None)
-    serializer_class = CategoryDetailSerializer
-
-
-@permission_classes([AllowAny])  # TODO: use authentication
-class CategoryChildrenViewDashboard(APIView):
-    """
-    View for for getting a category including its children categories
+    View for getting all categories.
+    Used for storefront.
     """
 
-    def get(self, request, id):
+    def get(self, request):
         """
-        Get a category including its children
+        Gets all published categories for storefront.
+        Language-specific data are returned only in the selected language (set in `Accept-Language` header).
+        If this header isn't present, Django app language is used instead.
         """
-        category = Category.objects.get(id=id)
-        serializer = CategoryWithChildrenSerializer(category)
+        categories = Category.objects.filter(
+            parent=None, published=True
+        )
+        serializer = CategoryRecursiveStorefrontSerializer(
+            categories, many=True, context={"request": request}
+        )
         return Response(serializer.data)
+
+
+@permission_classes([AllowAny])
+class CategoryDetailStorefrontView(RetrieveAPIView):
+    """
+    View for getting categories.
+    Used for storefront.
+    """
+
+    queryset = Category.objects.filter(published=True)
+    serializer_class = CategoryDetailStorefrontSerializer
+
+# @permission_classes([AllowAny])  # TODO: use authentication
+# class CategoryChildrenViewDashboard(APIView):
+#     """
+#     View for getting a category including its children categories
+#     """
+#
+#     def get(self, request, id):
+#         """
+#         Get a category including its children
+#         """
+#         category = Category.objects.get(id=id)
+#         serializer = CategoryWithChildrenSerializer(category)
+#         return Response(serializer.data)
