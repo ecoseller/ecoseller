@@ -71,7 +71,7 @@ class CategoryDetailSerializer(TranslatableModelSerializer, ModelSerializer):
         fields = ("id", "published", "translations", "update_at", "create_at", "parent")
 
 
-class CategoryWithChildrenSerializer(CategoryDetailSerializer):
+class CategoryWithChildrenSerializer(TranslatedSerializerMixin, ModelSerializer):
     """
     Extension of CategoryDetailSerializer with children field.
     """
@@ -82,10 +82,11 @@ class CategoryWithChildrenSerializer(CategoryDetailSerializer):
         model = Category
         fields = (
             "id",
-            "published",
-            "translations",
-            "update_at",
-            "create_at",
+            "title",
+            "description",
+            "meta_title",
+            "meta_description",
+            "slug",
             "parent",
             "children",
         )

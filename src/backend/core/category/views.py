@@ -2,7 +2,11 @@ from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
-from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from rest_framework.generics import (
+    RetrieveUpdateDestroyAPIView,
+    ListAPIView,
+    RetrieveAPIView,
+)
 
 # from django.contrib.auth.models import User
 from rest_framework.decorators import permission_classes
@@ -61,6 +65,16 @@ class CategoryDetailViewDashboard(RetrieveUpdateDestroyAPIView):
     #     """
     #     instance.published = False
     #     instance.save()
+
+
+@permission_classes([AllowAny])  # TODO: use authentication
+class CategoryTopLevelViewStorefront(ListAPIView):
+    """
+    View for getting category for storefront
+    """
+
+    queryset = Category.objects.filter(published=True, parent=None)
+    serializer_class = CategoryDetailSerializer
 
 
 @permission_classes([AllowAny])  # TODO: use authentication
