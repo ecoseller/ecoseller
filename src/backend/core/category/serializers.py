@@ -64,11 +64,12 @@ class CategoryDetailStorefrontSerializer(TranslatableModelSerializer, ModelSeria
     """
 
     translations = TranslatedFieldsField(shared_model=Category)
-    children = PrimaryKeyRelatedField(many=True, required=False, source="published_children")
+
+    # children = PrimaryKeyRelatedField(many=True, required=False, source="published_children")
 
     class Meta:
         model = Category
-        fields = ("id", "translations", "parent", "children")
+        fields = ("id", "translations", "parent")
 
 
 class CategoryRecursiveDashboardSerializer(CategoryRecursiveStorefrontSerializer):
