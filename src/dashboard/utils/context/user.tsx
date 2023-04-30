@@ -1,6 +1,6 @@
 import { IGroup, IPermission, IUser } from "@/types/user";
 import { useState, createContext, useContext, useEffect } from "react";
-
+import { useRouter } from "next/router";
 interface IUserContextProps {
   user: IUser | null;
   roles: IGroup[] | [];
@@ -16,13 +16,15 @@ export const UserProvider = ({ children }: IUserProviderProps): JSX.Element => {
   const [user, setUser] = useState<IUser | null>(null);
   const [roles, setRoles] = useState<IGroup[]>([]);
 
+  const { pathname } = useRouter();
+
   useEffect(() => {
     getUser();
   }, []);
 
   useEffect(() => {
     getRoles();
-  }, [user]);
+  }, [user, pathname]);
 
   const getUser = async () => {
     await fetch(`/api/user/detail`)
