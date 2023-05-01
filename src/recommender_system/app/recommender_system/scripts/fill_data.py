@@ -1,6 +1,7 @@
 import csv
 from datetime import datetime
 import logging
+import random
 from typing import Dict, List, Set, Tuple
 
 from dependency_injector.wiring import inject, Provide
@@ -272,7 +273,7 @@ def fill_products(
             product_variants[row[1]] = ProductVariantModel(
                 sku=row[1],
                 ean=row[1],
-                recommendation_weight=1.0,
+                recommendation_weight=random.random(),
                 update_at=update_at,
                 create_at=update_at,
             )
