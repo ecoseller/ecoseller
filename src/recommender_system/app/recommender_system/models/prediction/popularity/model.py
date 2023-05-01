@@ -17,4 +17,4 @@ class PopularityPredictionModel(AbstractPredictionModel):
     ) -> List[str]:
         if variants is not None:
             return variants
-        return storage.get_popular_product_variant_pks()
+        return storage.get_popular_product_variant_pks(limit=1000)

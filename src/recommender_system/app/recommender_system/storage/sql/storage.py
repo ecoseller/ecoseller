@@ -1,5 +1,5 @@
 import argparse
-from typing import Any, Dict, List, Type, Union
+from typing import Any, Dict, List, Optional, Type, Union
 
 from alembic import command, config
 from sqlalchemy import create_engine, and_, func, case
@@ -102,6 +102,17 @@ class SQLStorage(AbstractStorage):
 
         return models
 
+    def count_objects(
+        self, model_class: Type[StoredBaseModel], **kwargs
+    ) -> List[StoredBaseModel]:
+        sql_class = SQLModelMapper.map(model_class=model_class)
+
+        pk = getattr(sql_class, model_class.Meta.primary_key)
+        query = self.session.query(func.count(pk))
+        query = self._filter(model_class=model_class, query=query, filters=kwargs)
+
+        return query.scalar()
+
     def get_next_pk(self, model_class: Type[StoredBaseModel]) -> int:
         sql_class = SQLModelMapper.map(model_class=model_class)
 
@@ -112,17 +123,28 @@ class SQLStorage(AbstractStorage):
         return current_max + 1 if current_max is not None else 1
 
     def get_objects_attribute(
-        self, model_class: Type[StoredBaseModel], attribute: str, **kwargs
+        self,
+        model_class: Type[StoredBaseModel],
+        attribute: str,
+        limit: Optional[int] = None,
+        **kwargs,
     ) -> List[Any]:
         sql_class = SQLModelMapper.map(model_class=model_class)
 
         query = self.session.query(getattr(sql_class, attribute))
         query = self._filter(model_class=model_class, query=query, filters=kwargs)
+        if limit is not None:
+            query = query.limit(limit)
 
         return list(map(lambda row: row[0], query.all()))
 
     def get_random_weighted_attribute(
-        self, model_class: Type[StoredBaseModel], attribute: str, weight: str, **kwargs
+        self,
+        model_class: Type[StoredBaseModel],
+        attribute: str,
+        weight: str,
+        limit: Optional[int] = None,
+        **kwargs,
     ) -> List[Any]:
         sql_class = SQLModelMapper.map(model_class=model_class)
 
@@ -131,6 +153,8 @@ class SQLStorage(AbstractStorage):
         query = self.session.query(getattr(sql_class, attribute), priority)
         query = self._filter(model_class=model_class, query=query, filters=kwargs)
         query = query.order_by(priority.desc())
+        if limit is not None:
+            query = query.limit(limit)
 
         return list(map(lambda row: row[0], query.all()))
 
@@ -170,7 +194,7 @@ class SQLStorage(AbstractStorage):
 
         return models
 
-    def get_popular_product_variant_pks(self) -> List[Any]:
+    def get_popular_product_variant_pks(self, limit: Optional[int] = None) -> List[Any]:
         amount = case(
             (
                 SQLOrderProductVariant.product_variant_sku.isnot(None),
@@ -204,6 +228,8 @@ class SQLStorage(AbstractStorage):
             .group_by(SQLProductVariant.sku)
         )
         query = query.order_by(priority.desc())
+        if limit is not None:
+            query = query.limit(limit)
 
         return list(map(lambda row: row[0], query.all()))
 

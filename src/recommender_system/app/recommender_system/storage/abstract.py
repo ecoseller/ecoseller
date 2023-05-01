@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, List, Type
+from typing import Any, List, Optional, Type
 
 from recommender_system.models.stored.base import StoredBaseModel
 from recommender_system.models.stored.many_to_many_relation import (
@@ -57,6 +57,13 @@ class AbstractStorage(ABC):
         raise NotImplementedError()
 
     @abstractmethod
+    def count_objects(self, model_class: Type[StoredBaseModel], **kwargs) -> int:
+        """
+        Counts models of type `model_class` saved in the database.
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
     def get_next_pk(self, model_class: Type[StoredBaseModel]) -> int:
         """
         Returns next pk value for model_class.
@@ -65,7 +72,11 @@ class AbstractStorage(ABC):
 
     @abstractmethod
     def get_objects_attribute(
-        self, model_class: Type[StoredBaseModel], attribute: str, **kwargs
+        self,
+        model_class: Type[StoredBaseModel],
+        attribute: str,
+        limit: Optional[int] = None,
+        **kwargs
     ) -> List[Any]:
         """
         Searches for models of type `model_class` and returns their attribute
@@ -75,7 +86,12 @@ class AbstractStorage(ABC):
 
     @abstractmethod
     def get_random_weighted_attribute(
-        self, model_class: Type[StoredBaseModel], attribute: str, weight: str, **kwargs
+        self,
+        model_class: Type[StoredBaseModel],
+        attribute: str,
+        weight: str,
+        limit: Optional[int] = None,
+        **kwargs
     ) -> List[Any]:
         """
         Searches for models of type `model_class` and returns their attribute
@@ -97,7 +113,7 @@ class AbstractStorage(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def get_popular_product_variant_pks(self) -> List[Any]:
+    def get_popular_product_variant_pks(self, limit: Optional[int] = None) -> List[Any]:
         """
         Searches for product variants and returns their primary key randomly
         sampled by number of their orders.

@@ -24,7 +24,6 @@ from recommender_system.models.stored.product_variant import ProductVariantModel
 from recommender_system.storage.abstract import AbstractStorage
 from recommender_system.server.app import create_app
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 

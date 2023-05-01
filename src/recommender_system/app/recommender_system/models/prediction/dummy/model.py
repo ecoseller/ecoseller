@@ -21,4 +21,5 @@ class DummyPredictionModel(AbstractPredictionModel):
         return storage.get_objects_attribute(
             model_class=ProductVariantModel,
             attribute=ProductVariantModel.Meta.primary_key,
+            limit=1000,
         )
