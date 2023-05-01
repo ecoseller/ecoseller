@@ -57,6 +57,13 @@ class AbstractStorage(ABC):
         raise NotImplementedError()
 
     @abstractmethod
+    def get_next_pk(self, model_class: Type[StoredBaseModel]) -> int:
+        """
+        Returns next pk value for model_class.
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
     def get_objects_attribute(
         self, model_class: Type[StoredBaseModel], attribute: str, **kwargs
     ) -> List[Any]:
@@ -106,6 +113,10 @@ class AbstractStorage(ABC):
 
         Returns primary key of stored object.
         """
+        raise NotImplementedError()
+
+    @abstractmethod
+    def bulk_create_objects(self, models: List[StoredBaseModel]) -> None:
         raise NotImplementedError()
 
     @abstractmethod

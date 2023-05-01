@@ -150,3 +150,6 @@ GitHub.sublime-settings
 # Ignore Mac DS_Store files
 .DS_Store
 **/.DS_Store
+
+# Recommender system dataset
+src/recommender_system/data

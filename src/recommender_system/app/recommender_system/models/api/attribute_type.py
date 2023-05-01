@@ -11,6 +11,7 @@ class AttributeType(ApiBaseModel):
     """
 
     id: int
+    type: str
     type_name: Optional[str]
     unit: Optional[str]
 

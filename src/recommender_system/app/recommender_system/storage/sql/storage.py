@@ -72,7 +72,7 @@ class SQLStorage(AbstractStorage):
     def get_object(
         self, model_class: Type[StoredBaseModel], **kwargs
     ) -> StoredBaseModel:
-        sql_class = SQLModelMapper.map(model_class)
+        sql_class = SQLModelMapper.map(model_class=model_class)
 
         query = self.session.query(sql_class)
         query = self._filter(model_class=model_class, query=query, filters=kwargs)
@@ -89,7 +89,7 @@ class SQLStorage(AbstractStorage):
     def get_objects(
         self, model_class: Type[StoredBaseModel], **kwargs
     ) -> List[StoredBaseModel]:
-        sql_class = SQLModelMapper.map(model_class)
+        sql_class = SQLModelMapper.map(model_class=model_class)
 
         query = self.session.query(sql_class)
         query = self._filter(model_class=model_class, query=query, filters=kwargs)
@@ -102,10 +102,19 @@ class SQLStorage(AbstractStorage):
 
         return models
 
+    def get_next_pk(self, model_class: Type[StoredBaseModel]) -> int:
+        sql_class = SQLModelMapper.map(model_class=model_class)
+
+        current_max = self.session.query(
+            func.max(getattr(sql_class, model_class.Meta.primary_key))
+        ).scalar()
+
+        return current_max + 1 if current_max is not None else 1
+
     def get_objects_attribute(
         self, model_class: Type[StoredBaseModel], attribute: str, **kwargs
     ) -> List[Any]:
-        sql_class = SQLModelMapper.map(model_class)
+        sql_class = SQLModelMapper.map(model_class=model_class)
 
         query = self.session.query(getattr(sql_class, attribute))
         query = self._filter(model_class=model_class, query=query, filters=kwargs)
@@ -115,7 +124,7 @@ class SQLStorage(AbstractStorage):
     def get_random_weighted_attribute(
         self, model_class: Type[StoredBaseModel], attribute: str, weight: str, **kwargs
     ) -> List[Any]:
-        sql_class = SQLModelMapper.map(model_class)
+        sql_class = SQLModelMapper.map(model_class=model_class)
 
         priority = random() * getattr(sql_class, weight)
 
@@ -216,6 +225,13 @@ class SQLStorage(AbstractStorage):
             )
         result = self.session.execute(query.returning(pk_column))
         return result.fetchone()[0]
+
+    def bulk_create_objects(self, models: List[StoredBaseModel]) -> None:
+        if len(models) == 0:
+            return
+        sql_class = SQLModelMapper.map(models[0].__class__)
+        data = [model.dict() for model in models]
+        self.session.execute(insert(sql_class), data)
 
     def refresh_object(self, model: StoredBaseModel) -> None:
         result = self.get_object(model_class=model.__class__, pk=model.pk)
