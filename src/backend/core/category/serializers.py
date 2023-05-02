@@ -2,7 +2,6 @@ from parler_rest.serializers import (
     TranslatableModelSerializer,
     TranslatedFieldsField,
 )
-from rest_framework.relations import PrimaryKeyRelatedField
 from rest_framework.serializers import (
     ModelSerializer,
 )
