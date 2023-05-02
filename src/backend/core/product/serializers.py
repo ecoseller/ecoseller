@@ -43,8 +43,21 @@ Common serializers
 """
 
 
-class ProductMediaSerializer(ModelSerializer):
+class ProductMediaBaseSerializer(ModelSerializer):
     media = serializers.ImageField(required=False, use_url=True)
+    type = serializers.ChoiceField(choices=ProductMediaTypes.CHOICES, required=False)
+
+    class Meta:
+        model = ProductMedia
+        fields = (
+            "id",
+            "media",
+            "type",
+            "alt",
+        )
+
+
+class ProductMediaDetailsSerializer(ProductMediaBaseSerializer):
     # product_id = serializers.ReadOnlyField(source="product.id")
     product_id = serializers.PrimaryKeyRelatedField(
         many=False,
@@ -53,17 +66,12 @@ class ProductMediaSerializer(ModelSerializer):
         required=False,
         # write_only=True,
     )
-    type = serializers.ChoiceField(choices=ProductMediaTypes.CHOICES, required=False)
     sort_order = serializers.IntegerField(required=False)
 
-    class Meta:
+    class Meta(ProductMediaBaseSerializer.Meta):
         model = ProductMedia
         order_by = ["sort_order"]
-        fields = (
-            "id",
-            "media",
-            "type",
-            "alt",
+        fields = ProductMediaBaseSerializer.Meta.fields + (
             "product_id",
             "sort_order",
         )
@@ -351,7 +359,7 @@ class ProductDashboardListSerializer(TranslatedSerializerMixin, ModelSerializer)
     returns product fields for dashboard
     """
 
-    primary_image = ProductMediaSerializer(
+    primary_image = ProductMediaDetailsSerializer(
         read_only=True, many=False, source="get_primary_photo"
     )
 
@@ -374,7 +382,7 @@ class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSeriali
         many=True, read_only=False, required=False
     )
     id = CharField(required=False, read_only=True)  # for update
-    media = ProductMediaSerializer(many=True, source="product_media", read_only=True)
+    media = ProductMediaDetailsSerializer(many=True, source="product_media", read_only=True)
     type_id = PrimaryKeyRelatedField(
         required=False, write_only=True, queryset=ProductType.objects.all()
     )  # for update
@@ -514,6 +522,10 @@ class ProductStorefrontSerializer(TranslatedSerializerMixin, ModelSerializer):
     Only one translation is returned (see TranslatedSerializerMixin)
     """
 
+    primary_image = ProductMediaBaseSerializer(
+        read_only=True, many=False, source="get_primary_photo"
+    )
+
     class Meta:
         model = Product
         fields = (
@@ -522,4 +534,5 @@ class ProductStorefrontSerializer(TranslatedSerializerMixin, ModelSerializer):
             "meta_title",
             "meta_description",
             "slug",
+            "primary_image",
         )
