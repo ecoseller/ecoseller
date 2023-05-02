@@ -11,7 +11,7 @@ import Slider from "@/components/Slider/Slider";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 // styles
-import styles from "@/styles/HomePage/Homepage.module.scss";
+import styles from "@/styles/Homepage/Homepage.module.scss";
 import Grid from "@mui/material/Grid";
 import CompanyBenefit from "@/components/Homepage/CompanyBenefit";
 import { IProductSliderData } from "@/types/product";
