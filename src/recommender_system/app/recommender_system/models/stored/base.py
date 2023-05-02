@@ -130,3 +130,39 @@ class ProductStoredBaseModel(StoredBaseModel):
         cls, storage: "AbstractStorage" = Provide["product_storage"], **kwargs
     ) -> List["StoredBaseModel"]:
         return super().gets(storage=storage, **kwargs)
+
+
+class SimilarityStoredBaseModel(StoredBaseModel):
+    """
+    This model represents base class for all models stored in the similarity database.
+    """
+
+    @inject
+    def __init__(
+        self,
+        _storage: "AbstractStorage" = Provide["similarity_storage"],
+        *args,
+        **kwargs
+    ):
+        super().__init__(_storage=_storage, *args, **kwargs)
+
+    @classmethod
+    @inject
+    def get_next_pk(
+        cls, storage: "AbstractStorage" = Provide["similarity_storage"]
+    ) -> int:
+        return super().get_next_pk(storage=storage)
+
+    @classmethod
+    @inject
+    def get(
+        cls, storage: "AbstractStorage" = Provide["similarity_storage"], **kwargs
+    ) -> "StoredBaseModel":
+        return super().get(storage=storage, **kwargs)
+
+    @classmethod
+    @inject
+    def gets(
+        cls, storage: "AbstractStorage" = Provide["similarity_storage"], **kwargs
+    ) -> List["StoredBaseModel"]:
+        return super().gets(storage=storage, **kwargs)

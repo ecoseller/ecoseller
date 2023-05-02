@@ -20,7 +20,8 @@ class AttributeModel(ProductStoredBaseModel):
     """
 
     id: int
-    value: Optional[str]
+    raw_value: Optional[str]
+    numeric_value: Optional[float]
     order: Optional[int]
 
     attribute_type_id: int
@@ -31,8 +32,16 @@ class AttributeModel(ProductStoredBaseModel):
 
     @classmethod
     def from_api_model(cls, model: ApiBaseModel, **kwargs: Any) -> StoredBaseModel:
+        numeric_value = None
+        try:
+            numeric_value = float(model.raw_value)
+        except ValueError:
+            pass
         return super().from_api_model(
-            model=model, attribute_type_id=model.type, **kwargs
+            model=model,
+            attribute_type_id=model.type,
+            numeric_value=numeric_value,
+            **kwargs
         )
 
     @property

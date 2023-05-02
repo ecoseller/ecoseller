@@ -1,10 +1,13 @@
 from abc import ABC, abstractmethod
-from typing import Any, List, Optional, Type
+from typing import Any, Dict, List, Optional, Type, TYPE_CHECKING
 
 from recommender_system.models.stored.base import StoredBaseModel
 from recommender_system.models.stored.many_to_many_relation import (
     ManyToManyRelationMixin,
 )
+
+if TYPE_CHECKING:
+    from recommender_system.models.stored.attribute_type import AttributeTypeModel
 
 
 class AbstractStorage(ABC):
@@ -121,6 +124,20 @@ class AbstractStorage(ABC):
         raise NotImplementedError()
 
     @abstractmethod
+    def get_raw_attribute_values(self, attribute_type_id: int) -> List[str]:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def get_attribute_type_mean(self, attribute_type_id: int) -> Optional[float]:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def get_product_variant_attribute_values(
+        self, attribute_type_id: int, attribute_type_type: "AttributeTypeModel.Type"
+    ) -> Dict[str, Optional[Any]]:
+        raise NotImplementedError()
+
+    @abstractmethod
     def store_object(self, model: StoredBaseModel, create: bool = False) -> Any:
         """
         Stores `model` instance in storage.
@@ -147,4 +164,8 @@ class AbstractStorage(ABC):
         """
         Deletes `model` instance from recommender_system.storage.
         """
+        raise NotImplementedError()
+
+    @abstractmethod
+    def delete(self, model_class: Type[StoredBaseModel], **kwargs) -> None:
         raise NotImplementedError()

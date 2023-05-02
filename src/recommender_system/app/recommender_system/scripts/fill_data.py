@@ -348,15 +348,19 @@ def fill_attributes(
     i = 1
     for row in rows:
         if row[2] not in ["available", "categoryid", "790"]:
-            value = row[3][:200]
+            raw_value = row[3][:200]
+            numeric_value = None
             if is_numerical[row[2]]:
-                value = row[3][1:]
-            attribute = attributes.get((row[2], value))
+                numeric_value = float(row[3][1:])
+            attribute = attributes.get((row[2], raw_value))
             if attribute is None:
                 attribute = AttributeModel(
-                    id=i, value=value, attribute_type_id=int(row[2])
+                    id=i,
+                    raw_value=raw_value,
+                    numeric_value=numeric_value,
+                    attribute_type_id=int(row[2]),
                 )
-                attributes[(row[2], value)] = attribute
+                attributes[(row[2], raw_value)] = attribute
                 i += 1
             attribute_product_variants[(row[1], row[2])] = AttributeProductVariantModel(
                 attribute_id=attribute.id, product_variant_sku=row[1]

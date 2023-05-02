@@ -1,8 +1,8 @@
 import argparse
-from typing import Any, Dict, List, Optional, Type, Union
+from typing import Any, Dict, List, Optional, Type, Union, TYPE_CHECKING
 
 from alembic import command, config
-from sqlalchemy import create_engine, and_, func, case
+from sqlalchemy import create_engine, and_, func, case, delete
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Query, Session
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
@@ -18,9 +18,14 @@ from recommender_system.storage.sql.mapper import SQLModelMapper
 from recommender_system.storage.sql.models.feedback import FeedbackBase
 from recommender_system.storage.sql.models.products import (
     ProductBase,
+    SQLAttribute,
+    SQLAttributeProductVariant,
     SQLOrderProductVariant,
     SQLProductVariant,
 )
+
+if TYPE_CHECKING:
+    from recommender_system.models.stored.attribute_type import AttributeTypeModel
 
 
 Base = Union[Type[ProductBase], Type[FeedbackBase]]
@@ -233,6 +238,45 @@ class SQLStorage(AbstractStorage):
 
         return list(map(lambda row: row[0], query.all()))
 
+    def get_raw_attribute_values(self, attribute_type_id: int) -> List[str]:
+        frequency = func.count(SQLAttribute.id)
+        query = self.session.query(SQLAttribute.raw_value, frequency).select_from(
+            SQLAttribute
+        )
+        query = query.filter(SQLAttribute.attribute_type_id == attribute_type_id)
+        query = query.group_by(SQLAttribute.raw_value)
+        query = query.order_by(frequency.desc())
+
+        return [row[0] for row in query.all()]
+
+    def get_attribute_type_mean(self, attribute_type_id: int) -> Optional[float]:
+        query = self.session.query(func.avg(SQLAttribute.numeric_value)).select_from(
+            SQLAttribute
+        )
+        query = query.filter(SQLAttribute.attribute_type_id == attribute_type_id)
+
+        return query.scalar()
+
+    def get_product_variant_attribute_values(
+        self, attribute_type_id: int, attribute_type_type: "AttributeTypeModel.Type"
+    ) -> Dict[str, Optional[Any]]:
+        from recommender_system.models.stored.attribute_type import AttributeTypeModel
+
+        if attribute_type_type == AttributeTypeModel.Type.NUMERICAL:
+            value_column = SQLAttribute.numeric_value
+        else:
+            value_column = SQLAttribute.raw_value
+
+        query = self.session.query(
+            SQLAttributeProductVariant.product_variant_sku, value_column
+        ).select_from(SQLAttributeProductVariant)
+        query = query.join(
+            SQLAttribute, SQLAttribute.id == SQLAttributeProductVariant.attribute_id
+        )
+        query = query.filter(SQLAttribute.attribute_type_id == attribute_type_id)
+
+        return {row[0]: row[1] for row in query.all()}
+
     def store_object(self, model: StoredBaseModel, create: bool = False) -> Any:
         sql_class = SQLModelMapper.map(model.__class__)
         pk_column = getattr(sql_class, model.Meta.primary_key)
@@ -272,3 +316,18 @@ class SQLStorage(AbstractStorage):
         self.session.query(sql_class).filter(
             getattr(sql_class, model.Meta.primary_key) == model.pk
         ).delete()
+
+    def delete(self, model_class: Type[StoredBaseModel], **kwargs) -> None:
+        sql_class = SQLModelMapper.map(model_class=model_class)
+
+        stmt_filters = []
+        for key, value in kwargs:
+            if key == "pk":
+                column = getattr(sql_class, model_class.Meta.primary_key)
+            else:
+                column = getattr(sql_class, key)
+            stmt_filters.append(column == value)
+
+        stmt = delete(sql_class).where(*stmt_filters)
+
+        self.session.execute(stmt)

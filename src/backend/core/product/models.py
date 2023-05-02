@@ -237,7 +237,7 @@ class BaseAttribute(models.Model):
             "_model_class": "Attribute",  # Until Base and Extension attributes are joined
             "id": self.id,
             "type": self.type.id,
-            "value": self.value,
+            "raw_value": self.value,
             "order": self.order,
             "ext_attributes": [attribute.id for attribute in self.ext_attributes.all()],
         }
@@ -301,7 +301,7 @@ class ExtensionAttribute(models.Model):
             "_model_class": "Attribute",  # Until Base and Extension attributes are joined
             "id": self.id,
             "type": self.type.id,
-            "value": self.value,
+            "raw_value": self.value,
             "order": self.order,
             "ext_attributes": [attribute.id for attribute in self.ext_attributes.all()],
         }

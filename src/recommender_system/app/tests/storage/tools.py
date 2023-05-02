@@ -30,7 +30,7 @@ default_dicts: Dict[Type[StoredBaseModel], Any] = {
     },
     AttributeModel: {
         "id": 0,
-        "value": "1",
+        "raw_value": "1",
         "attribute_type_id": 0,
         "parent_attribute_id": None,
     },

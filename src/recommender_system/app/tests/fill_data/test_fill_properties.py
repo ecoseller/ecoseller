@@ -91,21 +91,23 @@ def clear_attributes():
 
     for row in ROWS:
         if row[2] not in ["available", "categoryid", "790"]:
-            value = row[3]
-            if is_numerical[row[2]]:
-                value = value[1:]
-            attributes.add((int(row[2]), value))
+            raw_value = row[3]
+            attributes.add((int(row[2]), raw_value))
             delete_model(
-                model_class=AttributeModel, attribute_type_id=int(row[2]), value=value
+                model_class=AttributeModel,
+                attribute_type_id=int(row[2]),
+                raw_value=raw_value,
             )
     for price in ProductPriceModel.gets(price_list_code="RETAILROCKET"):
         price.delete()
 
     yield attributes
 
-    for attribute_type_id, value in attributes:
+    for attribute_type_id, raw_value in attributes:
         delete_model(
-            model_class=AttributeModel, attribute_type_id=attribute_type_id, value=value
+            model_class=AttributeModel,
+            attribute_type_id=attribute_type_id,
+            raw_value=raw_value,
         )
     for price in ProductPriceModel.gets(price_list_code="RETAILROCKET"):
         price.delete()
@@ -178,9 +180,11 @@ def test_fill_attributes(
     _ = clear_product_variants
     attributes = clear_attributes
 
-    for attribute_type_id, value in attributes:
+    for attribute_type_id, raw_value in attributes:
         with pytest.raises(AttributeModel.DoesNotExist):
-            _ = AttributeModel.get(attribute_type_id=attribute_type_id, value=value)
+            _ = AttributeModel.get(
+                attribute_type_id=attribute_type_id, raw_value=raw_value
+            )
 
     old_count = len(AttributeModel.gets())
 
