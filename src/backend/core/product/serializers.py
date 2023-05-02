@@ -516,9 +516,9 @@ class ProductDashboardSerializer(TranslatedSerializerMixin, ModelSerializer):
         )
 
 
-class ProductStorefrontSerializer(TranslatedSerializerMixin, ModelSerializer):
+class ProductStorefrontListSerializer(TranslatedSerializerMixin, ModelSerializer):
     """
-    Product serializer used for storefront.
+    Product serializer used for storefront when listing products
     Only one translation is returned (see TranslatedSerializerMixin)
     """
 

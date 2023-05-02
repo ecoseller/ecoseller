@@ -20,7 +20,7 @@ from category.serializers import (
     CategoryDetailStorefrontSerializer,
 )
 from product.models import Product
-from product.serializers import ProductStorefrontSerializer
+from product.serializers import ProductStorefrontListSerializer
 
 
 @permission_classes([AllowAny])  # TODO: use authentication
@@ -128,7 +128,7 @@ class CategoryDetailProductsStorefrontView(APIView):
             category = Category.objects.get(id=pk, published=True)
             products = _get_all_published_products(category)
 
-            serializer = ProductStorefrontSerializer(
+            serializer = ProductStorefrontListSerializer(
                 products, many=True, context={"request": request}
             )
 
