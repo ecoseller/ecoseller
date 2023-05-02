@@ -21,6 +21,12 @@ a {
   width: 100%;
   max-width: 1620px;
   margin: 0px auto;
+  @media screen and (max-width: 1620px) {
+    padding: 20px;
+  }
+  @media screen and (max-width: 700px) {
+    padding: 10px;
+  }
 }
 
 /* @media (prefers-color-scheme: dark) {

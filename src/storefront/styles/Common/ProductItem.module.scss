@@ -1,0 +1,48 @@
+// styling for the product item component
+// it can be used for the slider component as well as the product category listing
+// we need to style wrapper productItem, productItem_image, productItem_content, productItem_title, productItem_price
+
+.productItem {
+  position: relative;
+  border-radius: 5px;
+  height: 500px;
+  overflow: hidden;
+  width: 280px;
+  cursor: pointer;
+
+  .productItem_image {
+    position: relative;
+    height: 350px;
+    width: auto;
+    margin: 20px auto 0 auto;
+
+    // for smaller screens
+    // @media screen and (max-width: 700px) {
+    //     height: 200px;
+    // }
+
+    > img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  .productItem_content {
+    background-color: #fff;
+    border-radius: 10px;
+    // padding: 20px;
+    position: absolute;
+    width: 100%;
+
+    .productItem_title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .productItem_price {
+      font-size: 1.2rem;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+  }
+}
