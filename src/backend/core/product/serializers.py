@@ -513,6 +513,7 @@ class ProductStorefrontSerializer(TranslatedSerializerMixin, ModelSerializer):
     Product serializer used for storefront.
     Only one translation is returned (see TranslatedSerializerMixin)
     """
+
     class Meta:
         model = Product
         fields = (

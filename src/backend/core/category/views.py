@@ -152,6 +152,7 @@ def _get_all_published_products(category):
     subcategory_ids = _get_all_subcategory_ids(category)
     return Product.objects.filter(published=True, category__in=subcategory_ids)
 
+
 # @permission_classes([AllowAny])  # TODO: use authentication
 # class CategoryChildrenViewDashboard(APIView):
 #     """
