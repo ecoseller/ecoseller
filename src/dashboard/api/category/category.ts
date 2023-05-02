@@ -25,7 +25,7 @@ export const addCategory = async (categoryToAdd: ICategoryEditable) => {
  * @param id
  */
 export const getCategory = async (id: string) => {
-  return await axiosPrivate.get<ICategoryDetail>(`/category/dashboard/${id}`);
+  return await axiosPrivate.get<ICategoryDetail>(`/category/dashboard/${id}/`);
 };
 
 /**
@@ -37,7 +37,7 @@ export const updateCategory = async (
   id: string,
   updatedCategory: ICategoryEditable
 ) => {
-  return await axiosPrivate.put(`/category/dashboard/${id}`, updatedCategory);
+  return await axiosPrivate.put(`/category/dashboard/${id}/`, updatedCategory);
 };
 
 /**
@@ -45,5 +45,5 @@ export const updateCategory = async (
  * @param id
  */
 export const deleteCategory = async (id: string) => {
-  return await axiosPrivate.delete(`/category/dashboard/${id}`);
+  return await axiosPrivate.delete(`/category/dashboard/${id}/`);
 };

@@ -44,7 +44,7 @@ class CategoryRecursiveStorefrontSerializer(TranslatedSerializerMixin, ModelSeri
     Only one translation is returned (see TranslatedSerializerMixin)
     """
 
-    children = RecursiveField(many=True, required=False, source="all_children")
+    children = RecursiveField(many=True, required=False, source="published_children")
 
     class Meta:
         model = Category
@@ -63,7 +63,7 @@ class CategoryDetailStorefrontSerializer(CategoryRecursiveStorefrontSerializer):
     Only one translation is returned (see TranslatedSerializerMixin)
     """
 
-    class Meta:
+    class Meta(CategoryRecursiveStorefrontSerializer.Meta):
         model = Category
         fields = CategoryRecursiveStorefrontSerializer.Meta.fields + (
             "description",
@@ -71,15 +71,22 @@ class CategoryDetailStorefrontSerializer(CategoryRecursiveStorefrontSerializer):
         )
 
 
-class CategoryRecursiveDashboardSerializer(CategoryRecursiveStorefrontSerializer):
+class CategoryRecursiveDashboardSerializer(TranslatedSerializerMixin, ModelSerializer):
     """
     Serializes categories into tree structure for dashboard.
     Only one translation is returned (see TranslatedSerializerMixin)
     """
 
-    class Meta(CategoryRecursiveStorefrontSerializer.Meta):
+    children = RecursiveField(many=True, required=False, source="all_children")
+
+    class Meta:
         model = Category
-        fields = CategoryRecursiveStorefrontSerializer.Meta.fields + (
+        fields = (
+            "id",
+            "title",
+            "meta_title",
+            "slug",
+            "children",
             "published",
             "create_at",
             "update_at",
