@@ -173,6 +173,27 @@ class Product(TranslatableModel):
 
 
 # Attributes
+
+
+class AttributeTypeValueType:
+    """
+    Enum class for attribute type value types
+    * TEXT - value is represented as a text (e.g. "red", "XL"), so it can't be sorted
+    * INTEGER - value is represented as an integer (e.g. 10, 20), so it can be sorted
+    * DECIMAL - value is represented as a decimal (e.g. 10.5, 20.5), so it can be sorted
+    """
+
+    TEXT = "TEXT"
+    INTEGER = "INTEGER"
+    DECIMAL = "DECIMAL"
+
+    CHOICES = [
+        (TEXT, "Value is represented as a text"),
+        (INTEGER, "Value is represented as an integer"),
+        (DECIMAL, "Value is represented as a decimal"),
+    ]
+
+
 class AttributeType(models.Model):
     type_name = models.CharField(
         max_length=200,
@@ -187,6 +208,11 @@ class AttributeType(models.Model):
         blank=True,
         null=True,
         help_text="Unit of given type in which value is measured",
+    )
+    value_type = models.CharField(
+        max_length=10,
+        choices=AttributeTypeValueType.CHOICES,
+        default=AttributeTypeValueType.TEXT,
     )
 
     def __str__(self) -> str:

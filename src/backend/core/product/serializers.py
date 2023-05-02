@@ -318,6 +318,7 @@ class AtrributeTypeDashboardSerializer(ModelSerializer):
             "type_name",
             "unit",
             "base_attributes",
+            "value_type",
         )
 
 
