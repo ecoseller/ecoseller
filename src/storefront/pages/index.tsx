@@ -5,127 +5,28 @@
 
 // react
 import React from "react";
+// components
+import Slider from "@/components/Slider/Slider";
 // mui
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-// components
+// styles
+import styles from "@/styles/HomePage/HomePage.module.scss";
 
 const HomePage = () => {
   return (
     <div className={`container`}>
-      <Box sx={{ p: 5, height: "400px", backgroundColor: "#f2f2f2" }}></Box>
-      <Box sx={{ p: 5 }}>
-        <Typography variant="h4" gutterBottom>
-          Welcome to our ecommerce store!
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          We offer a wide selection of products for all your needs.
-        </Typography>
-      </Box>
-      <Box sx={{ p: 5 }}>
-        <Typography variant="h4" gutterBottom>
-          Welcome to our ecommerce store!
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          We offer a wide selection of products for all your needs.
-        </Typography>
-      </Box>
-      <Box sx={{ p: 5 }}>
-        <Typography variant="h4" gutterBottom>
-          Welcome to our ecommerce store!
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          We offer a wide selection of products for all your needs.
-        </Typography>
-      </Box>
-      <Box sx={{ p: 5 }}>
-        <Typography variant="h4" gutterBottom>
-          Welcome to our ecommerce store!
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          We offer a wide selection of products for all your needs.
-        </Typography>
-      </Box>
-      <Box sx={{ p: 5 }}>
-        <Typography variant="h4" gutterBottom>
-          Welcome to our ecommerce store!
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          We offer a wide selection of products for all your needs.
-        </Typography>
-      </Box>
-      <Box sx={{ p: 5 }}>
-        <Typography variant="h4" gutterBottom>
-          Welcome to our ecommerce store!
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          We offer a wide selection of products for all your needs.
-        </Typography>
-      </Box>
-      <Box sx={{ p: 5 }}>
-        <Typography variant="h4" gutterBottom>
-          Welcome to our ecommerce store!
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          We offer a wide selection of products for all your needs.
-        </Typography>
-      </Box>
-      <Box sx={{ p: 5 }}>
-        <Typography variant="h4" gutterBottom>
-          Welcome to our ecommerce store!
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          We offer a wide selection of products for all your needs.
-        </Typography>
-      </Box>
-      <Box sx={{ p: 5 }}>
-        <Typography variant="h4" gutterBottom>
-          Welcome to our ecommerce store!
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          We offer a wide selection of products for all your needs.
-        </Typography>
-      </Box>
-      <Box sx={{ p: 5 }}>
-        <Typography variant="h4" gutterBottom>
-          Welcome to our ecommerce store!
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          We offer a wide selection of products for all your needs.
-        </Typography>
-      </Box>
-      <Box sx={{ p: 5 }}>
-        <Typography variant="h4" gutterBottom>
-          Welcome to our ecommerce store!
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          We offer a wide selection of products for all your needs.
-        </Typography>
-      </Box>
-      <Box sx={{ p: 5 }}>
-        <Typography variant="h4" gutterBottom>
-          Welcome to our ecommerce store!
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          We offer a wide selection of products for all your needs.
-        </Typography>
-      </Box>
-      <Box sx={{ p: 5 }}>
-        <Typography variant="h4" gutterBottom>
-          Welcome to our ecommerce store!
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          We offer a wide selection of products for all your needs.
-        </Typography>
-      </Box>
-      <Box sx={{ p: 5 }}>
-        <Typography variant="h4" gutterBottom>
-          Welcome to our ecommerce store!
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          We offer a wide selection of products for all your needs.
-        </Typography>
-      </Box>
+      <div className={styles.homePage}>
+        <Slider />
+        <Box sx={{ p: 5 }}>
+          <Typography variant="h4" gutterBottom>
+            Welcome to our ecommerce store!
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            We offer a wide selection of products for all your needs.
+          </Typography>
+        </Box>
+      </div>
     </div>
   );
 };
