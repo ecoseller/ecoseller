@@ -17,7 +17,7 @@ from .models import (
     ProductType,
 )
 from .serializers import (
-    ProductSerializer,
+    ProductDashboardSerializer,
     ProductDashboardListSerializer,
     ProductDashboardDetailSerializer,
     PriceListBaseSerializer,
@@ -273,7 +273,7 @@ class ProductDetailStorefront(APIView):
         except Product.DoesNotExist:
             return Response({"error": "Product does not exist"}, status=404)
 
-        serialized_product = ProductSerializer(product)
+        serialized_product = ProductDashboardSerializer(product)
         return Response(serialized_product.data, status=200)
 
 

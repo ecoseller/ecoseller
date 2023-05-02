@@ -19,7 +19,6 @@ from django.db.models import (
     Max,
 )
 
-
 from category.serializers import (
     CategorySerializer,
 )
@@ -38,7 +37,6 @@ from product.models import (
     ProductMediaTypes,
     ProductType,
 )
-
 
 """
 Common serializers
@@ -482,9 +480,9 @@ class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSeriali
         return instance
 
 
-class ProductSerializer(TranslatedSerializerMixin, ModelSerializer):
+class ProductDashboardSerializer(TranslatedSerializerMixin, ModelSerializer):
     """
-    Basic Product model serializer (see product/models.py)
+    Basic Product model serializer (see product/models.py) used for dashboard
     retrieving all fields defined in the model with nested list of product variants
     and category.
     Only one translation is returned (see TranslatedSerializerMixin)
@@ -507,4 +505,20 @@ class ProductSerializer(TranslatedSerializerMixin, ModelSerializer):
             "description_editorjs",
             "slug",
             "product_variants",
+        )
+
+
+class ProductStorefrontSerializer(TranslatedSerializerMixin, ModelSerializer):
+    """
+    Product serializer used for storefront.
+    Only one translation is returned (see TranslatedSerializerMixin)
+    """
+    class Meta:
+        model = Product
+        fields = (
+            "id",
+            "title",
+            "meta_title",
+            "meta_description",
+            "slug",
         )
