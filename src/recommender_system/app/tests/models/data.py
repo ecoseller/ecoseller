@@ -39,7 +39,12 @@ _now = datetime.now().isoformat()
 
 
 def _attribute_type(id: int = 0) -> Dict[str, Any]:
-    return {"id": id, "type_name": "type_name", "unit": "unit"}
+    return {
+        "id": id,
+        "type": AttributeTypeModel.Type.CATEGORICAL,
+        "type_name": "type_name",
+        "unit": "unit",
+    }
 
 
 def _root_attribute() -> Dict[str, Any]:

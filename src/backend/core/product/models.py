@@ -204,6 +204,7 @@ class AttributeType(models.Model):
         data = {
             "_model_class": "AttributeType",  # Until Base and Extension attributes are joined
             "id": self.id,
+            "type": "CATEGORICAL",
             "type_name": self.type_name,
             "unit": self.unit,
         }
@@ -272,6 +273,7 @@ class ExtAttributeType(models.Model):
         data = {
             "_model_class": "AttributeType",  # Until Base and Extension attributes are joined
             "id": self.id,
+            "type": "CATEGORICAL",
             "type_name": self.type_name,
             "unit": self.unit,
         }

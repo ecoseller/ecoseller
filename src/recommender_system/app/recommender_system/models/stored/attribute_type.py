@@ -1,5 +1,7 @@
 from typing import List, Optional, TYPE_CHECKING
 
+from strenum import StrEnum
+
 from recommender_system.models.stored.base import ProductStoredBaseModel
 
 if TYPE_CHECKING:
@@ -14,11 +16,24 @@ class AttributeTypeModel(ProductStoredBaseModel):
     """
 
     id: int
+    type: str
     type_name: Optional[str]
     unit: Optional[str]
 
     class Meta:
         primary_key = "id"
+
+    class Type(StrEnum):
+        NUMERICAL = "NUMERICAL"
+        CATEGORICAL = "CATEGORICAL"
+
+        @classmethod
+        def get_default(cls) -> str:
+            return cls.CATEGORICAL
+
+    @property
+    def is_numerical(self) -> bool:
+        return self.type == AttributeTypeModel.Type.NUMERICAL
 
     @property
     def attributes(self) -> List["AttributeModel"]:

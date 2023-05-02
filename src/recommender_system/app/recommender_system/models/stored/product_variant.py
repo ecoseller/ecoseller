@@ -26,6 +26,10 @@ class ProductVariantModel(ProductStoredBaseModel):
         primary_key = "sku"
 
     @property
+    def next_pk(self) -> int:
+        raise TypeError("ProductVariantModel can not get next pk value.")
+
+    @property
     def attributes(self) -> List["AttributeModel"]:
         from recommender_system.models.stored.attribute_product_variant import (
             AttributeProductVariantModel,

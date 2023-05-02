@@ -35,6 +35,10 @@ class StoredBaseModel(BaseModel):
         data.update(kwargs)
         return cls.parse_obj(data)
 
+    @classmethod
+    def get_next_pk(cls, storage: "AbstractStorage") -> int:
+        return storage.get_next_pk(model_class=cls)
+
     @property
     def pk(self) -> Any:
         return getattr(self, self.Meta.primary_key)
@@ -75,6 +79,13 @@ class FeedbackStoredBaseModel(StoredBaseModel):
 
     @classmethod
     @inject
+    def get_next_pk(
+        cls, storage: "AbstractStorage" = Provide["feedback_storage"]
+    ) -> int:
+        return super().get_next_pk(storage=storage)
+
+    @classmethod
+    @inject
     def get(
         cls, storage: "AbstractStorage" = Provide["feedback_storage"], **kwargs
     ) -> "StoredBaseModel":
@@ -98,6 +109,13 @@ class ProductStoredBaseModel(StoredBaseModel):
         self, _storage: "AbstractStorage" = Provide["product_storage"], *args, **kwargs
     ):
         super().__init__(_storage=_storage, *args, **kwargs)
+
+    @classmethod
+    @inject
+    def get_next_pk(
+        cls, storage: "AbstractStorage" = Provide["product_storage"]
+    ) -> int:
+        return super().get_next_pk(storage=storage)
 
     @classmethod
     @inject

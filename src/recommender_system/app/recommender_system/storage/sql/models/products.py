@@ -16,6 +16,7 @@ from recommender_system.models.stored.attribute_product_variant import (
     AttributeProductVariantModel,
 )
 from recommender_system.models.stored.attribute_type import AttributeTypeModel
+from recommender_system.models.stored.category_ancestor import CategoryAncestorModel
 from recommender_system.models.stored.order import OrderModel
 from recommender_system.models.stored.order_product_variant import (
     OrderProductVariantModel,
@@ -79,6 +80,11 @@ class SQLAttributeType(ProductBase):
     """
 
     id = Column(Integer(), primary_key=True)
+    type = Column(
+        String(100),
+        nullable=False,
+        server_default=AttributeTypeModel.Type.get_default(),
+    )
     type_name = Column(String(200), nullable=True)
     unit = Column(String(200), nullable=True)
 
@@ -103,6 +109,22 @@ class SQLAttributeTypeProductType(ProductBase):
 
     class Meta:
         origin_model = AttributeTypeProductTypeModel
+
+
+class SQLCategoryAncestor(ProductBase):
+    """
+    This model represents category and its ancestor relation in SQL database.
+    """
+
+    id = Column(Integer(), primary_key=True)
+
+    category_id = Column(Integer(), nullable=False)
+    category_ancestor_id = Column(Integer(), nullable=False)
+
+    __tablename__ = "category_ancestor"
+
+    class Meta:
+        origin_model = CategoryAncestorModel
 
 
 class SQLOrder(ProductBase):

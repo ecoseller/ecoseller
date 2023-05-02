@@ -24,6 +24,7 @@ from recommender_system.models.stored.review import ReviewModel
 default_dicts: Dict[Type[StoredBaseModel], Any] = {
     AttributeTypeModel: {
         "id": 0,
+        "type": AttributeTypeModel.Type.CATEGORICAL,
         "type_name": "weight",
         "unit": "kg",
     },
@@ -139,9 +140,9 @@ def get_or_create_model(model_class: Type[StoredBaseModel]) -> StoredBaseModel:
     return model
 
 
-def delete_model(model_class: Type[StoredBaseModel], pk: Any) -> None:
+def delete_model(model_class: Type[StoredBaseModel], **kwargs: Any) -> None:
     try:
-        model = model_class.get(pk=pk)
+        model = model_class.get(**kwargs)
         model._storage.delete_object(model=model)
     except model_class.DoesNotExist:
         pass
