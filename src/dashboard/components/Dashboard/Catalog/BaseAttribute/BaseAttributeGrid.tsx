@@ -14,6 +14,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteIcon from "@mui/icons-material/Delete";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import {
   DataGrid,
   GridRowsProp,
@@ -26,6 +27,7 @@ import {
   GridRowId,
   GridRowParams,
   MuiEvent,
+  GridCellParams,
 } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
@@ -37,11 +39,17 @@ import {
   putBaseAttribute,
 } from "@/api/product/attributes";
 // types
-import { IBaseAttribute, IBaseAttributePostRequest } from "@/types/product";
+import {
+  IBaseAttribute,
+  IBaseAttributePostRequest,
+  TAttributeTypeValueType,
+} from "@/types/product";
+import Tooltip from "@mui/material/Tooltip";
 
 interface IBaseAttributeTable extends IBaseAttribute {
   id: number;
   isNew: boolean;
+  valid: boolean;
 }
 
 interface EditToolbarProps {
@@ -79,11 +87,31 @@ const EditToolbar = (props: EditToolbarProps) => {
 interface IBaseAttributeGridProps {
   attributeTypeId: number | undefined;
   baseAttributes: IBaseAttribute[];
+  attribtueTypeValueType: TAttributeTypeValueType;
   setState: (data: IBaseAttribute[]) => void;
 }
 
+const validateValueAgainstValueType = (
+  value: string,
+  valueType: TAttributeTypeValueType
+) => {
+  let valid = false;
+  switch (valueType) {
+    case "INTEGER":
+      valid = Number.isInteger(Number(value));
+      console.log("valid integer?", valid, value, Number(value));
+      break;
+    case "DECIMAL":
+      valid = !Number.isNaN(value);
+      break;
+    default:
+      valid = true;
+  }
+  return valid;
+};
 const BaseAttributeGrid = ({
   attributeTypeId,
+  attribtueTypeValueType,
   baseAttributes,
   setState,
 }: IBaseAttributeGridProps) => {
@@ -95,6 +123,7 @@ const BaseAttributeGrid = ({
         ...row,
         id: row.id as number,
         isNew: false,
+        valid: true,
       }))
   );
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
@@ -115,6 +144,22 @@ const BaseAttributeGrid = ({
         severity: "error",
       });
       throw new Error("Value is required");
+    }
+
+    // check attribute type value type
+    const valid = validateValueAgainstValueType(
+      newRow.value,
+      attribtueTypeValueType
+    );
+    if (!valid) {
+      setSnackbar({
+        open: true,
+        message: `Value is not valid for this value type ${attribtueTypeValueType.toLowerCase()}`,
+        severity: "error",
+      });
+      throw new Error(
+        `Value is not valid for this value type ${attribtueTypeValueType}`
+      );
     }
 
     const updatedRow = { ...newRow, isNew: false };
@@ -247,6 +292,34 @@ const BaseAttributeGrid = ({
       sortable: false,
       disableColumnMenu: true,
     },
+    // {
+    //   field: "valid",
+    //   headerName: "Valid type",
+    //   width: 125,
+    //   minWidth: 150,
+    //   maxWidth: 200,
+    //   sortable: false,
+    //   disableColumnMenu: true,
+    //   renderCell: (params: GridCellParams) => {
+    //     // const { valid } = params.row;
+    //     const valid = validateValueAgainstValueType(
+    //       params.row.value,
+    //       attribtueTypeValueType
+    //     );
+    //     console.log("valid", valid, params.row.value, attribtueTypeValueType);
+    //     return valid ? (
+    //       <Tooltip title={"Value has correct type."}>
+    //         <CheckCircleIcon className="textSuccess" />
+    //       </Tooltip>
+    //     ) : (
+    //       <Tooltip
+    //         title={`Value has incorrect type. Please provide value with type ${attribtueTypeValueType.toLowerCase()}`}
+    //       >
+    //         <CancelIcon className="textError" />
+    //       </Tooltip>
+    //     );
+    //   },
+    // },
     {
       field: "actions",
       type: "actions",

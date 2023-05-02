@@ -98,10 +98,13 @@ export interface IBaseAttribute extends IBaseAttributePostRequest {
   id: number;
 }
 
+export type TAttributeTypeValueType = "TEXT" | "INTEGER" | "DECIMAL";
+
 export interface IAttributeTypePostRequest {
   id?: number;
   type_name: string;
   unit?: string;
+  value_type?: TAttributeTypeValueType;
   base_attributes: IBaseAttribute[];
 }
 
