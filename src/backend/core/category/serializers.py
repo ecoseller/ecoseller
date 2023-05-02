@@ -57,19 +57,18 @@ class CategoryRecursiveStorefrontSerializer(TranslatedSerializerMixin, ModelSeri
         )
 
 
-class CategoryDetailStorefrontSerializer(TranslatableModelSerializer, ModelSerializer):
+class CategoryDetailStorefrontSerializer(CategoryRecursiveStorefrontSerializer):
     """
     Serializer returning detailed data about category for storefront.
-    Language specific data are present in all languages (in `translations` field).
+    Only one translation is returned (see TranslatedSerializerMixin)
     """
-
-    translations = TranslatedFieldsField(shared_model=Category)
-
-    # children = PrimaryKeyRelatedField(many=True, required=False, source="published_children")
 
     class Meta:
         model = Category
-        fields = ("id", "translations", "parent")
+        fields = CategoryRecursiveStorefrontSerializer.Meta.fields + (
+            "description",
+            "meta_description",
+        )
 
 
 class CategoryRecursiveDashboardSerializer(CategoryRecursiveStorefrontSerializer):
@@ -98,6 +97,7 @@ class CategoryDetailDashboardSerializer(TranslatableModelSerializer, ModelSerial
     class Meta:
         model = Category
         fields = ("id", "published", "translations", "update_at", "create_at", "parent")
+
 
 # class CategoryWithChildrenSerializer(TranslatedSerializerMixin, ModelSerializer):
 #     """

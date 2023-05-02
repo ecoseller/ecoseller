@@ -88,14 +88,25 @@ class CategoryStorefrontView(APIView):
 
 
 @permission_classes([AllowAny])
-class CategoryDetailStorefrontView(RetrieveAPIView):
+class CategoryDetailStorefrontView(APIView):
     """
     View for getting categories.
     Used for storefront.
     """
 
-    queryset = Category.objects.filter(published=True)
-    serializer_class = CategoryDetailStorefrontSerializer
+    def get(self, request, pk):
+        """
+        Gets all published categories for storefront.
+        Language-specific data are returned only in the selected language (set in `Accept-Language` header).
+        If this header isn't present, Django app language is used instead.
+        """
+        category = Category.objects.get(
+            id=pk, published=True
+        )
+        serializer = CategoryDetailStorefrontSerializer(
+            category, context={"request": request}
+        )
+        return Response(serializer.data)
 
 # @permission_classes([AllowAny])  # TODO: use authentication
 # class CategoryChildrenViewDashboard(APIView):
