@@ -6,7 +6,7 @@ from rest_framework.generics import (
 )
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
+from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 from rest_framework.views import APIView
 
 from category.models import Category
@@ -101,17 +101,20 @@ class CategoryDetailStorefrontView(APIView):
         Language-specific data are returned only in the selected language (set in `Accept-Language` header).
         If this header isn't present, Django app language is used instead.
         """
-        category = Category.objects.get(id=pk, published=True)
-        serializer = CategoryDetailStorefrontSerializer(
-            category, context={"request": request}
-        )
-        return Response(serializer.data)
+        try:
+            category = Category.objects.get(id=pk, published=True)
+            serializer = CategoryDetailStorefrontSerializer(
+                category, context={"request": request}
+            )
+            return Response(serializer.data)
+        except Category.DoesNotExist:
+            return Response(status=HTTP_404_NOT_FOUND)
 
 
 @permission_classes([AllowAny])
 class CategoryDetailProductsStorefrontView(APIView):
     """
-    View for all products in given category.
+    View for getting all products in the given category.
     Used for storefront.
     """
 
@@ -126,7 +129,6 @@ class CategoryDetailProductsStorefrontView(APIView):
             category, context={"request": request}
         )
         return Response(serializer.data)
-
 
 # @permission_classes([AllowAny])  # TODO: use authentication
 # class CategoryChildrenViewDashboard(APIView):
