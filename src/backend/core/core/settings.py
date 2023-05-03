@@ -218,3 +218,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "user.User"
 
 RS_URL = os.environ.get("RS_URL", "")
+RS_ENABLED = os.environ.get("RS_ENABLED", "TRUE").upper() == "TRUE"
