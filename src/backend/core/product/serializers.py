@@ -21,6 +21,7 @@ from django.db.models import (
 
 from category.serializers import (
     CategorySerializer,
+    CategoryMinimalSerializer,
 )
 from country.serializers import (
     CurrencySerializer,
@@ -572,14 +573,14 @@ class ProductStorefrontDetailSerializer(TranslatedSerializerMixin, ModelSerializ
     product_variants = ProductVariantStorefrontDetailSerializer(
         many=True, read_only=True
     )
-    category = CategorySerializer(read_only=True)
+    breadcrumbs = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
         fields = (
             "id",
             "published",
-            "category",
+            "breadcrumbs",
             "title",
             "meta_title",
             "meta_description",
@@ -589,6 +590,15 @@ class ProductStorefrontDetailSerializer(TranslatedSerializerMixin, ModelSerializ
             "slug",
             "product_variants",
         )
+
+    def get_breadcrumbs(self, obj):
+        breadcrumbs = []
+        if obj.category:
+            breadcrumbs = obj.category.get_ancestors(include_self=True)
+        serializer = CategoryMinimalSerializer(
+            breadcrumbs, many=True, context=self.context
+        ).data
+        return serializer
 
 
 class ProductStorefrontListSerializer(TranslatedSerializerMixin, ModelSerializer):

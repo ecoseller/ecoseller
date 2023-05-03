@@ -129,3 +129,13 @@ class CategoryDetailDashboardSerializer(TranslatableModelSerializer, ModelSerial
 #         return [
 #             CategoryDetailSerializer(child).data for child in obj.published_children
 #         ]
+
+
+class CategoryMinimalSerializer(TranslatedSerializerMixin, ModelSerializer):
+    """
+    Minimal serializer for Category model.
+    """
+
+    class Meta:
+        model = Category
+        fields = ("id", "title", "slug")
