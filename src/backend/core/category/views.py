@@ -130,12 +130,13 @@ class CategoryDetailProductsStorefrontView(APIView):
             category = Category.objects.get(id=pk, published=True)
             products = _get_all_published_products(category)
 
-            serializer = ProductStorefrontListSerializer(
-                products, many=True, context={"request": request}
-            )
+            pricelist = self._get_pricelist(request)
 
-            pl = self._get_pricelist(request)
-            p = _get_prices(products[0], pl)
+            serializer = ProductStorefrontListSerializer(
+                products,
+                many=True,
+                context={"request": request, "price_list": pricelist},
+            )
 
             return Response(serializer.data)
         except Category.DoesNotExist:
