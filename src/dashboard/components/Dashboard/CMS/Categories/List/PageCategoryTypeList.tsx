@@ -275,7 +275,7 @@ const PageCategoryTypeList = ({ types }: IPageTypeListProps) => {
         rows={rows}
         columns={columns}
         density={"compact"}
-        editMode={"cell"}
+        editMode={"row"}
         hideFooter={true}
         autoHeight={true}
         rowModesModel={rowModesModel}

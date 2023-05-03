@@ -242,10 +242,6 @@ const ProductVariantsEditor = ({
           disableColumnMenu: true,
           type: "singleSelect",
           valueOptions: [
-            {
-              value: null,
-              label: "",
-            },
             ...(attribute?.base_attributes?.map((value: IBaseAttribute) => ({
               value: value.id,
               label:
@@ -362,8 +358,8 @@ const ProductVariantsEditor = ({
       return;
     }
 
-    router.push(`/products/variants/${row.sku}`);
-    // setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+    // router.push(`/products/variants/${row.sku}`);
+    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
 
   const handleSaveClick = (id: GridRowId) => () => {
@@ -454,7 +450,7 @@ const ProductVariantsEditor = ({
             rows={rows}
             columns={columns}
             density={"compact"}
-            editMode={"cell"}
+            editMode={"row"}
             hideFooter={true}
             autoHeight={true}
             rowModesModel={rowModesModel}
