@@ -28,6 +28,9 @@ const nextConfig = {
     apiUrl: process.env.NEXT_PUBLIC_BACKEND_API || "http://localhost:8000",
   },
   // output: "standalone",
+  images: {
+    domains: ["127.0.0.1"],
+  },
 };
 
 module.exports = nextConfig;
