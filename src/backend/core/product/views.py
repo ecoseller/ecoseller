@@ -18,6 +18,7 @@ from .models import (
 )
 from .serializers import (
     ProductDashboardSerializer,
+    ProductStorefrontDetailSerializer,
     ProductDashboardListSerializer,
     ProductDashboardDetailSerializer,
     PriceListBaseSerializer,
@@ -285,11 +286,15 @@ class ProductDetailStorefront(APIView):
 
     def get(self, request, pk):
         try:
-            product = Product.objects.get(pk=pk)
+            product = Product.objects.get(pk=pk, published=True)
         except Product.DoesNotExist:
             return Response({"error": "Product does not exist"}, status=404)
 
-        serialized_product = ProductDashboardSerializer(product)
+        pricelist = self.get_pricelist(request)
+
+        serialized_product = ProductStorefrontDetailSerializer(
+            product, context={"request": request, "pricelist": pricelist}
+        )
         return Response(serialized_product.data, status=200)
 
 

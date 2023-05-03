@@ -519,6 +519,78 @@ class ProductDashboardSerializer(TranslatedSerializerMixin, ModelSerializer):
         )
 
 
+class AttributeTypeStorefrontSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AttributeType
+        fields = (
+            "id",
+            "type_name",
+            "unit",
+        )
+
+
+class BaseAttributeStorefrontSerializer(serializers.ModelSerializer):
+    type = AttributeTypeStorefrontSerializer(read_only=True)
+
+    class Meta:
+        model = BaseAttribute
+        fields = (
+            "id",
+            "order",
+            "value",
+            "type",
+        )
+
+
+class ProductVariantStorefrontDetailSerializer(ProductVariantSerializer):
+    price = serializers.SerializerMethodField()
+    attributes = BaseAttributeStorefrontSerializer(many=True, read_only=True)
+
+    def get_price(self, obj):
+        print("GET PRICE", obj, self.context)
+        if not "pricelist" in self.context:
+            return None
+        try:
+            price = ProductPrice.objects.get(
+                product_variant=obj, price_list=self.context["pricelist"]
+            )
+        except ProductPrice.DoesNotExist:
+            return None
+        # price_serializer = ProductPriceSerializer(price)
+        formatted_price = self.context["pricelist"].format_price(price.price)
+        return formatted_price  # price_serializer.data
+
+
+class ProductStorefrontDetailSerializer(TranslatedSerializerMixin, ModelSerializer):
+    """
+    Basic Product model serializer (see product/models.py) used for dashboard
+    retrieving all fields defined in the model with nested list of product variants
+    and category.
+    Only one translation is returned (see TranslatedSerializerMixin)
+    """
+
+    product_variants = ProductVariantStorefrontDetailSerializer(
+        many=True, read_only=True
+    )
+    category = CategorySerializer(read_only=True)
+
+    class Meta:
+        model = Product
+        fields = (
+            "id",
+            "published",
+            "category",
+            "title",
+            "meta_title",
+            "meta_description",
+            "short_description",
+            "description",
+            "description_editorjs",
+            "slug",
+            "product_variants",
+        )
+
+
 class ProductStorefrontListSerializer(TranslatedSerializerMixin, ModelSerializer):
     """
     Product serializer used for storefront when listing products
