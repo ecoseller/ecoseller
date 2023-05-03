@@ -34,6 +34,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { randomId } from "@mui/x-data-grid-generator";
 import { Alert, Snackbar } from "@mui/material";
+import ClickAwayListener from "@mui/base/ClickAwayListener";
 // types
 import { ICurrency, IPriceList } from "@/types/localization";
 import {
@@ -41,6 +42,7 @@ import {
   postPriceList,
   putPriceList,
 } from "@/api/country/product/priceList";
+
 interface IPriceListTable extends IPriceList {
   isNew?: boolean;
   id: string;
@@ -146,7 +148,6 @@ const DashboardPriceListsPage = () => {
       field: "currency",
       headerName: "Currency",
       editable: true,
-      flex: 1,
       type: "singleSelect",
       valueOptions: currencies?.map((currency) => ({
         label: currency.symbol,
@@ -156,6 +157,15 @@ const DashboardPriceListsPage = () => {
     {
       field: "rounding",
       headerName: "Rounding",
+      editable: true,
+      flex: 1,
+      sortable: false,
+      disableColumnMenu: true,
+      type: "boolean",
+    },
+    {
+      field: "is_default",
+      headerName: "Is default",
       editable: true,
       flex: 1,
       sortable: false,
@@ -317,6 +327,23 @@ const DashboardPriceListsPage = () => {
       throw new Error("Code already exists");
     }
 
+    // check if there's a duplicate default
+    // if yes, show error
+    // if no, save row
+    const isDuplicateDefault = rows.some(
+      (row) =>
+        row.is_default === updatedRow.is_default && row.id !== updatedRow.id
+    );
+
+    if (isDuplicateDefault) {
+      setSnackbar({
+        open: true,
+        message: "Default already exists",
+        severity: "error",
+      });
+      throw new Error("Default already exists");
+    }
+
     // POST or PUT
     if (updatedRow && !postNew) {
       // update currency
@@ -392,7 +419,7 @@ const DashboardPriceListsPage = () => {
             rows={rows}
             columns={columns}
             density={"compact"}
-            editMode={"cell"}
+            editMode={"row"} //<-- changing this from "cell" to "row" made the edit mode finally properly work and not trigger every single select...
             hideFooter={true}
             autoHeight={true}
             rowModesModel={rowModesModel}

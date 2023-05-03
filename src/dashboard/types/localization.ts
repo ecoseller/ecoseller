@@ -11,6 +11,7 @@ export interface ICurrency {
 export interface IPriceList {
   code: string;
   currency: number;
+  is_default: boolean;
   rounding: boolean;
   includes_vat: boolean;
   update_at: string;

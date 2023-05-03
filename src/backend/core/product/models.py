@@ -347,6 +347,7 @@ class PriceList(models.Model):
     code = models.CharField(
         max_length=200, blank=False, null=False, unique=True, primary_key=True
     )
+    is_default = models.BooleanField(default=False, unique=True)
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
     rounding = models.BooleanField(default=False)
     includes_vat = models.BooleanField(
