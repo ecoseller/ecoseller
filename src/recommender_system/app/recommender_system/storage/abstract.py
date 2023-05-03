@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Type, TYPE_CHECKING
+from typing import Any, Dict, List, Optional, Tuple, Type, TYPE_CHECKING
 
 from recommender_system.models.stored.base import StoredBaseModel
 from recommender_system.models.stored.many_to_many_relation import (
@@ -124,6 +124,10 @@ class AbstractStorage(ABC):
         raise NotImplementedError()
 
     @abstractmethod
+    def get_product_variant_popularities(self, pks: List[str]) -> List[Tuple[str, int]]:
+        raise NotImplementedError
+
+    @abstractmethod
     def get_raw_attribute_values(self, attribute_type_id: int) -> List[str]:
         raise NotImplementedError()
 
@@ -135,6 +139,16 @@ class AbstractStorage(ABC):
     def get_product_variant_attribute_values(
         self, attribute_type_id: int, attribute_type_type: "AttributeTypeModel.Type"
     ) -> Dict[str, Optional[Any]]:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def get_product_variant_pks_in_category(self, category_id: int) -> List[str]:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def get_closest_product_variant_pks(
+        self, to: str, limit: Optional[int], **kwargs: Any
+    ) -> List[str]:
         raise NotImplementedError()
 
     @abstractmethod

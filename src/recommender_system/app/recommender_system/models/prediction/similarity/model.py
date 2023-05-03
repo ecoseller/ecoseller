@@ -1,3 +1,4 @@
+import random
 from typing import List, Optional
 
 from dependency_injector.wiring import inject, Provide
@@ -52,12 +53,73 @@ class SimilarityPredictionModel(AbstractPredictionModel):
             distances=distances, product_variant_skus=train_data.product_variant_skus
         )
 
+    def retrieve_homepage(self, session_id: str, user_id: Optional[int]) -> List[str]:
+        raise TypeError(
+            f"{self.__class__.__name__} can not perform retrieval for homepage recommendations."
+        )
+
     @inject
-    def predict(
+    def retrieve_product_detail(
         self,
         session_id: str,
         user_id: Optional[int],
-        variants: Optional[List[str]] = None,
-        storage: AbstractStorage = Provide["product_storage"],
+        variant: str,
+        similarity_storage: AbstractStorage = Provide["similarity_storage"],
     ) -> List[str]:
-        raise NotImplementedError()
+        return similarity_storage.get_closest_product_variant_pks(
+            to=variant, limit=1000
+        )
+
+    @inject
+    def retrieve_cart(
+        self,
+        session_id: str,
+        user_id: Optional[int],
+        variants_in_cart: List[str],
+        similarity_storage: AbstractStorage = Provide["similarity_storage"],
+    ) -> List[str]:
+        # TODO: Check if there are variants in cart in model manager
+        return similarity_storage.get_closest_product_variant_pks(
+            to=random.choice(variants_in_cart), limit=1000
+        )
+
+    def score_homepage(
+        self, session_id: str, user_id: Optional[int], variants: List[str]
+    ) -> List[str]:
+        raise TypeError(
+            f"{self.__class__.__name__} can not perform scoring for homepage recommendations."
+        )
+
+    def score_category_list(
+        self, session_id: str, user_id: Optional[int], variants: List[str]
+    ) -> List[str]:
+        raise TypeError(
+            f"{self.__class__.__name__} can not perform scoring for category list recommendations."
+        )
+
+    @inject
+    def score_product_detail(
+        self,
+        session_id: str,
+        user_id: Optional[int],
+        variants: List[str],
+        variant: str,
+        similarity_storage: AbstractStorage = Provide["similarity_storage"],
+    ) -> List[str]:
+        return similarity_storage.get_closest_product_variant_pks(
+            to=variant, limit=1000, pks=variants
+        )
+
+    @inject
+    def score_cart(
+        self,
+        session_id: str,
+        user_id: Optional[int],
+        variants: List[str],
+        variants_in_cart: List[str],
+        similarity_storage: AbstractStorage = Provide["similarity_storage"],
+    ) -> List[str]:
+        # TODO: Check if there are variants in cart in model manager
+        return similarity_storage.get_closest_product_variant_pks(
+            to=random.choice(variants_in_cart), limit=1000, pks=variants
+        )

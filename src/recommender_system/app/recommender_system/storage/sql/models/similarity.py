@@ -1,5 +1,6 @@
-from sqlalchemy.sql.schema import Column
+from sqlalchemy.sql.schema import Column, Index
 from sqlalchemy.sql.sqltypes import (
+    DECIMAL,
     Integer,
     String,
 )
@@ -20,8 +21,11 @@ class SQLDistance(SimilarityBase):
     id = Column(Integer(), primary_key=True)
     lhs = Column(String(255), nullable=False)
     rhs = Column(String(255), nullable=False)
+    distance = Column(DECIMAL(), nullable=False)
 
     __tablename__ = "distance"
+
+    __table_args__ = (Index("distance_distance_idx", distance),)
 
     class Meta:
         origin_model = DistanceModel
