@@ -528,16 +528,39 @@ class ProductStorefrontListSerializer(TranslatedSerializerMixin, ModelSerializer
         read_only=True, many=False, source="get_primary_photo"
     )
 
-    variant_prices = serializers.SerializerMethodField()
+    price = serializers.SerializerMethodField()
+    has_multiple_prices = serializers.SerializerMethodField()
 
-    def get_variant_prices(self, product):
+    def _get_variant_prices(self, product):
+        """
+        Get all product variants prices of the given product.
+        Price list is taken from self.context.
+        """
         price_list = self.context.get("price_list")
         variants = product.product_variants.all()
 
-        variant_prices = ProductPrice.objects.filter(
+        return ProductPrice.objects.filter(
             product_variant__in=variants, price_list=price_list
         )
-        return [p.formatted_price for p in variant_prices]
+
+    def _get_cheapest_variant(self, product):
+        """
+        Return the cheapest variant of the given product, or None if there are no variants.
+        Price list is taken from self.context.
+        """
+        variant_prices = self._get_variant_prices(product)
+        return variant_prices.order_by("price").first()
+
+    def get_price(self, product):
+        cheapest_variant = self._get_cheapest_variant(product)
+        return cheapest_variant.formatted_price if cheapest_variant is not None else None
+
+    def get_has_multiple_prices(self, product):
+        cheapest_variant = self._get_cheapest_variant(product)
+        if cheapest_variant is None:
+            return False
+        else:
+            return self._get_variant_prices(product).filter(price__gt=cheapest_variant.price).exists()
 
     class Meta:
         model = Product
@@ -548,5 +571,6 @@ class ProductStorefrontListSerializer(TranslatedSerializerMixin, ModelSerializer
             "meta_description",
             "slug",
             "primary_image",
-            "variant_prices",
+            "price",
+            "has_multiple_prices"
         )

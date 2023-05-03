@@ -154,14 +154,6 @@ class CategoryDetailProductsStorefrontView(APIView):
             return PriceList.objects.get(is_default=True)
 
 
-def _get_prices(product, price_list):
-    return [
-        p.formatted_price
-        for v in product.product_variants.all()
-        for p in v.price.filter(price_list=price_list)
-    ]
-
-
 def _get_all_subcategory_ids(category):
     """
     Get IDs of all subcategories (including recursive) under the given category
