@@ -267,9 +267,20 @@ Storefront views
 class ProductDetailStorefront(APIView):
     permission_classes = (permissions.AllowAny,)
 
-    def get(self, request, id):
+    def resolve_pricelist(self, request):
+        # get price list from request params or default to the default one
+        price_list_code = request.query_params.get("price_list", None)
+        if price_list_code:
+            try:
+                return PriceList.objects.get(code=price_list_code)
+            except PriceList.DoesNotExist:
+                return PriceList.objects.get(is_default=True)
+        else:
+            return PriceList.objects.get(is_default=True)
+
+    def get(self, request, pk):
         try:
-            product = Product.objects.get(id=id)
+            product = Product.objects.get(pk=pk)
         except Product.DoesNotExist:
             return Response({"error": "Product does not exist"}, status=404)
 
