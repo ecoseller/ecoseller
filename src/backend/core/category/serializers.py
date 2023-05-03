@@ -104,6 +104,7 @@ class CategoryDetailDashboardSerializer(TranslatableModelSerializer, ModelSerial
         model = Category
         fields = ("id", "published", "translations", "update_at", "create_at", "parent")
 
+
 # class CategoryWithChildrenSerializer(TranslatedSerializerMixin, ModelSerializer):
 #     """
 #     Extension of CategoryDetailSerializer with children field.

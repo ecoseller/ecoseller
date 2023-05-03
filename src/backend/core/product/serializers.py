@@ -382,7 +382,9 @@ class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSeriali
         many=True, read_only=False, required=False
     )
     id = CharField(required=False, read_only=True)  # for update
-    media = ProductMediaDetailsSerializer(many=True, source="product_media", read_only=True)
+    media = ProductMediaDetailsSerializer(
+        many=True, source="product_media", read_only=True
+    )
     type_id = PrimaryKeyRelatedField(
         required=False, write_only=True, queryset=ProductType.objects.all()
     )  # for update
@@ -526,6 +528,10 @@ class ProductStorefrontListSerializer(TranslatedSerializerMixin, ModelSerializer
         read_only=True, many=False, source="get_primary_photo"
     )
 
+    product_variants = ProductVariantSerializer(
+        many=True, read_only=False, required=False
+    )
+
     class Meta:
         model = Product
         fields = (
@@ -535,4 +541,5 @@ class ProductStorefrontListSerializer(TranslatedSerializerMixin, ModelSerializer
             "meta_description",
             "slug",
             "primary_image",
+            "product_variants",
         )

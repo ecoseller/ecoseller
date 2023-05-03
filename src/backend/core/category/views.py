@@ -19,7 +19,7 @@ from category.serializers import (
     CategoryRecursiveStorefrontSerializer,
     CategoryDetailStorefrontSerializer,
 )
-from product.models import Product
+from product.models import Product, ProductVariant, PriceList
 from product.serializers import ProductStorefrontListSerializer
 
 
@@ -123,6 +123,8 @@ class CategoryDetailProductsStorefrontView(APIView):
     Used for storefront.
     """
 
+    PRICE_LIST_URL_PARAM = "price_list"
+
     def get(self, request, pk):
         try:
             category = Category.objects.get(id=pk, published=True)
@@ -132,14 +134,36 @@ class CategoryDetailProductsStorefrontView(APIView):
                 products, many=True, context={"request": request}
             )
 
+            pl = self._get_pricelist(request)
+            p = _get_prices(products[0], pl)
+
             return Response(serializer.data)
         except Category.DoesNotExist:
             return Response(status=HTTP_404_NOT_FOUND)
 
+    def _get_pricelist(self, request):
+        # get price list from request params or default to the default one
+        price_list_code = request.query_params.get(self.PRICE_LIST_URL_PARAM, None)
+        if price_list_code:
+            try:
+                return PriceList.objects.get(code=price_list_code)
+            except PriceList.DoesNotExist:
+                return PriceList.objects.get(is_default=True)
+        else:
+            return PriceList.objects.get(is_default=True)
+
+
+def _get_prices(product, price_list):
+    return [
+        p.formatted_price
+        for v in product.product_variants.all()
+        for p in v.price.filter(price_list=price_list)
+    ]
+
 
 def _get_all_subcategory_ids(category):
     """
-    Get IDs of all subcategories (including recursively) under the given category
+    Get IDs of all subcategories (including recursive) under the given category
     """
     children = category.published_children
     return [category.id] + [id for c in children for id in _get_all_subcategory_ids(c)]
