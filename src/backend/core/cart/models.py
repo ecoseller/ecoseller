@@ -2,7 +2,7 @@ from django.db import models
 from country.models import (
     Country,
 )
-from product.models import Product, ProductVariant
+from product.models import ProductVariant
 
 
 class Cart(models.Model):

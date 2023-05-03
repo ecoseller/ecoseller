@@ -6,20 +6,20 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cart', '0001_initial'),
+        ("cart", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='cartitem',
-            name='create_at',
+            model_name="cartitem",
+            name="create_at",
         ),
         migrations.RemoveField(
-            model_name='cartitem',
-            name='product',
+            model_name="cartitem",
+            name="product",
         ),
         migrations.RemoveField(
-            model_name='cartitem',
-            name='update_at',
+            model_name="cartitem",
+            name="update_at",
         ),
     ]

@@ -3,5 +3,5 @@ from . import views
 
 
 urlpatterns = [
-    path("<str:pk>/", views.CartDetailStorefrontView.as_view()),
+    path("<str:token>/", views.CartDetailStorefrontView.as_view()),
 ]

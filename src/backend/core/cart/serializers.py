@@ -1,5 +1,8 @@
 from rest_framework.serializers import (
     ModelSerializer,
+    Serializer,
+    CharField,
+    IntegerField,
 )
 from cart.models import (
     Cart,
@@ -45,3 +48,17 @@ class CartSerializer(ModelSerializer):
             "create_at",
             "cart_items",
         )
+
+
+class CartItemUpdateCountSerializer(Serializer):
+
+    sku = CharField()
+    quantity = IntegerField(min_value=1)
+
+    def create(self, validated_data):
+        return CartItemUpdateInfo(validated_data["sku"], validated_data["quantity"])
+
+
+class CartItemUpdateInfo:
+    def __init__(self, sku, quantity):
+        self.sku, self.quantity = sku, quantity
