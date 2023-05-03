@@ -50,15 +50,18 @@ class CartSerializer(ModelSerializer):
         )
 
 
-class CartItemUpdateCountSerializer(Serializer):
+class CartItemUpdateSerializer(Serializer):
+    """
+    Serializer used for updating cart items
+    """
 
     sku = CharField()
     quantity = IntegerField(min_value=1)
 
     def create(self, validated_data):
-        return CartItemUpdateInfo(validated_data["sku"], validated_data["quantity"])
+        return CartItemUpdateData(validated_data["sku"], validated_data["quantity"])
 
 
-class CartItemUpdateInfo:
+class CartItemUpdateData:
     def __init__(self, sku, quantity):
         self.sku, self.quantity = sku, quantity
