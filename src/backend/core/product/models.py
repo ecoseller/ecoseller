@@ -12,6 +12,7 @@ from category.models import (
 from country.models import (
     Currency,
 )
+from django.forms import ValidationError as FormValidationError
 
 
 class ProductVariant(models.Model):
@@ -347,7 +348,7 @@ class PriceList(models.Model):
     code = models.CharField(
         max_length=200, blank=False, null=False, unique=True, primary_key=True
     )
-    is_default = models.BooleanField(default=False, unique=True)
+    is_default = models.BooleanField(default=False)
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
     rounding = models.BooleanField(default=False)
     includes_vat = models.BooleanField(
@@ -356,6 +357,13 @@ class PriceList(models.Model):
 
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
+
+    # custom save method which will ensure that only one pricelist is default
+    def save(self, *args, **kwargs):
+        if self.is_default and len(PriceList.objects.filter(is_default=True)) > 0:
+            raise FormValidationError("Only one pricelist can be default")
+
+        super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return "{} ({})".format(self.code, self.currency)
