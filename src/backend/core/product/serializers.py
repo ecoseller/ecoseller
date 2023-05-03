@@ -518,12 +518,6 @@ class ProductDashboardSerializer(TranslatedSerializerMixin, ModelSerializer):
         )
 
 
-class ProductPriceStorefrontListSerializer(ModelSerializer):
-    class Meta:
-        model = ProductPrice
-        fields = ("formatted_price",)
-
-
 class ProductStorefrontListSerializer(TranslatedSerializerMixin, ModelSerializer):
     """
     Product serializer used for storefront when listing products
@@ -538,14 +532,12 @@ class ProductStorefrontListSerializer(TranslatedSerializerMixin, ModelSerializer
 
     def get_variant_prices(self, product):
         price_list = self.context.get("price_list")
+        variants = product.product_variants.all()
 
-        variant_prices = [
-            price
-            for variant in product.product_variants.all()
-            for price in variant.price.filter(price_list=price_list)
-        ]
-        serializer = ProductPriceStorefrontListSerializer(variant_prices, many=True)
-        return serializer.data
+        variant_prices = ProductPrice.objects.filter(
+            product_variant__in=variants, price_list=price_list
+        )
+        return [p.formatted_price for p in variant_prices]
 
     class Meta:
         model = Product
