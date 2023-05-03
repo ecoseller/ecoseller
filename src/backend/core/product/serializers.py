@@ -77,6 +77,7 @@ class PriceListBaseSerializer(ModelSerializer):
         fields = (
             "code",
             "currency",
+            "is_default",
             "rounding",
             "includes_vat",
             "update_at",
