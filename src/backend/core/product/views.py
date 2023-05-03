@@ -17,14 +17,14 @@ from .models import (
     ProductType,
 )
 from .serializers import (
-    ProductSerializer,
+    ProductDashboardSerializer,
     ProductDashboardListSerializer,
     ProductDashboardDetailSerializer,
     PriceListBaseSerializer,
     AtrributeTypeDashboardSerializer,
     BaseAttributeDashboardSerializer,
     ProductVariantSerializer,
-    ProductMediaSerializer,
+    ProductMediaDetailsSerializer,
     ProductTypeSerializer,
 )
 
@@ -273,7 +273,7 @@ class ProductDetailStorefront(APIView):
         except Product.DoesNotExist:
             return Response({"error": "Product does not exist"}, status=404)
 
-        serialized_product = ProductSerializer(product)
+        serialized_product = ProductDashboardSerializer(product)
         return Response(serialized_product.data, status=200)
 
 
@@ -281,7 +281,7 @@ class ProductMediaUpload(GenericAPIView):
     allowed_methods = ["POST"]
     permission_classes = (permissions.AllowAny,)
     parser_classes = (MultiPartParser, FormParser)
-    serializer_class = ProductMediaSerializer
+    serializer_class = ProductMediaDetailsSerializer
 
     def post(self, request, *args, **kwargs):
         product_media_serializer = self.serializer_class(
@@ -297,7 +297,7 @@ class ProductMediaUpload(GenericAPIView):
 class ProductMediaUploadDetailView(RetrieveUpdateDestroyAPIView):
     allowed_methods = ["GET", "PUT", "DELETE"]
     permission_classes = (permissions.AllowAny,)
-    serializer_class = ProductMediaSerializer
+    serializer_class = ProductMediaDetailsSerializer
     lookup_field = "id"
     lookup_url_kwarg = "id"
 

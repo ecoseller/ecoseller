@@ -19,7 +19,6 @@ from django.db.models import (
     Max,
 )
 
-
 from category.serializers import (
     CategorySerializer,
 )
@@ -39,14 +38,26 @@ from product.models import (
     ProductType,
 )
 
-
 """
 Common serializers
 """
 
 
-class ProductMediaSerializer(ModelSerializer):
+class ProductMediaBaseSerializer(ModelSerializer):
     media = serializers.ImageField(required=False, use_url=True)
+    type = serializers.ChoiceField(choices=ProductMediaTypes.CHOICES, required=False)
+
+    class Meta:
+        model = ProductMedia
+        fields = (
+            "id",
+            "media",
+            "type",
+            "alt",
+        )
+
+
+class ProductMediaDetailsSerializer(ProductMediaBaseSerializer):
     # product_id = serializers.ReadOnlyField(source="product.id")
     product_id = serializers.PrimaryKeyRelatedField(
         many=False,
@@ -55,17 +66,12 @@ class ProductMediaSerializer(ModelSerializer):
         required=False,
         # write_only=True,
     )
-    type = serializers.ChoiceField(choices=ProductMediaTypes.CHOICES, required=False)
     sort_order = serializers.IntegerField(required=False)
 
-    class Meta:
+    class Meta(ProductMediaBaseSerializer.Meta):
         model = ProductMedia
         order_by = ["sort_order"]
-        fields = (
-            "id",
-            "media",
-            "type",
-            "alt",
+        fields = ProductMediaBaseSerializer.Meta.fields + (
             "product_id",
             "sort_order",
         )
@@ -354,7 +360,7 @@ class ProductDashboardListSerializer(TranslatedSerializerMixin, ModelSerializer)
     returns product fields for dashboard
     """
 
-    primary_image = ProductMediaSerializer(
+    primary_image = ProductMediaDetailsSerializer(
         read_only=True, many=False, source="get_primary_photo"
     )
 
@@ -377,7 +383,9 @@ class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSeriali
         many=True, read_only=False, required=False
     )
     id = CharField(required=False, read_only=True)  # for update
-    media = ProductMediaSerializer(many=True, source="product_media", read_only=True)
+    media = ProductMediaDetailsSerializer(
+        many=True, source="product_media", read_only=True
+    )
     type_id = PrimaryKeyRelatedField(
         required=False, write_only=True, queryset=ProductType.objects.all()
     )  # for update
@@ -483,9 +491,9 @@ class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSeriali
         return instance
 
 
-class ProductSerializer(TranslatedSerializerMixin, ModelSerializer):
+class ProductDashboardSerializer(TranslatedSerializerMixin, ModelSerializer):
     """
-    Basic Product model serializer (see product/models.py)
+    Basic Product model serializer (see product/models.py) used for dashboard
     retrieving all fields defined in the model with nested list of product variants
     and category.
     Only one translation is returned (see TranslatedSerializerMixin)
@@ -508,4 +516,68 @@ class ProductSerializer(TranslatedSerializerMixin, ModelSerializer):
             "description_editorjs",
             "slug",
             "product_variants",
+        )
+
+
+class ProductStorefrontListSerializer(TranslatedSerializerMixin, ModelSerializer):
+    """
+    Product serializer used for storefront when listing products
+    Only one translation is returned (see TranslatedSerializerMixin)
+    """
+
+    primary_image = ProductMediaBaseSerializer(
+        read_only=True, many=False, source="get_primary_photo"
+    )
+
+    price = serializers.SerializerMethodField()
+    has_multiple_prices = serializers.SerializerMethodField()
+
+    def _get_variant_prices(self, product):
+        """
+        Get all product variants prices of the given product.
+        Price list is taken from self.context.
+        """
+        price_list = self.context.get("price_list")
+        variants = product.product_variants.all()
+
+        return ProductPrice.objects.filter(
+            product_variant__in=variants, price_list=price_list
+        )
+
+    def _get_cheapest_variant(self, product):
+        """
+        Return the cheapest variant of the given product, or None if there are no variants.
+        Price list is taken from self.context.
+        """
+        variant_prices = self._get_variant_prices(product)
+        return variant_prices.order_by("price").first()
+
+    def get_price(self, product):
+        cheapest_variant = self._get_cheapest_variant(product)
+        return (
+            cheapest_variant.formatted_price if cheapest_variant is not None else None
+        )
+
+    def get_has_multiple_prices(self, product):
+        cheapest_variant = self._get_cheapest_variant(product)
+        if cheapest_variant is None:
+            return False
+        else:
+            return (
+                self._get_variant_prices(product)
+                .filter(price__gt=cheapest_variant.price)
+                .exists()
+            )
+
+    class Meta:
+        model = Product
+        fields = (
+            "id",
+            "title",
+            "meta_title",
+            "meta_description",
+            "slug",
+            "primary_image",
+            "price",
+            "has_multiple_prices",
         )
