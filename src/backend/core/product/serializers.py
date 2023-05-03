@@ -574,6 +574,9 @@ class ProductStorefrontDetailSerializer(TranslatedSerializerMixin, ModelSerializ
         many=True, read_only=True
     )
     breadcrumbs = serializers.SerializerMethodField()
+    media = ProductMediaBaseSerializer(
+        read_only=True, many=True, source="product_media"
+    )
 
     class Meta:
         model = Product
@@ -588,6 +591,7 @@ class ProductStorefrontDetailSerializer(TranslatedSerializerMixin, ModelSerializ
             "description_editorjs",
             "slug",
             "product_variants",
+            "media",
         )
 
     def get_breadcrumbs(self, obj):
