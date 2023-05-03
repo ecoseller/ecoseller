@@ -553,14 +553,20 @@ class ProductStorefrontListSerializer(TranslatedSerializerMixin, ModelSerializer
 
     def get_price(self, product):
         cheapest_variant = self._get_cheapest_variant(product)
-        return cheapest_variant.formatted_price if cheapest_variant is not None else None
+        return (
+            cheapest_variant.formatted_price if cheapest_variant is not None else None
+        )
 
     def get_has_multiple_prices(self, product):
         cheapest_variant = self._get_cheapest_variant(product)
         if cheapest_variant is None:
             return False
         else:
-            return self._get_variant_prices(product).filter(price__gt=cheapest_variant.price).exists()
+            return (
+                self._get_variant_prices(product)
+                .filter(price__gt=cheapest_variant.price)
+                .exists()
+            )
 
     class Meta:
         model = Product
@@ -572,5 +578,5 @@ class ProductStorefrontListSerializer(TranslatedSerializerMixin, ModelSerializer
             "slug",
             "primary_image",
             "price",
-            "has_multiple_prices"
+            "has_multiple_prices",
         )
