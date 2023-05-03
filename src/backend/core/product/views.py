@@ -267,9 +267,25 @@ Storefront views
 class ProductDetailStorefront(APIView):
     permission_classes = (permissions.AllowAny,)
 
-    def get(self, request, id):
+    def get_pricelist(self, request):
+        # obtain pricelist id from request query params or default to `is_default=True`
+        pricelist_code = request.GET.get("pricelist", None)
+        if pricelist_code:
+            try:
+                pricelist = PriceList.objects.get(code=pricelist_code)
+            except PriceList.DoesNotExist:
+                pricelist = (
+                    PriceList.objects.all().first()
+                )  # .get(is_default=True) <-- uncomment after merging https://github.com/ecoseller/ecoseller/pull/199
+        else:
+            pricelist = (
+                PriceList.objects.all().first()
+            )  # .get(is_default=True) <-- uncomment after merging https://github.com/ecoseller/ecoseller/pull/199
+        return pricelist
+
+    def get(self, request, pk):
         try:
-            product = Product.objects.get(id=id)
+            product = Product.objects.get(pk=pk)
         except Product.DoesNotExist:
             return Response({"error": "Product does not exist"}, status=404)
 

@@ -3,9 +3,9 @@ from . import views
 
 
 urlpatterns = [
+    path("storefront/<int:pk>/", views.ProductDetailStorefront.as_view()),
     path("dashboard/type/", views.ProductTypeDashboardView.as_view()),
     path("dashboard/type/<int:id>/", views.ProductTypeDashboardDetailView.as_view()),
-    path("storefront/<str:id>/", views.ProductDetailStorefront.as_view()),
     path("dashboard/", views.ProductListDashboard.as_view()),
     path("dashboard/variant/<str:sku>/", views.ProductVariantDashboard.as_view()),
     path("dashboard/detail/", views.ProductDashboardView.as_view()),
