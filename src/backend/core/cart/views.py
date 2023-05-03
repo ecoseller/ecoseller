@@ -7,6 +7,7 @@ from rest_framework.status import (
     HTTP_404_NOT_FOUND,
     HTTP_400_BAD_REQUEST,
     HTTP_204_NO_CONTENT,
+    HTTP_201_CREATED,
 )
 from rest_framework.views import APIView
 
@@ -34,15 +35,20 @@ class CartDetailStorefrontView(RetrieveAPIView, CreateModelMixin):
                 cart = Cart.objects.get(token=token)
                 product_variant = ProductVariant.objects.get(sku=update_data.sku)
 
-                price = ProductPrice.objects.get(product_variant=product_variant,
-                                                 price_list__is_default=True)  # TODO: use selected pricelist
+                price = ProductPrice.objects.get(
+                    product_variant=product_variant, price_list__is_default=True
+                )  # TODO: use selected pricelist
 
-                cart_item = CartItem(cart=cart, product_variant=product_variant, unit_price_gross=price.price,
-                                     unit_price_net=price.price,
-                                     quantity=update_data.quantity)
+                cart_item = CartItem(
+                    cart=cart,
+                    product_variant=product_variant,
+                    unit_price_gross=price.price,
+                    unit_price_net=price.price,
+                    quantity=update_data.quantity,
+                )
                 cart_item.save()
 
-                return Response(status=HTTP_204_NO_CONTENT)
+                return Response(status=HTTP_201_CREATED)
             return Response(status=HTTP_400_BAD_REQUEST)
         except (Cart.DoesNotExist, ProductVariant.DoesNotExist):
             return Response(status=HTTP_404_NOT_FOUND)
@@ -55,6 +61,7 @@ class CartUpdateQuantityStorefrontView(APIView):
     """
     View for updating cart items quantity
     """
+
     def put(self, request, token):
         try:
             serializer = CartItemUpdateSerializer(data=request.data)
@@ -77,6 +84,7 @@ class CartItemDeleteStorefrontView(APIView):
     """
     View used for deleting cart items
     """
+
     def delete(self, request, token, sku):
         try:
             cart = Cart.objects.get(token=token)
