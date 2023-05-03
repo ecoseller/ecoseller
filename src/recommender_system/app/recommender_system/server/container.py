@@ -35,3 +35,8 @@ class Container(containers.DeclarativeContainer):
         connection_string=os.environ["RS_PRODUCT_DB_URL"],
         alembic_location="recommender_system/storage/product/alembic.ini",
     )
+    similarity_storage = providers.Singleton(
+        SQLStorage,
+        connection_string=os.environ["RS_SIMILARITY_DB_URL"],
+        alembic_location="recommender_system/storage/similarity/alembic.ini",
+    )
