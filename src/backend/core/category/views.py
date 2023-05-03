@@ -19,7 +19,7 @@ from category.serializers import (
     CategoryRecursiveStorefrontSerializer,
     CategoryDetailStorefrontSerializer,
 )
-from product.models import Product, ProductVariant, PriceList
+from product.models import Product, PriceList
 from product.serializers import ProductStorefrontListSerializer
 
 
