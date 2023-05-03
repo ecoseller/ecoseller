@@ -17,7 +17,7 @@ from .models import (
     ProductType,
 )
 from .serializers import (
-    ProductDashboardSerializer,
+    ProductStorefrontDetailSerializer,
     ProductDashboardListSerializer,
     ProductDashboardDetailSerializer,
     PriceListBaseSerializer,
@@ -267,24 +267,33 @@ Storefront views
 class ProductDetailStorefront(APIView):
     permission_classes = (permissions.AllowAny,)
 
-    def resolve_pricelist(self, request):
-        # get price list from request params or default to the default one
-        price_list_code = request.query_params.get("price_list", None)
-        if price_list_code:
+    def get_pricelist(self, request):
+        # obtain pricelist id from request query params or default to `is_default=True`
+        pricelist_code = request.GET.get("pricelist", None)
+        if pricelist_code:
             try:
-                return PriceList.objects.get(code=price_list_code)
+                pricelist = PriceList.objects.get(code=pricelist_code)
             except PriceList.DoesNotExist:
-                return PriceList.objects.get(is_default=True)
+                pricelist = (
+                    PriceList.objects.all().first()
+                )  # .get(is_default=True) <-- uncomment after merging https://github.com/ecoseller/ecoseller/pull/199
         else:
-            return PriceList.objects.get(is_default=True)
+            pricelist = (
+                PriceList.objects.all().first()
+            )  # .get(is_default=True) <-- uncomment after merging https://github.com/ecoseller/ecoseller/pull/199
+        return pricelist
 
     def get(self, request, pk):
         try:
-            product = Product.objects.get(pk=pk)
+            product = Product.objects.get(pk=pk, published=True)
         except Product.DoesNotExist:
             return Response({"error": "Product does not exist"}, status=404)
 
-        serialized_product = ProductDashboardSerializer(product)
+        pricelist = self.get_pricelist(request)
+
+        serialized_product = ProductStorefrontDetailSerializer(
+            product, context={"request": request, "pricelist": pricelist}
+        )
         return Response(serialized_product.data, status=200)
 
 

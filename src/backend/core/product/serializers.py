@@ -21,6 +21,7 @@ from django.db.models import (
 
 from category.serializers import (
     CategorySerializer,
+    CategoryMinimalSerializer,
 )
 from country.serializers import (
     CurrencySerializer,
@@ -518,6 +519,90 @@ class ProductDashboardSerializer(TranslatedSerializerMixin, ModelSerializer):
             "slug",
             "product_variants",
         )
+
+
+class AttributeTypeStorefrontSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AttributeType
+        fields = (
+            "id",
+            "type_name",
+            "unit",
+        )
+
+
+class BaseAttributeStorefrontSerializer(serializers.ModelSerializer):
+    type = AttributeTypeStorefrontSerializer(read_only=True)
+
+    class Meta:
+        model = BaseAttribute
+        fields = (
+            "id",
+            "order",
+            "value",
+            "type",
+        )
+
+
+class ProductVariantStorefrontDetailSerializer(ProductVariantSerializer):
+    price = serializers.SerializerMethodField()
+    attributes = BaseAttributeStorefrontSerializer(many=True, read_only=True)
+
+    def get_price(self, obj):
+        print("GET PRICE", obj, self.context)
+        if "pricelist" not in self.context:
+            return None
+        try:
+            price = ProductPrice.objects.get(
+                product_variant=obj, price_list=self.context["pricelist"]
+            )
+        except ProductPrice.DoesNotExist:
+            return None
+        # price_serializer = ProductPriceSerializer(price)
+        formatted_price = self.context["pricelist"].format_price(price.price)
+        return formatted_price  # price_serializer.data
+
+
+class ProductStorefrontDetailSerializer(TranslatedSerializerMixin, ModelSerializer):
+    """
+    Basic Product model serializer (see product/models.py) used for dashboard
+    retrieving all fields defined in the model with nested list of product variants
+    and category.
+    Only one translation is returned (see TranslatedSerializerMixin)
+    """
+
+    product_variants = ProductVariantStorefrontDetailSerializer(
+        many=True, read_only=True
+    )
+    breadcrumbs = serializers.SerializerMethodField()
+    media = ProductMediaBaseSerializer(
+        read_only=True, many=True, source="product_media"
+    )
+
+    class Meta:
+        model = Product
+        fields = (
+            "id",
+            "breadcrumbs",
+            "title",
+            "meta_title",
+            "meta_description",
+            "short_description",
+            "description",
+            "description_editorjs",
+            "slug",
+            "product_variants",
+            "media",
+        )
+
+    def get_breadcrumbs(self, obj):
+        breadcrumbs = []
+        if obj.category:
+            breadcrumbs = obj.category.get_ancestors(include_self=True)
+        serializer = CategoryMinimalSerializer(
+            breadcrumbs, many=True, context=self.context
+        ).data
+        return serializer
 
 
 class ProductStorefrontListSerializer(TranslatedSerializerMixin, ModelSerializer):
