@@ -9,7 +9,7 @@ export const categoryAPI = async (
   locale: string
 ) => {
   return await api
-    .get(`/category/`, {
+    .get(`/category/storefront/`, {
       headers: { "Accept-Language": locale },
     })
     .then((response: any) => response.data)
