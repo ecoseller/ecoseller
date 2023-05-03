@@ -32,7 +32,7 @@ class CartItem(models.Model):
     product_variant = models.ForeignKey(
         ProductVariant, null=True, on_delete=models.SET_NULL
     )
-    product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
+    # product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)  # TODO: check if needed
     unit_price_gross = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True
     )
@@ -40,5 +40,5 @@ class CartItem(models.Model):
         max_digits=10, decimal_places=2, blank=True, null=True
     )
     quantity = models.IntegerField(default=1)
-    update_at = models.DateTimeField(auto_now=True)
-    create_at = models.DateTimeField(auto_now_add=True)
+    # update_at = models.DateTimeField(auto_now=True)  # TODO: check if needed
+    # create_at = models.DateTimeField(auto_now_add=True)  # TODO: check if needed

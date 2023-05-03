@@ -20,14 +20,10 @@ class CartItemSerializer(ModelSerializer):
     class Meta:
         model = CartItem
         fields = (
-            "id",
             "product_variant",
-            "product",
             "unit_price_gross",
             "unit_price_net",
             "quantity",
-            "update_at",
-            "create_at",
         )
 
 
