@@ -217,7 +217,7 @@ const DashboardProductTypesPage = () => {
             rows={rows}
             columns={columns}
             density={"compact"}
-            editMode={"cell"}
+            editMode={"row"}
             hideFooter={true}
             autoHeight={true}
             rowModesModel={rowModesModel}
