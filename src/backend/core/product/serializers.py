@@ -579,7 +579,6 @@ class ProductStorefrontDetailSerializer(TranslatedSerializerMixin, ModelSerializ
         model = Product
         fields = (
             "id",
-            "published",
             "breadcrumbs",
             "title",
             "meta_title",
