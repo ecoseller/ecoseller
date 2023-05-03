@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('product', '0025_attributetype_value_type'),
+        ("product", "0025_attributetype_value_type"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='pricelist',
-            name='is_default',
+            model_name="pricelist",
+            name="is_default",
             field=models.BooleanField(default=False, unique=True),
         ),
     ]
