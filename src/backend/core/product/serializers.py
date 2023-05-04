@@ -87,7 +87,6 @@ class PriceListBaseSerializer(ModelSerializer):
             "currency",
             "is_default",
             "rounding",
-            "includes_vat",
             "update_at",
             "create_at",
         )
@@ -103,7 +102,6 @@ class PriceListSerializer(PriceListBaseSerializer):
             "name",
             "currency",
             "rounding",
-            "includes_vat",
             "update_at",
             "create_at",
         )

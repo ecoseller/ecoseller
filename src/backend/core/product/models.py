@@ -379,9 +379,6 @@ class PriceList(models.Model):
     is_default = models.BooleanField(default=False)
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
     rounding = models.BooleanField(default=False)
-    includes_vat = models.BooleanField(
-        default=True
-    )  # prices in pricelist are including VAT
 
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
