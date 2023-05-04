@@ -25,6 +25,7 @@ from recommender_system.storage.sql.models.products import (
     SQLOrderProductVariant,
     SQLProduct,
     SQLProductProductVariant,
+    SQLProductPrice,
     SQLProductVariant,
 )
 from recommender_system.storage.sql.models.similarity import SQLDistance
@@ -295,13 +296,17 @@ class SQLStorage(AbstractStorage):
 
         return [row[0] for row in query.all()]
 
-    def get_attribute_type_mean(self, attribute_type_id: int) -> Optional[float]:
-        query = self.session.query(func.avg(SQLAttribute.numeric_value)).select_from(
-            SQLAttribute
-        )
+    def get_attribute_type_stats(
+        self, attribute_type_id: int
+    ) -> Optional[Tuple[float, float, float]]:
+        query = self.session.query(
+            func.min(SQLAttribute.numeric_value),
+            func.avg(SQLAttribute.numeric_value),
+            func.max(SQLAttribute.numeric_value),
+        ).select_from(SQLAttribute)
         query = query.filter(SQLAttribute.attribute_type_id == attribute_type_id)
 
-        return query.scalar()
+        return query.first()
 
     def get_product_variant_attribute_values(
         self, attribute_type_id: int, attribute_type_type: "AttributeTypeModel.Type"
@@ -348,8 +353,26 @@ class SQLStorage(AbstractStorage):
 
         return [row[0] for row in query.all()]
 
+    def get_product_variant_prices(self, pks: List[str]) -> List[Tuple[str, float]]:
+        query = self.session.query(
+            SQLProductPrice.product_variant_sku, SQLProductPrice.price
+        )
+        query = query.select_from(SQLProductPrice)
+        query = query.filter(SQLProductPrice.product_variant_sku.in_(pks))
+        return [(row[0], row[1]) for row in query.all()]
+
+    def get_price_stats(self, pks: List[str]) -> Optional[Tuple[float, float, float]]:
+        query = self.session.query(
+            func.min(SQLProductPrice.price),
+            func.avg(SQLProductPrice.price),
+            func.max(SQLProductPrice.price),
+        ).select_from(SQLProductPrice)
+        query = query.filter(SQLProductPrice.product_variant_sku.in_(pks))
+
+        return query.first()
+
     def get_closest_product_variant_pks(
-        self, to: str, limit: Optional[int], **kwargs: Any
+        self, to: str, limit: Optional[int] = None, **kwargs: Any
     ) -> List[str]:
         query = self.session.query(SQLDistance).select_from(SQLDistance)
         query = query.filter(or_(SQLDistance.lhs == to, SQLDistance.rhs == to))

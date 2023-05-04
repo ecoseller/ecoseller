@@ -132,7 +132,9 @@ class AbstractStorage(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def get_attribute_type_mean(self, attribute_type_id: int) -> Optional[float]:
+    def get_attribute_type_stats(
+        self, attribute_type_id: int
+    ) -> Optional[Tuple[float, float, float]]:
         raise NotImplementedError()
 
     @abstractmethod
@@ -146,8 +148,16 @@ class AbstractStorage(ABC):
         raise NotImplementedError()
 
     @abstractmethod
+    def get_product_variant_prices(self, pks: List[str]) -> List[Tuple[str, float]]:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def get_price_stats(self, pks: List[str]) -> Optional[Tuple[float, float, float]]:
+        raise NotImplementedError()
+
+    @abstractmethod
     def get_closest_product_variant_pks(
-        self, to: str, limit: Optional[int], **kwargs: Any
+        self, to: str, limit: Optional[int] = None, **kwargs: Any
     ) -> List[str]:
         raise NotImplementedError()
 

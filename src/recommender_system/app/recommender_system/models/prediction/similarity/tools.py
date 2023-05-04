@@ -10,6 +10,10 @@ from recommender_system.models.stored.product_variant import ProductVariantModel
 from recommender_system.storage.abstract import AbstractStorage
 
 
+DEFAULT_NUMERIC_VALUE = 0.5
+DEFAULT_CATEGORICAL_VALUE = 0.5
+
+
 @inject
 def prepare_variants(
     product_storage: AbstractStorage = Provide["product_storage"],
@@ -34,53 +38,99 @@ def prepare_variants(
         attribute=AttributeTypeModel.Meta.primary_key,
         type=AttributeTypeModel.Type.CATEGORICAL,
     )
-    categorical = np.zeros(
-        (len(product_variant_skus), len(categorical_type_ids)), dtype=np.int64
-    )
-    categorical_mask = np.full(
-        (len(product_variant_skus), len(categorical_type_ids)), False, dtype=bool
-    )
-    for col, type_id in enumerate(categorical_type_ids):
-        possible_values = product_storage.get_raw_attribute_values(
-            attribute_type_id=type_id
+    categorical = None
+    categorical_mask = None
+    if len(categorical_type_ids) > 0:
+        categorical = np.full(
+            (len(product_variant_skus), len(categorical_type_ids)),
+            DEFAULT_CATEGORICAL_VALUE,
+            dtype=np.int64,
         )
-        value_mapper = {}
-        for i, value in enumerate(possible_values):
-            value_mapper[value] = i
-        variant_attributes = product_storage.get_product_variant_attribute_values(
-            attribute_type_id=type_id,
-            attribute_type_type=AttributeTypeModel.Type.CATEGORICAL,
+        categorical_mask = np.full(
+            (len(product_variant_skus), len(categorical_type_ids)), False, dtype=bool
         )
-        for sku, value in variant_attributes:
+        for col, type_id in enumerate(categorical_type_ids):
+            possible_values = product_storage.get_raw_attribute_values(
+                attribute_type_id=type_id
+            )
+            value_mapper = {}
+            for i, value in enumerate(possible_values):
+                value_mapper[value] = i
+            variant_attributes = product_storage.get_product_variant_attribute_values(
+                attribute_type_id=type_id,
+                attribute_type_type=AttributeTypeModel.Type.CATEGORICAL,
+            )
+            for sku, value in variant_attributes.items():
+                row = variant_mapper[sku]
+                if value is not None:
+                    categorical[row, col] = value_mapper[value]
+                    categorical_mask[row, col] = True
+
+    prices = np.full(
+        (len(product_variant_skus), 1), DEFAULT_NUMERIC_VALUE, dtype=np.double
+    )
+    prices_mask = np.full((len(product_variant_skus), 1), False, dtype=bool)
+    prices_data = product_storage.get_product_variant_prices(pks=product_variant_skus)
+    stats = product_storage.get_price_stats(pks=product_variant_skus)
+    for sku, price in prices_data:
+        if stats is not None:
+            min, avg, max = stats
+            if min != max:
+                # Normalize into [0, 1]
+                normalized_price = (price - min) / (max - min)
+            else:
+                normalized_price = DEFAULT_NUMERIC_VALUE
             row = variant_mapper[sku]
-            categorical[row, col] = value_mapper[value]
-            categorical_mask[row, col] = True
+            prices[row, 0] = normalized_price
+            prices_mask[row, 0] = True
 
     numerical_type_ids = product_storage.get_objects_attribute(
         model_class=AttributeTypeModel,
         attribute=AttributeTypeModel.Meta.primary_key,
         type=AttributeTypeModel.Type.NUMERICAL,
     )
-    numerical = np.zeros(
-        (len(product_variant_skus), len(categorical_type_ids)), dtype=np.double
-    )
-    numerical_mask = np.full(
-        (len(product_variant_skus), len(categorical_type_ids)), False, dtype=bool
-    )
-    for col, type_id in enumerate(numerical_type_ids):
-        mean = product_storage.get_attribute_type_mean(attribute_type_id=type_id)
-        variant_attributes = product_storage.get_product_variant_attribute_values(
-            attribute_type_id=type_id,
-            attribute_type_type=AttributeTypeModel.Type.CATEGORICAL,
+    numerical = prices
+    numerical_mask = prices_mask
+    if len(numerical_type_ids) > 0:
+        numerical = np.hstack(
+            (
+                prices,
+                np.full(
+                    (len(product_variant_skus), len(numerical_type_ids)),
+                    DEFAULT_NUMERIC_VALUE,
+                    dtype=np.double,
+                ),
+            )
         )
-        for sku in product_variant_skus:
-            value = variant_attributes.get(sku)
-            row = variant_mapper[sku]
-            if value is not None:
-                numerical[row, col] = value
-                numerical_mask[row, col] = True
-            else:
-                numerical[row, col] = mean
+        numerical_mask = np.hstack(
+            (
+                prices_mask,
+                np.full(
+                    (len(product_variant_skus), len(numerical_type_ids)),
+                    False,
+                    dtype=bool,
+                ),
+            )
+        )
+        for col, type_id in enumerate(numerical_type_ids, start=1):
+            stats = product_storage.get_attribute_type_stats(attribute_type_id=type_id)
+            if stats is not None:
+                min, avg, max = stats
+                variant_attributes = (
+                    product_storage.get_product_variant_attribute_values(
+                        attribute_type_id=type_id,
+                        attribute_type_type=AttributeTypeModel.Type.NUMERICAL,
+                    )
+                )
+                for sku, value in variant_attributes.items():
+                    row = variant_mapper[sku]
+                    numerical_mask[row, col] = True
+                    if min != max:
+                        # Normalize into [0, 1]
+                        normalized_value = (value - min) / (max - min)
+                    else:
+                        normalized_value = DEFAULT_NUMERIC_VALUE
+                    numerical[row, col] = normalized_value
 
     return TrainData(
         product_variant_skus=product_variant_skus,
@@ -111,7 +161,11 @@ def compute_weight(u: np.ndarray, v: np.ndarray) -> np.double:
     np.double
         The weight of distance of two product variants based on their attribute masks.
     """
-    return np.sum(np.logical_or(u, v)) / np.sum(np.logical_and(u, v))
+    result = np.sum(np.logical_or(u, v))
+    divisor = np.sum(np.logical_and(u, v))
+    if divisor != 0:
+        result /= divisor
+    return result
 
 
 def compute_numerical_distances(variants: np.ndarray, mask: np.ndarray) -> np.ndarray:

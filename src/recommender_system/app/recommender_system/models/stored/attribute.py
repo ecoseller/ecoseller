@@ -74,6 +74,15 @@ class AttributeModel(ProductStoredBaseModel):
             model=self, relation_model_class=AttributeProductVariantModel
         )
 
+    def delete(self) -> None:
+        from recommender_system.models.stored.attribute_product_variant import (
+            AttributeProductVariantModel,
+        )
+
+        for apv in AttributeProductVariantModel.gets(attribute_id=self.id):
+            apv.delete()
+        super().delete()
+
     def add_product_variant(self, product_variant: "ProductVariantModel") -> None:
         from recommender_system.models.stored.attribute_product_variant import (
             AttributeProductVariantModel,

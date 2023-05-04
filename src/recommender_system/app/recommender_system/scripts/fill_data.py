@@ -244,7 +244,7 @@ def fill_products(
     product_variants: Dict[str, ProductVariantModel] = {}
     product_product_variants: List[ProductProductVariantModel] = []
     prices: Dict[str, ProductPriceModel] = {}
-    i = 1
+    i = ProductPriceModel.get_next_pk()
     for row in rows:
         update_at = datetime.utcfromtimestamp(int(row[0]) / 1_000)
 
@@ -345,7 +345,7 @@ def fill_attributes(
     logger.info("Getting attribute objects...")
     attributes: Dict[Tuple[str, str], AttributeModel] = {}
     attribute_product_variants: Dict[Tuple[str, str], AttributeProductVariantModel] = {}
-    i = 1
+    i = AttributeModel.get_next_pk()
     for row in rows:
         if row[2] not in ["available", "categoryid", "790"]:
             raw_value = row[3][:200]
@@ -391,6 +391,8 @@ def fill_properties(product_storage: AbstractStorage) -> None:
     ]:
         with open(filename, "r") as file:
             rows += list(csv.reader(file, delimiter=","))[1:]
+
+    # TODO: sort by timestamp
 
     fill_attribute_types(rows=rows, product_storage=product_storage)
     fill_product_types(rows=rows, product_storage=product_storage)

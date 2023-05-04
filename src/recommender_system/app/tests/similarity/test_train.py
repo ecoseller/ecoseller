@@ -1,7 +1,13 @@
 import csv
 
+import numpy as np
 import pytest
 
+
+from recommender_system.models.prediction.similarity.tools import (
+    prepare_variants,
+    compute_numerical_distances,
+)
 from recommender_system.models.stored.attribute import AttributeModel
 from recommender_system.models.stored.attribute_type import AttributeTypeModel
 from recommender_system.models.stored.product import ProductModel
@@ -17,7 +23,7 @@ from recommender_system.scripts.fill_data import (
 from tests.storage.tools import delete_model
 
 
-FILENAME = "tests/fill_data/properties.csv"
+FILENAME = "tests/similarity/data_numerical.csv"
 with open(FILENAME, "r") as file:
     ROWS = list(csv.reader(file, delimiter=","))[1:]
 
@@ -113,33 +119,7 @@ def clear_attributes():
         price.delete()
 
 
-def test_fill_attribute_types(
-    clear_attribute_types,
-    clear_product_types,
-    clear_products,
-    clear_product_variants,
-    clear_attributes,
-):
-    attribute_type_ids = clear_attribute_types
-    _ = clear_product_types
-    _ = clear_products
-    _ = clear_product_variants
-    _ = clear_attributes
-
-    for attribute_type_id in attribute_type_ids:
-        with pytest.raises(AttributeTypeModel.DoesNotExist):
-            _ = AttributeTypeModel.get(pk=attribute_type_id)
-
-    old_count = len(AttributeTypeModel.gets())
-
-    fill_attribute_types(rows=ROWS)
-
-    new_count = len(AttributeTypeModel.gets())
-
-    assert new_count == old_count + len(attribute_type_ids)
-
-
-def test_fill_product_types(
+def test_numerical_distances(
     clear_attribute_types,
     clear_product_types,
     clear_products,
@@ -147,92 +127,36 @@ def test_fill_product_types(
     clear_attributes,
 ):
     _ = clear_attribute_types
-    product_type_ids = clear_product_types
+    _ = clear_product_types
     _ = clear_products
     _ = clear_product_variants
     _ = clear_attributes
-
-    for product_type_id in product_type_ids:
-        with pytest.raises(ProductTypeModel.DoesNotExist):
-            _ = ProductTypeModel.get(pk=product_type_id)
-
-    old_count = len(ProductTypeModel.gets())
 
     fill_attribute_types(rows=ROWS)
     fill_product_types(rows=ROWS)
-
-    new_count = len(ProductTypeModel.gets())
-
-    assert new_count == old_count + len(product_type_ids)
-
-    assert len(ProductTypeModel.get(pk=1).attribute_types) == 2
-    assert len(ProductTypeModel.get(pk=2).attribute_types) == 1
-
-
-def test_fill_products(
-    clear_attribute_types,
-    clear_product_types,
-    clear_products,
-    clear_product_variants,
-    clear_attributes,
-):
-    _ = clear_attribute_types
-    _ = clear_product_types
-    product_ids = clear_products
-    product_variant_skus = clear_product_variants
-    _ = clear_attributes
-
-    for product_id in product_ids:
-        with pytest.raises(ProductModel.DoesNotExist):
-            _ = ProductModel.get(pk=product_id)
-
-    old_products_count = len(ProductModel.gets())
-    old_product_variants_count = len(ProductVariantModel.gets())
-
-    fill_products(rows=ROWS)
-
-    new_products_count = len(ProductModel.gets())
-    new_product_variants_count = len(ProductVariantModel.gets())
-
-    assert new_products_count == old_products_count + len(product_ids)
-    assert new_product_variants_count == old_product_variants_count + len(
-        product_variant_skus
-    )
-
-
-def test_fill_attributes(
-    clear_attribute_types,
-    clear_product_types,
-    clear_products,
-    clear_product_variants,
-    clear_attributes,
-):
-    _ = clear_attribute_types
-    _ = clear_product_types
-    _ = clear_products
-    _ = clear_product_variants
-    attributes = clear_attributes
-
-    for attribute_type_id, raw_value in attributes:
-        with pytest.raises(AttributeModel.DoesNotExist):
-            _ = AttributeModel.get(
-                attribute_type_id=attribute_type_id, raw_value=raw_value
-            )
-
-    old_count = len(AttributeModel.gets())
-
-    fill_attribute_types(rows=ROWS)
     fill_products(rows=ROWS)
     fill_attributes(rows=ROWS)
 
-    new_count = len(AttributeModel.gets())
+    train_data = prepare_variants()
 
-    assert new_count == old_count + len(attributes)
+    assert train_data.categorical is None
+    assert train_data.categorical_mask is None
+    assert train_data.numerical.shape == (4, 4)
+    assert train_data.numerical_mask.shape == (4, 4)
 
-    assert len(ProductVariantModel.get(pk="1").attributes) == 3
-    assert len(ProductVariantModel.get(pk="2").attributes) == 2
-    assert len(ProductVariantModel.get(pk="3").attributes) == 1
+    distances = compute_numerical_distances(
+        variants=train_data.numerical, mask=train_data.numerical_mask
+    )
 
-    assert ProductPriceModel.get(product_variant_sku="1").price == 360
-    assert ProductPriceModel.get(product_variant_sku="2").price == 5360
-    assert ProductPriceModel.get(product_variant_sku="3").price == 15360
+    idx1 = train_data.product_variant_skus.index("1")
+    idx2 = train_data.product_variant_skus.index("2")
+    idx3 = train_data.product_variant_skus.index("3")
+    idx4 = train_data.product_variant_skus.index("4")
+
+    assert distances[idx1, idx2] == distances[idx1, idx3]
+    assert distances[idx1, idx2] < distances[idx1, idx4]
+
+    assert np.sum(train_data.numerical_mask[idx1]) == 3
+    assert np.sum(train_data.numerical_mask[idx2]) == 3
+    assert np.sum(train_data.numerical_mask[idx3]) == 3
+    assert np.sum(train_data.numerical_mask[idx4]) == 3

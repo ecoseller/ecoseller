@@ -45,9 +45,10 @@ class SimilarityPredictionModel(AbstractPredictionModel):
         distances = compute_numerical_distances(
             variants=train_data.numerical, mask=train_data.numerical_mask
         )
-        distances += compute_categorical_distances(
-            variants=train_data.categorical, mask=train_data.categorical_mask
-        )
+        if train_data.categorical is not None:
+            distances += compute_categorical_distances(
+                variants=train_data.categorical, mask=train_data.categorical_mask
+            )
         self.delete_distances()
         self.save_distances(
             distances=distances, product_variant_skus=train_data.product_variant_skus
@@ -107,7 +108,7 @@ class SimilarityPredictionModel(AbstractPredictionModel):
         similarity_storage: AbstractStorage = Provide["similarity_storage"],
     ) -> List[str]:
         return similarity_storage.get_closest_product_variant_pks(
-            to=variant, limit=1000, pks=variants
+            to=variant, pks=variants
         )
 
     @inject
@@ -121,5 +122,5 @@ class SimilarityPredictionModel(AbstractPredictionModel):
     ) -> List[str]:
         # TODO: Check if there are variants in cart in model manager
         return similarity_storage.get_closest_product_variant_pks(
-            to=random.choice(variants_in_cart), limit=1000, pks=variants
+            to=random.choice(variants_in_cart), pks=variants
         )
