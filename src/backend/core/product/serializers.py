@@ -332,12 +332,6 @@ class AtrributeTypeDashboardSerializer(ModelSerializer):
 
 class ProductTypeVatGroupSerializer(ModelSerializer):
     id = serializers.IntegerField(required=False, read_only=True)
-    # product_type = serializers.PrimaryKeyRelatedField(
-    #     queryset=ProductType.objects.all(), required=False
-    # )
-    # country = serializers.PrimaryKeyRelatedField(
-    #     queryset=Country.objects.all(), required=False
-    # )
 
     class Meta:
         model = ProductTypeVatGroup
