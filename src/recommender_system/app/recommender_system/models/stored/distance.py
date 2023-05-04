@@ -13,6 +13,7 @@ class DistanceModel(SimilarityStoredBaseModel):
     id: Optional[int]
     lhs: str
     rhs: str
+    distance: float
 
     class Meta:
         primary_key = "id"

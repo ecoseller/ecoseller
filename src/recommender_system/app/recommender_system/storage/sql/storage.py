@@ -374,7 +374,9 @@ class SQLStorage(AbstractStorage):
     def get_closest_product_variant_pks(
         self, to: str, limit: Optional[int] = None, **kwargs: Any
     ) -> List[str]:
-        query = self.session.query(SQLDistance).select_from(SQLDistance)
+        query = self.session.query(SQLDistance.lhs, SQLDistance.rhs).select_from(
+            SQLDistance
+        )
         query = query.filter(or_(SQLDistance.lhs == to, SQLDistance.rhs == to))
         query = self._filter(model_class=DistanceModel, query=query, filters=kwargs)
         query = query.order_by(SQLDistance.distance)

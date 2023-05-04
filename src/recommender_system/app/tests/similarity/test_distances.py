@@ -4,6 +4,9 @@ import numpy as np
 import pytest
 
 
+from recommender_system.models.prediction.similarity.model import (
+    SimilarityPredictionModel,
+)
 from recommender_system.models.prediction.similarity.tools import (
     prepare_variants,
     compute_numerical_distances,
@@ -19,7 +22,6 @@ from recommender_system.scripts.fill_data import (
     fill_products,
     fill_attributes,
 )
-from tests.storage.tools import delete_model
 
 
 FILENAME = "tests/similarity/data_numerical.csv"
@@ -54,7 +56,7 @@ def clear_database():
         attribute.delete()
 
 
-def test_numerical_distances(
+def test_train_numerical_distances(
     clear_database,
 ):
     _ = clear_database
@@ -87,3 +89,24 @@ def test_numerical_distances(
     assert np.sum(train_data.numerical_mask[idx2]) == 3
     assert np.sum(train_data.numerical_mask[idx3]) == 3
     assert np.sum(train_data.numerical_mask[idx4]) == 3
+
+
+def test_predict_numerical_distances(
+    clear_database,
+):
+    _ = clear_database
+
+    fill_attribute_types(rows=ROWS)
+    fill_product_types(rows=ROWS)
+    fill_products(rows=ROWS)
+    fill_attributes(rows=ROWS)
+
+    model = SimilarityPredictionModel()
+    model.train()
+
+    result = model.retrieve_product_detail(
+        session_id="session", user_id=None, variant="1"
+    )
+
+    assert "1" not in result
+    assert result.index("2") < result.index("4")
