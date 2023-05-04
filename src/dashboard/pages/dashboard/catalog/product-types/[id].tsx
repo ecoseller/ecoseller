@@ -82,15 +82,20 @@ const DashboardProductTypeDetailPage = ({
             preventNavigation={preventNavigation}
             setPreventNavigation={setPreventNavigation}
             onButtonClick={async () => {
-              await putProductType(state)
-                .then((res: any) => {
+              fetch(`/api/product/type/${state.id}`, {
+                method: "PUT",
+                body: JSON.stringify(state),
+              })
+                .then((res) => res.json())
+                .then((res) => {
+                  console.log("res", res);
                   setSnackbar({
                     open: true,
                     message: "Product type updated",
                     severity: "success",
                   });
                 })
-                .catch((err: any) => {
+                .catch((err) => {
                   console.log("postProduct", err);
                   setSnackbar({
                     open: true,

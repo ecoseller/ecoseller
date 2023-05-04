@@ -13,7 +13,6 @@ export interface IPriceList {
   currency: number;
   is_default: boolean;
   rounding: boolean;
-  includes_vat: boolean;
   update_at: string;
 }
 

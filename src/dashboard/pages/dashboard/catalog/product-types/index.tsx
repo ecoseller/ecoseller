@@ -34,6 +34,8 @@ import AddIcon from "@mui/icons-material/Add";
 import { IProductType } from "@/types/product";
 // api
 import { deleteProductType, postProductType } from "@/api/product/types";
+import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
+import { productTypeListAPI } from "@/pages/api/product/type";
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -52,24 +54,27 @@ const EditToolbar = (props: EditToolbarProps) => {
       name: "",
       allowed_attribute_types_ids: [],
     };
-    postProductType(newRow)
-      .then((res) => {
-        setRows((oldRows) => [
-          ...oldRows,
-          {
-            ...newRow,
-            id: res.data.id,
-          },
-        ]);
-        setRowModesModel((oldModel) => ({
-          ...oldModel,
-          [res.data.id]: GridRowModes.Edit,
-        }));
-        router.push(`/dashboard/catalog/product-types/${res.data.id}`);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    fetch("/api/product/type", {
+      method: "POST",
+      body: JSON.stringify(newRow),
+    }).then((res) => {
+      if (res.ok) {
+        res.json().then((data) => {
+          // setRows((oldRows) => [
+          //   ...oldRows,
+          //   {
+          //     ...newRow,
+          //     id: data.id,
+          //   },
+          // ]);
+          // setRowModesModel((oldModel) => ({
+          //   ...oldModel,
+          //   [data.id]: GridRowModes.Edit,
+          // }));
+          router.push(`/dashboard/catalog/product-types/${data.id}`);
+        });
+      }
+    });
   };
 
   return (
@@ -81,16 +86,16 @@ const EditToolbar = (props: EditToolbarProps) => {
   );
 };
 
-const DashboardProductTypesPage = () => {
-  const {
-    data: productTypesData,
-    error: productTypesError,
-    mutate: productTypesMutate,
-  } = useSWR<IProductType[]>("/product/dashboard/type/");
+interface IDashboardProductTypesPageProps {
+  productTypesData: IProductType[];
+}
 
-  const [rows, setRows] = useState<IProductType[]>([]);
+const DashboardProductTypesPage = ({
+  productTypesData,
+}: IDashboardProductTypesPageProps) => {
+  const [rows, setRows] = useState<IProductType[]>(productTypesData || []);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
-
+  console.log("productTypesData", productTypesData);
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
     message: string;
@@ -108,18 +113,6 @@ const DashboardProductTypesPage = () => {
   };
 
   const router = useRouter();
-
-  console.log("currencies", rows);
-
-  useEffect(() => {
-    if (productTypesData) {
-      setRows(
-        productTypesData.map((type: IProductType) => ({
-          ...type,
-        }))
-      );
-    }
-  }, [productTypesData]);
 
   const columns: GridColDef[] = [
     {
@@ -168,22 +161,21 @@ const DashboardProductTypesPage = () => {
             icon={<DeleteIcon />}
             label="Delete"
             onClick={() => {
-              deleteProductType(id)
-                .then((res) => {
-                  productTypesMutate();
+              fetch(`/api/product/type/${id}`, {
+                method: "DELETE",
+              }).then((res) => {
+                if (res.ok) {
                   setSnackbar({
                     open: true,
                     message: "Product type deleted",
                     severity: "success",
                   });
-                })
-                .catch((err) => {
-                  setSnackbar({
-                    open: true,
-                    message: "Error deleting product type",
-                    severity: "error",
+                  setRows((oldRows) => {
+                    const newRows = oldRows.filter((row) => row.id !== id);
+                    return newRows;
                   });
-                });
+                }
+              });
             }}
             color="inherit"
             key={"delete"}
@@ -244,10 +236,18 @@ DashboardProductTypesPage.getLayout = (page: ReactElement) => {
   );
 };
 
-export const getServersideProps = async (context: any) => {
-  console.log("Dashboard pricelists");
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { req, res } = context;
+  const productTypesData = await productTypeListAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
   return {
-    props: {},
+    props: {
+      productTypesData,
+    },
   };
 };
 

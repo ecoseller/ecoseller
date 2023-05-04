@@ -173,15 +173,6 @@ const DashboardPriceListsPage = () => {
       type: "boolean",
     },
     {
-      field: "includes_vat",
-      headerName: "Incl. VAT",
-      editable: true,
-      flex: 1,
-      sortable: false,
-      disableColumnMenu: true,
-      type: "boolean",
-    },
-    {
       field: "actions",
       type: "actions",
       headerName: "Actions",

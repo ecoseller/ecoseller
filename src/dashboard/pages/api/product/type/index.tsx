@@ -21,10 +21,24 @@ export const productTypeListAPI = async (
 
   switch (method) {
     case "GET":
+      console.log("productTypeListAPI");
       return await api
         .get(`/product/dashboard/type/`)
         .then((response) => response.data)
-        .then((data: ICountry[]) => {
+        .then((data) => {
+          return data;
+        })
+        .catch((error: any) => {
+          throw error;
+        });
+    case "POST":
+      console.log("productTypeListAPI");
+      const body = req?.body;
+      if (!body) throw new Error("Body is empty");
+      return await api
+        .post(`/product/dashboard/type/`, body)
+        .then((response) => response.data)
+        .then((data) => {
           return data;
         })
         .catch((error: any) => {
@@ -37,13 +51,19 @@ export const productTypeListAPI = async (
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   /**
-   * This is a wrapper for the cart api in the backend
-   * It returns whole cart data from the backend
+   * This is a wrapper for the product type API in the backend
    */
-  // get the cart data from the backend
-  return productTypeListAPI("GET", req, res)
-    .then((data) => res.status(200).json(data))
-    .catch((error) => res.status(400).json(null));
+  const { method } = req;
+  if (method == "GET") {
+    return productTypeListAPI("GET", req, res)
+      .then((data) => res.status(200).json(data))
+      .catch((error) => res.status(400).json(null));
+  } else if (method == "POST") {
+    return productTypeListAPI("POST", req, res)
+      .then((data) => res.status(201).json(data))
+      .catch((error) => res.status(400).json(null));
+  }
+  return res.status(404).json({ message: "Method not supported" });
 };
 
 export default handler;
