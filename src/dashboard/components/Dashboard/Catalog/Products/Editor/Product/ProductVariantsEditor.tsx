@@ -228,18 +228,18 @@ const ProductVariantsEditor = ({
       sortable: false,
       disableColumnMenu: true,
     },
-    ...(pricelistsData
-      ? pricelistsData?.map((pricelist: IPriceList) => ({
-          field: `$PRICE_${pricelist.code}`,
-          headerName: pricelist.code,
-          editable: true,
-          width: 125,
-          minWidth: 150,
-          maxWidth: 200,
-          sortable: false,
-          disableColumnMenu: true,
-        }))
-      : []), // <-- this generates pricelist columns
+    // ...(pricelistsData
+    //   ? pricelistsData?.map((pricelist: IPriceList) => ({
+    //       field: `$PRICE_${pricelist.code}`,
+    //       headerName: pricelist.code,
+    //       editable: true,
+    //       width: 125,
+    //       minWidth: 150,
+    //       maxWidth: 200,
+    //       sortable: false,
+    //       disableColumnMenu: true,
+    //     }))
+    //   : []), // <-- this generates pricelist columns
     ...(attributesData
       ? attributesData?.map((attribute) => ({
           field: `$ATTRIBUTE_${attribute.type_name}`,
