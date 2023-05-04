@@ -122,6 +122,12 @@ def prepare_variants(
                         attribute_type_type=AttributeTypeModel.Type.NUMERICAL,
                     )
                 )
+                if min != max:
+                    # Normalize into [0, 1]
+                    normalized_avg = (avg - min) / (max - min)
+                else:
+                    normalized_avg = DEFAULT_NUMERIC_VALUE
+                numerical[:, col] = normalized_avg
                 for sku, value in variant_attributes.items():
                     row = variant_mapper[sku]
                     numerical_mask[row, col] = True
