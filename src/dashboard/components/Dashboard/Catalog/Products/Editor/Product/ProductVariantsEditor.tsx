@@ -219,8 +219,8 @@ const ProductVariantsEditor = ({
       disableColumnMenu: true,
     },
     {
-      field: "availability",
-      headerName: "Availability",
+      field: "stock_quantity",
+      headerName: "Stock quantity",
       editable: true,
       width: 125,
       minWidth: 150,
