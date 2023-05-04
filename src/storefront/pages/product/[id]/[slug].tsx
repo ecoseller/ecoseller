@@ -37,10 +37,12 @@ const ProductPage = ({ data }: IProductPageProps) => {
         description={data.meta_description}
         url={basePath}
       />
-      <h1>{data.title}</h1>
-      <MediaGallery media={data.media} />
-      <ProductVariants variants={data.product_variants} />
-      <Output data={data.description_editorjs} />
+      <div className={`container`}>
+        <h1>{data.title}</h1>
+        <MediaGallery media={data.media} />
+        <ProductVariants variants={data.product_variants} />
+        <Output data={data.description_editorjs} />
+      </div>
     </>
   );
 };
