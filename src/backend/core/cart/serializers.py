@@ -1,5 +1,8 @@
 from rest_framework.serializers import (
     ModelSerializer,
+    Serializer,
+    CharField,
+    IntegerField,
 )
 from cart.models import (
     Cart,
@@ -20,14 +23,10 @@ class CartItemSerializer(ModelSerializer):
     class Meta:
         model = CartItem
         fields = (
-            "id",
             "product_variant",
-            "product",
             "unit_price_gross",
             "unit_price_net",
             "quantity",
-            "update_at",
-            "create_at",
         )
 
 
@@ -49,3 +48,20 @@ class CartSerializer(ModelSerializer):
             "create_at",
             "cart_items",
         )
+
+
+class CartItemUpdateSerializer(Serializer):
+    """
+    Serializer used for updating cart items
+    """
+
+    sku = CharField()
+    quantity = IntegerField(min_value=1)
+
+    def create(self, validated_data):
+        return CartItemUpdateData(validated_data["sku"], validated_data["quantity"])
+
+
+class CartItemUpdateData:
+    def __init__(self, sku, quantity):
+        self.sku, self.quantity = sku, quantity
