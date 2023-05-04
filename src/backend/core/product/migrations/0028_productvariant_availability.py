@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('product', '0027_alter_pricelist_is_default'),
+        ("product", "0027_alter_pricelist_is_default"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='productvariant',
-            name='availability',
+            model_name="productvariant",
+            name="availability",
             field=models.IntegerField(default=0),
         ),
     ]
