@@ -19,6 +19,7 @@ class ProductVariant(models.Model):
     sku = models.CharField(max_length=255, blank=True, primary_key=True, unique=True)
     ean = models.CharField(max_length=13, blank=True)
     weight = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    availability = models.IntegerField(default=0)
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
     attributes = models.ManyToManyField("BaseAttribute", blank=True)
