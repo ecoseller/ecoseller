@@ -218,6 +218,16 @@ const ProductVariantsEditor = ({
       sortable: false,
       disableColumnMenu: true,
     },
+    {
+      field: "stock_quantity",
+      headerName: "Stock quantity",
+      editable: true,
+      width: 125,
+      minWidth: 150,
+      maxWidth: 200,
+      sortable: false,
+      disableColumnMenu: true,
+    },
     ...(pricelistsData
       ? pricelistsData?.map((pricelist: IPriceList) => ({
           field: `$PRICE_${pricelist.code}`,
