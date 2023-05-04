@@ -119,8 +119,8 @@ const MediaGallery = ({ media }: IMediaGalleryProps) => {
       <div
         className={`${styles.slider}`}
         style={{
-          height: `550px`,
-          width: "300px",
+          height: `100px`,
+          width: "100px",
           paddingLeft: 0,
           paddingRight: 0,
         }}
@@ -128,12 +128,12 @@ const MediaGallery = ({ media }: IMediaGalleryProps) => {
         <div className={styles.slider_holder}>
           <div
             ref={thumbnailRef}
-            className={`${styles.slider_items_wrapper} keen-slider thumbnail`}
+            className={`${styles.slider_items_wrapper} keen-slider`}
           >
             {media?.map((item: IProductMedia, index: number) => {
               return (
-                <div className={`${styles.slide_item} keen-slider__slide`}>
-                  <div className={styles.slide_wrapper}>
+                <div className={`${styles.thumbnail_item} keen-slider__slide`}>
+                  <div className={styles.slide_wrapper_thumnail}>
                     <Image
                       src={item?.media}
                       alt={`Product image thumbnail ${index} ${item?.alt}`}
