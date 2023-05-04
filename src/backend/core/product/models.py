@@ -11,6 +11,7 @@ from category.models import (
 )
 from country.models import (
     Currency,
+    Country,
 )
 from django.forms import ValidationError as FormValidationError
 
@@ -47,6 +48,32 @@ class ProductVariant(models.Model):
             "attributes": [attribute.id for attribute in self.attributes.all()],
         }
         RecommenderSystemApi.store_object(data=data)
+
+
+class ProductTypeVatGroup(models.Model):
+    """
+    This model is meant to be used to define vat groups for product types.
+    for each country.
+    """
+
+    product_type = models.ForeignKey(
+        "ProductType",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="vat_groups",
+    )
+    country = models.ForeignKey(
+        Country, on_delete=models.CASCADE, null=True, blank=True
+    )
+    vat = models.IntegerField(default=20)
+    update_at = models.DateTimeField(auto_now=True)
+    create_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return "product_type: {} country: {} vat: {}".format(
+            self.product_type, self.country, self.vat
+        )
 
 
 class ProductType(models.Model):
@@ -391,7 +418,7 @@ class ProductPrice(models.Model):
     )
     price = models.DecimalField(
         max_digits=10, decimal_places=2, blank=False, null=False
-    )
+    )  # this is supposed to be price without VAT
 
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)

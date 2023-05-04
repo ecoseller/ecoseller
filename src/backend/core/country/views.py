@@ -5,9 +5,11 @@ from rest_framework import permissions
 from django.conf import settings
 
 from .models import (
+    Country,
     Currency,
 )
 from .serializers import (
+    CountrySerializer,
     CurrencySerializer,
 )
 
@@ -17,6 +19,36 @@ from rest_framework.generics import RetrieveUpdateDestroyAPIView
 DEFAULT_LANGUAGE_CODE = settings.PARLER_DEFAULT_LANGUAGE_CODE
 LANGUAGES = settings.PARLER_LANGUAGES[None]
 # from parler.utils.conf import LanguagesSetting
+
+
+"""
+Country views
+"""
+
+
+class CountryListView(GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = [
+        "GET",
+        "POST",
+    ]
+    authentication_classes = []
+    serializer_class = CountrySerializer
+
+    def get_queryset(self):
+        return Country.objects.all()
+
+    def get(self, request):
+        qs = self.get_queryset()
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data, status=200)
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
 
 
 """

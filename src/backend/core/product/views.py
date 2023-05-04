@@ -15,6 +15,7 @@ from .models import (
     BaseAttribute,
     ProductMedia,
     ProductType,
+    ProductTypeVatGroup,
 )
 from .serializers import (
     ProductStorefrontDetailSerializer,
@@ -26,6 +27,7 @@ from .serializers import (
     ProductVariantSerializer,
     ProductMediaDetailsSerializer,
     ProductTypeSerializer,
+    ProductTypeVatGroupSerializer,
 )
 
 from rest_framework.parsers import (
@@ -146,6 +148,41 @@ class PriceListDashboardDetailView(RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return PriceList.objects.all()
+
+
+class ProductTypeVatGroupDashboardView(GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = [
+        "GET",
+        "POST",
+    ]
+    authentication_classes = []
+    serializer_class = ProductTypeVatGroupSerializer
+
+    def get_queryset(self):
+        return ProductType.objects.all()
+
+    def get(self, request):
+        product_types = self.get_queryset()
+        serializer = self.serializer_class(product_types, many=True)
+        return Response(serializer.data, status=200)
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            instance = serializer.save()
+            return Response({**serializer.data, "id": instance.id}, status=201)
+        return Response(serializer.errors, status=400)
+
+
+class ProductTypeVatGroupDashboardDetailView(RetrieveUpdateDestroyAPIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = []
+    allowed_methods = ["PUT", "DELETE"]
+    serializer_class = ProductTypeVatGroupSerializer
+    queryset = ProductTypeVatGroup.objects.all()
+    lookup_field = "id"
+    lookup_url_kwarg = "id"
 
 
 class ProductTypeDashboardView(GenericAPIView):
