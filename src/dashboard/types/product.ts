@@ -43,9 +43,17 @@ export interface IProductMedia {
   media: string;
   sort_order: number;
 }
+
+export interface IProductTypeVatGroup {
+  id: number;
+  vat: number;
+  country: number;
+  product_type: number;
+}
 export interface IProductType {
   id?: number;
   name: string;
+  vat_groups: IProductTypeVatGroup[];
   allowed_attribute_types?: IAttributeType[];
   allowed_attribute_types_ids?: number[];
 }

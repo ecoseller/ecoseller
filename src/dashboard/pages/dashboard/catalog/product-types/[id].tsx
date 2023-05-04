@@ -21,18 +21,26 @@ import Alert from "@mui/material/Alert";
 // types
 import { putProductType } from "@/api/product/types";
 import { IAttributeType, IProductType } from "@/types/product";
+import { ICountry } from "@/types/country";
 // api
 import { axiosPrivate } from "@/utils/axiosPrivate";
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
+import ProductTypeVatGroup from "@/components/Dashboard/Catalog/ProducType/ProductTypeVatGroup";
+import { countryListAPI } from "@/pages/api/country";
+import { NextRequest } from "next/server";
+import { productAttributeTypeAPI } from "@/pages/api/product/attribute/type";
+import { productTypeDetailAPI } from "@/pages/api/product/type/[id]";
 
 interface IProps {
   productType: IProductType;
   attributesData: IAttributeType[];
+  countries: ICountry[];
 }
 
 const DashboardProductTypeDetailPage = ({
   productType,
   attributesData,
+  countries,
 }: IProps) => {
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
   const [state, setState] = useState<IProductType>(productType);
@@ -108,6 +116,12 @@ const DashboardProductTypeDetailPage = ({
               setState={(v: IProductType) => setState(v)}
               attributeTypes={attributesData}
             />
+            <ProductTypeVatGroup
+              state={state}
+              setState={(v: IProductType) => setState(v)}
+              countries={countries}
+            />
+
             {snackbar ? (
               <Snackbar
                 open={snackbar.open}
@@ -142,21 +156,32 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const params = context.params;
   const id = params?.id;
 
-  const productTypeRes = await axiosPrivate.get(
-    `/product/dashboard/type/${id}/`
-  );
-  const productType = productTypeRes.data;
+  const { req, res } = context;
 
-  const attributesRes = await axiosPrivate.get(
-    `/product/dashboard/attribute/type/`
+  const productType = await productTypeDetailAPI(
+    "GET",
+    Number(id),
+    req as NextApiRequest,
+    res as NextApiResponse
   );
-  const attributesData = attributesRes.data;
-  console.log("attributes", attributesData);
+
+  const attributesData = await productAttributeTypeAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
+  const countries = await countryListAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
 
   return {
     props: {
       productType,
       attributesData,
+      countries,
     },
   };
 };
