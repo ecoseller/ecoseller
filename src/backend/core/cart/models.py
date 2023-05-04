@@ -3,6 +3,7 @@ from country.models import (
     Country,
 )
 from product.models import ProductVariant
+from user.models import User
 
 
 class Cart(models.Model):
@@ -19,6 +20,7 @@ class Cart(models.Model):
     country = models.ForeignKey(Country, null=True, on_delete=models.SET_NULL)
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
 
 
 class CartItem(models.Model):
