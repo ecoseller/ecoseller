@@ -7,10 +7,10 @@ import {
   backendApiHelper,
   cartApiUrlHelper,
 } from "@/utils/interceptors/api";
-import { ICountry } from "@/types/country";
+import { IVatGroup } from "@/types/country";
 import { HTTPMETHOD } from "@/types/common";
 
-export const productTypeVatGroupDetailAPI = async (
+export const vatGroupDetailAPI = async (
   method: HTTPMETHOD,
   id: number,
   req?: NextApiRequest,
@@ -20,14 +20,14 @@ export const productTypeVatGroupDetailAPI = async (
     setRequestResponse(req, res);
   }
 
-  const url = `/product/dashboard/type/vat-group/${id}/`;
+  const url = `/country/vat-group/${id}/`;
 
   switch (method) {
     case "GET":
       return await api
         .get(url)
         .then((response) => response.data)
-        .then((data: ICountry) => {
+        .then((data: IVatGroup) => {
           return data;
         })
         .catch((error: any) => {
@@ -41,7 +41,7 @@ export const productTypeVatGroupDetailAPI = async (
       return await api
         .put(url, body)
         .then((response) => response.data)
-        .then((data: ICountry) => {
+        .then((data: IVatGroup) => {
           return data;
         })
         .catch((error: any) => {
@@ -65,7 +65,7 @@ export const productTypeVatGroupDetailAPI = async (
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   /**
-   * This is a wrapper for product type vat group API
+   * This is a wrapper for vat group detail API
    * it allows to POST/GET data from the backend
    */
 
@@ -73,7 +73,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query;
 
   if (method === "GET" || method === "PUT" || method === "DELETE") {
-    return productTypeVatGroupDetailAPI(method, Number(id), req, res)
+    return vatGroupDetailAPI(method, Number(id), req, res)
       .then((data) => res.status(200).json(data))
       .catch((error) => res.status(400).json(null));
   }

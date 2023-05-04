@@ -21,7 +21,7 @@ import Alert from "@mui/material/Alert";
 // types
 import { putProductType } from "@/api/product/types";
 import { IAttributeType, IProductType } from "@/types/product";
-import { ICountry } from "@/types/country";
+import { ICountry, IVatGroup } from "@/types/country";
 // api
 import { axiosPrivate } from "@/utils/axiosPrivate";
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
@@ -30,16 +30,19 @@ import { countryListAPI } from "@/pages/api/country";
 import { NextRequest } from "next/server";
 import { productAttributeTypeAPI } from "@/pages/api/product/attribute/type";
 import { productTypeDetailAPI } from "@/pages/api/product/type/[id]";
+import { vatGroupAPI } from "@/pages/api/country/vat-group";
 
 interface IProps {
   productType: IProductType;
   attributesData: IAttributeType[];
+  vatGroups: IVatGroup[];
   countries: ICountry[];
 }
 
 const DashboardProductTypeDetailPage = ({
   productType,
   attributesData,
+  vatGroups,
   countries,
 }: IProps) => {
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
@@ -124,6 +127,7 @@ const DashboardProductTypeDetailPage = ({
             <ProductTypeVatGroup
               state={state}
               setState={(v: IProductType) => setState(v)}
+              vatGroups={vatGroups}
               countries={countries}
             />
 
@@ -176,6 +180,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     res as NextApiResponse
   );
 
+  const vatGroups = await vatGroupAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
   const countries = await countryListAPI(
     "GET",
     req as NextApiRequest,
@@ -186,6 +196,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     props: {
       productType,
       attributesData,
+      vatGroups,
       countries,
     },
   };

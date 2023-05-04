@@ -7,10 +7,10 @@ import {
   backendApiHelper,
   cartApiUrlHelper,
 } from "@/utils/interceptors/api";
-import { ICountry } from "@/types/country";
+import { ICountry, IVatGroup } from "@/types/country";
 import { HTTPMETHOD } from "@/types/common";
 
-export const productTypeVatGroupAPI = async (
+export const vatGroupAPI = async (
   method: HTTPMETHOD,
   req?: NextApiRequest,
   res?: NextApiResponse
@@ -18,14 +18,14 @@ export const productTypeVatGroupAPI = async (
   if (req && res) {
     setRequestResponse(req, res);
   }
-  const url = `/product/dashboard/type/vat-group/`;
+  const url = `/country/vat-group/`;
 
   switch (method) {
     case "GET":
       return await api
         .get(url)
         .then((response) => response.data)
-        .then((data: ICountry[]) => {
+        .then((data: IVatGroup[]) => {
           return data;
         })
         .catch((error: any) => {
@@ -40,7 +40,7 @@ export const productTypeVatGroupAPI = async (
       return await api
         .post(url, body)
         .then((response) => response.data)
-        .then((data: ICountry[]) => {
+        .then((data: IVatGroup) => {
           return data;
         })
         .catch((error: any) => {
@@ -53,14 +53,14 @@ export const productTypeVatGroupAPI = async (
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   /**
-   * This is a wrapper for product type vat group API
+   * This is a wrapper for vat group API
    * it allows to POST/GET data from the backend
    */
 
   const { method } = req;
 
   if (method === "GET" || method === "POST") {
-    return productTypeVatGroupAPI(method, req, res)
+    return vatGroupAPI(method, req, res)
       .then((data) => res.status(200).json(data))
       .catch((error) => res.status(400).json(null));
   }
