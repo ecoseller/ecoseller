@@ -67,6 +67,7 @@ export interface IProductVariant {
   sku: string;
   ean: string;
   weight: number;
+  availability: number;
   attributes: number[];
   price: IProductPrice[];
 }
