@@ -17,6 +17,7 @@ import {
   NextApiRequest,
   NextApiResponse,
 } from "next/types";
+import ProductVariants from "@/components/ProductDetail/ProductVariants";
 
 interface IProductPageProps {
   data: IProduct;
@@ -27,6 +28,7 @@ const ProductPage = ({ data }: IProductPageProps) => {
     <>
       <h1>{data.title}</h1>
       <MediaGallery media={data.media} />
+      <ProductVariants variants={data.product_variants} />
     </>
   );
 };

@@ -101,7 +101,7 @@ const MediaGallery = ({ media }: IMediaGalleryProps) => {
                   <div className={styles.slide_wrapper}>
                     <Image
                       src={item?.media}
-                      alt={`Slider image ${index}`}
+                      alt={`Product image thumbnail ${index} ${item?.alt}`}
                       fill
                       style={{
                         objectFit: "cover",
@@ -136,13 +136,12 @@ const MediaGallery = ({ media }: IMediaGalleryProps) => {
                   <div className={styles.slide_wrapper}>
                     <Image
                       src={item?.media}
-                      alt={`Slider image ${index}`}
+                      alt={`Product image thumbnail ${index} ${item?.alt}`}
                       fill
                       style={{
                         objectFit: "cover",
                         objectPosition: "center",
                       }}
-                      priority
                     />
                   </div>
                 </div>
