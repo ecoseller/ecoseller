@@ -121,20 +121,23 @@ class ProductPriceListSerializer(serializers.ListSerializer):
             raise "Product variant is required"
 
         prices = []
-        for price in validated_data:
-            price_list = price.pop("price_list")
-            price = price.pop("price")
+        for price_data in validated_data:
+            price_list = price_data.pop("price_list")
+            price = price_data.pop("price")
+            discount = price_data.pop("discount", None)
             try:
                 price_obj = ProductPrice.objects.get(
                     price_list=price_list,
                     product_variant=product_variant,
                 )
                 price_obj.price = price
+                price_obj.discount = discount
             except ProductPrice.DoesNotExist:
                 price_obj = ProductPrice.objects.create(
                     price_list=price_list,
                     product_variant=product_variant,
                     price=price,
+                    discount=discount,
                 )
             price_obj.save()
             prices.append(price_obj)
@@ -153,6 +156,7 @@ class ProductPriceSerializer(ModelSerializer):
         fields = (
             "id",
             "price",
+            "discount",
             "price_list",
         )
 
@@ -171,13 +175,14 @@ class ProductPriceSerializer(ModelSerializer):
         """
         Create new price
         """
-        print(validated_data)
         price_list = validated_data.pop("price_list")
         price = validated_data.pop("price")
+        discount = validated_data.pop("discount", None)
 
         return ProductPrice.objects.create(
             price_list=price_list,
             price=price,
+            discount=discount,
         )
 
     def update(self, instance, validated_data):
@@ -185,8 +190,11 @@ class ProductPriceSerializer(ModelSerializer):
         Update existing price
         """
         price = validated_data.pop("price", None)
+        discount = validated_data.pop("discount", None)
         if price is not None:
             instance.price = price
+        if discount is not None:
+            instance.discount = discount
         instance.save()
         return instance
 

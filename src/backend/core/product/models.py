@@ -3,6 +3,7 @@ from parler.models import TranslatableModel, TranslatedFields
 from ckeditor.fields import RichTextField
 from django_editorjs_fields import EditorJsJSONField
 from api.recommender_system import RecommenderSystemApi
+from django.core.validators import MaxValueValidator, MinValueValidator
 from core.models import (
     SortableModel,
 )
@@ -390,6 +391,13 @@ class ProductPrice(models.Model):
     price = models.DecimalField(
         max_digits=10, decimal_places=2, blank=False, null=False
     )  # this is supposed to be price without VAT
+    discount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+    )  # this is supposed to be discount in percentage
 
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
@@ -402,6 +410,18 @@ class ProductPrice(models.Model):
     @property
     def formatted_price(self):
         return self.price_list.format_price(self.price)
+
+    @property
+    def formatted_discount(self):
+        # calculate discounted price
+        if self.discount is not None:
+            return self.price_list.format_price(self.price * (1 - self.discount / 100))
+        else:
+            return None
+
+    @property
+    def is_discounted(self):
+        return self.discount is not None
 
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
