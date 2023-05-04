@@ -2,8 +2,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 
-from cart.models import Cart
-
 
 # Manager for User model
 class UserManager(BaseUserManager):
@@ -52,7 +50,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
 
-    cart = models.ForeignKey(Cart, null=True, on_delete=models.SET_NULL)
     objects = UserManager()
 
     USERNAME_FIELD = "email"
