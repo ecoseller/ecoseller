@@ -143,6 +143,8 @@ def get_or_create_model(model_class: Type[StoredBaseModel]) -> StoredBaseModel:
 def delete_model(model_class: Type[StoredBaseModel], **kwargs: Any) -> None:
     try:
         model = model_class.get(**kwargs)
+        model.delete()
+    except TypeError:
         model._storage.delete_object(model=model)
     except model_class.DoesNotExist:
         pass
