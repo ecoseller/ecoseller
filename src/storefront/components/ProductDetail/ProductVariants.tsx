@@ -49,7 +49,9 @@ const ProductVariants = ({ variants }: IProductVariantsProps) => {
                 {variant.sku} - attributes
               </TableCell>
               <TableCell align="right">{variant.availability}</TableCell>
-              <TableCell align="right">{variant.price}</TableCell>
+              <TableCell align="right">{variant.price} / pc</TableCell>
+              <TableCell align="right">Select qty</TableCell>
+              <TableCell align="right">add to cart</TableCell>
             </TableRow>
           ))}
         </TableBody>

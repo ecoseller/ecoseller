@@ -18,14 +18,24 @@ import {
   NextApiResponse,
 } from "next/types";
 import ProductVariants from "@/components/ProductDetail/ProductVariants";
+import { Head } from "next/document";
+import HeadMeta from "@/components/Common/SEO";
+import { useRouter } from "next/router";
 
 interface IProductPageProps {
   data: IProduct;
 }
 
 const ProductPage = ({ data }: IProductPageProps) => {
+  const { basePath } = useRouter();
+
   return (
     <>
+      <HeadMeta
+        title={data.meta_title}
+        description={data.meta_description}
+        url={basePath}
+      />
       <h1>{data.title}</h1>
       <MediaGallery media={data.media} />
       <ProductVariants variants={data.product_variants} />
