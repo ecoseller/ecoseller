@@ -7,11 +7,9 @@ from django.conf import settings
 from .models import (
     Country,
     Currency,
+    VatGroup,
 )
-from .serializers import (
-    CountrySerializer,
-    CurrencySerializer,
-)
+from .serializers import CountrySerializer, CurrencySerializer, VatGroupSerializer
 
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 
@@ -112,3 +110,53 @@ class CurrencyDetailView(RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Currency.objects.all()
+
+
+"""
+Vat group views
+"""
+
+
+class VatGroupListView(GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = [
+        "GET",
+        "POST",
+    ]
+    authentication_classes = []
+    serializer_class = VatGroupSerializer
+
+    def get_queryset(self):
+        return VatGroup.objects.all()
+
+    def get(self, request):
+        qs = self.get_queryset()
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data, status=200)
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+
+class VatGroupDetailView(RetrieveUpdateDestroyAPIView):
+    """
+    List all products for dashboard
+    """
+
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = [
+        "GET",
+        "PUT",
+        "DELETE",
+    ]
+    authentication_classes = []
+    serializer_class = VatGroupSerializer
+    lookup_field = "id"
+    lookup_url_kwarg = "id"
+
+    def get_queryset(self):
+        return VatGroup.objects.all()

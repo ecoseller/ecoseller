@@ -9,10 +9,7 @@ from core.models import (
 from category.models import (
     Category,
 )
-from country.models import (
-    Currency,
-    Country,
-)
+from country.models import Currency, Country, VatGroup
 from django.forms import ValidationError as FormValidationError
 
 
@@ -50,35 +47,12 @@ class ProductVariant(models.Model):
         RecommenderSystemApi.store_object(data=data)
 
 
-class ProductTypeVatGroup(models.Model):
-    """
-    This model is meant to be used to define vat groups for product types.
-    for each country.
-    """
-
-    product_type = models.ForeignKey(
-        "ProductType",
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name="vat_groups",
-    )
-    country = models.ForeignKey(
-        Country, on_delete=models.CASCADE, null=True, blank=True
-    )
-    vat = models.IntegerField(default=20)
-    update_at = models.DateTimeField(auto_now=True)
-    create_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self) -> str:
-        return "product_type: {} country: {} vat: {}".format(
-            self.product_type, self.country, self.vat
-        )
-
-
 class ProductType(models.Model):
     name = models.CharField(max_length=200, blank=True, null=True)
     allowed_attribute_types = models.ManyToManyField("AttributeType", blank=True)
+    vat_groups = models.ManyToManyField(
+        VatGroup, blank=True, related_name="product_types"
+    )
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
 

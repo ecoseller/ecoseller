@@ -61,3 +61,28 @@ class Currency(models.Model):
         if self.symbol_position == "BEFORE":
             return "{} {}".format(self.symbol, price)
         return "{} {}".format(price, self.symbol)
+
+
+class VatGroup(models.Model):
+    """
+    This model represents VAT group object which is used in `PriceList` model
+    It helps to keep track of VAT group name and rate
+    """
+
+    name = models.CharField(max_length=200, blank=False, null=False, unique=True)
+    rate = models.DecimalField(
+        max_digits=5, decimal_places=2, blank=False, null=False, unique=True
+    )
+    country = models.ForeignKey(
+        "country.Country", on_delete=models.CASCADE, blank=False, null=False
+    )
+
+    update_at = models.DateTimeField(auto_now=True)
+    create_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "VAT Group"
+        verbose_name_plural = "VAT Groups"
+
+    def __str__(self) -> str:
+        return "{} ({})".format(self.name, self.rate)

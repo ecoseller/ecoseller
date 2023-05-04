@@ -37,7 +37,6 @@ from product.models import (
     BaseAttribute,
     ProductMediaTypes,
     ProductType,
-    ProductTypeVatGroup,
 )
 
 """
@@ -330,19 +329,6 @@ class AtrributeTypeDashboardSerializer(ModelSerializer):
         )
 
 
-class ProductTypeVatGroupSerializer(ModelSerializer):
-    id = serializers.IntegerField(required=False, read_only=True)
-
-    class Meta:
-        model = ProductTypeVatGroup
-        fields = (
-            "id",
-            "product_type",
-            "country",
-            "vat",
-        )
-
-
 class ProductTypeSerializer(ModelSerializer):
     # name = CharField(required=False)
     allowed_attribute_types = AtrributeTypeDashboardSerializer(
@@ -354,7 +340,6 @@ class ProductTypeSerializer(ModelSerializer):
         source="allowed_attribute_types",
         # write_only=True,
     )
-    vat_groups = ProductTypeVatGroupSerializer(many=True, read_only=True)
     create_at = serializers.DateTimeField(read_only=True)
     update_at = serializers.DateTimeField(read_only=True)
 
