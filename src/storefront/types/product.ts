@@ -1,3 +1,5 @@
+import { DataProp } from "@/utils/editorjs/Output";
+
 export interface IProductSliderData {
   id: number;
   title: string;
@@ -48,7 +50,7 @@ export interface IProduct {
   meta_title: string;
   meta_description: string;
   description: string;
-  description_editorjs: string;
+  description_editorjs: DataProp;
   slug: string;
   product_variants: IProductVariant[];
   media: IProductMedia[];

@@ -4,6 +4,7 @@
 
 // libs
 import { productAPI } from "@/pages/api/product/[id]";
+import Output from "@/utils/editorjs/Output";
 
 // components
 import MediaGallery from "@/components/ProductDetail/MediaGallery";
@@ -39,6 +40,7 @@ const ProductPage = ({ data }: IProductPageProps) => {
       <h1>{data.title}</h1>
       <MediaGallery media={data.media} />
       <ProductVariants variants={data.product_variants} />
+      <Output data={data.description_editorjs} />
     </>
   );
 };
