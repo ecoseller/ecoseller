@@ -26,6 +26,10 @@ export interface IBaseAttribute {
 }
 
 export interface IProductVariant {
+  sku: string;
+  ean: string;
+  weight: number;
+  availability: number;
   price: string;
   attribtues: IBaseAttribute[];
 }
