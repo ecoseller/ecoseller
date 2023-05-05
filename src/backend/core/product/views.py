@@ -16,6 +16,11 @@ from .models import (
     ProductMedia,
     ProductType,
 )
+
+from country.models import (
+    Country,
+)
+
 from .serializers import (
     ProductStorefrontDetailSerializer,
     ProductDashboardListSerializer,
@@ -274,14 +279,21 @@ class ProductDetailStorefront(APIView):
             try:
                 pricelist = PriceList.objects.get(code=pricelist_code)
             except PriceList.DoesNotExist:
-                pricelist = (
-                    PriceList.objects.all().first()
-                )  # .get(is_default=True) <-- uncomment after merging https://github.com/ecoseller/ecoseller/pull/199
+                pricelist = PriceList.objects.get(is_default=True)
         else:
-            pricelist = (
-                PriceList.objects.all().first()
-            )  # .get(is_default=True) <-- uncomment after merging https://github.com/ecoseller/ecoseller/pull/199
+            pricelist = PriceList.objects.get(is_default=True)
         return pricelist
+
+    def get_country(self, request):
+        # obtain country id from request query params or default to `is_default=True`
+        country_code = request.GET.get("country", None)
+        if country_code:
+            try:
+                country = Country.objects.get(code=country_code)
+            except Country.DoesNotExist:
+                country = Country.objects.all().first()
+
+        return country
 
     def get(self, request, pk):
         try:
@@ -290,9 +302,16 @@ class ProductDetailStorefront(APIView):
             return Response({"error": "Product does not exist"}, status=404)
 
         pricelist = self.get_pricelist(request)
+        country = self.get_country(request)
 
         serialized_product = ProductStorefrontDetailSerializer(
-            product, context={"request": request, "pricelist": pricelist}
+            product,
+            context={
+                "request": request,
+                "pricelist": pricelist,
+                "product_type": product.type,
+                "country": country,
+            },
         )
         return Response(serialized_product.data, status=200)
 

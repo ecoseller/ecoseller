@@ -19,6 +19,8 @@ import {
   GridRowModesModel,
   GridRowParams,
   MuiEvent,
+  GridRowModel,
+  GridColumnGroupingModel,
 } from "@mui/x-data-grid/models";
 import { useEffect, useState } from "react";
 import { ISetProductStateAction } from "../ProductEditorWrapper";
@@ -115,18 +117,87 @@ const ProductVariantPricesEditor = ({
       disableColumnMenu: true,
     },
     ...(pricelistsData
-      ? pricelistsData?.map((pricelist: IPriceList) => ({
-          field: `$PRICE_${pricelist.code}`,
-          headerName: pricelist.code,
-          editable: true,
-          width: 125,
-          minWidth: 150,
-          maxWidth: 200,
-          sortable: false,
-          disableColumnMenu: true,
-        }))
+      ? pricelistsData?.flatMap((pricelist: IPriceList) => {
+          const priceColumn = {
+            field: `$PRICE_${pricelist.code}_price`,
+            headerName: `Price`,
+            editable: true,
+            width: 125,
+            minWidth: 150,
+            maxWidth: 200,
+            sortable: false,
+            disableColumnMenu: true,
+            valueFormatter: ({ value }: { value: number }) =>
+              value ? `${value} ${pricelist?.currency}` : null,
+          };
+
+          const discountColumn = {
+            field: `$PRICE_${pricelist.code}_discount`,
+            headerName: `Discount`,
+            editable: true,
+            width: 125,
+            minWidth: 150,
+            maxWidth: 200,
+            sortable: false,
+            disableColumnMenu: true,
+            valueFormatter: ({ value }: { value: number }) =>
+              value ? `${value} %` : null,
+          };
+          return [priceColumn, discountColumn];
+        })
       : []), // <-- this generates pricelist columns
+
+    //   ({
+    //       field: `$PRICE_${pricelist.code}_price`,
+    //       headerName: `Price`,
+    //       editable: true,
+    //       width: 125,
+    //       minWidth: 150,
+    //       maxWidth: 200,
+    //       sortable: false,
+    //       disableColumnMenu: true,
+    //     }))
+    //   : []), // <-- this generates pricelist columns
+    // ...(pricelistsData
+    //   ? pricelistsData?.map((pricelist: IPriceList) => ({
+    //       field: `$PRICE_${pricelist.code}_discount`,
+    //       headerName: `Discount`,
+    //       editable: true,
+    //       width: 125,
+    //       minWidth: 150,
+    //       maxWidth: 200,
+    //       sortable: false,
+    //       disableColumnMenu: true,
+    //     }))
+    //   : []), // <-- this generates pricelist columns
   ];
+
+  const columnGroupingModel: GridColumnGroupingModel =
+    pricelistsData?.map((pricelist: IPriceList) => ({
+      groupId: pricelist.code,
+      children: [
+        {
+          field: `$PRICE_${pricelist.code}_price`,
+          headerName: "Price",
+          editable: true,
+        },
+        {
+          field: `$PRICE_${pricelist.code}_discount`,
+          headerName: "Discount",
+          editable: true,
+        },
+      ],
+    })) || [];
+  //   [
+  //   {
+  //     groupId: "Prices",
+  //     children: [
+  //       ...(pricelistsData?.map((pricelist: IPriceList) => ({
+  //         field: `$PRICE_${pricelist.code}`,
+  //       })) || []), // <-- this creates groupping for pricelists
+  //     ],
+  //   },
+  // ];
 
   const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
     setRowModesModel(newRowModesModel);
@@ -195,6 +266,8 @@ const ProductVariantPricesEditor = ({
               slotProps={{
                 toolbar: { setRows, setRowModesModel },
               }}
+              experimentalFeatures={{ columnGrouping: true }}
+              columnGroupingModel={columnGroupingModel}
               sx={{ overflowX: "scroll" }}
             />
           </>

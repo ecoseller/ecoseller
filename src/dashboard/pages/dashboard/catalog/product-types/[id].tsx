@@ -21,18 +21,29 @@ import Alert from "@mui/material/Alert";
 // types
 import { putProductType } from "@/api/product/types";
 import { IAttributeType, IProductType } from "@/types/product";
+import { ICountry, IVatGroup } from "@/types/country";
 // api
 import { axiosPrivate } from "@/utils/axiosPrivate";
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
+import ProductTypeVatGroup from "@/components/Dashboard/Catalog/ProducType/ProductTypeVatGroup";
+import { countryListAPI } from "@/pages/api/country";
+import { NextRequest } from "next/server";
+import { productAttributeTypeAPI } from "@/pages/api/product/attribute/type";
+import { productTypeDetailAPI } from "@/pages/api/product/type/[id]";
+import { vatGroupAPI } from "@/pages/api/country/vat-group";
 
 interface IProps {
   productType: IProductType;
   attributesData: IAttributeType[];
+  vatGroups: IVatGroup[];
+  countries: ICountry[];
 }
 
 const DashboardProductTypeDetailPage = ({
   productType,
   attributesData,
+  vatGroups,
+  countries,
 }: IProps) => {
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
   const [state, setState] = useState<IProductType>(productType);
@@ -74,15 +85,20 @@ const DashboardProductTypeDetailPage = ({
             preventNavigation={preventNavigation}
             setPreventNavigation={setPreventNavigation}
             onButtonClick={async () => {
-              await putProductType(state)
-                .then((res: any) => {
+              fetch(`/api/product/type/${state.id}`, {
+                method: "PUT",
+                body: JSON.stringify(state),
+              })
+                .then((res) => res.json())
+                .then((res) => {
+                  console.log("res", res);
                   setSnackbar({
                     open: true,
                     message: "Product type updated",
                     severity: "success",
                   });
                 })
-                .catch((err: any) => {
+                .catch((err) => {
                   console.log("postProduct", err);
                   setSnackbar({
                     open: true,
@@ -108,6 +124,13 @@ const DashboardProductTypeDetailPage = ({
               setState={(v: IProductType) => setState(v)}
               attributeTypes={attributesData}
             />
+            <ProductTypeVatGroup
+              state={state}
+              setState={(v: IProductType) => setState(v)}
+              vatGroups={vatGroups}
+              countries={countries}
+            />
+
             {snackbar ? (
               <Snackbar
                 open={snackbar.open}
@@ -142,21 +165,39 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const params = context.params;
   const id = params?.id;
 
-  const productTypeRes = await axiosPrivate.get(
-    `/product/dashboard/type/${id}/`
-  );
-  const productType = productTypeRes.data;
+  const { req, res } = context;
 
-  const attributesRes = await axiosPrivate.get(
-    `/product/dashboard/attribute/type/`
+  const productType = await productTypeDetailAPI(
+    "GET",
+    Number(id),
+    req as NextApiRequest,
+    res as NextApiResponse
   );
-  const attributesData = attributesRes.data;
-  console.log("attributes", attributesData);
+
+  const attributesData = await productAttributeTypeAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
+  const vatGroups = await vatGroupAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
+  const countries = await countryListAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
 
   return {
     props: {
       productType,
       attributesData,
+      vatGroups,
+      countries,
     },
   };
 };

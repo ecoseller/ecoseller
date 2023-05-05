@@ -19,6 +19,10 @@ from django.db.models import (
     Max,
 )
 
+from country.models import (
+    VatGroup,
+)
+
 from category.serializers import (
     CategorySerializer,
     CategoryMinimalSerializer,
@@ -86,7 +90,6 @@ class PriceListBaseSerializer(ModelSerializer):
             "currency",
             "is_default",
             "rounding",
-            "includes_vat",
             "update_at",
             "create_at",
         )
@@ -102,7 +105,6 @@ class PriceListSerializer(PriceListBaseSerializer):
             "name",
             "currency",
             "rounding",
-            "includes_vat",
             "update_at",
             "create_at",
         )
@@ -123,20 +125,23 @@ class ProductPriceListSerializer(serializers.ListSerializer):
             raise "Product variant is required"
 
         prices = []
-        for price in validated_data:
-            price_list = price.pop("price_list")
-            price = price.pop("price")
+        for price_data in validated_data:
+            price_list = price_data.pop("price_list")
+            price = price_data.pop("price")
+            discount = price_data.pop("discount", None)
             try:
                 price_obj = ProductPrice.objects.get(
                     price_list=price_list,
                     product_variant=product_variant,
                 )
                 price_obj.price = price
+                price_obj.discount = discount
             except ProductPrice.DoesNotExist:
                 price_obj = ProductPrice.objects.create(
                     price_list=price_list,
                     product_variant=product_variant,
                     price=price,
+                    discount=discount,
                 )
             price_obj.save()
             prices.append(price_obj)
@@ -155,6 +160,7 @@ class ProductPriceSerializer(ModelSerializer):
         fields = (
             "id",
             "price",
+            "discount",
             "price_list",
         )
 
@@ -173,13 +179,14 @@ class ProductPriceSerializer(ModelSerializer):
         """
         Create new price
         """
-        print(validated_data)
         price_list = validated_data.pop("price_list")
         price = validated_data.pop("price")
+        discount = validated_data.pop("discount", None)
 
         return ProductPrice.objects.create(
             price_list=price_list,
             price=price,
+            discount=discount,
         )
 
     def update(self, instance, validated_data):
@@ -187,8 +194,11 @@ class ProductPriceSerializer(ModelSerializer):
         Update existing price
         """
         price = validated_data.pop("price", None)
+        discount = validated_data.pop("discount", None)
         if price is not None:
             instance.price = price
+        if discount is not None:
+            instance.discount = discount
         instance.save()
         return instance
 
@@ -352,6 +362,7 @@ class ProductTypeSerializer(ModelSerializer):
             "name",
             "allowed_attribute_types",
             "allowed_attribute_types_ids",
+            "vat_groups",
             "create_at",
             "update_at",
         )
@@ -550,8 +561,11 @@ class ProductVariantStorefrontDetailSerializer(ProductVariantSerializer):
     attributes = BaseAttributeStorefrontSerializer(many=True, read_only=True)
 
     def get_price(self, obj):
-        print("GET PRICE", obj, self.context)
-        if "pricelist" not in self.context:
+        if (
+            "pricelist" not in self.context
+            or "country" not in self.context
+            or "product_type" not in self.context
+        ):
             return None
         try:
             price = ProductPrice.objects.get(
@@ -559,9 +573,49 @@ class ProductVariantStorefrontDetailSerializer(ProductVariantSerializer):
             )
         except ProductPrice.DoesNotExist:
             return None
-        # price_serializer = ProductPriceSerializer(price)
-        formatted_price = self.context["pricelist"].format_price(price.price)
-        return formatted_price  # price_serializer.data
+
+        vat_group = (
+            self.context["product_type"]
+            .vat_groups.all()
+            .filter(country=self.context["country"])
+        ).first()
+
+        print(vat_group, self.context["product_type"], self.context["country"])
+
+        if not vat_group:
+            # if there is no vat group for the country, we take the default one
+            vat_group = VatGroup.objects.filter(
+                country=self.context["country"], is_default=True
+            ).first()
+        if not vat_group:
+            # if there is no default vat group, we take the first one
+            vat_group = VatGroup.objects.filter(country=self.context["country"]).first()
+        if not vat_group:
+            # if there is no vat group at all, we return None
+            return None
+
+        price_net = price.price
+        price_gros = price.price_incl_vat(vat_group.rate)
+        print(price_net, price_gros, vat_group.rate)
+
+        return {
+            "net": self.context["pricelist"].format_price(price_net),
+            "gross": self.context["pricelist"].format_price(price_gros),
+            "vat": vat_group.rate,
+            "discount": {
+                "percentage": price.discount,
+                "net": self.context["pricelist"].format_price(price.discounted_price),
+                "gross": self.context["pricelist"].format_price(
+                    price.discounted_price_incl_vat(vat_group.rate)
+                ),
+            }
+            if price.discount is not None
+            else None,
+        }
+
+        # # price_serializer = ProductPriceSerializer(price)
+        # formatted_price = self.context["pricelist"].format_price(price.price)
+        # return formatted_price  # price_serializer.data
 
 
 class ProductStorefrontDetailSerializer(TranslatedSerializerMixin, ModelSerializer):

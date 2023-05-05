@@ -5,7 +5,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("cart", "0002_remove_cartitem_create_at_remove_cartitem_product_and_more"),
         ("user", "0004_user_groups_user_is_superuser_user_user_permissions"),
