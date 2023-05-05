@@ -5,16 +5,19 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('country', '0008_vatgroup'),
+        ("country", "0008_vatgroup"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='vatgroup',
-            name='country',
-            field=models.ForeignKey(default='cz', on_delete=django.db.models.deletion.CASCADE, to='country.country'),
+            model_name="vatgroup",
+            name="country",
+            field=models.ForeignKey(
+                default="cz",
+                on_delete=django.db.models.deletion.CASCADE,
+                to="country.country",
+            ),
             preserve_default=False,
         ),
     ]

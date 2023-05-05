@@ -4,19 +4,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('country', '0009_vatgroup_country'),
-        ('product', '0033_remove_producttypevatgroup_vat_and_more'),
+        ("country", "0009_vatgroup_country"),
+        ("product", "0033_remove_producttypevatgroup_vat_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='producttype',
-            name='vat_groups',
-            field=models.ManyToManyField(blank=True, related_name='product_types', to='country.vatgroup'),
+            model_name="producttype",
+            name="vat_groups",
+            field=models.ManyToManyField(
+                blank=True, related_name="product_types", to="country.vatgroup"
+            ),
         ),
         migrations.DeleteModel(
-            name='ProductTypeVatGroup',
+            name="ProductTypeVatGroup",
         ),
     ]

@@ -5,20 +5,24 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('country', '0008_vatgroup'),
-        ('product', '0032_remove_pricelist_includes_vat'),
+        ("country", "0008_vatgroup"),
+        ("product", "0032_remove_pricelist_includes_vat"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='producttypevatgroup',
-            name='vat',
+            model_name="producttypevatgroup",
+            name="vat",
         ),
         migrations.AddField(
-            model_name='producttypevatgroup',
-            name='vat_group',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='country.vatgroup'),
+            model_name="producttypevatgroup",
+            name="vat_group",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="country.vatgroup",
+            ),
         ),
     ]

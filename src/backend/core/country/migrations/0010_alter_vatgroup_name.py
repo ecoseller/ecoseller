@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('country', '0009_vatgroup_country'),
+        ("country", "0009_vatgroup_country"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='vatgroup',
-            name='name',
+            model_name="vatgroup",
+            name="name",
             field=models.CharField(max_length=200),
         ),
     ]

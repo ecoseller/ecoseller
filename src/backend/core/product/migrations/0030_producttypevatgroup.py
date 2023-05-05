@@ -5,22 +5,45 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('country', '0007_alter_country_options_alter_currency_options_and_more'),
-        ('product', '0029_rename_availability_productvariant_stock_quantity'),
+        ("country", "0007_alter_country_options_alter_currency_options_and_more"),
+        ("product", "0029_rename_availability_productvariant_stock_quantity"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ProductTypeVatGroup',
+            name="ProductTypeVatGroup",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('vat', models.IntegerField(default=20)),
-                ('update_at', models.DateTimeField(auto_now=True)),
-                ('create_at', models.DateTimeField(auto_now_add=True)),
-                ('country', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='country.country')),
-                ('product_type', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='product.producttype')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("vat", models.IntegerField(default=20)),
+                ("update_at", models.DateTimeField(auto_now=True)),
+                ("create_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "country",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="country.country",
+                    ),
+                ),
+                (
+                    "product_type",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="product.producttype",
+                    ),
+                ),
             ],
         ),
     ]
