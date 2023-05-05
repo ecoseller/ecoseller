@@ -44,6 +44,7 @@ export const vatGroupAPI = async (
           return data;
         })
         .catch((error: any) => {
+          console.log("error", error?.response?.data);
           throw error;
         });
     default:

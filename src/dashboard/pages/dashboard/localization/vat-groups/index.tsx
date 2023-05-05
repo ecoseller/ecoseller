@@ -146,6 +146,20 @@ const DashboardVatGroupPage = ({
       throw new Error("Rate is invalid");
     }
 
+    // check if the is_default is unique for the country
+    const isDefaultUnique = rows.every(
+      (row) =>
+        row.country !== newRow.country || row.is_default !== newRow.is_default
+    );
+    if (!isDefaultUnique) {
+      setSnackbar({
+        open: true,
+        message: "Default is not unique for the country",
+        severity: "error",
+      });
+      throw new Error("Default is not unique");
+    }
+
     const updatedRow = { ...newRow, isNew: false };
     console.log("updatedRow", updatedRow);
 
@@ -158,6 +172,7 @@ const DashboardVatGroupPage = ({
           rate: newRow.rate,
           name: newRow.name,
           country: newRow.country,
+          is_default: newRow.is_default,
         }),
       })
         .then((res) => res.json())
@@ -187,6 +202,7 @@ const DashboardVatGroupPage = ({
         name: newRow.name,
         rate: newRow.rate,
         country: newRow.country,
+        is_default: newRow.is_default,
       }),
     })
       .then((res) => res.json())
@@ -295,6 +311,8 @@ const DashboardVatGroupPage = ({
       maxWidth: 200,
       sortable: false,
       disableColumnMenu: true,
+      valueFormatter: ({ value }: { value: number }) =>
+        value ? `${value} %` : null,
     },
     {
       field: "name",
@@ -316,6 +334,17 @@ const DashboardVatGroupPage = ({
         value: country.code,
         label: country.name,
       })),
+      editable: true,
+      width: 125,
+      minWidth: 150,
+      maxWidth: 200,
+      sortable: false,
+      disableColumnMenu: true,
+    },
+    {
+      field: "is_default",
+      headerName: "Default",
+      type: "boolean",
       editable: true,
       width: 125,
       minWidth: 150,
