@@ -69,10 +69,8 @@ class VatGroup(models.Model):
     It helps to keep track of VAT group name and rate
     """
 
-    name = models.CharField(max_length=200, blank=False, null=False, unique=True)
-    rate = models.DecimalField(
-        max_digits=5, decimal_places=2, blank=False, null=False, unique=True
-    )
+    name = models.CharField(max_length=200, blank=False, null=False)
+    rate = models.DecimalField(max_digits=5, decimal_places=2, blank=False, null=False)
     country = models.ForeignKey(
         "country.Country", on_delete=models.CASCADE, blank=False, null=False
     )
