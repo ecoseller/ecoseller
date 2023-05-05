@@ -10,7 +10,7 @@ from core.models import (
 from category.models import (
     Category,
 )
-from country.models import Currency, Country, VatGroup
+from country.models import Currency, VatGroup
 from django.forms import ValidationError as FormValidationError
 
 
