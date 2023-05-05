@@ -3,15 +3,14 @@ from parler.models import TranslatableModel, TranslatedFields
 from ckeditor.fields import RichTextField
 from django_editorjs_fields import EditorJsJSONField
 from api.recommender_system import RecommenderSystemApi
+from django.core.validators import MaxValueValidator, MinValueValidator
 from core.models import (
     SortableModel,
 )
 from category.models import (
     Category,
 )
-from country.models import (
-    Currency,
-)
+from country.models import Currency, VatGroup
 from django.forms import ValidationError as FormValidationError
 
 
@@ -52,6 +51,9 @@ class ProductVariant(models.Model):
 class ProductType(models.Model):
     name = models.CharField(max_length=200, blank=True, null=True)
     allowed_attribute_types = models.ManyToManyField("AttributeType", blank=True)
+    vat_groups = models.ManyToManyField(
+        VatGroup, blank=True, related_name="product_types"
+    )
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
 
@@ -352,9 +354,6 @@ class PriceList(models.Model):
     is_default = models.BooleanField(default=False)
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
     rounding = models.BooleanField(default=False)
-    includes_vat = models.BooleanField(
-        default=True
-    )  # prices in pricelist are including VAT
 
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
@@ -373,6 +372,7 @@ class PriceList(models.Model):
         """
         Formats price according to rounding and currency
         """
+        print("ROUNDING", self.rounding, price)
         price = round(price) if self.rounding else round(price, 2)
         price = f"{price:,}".replace(",", " ")
         return self.currency.format_price(price)
@@ -391,7 +391,14 @@ class ProductPrice(models.Model):
     )
     price = models.DecimalField(
         max_digits=10, decimal_places=2, blank=False, null=False
-    )
+    )  # this is supposed to be price without VAT
+    discount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+    )  # this is supposed to be discount in percentage
 
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
@@ -404,6 +411,29 @@ class ProductPrice(models.Model):
     @property
     def formatted_price(self):
         return self.price_list.format_price(self.price)
+
+    @property
+    def discounted_price(self):
+        if self.discount is not None:
+            return self.price * (1 - self.discount / 100)
+        else:
+            return None
+
+    def format_price(self, price):
+        return self.price_list.format_price(price)
+
+    def price_incl_vat(self, vat):
+        return self.price * (1 + vat / 100)
+
+    def discounted_price_incl_vat(self, vat):
+        if self.discount is not None:
+            return self.price_incl_vat(vat) * (1 - self.discount / 100)
+        else:
+            return None
+
+    @property
+    def is_discounted(self):
+        return self.discount is not None
 
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None

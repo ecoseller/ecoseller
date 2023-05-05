@@ -1,10 +1,23 @@
 from rest_framework.serializers import (
     ModelSerializer,
 )
-from country.models import (
-    Country,
-    Currency,
-)
+from country.models import Country, Currency, VatGroup
+
+
+class VatGroupSerializer(ModelSerializer):
+    """
+    Basic VatGroup model serializer (see country/models.py)
+    """
+
+    class Meta:
+        model = VatGroup
+        fields = (
+            "id",
+            "name",
+            "rate",
+            "is_default",
+            "country",
+        )
 
 
 class CurrencySerializer(ModelSerializer):

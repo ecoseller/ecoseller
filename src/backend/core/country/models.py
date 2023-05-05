@@ -61,3 +61,39 @@ class Currency(models.Model):
         if self.symbol_position == "BEFORE":
             return "{} {}".format(self.symbol, price)
         return "{} {}".format(price, self.symbol)
+
+
+class VatGroup(models.Model):
+    """
+    This model represents VAT group object which is used in `PriceList` model
+    It helps to keep track of VAT group name and rate
+    """
+
+    name = models.CharField(max_length=200, blank=False, null=False)
+    rate = models.DecimalField(max_digits=5, decimal_places=2, blank=False, null=False)
+    country = models.ForeignKey(
+        "country.Country", on_delete=models.CASCADE, blank=False, null=False
+    )
+    is_default = models.BooleanField(default=False)
+
+    update_at = models.DateTimeField(auto_now=True)
+    create_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "VAT Group"
+        verbose_name_plural = "VAT Groups"
+
+    # overload save method to ensure that only one default VAT group exists for each country
+    def save(self, *args, **kwargs):
+        if self.is_default:
+            try:
+                temp = VatGroup.objects.get(country=self.country, is_default=True)
+                if self != temp:
+                    temp.is_default = False
+                    temp.save()
+            except VatGroup.DoesNotExist:
+                pass
+        super(VatGroup, self).save(*args, **kwargs)
+
+    def __str__(self) -> str:
+        return "{} ({})".format(self.name, self.rate)
