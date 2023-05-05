@@ -1,9 +1,11 @@
 from django.contrib.auth.management import create_permissions
 from django.contrib.auth.models import Group, Permission
 
-from roles.models import ManagerGroup
+from roles.models import ManagerGroup, ManagerPermission
 
 from roles.roles_manager import RolesManager
+
+from . import models
 
 
 def populate_groups(apps, schema_editor):
@@ -37,3 +39,14 @@ def populate_groups(apps, schema_editor):
             djangoPerm = RolesManager.manager_permission_to_django_permission(perm)
             if djangoPerm is not None:
                 group.permissions.add(djangoPerm)
+
+    # Create admin group with all permissions
+    adminGroup = Group.objects.create(name="Admin")
+    for perm in Permission.objects.all():
+        adminGroup.permissions.add(perm)
+
+    adminManagerGroup = ManagerGroup.objects.create(
+        name="Admin", description="Admin group"
+    )
+    for perm in ManagerPermission.objects.all():
+        adminManagerGroup.permissions.add(perm)

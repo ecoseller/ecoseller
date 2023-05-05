@@ -113,6 +113,7 @@ class UserGroupView(GenericAPIView):
     def get_queryset(self):
         try:
             user = User.objects.get(email=self.kwargs["id"])
+            print(user.groups.all())
             return user.groups.all()
         except Exception:
             return None
@@ -291,16 +292,26 @@ class PermissionView(GenericAPIView):
     def get(self, request):
         # return just a few permissions that actually makes sense
         # maybe put in some config in the future
-        filterModels = ["category", "productprice", "user", "product"]
+        filterModels = [
+            "group",
+            "cart",
+            "category",
+            "page",
+            "productprice",
+            "productmedia",
+            "product",
+            "user",
+        ]
         filterActions = ["change", "add"]
         permissions = self.get_queryset().values()
         perms = []
         for permission in permissions:
             for action in filterActions:
                 for model in filterModels:
+                    modelName = permission["name"].split("_")[0]
                     if (
                         action in permission["name"]
-                        and model in permission["name"]
+                        and model == modelName
                         and permission not in perms
                     ):
                         perms.append(permission)
