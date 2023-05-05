@@ -15,6 +15,7 @@ class VatGroupSerializer(ModelSerializer):
             "id",
             "name",
             "rate",
+            "is_default",
             "country",
         )
 

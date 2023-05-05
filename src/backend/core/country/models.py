@@ -74,6 +74,7 @@ class VatGroup(models.Model):
     country = models.ForeignKey(
         "country.Country", on_delete=models.CASCADE, blank=False, null=False
     )
+    is_default = models.BooleanField(default=False)
 
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
@@ -81,6 +82,18 @@ class VatGroup(models.Model):
     class Meta:
         verbose_name = "VAT Group"
         verbose_name_plural = "VAT Groups"
+
+    # overload save method to ensure that only one default VAT group exists for each country
+    def save(self, *args, **kwargs):
+        if self.is_default:
+            try:
+                temp = VatGroup.objects.get(country=self.country, is_default=True)
+                if self != temp:
+                    temp.is_default = False
+                    temp.save()
+            except VatGroup.DoesNotExist:
+                pass
+        super(VatGroup, self).save(*args, **kwargs)
 
     def __str__(self) -> str:
         return "{} ({})".format(self.name, self.rate)

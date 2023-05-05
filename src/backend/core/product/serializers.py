@@ -19,6 +19,10 @@ from django.db.models import (
     Max,
 )
 
+from country.models import (
+    VatGroup,
+)
+
 from category.serializers import (
     CategorySerializer,
     CategoryMinimalSerializer,
@@ -557,8 +561,11 @@ class ProductVariantStorefrontDetailSerializer(ProductVariantSerializer):
     attributes = BaseAttributeStorefrontSerializer(many=True, read_only=True)
 
     def get_price(self, obj):
-        print("GET PRICE", obj, self.context)
-        if "pricelist" not in self.context:
+        if (
+            "pricelist" not in self.context
+            or "country" not in self.context
+            or "product_type" not in self.context
+        ):
             return None
         try:
             price = ProductPrice.objects.get(
@@ -566,9 +573,50 @@ class ProductVariantStorefrontDetailSerializer(ProductVariantSerializer):
             )
         except ProductPrice.DoesNotExist:
             return None
-        # price_serializer = ProductPriceSerializer(price)
-        formatted_price = self.context["pricelist"].format_price(price.price)
-        return formatted_price  # price_serializer.data
+
+        vat_group = (
+            self.context["product_type"]
+            .vat_groups.all()
+            .filter(country=self.context["country"])
+        ).first()
+
+        print(vat_group, self.context["product_type"], self.context["country"])
+
+        if not vat_group:
+            # if there is no vat group for the country, we take the default one
+            vat_group = VatGroup.objects.filter(
+                country=self.context["country"], is_default=True
+            ).first()
+        if not vat_group:
+            # if there is no default vat group, we take the first one
+            vat_group = VatGroup.objects.filter(country=self.context["country"]).first()
+        if not vat_group:
+            # if there is no vat group at all, we return None
+            return None
+
+        price_net = price.price
+        price_gros = price.price_incl_vat(vat_group.rate)
+        print(price_net, price_gros, vat_group.rate)
+
+        return {
+            "net": self.context["pricelist"].format_price(price_net),
+            "gross": self.context["pricelist"].format_price(price_gros),
+            "vat": vat_group.rate,
+            "currency": self.context["pricelist"].currency.symbol,
+            "discount": {
+                "percentage": price.discount,
+                "net": self.context["pricelist"].format_price(price.discounted_price),
+                "gross": self.context["pricelist"].format_price(
+                    price.discounted_price_incl_vat(vat_group.rate)
+                ),
+            }
+            if price.discount is not None
+            else None,
+        }
+
+        # # price_serializer = ProductPriceSerializer(price)
+        # formatted_price = self.context["pricelist"].format_price(price.price)
+        # return formatted_price  # price_serializer.data
 
 
 class ProductStorefrontDetailSerializer(TranslatedSerializerMixin, ModelSerializer):

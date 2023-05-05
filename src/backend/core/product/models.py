@@ -372,6 +372,7 @@ class PriceList(models.Model):
         """
         Formats price according to rounding and currency
         """
+        print("ROUNDING", self.rounding, price)
         price = round(price) if self.rounding else round(price, 2)
         price = f"{price:,}".replace(",", " ")
         return self.currency.format_price(price)
@@ -412,10 +413,21 @@ class ProductPrice(models.Model):
         return self.price_list.format_price(self.price)
 
     @property
-    def formatted_discount(self):
-        # calculate discounted price
+    def discounted_price(self):
         if self.discount is not None:
-            return self.price_list.format_price(self.price * (1 - self.discount / 100))
+            return self.price * (1 - self.discount / 100)
+        else:
+            return None
+
+    def format_price(self, price):
+        return self.price_list.format_price(price)
+
+    def price_incl_vat(self, vat):
+        return self.price * (1 + vat / 100)
+
+    def discounted_price_incl_vat(self, vat):
+        if self.discount is not None:
+            return self.price_incl_vat(vat) * (1 - self.discount / 100)
         else:
             return None
 
