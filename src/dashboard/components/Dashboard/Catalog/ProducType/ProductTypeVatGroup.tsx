@@ -102,7 +102,7 @@ const ProductTypeVatGroup = ({
                 }
               );
               return (
-                <FormControl fullWidth>
+                <FormControl fullWidth key={country.code}>
                   <FormLabel>{country.name}</FormLabel>
                   <RadioGroup
                     aria-label="vat-group"
@@ -128,6 +128,7 @@ const ProductTypeVatGroup = ({
                     {vatGroupsForCountry.map((vatGroup: IVatGroup) => {
                       return (
                         <FormControlLabel
+                          key={vatGroup.id}
                           value={vatGroup.id}
                           control={<Radio />}
                           label={`${vatGroup.name} (${vatGroup.rate}%)`}
