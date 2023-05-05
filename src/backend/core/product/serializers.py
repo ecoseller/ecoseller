@@ -602,7 +602,6 @@ class ProductVariantStorefrontDetailSerializer(ProductVariantSerializer):
             "net": self.context["pricelist"].format_price(price_net),
             "gross": self.context["pricelist"].format_price(price_gros),
             "vat": vat_group.rate,
-            "currency": self.context["pricelist"].currency.symbol,
             "discount": {
                 "percentage": price.discount,
                 "net": self.context["pricelist"].format_price(price.discounted_price),
