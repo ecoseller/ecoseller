@@ -6,22 +6,24 @@ from typing import Dict, List, Set, Tuple
 
 from dependency_injector.wiring import inject, Provide
 
-from recommender_system.models.stored.attribute import AttributeModel
-from recommender_system.models.stored.attribute_product_variant import (
+from recommender_system.models.stored.product.attribute import AttributeModel
+from recommender_system.models.stored.product.attribute_product_variant import (
     AttributeProductVariantModel,
 )
-from recommender_system.models.stored.attribute_type import AttributeTypeModel
-from recommender_system.models.stored.attribute_type_product_type import (
+from recommender_system.models.stored.product.attribute_type import AttributeTypeModel
+from recommender_system.models.stored.product.attribute_type_product_type import (
     AttributeTypeProductTypeModel,
 )
-from recommender_system.models.stored.category_ancestor import CategoryAncestorModel
-from recommender_system.models.stored.product import ProductModel
-from recommender_system.models.stored.product_price import ProductPriceModel
-from recommender_system.models.stored.product_product_variant import (
+from recommender_system.models.stored.product.category_ancestor import (
+    CategoryAncestorModel,
+)
+from recommender_system.models.stored.product.product import ProductModel
+from recommender_system.models.stored.product.product_price import ProductPriceModel
+from recommender_system.models.stored.product.product_product_variant import (
     ProductProductVariantModel,
 )
-from recommender_system.models.stored.product_type import ProductTypeModel
-from recommender_system.models.stored.product_variant import ProductVariantModel
+from recommender_system.models.stored.product.product_type import ProductTypeModel
+from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.storage.abstract import AbstractStorage
 from recommender_system.server.app import create_app
 

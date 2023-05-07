@@ -3,11 +3,11 @@ from unittest import TestCase
 
 import pytest
 
-from recommender_system.models.stored.order import OrderModel
-from recommender_system.models.stored.order_product_variant import (
+from recommender_system.models.stored.product.order import OrderModel
+from recommender_system.models.stored.product.order_product_variant import (
     OrderProductVariantModel,
 )
-from recommender_system.models.stored.product_variant import ProductVariantModel
+from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from tests.storage.tools import get_or_create_model, delete_model, default_dicts
 
 

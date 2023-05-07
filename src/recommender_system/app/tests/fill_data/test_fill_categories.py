@@ -2,7 +2,9 @@ import csv
 
 import pytest
 
-from recommender_system.models.stored.category_ancestor import CategoryAncestorModel
+from recommender_system.models.stored.product.category_ancestor import (
+    CategoryAncestorModel,
+)
 from recommender_system.scripts.fill_data import fill_ancestors
 from tests.storage.tools import delete_model
 

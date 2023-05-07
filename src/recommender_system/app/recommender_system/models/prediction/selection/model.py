@@ -3,11 +3,18 @@ from typing import Optional, List
 from dependency_injector.wiring import inject, Provide
 
 from recommender_system.models.prediction.abstract import AbstractPredictionModel
-from recommender_system.models.stored.product_variant import ProductVariantModel
+from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.storage.abstract import AbstractStorage
 
 
 class SelectionPredictionModel(AbstractPredictionModel):
+    class Meta:
+        model_name = "selection"
+
+    @property
+    def default_identifier(self) -> str:
+        return "selection"
+
     @inject
     def retrieve(
         self, storage: AbstractStorage = Provide["product_storage"]
@@ -89,3 +96,9 @@ class SelectionPredictionModel(AbstractPredictionModel):
             weight="recommendation_weight",
             limit=1000,
         )
+
+    def train(self) -> None:
+        pass
+
+    def replace_old(self) -> None:
+        pass

@@ -5,8 +5,8 @@ import numpy as np
 from scipy.spatial.distance import pdist, squareform
 
 from recommender_system.models.prediction.similarity.train_data import TrainData
-from recommender_system.models.stored.attribute_type import AttributeTypeModel
-from recommender_system.models.stored.product_variant import ProductVariantModel
+from recommender_system.models.stored.product.attribute_type import AttributeTypeModel
+from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.storage.abstract import AbstractStorage
 
 

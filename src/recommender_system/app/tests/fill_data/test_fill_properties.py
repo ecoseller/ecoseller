@@ -2,12 +2,12 @@ import csv
 
 import pytest
 
-from recommender_system.models.stored.attribute import AttributeModel
-from recommender_system.models.stored.attribute_type import AttributeTypeModel
-from recommender_system.models.stored.product import ProductModel
-from recommender_system.models.stored.product_price import ProductPriceModel
-from recommender_system.models.stored.product_type import ProductTypeModel
-from recommender_system.models.stored.product_variant import ProductVariantModel
+from recommender_system.models.stored.product.attribute import AttributeModel
+from recommender_system.models.stored.product.attribute_type import AttributeTypeModel
+from recommender_system.models.stored.product.product import ProductModel
+from recommender_system.models.stored.product.product_price import ProductPriceModel
+from recommender_system.models.stored.product.product_type import ProductTypeModel
+from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.scripts.fill_data import (
     fill_attribute_types,
     fill_product_types,
