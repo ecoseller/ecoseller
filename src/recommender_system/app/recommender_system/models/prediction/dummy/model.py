@@ -70,3 +70,6 @@ class DummyPredictionModel(AbstractPredictionModel):
 
     def replace_old(self) -> None:
         pass
+
+    def delete(self) -> None:
+        pass
