@@ -70,13 +70,13 @@ class ProductVariantModel(ProductStoredBaseModel):
             ProductProductVariantModel,
         )
 
-        super().delete()
         for apv in AttributeProductVariantModel.gets(product_variant_sku=self.sku):
             apv.delete()
         for opv in OrderProductVariantModel.gets(product_variant_sku=self.sku):
             opv.delete()
         for ppv in ProductProductVariantModel.gets(product_variant_sku=self.sku):
             ppv.delete()
+        super().delete()
 
     def add_attribute(self, attribute: "AttributeModel") -> None:
         from recommender_system.models.stored.attribute_product_variant import (

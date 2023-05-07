@@ -45,7 +45,8 @@ class SQLAttribute(ProductBase):
     """
 
     id = Column(Integer(), primary_key=True)
-    value = Column(String(200), nullable=True)
+    raw_value = Column(String(200), nullable=True)
+    numeric_value = Column(DECIMAL(), nullable=True)
     order = Column(Integer(), nullable=True)
 
     attribute_type_id = Column(Integer(), nullable=False)

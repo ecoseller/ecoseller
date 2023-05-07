@@ -16,3 +16,7 @@ class SQLProductBase(SQLBase):
 
 class SQLFeedbackBase(SQLBase):
     pass
+
+
+class SQLSimilarityBase(SQLBase):
+    pass
