@@ -49,9 +49,9 @@ class OrderModel(ProductStoredBaseModel):
             OrderProductVariantModel,
         )
 
-        super().delete()
         for opv in OrderProductVariantModel.gets(order_id=self.id):
             opv.delete()
+        super().delete()
 
     def add_product_variant(
         self, product_variant: ProductVariantModel, amount: int

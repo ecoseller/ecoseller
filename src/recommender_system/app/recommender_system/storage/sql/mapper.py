@@ -26,6 +26,7 @@ from recommender_system.storage.sql.models.products import (
     SQLProductType,
     SQLProductVariant,
 )
+from recommender_system.storage.sql.models.similarity import SQLDistance
 
 
 Base = Union[Type[FeedbackBase], Type[ProductBase]]
@@ -51,6 +52,7 @@ _sql_models = [
     SQLProductTranslation,
     SQLProductType,
     SQLProductVariant,
+    SQLDistance,
 ]
 
 

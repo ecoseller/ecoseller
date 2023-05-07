@@ -1,14 +1,15 @@
 import argparse
-from typing import Any, Dict, List, Optional, Type, Union
+from typing import Any, Dict, List, Optional, Tuple, Type, Union, TYPE_CHECKING
 
 from alembic import command, config
-from sqlalchemy import create_engine, and_, func, case
+from sqlalchemy import create_engine, and_, func, case, delete, or_
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Query, Session
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from sqlalchemy.sql.functions import random
 
 from recommender_system.models.stored.base import StoredBaseModel
+from recommender_system.models.stored.distance import DistanceModel
 from recommender_system.models.stored.many_to_many_relation import (
     ManyToManyRelationMixin,
 )
@@ -18,9 +19,19 @@ from recommender_system.storage.sql.mapper import SQLModelMapper
 from recommender_system.storage.sql.models.feedback import FeedbackBase
 from recommender_system.storage.sql.models.products import (
     ProductBase,
+    SQLAttribute,
+    SQLAttributeProductVariant,
+    SQLCategoryAncestor,
     SQLOrderProductVariant,
+    SQLProduct,
+    SQLProductProductVariant,
+    SQLProductPrice,
     SQLProductVariant,
 )
+from recommender_system.storage.sql.models.similarity import SQLDistance
+
+if TYPE_CHECKING:
+    from recommender_system.models.stored.attribute_type import AttributeTypeModel
 
 
 Base = Union[Type[ProductBase], Type[FeedbackBase]]
@@ -55,17 +66,21 @@ class SQLStorage(AbstractStorage):
         command.upgrade(conf, "heads")
 
     def _filter(
-        self, model_class: Type[Base], query: Query, filters: Dict[str, Any]
+        self, model_class: Type[StoredBaseModel], query: Query, filters: Dict[str, Any]
     ) -> Query:
         sql_class = SQLModelMapper.map(model_class=model_class)
 
         query_filters = []
         for key, value in filters.items():
-            if key == "pk":
+            if key == "pks":
                 column = getattr(sql_class, model_class.Meta.primary_key)
+                query_filters.append(column.in_(value))
             else:
-                column = getattr(sql_class, key)
-            query_filters.append(column == value)
+                if key == "pk":
+                    column = getattr(sql_class, model_class.Meta.primary_key)
+                else:
+                    column = getattr(sql_class, key)
+                query_filters.append(column == value)
 
         return query.filter(*query_filters)
 
@@ -136,7 +151,7 @@ class SQLStorage(AbstractStorage):
         if limit is not None:
             query = query.limit(limit)
 
-        return list(map(lambda row: row[0], query.all()))
+        return [row[0] for row in query.all()]
 
     def get_random_weighted_attribute(
         self,
@@ -156,7 +171,7 @@ class SQLStorage(AbstractStorage):
         if limit is not None:
             query = query.limit(limit)
 
-        return list(map(lambda row: row[0], query.all()))
+        return [row[0] for row in query.all()]
 
     def get_related_objects(
         self,
@@ -231,7 +246,144 @@ class SQLStorage(AbstractStorage):
         if limit is not None:
             query = query.limit(limit)
 
-        return list(map(lambda row: row[0], query.all()))
+        return [row[0] for row in query.all()]
+
+    def get_product_variant_popularities(self, pks: List[str]) -> List[Tuple[str, int]]:
+        amount = case(
+            (
+                SQLOrderProductVariant.product_variant_sku.isnot(None),
+                SQLOrderProductVariant.amount,
+            ),
+            else_=0,
+        ).label("amount")
+
+        number_of_orders = (
+            self.session.query(
+                SQLProductVariant.sku,
+                amount,
+            )
+            .select_from(SQLProductVariant)
+            .outerjoin(
+                SQLOrderProductVariant,
+                SQLOrderProductVariant.product_variant_sku == SQLProductVariant.sku,
+            )
+            .subquery()
+        )
+
+        priority = func.sum(number_of_orders.c.amount)
+
+        query = (
+            self.session.query(SQLProductVariant.sku, priority)
+            .select_from(SQLProductVariant)
+            .join(
+                number_of_orders,
+                number_of_orders.c.sku == SQLProductVariant.sku,
+            )
+            .filter(SQLProductVariant.sku.in_(pks))
+            .group_by(SQLProductVariant.sku)
+        )
+
+        return [(row[0], row[1]) for row in query.all()]
+
+    def get_raw_attribute_values(self, attribute_type_id: int) -> List[str]:
+        frequency = func.count(SQLAttribute.id)
+        query = self.session.query(SQLAttribute.raw_value, frequency).select_from(
+            SQLAttribute
+        )
+        query = query.filter(SQLAttribute.attribute_type_id == attribute_type_id)
+        query = query.group_by(SQLAttribute.raw_value)
+        query = query.order_by(frequency.desc())
+
+        return [row[0] for row in query.all()]
+
+    def get_attribute_type_stats(
+        self, attribute_type_id: int
+    ) -> Optional[Tuple[float, float, float]]:
+        query = self.session.query(
+            func.min(SQLAttribute.numeric_value),
+            func.avg(SQLAttribute.numeric_value),
+            func.max(SQLAttribute.numeric_value),
+        ).select_from(SQLAttribute)
+        query = query.filter(SQLAttribute.attribute_type_id == attribute_type_id)
+
+        return query.first()
+
+    def get_product_variant_attribute_values(
+        self, attribute_type_id: int, attribute_type_type: "AttributeTypeModel.Type"
+    ) -> Dict[str, Optional[Any]]:
+        from recommender_system.models.stored.attribute_type import AttributeTypeModel
+
+        if attribute_type_type == AttributeTypeModel.Type.NUMERICAL:
+            value_column = SQLAttribute.numeric_value
+        else:
+            value_column = SQLAttribute.raw_value
+
+        query = self.session.query(
+            SQLAttributeProductVariant.product_variant_sku, value_column
+        ).select_from(SQLAttributeProductVariant)
+        query = query.join(
+            SQLAttribute, SQLAttribute.id == SQLAttributeProductVariant.attribute_id
+        )
+        query = query.filter(SQLAttribute.attribute_type_id == attribute_type_id)
+
+        return {row[0]: row[1] for row in query.all()}
+
+    def get_product_variant_pks_in_category(self, category_id: int) -> List[str]:
+        query = self.session.query(SQLProductVariant.sku).select_from(SQLProductVariant)
+        query = query.join(
+            SQLProductProductVariant,
+            SQLProductProductVariant.product_variant_sku == SQLProductVariant.sku,
+        )
+        query = query.join(
+            SQLProduct, SQLProduct.id == SQLProductProductVariant.product_id
+        )
+        query = query.outerjoin(
+            SQLCategoryAncestor,
+            SQLCategoryAncestor.category_id == SQLProduct.category_id,
+        )
+        query = query.filter(
+            or_(
+                SQLCategoryAncestor.category_ancestor_id == category_id,
+                and_(
+                    SQLCategoryAncestor.category_id.is_(None),
+                    SQLProduct.category_id == category_id,
+                ),
+            )
+        )
+
+        return [row[0] for row in query.all()]
+
+    def get_product_variant_prices(self, pks: List[str]) -> List[Tuple[str, float]]:
+        query = self.session.query(
+            SQLProductPrice.product_variant_sku, SQLProductPrice.price
+        )
+        query = query.select_from(SQLProductPrice)
+        query = query.filter(SQLProductPrice.product_variant_sku.in_(pks))
+        return [(row[0], row[1]) for row in query.all()]
+
+    def get_price_stats(self, pks: List[str]) -> Optional[Tuple[float, float, float]]:
+        query = self.session.query(
+            func.min(SQLProductPrice.price),
+            func.avg(SQLProductPrice.price),
+            func.max(SQLProductPrice.price),
+        ).select_from(SQLProductPrice)
+        query = query.filter(SQLProductPrice.product_variant_sku.in_(pks))
+
+        return query.first()
+
+    def get_closest_product_variant_pks(
+        self, to: str, limit: Optional[int] = None, **kwargs: Any
+    ) -> List[str]:
+        query = self.session.query(SQLDistance.lhs, SQLDistance.rhs).select_from(
+            SQLDistance
+        )
+        query = query.filter(or_(SQLDistance.lhs == to, SQLDistance.rhs == to))
+        query = self._filter(model_class=DistanceModel, query=query, filters=kwargs)
+        query = query.order_by(SQLDistance.distance)
+        if limit is not None:
+            query = query.limit(limit)
+
+        return [row[0] if row[0] != to else row[1] for row in query.all()]
 
     def store_object(self, model: StoredBaseModel, create: bool = False) -> Any:
         sql_class = SQLModelMapper.map(model.__class__)
@@ -272,3 +424,18 @@ class SQLStorage(AbstractStorage):
         self.session.query(sql_class).filter(
             getattr(sql_class, model.Meta.primary_key) == model.pk
         ).delete()
+
+    def delete(self, model_class: Type[StoredBaseModel], **kwargs) -> None:
+        sql_class = SQLModelMapper.map(model_class=model_class)
+
+        stmt_filters = []
+        for key, value in kwargs:
+            if key == "pk":
+                column = getattr(sql_class, model_class.Meta.primary_key)
+            else:
+                column = getattr(sql_class, key)
+            stmt_filters.append(column == value)
+
+        stmt = delete(sql_class).where(*stmt_filters)
+
+        self.session.execute(stmt)

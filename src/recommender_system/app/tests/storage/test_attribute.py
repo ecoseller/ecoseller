@@ -72,15 +72,15 @@ def test_attribute_update(create_attribute):
     attribute_pk = create_attribute
     attribute = AttributeModel.get(pk=attribute_pk)
 
-    assert attribute.value != "unittest"
+    assert attribute.raw_value != "unittest"
 
-    attribute.value = "unittest"
+    attribute.raw_value = "unittest"
     attribute.save()
 
     stored_attribute = AttributeModel.get(pk=attribute.pk)
 
     assert stored_attribute.pk == attribute.pk
-    assert stored_attribute.value == "unittest"
+    assert stored_attribute.raw_value == "unittest"
 
 
 def test_attribute_refresh(create_attribute):
@@ -88,15 +88,15 @@ def test_attribute_refresh(create_attribute):
     attribute = AttributeModel.get(pk=attribute_pk)
 
     modified_attribute = attribute.copy()
-    modified_attribute.value = "unittest"
+    modified_attribute.raw_value = "unittest"
     modified_attribute.save()
 
-    assert modified_attribute.value == "unittest"
-    assert attribute.value != "unittest"
+    assert modified_attribute.raw_value == "unittest"
+    assert attribute.raw_value != "unittest"
 
     attribute.refresh()
 
-    assert attribute.value == "unittest"
+    assert attribute.raw_value == "unittest"
 
 
 def test_attribute_delete(create_attribute):

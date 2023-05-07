@@ -1,6 +1,6 @@
 from sqlalchemy.sql.schema import Column
 from sqlalchemy.sql.sqltypes import (
-    Float,
+    DECIMAL,
     Integer,
     String,
     TIMESTAMP,
@@ -74,7 +74,7 @@ class SQLProductDetailLeave(FeedbackBase):
     user_id = Column(Integer(), nullable=True)
     product_id = Column(Integer(), nullable=False)
     product_variant_sku = Column(String(255), nullable=False)
-    time_spent = Column(Float(), nullable=False)
+    time_spent = Column(DECIMAL(), nullable=False)
     create_at = Column(TIMESTAMP(), nullable=False)
 
     session_id = Column(String(100), nullable=False)

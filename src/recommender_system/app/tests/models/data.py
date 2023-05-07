@@ -51,7 +51,7 @@ def _root_attribute() -> Dict[str, Any]:
     return {
         "id": 0,
         "type": 0,
-        "value": "value 1",
+        "raw_value": "1.0",
         "order": 0,
         "ext_attributes": list(range(1, 3)),
     }
@@ -60,7 +60,8 @@ def _root_attribute() -> Dict[str, Any]:
 def _attribute_model(id: int = 0, parent_id: Optional[int] = None) -> Dict[str, Any]:
     return {
         "id": id,
-        "value": "value 1",
+        "raw_value": "1.0",
+        "numeric_value": 1.0,
         "order": id,
         "attribute_type_id": id,
         "parent_attribute_id": parent_id,

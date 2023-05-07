@@ -12,7 +12,7 @@ class Attribute(ApiBaseModel):
 
     id: int
     type: int
-    value: Optional[str]
+    raw_value: Optional[str]
     order: Optional[int]
     ext_attributes: List[int]
 

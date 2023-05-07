@@ -244,7 +244,7 @@ def fill_products(
     product_variants: Dict[str, ProductVariantModel] = {}
     product_product_variants: List[ProductProductVariantModel] = []
     prices: Dict[str, ProductPriceModel] = {}
-    i = 1
+    i = ProductPriceModel.get_next_pk()
     for row in rows:
         update_at = datetime.utcfromtimestamp(int(row[0]) / 1_000)
 
@@ -345,18 +345,22 @@ def fill_attributes(
     logger.info("Getting attribute objects...")
     attributes: Dict[Tuple[str, str], AttributeModel] = {}
     attribute_product_variants: Dict[Tuple[str, str], AttributeProductVariantModel] = {}
-    i = 1
+    i = AttributeModel.get_next_pk()
     for row in rows:
         if row[2] not in ["available", "categoryid", "790"]:
-            value = row[3][:200]
+            raw_value = row[3][:200]
+            numeric_value = None
             if is_numerical[row[2]]:
-                value = row[3][1:]
-            attribute = attributes.get((row[2], value))
+                numeric_value = float(row[3][1:])
+            attribute = attributes.get((row[2], raw_value))
             if attribute is None:
                 attribute = AttributeModel(
-                    id=i, value=value, attribute_type_id=int(row[2])
+                    id=i,
+                    raw_value=raw_value,
+                    numeric_value=numeric_value,
+                    attribute_type_id=int(row[2]),
                 )
-                attributes[(row[2], value)] = attribute
+                attributes[(row[2], raw_value)] = attribute
                 i += 1
             attribute_product_variants[(row[1], row[2])] = AttributeProductVariantModel(
                 attribute_id=attribute.id, product_variant_sku=row[1]
@@ -387,6 +391,8 @@ def fill_properties(product_storage: AbstractStorage) -> None:
     ]:
         with open(filename, "r") as file:
             rows += list(csv.reader(file, delimiter=","))[1:]
+
+    # TODO: sort by timestamp
 
     fill_attribute_types(rows=rows, product_storage=product_storage)
     fill_product_types(rows=rows, product_storage=product_storage)

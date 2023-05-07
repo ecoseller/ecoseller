@@ -81,9 +81,9 @@ class ProductModel(ProductStoredBaseModel):
             ProductProductVariantModel,
         )
 
-        super().delete()
         for ppv in ProductProductVariantModel.gets(product_id=self.id):
             ppv.delete()
+        super().delete()
 
     def add_product_variant(self, product_variant: "ProductVariantModel") -> None:
         from recommender_system.models.stored.product_product_variant import (
