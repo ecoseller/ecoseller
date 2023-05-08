@@ -28,7 +28,6 @@ from recommender_system.storage.abstract import AbstractStorage
 from recommender_system.server.app import create_app
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
 
 CHUNK_SIZE = 500_000
 
