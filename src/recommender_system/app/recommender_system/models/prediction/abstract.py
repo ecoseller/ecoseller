@@ -1,6 +1,10 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
+from recommender_system.models.stored.model.latest_identifier import (
+    LatestIdentifierModel,
+)
+
 
 class AbstractPredictionModel(ABC):
     identifier: str
@@ -71,3 +75,7 @@ class AbstractPredictionModel(ABC):
     @abstractmethod
     def replace_old(self) -> None:
         raise NotImplementedError()
+
+    @classmethod
+    def get_latest_identifier(cls) -> str:
+        return LatestIdentifierModel.get(model_name=cls.Meta.model_name).identifier

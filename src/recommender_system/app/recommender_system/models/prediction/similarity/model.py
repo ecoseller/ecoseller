@@ -147,11 +147,11 @@ class SimilarityPredictionModel(AbstractPredictionModel):
 
     def replace_old(self) -> None:
         try:
-            current_model = LatestIdentifierModel.get(model_name=self.Meta.model_name)
+            latest_identifier = self.get_latest_identifier()
         except LatestIdentifierModel.DoesNotExist:
-            current_model = None
+            latest_identifier = None
         LatestIdentifierModel(
             model_name=self.Meta.model_name, identifier=self.identifier
         ).save()
-        if current_model is not None:
-            self.__class__(identifier=current_model.identifier).delete()
+        if latest_identifier is not None:
+            self.__class__(identifier=latest_identifier).delete()
