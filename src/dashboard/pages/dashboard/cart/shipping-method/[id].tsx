@@ -11,20 +11,16 @@ import EditableContentWrapper, {
   PrimaryButtonAction,
 } from "@/components/Dashboard/Generic/EditableContentWrapper";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
-import ProductTypeGeneralInformation from "@/components/Dashboard/Catalog/ProducType/ProductTypeGeneralInformation";
-import ProductTypeAllowedAttribtuesSelect from "@/components/Dashboard/Catalog/ProducType/ProductTypeAllowedAttribtuesSelect";
 // mui
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 // types
-import { IAttributeType, IProductType } from "@/types/product";
 import { ICountry, IVatGroup } from "@/types/country";
 // api
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
 import { countryListAPI } from "@/pages/api/country";
-import { productAttributeTypeAPI } from "@/pages/api/product/attribute/type";
 import { vatGroupAPI } from "@/pages/api/country/vat-group";
 import { shippingMethodDetailAPI } from "@/pages/api/cart/shipping-method/[id]";
 import {
@@ -33,13 +29,11 @@ import {
   ISetShippingMethodStateData,
   IShippingMethod,
   IShippingMethodCountry,
-  TShippingMethodNoImage,
 } from "@/types/cart/methods";
 import Grid from "@mui/material/Grid";
 import TranslatedFieldsTabList from "@/components/Dashboard/Generic/TranslatedFieldsTabList";
 import { IEntityTranslations } from "@/types/common";
 import { IDispatchWrapper } from "@/components/Dashboard/Common/IDispatchWrapper";
-import EntityVisibilityForm from "@/components/Dashboard/Generic/Forms/EntityVisibilityForm";
 import ShippingPaymentMethodImageUploader from "@/components/Dashboard/Cart/Methods/ImageUploader";
 import { currencyListAPI } from "@/pages/api/country/currency";
 import { shippingMethodCountryListAPI } from "@/pages/api/cart/shipping-method/[id]/country";
@@ -264,29 +258,12 @@ const DashboardShippingMethodDetailPage = ({
                 />
               </Grid>
               <Grid item md={4} xs={12}>
-                {/* <EntityVisibilityForm
-                  isPublished={shippingMethodState.is_published || false}
-                  setValue={dispatchGeneralInformation.setPublished}
-                /> */}
                 <ShippingPaymentMethodImageUploader
                   state={shippingMethodState}
                   uploadPath="/api/cart/shipping-method/"
                 />
               </Grid>
             </Grid>
-
-            {/* <ProductTypeAllowedAttribtuesSelect
-              state={state}
-              setState={(v: IProductType) => setState(v)}
-              attributeTypes={attributesData}
-            />
-            <ProductTypeVatGroup
-              state={state}
-              setState={(v: IProductType) => setState(v)}
-              vatGroups={vatGroups}
-              countries={countries}
-            /> */}
-
             {snackbar ? (
               <Snackbar
                 open={snackbar.open}

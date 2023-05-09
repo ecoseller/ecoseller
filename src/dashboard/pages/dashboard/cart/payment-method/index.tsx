@@ -8,7 +8,7 @@ import useSWR from "swr";
 
 // layout
 import DashboardLayout from "@/pages/dashboard/layout"; //react
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useState } from "react";
 import RootLayout from "@/pages/layout";
 // components
 // mui
@@ -23,7 +23,6 @@ import {
   GridRowsProp,
   GridColDef,
   GridToolbarContainer,
-  GridRowModes,
   GridRowModesModel,
   GridActionsCellItem,
   GridEventListener,
@@ -33,9 +32,7 @@ import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 // types
 // api
-import { deleteProductType, postProductType } from "@/api/product/types";
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
-import { productTypeListAPI } from "@/pages/api/product/type";
 import { paymentMethodListAPI } from "@/pages/api/cart/payment-method";
 import { IPaymentMethod } from "@/types/cart/methods";
 import imgPath from "@/utils/imgPath";
@@ -183,13 +180,13 @@ const DashboardPaymentMethodPage = ({
             icon={<DeleteIcon />}
             label="Delete"
             onClick={() => {
-              fetch(`/api/cart/shipping-method/${id}`, {
+              fetch(`/api/cart/payment-method/${id}`, {
                 method: "DELETE",
               }).then((res) => {
                 if (res.ok) {
                   setSnackbar({
                     open: true,
-                    message: "Shipping method deleted",
+                    message: "Payment method deleted",
                     severity: "success",
                   });
                   setRows((oldRows) => {
