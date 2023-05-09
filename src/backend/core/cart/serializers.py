@@ -3,8 +3,6 @@ from rest_framework.serializers import (
     Serializer,
     CharField,
     IntegerField,
-    FileField,
-    PrimaryKeyRelatedField,
 )
 from core.mixins import (
     TranslatedSerializerMixin,
