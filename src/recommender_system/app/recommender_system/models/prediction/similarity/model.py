@@ -15,7 +15,7 @@ from recommender_system.models.prediction.similarity.tools import (
     compute_categorical_distances,
 )
 from recommender_system.models.stored.similarity.distance import DistanceModel
-from recommender_system.storage.abstract import AbstractStorage
+from recommender_system.storage.similarity.abstract import AbstractSimilarityStorage
 
 
 class SimilarityPredictionModel(AbstractPredictionModel):
@@ -28,7 +28,8 @@ class SimilarityPredictionModel(AbstractPredictionModel):
 
     @inject
     def delete_distances(
-        self, similarity_storage: AbstractStorage = Provide["similarity_storage"]
+        self,
+        similarity_storage: AbstractSimilarityStorage = Provide["similarity_storage"],
     ) -> None:
         similarity_storage.delete(model_class=DistanceModel)
 
@@ -37,7 +38,7 @@ class SimilarityPredictionModel(AbstractPredictionModel):
         self,
         distances: np.ndarray,
         product_variant_skus: List[str],
-        similarity_storage: AbstractStorage = Provide["similarity_storage"],
+        similarity_storage: AbstractSimilarityStorage = Provide["similarity_storage"],
     ) -> None:
         distance_models = []
         for i in range(len(product_variant_skus)):
@@ -77,9 +78,9 @@ class SimilarityPredictionModel(AbstractPredictionModel):
         session_id: str,
         user_id: Optional[int],
         variant: str,
-        similarity_storage: AbstractStorage = Provide["similarity_storage"],
+        similarity_storage: AbstractSimilarityStorage = Provide["similarity_storage"],
     ) -> List[str]:
-        return similarity_storage.get_closest_product_variant_pks(
+        return similarity_storage.get_closest_product_variant_skus(
             to=variant, limit=1000
         )
 
@@ -89,10 +90,10 @@ class SimilarityPredictionModel(AbstractPredictionModel):
         session_id: str,
         user_id: Optional[int],
         variants_in_cart: List[str],
-        similarity_storage: AbstractStorage = Provide["similarity_storage"],
+        similarity_storage: AbstractSimilarityStorage = Provide["similarity_storage"],
     ) -> List[str]:
         # TODO: Check if there are variants in cart in model manager
-        return similarity_storage.get_closest_product_variant_pks(
+        return similarity_storage.get_closest_product_variant_skus(
             to=random.choice(variants_in_cart), limit=1000
         )
 
@@ -117,9 +118,9 @@ class SimilarityPredictionModel(AbstractPredictionModel):
         user_id: Optional[int],
         variants: List[str],
         variant: str,
-        similarity_storage: AbstractStorage = Provide["similarity_storage"],
+        similarity_storage: AbstractSimilarityStorage = Provide["similarity_storage"],
     ) -> List[str]:
-        return similarity_storage.get_closest_product_variant_pks(
+        return similarity_storage.get_closest_product_variant_skus(
             to=variant, pks=variants
         )
 
@@ -130,16 +131,17 @@ class SimilarityPredictionModel(AbstractPredictionModel):
         user_id: Optional[int],
         variants: List[str],
         variants_in_cart: List[str],
-        similarity_storage: AbstractStorage = Provide["similarity_storage"],
+        similarity_storage: AbstractSimilarityStorage = Provide["similarity_storage"],
     ) -> List[str]:
         # TODO: Check if there are variants in cart in model manager
-        return similarity_storage.get_closest_product_variant_pks(
+        return similarity_storage.get_closest_product_variant_skus(
             to=random.choice(variants_in_cart), pks=variants
         )
 
     @inject
     def delete(
-        self, similarity_storage: AbstractStorage = Provide["similarity_storage"]
+        self,
+        similarity_storage: AbstractSimilarityStorage = Provide["similarity_storage"],
     ) -> None:
         similarity_storage.delete(
             model_class=DistanceModel, model_identifier=self.identifier
