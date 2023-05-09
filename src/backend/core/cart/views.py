@@ -11,7 +11,7 @@ from rest_framework.status import (
     HTTP_201_CREATED,
 )
 from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import ListCreateAPIView
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 
 from cart.models import (
@@ -123,7 +123,7 @@ class CartItemDeleteStorefrontView(APIView):
             return Response(status=HTTP_404_NOT_FOUND)
 
 
-class PaymentMethodListDashboardView(GenericAPIView):
+class PaymentMethodListDashboardView(ListCreateAPIView):
     permission_classes = (AllowAny,)
     allowed_methods = [
         "GET",
@@ -131,21 +131,7 @@ class PaymentMethodListDashboardView(GenericAPIView):
     ]
     authentication_classes = []
     serializer_class = PaymentMethodSerializer
-
-    def get_queryset(self):
-        return PaymentMethod.objects.all()
-
-    def get(self, request):
-        qs = self.get_queryset()
-        serializer = self.get_serializer(qs, many=True)
-        return Response(serializer.data, status=200)
-
-    def post(self, request):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
+    queryset = PaymentMethod.objects.all()
 
 
 class PaymentMethodDetailDashboardView(RetrieveUpdateDestroyAPIView):
@@ -171,7 +157,7 @@ class PaymentMethodDetailDashboardView(RetrieveUpdateDestroyAPIView):
         return PaymentMethod.objects.all()
 
 
-class PaymentMethodCountryListView(GenericAPIView):
+class PaymentMethodCountryListView(ListCreateAPIView):
     permission_classes = (AllowAny,)
     allowed_methods = [
         "GET",
@@ -184,18 +170,6 @@ class PaymentMethodCountryListView(GenericAPIView):
         method_id = self.kwargs.get("method_id")
         print(method_id)
         return PaymentMethodCountry.objects.filter(payment_method__id=method_id)
-
-    def get(self, request, method_id):
-        qs = self.get_queryset()
-        serializer = self.get_serializer(qs, many=True)
-        return Response(serializer.data, status=200)
-
-    def post(self, request, method_id):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
 
 
 class PaymentMethodCountryDetailDashboardView(RetrieveUpdateDestroyAPIView):
@@ -219,24 +193,17 @@ class PaymentMethodCountryDetailDashboardView(RetrieveUpdateDestroyAPIView):
         return PaymentMethodCountry.objects.all()
 
 
-class PaymentMethodCountryFullListView(GenericAPIView):
+class PaymentMethodCountryFullListView(ListCreateAPIView):
     permission_classes = (AllowAny,)
     allowed_methods = [
         "GET",
     ]
     authentication_classes = []
     serializer_class = PaymentMethodCountryFullSerializer
-
-    def get_queryset(self):
-        return PaymentMethodCountry.objects.all()
-
-    def get(self, request):
-        qs = self.get_queryset()
-        serializer = self.get_serializer(qs, many=True)
-        return Response(serializer.data, status=200)
+    queryset = PaymentMethodCountry.objects.all()
 
 
-class ShippingMethodListDashboardView(GenericAPIView):
+class ShippingMethodListDashboardView(ListCreateAPIView):
     permission_classes = (AllowAny,)
     allowed_methods = [
         "GET",
@@ -244,21 +211,7 @@ class ShippingMethodListDashboardView(GenericAPIView):
     ]
     authentication_classes = []
     serializer_class = ShippingMethodSerializer
-
-    def get_queryset(self):
-        return ShippingMethod.objects.all()
-
-    def get(self, request):
-        qs = self.get_queryset()
-        serializer = self.get_serializer(qs, many=True)
-        return Response(serializer.data, status=200)
-
-    def post(self, request):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
+    queryset = ShippingMethod.objects.all()
 
 
 class ShippingMethodDetailDashboardView(RetrieveUpdateDestroyAPIView):
@@ -284,7 +237,7 @@ class ShippingMethodDetailDashboardView(RetrieveUpdateDestroyAPIView):
         return ShippingMethod.objects.all()
 
 
-class ShippingMethodCountryListView(GenericAPIView):
+class ShippingMethodCountryListView(ListCreateAPIView):
     permission_classes = (AllowAny,)
     allowed_methods = [
         "GET",
@@ -297,18 +250,6 @@ class ShippingMethodCountryListView(GenericAPIView):
         method_id = self.kwargs.get("method_id")
         print(method_id)
         return ShippingMethodCountry.objects.filter(shipping_method__id=method_id)
-
-    def get(self, request, method_id):
-        qs = self.get_queryset()
-        serializer = self.get_serializer(qs, many=True)
-        return Response(serializer.data, status=200)
-
-    def post(self, request, method_id):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
 
 
 class ShippingMethodCountryDetailDashboardView(RetrieveUpdateDestroyAPIView):
