@@ -41,6 +41,7 @@ import { ICurrency } from "@/types/localization";
 import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import { Typography } from "@mui/material";
 
 interface IShippingMethodCountryTable extends IShippingMethodCountry {
   isNew: boolean;
@@ -303,8 +304,10 @@ const ShippingMethodCountryEditor = ({
 
   const CustomPaymentMethodComponent = (props: any) => {
     const { id, value, field } = props;
-    const apiRef = useGridApiContext();
+    const country = props?.row?.country;
 
+    const apiRef = useGridApiContext();
+    console.log("country", country);
     const handleChange = (event: any) => {
       const eventValue = event.target.value; // The new value entered by the user
       console.log({ eventValue });
@@ -317,22 +320,31 @@ const ShippingMethodCountryEditor = ({
       });
     };
 
+    if (!country)
+      return (
+        <Typography variant="body2" color="error">
+          Please select country first
+        </Typography>
+      );
+
     return (
       <Select
-        labelId="demo-multiple-name-label"
-        id="demo-multiple-name"
+        labelId="payment-method-select-label"
+        id="payment-method-select"
         multiple
-        value={value}
+        value={value || []}
         onChange={handleChange}
         sx={{ width: "100%" }}
       >
-        {paymentMethodCountryFullList.map(
-          (option: IPaymentMethodCountryFullList) => (
-            <MenuItem key={option.id} value={option.id}>
-              {option.payment_method.title}
-            </MenuItem>
+        {paymentMethodCountryFullList
+          ?.filter(
+            (option: IPaymentMethodCountryFullList) => option.country == country
           )
-        )}
+          .map((option: IPaymentMethodCountryFullList) => (
+            <MenuItem key={option.id} value={option.id}>
+              {option.payment_method.title} {option.country}
+            </MenuItem>
+          ))}
       </Select>
     );
   };
@@ -344,6 +356,8 @@ const ShippingMethodCountryEditor = ({
   const CustomFilterInputSingleSelect = (props: any) => {
     const { item, applyValue, type, apiRef, focusElementRef, ...others } =
       props;
+
+    const country = props?.row?.country;
 
     return (
       <TextField
