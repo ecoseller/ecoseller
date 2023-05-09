@@ -9,7 +9,10 @@ from recommender_system.managers.monitoring_manager import MonitoringManager
 from recommender_system.managers.prediction_pipeline import PredictionPipeline
 from recommender_system.managers.request_manager import RequestManager
 from recommender_system.managers.trainer import Trainer
-from recommender_system.storage.sql.storage import SQLStorage
+from recommender_system.storage.feedback.storage import SQLFeedbackStorage
+from recommender_system.storage.model.storage import SQLModelStorage
+from recommender_system.storage.product.storage import SQLProductStorage
+from recommender_system.storage.similarity.storage import SQLSimilarityStorage
 
 
 class Container(containers.DeclarativeContainer):
@@ -26,22 +29,22 @@ class Container(containers.DeclarativeContainer):
     trainer = providers.Singleton(Trainer)
 
     feedback_storage = providers.Singleton(
-        SQLStorage,
+        SQLFeedbackStorage,
         connection_string=os.environ["RS_FEEDBACK_DB_URL"],
         alembic_location="recommender_system/storage/feedback/alembic.ini",
     )
     model_storage = providers.Singleton(
-        SQLStorage,
+        SQLModelStorage,
         connection_string=os.environ["RS_MODEL_DB_URL"],
         alembic_location="recommender_system/storage/model/alembic.ini",
     )
     product_storage = providers.Singleton(
-        SQLStorage,
+        SQLProductStorage,
         connection_string=os.environ["RS_PRODUCT_DB_URL"],
         alembic_location="recommender_system/storage/product/alembic.ini",
     )
     similarity_storage = providers.Singleton(
-        SQLStorage,
+        SQLSimilarityStorage,
         connection_string=os.environ["RS_SIMILARITY_DB_URL"],
         alembic_location="recommender_system/storage/similarity/alembic.ini",
     )

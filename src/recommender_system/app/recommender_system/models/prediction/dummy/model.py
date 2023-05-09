@@ -4,7 +4,7 @@ from dependency_injector.wiring import inject, Provide
 
 from recommender_system.models.prediction.abstract import AbstractPredictionModel
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
-from recommender_system.storage.abstract import AbstractStorage
+from recommender_system.storage.product.abstract import AbstractProductStorage
 
 
 class DummyPredictionModel(AbstractPredictionModel):
@@ -17,7 +17,7 @@ class DummyPredictionModel(AbstractPredictionModel):
 
     @inject
     def retrieve(
-        self, storage: AbstractStorage = Provide["product_storage"]
+        self, storage: AbstractProductStorage = Provide["product_storage"]
     ) -> List[str]:
         return storage.get_objects_attribute(
             model_class=ProductVariantModel,

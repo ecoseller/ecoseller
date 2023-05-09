@@ -4,7 +4,7 @@ from dependency_injector.wiring import inject, Provide
 
 from recommender_system.models.prediction.abstract import AbstractPredictionModel
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
-from recommender_system.storage.abstract import AbstractStorage
+from recommender_system.storage.product.abstract import AbstractProductStorage
 
 
 class SelectionPredictionModel(AbstractPredictionModel):
@@ -17,7 +17,7 @@ class SelectionPredictionModel(AbstractPredictionModel):
 
     @inject
     def retrieve(
-        self, storage: AbstractStorage = Provide["product_storage"]
+        self, storage: AbstractProductStorage = Provide["product_storage"]
     ) -> List[str]:
         return storage.get_random_weighted_attribute(
             model_class=ProductVariantModel,
@@ -27,7 +27,9 @@ class SelectionPredictionModel(AbstractPredictionModel):
         )
 
     def score(
-        self, variants: List[str], storage: AbstractStorage = Provide["product_storage"]
+        self,
+        variants: List[str],
+        storage: AbstractProductStorage = Provide["product_storage"],
     ) -> List[str]:
         product_variants = storage.get_objects(
             model_class=ProductVariantModel, pks=variants
@@ -86,7 +88,7 @@ class SelectionPredictionModel(AbstractPredictionModel):
         session_id: str,
         user_id: Optional[int],
         variants: Optional[List[str]] = None,
-        storage: AbstractStorage = Provide["product_storage"],
+        storage: AbstractProductStorage = Provide["product_storage"],
     ) -> List[str]:
         if variants is not None:
             return variants

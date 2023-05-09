@@ -25,6 +25,7 @@ from recommender_system.models.stored.product.product_product_variant import (
 from recommender_system.models.stored.product.product_type import ProductTypeModel
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.storage.abstract import AbstractStorage
+from recommender_system.storage.product.abstract import AbstractProductStorage
 from recommender_system.server.app import create_app
 
 logger = logging.getLogger(__name__)
@@ -57,7 +58,7 @@ def fill_node_ancestors(
 @inject
 def fill_ancestors(
     rows: List[List[str]],
-    product_storage: AbstractStorage = Provide["product_storage"],
+    product_storage: AbstractProductStorage = Provide["product_storage"],
 ) -> None:
     nodes = set()
     for row in rows:
@@ -116,7 +117,8 @@ def fill_categories(product_storage: AbstractStorage) -> None:
 
 @inject
 def fill_attribute_types(
-    rows: List[List[str]], product_storage: AbstractStorage = Provide["product_storage"]
+    rows: List[List[str]],
+    product_storage: AbstractProductStorage = Provide["product_storage"],
 ) -> None:
     logger.info("Filling attribute types...")
 
@@ -155,7 +157,8 @@ def fill_attribute_types(
 
 @inject
 def fill_product_types(
-    rows: List[List[str]], product_storage: AbstractStorage = Provide["product_storage"]
+    rows: List[List[str]],
+    product_storage: AbstractProductStorage = Provide["product_storage"],
 ) -> None:
     logger.info("Filling product types...")
 
@@ -230,7 +233,8 @@ def fill_product_types(
 
 @inject
 def fill_products(
-    rows: List[List[str]], product_storage: AbstractStorage = Provide["product_storage"]
+    rows: List[List[str]],
+    product_storage: AbstractProductStorage = Provide["product_storage"],
 ) -> None:
     logger.info("Filling products and product variants...")
 
@@ -329,7 +333,8 @@ def fill_products(
 
 @inject
 def fill_attributes(
-    rows: List[List[str]], product_storage: AbstractStorage = Provide["product_storage"]
+    rows: List[List[str]],
+    product_storage: AbstractProductStorage = Provide["product_storage"],
 ) -> None:
     logger.info("Filling attributes...")
 
