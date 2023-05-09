@@ -1,11 +1,8 @@
 // react
 import React from "react";
 // next
-import { useRouter } from "next/router";
 // mui
-import Typography from "@mui/material/Typography";
-import { useEffect, useState } from "react";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import { useState } from "react";
 import {
   DataGrid,
   GridRowsProp,
@@ -18,8 +15,6 @@ import {
   MuiEvent,
   GridEventListener,
   GridRowId,
-  GridRowModel,
-  GridColumnGroupingModel,
 } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";

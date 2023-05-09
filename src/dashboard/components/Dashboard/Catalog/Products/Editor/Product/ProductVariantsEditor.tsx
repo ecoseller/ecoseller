@@ -16,7 +16,7 @@ import EditorCard from "@/components/Dashboard/Generic/EditorCard";
 // mui
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import EditIcon from "@mui/icons-material/Edit";
 import {
   DataGrid,
   GridRowsProp,
@@ -295,7 +295,7 @@ const ProductVariantsEditor = ({
 
         return [
           <GridActionsCellItem
-            icon={<OpenInNewIcon />}
+            icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
             onClick={handleEditClick(id)}

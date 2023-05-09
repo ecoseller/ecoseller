@@ -46,7 +46,7 @@ const TranslatedFieldsTab = ({
   const [editSlug, setEditSlug] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!editSlug && state?.title != undefined) {
+    if (!editSlug && state?.title != undefined && dispatchWrapper?.setSlug) {
       // set slug from title
       // but only if slug is empty
       dispatchWrapper.setSlug(
@@ -65,53 +65,79 @@ const TranslatedFieldsTab = ({
   return (
     <FormControl fullWidth margin={"normal"}>
       <Stack spacing={2}>
-        <TextField
-          label="Title"
-          value={state?.title || ""}
-          onChange={(
-            e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-          ) => {
-            dispatchWrapper.setTitle(language, e.target.value);
-          }}
-        />
-        <TextField
-          label="Slug"
-          value={state?.slug || ""}
-          disabled={!editSlug}
-          onChange={(
-            e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-          ) => {
-            const slugiffied = slugify(e.target.value, {
-              lower: true,
-              locale: language,
-              strict: true,
-            });
-            dispatchWrapper.setSlug(language, slugiffied);
-          }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={() => setEditSlug(!editSlug)}>
-                  {!editSlug ? (
-                    <Tooltip title={"Don't synchronize slug with title"}>
-                      <SyncDisabledIcon />
-                    </Tooltip>
-                  ) : (
-                    <Tooltip title={"Synchronize slug with title"}>
-                      <SyncIcon />
-                    </Tooltip>
-                  )}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-        <EditorJSField
-          data={state?.description_editorjs || ({} as IEditorJSData)}
-          onChange={(data: IEditorJSData) => {
-            dispatchWrapper.setDescription(language, data);
-          }}
-        />
+        {dispatchWrapper && dispatchWrapper?.setTitle ? (
+          <TextField
+            label="Title"
+            value={state?.title || ""}
+            onChange={(
+              e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+            ) => {
+              dispatchWrapper?.setTitle
+                ? dispatchWrapper.setTitle(language, e.target.value)
+                : null;
+            }}
+          />
+        ) : null}
+        {dispatchWrapper && dispatchWrapper?.setSlug ? (
+          <TextField
+            label="Slug"
+            value={state?.slug || ""}
+            disabled={!editSlug}
+            onChange={(
+              e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+            ) => {
+              const slugiffied = slugify(e.target.value, {
+                lower: true,
+                locale: language,
+                strict: true,
+              });
+              dispatchWrapper?.setSlug
+                ? dispatchWrapper.setSlug(language, slugiffied)
+                : null;
+            }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={() => setEditSlug(!editSlug)}>
+                    {!editSlug ? (
+                      <Tooltip title={"Don't synchronize slug with title"}>
+                        <SyncDisabledIcon />
+                      </Tooltip>
+                    ) : (
+                      <Tooltip title={"Synchronize slug with title"}>
+                        <SyncIcon />
+                      </Tooltip>
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+        ) : null}
+        {dispatchWrapper && dispatchWrapper?.setDescription ? (
+          <EditorJSField
+            data={state?.description_editorjs || ({} as IEditorJSData)}
+            label={"Description"}
+            onChange={(data: IEditorJSData) => {
+              dispatchWrapper?.setDescription
+                ? dispatchWrapper.setDescription(language, data)
+                : null;
+            }}
+          />
+        ) : null}
+        {dispatchWrapper && dispatchWrapper?.setDescriptionPlain ? (
+          <TextField
+            label="Description"
+            value={state?.description || ""}
+            onChange={(
+              e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+            ) => {
+              dispatchWrapper?.setDescriptionPlain
+                ? dispatchWrapper.setDescriptionPlain(language, e.target.value)
+                : null;
+            }}
+          />
+        ) : null}
       </Stack>
     </FormControl>
   );
