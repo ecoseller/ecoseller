@@ -1,7 +1,7 @@
 from rest_framework.serializers import (
     ModelSerializer,
 )
-from country.models import Country, Currency, VatGroup
+from country.models import Country, Currency, VatGroup, Address
 
 
 class VatGroupSerializer(ModelSerializer):
@@ -46,3 +46,12 @@ class CountrySerializer(ModelSerializer):
             "name",
             "locale",
         )
+
+
+class AddressSerializer(ModelSerializer):
+    """
+    Address serializer that serializes all fields
+    """
+    class Meta:
+        model = Address
+        fields = "__all__"

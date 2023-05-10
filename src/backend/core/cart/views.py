@@ -33,6 +33,7 @@ from cart.serializers import (
     PaymentMethodCountrySerializer,
     PaymentMethodCountryFullSerializer,
 )
+from country.serializers import AddressSerializer
 from product.models import ProductVariant, ProductPrice
 
 from rest_framework.parsers import (
@@ -102,6 +103,52 @@ class CartUpdateQuantityStorefrontView(APIView):
                 return Response(status=HTTP_204_NO_CONTENT)
             return Response(status=HTTP_400_BAD_REQUEST)
         except (Cart.DoesNotExist, CartItem.DoesNotExist):
+            return Response(status=HTTP_404_NOT_FOUND)
+
+
+@permission_classes([AllowAny])
+class CartUpdateBillingAddressStorefrontView(APIView):
+    """
+    View for updating cart's billing address
+    """
+
+    def put(self, request, token):
+        try:
+            serializer = AddressSerializer(data=request.data)
+            if serializer.is_valid():
+                address = serializer.save()
+                cart = Cart.objects.get(token=token)
+
+                # update billing address
+                cart.billing_address = address
+                cart.save()
+
+                return Response(status=HTTP_204_NO_CONTENT)
+            return Response(status=HTTP_400_BAD_REQUEST)
+        except Cart.DoesNotExist:
+            return Response(status=HTTP_404_NOT_FOUND)
+
+
+@permission_classes([AllowAny])
+class CartUpdateShippingAddressStorefrontView(APIView):
+    """
+    View for updating cart's shipping address
+    """
+
+    def put(self, request, token):
+        try:
+            serializer = AddressSerializer(data=request.data)
+            if serializer.is_valid():
+                address = serializer.save()
+                cart = Cart.objects.get(token=token)
+
+                # update shipping address
+                cart.shipping_address = address
+                cart.save()
+
+                return Response(status=HTTP_204_NO_CONTENT)
+            return Response(status=HTTP_400_BAD_REQUEST)
+        except Cart.DoesNotExist:
             return Response(status=HTTP_404_NOT_FOUND)
 
 
