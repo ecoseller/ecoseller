@@ -103,6 +103,7 @@ class Address(models.Model):
     """
     Object representing address
     """
+
     street = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
     postal_code = models.CharField(max_length=255)

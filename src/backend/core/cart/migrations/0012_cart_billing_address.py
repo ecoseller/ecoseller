@@ -7,14 +7,18 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('country', '0013_address'),
-        ('cart', '0011_alter_shippingmethodcountry_payment_methods'),
+        ("country", "0013_address"),
+        ("cart", "0011_alter_shippingmethodcountry_payment_methods"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='cart',
-            name='billing_address',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='country.address'),
+            model_name="cart",
+            name="billing_address",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="country.address",
+            ),
         ),
     ]
