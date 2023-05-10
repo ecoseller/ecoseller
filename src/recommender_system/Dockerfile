@@ -4,7 +4,7 @@ RUN mkdir /usr/src/app
 WORKDIR /usr/src/app
 
 RUN apt-get update
-RUN apt-get install -y gcc
+RUN apt-get install -y gcc curl
 
 COPY ./requirements.txt requirements.txt
 COPY ./app/ .

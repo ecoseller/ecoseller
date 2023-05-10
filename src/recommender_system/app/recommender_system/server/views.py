@@ -8,6 +8,10 @@ from recommender_system.managers.prediction_pipeline import PredictionPipeline
 from recommender_system.utils.recommendation_type import RecommendationType
 
 
+def view_healthcheck() -> Tuple[Any, ...]:
+    return "", 200
+
+
 @inject
 def view_store_object(
     data_manager: DataManager = Provide["data_manager"],
