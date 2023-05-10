@@ -1,5 +1,5 @@
-// /api/country/index.ts
-// call the country api in the backend and return the data (list of countries)
+// /api/cart/payment-method/country.ts
+// call the payment method full country list api in the backend and return the data (list of payment method countries)
 import type { NextApiRequest, NextApiResponse } from "next";
 import {
   api,
@@ -10,7 +10,7 @@ import {
 import { ICountry } from "@/types/country";
 import { HTTPMETHOD } from "@/types/common";
 
-export const productTypeListAPI = async (
+export const paymentMethodCountryFullListAPI = async (
   method: HTTPMETHOD,
   req?: NextApiRequest,
   res?: NextApiResponse
@@ -19,22 +19,12 @@ export const productTypeListAPI = async (
     setRequestResponse(req, res);
   }
 
+  const url = `/cart/dashboard/payment/method/country/`;
+
   switch (method) {
     case "GET":
       return await api
-        .get(`/product/dashboard/type/`)
-        .then((response) => response.data)
-        .then((data) => {
-          return data;
-        })
-        .catch((error: any) => {
-          throw error;
-        });
-    case "POST":
-      const body = req?.body;
-      if (!body) throw new Error("Body is empty");
-      return await api
-        .post(`/product/dashboard/type/`, body)
+        .get(url)
         .then((response) => response.data)
         .then((data) => {
           return data;
@@ -49,16 +39,12 @@ export const productTypeListAPI = async (
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   /**
-   * This is a wrapper for the product type API in the backend
+   * This is a wrapper for the payment method dashboard API in the backend that return full list of payment method countries with nested payment methods
    */
   const { method } = req;
   if (method == "GET") {
-    return productTypeListAPI("GET", req, res)
+    return paymentMethodCountryFullListAPI("GET", req, res)
       .then((data) => res.status(200).json(data))
-      .catch((error) => res.status(400).json(null));
-  } else if (method == "POST") {
-    return productTypeListAPI("POST", req, res)
-      .then((data) => res.status(201).json(data))
       .catch((error) => res.status(400).json(null));
   }
   return res.status(404).json({ message: "Method not supported" });

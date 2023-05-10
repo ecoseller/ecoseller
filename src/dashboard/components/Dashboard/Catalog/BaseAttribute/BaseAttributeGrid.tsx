@@ -13,8 +13,7 @@ import Stack from "@mui/material/Stack";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteIcon from "@mui/icons-material/Delete";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import EditIcon from "@mui/icons-material/Edit";
 import {
   DataGrid,
   GridRowsProp,
@@ -354,7 +353,7 @@ const BaseAttributeGrid = ({
 
         return [
           <GridActionsCellItem
-            icon={<OpenInNewIcon />}
+            icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
             onClick={handleEditClick(id)}

@@ -19,6 +19,7 @@ export interface IEntityTranslation {
   description_editorjs?: OutputData;
   short_description?: string;
   slug?: string;
+  name?: string;
 }
 
 export interface IEntityTranslations {

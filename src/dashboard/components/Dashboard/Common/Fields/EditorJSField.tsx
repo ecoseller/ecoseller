@@ -71,12 +71,14 @@ interface IEditorJSFieldProps {
   data: IEditorJSData;
   onChange: (data: IEditorJSData) => void;
   readOnly?: boolean;
+  label?: string;
 }
 
 const EditorJSField = ({
   data,
   onChange,
   readOnly = false,
+  label = "Content",
 }: IEditorJSFieldProps) => {
   const ejInstance = useRef<any>();
 
@@ -132,7 +134,7 @@ const EditorJSField = ({
           fontFamily: "var(--font-base)",
         }}
       >
-        Label
+        {label}
       </span>
       <div
         style={{

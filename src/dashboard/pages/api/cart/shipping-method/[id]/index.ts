@@ -10,8 +10,9 @@ import {
 import { ICountry } from "@/types/country";
 import { HTTPMETHOD } from "@/types/common";
 
-export const productTypeListAPI = async (
+export const shippingMethodDetailAPI = async (
   method: HTTPMETHOD,
+  id: number,
   req?: NextApiRequest,
   res?: NextApiResponse
 ) => {
@@ -19,10 +20,18 @@ export const productTypeListAPI = async (
     setRequestResponse(req, res);
   }
 
+  //   const contentType = req?.headers["content-type"]
+  //     ? req.headers["content-type"]
+  //     : "application/json";
+
+  if (!id) throw new Error("Provide ID");
+
+  const url = `/cart/dashboard/shipping/method/${id}/`;
+
   switch (method) {
     case "GET":
       return await api
-        .get(`/product/dashboard/type/`)
+        .get(url)
         .then((response) => response.data)
         .then((data) => {
           return data;
@@ -30,11 +39,22 @@ export const productTypeListAPI = async (
         .catch((error: any) => {
           throw error;
         });
-    case "POST":
+    case "PUT":
       const body = req?.body;
       if (!body) throw new Error("Body is empty");
       return await api
-        .post(`/product/dashboard/type/`, body)
+        .put(url, body)
+        .then((response) => response.data)
+        .then((data) => {
+          return data;
+        })
+        .catch((error: any) => {
+          console.log("error", error?.response?.data);
+          throw error;
+        });
+    case "DELETE":
+      return await api
+        .delete(url)
         .then((response) => response.data)
         .then((data) => {
           return data;
@@ -49,16 +69,23 @@ export const productTypeListAPI = async (
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   /**
-   * This is a wrapper for the product type API in the backend
+   * This is a wrapper for the shipping method dashboard API in the backend
    */
+
+  const { id } = req.query;
+
   const { method } = req;
   if (method == "GET") {
-    return productTypeListAPI("GET", req, res)
+    return shippingMethodDetailAPI("GET", Number(id), req, res)
       .then((data) => res.status(200).json(data))
       .catch((error) => res.status(400).json(null));
-  } else if (method == "POST") {
-    return productTypeListAPI("POST", req, res)
-      .then((data) => res.status(201).json(data))
+  } else if (method == "PUT") {
+    return shippingMethodDetailAPI("PUT", Number(id), req, res)
+      .then((data) => res.status(200).json(data))
+      .catch((error) => res.status(400).json(error));
+  } else if (method == "DELETE") {
+    return shippingMethodDetailAPI("DELETE", Number(id), req, res)
+      .then((data) => res.status(200).json(data))
       .catch((error) => res.status(400).json(null));
   }
   return res.status(404).json({ message: "Method not supported" });

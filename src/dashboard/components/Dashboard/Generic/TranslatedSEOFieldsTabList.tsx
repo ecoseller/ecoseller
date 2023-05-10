@@ -37,7 +37,8 @@ const TranslatedSEOFieldsTab = ({
   state,
   dispatchWrapper,
 }: ITranslatedSEOFieldsTabProps) => {
-  return (
+  return dispatchWrapper?.setMetaTitle &&
+    dispatchWrapper?.setMetaDescription ? (
     <FormControl fullWidth margin={"normal"}>
       <Stack spacing={2}>
         <TextField
@@ -46,9 +47,12 @@ const TranslatedSEOFieldsTab = ({
           onChange={(
             e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
           ) => {
-            dispatchWrapper.setMetaTitle(language, e.target.value);
+            dispatchWrapper?.setMetaTitle
+              ? dispatchWrapper.setMetaTitle(language, e.target.value)
+              : null;
           }}
         />
+        {}
         <TextField
           label="Meta description"
           value={state?.meta_description || ""}
@@ -56,12 +60,14 @@ const TranslatedSEOFieldsTab = ({
           onChange={(
             e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
           ) => {
-            dispatchWrapper.setMetaDescription(language, e.target.value);
+            dispatchWrapper?.setMetaDescription
+              ? dispatchWrapper.setMetaDescription(language, e.target.value)
+              : null;
           }}
         />
       </Stack>
     </FormControl>
-  );
+  ) : null;
 };
 
 interface ITranslatedSEOFieldsTabListProps {

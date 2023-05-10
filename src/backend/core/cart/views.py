@@ -2,6 +2,7 @@ from rest_framework.decorators import permission_classes
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.mixins import CreateModelMixin
 from rest_framework.permissions import AllowAny
+
 from rest_framework.response import Response
 from rest_framework.status import (
     HTTP_404_NOT_FOUND,
@@ -10,10 +11,35 @@ from rest_framework.status import (
     HTTP_201_CREATED,
 )
 from rest_framework.views import APIView
+from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
 
-from cart.models import Cart, CartItem
-from cart.serializers import CartSerializer, CartItemUpdateSerializer
+from cart.models import (
+    Cart,
+    CartItem,
+    ShippingMethod,
+    ShippingMethodCountry,
+    PaymentMethod,
+    PaymentMethodCountry,
+)
+from cart.serializers import (
+    CartSerializer,
+    CartItemUpdateSerializer,
+    ShippingMethodSerializer,
+    ShippingMethodDetailSerializer,
+    ShippingMethodCountrySerializer,
+    PaymentMethodSerializer,
+    PaymentMethodDetailSerializer,
+    PaymentMethodCountrySerializer,
+    PaymentMethodCountryFullSerializer,
+)
 from product.models import ProductVariant, ProductPrice
+
+from rest_framework.parsers import (
+    MultiPartParser,
+    FormParser,
+    JSONParser,
+)
 
 
 @permission_classes([AllowAny])  # TODO: use authentication
@@ -95,3 +121,153 @@ class CartItemDeleteStorefrontView(APIView):
             return Response(status=HTTP_204_NO_CONTENT)
         except (Cart.DoesNotExist, CartItem.DoesNotExist):
             return Response(status=HTTP_404_NOT_FOUND)
+
+
+class PaymentMethodListDashboardView(ListCreateAPIView):
+    permission_classes = (AllowAny,)
+    allowed_methods = [
+        "GET",
+        "POST",
+    ]
+    authentication_classes = []
+    serializer_class = PaymentMethodSerializer
+    queryset = PaymentMethod.objects.all()
+
+
+class PaymentMethodDetailDashboardView(RetrieveUpdateDestroyAPIView):
+    """
+    List detail payment method
+    """
+
+    permission_classes = (AllowAny,)
+    allowed_methods = [
+        "GET",
+        "PUT",
+        "DELETE",
+    ]
+    authentication_classes = []
+    serializer_class = PaymentMethodDetailSerializer
+
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+
+    lookup_field = "id"
+    lookup_url_kwarg = "id"
+
+    def get_queryset(self):
+        return PaymentMethod.objects.all()
+
+
+class PaymentMethodCountryListView(ListCreateAPIView):
+    permission_classes = (AllowAny,)
+    allowed_methods = [
+        "GET",
+        "POST",
+    ]
+    authentication_classes = []
+    serializer_class = PaymentMethodCountrySerializer
+
+    def get_queryset(self):
+        method_id = self.kwargs.get("method_id")
+        print(method_id)
+        return PaymentMethodCountry.objects.filter(payment_method__id=method_id)
+
+
+class PaymentMethodCountryDetailDashboardView(RetrieveUpdateDestroyAPIView):
+    """
+    Detail of payment method country
+    """
+
+    permission_classes = (AllowAny,)
+    allowed_methods = [
+        "GET",
+        "PUT",
+        "DELETE",
+    ]
+    authentication_classes = []
+
+    serializer_class = PaymentMethodCountrySerializer
+    lookup_field = "id"
+    lookup_url_kwarg = "id"
+
+    def get_queryset(self):
+        return PaymentMethodCountry.objects.all()
+
+
+class PaymentMethodCountryFullListView(ListCreateAPIView):
+    permission_classes = (AllowAny,)
+    allowed_methods = [
+        "GET",
+    ]
+    authentication_classes = []
+    serializer_class = PaymentMethodCountryFullSerializer
+    queryset = PaymentMethodCountry.objects.all()
+
+
+class ShippingMethodListDashboardView(ListCreateAPIView):
+    permission_classes = (AllowAny,)
+    allowed_methods = [
+        "GET",
+        "POST",
+    ]
+    authentication_classes = []
+    serializer_class = ShippingMethodSerializer
+    queryset = ShippingMethod.objects.all()
+
+
+class ShippingMethodDetailDashboardView(RetrieveUpdateDestroyAPIView):
+    """
+    List detail shipping method
+    """
+
+    permission_classes = (AllowAny,)
+    allowed_methods = [
+        "GET",
+        "PUT",
+        "DELETE",
+    ]
+    authentication_classes = []
+    serializer_class = ShippingMethodDetailSerializer
+
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+
+    lookup_field = "id"
+    lookup_url_kwarg = "id"
+
+    def get_queryset(self):
+        return ShippingMethod.objects.all()
+
+
+class ShippingMethodCountryListView(ListCreateAPIView):
+    permission_classes = (AllowAny,)
+    allowed_methods = [
+        "GET",
+        "POST",
+    ]
+    authentication_classes = []
+    serializer_class = ShippingMethodCountrySerializer
+
+    def get_queryset(self):
+        method_id = self.kwargs.get("method_id")
+        print(method_id)
+        return ShippingMethodCountry.objects.filter(shipping_method__id=method_id)
+
+
+class ShippingMethodCountryDetailDashboardView(RetrieveUpdateDestroyAPIView):
+    """
+    List all products for dashboard
+    """
+
+    permission_classes = (AllowAny,)
+    allowed_methods = [
+        "GET",
+        "PUT",
+        "DELETE",
+    ]
+    authentication_classes = []
+
+    serializer_class = ShippingMethodCountrySerializer
+    lookup_field = "id"
+    lookup_url_kwarg = "id"
+
+    def get_queryset(self):
+        return ShippingMethodCountry.objects.all()
