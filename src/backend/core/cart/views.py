@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
+from typing import io
 
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.decorators import permission_classes
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.mixins import CreateModelMixin
@@ -108,7 +110,6 @@ class CartUpdateQuantityStorefrontView(APIView):
             return Response(status=HTTP_404_NOT_FOUND)
 
 
-@permission_classes([AllowAny])
 class CartUpdateAddressBaseStorefrontView(APIView, ABC):
     """
     Base view for updating cart's billing/shipping address.
@@ -158,6 +159,50 @@ class CartUpdateShippingAddressStorefrontView(CartUpdateAddressBaseStorefrontVie
         cart.shipping_address = address
         cart.save()
 
+
+class CartUpdateMethodBaseStorefrontView(APIView, ABC):
+    """
+    Base view for updating cart's payment/shipping method country.
+    Do not use this view directly, use inherited classes instead (and implement `_set_method` method)
+    """
+
+    @abstractmethod
+    def _set_method(self, cart, id):
+        """
+        Set payment/shipping method country
+        """
+        pass
+
+    def post(self, request, token, id):
+        try:
+            cart = Cart.objects.get(token=token)
+            self._set_method(cart, id)
+
+            return Response(status=HTTP_204_NO_CONTENT)
+        except ObjectDoesNotExist:
+            return Response(status=HTTP_404_NOT_FOUND)
+
+
+@permission_classes([AllowAny])
+class CartUpdateShippingMethodStorefrontView(CartUpdateMethodBaseStorefrontView):
+    """
+    View for updating cart's shipping method country
+    """
+
+    def _set_method(self, cart, id):
+        cart.shipping_method_country = ShippingMethodCountry.objects.get(id=id)
+        cart.save()
+
+
+@permission_classes([AllowAny])
+class CartUpdatePaymentMethodStorefrontView(CartUpdateMethodBaseStorefrontView):
+    """
+    View for updating cart's shipping method country
+    """
+
+    def _set_method(self, cart, id):
+        cart.payment_method_country = PaymentMethodCountry.objects.get(id=id)
+        cart.save()
 
 @permission_classes([AllowAny])
 class CartItemDeleteStorefrontView(APIView):

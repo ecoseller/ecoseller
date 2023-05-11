@@ -39,5 +39,7 @@ urlpatterns = [
     ),
     path("storefront/<str:token>/billing-address/", views.CartUpdateBillingAddressStorefrontView.as_view()),
     path("storefront/<str:token>/shipping-address/", views.CartUpdateShippingAddressStorefrontView.as_view()),
+    path("storefront/<str:token>/payment-method/<int:id>/", views.CartUpdatePaymentMethodStorefrontView.as_view()),
+    path("storefront/<str:token>/shipping-method/<int:id>/", views.CartUpdateShippingMethodStorefrontView.as_view()),
     path("storefront/<str:token>/<str:sku>/", views.CartItemDeleteStorefrontView.as_view()),
 ]
