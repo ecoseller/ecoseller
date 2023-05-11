@@ -8,15 +8,14 @@ import EditableContentWrapper, {
 } from "@/components/Dashboard/Generic/EditableContentWrapper";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 import {
-  createGroup,
-  getGroup,
   getPermissions,
   updateGroup,
 } from "@/api/users-roles/users";
 import { IPermission, IGroup } from "@/types/user";
 import CreateRole from "@/components/Dashboard/UsersRoles/Roles/CreateRole";
 import EditRole from "@/components/Dashboard/UsersRoles/Roles/EditRole";
-import { useSnackbarState } from "@/utils/snackbar";
+import { concreteGroupAPI } from "@/pages/api/roles/groups/[role_name]";
+import { NextApiRequest, NextApiResponse } from "next";
 
 interface IEditGroupProps {
   group: IGroup;
@@ -123,12 +122,19 @@ DashboardGroupEditPage.getLayout = (page: ReactElement) => {
 
 export const getServerSideProps = async (context: any) => {
   const groupId = context?.params?.id;
-  const group = await getGroup(groupId);
+  const { req, res } = context;
+
+  const group = await concreteGroupAPI(
+    "GET",
+    groupId as string,
+    req as NextApiRequest,
+    res as NextApiResponse
+  )
 
   const permissions = await getPermissions();
   return {
     props: {
-      group: group.data,
+      group: group,
       permissions: permissions.data,
     },
   };

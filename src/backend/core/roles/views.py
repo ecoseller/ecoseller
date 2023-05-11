@@ -92,8 +92,10 @@ class UserGroupView(GenericAPIView):
             group = RolesManager.django_group_to_manager_group(group)
             userManagerGroups.append(group)
 
+        print("DATA", request.data)
+        print("user", user)
         user.groups.clear()
-        newGroups = request.data["groups"]
+        newGroups = request.data["roles"]
 
         for group in newGroups:
             drfGroup = RolesManager.manager_group_to_django_group(group)

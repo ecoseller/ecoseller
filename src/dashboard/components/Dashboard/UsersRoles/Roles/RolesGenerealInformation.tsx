@@ -15,7 +15,6 @@ import { IGroup } from "@/types/user";
 
 import { Alert, Button, Card, Snackbar, Tooltip } from "@mui/material";
 import { axiosPrivate } from "@/utils/axiosPrivate";
-import { deleteGroup } from "@/api/users-roles/users";
 import { handleClientScriptLoad } from "next/script";
 import { useSnackbarState } from "@/utils/snackbar";
 
@@ -37,22 +36,6 @@ const EditToolbar = (props: any) => {
   );
 };
 
-const getGroups = async () => {
-  const groups: IGroup[] = [];
-  const grps = await axiosPrivate.get(`/roles/groups`);
-
-  for (const group of grps.data) {
-    groups.push({
-      name: group["name"],
-      description: group["description"],
-      permissions: group["permissions"],
-    });
-  }
-
-  return {
-    groups: groups || [],
-  };
-};
 
 const GroupsGrid = () => {
   const router = useRouter();
@@ -77,10 +60,16 @@ const GroupsGrid = () => {
   };
 
   const fetchGroups = async () => {
-    getGroups().then((data) => {
-      console.log("groups data: ", data);
-      setGroups(data.groups);
-    });
+    fetch("/api/roles/groups", {
+      method: "GET",
+    })
+      .then((res) => {
+        if (res.ok) {
+          res.json().then((data) => {
+            setGroups(data);
+          });
+        }
+      });
   };
 
   React.useEffect(() => {
@@ -129,8 +118,10 @@ const GroupsGrid = () => {
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={() => {
-              deleteGroup(row)
+            onClick={async () => {
+              await fetch(`/api/roles/groups/${row.name}`, {
+                method: "DELETE",
+              })
                 .then((res) => {
                   setSnackbar({
                     open: true,

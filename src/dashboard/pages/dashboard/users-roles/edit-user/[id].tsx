@@ -4,12 +4,8 @@ import { ReactElement, useEffect, useState } from "react";
 import DashboardLayout from "@/pages/dashboard/layout"; //react
 import { Alert, Container, Snackbar } from "@mui/material";
 import { IGroup, IUser } from "@/types/user";
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
 import {
-  getUserData,
-  getUserGroups,
-  updateUser,
-  getGroups,
   updateRoles,
 } from "@/api/users-roles/users";
 import EditableContentWrapper, {
@@ -18,7 +14,9 @@ import EditableContentWrapper, {
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 import UserGeneralInformation from "@/components/Dashboard/UsersRoles/Users/Editor/User/UserGeneralInformation";
 import UserGroupsInformation from "@/components/Dashboard/UsersRoles/Users/Editor/User/UserGroupsInformation";
-import { useSnackbarState } from "@/utils/snackbar";
+import { concreteUserAPI } from "@/pages/api/user/users/[email]";
+import { userRoleAPI } from "@/pages/api/roles/user/[email]";
+import { groupsAPI } from "@/pages/api/roles/groups";
 
 interface IUserEditProps {
   userData: IUser;
@@ -61,15 +59,30 @@ const DashboardUserEditPage = ({ userData, groups }: IUserEditProps) => {
           setPreventNavigation={setPreventNavigation}
           onButtonClick={async () => {
             await setPreventNavigation(false);
-            await updateUser(state)
+            fetch(`/api/user/users/${state.email}`,
+              {
+                method: "PUT",
+                body: JSON.stringify(state),
+              })
               .then(async (res: any) => {
-                await updateRoles(state.email, state.roles)
+                console.log("body", JSON.stringify({
+                  roles: state.roles,
+                }));
+                await fetch(`/api/roles/user/${state.email}`,
+                  {
+                    method: "PUT",
+                    body: JSON.stringify({
+                      roles: state.roles,
+                    }),
+                  })
                   .then((res: any) => {
-                    setSnackbar({
-                      open: true,
-                      message: "User updated",
-                      severity: "success",
-                    });
+                    if (res.ok) {
+                      setSnackbar({
+                        open: true,
+                        message: "User updated",
+                        severity: "success",
+                      });
+                    }
                   })
                   .catch((err: any) => {
                     console.log("updateUser", err);
@@ -135,23 +148,39 @@ DashboardUserEditPage.getLayout = (page: ReactElement) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const email = context.params?.id;
-  const userDataRet = await getUserData(email as string);
+  const { req, res } = context;
+  const userDataRet = await concreteUserAPI(
+    "GET",
+    email as string,
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
   const userData: IUser = {
-    email: userDataRet.data.email,
-    first_name: userDataRet.data.first_name,
-    last_name: userDataRet.data.last_name,
-    is_admin: userDataRet.data.is_admin,
+    email: userDataRet.email,
+    first_name: userDataRet?.first_name || "",
+    last_name: userDataRet?.last_nam || "",
+    is_admin: userDataRet.is_admin,
     roles: [],
   };
-  const userRolesData = await getUserGroups(email as string);
-  for (let i = 0; i < userRolesData.data.length; i++) {
-    userData.roles.push(userRolesData.data[i].name);
+  const userRolesData = await userRoleAPI(
+    "GET",
+    email as string,
+    req as NextApiRequest,
+    res as NextApiResponse
+  )
+  for (let i = 0; i < userRolesData?.length; i++) {
+    userData.roles.push(userRolesData[i]?.name);
   }
 
-  const groups = await getGroups();
+  const groups = await groupsAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  )
 
   return {
-    props: { userData: userData, groups: groups.data },
+    props: { userData: userData, groups: groups },
   };
 };
 

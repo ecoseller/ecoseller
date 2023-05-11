@@ -7,7 +7,6 @@ import CreateUser from "@/components/Dashboard/UsersRoles/Users/CreateUser";
 import EditableContentWrapper, {
   PrimaryButtonAction,
 } from "@/components/Dashboard/Generic/EditableContentWrapper";
-import { createUser } from "@/api/users-roles/users";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 import { useSnackbarState } from "@/utils/snackbar";
 
@@ -44,7 +43,13 @@ const DashboardUserAddPage = () => {
           setPreventNavigation={setPreventNavigation}
           onButtonClick={async () => {
             await setPreventNavigation(false);
-            await createUser(email, password)
+            await fetch("/api/user/users", {
+              method: "POST",
+              body: JSON.stringify({
+                email: email,
+                password: password,
+              })
+            })
               .then((res: any) => {
                 setPreventNavigation(false);
                 console.log(preventNavigation);

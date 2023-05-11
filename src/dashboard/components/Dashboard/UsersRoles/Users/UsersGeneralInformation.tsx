@@ -18,8 +18,6 @@ import { IUser } from "@/types/user";
 
 import { Alert, Button, Card, Snackbar } from "@mui/material";
 import { axiosPrivate } from "@/utils/axiosPrivate";
-import { deleteUser } from "@/api/users-roles/users";
-import { useSnackbarState } from "@/utils/snackbar";
 
 const PAGE_SIZE = 30;
 
@@ -171,8 +169,10 @@ const UsersGrid = () => {
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={() => {
-              deleteUser(row.email)
+            onClick={async () => {
+              fetch(`/api/user/users/${row.email}`, {
+                method: "DELETE",
+              })
                 .then((res) => {
                   setSnackbar({
                     open: true,

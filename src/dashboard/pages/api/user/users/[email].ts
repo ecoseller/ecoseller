@@ -15,7 +15,6 @@ export const concreteUserAPI = async (
     email: string,
     req?: NextApiRequest,
     res?: NextApiResponse,
-    body?: any
 ) => {
     if (req && res) {
         setRequestResponse(req, res);
@@ -33,6 +32,9 @@ export const concreteUserAPI = async (
                     throw error;
                 });
         case "PUT":
+            console.log("body", req?.body);
+            const body = req?.body;
+            if (!body) throw new Error("Body is empty");
             return await api
                 .put(`/user/users/${email}`, body)
                 .then((response) => response.data)
@@ -64,10 +66,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
      */
 
     const { method } = req;
-    const { body } = req;
     const { email } = req.query;
 
-    return concreteUserAPI(method as HTTPMETHOD, email as string, req, res, body)
+    return concreteUserAPI(method as HTTPMETHOD, email as string, req, res)
         .then((data) => res.status(200).json(data))
         .catch((error) => res.status(400).json(null));
 };
