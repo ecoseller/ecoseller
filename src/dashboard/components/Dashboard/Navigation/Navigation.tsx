@@ -12,6 +12,7 @@ import { INavigationItem } from "@/utils/navigationData";
 import { useEffect, useState } from "react";
 import { ExpandLess, ExpandMore, StarBorder } from "@mui/icons-material";
 import Collapse from "@mui/material/Collapse";
+import { useUser } from "@/utils/context/user";
 
 interface INavigationProps {
   data: INavigationItem[];
@@ -73,7 +74,9 @@ function NavigationItem({ item, sx, onClick, dense }: INavigationItemProps) {
    * @param sx - style props
    */
 
-  const { title, path, icon, info, children, level } = item;
+  const { title, path, icon, info, children, level, permissions } = item;
+
+  const { checkHasPermission } = useUser();
 
   const { pathname } = useRouter();
 
@@ -83,6 +86,11 @@ function NavigationItem({ item, sx, onClick, dense }: INavigationItemProps) {
   useEffect(() => {
     setOpen(pathname.includes(path));
   }, [pathname]);
+
+  if (permissions && checkHasPermission && !checkHasPermission(permissions)) {
+    // user has no permission to see this item
+    return null;
+  }
 
   if (children && children.length > 0) {
     // generate item and sub-navigation
