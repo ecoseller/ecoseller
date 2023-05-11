@@ -3,10 +3,40 @@
         "EditorRole": {
             "permissions": [
                 {
-                    "name": "product_view_permission",
-                    "description": "Can view product",
-                    "type": "VIEW",
-                    "model": "product"
+                    "name": "cart_change_permission",
+                    "description": "Can change cart",
+                    "type": "CHANGE",
+                    "model": "cart"
+                },
+                {
+                    "name": "cart_add_permission",
+                    "description": "Can add cart",
+                    "type": "ADD",
+                    "model": "cart"
+                },
+                {
+                    "name": "productprice_change_permission",
+                    "description": "Can change product price",
+                    "type": "CHANGE",
+                    "model": "productprice"
+                },
+                {
+                    "name": "productprice_add_permission",
+                    "description": "Can add product price",
+                    "type": "ADD",
+                    "model": "productprice"
+                },
+                {
+                    "name": "productmedia_change_permission",
+                    "description": "Can change product media",
+                    "type": "CHANGE",
+                    "model": "productmedia"
+                },
+                {
+                    "name": "productmedia_add_permission",
+                    "description": "Can add product media",
+                    "type": "ADD",
+                    "model": "productmedia"
                 },
                 {
                     "name": "product_change_permission",
@@ -15,16 +45,34 @@
                     "model": "product"
                 },
                 {
-                    "name": "productprice_view_permission",
-                    "description": "Can view product price",
-                    "type": "VIEW",
-                    "model": "productprice"
+                    "name": "product_add_permission",
+                    "description": "Can add product",
+                    "type": "ADD",
+                    "model": "product"
                 },
                 {
-                    "name": "productprice_change_permission",
-                    "description": "Can change product price",
+                    "name": "category_change_permission",
+                    "description": "Can change category",
                     "type": "CHANGE",
-                    "model": "productprice"
+                    "model": "category"
+                },
+                {
+                    "name": "category_add_permission",
+                    "description": "Can add category",
+                    "type": "ADD",
+                    "model": "category"
+                },
+                {
+                    "name": "page_change_permission",
+                    "description": "Can change page",
+                    "type": "CHANGE",
+                    "model": "page"
+                },
+                {
+                    "name": "page_add_permission",
+                    "description": "Can add page",
+                    "type": "ADD",
+                    "model": "page"
                 }
             ],
             "description": "Editor role",
@@ -35,20 +83,58 @@
         "CopywriterRole": {
             "permissions": [
                 {
-                    "name": "product_view_permission",
-                    "description": "Can view product",
-                    "type": "VIEW",
+                    "name": "page_change_permission",
+                    "description": "Can change page",
+                    "type": "CHANGE",
+                    "model": "page"
+                },
+                {
+                    "name": "product_change_permission",
+                    "description": "Can change product",
+                    "type": "CHANGE",
                     "model": "product"
                 },
                 {
-                    "name": "productprice_view_permission",
-                    "description": "Can view product price",
-                    "type": "VIEW",
-                    "model": "productprice"
+                    "name": "productmedia_change_permission",
+                    "description": "Can change product media",
+                    "type": "CHANGE",
+                    "model": "productmedia"
+                },
+                {
+                    "name": "category_change_permission",
+                    "description": "Can change category",
+                    "type": "CHANGE",
+                    "model": "category"
                 }
             ],
             "description": "Copywriter role",
             "name": "Copywriter"
+        }
+    },
+    {
+        "UserManager": {
+            "permissions": [
+                {
+                    "name": "user_add_permission",
+                    "description": "Can add user",
+                    "type": "ADD",
+                    "model": "user"
+                },
+                {
+                    "name": "user_change_permission",
+                    "description": "Can change user",
+                    "type": "CHANGE",
+                    "model": "user"
+                },
+                {
+                    "name": "group_change_permission",
+                    "description": "Can change group",
+                    "type": "CHANGE",
+                    "model": "group"
+                }
+            ],
+            "description": "User manager role",
+            "name": "UserManager"
         }
     }
 ]
