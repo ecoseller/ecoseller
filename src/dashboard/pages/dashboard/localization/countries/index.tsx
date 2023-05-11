@@ -2,6 +2,8 @@
 
 // libraries
 import useSWR from "swr";
+import getUnicodeFlagIcon from "country-flag-icons/unicode";
+import { hasFlag } from "country-flag-icons";
 
 // layout
 import DashboardLayout from "@/pages/dashboard/layout"; //react
@@ -107,6 +109,20 @@ const DashboardCountryPage = ({ countries, pricelists }: IProps) => {
   console.log("countries", rows);
 
   const columns: GridColDef[] = [
+    {
+      field: "flag",
+      headerName: "",
+      flex: 1,
+      maxWidth: 50,
+      sortable: false,
+      disableColumnMenu: true,
+      renderCell: (params) => {
+        if (params.row.code && hasFlag(params.row.code.toUpperCase())) {
+          return getUnicodeFlagIcon(params.row.code.toUpperCase());
+        }
+        return null;
+      },
+    },
     {
       field: "code",
       headerName: "Code",
