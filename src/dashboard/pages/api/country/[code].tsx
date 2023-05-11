@@ -10,7 +10,7 @@ import {
 import { ICountry } from "@/types/country";
 import { HTTPMETHOD } from "@/types/common";
 
-export const countryListAPI = async (
+export const countryDetailAPI = async (
   method: HTTPMETHOD,
   req: NextApiRequest,
   res: NextApiResponse
@@ -19,29 +19,39 @@ export const countryListAPI = async (
     setRequestResponse(req, res);
   }
 
-  ("http://localhost:8000/api/country/");
+  const { code } = req.query;
+
+  if (!code) throw new Error("Code is empty");
 
   switch (method) {
     case "GET":
       return await api
-        .get("/country/")
+        .get(`/country/${code}/`)
         .then((response) => response.data)
-        .then((data: ICountry[]) => {
-          console.log("data", data);
+        .then((data: ICountry) => {
           return data;
         })
         .catch((error: any) => {
           throw error;
         });
-    case "POST":
+    case "PUT":
       const body = req?.body;
       console.log("body", body);
       if (!body) throw new Error("Body is empty");
-
       return await api
-        .post("/country/", body)
+        .put(`/country/${code}/`, body)
         .then((response) => response.data)
-        .then((data: ICountry[]) => {
+        .then((data: ICountry) => {
+          return data;
+        })
+        .catch((error: any) => {
+          throw error;
+        });
+    case "DELETE":
+      return await api
+        .delete(`/country/${code}/`)
+        .then((response) => response.data)
+        .then((data: ICountry) => {
           return data;
         })
         .catch((error: any) => {
@@ -54,17 +64,21 @@ export const countryListAPI = async (
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   /**
-   * This is a wrapper for the country list api in the backend
+   * This is a wrapper for the country detail api in the backend
    */
   // get the cart data from the backend
   const method = req.method as HTTPMETHOD;
 
-  if (method === "POST") {
-    return countryListAPI("POST", req, res)
-      .then((data) => res.status(201).json(data))
+  if (method === "PUT") {
+    return countryDetailAPI("PUT", req, res)
+      .then((data) => res.status(200).json(data))
       .catch((error) => res.status(400).json(null));
   } else if (method === "GET") {
-    return countryListAPI("GET", req, res)
+    return countryDetailAPI("GET", req, res)
+      .then((data) => res.status(200).json(data))
+      .catch((error) => res.status(400).json(null));
+  } else if (method === "DELETE") {
+    return countryDetailAPI("DELETE", req, res)
       .then((data) => res.status(200).json(data))
       .catch((error) => res.status(400).json(null));
   }
