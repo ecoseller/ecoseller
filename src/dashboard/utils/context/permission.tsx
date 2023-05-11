@@ -2,13 +2,39 @@ import { IGroup, IPermission, IUser } from "@/types/user";
 import { useState, createContext, useContext, useEffect } from "react";
 import { useUser } from "./user";
 
+export type ContextPermissions =
+  // cart
+  | "cart_change_permission"
+  | "cart_add_permission"
+  // productprice
+  | "productprice_change_permission"
+  | "productprice_add_permission"
+  // productmedia
+  | "productmedia_change_permission"
+  | "productmedia_add_permission"
+  // product
+  | "product_change_permission"
+  | "product_add_permission"
+  // category
+  | "category_change_permission"
+  | "category_add_permission"
+  // page
+  | "page_change_permission"
+  | "page_add_permission"
+  // user
+  | "user_change_permission"
+  | "user_add_permission"
+  // group
+  | "group_change_permission"
+  | "group_add_permission";
+
 interface IPermissionContextProps {
   hasPermission: boolean;
 }
 
 interface IPermissionProviderProps {
   children: React.ReactNode;
-  permission: string;
+  permission: ContextPermissions;
 }
 
 const PermissionContext = createContext<Partial<IPermissionContextProps>>({});
@@ -48,9 +74,15 @@ export const PermissionProvider = ({
   };
 
   const checkHasPermission = async () => {
+    if (user.is_admin == true) {
+      setHasPermission(true);
+      return;
+    }
+
     if (
-      permissions.filter((perm: IPermission) => perm.name === permission)
-        .length > 0
+      permissions.filter(
+        (perm: IPermission) => (perm.name as ContextPermissions) === permission
+      ).length > 0
     ) {
       setHasPermission(true);
     }

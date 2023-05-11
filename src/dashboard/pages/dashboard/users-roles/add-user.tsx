@@ -48,7 +48,7 @@ const DashboardUserAddPage = () => {
               body: JSON.stringify({
                 email: email,
                 password: password,
-              })
+              }),
             })
               .then((res: any) => {
                 setPreventNavigation(false);

@@ -56,19 +56,17 @@ const DashboardUserEditPage = ({ userData, groups }: IUserEditProps) => {
           setPreventNavigation={setPreventNavigation}
           onButtonClick={async () => {
             await setPreventNavigation(false);
-            fetch(`/api/user/users/${state.email}`,
-              {
-                method: "PUT",
-                body: JSON.stringify(state),
-              })
+            fetch(`/api/user/users/${state.email}`, {
+              method: "PUT",
+              body: JSON.stringify(state),
+            })
               .then(async (res: any) => {
-                await fetch(`/api/roles/user/${state.email}`,
-                  {
-                    method: "PUT",
-                    body: JSON.stringify({
-                      roles: state.roles,
-                    }),
-                  })
+                await fetch(`/api/roles/user/${state.email}`, {
+                  method: "PUT",
+                  body: JSON.stringify({
+                    roles: state.roles,
+                  }),
+                })
                   .then((res: any) => {
                     if (res.ok) {
                       setSnackbar({
@@ -162,7 +160,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     email as string,
     req as NextApiRequest,
     res as NextApiResponse
-  )
+  );
   for (let i = 0; i < userRolesData?.length; i++) {
     userData.roles.push(userRolesData[i]?.name);
   }
@@ -171,7 +169,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     "GET",
     req as NextApiRequest,
     res as NextApiResponse
-  )
+  );
 
   return {
     props: { userData: userData, groups: groups },

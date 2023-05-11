@@ -22,6 +22,8 @@ interface IEditGroupProps {
 const DashboardGroupEditPage = ({ group, permissions }: IEditGroupProps) => {
   const router = useRouter();
 
+  console.log("permissions", permissions);
+
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
   const [groupState, setGroupState] = useState<IGroup>(group);
 
@@ -125,7 +127,7 @@ export const getServerSideProps = async (context: any) => {
     groupId as string,
     req as NextApiRequest,
     res as NextApiResponse
-  )
+  );
 
   const permissions = await permissionsAPI(
     "GET",

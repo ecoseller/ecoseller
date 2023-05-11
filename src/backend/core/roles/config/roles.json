@@ -125,12 +125,6 @@
                     "description": "Can change user",
                     "type": "CHANGE",
                     "model": "user"
-                },
-                {
-                    "name": "group_change_permission",
-                    "description": "Can change group",
-                    "type": "CHANGE",
-                    "model": "group"
                 }
             ],
             "description": "User manager role",

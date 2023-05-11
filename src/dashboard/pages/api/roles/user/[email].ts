@@ -14,7 +14,7 @@ export const userRoleAPI = async (
   method: HTTPMETHOD,
   email: string,
   req?: NextApiRequest,
-  res?: NextApiResponse,
+  res?: NextApiResponse
 ) => {
   if (req && res) {
     setRequestResponse(req, res);

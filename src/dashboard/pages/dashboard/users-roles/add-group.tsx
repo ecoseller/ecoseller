@@ -63,9 +63,8 @@ const DashboardGroupAddPage = ({ permissions }: IPermissionsProps) => {
                 description: group.description,
                 permissions: group.permissions.map((p) => {
                   return p.name;
-                }
-                )
-              })
+                }),
+              }),
             })
               .then((res: any) => {
                 setPreventNavigation(false);

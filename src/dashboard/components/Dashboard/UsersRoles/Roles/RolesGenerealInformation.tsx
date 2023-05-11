@@ -36,7 +36,6 @@ const EditToolbar = (props: any) => {
   );
 };
 
-
 const GroupsGrid = () => {
   const router = useRouter();
   const [groups, setGroups] = useState<IGroup[]>([]);
@@ -62,14 +61,13 @@ const GroupsGrid = () => {
   const fetchGroups = async () => {
     fetch("/api/roles/groups", {
       method: "GET",
-    })
-      .then((res) => {
-        if (res.ok) {
-          res.json().then((data) => {
-            setGroups(data);
-          });
-        }
-      });
+    }).then((res) => {
+      if (res.ok) {
+        res.json().then((data) => {
+          setGroups(data);
+        });
+      }
+    });
   };
 
   React.useEffect(() => {
