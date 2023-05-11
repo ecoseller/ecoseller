@@ -14,6 +14,7 @@ import UserGroupsInformation from "@/components/Dashboard/UsersRoles/Users/Edito
 import { concreteUserAPI } from "@/pages/api/user/users/[email]";
 import { userRoleAPI } from "@/pages/api/roles/user/[email]";
 import { groupsAPI } from "@/pages/api/roles/groups";
+import { PermissionProvider } from "@/utils/context/permission";
 
 interface IUserEditProps {
   userData: IUser;
@@ -50,81 +51,84 @@ const DashboardUserEditPage = ({ userData, groups }: IUserEditProps) => {
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
-        <EditableContentWrapper
-          primaryButtonTitle={PrimaryButtonAction.Save}
-          preventNavigation={preventNavigation}
-          setPreventNavigation={setPreventNavigation}
-          onButtonClick={async () => {
-            await setPreventNavigation(false);
-            fetch(`/api/user/users/${state.email}`, {
-              method: "PUT",
-              body: JSON.stringify(state),
-            })
-              .then(async (res: any) => {
-                await fetch(`/api/roles/user/${state.email}`, {
-                  method: "PUT",
-                  body: JSON.stringify({
-                    roles: state.roles,
-                  }),
-                })
-                  .then((res: any) => {
-                    if (res.ok) {
+        <PermissionProvider permission="user_change_permission">
+          <EditableContentWrapper
+            primaryButtonTitle={PrimaryButtonAction.Save}
+            preventNavigation={preventNavigation}
+            setPreventNavigation={setPreventNavigation}
+            onButtonClick={async () => {
+              await setPreventNavigation(false);
+              fetch(`/api/user/users/${state.email}`, {
+                method: "PUT",
+                body: JSON.stringify(state),
+              })
+                .then(async (res: any) => {
+                  await fetch(`/api/roles/user/${state.email}`, {
+                    method: "PUT",
+                    body: JSON.stringify({
+                      roles: state.roles,
+                    }),
+                  })
+                    .then((res: any) => {
+                      if (res.ok) {
+                        setSnackbar({
+                          open: true,
+                          message: "User updated",
+                          severity: "success",
+                        });
+                      }
+                    })
+                    .catch((err: any) => {
+                      console.log("updateUser", err);
                       setSnackbar({
                         open: true,
-                        message: "User updated",
-                        severity: "success",
+                        message: "Something went wrong",
+                        severity: "error",
                       });
-                    }
-                  })
-                  .catch((err: any) => {
-                    console.log("updateUser", err);
-                    setSnackbar({
-                      open: true,
-                      message: "Something went wrong",
-                      severity: "error",
                     });
+                })
+                .catch((err: any) => {
+                  console.log("updateUser", err);
+                  setSnackbar({
+                    open: true,
+                    message: "Something went wrong",
+                    severity: "error",
                   });
-              })
-              .catch((err: any) => {
-                console.log("updateUser", err);
-                setSnackbar({
-                  open: true,
-                  message: "Something went wrong",
-                  severity: "error",
                 });
-              });
-          }}
-          returnPath={"/dashboard/users-roles"}
-        >
-          <TopLineWithReturn
-            title={`Edit user ${state?.email}`}
+            }}
             returnPath={"/dashboard/users-roles"}
-          />
-          <UserGeneralInformation
-            state={state}
-            setState={(v: IUser) => setState(v)}
-          />
-          <UserGroupsInformation
-            state={state}
-            setState={(v: IUser) => setState(v)}
-            groups={groups}
-          />
-          {snackbar ? (
-            <Snackbar
-              open={snackbar.open}
-              autoHideDuration={6000}
-              onClose={handleSnackbarClose}
-            >
-              <Alert
+            checkPermission={true}
+          >
+            <TopLineWithReturn
+              title={`Edit user ${state?.email}`}
+              returnPath={"/dashboard/users-roles"}
+            />
+            <UserGeneralInformation
+              state={state}
+              setState={(v: IUser) => setState(v)}
+            />
+            <UserGroupsInformation
+              state={state}
+              setState={(v: IUser) => setState(v)}
+              groups={groups}
+            />
+            {snackbar ? (
+              <Snackbar
+                open={snackbar.open}
+                autoHideDuration={6000}
                 onClose={handleSnackbarClose}
-                severity={snackbar.severity}
-                sx={{ width: "100%" }}
               >
-                {snackbar.message}
-              </Alert>
-            </Snackbar>
-          ) : null}
-        </EditableContentWrapper>
+                <Alert
+                  onClose={handleSnackbarClose}
+                  severity={snackbar.severity}
+                  sx={{ width: "100%" }}
+                >
+                  {snackbar.message}
+                </Alert>
+              </Snackbar>
+            ) : null}
+          </EditableContentWrapper>
+        </PermissionProvider>
       </Container>
     </DashboardLayout>
   );

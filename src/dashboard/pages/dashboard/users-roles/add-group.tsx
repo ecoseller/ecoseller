@@ -11,6 +11,7 @@ import { IPermission, IGroup } from "@/types/user";
 import CreateRole from "@/components/Dashboard/UsersRoles/Roles/CreateRole";
 import { permissionsAPI } from "@/pages/api/roles/permissions";
 import { NextApiRequest, NextApiResponse } from "next";
+import { PermissionProvider } from "@/utils/context/permission";
 
 interface IPermissionsProps {
   permissions: IPermission[];
@@ -50,69 +51,72 @@ const DashboardGroupAddPage = ({ permissions }: IPermissionsProps) => {
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
-        <EditableContentWrapper
-          primaryButtonTitle={PrimaryButtonAction.Create}
-          preventNavigation={preventNavigation}
-          setPreventNavigation={setPreventNavigation}
-          onButtonClick={async () => {
-            await setPreventNavigation(false);
-            await fetch("/api/roles/groups", {
-              method: "POST",
-              body: JSON.stringify({
-                name: group.name,
-                description: group.description,
-                permissions: group.permissions.map((p) => {
-                  return p.name;
+        <PermissionProvider permission="group_add_permission">
+          <EditableContentWrapper
+            primaryButtonTitle={PrimaryButtonAction.Create}
+            preventNavigation={preventNavigation}
+            setPreventNavigation={setPreventNavigation}
+            onButtonClick={async () => {
+              await setPreventNavigation(false);
+              await fetch("/api/roles/groups", {
+                method: "POST",
+                body: JSON.stringify({
+                  name: group.name,
+                  description: group.description,
+                  permissions: group.permissions.map((p) => {
+                    return p.name;
+                  }),
                 }),
-              }),
-            })
-              .then((res: any) => {
-                setPreventNavigation(false);
-                console.log(preventNavigation);
-                setSnackbar({
-                  open: true,
-                  message: "Group created successfully",
-                  severity: "success",
-                });
-                router.push("/dashboard/users-roles");
               })
-              .catch((err: any) => {
-                setPreventNavigation(false);
-                console.log(preventNavigation);
-                setSnackbar({
-                  open: true,
-                  message: "Error creating group",
-                  severity: "error",
+                .then((res: any) => {
+                  setPreventNavigation(false);
+                  console.log(preventNavigation);
+                  setSnackbar({
+                    open: true,
+                    message: "Group created successfully",
+                    severity: "success",
+                  });
+                  router.push("/dashboard/users-roles");
+                })
+                .catch((err: any) => {
+                  setPreventNavigation(false);
+                  console.log(preventNavigation);
+                  setSnackbar({
+                    open: true,
+                    message: "Error creating group",
+                    severity: "error",
+                  });
                 });
-              });
-          }}
-          returnPath="/dashboard/users-roles"
-        >
-          <TopLineWithReturn
-            title="Add Group"
+            }}
             returnPath="/dashboard/users-roles"
-          />
-          <CreateRole
-            group={group}
-            setGroup={setGroup}
-            permissions={permissions}
-          />
-          {snackbar ? (
-            <Snackbar
-              open={snackbar.open}
-              autoHideDuration={6000}
-              onClose={handleSnackbarClose}
-            >
-              <Alert
+            checkPermission={true}
+          >
+            <TopLineWithReturn
+              title="Add Group"
+              returnPath="/dashboard/users-roles"
+            />
+            <CreateRole
+              group={group}
+              setGroup={setGroup}
+              permissions={permissions}
+            />
+            {snackbar ? (
+              <Snackbar
+                open={snackbar.open}
+                autoHideDuration={6000}
                 onClose={handleSnackbarClose}
-                severity={snackbar.severity}
-                sx={{ width: "100%" }}
               >
-                {snackbar.message}
-              </Alert>
-            </Snackbar>
-          ) : null}
-        </EditableContentWrapper>
+                <Alert
+                  onClose={handleSnackbarClose}
+                  severity={snackbar.severity}
+                  sx={{ width: "100%" }}
+                >
+                  {snackbar.message}
+                </Alert>
+              </Snackbar>
+            ) : null}
+          </EditableContentWrapper>
+        </PermissionProvider>
       </Container>
     </DashboardLayout>
   );

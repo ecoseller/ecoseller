@@ -13,6 +13,7 @@ import EditRole from "@/components/Dashboard/UsersRoles/Roles/EditRole";
 import { concreteGroupAPI } from "@/pages/api/roles/groups/[role_name]";
 import { NextApiRequest, NextApiResponse } from "next";
 import { permissionsAPI } from "@/pages/api/roles/permissions";
+import { PermissionProvider } from "@/utils/context/permission";
 
 interface IEditGroupProps {
   group: IGroup;
@@ -48,63 +49,66 @@ const DashboardGroupEditPage = ({ group, permissions }: IEditGroupProps) => {
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
-        <EditableContentWrapper
-          primaryButtonTitle={PrimaryButtonAction.Save}
-          preventNavigation={preventNavigation}
-          setPreventNavigation={setPreventNavigation}
-          onButtonClick={async () => {
-            await setPreventNavigation(false);
-            await fetch(`/api/roles/groups/${groupState.name}`, {
-              method: "PUT",
-              body: JSON.stringify(groupState),
-            })
-              .then((res: any) => {
-                setPreventNavigation(false);
-                console.log(preventNavigation);
-                setSnackbar({
-                  open: true,
-                  message: "Group updated successfully",
-                  severity: "success",
-                });
-                router.push("/dashboard/users-roles");
+        <PermissionProvider permission="group_change_permission">
+          <EditableContentWrapper
+            primaryButtonTitle={PrimaryButtonAction.Save}
+            preventNavigation={preventNavigation}
+            setPreventNavigation={setPreventNavigation}
+            onButtonClick={async () => {
+              await setPreventNavigation(false);
+              await fetch(`/api/roles/groups/${groupState.name}`, {
+                method: "PUT",
+                body: JSON.stringify(groupState),
               })
-              .catch((err: any) => {
-                setPreventNavigation(false);
-                console.log(preventNavigation);
-                setSnackbar({
-                  open: true,
-                  message: "Error updating group",
-                  severity: "error",
+                .then((res: any) => {
+                  setPreventNavigation(false);
+                  console.log(preventNavigation);
+                  setSnackbar({
+                    open: true,
+                    message: "Group updated successfully",
+                    severity: "success",
+                  });
+                  router.push("/dashboard/users-roles");
+                })
+                .catch((err: any) => {
+                  setPreventNavigation(false);
+                  console.log(preventNavigation);
+                  setSnackbar({
+                    open: true,
+                    message: "Error updating group",
+                    severity: "error",
+                  });
                 });
-              });
-          }}
-          returnPath="/dashboard/users-roles"
-        >
-          <TopLineWithReturn
-            title="Edit Role"
+            }}
             returnPath="/dashboard/users-roles"
-          />
-          <EditRole
-            group={groupState}
-            setGroup={setGroupState}
-            permissions={permissions}
-          />
-          {snackbar ? (
-            <Snackbar
-              open={snackbar.open}
-              autoHideDuration={6000}
-              onClose={handleSnackbarClose}
-            >
-              <Alert
+            checkPermission={true}
+          >
+            <TopLineWithReturn
+              title="Edit Role"
+              returnPath="/dashboard/users-roles"
+            />
+            <EditRole
+              group={groupState}
+              setGroup={setGroupState}
+              permissions={permissions}
+            />
+            {snackbar ? (
+              <Snackbar
+                open={snackbar.open}
+                autoHideDuration={6000}
                 onClose={handleSnackbarClose}
-                severity={snackbar.severity}
-                sx={{ width: "100%" }}
               >
-                {snackbar.message}
-              </Alert>
-            </Snackbar>
-          ) : null}
-        </EditableContentWrapper>
+                <Alert
+                  onClose={handleSnackbarClose}
+                  severity={snackbar.severity}
+                  sx={{ width: "100%" }}
+                >
+                  {snackbar.message}
+                </Alert>
+              </Snackbar>
+            ) : null}
+          </EditableContentWrapper>
+        </PermissionProvider>
       </Container>
     </DashboardLayout>
   );

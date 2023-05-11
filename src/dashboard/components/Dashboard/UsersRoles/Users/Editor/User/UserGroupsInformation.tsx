@@ -10,6 +10,7 @@ import { FormControlLabel, FormGroup, FormHelperText } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Checkbox from "@mui/material/Checkbox";
 import { IGroup, IUser } from "@/types/user";
+import { usePermission } from "@/utils/context/permission";
 
 interface IGroupsProps {
   state: IUser;
@@ -19,6 +20,7 @@ interface IGroupsProps {
 
 const UserGroupsInformation = ({ state, setState, groups }: IGroupsProps) => {
   console.log(groups);
+  const { hasPermission } = usePermission()
 
   const handleCheckChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
@@ -50,6 +52,7 @@ const UserGroupsInformation = ({ state, setState, groups }: IGroupsProps) => {
                       control={
                         <Checkbox
                           id={group.name}
+                          disabled={!hasPermission}
                           checked={state.roles.includes(group.name)}
                           onChange={handleCheckChange}
                         />

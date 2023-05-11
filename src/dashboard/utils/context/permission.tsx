@@ -30,6 +30,7 @@ export type ContextPermissions =
 
 interface IPermissionContextProps {
   hasPermission: boolean;
+  permissions: ContextPermissions[];
 }
 
 interface IPermissionProviderProps {
@@ -74,6 +75,11 @@ export const PermissionProvider = ({
   };
 
   const checkHasPermission = async () => {
+    console.log("checkHasPermission")
+    if (!permission) {
+      setHasPermission(true);
+      return;
+    }
     if (user?.is_admin == true) {
       setHasPermission(true);
       return;

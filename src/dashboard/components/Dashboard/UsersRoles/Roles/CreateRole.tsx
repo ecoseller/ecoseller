@@ -17,6 +17,7 @@ import Stack from "@mui/material/Stack";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { IPermission, IGroup } from "@/types/user";
 import CheckboxList from "./RolesList";
+import { usePermission } from "@/utils/context/permission";
 
 interface ICreateRoleProps {
   group: IGroup;
@@ -25,6 +26,7 @@ interface ICreateRoleProps {
 }
 
 const CreateRole = ({ group, setGroup, permissions }: ICreateRoleProps) => {
+  const { hasPermission } = usePermission();
   return (
     <EditorCard>
       <Typography variant="h6">Create new group</Typography>
@@ -33,7 +35,7 @@ const CreateRole = ({ group, setGroup, permissions }: ICreateRoleProps) => {
           <TextField
             label="Name"
             value={group.name}
-            // disabled={true}
+            disabled={!hasPermission}
             onChange={(
               event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
             ) => {
@@ -51,7 +53,7 @@ const CreateRole = ({ group, setGroup, permissions }: ICreateRoleProps) => {
           <TextField
             label="Description"
             value={group.description}
-            // disabled={true}
+            disabled={!hasPermission}
             onChange={(
               event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
             ) => {
