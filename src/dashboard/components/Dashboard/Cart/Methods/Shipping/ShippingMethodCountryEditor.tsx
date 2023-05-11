@@ -116,7 +116,7 @@ const ShippingMethodCountryEditor = ({
   } | null>(null);
 
   const validateRow = (row: IShippingMethodCountryTable) => {
-    if (!row.price) {
+    if (row.price === undefined || row.price === null) {
       setSnackbar({
         open: true,
         message: "Price is required",
@@ -470,13 +470,13 @@ const ShippingMethodCountryEditor = ({
       valueFormatter: ({ value }) =>
         value
           ? // map over values and get payment method title
-            value?.map((paymentMethodId: number) => {
-              const paymentMethod = paymentMethodCountryFullList?.find(
-                (paymentMethodCountry: IPaymentMethodCountryFullList) =>
-                  paymentMethodCountry.id === paymentMethodId
-              );
-              return paymentMethod?.payment_method.title;
-            })
+          value?.map((paymentMethodId: number) => {
+            const paymentMethod = paymentMethodCountryFullList?.find(
+              (paymentMethodCountry: IPaymentMethodCountryFullList) =>
+                paymentMethodCountry.id === paymentMethodId
+            );
+            return paymentMethod?.payment_method.title;
+          })
           : "",
       renderEditCell: CustomPaymentMethodEditCell,
       valueOptions: (params) => {
