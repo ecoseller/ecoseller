@@ -18,6 +18,7 @@ import { IUser } from "@/types/user";
 
 import { Alert, Button, Card, Snackbar } from "@mui/material";
 import { axiosPrivate } from "@/utils/axiosPrivate";
+import { usePermission } from "@/utils/context/permission";
 
 const PAGE_SIZE = 30;
 
@@ -71,7 +72,12 @@ const UsersGrid = () => {
     page: 0,
     pageSize: PAGE_SIZE,
   });
-  const [snackbar, setSnackbar] = useSnackbarState();
+  const [snackbar, setSnackbar] = useState<{
+    open: boolean;
+    message: string;
+    severity: "success" | "error" | "info" | "warning";
+  } | null>(null);
+  const { hasPermission } = usePermission();
 
   const handleSnackbarClose = (
     event?: React.SyntheticEvent | Event,
@@ -159,6 +165,7 @@ const UsersGrid = () => {
           <GridActionsCellItem
             icon={<EditIcon />}
             label="Edit"
+            disabled={!hasPermission}
             className="textPrimary"
             onClick={() => {
               router.push(`/dashboard/users-roles/edit-user/${row.email}`);
@@ -169,6 +176,7 @@ const UsersGrid = () => {
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
+            disabled={!hasPermission}
             onClick={async () => {
               fetch(`/api/user/users/${row.email}`, {
                 method: "DELETE",

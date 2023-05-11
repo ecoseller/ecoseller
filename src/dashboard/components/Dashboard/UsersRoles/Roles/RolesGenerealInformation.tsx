@@ -16,7 +16,11 @@ import { IGroup } from "@/types/user";
 import { Alert, Button, Card, Snackbar, Tooltip } from "@mui/material";
 import { axiosPrivate } from "@/utils/axiosPrivate";
 import { handleClientScriptLoad } from "next/script";
+<<<<<<< HEAD
 import { useSnackbarState } from "@/utils/snackbar";
+=======
+import { usePermission } from "@/utils/context/permission";
+>>>>>>> 0d5cb9f (Defined permissions for change(and delete) user/group)
 
 const PAGE_SIZE = 30;
 
@@ -46,7 +50,16 @@ const GroupsGrid = () => {
     page: 0,
     pageSize: PAGE_SIZE,
   });
+<<<<<<< HEAD
   const [snackbar, setSnackbar] = useSnackbarState();
+=======
+  const [snackbar, setSnackbar] = useState<{
+    open: boolean;
+    message: string;
+    severity: "success" | "error" | "info" | "warning";
+  } | null>(null);
+  const { hasPermission } = usePermission();
+>>>>>>> 0d5cb9f (Defined permissions for change(and delete) user/group)
 
   const handleSnackbarClose = (
     event?: React.SyntheticEvent | Event,
@@ -106,6 +119,7 @@ const GroupsGrid = () => {
           <GridActionsCellItem
             icon={<EditIcon />}
             label="Edit"
+            disabled={!hasPermission}
             className="textPrimary"
             onClick={() => {
               router.push(`/dashboard/users-roles/edit-group/${row.name}`);
@@ -116,6 +130,7 @@ const GroupsGrid = () => {
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
+            disabled={!hasPermission}
             onClick={async () => {
               await fetch(`/api/roles/groups/${row.name}`, {
                 method: "DELETE",

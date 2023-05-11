@@ -74,7 +74,7 @@ export const PermissionProvider = ({
   };
 
   const checkHasPermission = async () => {
-    if (user.is_admin == true) {
+    if (user?.is_admin == true) {
       setHasPermission(true);
       return;
     }
