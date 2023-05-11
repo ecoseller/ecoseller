@@ -7,13 +7,15 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cart', '0016_rename_shippping_method_country_cart_shipping_method_country'),
+        ("cart", "0016_rename_shippping_method_country_cart_shipping_method_country"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='cart',
-            name='token',
-            field=models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False),
+            model_name="cart",
+            name="token",
+            field=models.UUIDField(
+                default=uuid.uuid4, primary_key=True, serialize=False
+            ),
         ),
     ]

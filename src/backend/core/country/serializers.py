@@ -52,6 +52,7 @@ class AddressSerializer(ModelSerializer):
     """
     Address serializer that serializes all fields
     """
+
     class Meta:
         model = Address
         fields = "__all__"

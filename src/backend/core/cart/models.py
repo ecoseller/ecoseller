@@ -128,10 +128,12 @@ class Cart(models.Model):
     shipping_address = models.ForeignKey(
         Address, null=True, on_delete=models.SET_NULL, related_name="+"
     )
-    payment_method_country = models.ForeignKey(PaymentMethodCountry, null=True, on_delete=models.SET_NULL,
-                                               related_name="+")
-    shipping_method_country = models.ForeignKey(ShippingMethodCountry, null=True, on_delete=models.SET_NULL,
-                                                related_name="+")
+    payment_method_country = models.ForeignKey(
+        PaymentMethodCountry, null=True, on_delete=models.SET_NULL, related_name="+"
+    )
+    shipping_method_country = models.ForeignKey(
+        ShippingMethodCountry, null=True, on_delete=models.SET_NULL, related_name="+"
+    )
 
 
 class CartItem(models.Model):
