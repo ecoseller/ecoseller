@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import io
 
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.decorators import permission_classes
@@ -35,7 +34,8 @@ from cart.serializers import (
     PaymentMethodSerializer,
     PaymentMethodDetailSerializer,
     PaymentMethodCountrySerializer,
-    PaymentMethodCountryFullSerializer, CartTokenSerializer,
+    PaymentMethodCountryFullSerializer,
+    CartTokenSerializer,
 )
 from country.serializers import AddressSerializer
 from product.models import ProductVariant, ProductPrice
@@ -140,7 +140,7 @@ class CartUpdateAddressBaseStorefrontView(APIView, ABC):
         """
         pass
 
-    def put(self, request, token):
+    def post(self, request, token):
         try:
             serializer = AddressSerializer(data=request.data)
             if serializer.is_valid():
@@ -190,7 +190,7 @@ class CartUpdateMethodBaseStorefrontView(APIView, ABC):
         """
         pass
 
-    def post(self, request, token, id):
+    def put(self, request, token, id):
         try:
             cart = Cart.objects.get(token=token)
             self._set_method(cart, id)
