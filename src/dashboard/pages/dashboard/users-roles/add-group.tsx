@@ -7,10 +7,10 @@ import EditableContentWrapper, {
   PrimaryButtonAction,
 } from "@/components/Dashboard/Generic/EditableContentWrapper";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
-import { createGroup, getPermissions } from "@/api/users-roles/users";
 import { IPermission, IGroup } from "@/types/user";
 import CreateRole from "@/components/Dashboard/UsersRoles/Roles/CreateRole";
-import { useSnackbarState } from "@/utils/snackbar";
+import { permissionsAPI } from "@/pages/api/roles/permissions";
+import { NextApiRequest, NextApiResponse } from "next";
 
 interface IPermissionsProps {
   permissions: IPermission[];
@@ -56,13 +56,17 @@ const DashboardGroupAddPage = ({ permissions }: IPermissionsProps) => {
           setPreventNavigation={setPreventNavigation}
           onButtonClick={async () => {
             await setPreventNavigation(false);
-            await createGroup(
-              group.name,
-              group.description,
-              group.permissions.map((p) => {
-                return p.name;
+            await fetch("/api/roles/groups", {
+              method: "POST",
+              body: JSON.stringify({
+                name: group.name,
+                description: group.description,
+                permissions: group.permissions.map((p) => {
+                  return p.name;
+                }
+                )
               })
-            )
+            })
               .then((res: any) => {
                 setPreventNavigation(false);
                 console.log(preventNavigation);
@@ -124,10 +128,15 @@ DashboardGroupAddPage.getLayout = (page: ReactElement) => {
 };
 
 export const getServerSideProps = async (context: any) => {
-  const permissions = await getPermissions();
+  const { req, res } = context;
+  const permissions = await permissionsAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
 
   return {
-    props: { permissions: permissions.data },
+    props: { permissions: permissions },
   };
 };
 

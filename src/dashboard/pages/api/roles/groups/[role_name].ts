@@ -15,7 +15,6 @@ export const concreteGroupAPI = async (
     role_name: string,
     req?: NextApiRequest,
     res?: NextApiResponse,
-    body?: any
 ) => {
     if (req && res) {
         setRequestResponse(req, res);
@@ -33,6 +32,8 @@ export const concreteGroupAPI = async (
                     throw error;
                 });
         case "PUT":
+            const body = req?.body;
+            if (!body) throw new Error("Body is empty");
             return await api
                 .put(`/roles/groups/${role_name}`, body)
                 .then((response) => response.data)
@@ -65,9 +66,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const { role_name } = req.query;
     const { method } = req;
-    const { body } = req;
 
-    return concreteGroupAPI(method as HTTPMETHOD, role_name as string, req, res, body)
+    return concreteGroupAPI(method as HTTPMETHOD, role_name as string, req, res)
         .then((data) => res.status(200).json(data))
         .catch((error) => res.status(400).json(null));
 };

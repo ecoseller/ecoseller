@@ -143,10 +143,16 @@ class GroupDetailView(GenericAPIView):
             return Response(status=400)
 
     def delete(self, request, id):
-        groups = self.get_queryset()
+        managerGroups = self.get_queryset()
         try:
-            group = groups.get(name=id)
-            group.delete()
+            managerGroup = managerGroups.get(name=id)
+            managerGroup.delete()
+
+            drfGroup = RolesManager.manager_group_to_django_group(id)
+            if drfGroup is None:
+                return Response(status=400)
+            drfGroup.delete()
+
             return Response(status=200)
         except Exception:
             return Response(status=400)

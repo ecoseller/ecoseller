@@ -7,15 +7,12 @@ import EditableContentWrapper, {
   PrimaryButtonAction,
 } from "@/components/Dashboard/Generic/EditableContentWrapper";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
-import {
-  getPermissions,
-  updateGroup,
-} from "@/api/users-roles/users";
 import { IPermission, IGroup } from "@/types/user";
 import CreateRole from "@/components/Dashboard/UsersRoles/Roles/CreateRole";
 import EditRole from "@/components/Dashboard/UsersRoles/Roles/EditRole";
 import { concreteGroupAPI } from "@/pages/api/roles/groups/[role_name]";
 import { NextApiRequest, NextApiResponse } from "next";
+import { permissionsAPI } from "@/pages/api/roles/permissions";
 
 interface IEditGroupProps {
   group: IGroup;
@@ -55,11 +52,10 @@ const DashboardGroupEditPage = ({ group, permissions }: IEditGroupProps) => {
           setPreventNavigation={setPreventNavigation}
           onButtonClick={async () => {
             await setPreventNavigation(false);
-            await updateGroup(
-              groupState.name,
-              groupState.description,
-              groupState.permissions
-            )
+            await fetch(`/api/roles/groups/${groupState.name}`, {
+              method: "PUT",
+              body: JSON.stringify(groupState),
+            })
               .then((res: any) => {
                 setPreventNavigation(false);
                 console.log(preventNavigation);
@@ -131,11 +127,16 @@ export const getServerSideProps = async (context: any) => {
     res as NextApiResponse
   )
 
-  const permissions = await getPermissions();
+  const permissions = await permissionsAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
   return {
     props: {
       group: group,
-      permissions: permissions.data,
+      permissions: permissions,
     },
   };
 };

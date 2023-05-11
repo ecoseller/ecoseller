@@ -15,7 +15,6 @@ export const userRoleAPI = async (
   email: string,
   req?: NextApiRequest,
   res?: NextApiResponse,
-  body?: any
 ) => {
   if (req && res) {
     setRequestResponse(req, res);
@@ -33,6 +32,8 @@ export const userRoleAPI = async (
           throw error;
         });
     case "PUT":
+      const body = req?.body;
+      if (!body) throw new Error("Body is empty");
       return await api
         .put(`/roles/user-groups/${email}`, body)
         .then((response) => response.data)

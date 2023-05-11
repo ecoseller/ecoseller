@@ -5,9 +5,6 @@ import DashboardLayout from "@/pages/dashboard/layout"; //react
 import { Alert, Container, Snackbar } from "@mui/material";
 import { IGroup, IUser } from "@/types/user";
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
-import {
-  updateRoles,
-} from "@/api/users-roles/users";
 import EditableContentWrapper, {
   PrimaryButtonAction,
 } from "@/components/Dashboard/Generic/EditableContentWrapper";
@@ -65,9 +62,6 @@ const DashboardUserEditPage = ({ userData, groups }: IUserEditProps) => {
                 body: JSON.stringify(state),
               })
               .then(async (res: any) => {
-                console.log("body", JSON.stringify({
-                  roles: state.roles,
-                }));
                 await fetch(`/api/roles/user/${state.email}`,
                   {
                     method: "PUT",
@@ -159,7 +153,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const userData: IUser = {
     email: userDataRet.email,
     first_name: userDataRet?.first_name || "",
-    last_name: userDataRet?.last_nam || "",
+    last_name: userDataRet?.last_name || "",
     is_admin: userDataRet.is_admin,
     roles: [],
   };

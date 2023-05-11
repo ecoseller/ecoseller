@@ -14,7 +14,6 @@ export const groupsAPI = async (
     method: HTTPMETHOD,
     req?: NextApiRequest,
     res?: NextApiResponse,
-    body?: any
 ) => {
     if (req && res) {
         setRequestResponse(req, res);
@@ -32,6 +31,8 @@ export const groupsAPI = async (
                     throw error;
                 });
         case "POST":
+            const body = req?.body;
+            if (!body) throw new Error("Body is empty");
             return await api
                 .post("/roles/groups", body)
                 .then((response) => response.data)
@@ -53,9 +54,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
      */
 
     const { method } = req;
-    const { body } = req;
 
-    return groupsAPI(method as HTTPMETHOD, req, res, body)
+    return groupsAPI(method as HTTPMETHOD, req, res)
         .then((data) => res.status(200).json(data))
         .catch((error) => res.status(400).json(null));
 };

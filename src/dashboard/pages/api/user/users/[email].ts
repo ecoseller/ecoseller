@@ -32,8 +32,9 @@ export const concreteUserAPI = async (
                     throw error;
                 });
         case "PUT":
-            console.log("body", req?.body);
             const body = req?.body;
+            console.log("body", body);
+
             if (!body) throw new Error("Body is empty");
             return await api
                 .put(`/user/users/${email}`, body)
