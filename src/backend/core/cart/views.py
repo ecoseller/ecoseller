@@ -1,3 +1,5 @@
+from abc import ABC, abstractmethod
+
 from rest_framework.decorators import permission_classes
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.mixins import CreateModelMixin
@@ -107,10 +109,18 @@ class CartUpdateQuantityStorefrontView(APIView):
 
 
 @permission_classes([AllowAny])
-class CartUpdateBillingAddressStorefrontView(APIView):
+class CartUpdateAddressBaseStorefrontView(APIView, ABC):
     """
-    View for updating cart's billing address
+    Base view for updating cart's billing/shipping address.
+    Do not use this view directly, use inherited classes instead (and implement `_set_address` method)
     """
+
+    @abstractmethod
+    def _set_address(self, cart, address):
+        """
+        Set desired type of address
+        """
+        pass
 
     def put(self, request, token):
         try:
@@ -119,9 +129,7 @@ class CartUpdateBillingAddressStorefrontView(APIView):
                 address = serializer.save()
                 cart = Cart.objects.get(token=token)
 
-                # update billing address
-                cart.billing_address = address
-                cart.save()
+                self._set_address(cart, address)
 
                 return Response(status=HTTP_204_NO_CONTENT)
             return Response(status=HTTP_400_BAD_REQUEST)
@@ -130,26 +138,25 @@ class CartUpdateBillingAddressStorefrontView(APIView):
 
 
 @permission_classes([AllowAny])
-class CartUpdateShippingAddressStorefrontView(APIView):
+class CartUpdateBillingAddressStorefrontView(CartUpdateAddressBaseStorefrontView):
+    """
+    View for updating cart's billing address
+    """
+
+    def _set_address(self, cart, address):
+        cart.billing_address = address
+        cart.save()
+
+
+@permission_classes([AllowAny])
+class CartUpdateShippingAddressStorefrontView(CartUpdateAddressBaseStorefrontView):
     """
     View for updating cart's shipping address
     """
 
-    def put(self, request, token):
-        try:
-            serializer = AddressSerializer(data=request.data)
-            if serializer.is_valid():
-                address = serializer.save()
-                cart = Cart.objects.get(token=token)
-
-                # update shipping address
-                cart.shipping_address = address
-                cart.save()
-
-                return Response(status=HTTP_204_NO_CONTENT)
-            return Response(status=HTTP_400_BAD_REQUEST)
-        except Cart.DoesNotExist:
-            return Response(status=HTTP_404_NOT_FOUND)
+    def _set_address(self, cart, address):
+        cart.shipping_address = address
+        cart.save()
 
 
 @permission_classes([AllowAny])
