@@ -33,6 +33,7 @@ urlpatterns = [
         "dashboard/shipping/method/<int:method_id>/country/<int:id>/",
         views.ShippingMethodCountryDetailDashboardView.as_view(),
     ),
+    path("storefront/", views.CartCreateStorefrontView.as_view()),
     path("storefront/<str:token>/", views.CartDetailStorefrontView.as_view()),
     path(
         "storefront/<str:token>/update-quantity/", views.CartUpdateQuantityStorefrontView.as_view()

@@ -35,7 +35,7 @@ from cart.serializers import (
     PaymentMethodSerializer,
     PaymentMethodDetailSerializer,
     PaymentMethodCountrySerializer,
-    PaymentMethodCountryFullSerializer,
+    PaymentMethodCountryFullSerializer, CartTokenSerializer,
 )
 from country.serializers import AddressSerializer
 from product.models import ProductVariant, ProductPrice
@@ -85,6 +85,23 @@ class CartDetailStorefrontView(RetrieveAPIView, CreateModelMixin):
             return Response(status=HTTP_404_NOT_FOUND)
         except ProductPrice.DoesNotExist:
             return Response(status=HTTP_400_BAD_REQUEST)
+
+
+@permission_classes([AllowAny])
+class CartCreateStorefrontView(APIView):
+    """
+    View used for creating cart
+    """
+
+    def post(self, request):
+        cart = Cart.objects.create()
+
+        # TODO: set user if logged-in
+
+        cart.save()
+
+        serializer = CartTokenSerializer(cart)
+        return Response(serializer.data)
 
 
 @permission_classes([AllowAny])
@@ -203,6 +220,7 @@ class CartUpdatePaymentMethodStorefrontView(CartUpdateMethodBaseStorefrontView):
     def _set_method(self, cart, id):
         cart.payment_method_country = PaymentMethodCountry.objects.get(id=id)
         cart.save()
+
 
 @permission_classes([AllowAny])
 class CartItemDeleteStorefrontView(APIView):

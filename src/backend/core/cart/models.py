@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from country.models import Country, Currency, VatGroup, Address
 from product.models import ProductVariant
@@ -112,7 +114,7 @@ class Cart(models.Model):
     Object representing cart of user (either logged in on identified just by "token" which is also a primary key).
     """
 
-    token = models.CharField(primary_key=True, max_length=20, unique=True)
+    token = models.UUIDField(primary_key=True, default=uuid.uuid4)
     country = models.ForeignKey(Country, null=True, on_delete=models.SET_NULL)
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
