@@ -37,6 +37,9 @@ import TranslatedSEOFieldsTabList from "../../../Generic/TranslatedSEOFieldsTabL
 import { IDispatchWrapper } from "@/components/Dashboard/Common/IDispatchWrapper";
 import { IEntityTranslations } from "@/types/common";
 import { OutputData } from "@editorjs/editorjs";
+import EditorCard from "@/components/Dashboard/Generic/EditorCard";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 
 export interface ISetProductStateAction {
   type: ActionSetProduct;
@@ -393,6 +396,45 @@ const ProductEditorWrapper = ({
           </Alert>
         </Snackbar>
       ) : null}
+      <Grid container spacing={2}>
+        <Grid item md={8} xs={12}>
+          <EditorCard>
+            <Box>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  if (!productData) {
+                    return;
+                  }
+                  setPreventNavigation(false);
+                  fetch(`/api/product/${productData.id}/`, {
+                    method: "DELETE",
+                  })
+                    .then((res) => {
+                      console.log("deleteProduct", res);
+                      router.replace(
+                        {
+                          pathname: `/dashboard/catalog/products`,
+                        },
+                        undefined,
+                        {}
+                      );
+                    })
+                    .catch(() => {
+                      setSnackbar({
+                        open: true,
+                        message: "Something went wrong",
+                        severity: "error",
+                      });
+                    });
+                }}
+              >
+                Delete
+              </Button>
+            </Box>
+          </EditorCard>
+        </Grid>
+      </Grid>
     </EditableContentWrapper>
   );
 };
