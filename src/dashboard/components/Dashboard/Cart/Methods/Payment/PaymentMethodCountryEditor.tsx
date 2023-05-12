@@ -33,6 +33,7 @@ import Alert from "@mui/material/Alert";
 import { IPaymentMethod, IPaymentMethodCountry } from "@/types/cart/methods";
 import { ICountry, IVatGroup } from "@/types/country";
 import { ICurrency } from "@/types/localization";
+import { useSnackbarState } from "@/utils/snackbar";
 
 interface IPaymentMethodCountryTable extends IPaymentMethodCountry {
   isNew: boolean;
@@ -98,11 +99,7 @@ const PaymentMethodCountryEditor = ({
     }))
   );
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   const validateRow = (row: IPaymentMethodCountryTable) => {
     if (!row.price) {

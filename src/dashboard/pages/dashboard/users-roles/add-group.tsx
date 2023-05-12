@@ -10,6 +10,7 @@ import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn"
 import { createGroup, getPermissions } from "@/api/users-roles/users";
 import { IPermission, IGroup } from "@/types/user";
 import CreateRole from "@/components/Dashboard/UsersRoles/Roles/CreateRole";
+import { useSnackbarState } from "@/utils/snackbar";
 
 interface IPermissionsProps {
   permissions: IPermission[];
@@ -26,11 +27,7 @@ const DashboardGroupAddPage = ({ permissions }: IPermissionsProps) => {
 
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
 
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   const handleSnackbarClose = (
     event?: React.SyntheticEvent | Event,

@@ -37,6 +37,7 @@ import TranslatedSEOFieldsTabList from "../../../Generic/TranslatedSEOFieldsTabL
 import { IDispatchWrapper } from "@/components/Dashboard/Common/IDispatchWrapper";
 import { IEntityTranslations } from "@/types/common";
 import { OutputData } from "@editorjs/editorjs";
+import { useSnackbarState } from "@/utils/snackbar";
 
 export interface ISetProductStateAction {
   type: ActionSetProduct;
@@ -123,11 +124,7 @@ const ProductEditorWrapper = ({
     }
   };
 
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   const router = useRouter();
 

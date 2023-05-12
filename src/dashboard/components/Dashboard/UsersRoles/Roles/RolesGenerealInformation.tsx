@@ -17,6 +17,7 @@ import { Alert, Button, Card, Snackbar, Tooltip } from "@mui/material";
 import { axiosPrivate } from "@/utils/axiosPrivate";
 import { deleteGroup } from "@/api/users-roles/users";
 import { handleClientScriptLoad } from "next/script";
+import { useSnackbarState } from "@/utils/snackbar";
 
 const PAGE_SIZE = 30;
 
@@ -63,11 +64,7 @@ const GroupsGrid = () => {
     page: 0,
     pageSize: PAGE_SIZE,
   });
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   const handleSnackbarClose = (
     event?: React.SyntheticEvent | Event,

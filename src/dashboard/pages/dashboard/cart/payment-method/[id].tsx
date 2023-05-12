@@ -38,6 +38,7 @@ import PaymentMethodCountryEditor from "@/components/Dashboard/Cart/Methods/Paym
 import { currencyListAPI } from "@/pages/api/country/currency";
 import { paymentMethodCountryListAPI } from "@/pages/api/cart/payment-method/[id]/country";
 import { ICurrency } from "@/types/localization";
+import { useSnackbarState } from "@/utils/snackbar";
 
 export interface ISetPaymentMethodStateAction {
   type: ActionSetPaymentMethod;
@@ -113,11 +114,7 @@ const DashboardPaymentMethodDetailPage = ({
         }
   );
 
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   const handleSnackbarClose = (
     event?: React.SyntheticEvent | Event,
