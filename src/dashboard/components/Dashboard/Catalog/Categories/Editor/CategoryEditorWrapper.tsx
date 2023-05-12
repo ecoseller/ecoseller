@@ -114,7 +114,7 @@ const CategoryEditorWrapper = ({
     });
   };
 
-  const setParentCategory = (categoryId: number) => {
+  const setParentCategory = (categoryId: number | null) => {
     dispatchCategoryState({
       type: SetCategoryActionType.SetParentCategory,
       payload: { parent: categoryId },

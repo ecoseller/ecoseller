@@ -300,7 +300,7 @@ const ProductEditorWrapper = ({
     });
   };
 
-  const setCategoryId = (categoryId: number) => {
+  const setCategoryId = (categoryId: number | null) => {
     dispatchProductState({
       type: ActionSetProduct.SETCATEGORY,
       payload: { category: categoryId },
