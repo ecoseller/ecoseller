@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { ExpandLess, ExpandMore, StarBorder } from "@mui/icons-material";
 import Collapse from "@mui/material/Collapse";
 import { useUser } from "@/utils/context/user";
+import { PermissionProvider, usePermission } from "@/utils/context/permission";
 
 interface INavigationProps {
   data: INavigationItem[];
@@ -78,6 +79,20 @@ function NavigationItem({ item, sx, onClick, dense }: INavigationItemProps) {
 
   const { checkHasPermission } = useUser();
 
+  return (
+    <PermissionProvider allowedPermissions={item.permissions}>
+      <PermissionNavItem item={item} sx={sx} onClick={onClick} dense={dense} />
+    </PermissionProvider>
+  );
+}
+
+const PermissionNavItem = ({
+  item,
+  sx,
+  onClick,
+  dense,
+}: INavigationItemProps) => {
+  const { title, path, icon, info, children, level, permissions } = item;
   const { pathname } = useRouter();
 
   const [open, setOpen] = useState(pathname.includes(path));
@@ -86,12 +101,9 @@ function NavigationItem({ item, sx, onClick, dense }: INavigationItemProps) {
   useEffect(() => {
     setOpen(pathname.includes(path));
   }, [pathname]);
+  const { hasPermission } = usePermission();
 
-  if (permissions && checkHasPermission && !checkHasPermission(permissions)) {
-    console.log("no permission")
-    console.log(permissions)
-    console.log(checkHasPermission)
-    console.log(checkHasPermission(permissions))
+  if (permissions && hasPermission) {
     // user has no permission to see this item
     return null;
   }
@@ -183,4 +195,4 @@ function NavigationItem({ item, sx, onClick, dense }: INavigationItemProps) {
       {info && info}
     </StyledNavigationItem>
   );
-}
+};
