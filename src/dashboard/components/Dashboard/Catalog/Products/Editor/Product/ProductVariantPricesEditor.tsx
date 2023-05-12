@@ -23,8 +23,11 @@ import {
   GridRowModel,
   GridColumnGroupingModel,
 } from "@mui/x-data-grid/models";
+import Tooltip from "@mui/material/Tooltip";
+
 import { useEffect, useState } from "react";
 import { ISetProductStateAction } from "../ProductEditorWrapper";
+import { usePermission } from "@/utils/context/permission";
 
 interface IProductVariantPriceEditorProps {
   disabled: boolean;
@@ -43,8 +46,12 @@ const ProductVariantPricesEditor = ({
   dispatch,
   pricelistsData,
 }: IProductVariantPriceEditorProps) => {
-  const [snackbar, setSnackbar] = useSnackbarState();
-
+  const [snackbar, setSnackbar] = useState<{
+    open: boolean;
+    message: string;
+    severity: "success" | "error" | "info" | "warning";
+  } | null>(null);
+  const { hasPermission } = usePermission();
   const [rows, setRows] = useState<IProductVariantPriceTable[]>([]);
 
   const [updateMainState, setUpdateMainState] = useState<boolean>(false);
@@ -87,10 +94,10 @@ const ProductVariantPricesEditor = ({
 
     const variantsToSet = rows.map(
       (row) =>
-        ({
-          ...(row as IProductVariant),
-          price: serializeProductVariantPricesFromRow(row, pricelistsData),
-        } as IProductVariant)
+      ({
+        ...(row as IProductVariant),
+        price: serializeProductVariantPricesFromRow(row, pricelistsData),
+      } as IProductVariant)
     );
     console.log("settingrows2", rows, variantsToSet);
 
@@ -115,33 +122,33 @@ const ProductVariantPricesEditor = ({
     },
     ...(pricelistsData
       ? pricelistsData?.flatMap((pricelist: IPriceList) => {
-          const priceColumn = {
-            field: `$PRICE_${pricelist.code}_price`,
-            headerName: `Price`,
-            editable: true,
-            width: 125,
-            minWidth: 150,
-            maxWidth: 200,
-            sortable: false,
-            disableColumnMenu: true,
-            valueFormatter: ({ value }: { value: number }) =>
-              value ? `${value} ${pricelist?.currency}` : null,
-          };
+        const priceColumn = {
+          field: `$PRICE_${pricelist.code}_price`,
+          headerName: `Price`,
+          editable: hasPermission,
+          width: 125,
+          minWidth: 150,
+          maxWidth: 200,
+          sortable: false,
+          disableColumnMenu: true,
+          valueFormatter: ({ value }: { value: number }) =>
+            value ? `${value} ${pricelist?.currency}` : null,
+        };
 
-          const discountColumn = {
-            field: `$PRICE_${pricelist.code}_discount`,
-            headerName: `Discount`,
-            editable: true,
-            width: 125,
-            minWidth: 150,
-            maxWidth: 200,
-            sortable: false,
-            disableColumnMenu: true,
-            valueFormatter: ({ value }: { value: number }) =>
-              value ? `${value} %` : null,
-          };
-          return [priceColumn, discountColumn];
-        })
+        const discountColumn = {
+          field: `$PRICE_${pricelist.code}_discount`,
+          headerName: `Discount`,
+          editable: hasPermission,
+          width: 125,
+          minWidth: 150,
+          maxWidth: 200,
+          sortable: false,
+          disableColumnMenu: true,
+          valueFormatter: ({ value }: { value: number }) =>
+            value ? `${value} %` : null,
+        };
+        return [priceColumn, discountColumn];
+      })
       : []), // <-- this generates pricelist columns
 
     //   ({
@@ -176,12 +183,12 @@ const ProductVariantPricesEditor = ({
         {
           field: `$PRICE_${pricelist.code}_price`,
           headerName: "Price",
-          editable: true,
+          editable: hasPermission,
         },
         {
           field: `$PRICE_${pricelist.code}_discount`,
           headerName: "Discount",
-          editable: true,
+          editable: hasPermission,
         },
       ],
     })) || [];

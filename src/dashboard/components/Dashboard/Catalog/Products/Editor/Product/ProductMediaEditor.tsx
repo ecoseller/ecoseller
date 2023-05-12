@@ -33,6 +33,7 @@ import EditorCard from "@/components/Dashboard/Generic/EditorCard";
 
 // types
 import { IProductMedia, ISetProductStateData } from "@/types/product";
+import { usePermission } from "@/utils/context/permission";
 
 export interface IProductMediaEditorState extends IProductMedia {
   name: string;
@@ -61,8 +62,11 @@ const ProductMediaHolder = ({
 
   console.log("media", media);
 
+  const { hasPermission } = usePermission();
+
   const moveCard = useCallback(
     async (dragIndex: number, hoverIndex: number) => {
+      if (!hasPermission) return;
       const [newDragSortOrder, newHoverSortOrder] = [
         media[hoverIndex].sort_order,
         media[dragIndex].sort_order,
@@ -136,6 +140,8 @@ const ProductMediaEditor = ({ disabled, state }: IProductMediaEditorProps) => {
    * It only updates the state of this component.
    */
 
+  const { hasPermission } = usePermission();
+
   const inputRef = useRef<HTMLInputElement>(null);
   const [productMedia, setProductMedia] = useState<IProductMediaEditorState[]>(
     (state?.media as IProductMediaEditorState[]) || []
@@ -206,7 +212,11 @@ const ProductMediaEditor = ({ disabled, state }: IProductMediaEditorProps) => {
               onChange={handleFileChange}
               multiple
             />
-            <Button variant="text" onClick={handleUploadClick}>
+            <Button
+              variant="text"
+              onClick={handleUploadClick}
+              disabled={!hasPermission}
+            >
               Upload
             </Button>
             <DndProvider backend={HTML5Backend}>

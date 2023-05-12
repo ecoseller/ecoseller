@@ -25,6 +25,7 @@ import { ISetProductStateAction } from "../Catalog/Products/Editor/ProductEditor
 import { ILanguage } from "@/types/localization";
 import { IDispatchWrapper } from "@/components/Dashboard/Common/IDispatchWrapper";
 import { IEntityTranslation, IEntityTranslations } from "@/types/common";
+import { usePermission } from "@/utils/context/permission";
 
 interface ITranslatedSEOFieldsTabProps {
   language: string;
@@ -37,6 +38,8 @@ const TranslatedSEOFieldsTab = ({
   state,
   dispatchWrapper,
 }: ITranslatedSEOFieldsTabProps) => {
+  const { hasPermission } = usePermission();
+
   return dispatchWrapper?.setMetaTitle &&
     dispatchWrapper?.setMetaDescription ? (
     <FormControl fullWidth margin={"normal"}>
@@ -44,6 +47,7 @@ const TranslatedSEOFieldsTab = ({
         <TextField
           label="Meta title"
           value={state?.meta_title || ""}
+          disabled={!hasPermission}
           onChange={(
             e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
           ) => {
@@ -56,6 +60,7 @@ const TranslatedSEOFieldsTab = ({
         <TextField
           label="Meta description"
           value={state?.meta_description || ""}
+          disabled={!hasPermission}
           multiline
           onChange={(
             e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>

@@ -128,7 +128,7 @@ const EditableContentWrapper = ({
             </Button>
             <Button
               variant="contained"
-              disabled={checkPermission && !hasPermission}
+              disabled={!hasPermission}
               onClick={async () => {
                 await innerOnSave();
                 // setIsSaved(true);

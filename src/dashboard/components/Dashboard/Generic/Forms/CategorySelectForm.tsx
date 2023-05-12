@@ -1,6 +1,8 @@
 // next.js
 // react
 import React, { useEffect, useState } from "react";
+import { usePermission } from "@/utils/context/permission";
+
 // components
 import EditorCard from "@/components/Dashboard/Generic/EditorCard";
 // mui
@@ -26,7 +28,7 @@ const CategorySelectForm = ({
   title = "Category",
 }: ICategorySelectProps) => {
   const [categories, setCategories] = useState<ICategoryLocalized[]>([]);
-
+  const { hasPermission } = usePermission();
   // load categories from API
   useEffect(() => {
     getAllCategories().then((categories) => {
@@ -71,6 +73,7 @@ const CategorySelectForm = ({
             labelId="category-select-label"
             id="category-select"
             value={`${categoryId || ""}`}
+            disabled={!hasPermission}
             label="Category"
             onChange={handleChange}
           >
