@@ -50,8 +50,10 @@ export const UserProvider = ({ children }: IUserProviderProps): JSX.Element => {
 
   const checkHasPermission = (permission: ContextPermissions): boolean => {
     if (!user) return false;
-    if (roles.length === 0) return false;
     if (user.is_admin) return true;
+    if (roles.length === 0) return false;
+
+    console.log("user from user", user);
 
     const permissions: IPermission[] = [];
     roles.forEach((role: IGroup) => {

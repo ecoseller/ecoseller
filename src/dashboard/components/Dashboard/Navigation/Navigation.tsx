@@ -88,6 +88,10 @@ function NavigationItem({ item, sx, onClick, dense }: INavigationItemProps) {
   }, [pathname]);
 
   if (permissions && checkHasPermission && !checkHasPermission(permissions)) {
+    console.log("no permission")
+    console.log(permissions)
+    console.log(checkHasPermission)
+    console.log(checkHasPermission(permissions))
     // user has no permission to see this item
     return null;
   }

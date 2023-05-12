@@ -8,6 +8,8 @@ from .roles_manager import RolesManager
 
 def check_user_access(wanted_permissions, user_id):
     user = User.objects.get(email=user_id)
+    if user.is_admin:
+        return True
     user_groups = user.groups.all()
     user_permissions = user.user_permissions.all()
     user_permissions_set = set()

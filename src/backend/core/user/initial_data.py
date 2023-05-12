@@ -39,14 +39,3 @@ def populate_groups(apps, schema_editor):
             djangoPerm = RolesManager.manager_permission_to_django_permission(perm)
             if djangoPerm is not None:
                 group.permissions.add(djangoPerm)
-
-    # Create admin group with all permissions
-    adminGroup = Group.objects.create(name="Admin")
-    for perm in Permission.objects.all():
-        adminGroup.permissions.add(perm)
-
-    adminManagerGroup = ManagerGroup.objects.create(
-        name="Admin", description="Admin group"
-    )
-    for perm in ManagerPermission.objects.all():
-        adminManagerGroup.permissions.add(perm)
