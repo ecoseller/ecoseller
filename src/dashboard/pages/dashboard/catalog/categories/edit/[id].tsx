@@ -20,12 +20,6 @@ const CategoryEditPage = ({ category }: ICategoryEditPageProps) => {
   const router = useRouter();
   const categoryId = category.id.toString();
 
-  async function deleteCat() {
-    deleteCategory(categoryId).then(() => {
-      router.push("/dashboard/catalog/categories");
-    });
-  }
-
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
@@ -35,19 +29,6 @@ const CategoryEditPage = ({ category }: ICategoryEditPageProps) => {
           title={`Edit category #${categoryId}`}
           categoryId={categoryId}
         />
-        <Grid container spacing={2}>
-          <Grid item md={8} xs={12}>
-            <EditorCard>
-              <CollapsableContentWithTitle title="Delete">
-                <Box>
-                  <Button variant="contained" onClick={deleteCat}>
-                    Delete
-                  </Button>
-                </Box>
-              </CollapsableContentWithTitle>
-            </EditorCard>
-          </Grid>
-        </Grid>
       </Container>
     </DashboardLayout>
   );

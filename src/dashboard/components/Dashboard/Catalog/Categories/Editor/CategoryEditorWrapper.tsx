@@ -6,7 +6,11 @@ import { ILanguage } from "@/types/localization";
 import EditableContentWrapper, {
   PrimaryButtonAction,
 } from "@/components/Dashboard/Generic/EditableContentWrapper";
-import { addCategory, updateCategory } from "@/api/category/category";
+import {
+  addCategory,
+  deleteCategory,
+  updateCategory,
+} from "@/api/category/category";
 import { useRouter } from "next/router";
 import { ICategoryEditable } from "@/types/category";
 import EntityVisibilityForm from "@/components/Dashboard/Generic/Forms/EntityVisibilityForm";
@@ -15,6 +19,10 @@ import TranslatedSEOFieldsTabList from "@/components/Dashboard/Generic/Translate
 import { IDispatchWrapper } from "@/components/Dashboard/Common/IDispatchWrapper";
 import { OutputData } from "@editorjs/editorjs";
 import TranslatedFieldsTabList from "@/components/Dashboard/Generic/TranslatedFieldsTabList";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Box from "@mui/material/Box";
+import EditorCard from "@/components/Dashboard/Generic/EditorCard";
+import Button from "@mui/material/Button";
 
 interface ICategoryEditorWrapperProps {
   initialCategory: ICategoryEditable;
@@ -189,6 +197,13 @@ const CategoryEditorWrapper = ({
     },
   };
 
+  async function deleteCat() {
+    setPreventNavigation(false);
+    deleteCategory(categoryId).then(() => {
+      router.push("/dashboard/catalog/categories");
+    });
+  }
+
   return (
     <EditableContentWrapper
       primaryButtonTitle={
@@ -228,6 +243,26 @@ const CategoryEditorWrapper = ({
           />
         </Grid>
       </Grid>
+      {creatingNew ? (
+        <></>
+      ) : (
+        <Grid container spacing={2}>
+          <Grid item md={8} xs={12}>
+            <EditorCard>
+              <Box>
+                <Button
+                  variant="contained"
+                  color="error"
+                  startIcon={<DeleteIcon />}
+                  onClick={deleteCat}
+                >
+                  Delete
+                </Button>
+              </Box>
+            </EditorCard>
+          </Grid>
+        </Grid>
+      )}
     </EditableContentWrapper>
   );
 };
