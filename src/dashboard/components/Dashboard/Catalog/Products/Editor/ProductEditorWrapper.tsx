@@ -37,7 +37,8 @@ import TranslatedSEOFieldsTabList from "../../../Generic/TranslatedSEOFieldsTabL
 import { IDispatchWrapper } from "@/components/Dashboard/Common/IDispatchWrapper";
 import { IEntityTranslations } from "@/types/common";
 import { OutputData } from "@editorjs/editorjs";
-import { useSnackbarState } from "@/utils/snackbar";
+import { generalSnackbarError, useSnackbarState } from "@/utils/snackbar";
+import SnackbarWithAlert from "@/components/Dashboard/Generic/SnackbarWithAlert";
 
 export interface ISetProductStateAction {
   type: ActionSetProduct;
@@ -231,15 +232,7 @@ const ProductEditorWrapper = ({
 
   console.log("productState", productState);
 
-  const handleSnackbarClose = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setSnackbar(null);
-  };
+
 
   const saveProductAndRedirect = async () => {
     postProduct(productState as IProduct)
@@ -259,11 +252,7 @@ const ProductEditorWrapper = ({
       })
       .catch((err: any) => {
         console.log("postProduct", err);
-        setSnackbar({
-          open: true,
-          message: "Something went wrong",
-          severity: "error",
-        });
+        setSnackbar(generalSnackbarError);
       });
   };
 
@@ -282,11 +271,7 @@ const ProductEditorWrapper = ({
       })
       .catch((err: any) => {
         console.log("putProduct", err);
-        setSnackbar({
-          open: true,
-          message: "Something went wrong",
-          severity: "error",
-        });
+        setSnackbar(generalSnackbarError);
       });
   };
 
@@ -376,19 +361,7 @@ const ProductEditorWrapper = ({
         </Grid>
       </Grid>
       {snackbar ? (
-        <Snackbar
-          open={snackbar.open}
-          autoHideDuration={6000}
-          onClose={handleSnackbarClose}
-        >
-          <Alert
-            onClose={handleSnackbarClose}
-            severity={snackbar.severity}
-            sx={{ width: "100%" }}
-          >
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
+        <SnackbarWithAlert snackbarData={snackbar} setSnackbar={setSnackbar}/>
       ) : null}
     </EditableContentWrapper>
   );

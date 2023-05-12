@@ -17,7 +17,7 @@ export const getAllCategories = async () => {
  * @param categoryToAdd
  */
 export const addCategory = async (categoryToAdd: ICategoryEditable) => {
-  return await axiosPrivate.post("/category/dashboard/", categoryToAdd);
+  return await axiosPrivate.post<ICategoryDetail>("/category/dashboard/", categoryToAdd);
 };
 
 /**
