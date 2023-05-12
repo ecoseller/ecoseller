@@ -232,8 +232,6 @@ const ProductEditorWrapper = ({
 
   console.log("productState", productState);
 
-
-
   const saveProductAndRedirect = async () => {
     postProduct(productState as IProduct)
       .then((res: any) => {
@@ -361,7 +359,7 @@ const ProductEditorWrapper = ({
         </Grid>
       </Grid>
       {snackbar ? (
-        <SnackbarWithAlert snackbarData={snackbar} setSnackbar={setSnackbar}/>
+        <SnackbarWithAlert snackbarData={snackbar} setSnackbar={setSnackbar} />
       ) : null}
     </EditableContentWrapper>
   );

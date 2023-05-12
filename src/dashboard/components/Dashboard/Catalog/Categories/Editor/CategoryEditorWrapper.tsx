@@ -4,12 +4,12 @@ import React, { useEffect, useReducer, useState } from "react";
 import { getLanguages } from "@/api/country/country";
 import { ILanguage } from "@/types/localization";
 import EditableContentWrapper, {
-  PrimaryButtonAction
+  PrimaryButtonAction,
 } from "@/components/Dashboard/Generic/EditableContentWrapper";
 import {
   addCategory,
   deleteCategory,
-  updateCategory
+  updateCategory,
 } from "@/api/category/category";
 import { useRouter } from "next/router";
 import { ICategoryEditable } from "@/types/category";
@@ -26,42 +26,36 @@ import Button from "@mui/material/Button";
 import { generalSnackbarError, useSnackbarState } from "@/utils/snackbar";
 import SnackbarWithAlert from "@/components/Dashboard/Generic/SnackbarWithAlert";
 
-interface ICategoryEditorWrapperProps
-{
+interface ICategoryEditorWrapperProps {
   initialCategory: ICategoryEditable;
   creatingNew: boolean;
   title: string;
   categoryId?: string;
 }
 
-export enum SetCategoryActionType
-{
+export enum SetCategoryActionType {
   SetTranslation,
   RecreateInitState,
   SetPublished,
   SetParentCategory,
 }
 
-export interface ISetCategoryAction
-{
+export interface ISetCategoryAction {
   type: SetCategoryActionType;
   payload: any;
 }
 
 const CategoryEditorWrapper = ({
-                                 initialCategory,
-                                 creatingNew,
-                                 title,
-                                 categoryId = ""
-                               }: ICategoryEditorWrapperProps) =>
-{
+  initialCategory,
+  creatingNew,
+  title,
+  categoryId = "",
+}: ICategoryEditorWrapperProps) => {
   function reducer(
     state: ICategoryEditable,
     action: ISetCategoryAction
-  ): ICategoryEditable
-  {
-    switch (action.type)
-    {
+  ): ICategoryEditable {
+    switch (action.type) {
       case SetCategoryActionType.SetTranslation:
         setPreventNavigation(true);
         return {
@@ -72,9 +66,9 @@ const CategoryEditorWrapper = ({
             [action.payload.translation.language]: {
               // update `translations[language]` field
               ...state.translations[action.payload.translation.language], // use the previous `translations[language]` state as a base
-              ...action.payload.translation.data // use the data from payload
-            }
-          }
+              ...action.payload.translation.data, // use the data from payload
+            },
+          },
         };
       case SetCategoryActionType.SetPublished:
         setPreventNavigation(true);
@@ -99,148 +93,131 @@ const CategoryEditorWrapper = ({
 
   const router = useRouter();
 
-  useEffect(() =>
-  {
-    getLanguages().then((langs) =>
-    {
+  useEffect(() => {
+    getLanguages().then((langs) => {
       setLanguages(langs.data);
     });
   }, []);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     dispatchCategoryState({
       type: SetCategoryActionType.RecreateInitState,
-      payload: initialCategory
+      payload: initialCategory,
     });
   }, [initialCategory]);
 
-  const save = async () =>
-  {
-    if (creatingNew)
-    {
+  const save = async () => {
+    if (creatingNew) {
       addCategory(category)
-        .then((res) =>
-        {
+        .then((res) => {
           const { id } = res.data;
-          router.push(`/dashboard/catalog/categories/edit/${id}`, undefined, { shallow: true });
+          router.push(`/dashboard/catalog/categories/edit/${id}`, undefined, {
+            shallow: true,
+          });
         })
-        .catch(() =>
-        {
+        .catch(() => {
           setSnackbar(generalSnackbarError);
         });
-    } else
-    {
+    } else {
       updateCategory(categoryId, category)
-        .then(() =>
-        {
+        .then(() => {
           setSnackbar({
             open: true,
             message: "Category updated",
-            severity: "success"
+            severity: "success",
           });
         })
-        .catch(() =>
-        {
+        .catch(() => {
           setSnackbar(generalSnackbarError);
         });
     }
   };
 
-  const setPublished = (published: boolean) =>
-  {
+  const setPublished = (published: boolean) => {
     dispatchCategoryState({
       type: SetCategoryActionType.SetPublished,
-      payload: { published: published }
+      payload: { published: published },
     });
   };
 
-  const setParentCategory = (categoryId: number | null) =>
-  {
+  const setParentCategory = (categoryId: number | null) => {
     dispatchCategoryState({
       type: SetCategoryActionType.SetParentCategory,
-      payload: { parent: categoryId }
+      payload: { parent: categoryId },
     });
   };
 
   const dispatchWrapper: IDispatchWrapper = {
-    setDescription(language: string, description: OutputData): void
-    {
+    setDescription(language: string, description: OutputData): void {
       dispatchCategoryState({
         type: SetCategoryActionType.SetTranslation,
         payload: {
           translation: {
             language: language,
             data: {
-              description_editorjs: description
-            }
-          }
-        }
+              description_editorjs: description,
+            },
+          },
+        },
       });
     },
-    setSlug(language: string, slug: string): void
-    {
+    setSlug(language: string, slug: string): void {
       dispatchCategoryState({
         type: SetCategoryActionType.SetTranslation,
         payload: {
           translation: {
             language: language,
             data: {
-              slug: slug
-            }
-          }
-        }
+              slug: slug,
+            },
+          },
+        },
       });
     },
-    setTitle(language: string, title: string): void
-    {
+    setTitle(language: string, title: string): void {
       dispatchCategoryState({
         type: SetCategoryActionType.SetTranslation,
         payload: {
           translation: {
             language: language,
             data: {
-              title: title
-            }
-          }
-        }
+              title: title,
+            },
+          },
+        },
       });
     },
-    setMetaTitle(language: string, metaTitle: string)
-    {
+    setMetaTitle(language: string, metaTitle: string) {
       dispatchCategoryState({
         type: SetCategoryActionType.SetTranslation,
         payload: {
           translation: {
             language: language,
             data: {
-              meta_title: metaTitle
-            }
-          }
-        }
+              meta_title: metaTitle,
+            },
+          },
+        },
       });
     },
-    setMetaDescription(language: string, metaDescription: string)
-    {
+    setMetaDescription(language: string, metaDescription: string) {
       dispatchCategoryState({
         type: SetCategoryActionType.SetTranslation,
         payload: {
           translation: {
             language: language,
             data: {
-              meta_description: metaDescription
-            }
-          }
-        }
+              meta_description: metaDescription,
+            },
+          },
+        },
       });
-    }
+    },
   };
 
-  async function deleteCat()
-  {
+  async function deleteCat() {
     setPreventNavigation(false);
-    deleteCategory(categoryId).then(() =>
-    {
+    deleteCategory(categoryId).then(() => {
       router.push("/dashboard/catalog/categories");
     });
   }
@@ -252,8 +229,7 @@ const CategoryEditorWrapper = ({
       } // To distinguish between create and update actions
       preventNavigation={preventNavigation}
       setPreventNavigation={setPreventNavigation}
-      onButtonClick={async () =>
-      {
+      onButtonClick={async () => {
         await save();
       }}
       returnPath={"/dashboard/catalog/categories"}

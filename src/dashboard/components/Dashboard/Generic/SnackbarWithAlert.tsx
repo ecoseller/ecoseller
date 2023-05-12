@@ -2,9 +2,7 @@ import { Snackbar } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import { ISnackbarData } from "@/utils/snackbar";
 
-
-interface ISnackbarWithAlertProps
-{
+interface ISnackbarWithAlertProps {
   snackbarData: ISnackbarData;
   setSnackbar: (data: ISnackbarData | null) => void;
 }
@@ -15,20 +13,19 @@ interface ISnackbarWithAlertProps
  * @param setSnackbar function for setting snackbar data
  * @constructor
  */
-const SnackbarWithAlert = ({ snackbarData, setSnackbar }: ISnackbarWithAlertProps) =>
-{
+const SnackbarWithAlert = ({
+  snackbarData,
+  setSnackbar,
+}: ISnackbarWithAlertProps) => {
   const handleSnackbarClose = (
     event?: React.SyntheticEvent | Event,
     reason?: string
-  ) =>
-  {
-    if (reason === "clickaway")
-    {
+  ) => {
+    if (reason === "clickaway") {
       return;
     }
     setSnackbar(null);
   };
-
 
   return (
     <Snackbar

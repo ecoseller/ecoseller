@@ -3,8 +3,7 @@ import { useState } from "react";
 /**
  * Interface for snackbar content
  */
-export interface ISnackbarData
-{
+export interface ISnackbarData {
   open: boolean;
   message: string;
   severity: "success" | "error" | "info" | "warning";
@@ -13,8 +12,7 @@ export interface ISnackbarData
 /**
  * Returns snackbar state together with set function
  */
-export function useSnackbarState()
-{
+export function useSnackbarState() {
   return useState<ISnackbarData | null>(null);
 }
 
@@ -24,5 +22,5 @@ export function useSnackbarState()
 export const generalSnackbarError: ISnackbarData = {
   open: true,
   message: "Something went wrong",
-  severity: "error"
+  severity: "error",
 };
