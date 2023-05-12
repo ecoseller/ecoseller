@@ -12,6 +12,7 @@ import ProductGrid from "@/components/Dashboard/Catalog/Products/List/ProductGri
 // mui
 import Container from "@mui/material/Container";
 import Card from "@mui/material/Card";
+import { PermissionProvider } from "@/utils/context/permission";
 
 // types
 
@@ -19,7 +20,9 @@ const DashboardProductsPage = () => {
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
-        <ProductListTopLine />
+        <PermissionProvider permission="product_add_permission">
+          <ProductListTopLine />
+        </PermissionProvider>
         <Card elevation={0}>
           <ProductGrid />
         </Card>
