@@ -342,7 +342,7 @@ const ProductEditorWrapper = ({
 
       <Grid container spacing={2}>
         <Grid item md={8} xs={12}>
-          <PermissionProvider permission="product_change_permission">
+          <PermissionProvider allowedPermissions={["product_change_permission"]}>
             <TranslatedFieldsTabList
               state={productState.translations || ({} as IEntityTranslations)}
               dispatchWrapper={dispatchWrapper}
@@ -359,14 +359,14 @@ const ProductEditorWrapper = ({
               pricelistsData={pricelistsData}
             />
           </PermissionProvider>
-          <PermissionProvider permission="productmedia_change_permission">
+          <PermissionProvider allowedPermissions={["productmedia_change_permission"]}>
             <ProductMediaEditor
               disabled={false}
               state={productState}
             // dispatch={dispatchProductState}
             />
           </PermissionProvider>
-          <PermissionProvider permission="productprice_change_permission">
+          <PermissionProvider allowedPermissions={["productprice_change_permission"]}>
             <ProductVariantPricesEditor
               disabled={false}
               state={productState}
@@ -376,7 +376,7 @@ const ProductEditorWrapper = ({
           </PermissionProvider>
         </Grid>
         <Grid item md={4} xs={12}>
-          <PermissionProvider permission="product_change_permission">
+          <PermissionProvider allowedPermissions={["product_change_permission"]}>
             <CategorySelectForm
               categoryId={productState.category}
               setCategoryId={setCategoryId}

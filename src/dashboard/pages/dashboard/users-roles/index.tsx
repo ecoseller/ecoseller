@@ -21,11 +21,11 @@ const DashboardRolesAndUsersPage = () => {
       <Typography variant="h4" gutterBottom>
         Users and roles
       </Typography>
-      <PermissionProvider permission="user_change_permission">
+      <PermissionProvider allowedPermissions={["user_change_permission"]}>
         <UserGrid />
       </PermissionProvider>
       <Grid item xs={12} md={6} lg={8} sx={{ paddingTop: 2 }}></Grid>
-      <PermissionProvider permission="group_change_permission">
+      <PermissionProvider allowedPermissions={["group_change_permission"]}>
         <GroupsGrid />
       </PermissionProvider>
     </DashboardLayout>

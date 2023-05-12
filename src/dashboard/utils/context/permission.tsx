@@ -35,7 +35,6 @@ interface IPermissionContextProps {
 
 interface IPermissionProviderProps {
   children: React.ReactNode;
-  permission?: ContextPermissions;
   allowedPermissions?: ContextPermissions[];
 }
 
@@ -43,7 +42,6 @@ const PermissionContext = createContext<Partial<IPermissionContextProps>>({});
 
 export const PermissionProvider = ({
   children,
-  permission,
   allowedPermissions,
 }: IPermissionProviderProps): JSX.Element => {
   const [permissions, setPermissions] = useState<IPermission[]>([]);
@@ -78,8 +76,7 @@ export const PermissionProvider = ({
 
   const checkHasPermission = async () => {
     console.log("checkHasPermission");
-    if (!permission) {
-      console.log("user", user);
+    if (allowedPermissions?.length == 0) {
       setHasPermission(true);
       return;
     }
@@ -90,9 +87,9 @@ export const PermissionProvider = ({
     }
 
     if (
-      permissions.filter(
-        (perm: IPermission) => (perm.name as ContextPermissions) === permission
-      ).length > 0
+      allowedPermissions?.every((permission) =>
+        permissions.some((p) => p.name == permission)
+      )
     ) {
       setHasPermission(true);
     }

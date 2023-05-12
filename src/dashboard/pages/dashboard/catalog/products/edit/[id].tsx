@@ -28,7 +28,7 @@ const DashboardProductsEditPage = ({ product, pricelistsData }: IProps) => {
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
-        <PermissionProvider permission="product_add_permission">
+        <PermissionProvider allowedPermissions={["product_add_permission"]}>
           <ProductEditorWrapper
             title={`Edit product #${id}`}
             returnPath={"/dashboard/catalog/products"}

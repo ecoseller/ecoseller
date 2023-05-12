@@ -20,7 +20,7 @@ const DashboardProductsPage = () => {
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
-        <PermissionProvider permission="product_add_permission">
+        <PermissionProvider allowedPermissions={["product_add_permission"]}>
           <ProductListTopLine />
         </PermissionProvider>
         <Card elevation={0}>

@@ -25,7 +25,7 @@ const DashboardProductsAddPage = ({
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
-        <PermissionProvider permission="product_add_permission">
+        <PermissionProvider allowedPermissions={["product_add_permission"]}>
           <ProductEditorWrapper
             title={"Add product"}
             returnPath={"/dashboard/catalog/products"}

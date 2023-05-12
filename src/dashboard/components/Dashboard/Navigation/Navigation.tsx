@@ -103,7 +103,7 @@ const PermissionNavItem = ({
   }, [pathname]);
   const { hasPermission } = usePermission();
 
-  if (permissions && hasPermission) {
+  if (permissions && !hasPermission) {
     // user has no permission to see this item
     return null;
   }
