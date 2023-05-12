@@ -15,8 +15,6 @@ from .models import (
 )
 from .serializers import CountrySerializer, CurrencySerializer, VatGroupSerializer
 
-from rest_framework.generics import RetrieveUpdateDestroyAPIView
-
 
 DEFAULT_LANGUAGE_CODE = settings.PARLER_DEFAULT_LANGUAGE_CODE
 LANGUAGES = settings.PARLER_LANGUAGES[None]
