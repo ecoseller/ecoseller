@@ -433,6 +433,8 @@ class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSeriali
                 pass
 
             del attrs["id"]
+        if "type_id" in attrs and attrs["type_id"] is not None:
+            attrs["type_id"] = attrs["type_id"].id
         # else:
         #     # if id is not present in attrs, it means that we are creating the product
         #     # so we take maximum id from all products and add 1 to it
