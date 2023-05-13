@@ -105,7 +105,7 @@ const PaymentMethodCountryEditor = ({
   } | null>(null);
 
   const validateRow = (row: IPaymentMethodCountryTable) => {
-    if (!row.price) {
+    if (row.price === undefined || row.price === null) {
       setSnackbar({
         open: true,
         message: "Price is required",
