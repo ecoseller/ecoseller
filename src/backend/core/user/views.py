@@ -4,11 +4,13 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from rest_framework_simplejwt import views as jwt_views
 
 from .models import User
 
 from .serializers import (
     RegistrationSerializer,
+    TokenObtainDashboardSerializer,
     UserSerializer,
 )
 
@@ -99,11 +101,26 @@ class UserViewObs(APIView):
         # currently triggers UserAuthBackend
         # user = authenticate(request)
 
-        print("USER", user)
-        print("AUTH", auth)
-
         if user is None:
             return Response({"error": "User does not exist"}, status=400)
 
         serializer = UserSerializer(user)
         return Response(serializer.data)
+
+
+class CustomTokenObtainPairView(jwt_views.TokenObtainPairView):
+    # Replace the serializer with your custom
+    serializer_class = TokenObtainDashboardSerializer
+
+    def post(self, request, *args, **kwargs):
+        try:
+            response = super().post(request, *args, **kwargs)
+            serializedData = self.serializer_class(data=request.data)
+            serializedData.is_valid(raise_exception=True)
+            dashboardLogin = serializedData.validated_data["dashboard_login"]
+            user = User.objects.get(email=request.data["email"])
+            if dashboardLogin == True and not user.is_staff:
+                return Response({"error": "Not authorized"}, status=400)
+            return response
+        except Exception as e:
+            return Response("Error login", status=400)
