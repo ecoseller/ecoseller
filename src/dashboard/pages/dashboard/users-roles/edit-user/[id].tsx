@@ -157,6 +157,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     first_name: userDataRet?.first_name || "",
     last_name: userDataRet?.last_name || "",
     is_admin: userDataRet.is_admin,
+    is_staff: userDataRet.is_staff,
     roles: [],
   };
   const userRolesData = await userRoleAPI(

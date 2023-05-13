@@ -87,6 +87,21 @@ const UserGeneralInformation = ({ state, setState }: IUserProps) => {
                 />
               }
             />
+            <FormControlLabel
+              label="Is Staff"
+              control={
+                <Checkbox
+                  checked={state.is_staff}
+                  disabled={!hasPermission}
+                  onChange={(e) => {
+                    setState({
+                      ...state,
+                      is_staff: e.target.checked,
+                    });
+                  }}
+                />
+              }
+            />
             {/* <TextField label="Name" /> */}
           </Stack>
         </FormControl>
