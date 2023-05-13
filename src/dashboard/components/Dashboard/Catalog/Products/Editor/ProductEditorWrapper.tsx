@@ -402,11 +402,11 @@ const ProductEditorWrapper = ({
             <Box>
               <Button
                 variant="contained"
-                onClick={() => {
+                onClick={async () => {
                   if (!productData) {
                     return;
                   }
-                  setPreventNavigation(false);
+                  await setPreventNavigation(false);
                   fetch(`/api/product/${productData.id}/`, {
                     method: "DELETE",
                   })
