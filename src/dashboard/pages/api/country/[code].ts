@@ -69,16 +69,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // get the cart data from the backend
   const method = req.method as HTTPMETHOD;
 
-  if (method === "PUT") {
-    return countryDetailAPI("PUT", req, res)
-      .then((data) => res.status(200).json(data))
-      .catch((error) => res.status(400).json(null));
-  } else if (method === "GET") {
-    return countryDetailAPI("GET", req, res)
-      .then((data) => res.status(200).json(data))
-      .catch((error) => res.status(400).json(null));
-  } else if (method === "DELETE") {
-    return countryDetailAPI("DELETE", req, res)
+  if (method === "PUT" || method === "GET" || method === "DELETE") {
+    return countryDetailAPI(method, req, res)
       .then((data) => res.status(200).json(data))
       .catch((error) => res.status(400).json(null));
   }
