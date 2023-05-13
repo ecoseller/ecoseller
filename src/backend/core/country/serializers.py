@@ -45,6 +45,9 @@ class CountrySerializer(ModelSerializer):
             "code",
             "name",
             "locale",
+            "default_price_list",
+            "update_at",
+            "create_at",
         )
 
 
