@@ -6,8 +6,6 @@ import {
 import axios from "axios";
 import { axiosNextApiInstance } from "@/utils/axiosNextApiInstance";
 
-
-
 /**
  * Get list of all categories
  */
@@ -31,7 +29,9 @@ export const addCategory = async (categoryToAdd: ICategoryEditable) => {
  * @param id
  */
 export const getCategory = async (id: string) => {
-  return await axiosNextApiInstance.get<ICategoryDetail>(`/api/category/${id}/`);
+  return await axiosNextApiInstance.get<ICategoryDetail>(
+    `/api/category/${id}/`
+  );
 };
 
 /**
@@ -43,7 +43,10 @@ export const updateCategory = async (
   id: string,
   updatedCategory: ICategoryEditable
 ) => {
-  return await axiosNextApiInstance.put(`/api/category/${id}/`, updatedCategory);
+  return await axiosNextApiInstance.put(
+    `/api/category/${id}/`,
+    updatedCategory
+  );
 };
 
 /**

@@ -10,7 +10,7 @@ import {
 import { ICountry } from "@/types/country";
 import { HTTPMETHOD } from "@/types/common";
 
-const categoryUrl = "/category/dashboard/"
+const categoryUrl = "/category/dashboard/";
 
 export const categoryAPI = async (
   method: HTTPMETHOD,
@@ -23,15 +23,13 @@ export const categoryAPI = async (
 
   switch (method) {
     case "GET":
-      return await api
-        .get(categoryUrl)
-        .then((response) => response.data);
+      return await api.get(categoryUrl).then((response) => response.data);
     case "POST":
       const body = req?.body;
       if (!body) throw new Error("Body is empty");
       return await api
         .post(categoryUrl, body)
-        .then((response) => response.data)
+        .then((response) => response.data);
     default:
       throw new Error("Method not supported");
   }
@@ -43,11 +41,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
    */
   const { method } = req;
   if (method == "GET") {
-    return categoryAPI("GET", req, res)
-      .then((data) => res.status(200).json(data));
+    return categoryAPI("GET", req, res).then((data) =>
+      res.status(200).json(data)
+    );
   } else if (method == "POST") {
-    return categoryAPI("POST", req, res)
-      .then((data) => res.status(201).json(data));
+    return categoryAPI("POST", req, res).then((data) =>
+      res.status(201).json(data)
+    );
   }
   return res.status(404).json({ message: "Method not supported" });
 };

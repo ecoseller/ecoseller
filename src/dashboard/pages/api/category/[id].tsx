@@ -5,7 +5,7 @@ import {
   api,
   setRequestResponse,
   backendApiHelper,
-  cartApiUrlHelper
+  cartApiUrlHelper,
 } from "@/utils/interceptors/api";
 import { ICountry } from "@/types/country";
 import { HTTPMETHOD } from "@/types/common";
@@ -16,21 +16,16 @@ export const categoryDetailAPI = async (
   req?: NextApiRequest,
   res?: NextApiResponse,
   body?: any
-) =>
-{
-  if (req && res)
-  {
+) => {
+  if (req && res) {
     setRequestResponse(req, res);
   }
 
   const categoryDetailUrl = `/category/dashboard/${id}/`;
 
-  switch (method)
-  {
+  switch (method) {
     case "GET":
-      return await api
-        .get(categoryDetailUrl)
-        .then((response) => response.data);
+      return await api.get(categoryDetailUrl).then((response) => response.data);
     case "PUT":
       const body = req?.body;
       if (!body) throw new Error("Body is empty");
@@ -46,22 +41,21 @@ export const categoryDetailAPI = async (
   }
 };
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) =>
-{
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   /**
    * This is a wrapper for the category type detail api in the backend
    */
 
-    // get the id from the query
+  // get the id from the query
   const { id } = req.query;
   // get body from the request
   const { body } = req;
 
   const { method } = req;
-  if (method == "PUT" || method == "DELETE" || method == "GET")
-  {
-    return categoryDetailAPI(method, Number(id), req, res, body)
-      .then((data) => res.status(200).json(data));
+  if (method == "PUT" || method == "DELETE" || method == "GET") {
+    return categoryDetailAPI(method, Number(id), req, res, body).then((data) =>
+      res.status(200).json(data)
+    );
   }
   return res.status(400).json({ message: "Method not supported" });
 };
