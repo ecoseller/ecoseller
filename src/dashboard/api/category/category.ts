@@ -4,17 +4,15 @@ import {
   ICategoryDetail,
 } from "@/types/category";
 import axios from "axios";
+import { axiosNextApiInstance } from "@/utils/axiosNextApiInstance";
 
-const axiosInstance = axios.create({
-  baseURL: "http://localhost:3030/",
-  timeout: 1000,
-});
+
 
 /**
  * Get list of all categories
  */
 export const getAllCategories = async () => {
-  return await axiosInstance.get<ICategoryLocalized[]>("/api/category/");
+  return await axiosNextApiInstance.get<ICategoryLocalized[]>("/api/category/");
 };
 
 /**
@@ -22,7 +20,7 @@ export const getAllCategories = async () => {
  * @param categoryToAdd
  */
 export const addCategory = async (categoryToAdd: ICategoryEditable) => {
-  return await axiosInstance.post<ICategoryDetail>(
+  return await axiosNextApiInstance.post<ICategoryDetail>(
     "/api/category/",
     categoryToAdd
   );
@@ -33,7 +31,7 @@ export const addCategory = async (categoryToAdd: ICategoryEditable) => {
  * @param id
  */
 export const getCategory = async (id: string) => {
-  return await axiosInstance.get<ICategoryDetail>(`/api/category/${id}/`);
+  return await axiosNextApiInstance.get<ICategoryDetail>(`/api/category/${id}/`);
 };
 
 /**
@@ -45,7 +43,7 @@ export const updateCategory = async (
   id: string,
   updatedCategory: ICategoryEditable
 ) => {
-  return await axiosInstance.put(`/api/category/${id}/`, updatedCategory);
+  return await axiosNextApiInstance.put(`/api/category/${id}/`, updatedCategory);
 };
 
 /**
@@ -53,5 +51,5 @@ export const updateCategory = async (
  * @param id
  */
 export const deleteCategory = async (id: string) => {
-  return await axiosInstance.delete(`/api/category/${id}/`);
+  return await axiosNextApiInstance.delete(`/api/category/${id}/`);
 };
