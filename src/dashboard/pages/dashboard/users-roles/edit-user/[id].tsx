@@ -58,34 +58,24 @@ const DashboardUserEditPage = ({ userData, groups }: IUserEditProps) => {
             setPreventNavigation={setPreventNavigation}
             onButtonClick={async () => {
               await setPreventNavigation(false);
-              fetch(`/api/user/users/${state.email}`, {
+              await fetch(`/api/user/users/${state.email}`, {
                 method: "PUT",
                 body: JSON.stringify(state),
+              });
+              await fetch(`/api/roles/user/${state.email}`, {
+                method: "PUT",
+                body: JSON.stringify({
+                  roles: state.roles,
+                }),
               })
-                .then(async (res: any) => {
-                  await fetch(`/api/roles/user/${state.email}`, {
-                    method: "PUT",
-                    body: JSON.stringify({
-                      roles: state.roles,
-                    }),
-                  })
-                    .then((res: any) => {
-                      if (res.ok) {
-                        setSnackbar({
-                          open: true,
-                          message: "User updated",
-                          severity: "success",
-                        });
-                      }
-                    })
-                    .catch((err: any) => {
-                      console.log("updateUser", err);
-                      setSnackbar({
-                        open: true,
-                        message: "Something went wrong",
-                        severity: "error",
-                      });
+                .then((res: any) => {
+                  if (res.ok) {
+                    setSnackbar({
+                      open: true,
+                      message: "User updated",
+                      severity: "success",
                     });
+                  }
                 })
                 .catch((err: any) => {
                   console.log("updateUser", err);

@@ -9,6 +9,7 @@ import {
 } from "@/utils/interceptors/api";
 import { IUser } from "@/types/user";
 import { HTTPMETHOD } from "@/types/common";
+import { getCookie } from "cookies-next";
 
 export const concreteUserAPI = async (
   method: HTTPMETHOD,
@@ -19,6 +20,9 @@ export const concreteUserAPI = async (
   if (req && res) {
     setRequestResponse(req, res);
   }
+
+  const access = getCookie("accessToken", { req, res }) as string;
+  console.log("concreteUserAPI", access);
 
   switch (method) {
     case "GET":

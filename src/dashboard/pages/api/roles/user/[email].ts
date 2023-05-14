@@ -9,6 +9,7 @@ import {
 } from "@/utils/interceptors/api";
 import { IGroup, IUser } from "@/types/user";
 import { HTTPMETHOD } from "@/types/common";
+import { getCookie } from "cookies-next";
 
 export const userRoleAPI = async (
   method: HTTPMETHOD,
@@ -19,6 +20,9 @@ export const userRoleAPI = async (
   if (req && res) {
     setRequestResponse(req, res);
   }
+
+  const access = getCookie("accessToken", { req, res }) as string;
+  console.log("userRoleAPI", access);
 
   switch (method) {
     case "GET":
