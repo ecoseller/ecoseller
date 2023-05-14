@@ -73,6 +73,54 @@
                     "description": "Can add page",
                     "type": "ADD",
                     "model": "page"
+                },
+                {
+                    "name": "producttype_change_permission",
+                    "description": "Can change product type",
+                    "type": "CHANGE",
+                    "model": "producttype"
+                },
+                {
+                    "name": "producttype_add_permission",
+                    "description": "Can add product type",
+                    "type": "ADD",
+                    "model": "producttype"
+                },
+                {
+                    "name": "pricelist_change_permission",
+                    "description": "Can change price list",
+                    "type": "CHANGE",
+                    "model": "pricelist"
+                },
+                {
+                    "name": "pricelist_add_permission",
+                    "description": "Can add price list",
+                    "type": "ADD",
+                    "model": "pricelist"
+                },
+                {
+                    "name": "attributetype_change_permission",
+                    "description": "Can change attribute type",
+                    "type": "CHANGE",
+                    "model": "attributetype"
+                },
+                {
+                    "name": "attributetype_add_permission",
+                    "description": "Can add attribute type",
+                    "type": "ADD",
+                    "model": "attributetype"
+                },
+                {
+                    "name": "baseattribute_change_permission",
+                    "description": "Can change base attribute",
+                    "type": "CHANGE",
+                    "model": "baseattribute"
+                },
+                {
+                    "name": "baseattribute_add_permission",
+                    "description": "Can add base attribute",
+                    "type": "ADD",
+                    "model": "baseattribute"
                 }
             ],
             "description": "Editor role",
