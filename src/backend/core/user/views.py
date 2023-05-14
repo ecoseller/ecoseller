@@ -54,12 +54,12 @@ class UserDetailView(RetrieveUpdateDestroyAPIView):
         return super().get(request, id)
 
     @check_user_access_decorator({"user_change_permission"})
-    def put(self, request):
-        return super().put(request)
+    def put(self, request, id):
+        return super().put(request, id)
 
     @check_user_access_decorator({"user_change_permission"})
-    def delete(self, request):
-        return super().delete(request)
+    def delete(self, request, id):
+        return super().delete(request, id)
 
     def get_queryset(self):
         return User.objects.all()

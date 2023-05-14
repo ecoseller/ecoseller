@@ -14,6 +14,7 @@ class UserAuthBackend(authentication.BaseAuthentication):
             ).decode(token, verify=False)
             username = valid_data["user_id"]
             user = User.objects.get(email=username)
+            print("User auth backend: ", user)
             return user
         except Exception as e:
             print("Authenticate error", e)

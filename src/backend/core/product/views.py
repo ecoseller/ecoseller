@@ -3,6 +3,7 @@ from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import permissions
+from roles.decorator import check_user_access_decorator
 from core.pagination import (
     DashboardPagination,
 )
@@ -95,6 +96,7 @@ class ProductDashboardView(GenericAPIView):
         serializer = self.serializer_class(products, many=True)
         return Response(serializer.data, status=200)
 
+    @check_user_access_decorator({"product_add_permission"})
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
@@ -111,6 +113,17 @@ class ProductDetailDashboardView(RetrieveUpdateDestroyAPIView):
     serializer_class = ProductDashboardDetailSerializer
     lookup_field = "id"
     lookup_url_kwarg = "id"
+
+    def get(self, request, id):
+        return super().get(request, id)
+
+    @check_user_access_decorator({"product_change_permission"})
+    def put(self, request, id):
+        return super().put(request, id)
+
+    @check_user_access_decorator({"product_change_permission"})
+    def delete(self, request, id):
+        return super().delete(request, id)
 
     def get_queryset(self):
         return Product.objects.all()
@@ -133,6 +146,7 @@ class PriceListDashboardView(GenericAPIView):
         serializer = self.serializer_class(price_lists, many=True)
         return Response(serializer.data, status=200)
 
+    @check_user_access_decorator({"pricelist_add_permission"})
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
@@ -148,6 +162,14 @@ class PriceListDashboardDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = PriceListBaseSerializer
     lookup_field = "code"
     lookup_url_kwarg = "code"
+
+    @check_user_access_decorator({"pricelist_change_permission"})
+    def put(self, request, code):
+        return super().put(request, code)
+
+    @check_user_access_decorator({"pricelist_change_permission"})
+    def delete(self, request, code):
+        return super().delete(request, code)
 
     def get_queryset(self):
         return PriceList.objects.all()
@@ -170,6 +192,7 @@ class ProductTypeDashboardView(GenericAPIView):
         serializer = self.serializer_class(product_types, many=True)
         return Response(serializer.data, status=200)
 
+    @check_user_access_decorator({"producttype_add_permission"})
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
@@ -185,6 +208,14 @@ class ProductTypeDashboardDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = ProductTypeSerializer
     lookup_field = "id"
     lookup_url_kwarg = "id"
+
+    @check_user_access_decorator({"producttype_change_permission"})
+    def put(self, request, *args, **kwargs):
+        return super().put(request, *args, **kwargs)
+
+    @check_user_access_decorator({"producttype_change_permission"})
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, *args, **kwargs)
 
     def get_queryset(self):
         return ProductType.objects.all()
@@ -207,6 +238,7 @@ class AttributeTypeDashboardView(GenericAPIView):
         serializer = self.serializer_class(attribute_types, many=True)
         return Response(serializer.data, status=200)
 
+    @check_user_access_decorator({"attributetype_add_permission"})
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
@@ -222,6 +254,14 @@ class AttributeTypeDashboardDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = AtrributeTypeDashboardSerializer
     lookup_field = "id"
     lookup_url_kwarg = "id"
+
+    @check_user_access_decorator({"attributetype_change_permission"})
+    def put(self, request, id):
+        return super().put(request, id)
+
+    @check_user_access_decorator({"attributetype_change_permission"})
+    def delete(self, request, id):
+        return super().delete(request, id)
 
     def get_queryset(self):
         return AttributeType.objects.all()
@@ -244,6 +284,7 @@ class BaseAttributeDashboardView(GenericAPIView):
         serializer = self.serializer_class(attribute_types, many=True)
         return Response(serializer.data, status=200)
 
+    @check_user_access_decorator({"baseattribute_add_permission"})
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
@@ -259,6 +300,14 @@ class BaseAttributeDashboardDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = BaseAttributeDashboardSerializer
     lookup_field = "id"
     lookup_url_kwarg = "id"
+
+    @check_user_access_decorator({"baseattribute_change_permission"})
+    def put(self, request, id):
+        return super().put(request, id)
+
+    @check_user_access_decorator({"baseattribute_change_permission"})
+    def delete(self, request, id):
+        return super().delete(request, id)
 
     def get_queryset(self):
         return BaseAttribute.objects.all()
@@ -322,6 +371,7 @@ class ProductMediaUpload(GenericAPIView):
     parser_classes = (MultiPartParser, FormParser)
     serializer_class = ProductMediaDetailsSerializer
 
+    @check_user_access_decorator({"productmedia_add_permission"})
     def post(self, request, *args, **kwargs):
         product_media_serializer = self.serializer_class(
             data=request.data, context={"request": request}
@@ -339,6 +389,14 @@ class ProductMediaUploadDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = ProductMediaDetailsSerializer
     lookup_field = "id"
     lookup_url_kwarg = "id"
+
+    @check_user_access_decorator({"productmedia_change_permission"})
+    def put(self, request, id):
+        return super().put(request, id)
+
+    @check_user_access_decorator({"productmedia_change_permission"})
+    def delete(self, request, id):
+        return super().delete(request, id)
 
     def get_queryset(self):
         return ProductMedia.objects.all()

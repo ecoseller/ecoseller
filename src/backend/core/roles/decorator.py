@@ -7,7 +7,8 @@ from .roles_manager import RolesManager
 
 
 def check_user_access(wanted_permissions, user):
-    if user is None:
+    print("Check user access: user: ", user)
+    if user is None or user.is_anonymous:
         return False
     if user.is_admin:
         print("Check user access: user is admin")
@@ -54,7 +55,9 @@ def check_user_access_decorator(permissions):
     def decorator(view_function):
         @wraps(view_function)
         def _wrapped_view(request, *args, **kwargs):
-            if not check_user_access(permissions, args[0].user):
+            user = args[0].user
+            print("Check user access decorator: ", user)
+            if not check_user_access(permissions, user):
                 return Response("User doesnt have permission", status=403)
             return view_function(request, *args, **kwargs)
 
