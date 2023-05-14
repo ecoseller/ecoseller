@@ -33,9 +33,30 @@ urlpatterns = [
         "dashboard/shipping/method/<int:method_id>/country/<int:id>/",
         views.ShippingMethodCountryDetailDashboardView.as_view(),
     ),
-    path("<str:token>/", views.CartDetailStorefrontView.as_view()),
+    path("storefront/", views.CartCreateStorefrontView.as_view()),
+    path("storefront/<str:token>/", views.CartDetailStorefrontView.as_view()),
     path(
-        "<str:token>/update-quantity/", views.CartUpdateQuantityStorefrontView.as_view()
+        "storefront/<str:token>/update-quantity/",
+        views.CartUpdateQuantityStorefrontView.as_view(),
     ),
-    path("<str:token>/<str:sku>/", views.CartItemDeleteStorefrontView.as_view()),
+    path(
+        "storefront/<str:token>/billing-address/",
+        views.CartUpdateBillingAddressStorefrontView.as_view(),
+    ),
+    path(
+        "storefront/<str:token>/shipping-address/",
+        views.CartUpdateShippingAddressStorefrontView.as_view(),
+    ),
+    path(
+        "storefront/<str:token>/payment-method/<int:id>/",
+        views.CartUpdatePaymentMethodStorefrontView.as_view(),
+    ),
+    path(
+        "storefront/<str:token>/shipping-method/<int:id>/",
+        views.CartUpdateShippingMethodStorefrontView.as_view(),
+    ),
+    path(
+        "storefront/<str:token>/<str:sku>/",
+        views.CartItemDeleteStorefrontView.as_view(),
+    ),
 ]

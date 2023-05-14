@@ -72,7 +72,12 @@ const navigationData: INavigationItem[] = [
     icon: <LanguageIcon />,
     children: [
       {
-        title: "Vat group",
+        title: "Countries",
+        path: "/countries",
+        icon: undefined,
+      },
+      {
+        title: "Vat groups",
         path: "/vat-groups",
         icon: undefined,
       },

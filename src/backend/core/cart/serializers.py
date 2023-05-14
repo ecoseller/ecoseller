@@ -54,6 +54,16 @@ class CartItemSerializer(ModelSerializer):
         )
 
 
+class CartTokenSerializer(ModelSerializer):
+    """
+    Serializer for cart's token
+    """
+
+    class Meta:
+        model = Cart
+        fields = ("token",)
+
+
 class CartSerializer(ModelSerializer):
     """
     Large serializer of cart (see cart/models.py)

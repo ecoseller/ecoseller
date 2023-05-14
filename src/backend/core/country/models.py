@@ -97,3 +97,14 @@ class VatGroup(models.Model):
 
     def __str__(self) -> str:
         return "{} ({})".format(self.name, self.rate)
+
+
+class Address(models.Model):
+    """
+    Object representing address
+    """
+
+    street = models.CharField(max_length=255)
+    city = models.CharField(max_length=255)
+    postal_code = models.CharField(max_length=255)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)

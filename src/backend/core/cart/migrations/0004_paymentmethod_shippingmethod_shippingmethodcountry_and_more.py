@@ -7,7 +7,6 @@ import parler.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("country", "0012_vatgroup_is_default"),
         ("cart", "0003_cart_user"),
