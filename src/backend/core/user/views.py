@@ -50,9 +50,6 @@ class UserDetailView(RetrieveUpdateDestroyAPIView):
     lookup_field = "email"
     lookup_url_kwarg = "id"
 
-    def get(self, request, id):
-        return super().get(request, id)
-
     @check_user_access_decorator({"user_change_permission"})
     def put(self, request, id):
         return super().put(request, id)

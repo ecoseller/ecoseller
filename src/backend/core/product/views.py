@@ -114,9 +114,6 @@ class ProductDetailDashboardView(RetrieveUpdateDestroyAPIView):
     lookup_field = "id"
     lookup_url_kwarg = "id"
 
-    def get(self, request, id):
-        return super().get(request, id)
-
     @check_user_access_decorator({"product_change_permission"})
     def put(self, request, id):
         return super().put(request, id)
