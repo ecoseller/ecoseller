@@ -22,7 +22,6 @@ class UserPermissionView(GenericAPIView):
     allowed_methods = [
         "GET",
     ]
-    authentication_classes = []
     serializer_class = ManagerPermissionSerializer
 
     def get(self, request, id):
@@ -61,7 +60,6 @@ class UserGroupView(GenericAPIView):
         "GET",
         "PUT",
     ]
-    authentication_classes = []
     serializer_class = ManagerGroupSerializer
 
     def get(self, request, id):
@@ -129,7 +127,6 @@ class GroupDetailView(GenericAPIView):
         "DELETE",
         "PUT",
     ]
-    authentication_classes = []
     serializer_class = ManagerGroupSerializer
 
     def get(self, request, id):
@@ -202,7 +199,6 @@ class PermissionDetailView(GenericAPIView):
         "GET",
         "DELETE",
     ]
-    authentication_classes = []
     serializer_class = ManagerPermissionSerializer
 
     def get(self, request, id):
@@ -244,7 +240,6 @@ class GroupView(GenericAPIView):
         "GET",
         "POST",
     ]
-    authentication_classes = []
     serializer_class = ManagerGroupSerializer
 
     def get(self, request):
@@ -299,7 +294,6 @@ class PermissionView(GenericAPIView):
     allowed_methods = [
         "GET",
     ]
-    authentication_classes = []
     serializer_class = ManagerPermissionSerializer
 
     def get(self, request):

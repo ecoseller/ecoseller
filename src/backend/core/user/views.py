@@ -23,7 +23,7 @@ class UserView(GenericAPIView):
         "GET",
         "POST",
     ]
-    authentication_classes = []
+
     serializer_class = RegistrationSerializer
 
     def get(self, request):

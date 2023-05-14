@@ -28,7 +28,6 @@ class PageDashboardView(APIView):
     """
 
     permission_classes = (AllowAny,)
-    authentication_classes = []
 
     def get(self, request):
         """
@@ -57,7 +56,6 @@ class PageFrontendDashboardDetailView(RetrieveUpdateDestroyAPIView):
     """
 
     permission_classes = (AllowAny,)
-    authentication_classes = []
 
     queryset = PageFrontend.objects.all()
     serializer_class = PageFrontendDashboardSerializer
@@ -69,7 +67,6 @@ class PageCMSDashboardDetailView(RetrieveUpdateDestroyAPIView):
     """
 
     permission_classes = (AllowAny,)
-    authentication_classes = []
 
     queryset = PageCMS.objects.all()
     serializer_class = PageCMSDashboardSerializer
@@ -81,7 +78,6 @@ class PageCategoryDashboardView(APIView):
     """
 
     permission_classes = (AllowAny,)
-    authentication_classes = []
 
     def get(self, request):
         """
@@ -112,7 +108,6 @@ class PageCategoryDashboardDetailView(
     """
 
     permission_classes = (AllowAny,)
-    authentication_classes = []
 
     queryset = PageCategory.objects.all()
     serializer_class = PageCategoryDashboardSerializer
@@ -124,7 +119,6 @@ class PageCategoryPagesDashboardView(APIView):
     """
 
     permission_classes = (AllowAny,)
-    authentication_classes = []
 
     def get(self, request, pk):
         """
@@ -139,7 +133,6 @@ class PageCategoryTypeDashboardView(APIView):
     """
 
     permission_classes = (AllowAny,)
-    authentication_classes = []
 
     def get(self, request):
         """
@@ -169,7 +162,6 @@ class PageTypeDashboardDetailView(RetrieveUpdateDestroyAPIView):
     """
 
     permission_classes = (AllowAny,)
-    authentication_classes = []
 
     queryset = PageCategoryType.objects.all()
     serializer_class = PageCateogryTypeDashboardSerializer
@@ -181,7 +173,6 @@ class PageTypePagesDashboardView(APIView):
     """
 
     permission_classes = (AllowAny,)
-    authentication_classes = []
 
     def get(self, request, pk):
         """

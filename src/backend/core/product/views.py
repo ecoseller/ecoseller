@@ -85,7 +85,7 @@ class ProductDashboardView(GenericAPIView):
         "GET",
         "POST",
     ]
-    authentication_classes = []
+
     serializer_class = ProductDashboardDetailSerializer
 
     def get_queryset(self):
@@ -109,7 +109,7 @@ class ProductDashboardView(GenericAPIView):
 class ProductDetailDashboardView(RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
     allowed_methods = ["GET", "PUT", "DELETE"]
-    authentication_classes = []
+
     serializer_class = ProductDashboardDetailSerializer
     lookup_field = "id"
     lookup_url_kwarg = "id"
@@ -132,7 +132,7 @@ class PriceListDashboardView(GenericAPIView):
         "GET",
         "POST",
     ]
-    authentication_classes = []
+
     serializer_class = PriceListBaseSerializer
 
     def get_queryset(self):
@@ -155,7 +155,7 @@ class PriceListDashboardView(GenericAPIView):
 class PriceListDashboardDetailView(RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
     allowed_methods = ["PUT", "DELETE"]
-    authentication_classes = []
+
     serializer_class = PriceListBaseSerializer
     lookup_field = "code"
     lookup_url_kwarg = "code"
@@ -178,7 +178,7 @@ class ProductTypeDashboardView(GenericAPIView):
         "GET",
         "POST",
     ]
-    authentication_classes = []
+
     serializer_class = ProductTypeSerializer
 
     def get_queryset(self):
@@ -201,7 +201,7 @@ class ProductTypeDashboardView(GenericAPIView):
 class ProductTypeDashboardDetailView(RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
     allowed_methods = ["PUT", "DELETE"]
-    authentication_classes = []
+
     serializer_class = ProductTypeSerializer
     lookup_field = "id"
     lookup_url_kwarg = "id"
@@ -224,7 +224,7 @@ class AttributeTypeDashboardView(GenericAPIView):
         "GET",
         "POST",
     ]
-    authentication_classes = []
+
     serializer_class = AtrributeTypeDashboardSerializer
 
     def get_queryset(self):
@@ -247,7 +247,7 @@ class AttributeTypeDashboardView(GenericAPIView):
 class AttributeTypeDashboardDetailView(RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
     allowed_methods = ["PUT", "DELETE"]
-    authentication_classes = []
+
     serializer_class = AtrributeTypeDashboardSerializer
     lookup_field = "id"
     lookup_url_kwarg = "id"
@@ -270,7 +270,7 @@ class BaseAttributeDashboardView(GenericAPIView):
         "GET",
         "POST",
     ]
-    authentication_classes = []
+
     serializer_class = BaseAttributeDashboardSerializer
 
     def get_queryset(self):
@@ -293,7 +293,7 @@ class BaseAttributeDashboardView(GenericAPIView):
 class BaseAttributeDashboardDetailView(RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
     allowed_methods = ["PUT", "DELETE"]
-    authentication_classes = []
+
     serializer_class = BaseAttributeDashboardSerializer
     lookup_field = "id"
     lookup_url_kwarg = "id"
