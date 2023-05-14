@@ -6,9 +6,11 @@ from user.models import User
 from .roles_manager import RolesManager
 
 
-def check_user_access(wanted_permissions, user_id):
-    user = User.objects.get(email=user_id)
+def check_user_access(wanted_permissions, user):
+    if user is None:
+        return False
     if user.is_admin:
+        print("Check user access: user is admin")
         return True
     user_groups = user.groups.all()
     user_permissions = user.user_permissions.all()
@@ -24,6 +26,7 @@ def check_user_access(wanted_permissions, user_id):
             )
 
     if wanted_permissions.issubset(user_permissions_set):
+        print("Check user access: user has permission")
         return True
     return False
 
@@ -51,7 +54,7 @@ def check_user_access_decorator(permissions):
     def decorator(view_function):
         @wraps(view_function)
         def _wrapped_view(request, *args, **kwargs):
-            if not check_user_access(permissions, kwargs.get("id")):
+            if not check_user_access(permissions, args[0].user):
                 return Response("User doesnt have permission", status=403)
             return view_function(request, *args, **kwargs)
 

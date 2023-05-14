@@ -4,6 +4,8 @@ from rest_framework.response import Response
 
 from rest_framework.generics import GenericAPIView
 
+from roles.decorator import check_user_access_decorator
+
 from .roles_manager import RolesManager, ManagerPermission, ManagerGroup
 from .serializers import (
     ManagerGroupSerializer,
@@ -84,6 +86,7 @@ class UserGroupView(GenericAPIView):
             print("Error", e)
             return Response(status=400)
 
+    @check_user_access_decorator({"user_change_permission"})
     def put(self, request, id):
         user = User.objects.get(email=id)
         userGroups = user.groups.all()
@@ -92,8 +95,6 @@ class UserGroupView(GenericAPIView):
             group = RolesManager.django_group_to_manager_group(group)
             userManagerGroups.append(group)
 
-        print("DATA", request.data)
-        print("user", user)
         user.groups.clear()
         newGroups = request.data["roles"]
 
@@ -142,6 +143,7 @@ class GroupDetailView(GenericAPIView):
             print(e)
             return Response(status=400)
 
+    @check_user_access_decorator({"group_change_permission"})
     def delete(self, request, id):
         managerGroups = self.get_queryset()
         try:
@@ -157,6 +159,7 @@ class GroupDetailView(GenericAPIView):
         except Exception:
             return Response(status=400)
 
+    @check_user_access_decorator({"group_change_permission"})
     def put(self, request, id):
         group = self.serializer_class(data=request.data)
         if not group.is_valid():
@@ -212,6 +215,7 @@ class PermissionDetailView(GenericAPIView):
         except Exception:
             return Response(status=400)
 
+    @check_user_access_decorator({"group_change_permission"})
     def delete(self, request, id):
         permissions = self.get_queryset()
         try:
@@ -250,6 +254,7 @@ class GroupView(GenericAPIView):
             serGroups.append(self.serializer_class(group).data)
         return Response(serGroups, status=200)
 
+    @check_user_access_decorator({"group_add_permission"})
     def post(self, request):
         groupName = request.data["name"]
         groupPermissions = request.data["permissions"]

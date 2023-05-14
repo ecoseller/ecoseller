@@ -6,6 +6,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework_simplejwt import views as jwt_views
 
+from roles.decorator import check_user_access_decorator
+
 from .models import User
 
 from .serializers import (
@@ -29,6 +31,7 @@ class UserView(GenericAPIView):
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data, status=200)
 
+    @check_user_access_decorator({"user_add_permission"})
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if not serializer.is_valid():
@@ -47,6 +50,17 @@ class UserDetailView(RetrieveUpdateDestroyAPIView):
     lookup_field = "email"
     lookup_url_kwarg = "id"
 
+    def get(self, request, id):
+        return super().get(request, id)
+
+    @check_user_access_decorator({"user_change_permission"})
+    def put(self, request):
+        return super().put(request)
+
+    @check_user_access_decorator({"user_change_permission"})
+    def delete(self, request):
+        return super().delete(request)
+
     def get_queryset(self):
         return User.objects.all()
 
@@ -61,7 +75,6 @@ class RegistrationView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
-        print("IN POST AT REGISTRATION VIEW")
         serializer = RegistrationSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=400)
