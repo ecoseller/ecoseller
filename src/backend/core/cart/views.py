@@ -38,7 +38,6 @@ from cart.serializers import (
     CartTokenSerializer,
 )
 from country.serializers import (
-    AddressSerializer,
     BillingAddressSerializer,
     ShippingAddressSerializer,
 )
