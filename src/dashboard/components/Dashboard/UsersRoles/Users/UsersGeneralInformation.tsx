@@ -48,6 +48,7 @@ const getUsers = async () => {
       first_name: user["first_name"],
       last_name: user["last_name"],
       is_admin: user["is_admin"],
+      is_staff: user["is_staff"],
       roles: [],
     });
     const userRoles = await axiosPrivate.get(
