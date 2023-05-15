@@ -1,5 +1,6 @@
-from .models import Order
+from .models import Order, OrderStatus
 from rest_framework import serializers
+from enumchoicefield import ChoiceEnum, EnumChoiceField
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -7,3 +8,8 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = "__all__"
         read_only_fields = ["token", "create_at", "cart"]
+
+    token = serializers.UUIDField(read_only=True)
+    create_at = serializers.DateTimeField(read_only=True)
+    status = EnumChoiceField(enum_class=OrderStatus)
+    cart = serializers.UUIDField(read_only=True)
