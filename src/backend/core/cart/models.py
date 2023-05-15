@@ -1,26 +1,15 @@
 import uuid
 
 from django.db import models
-<<<<<<< HEAD
-=======
-from product.models import ProductVariant, Product, PriceList, ProductPrice
->>>>>>> 6568e0f (shipping/billing address with setter for cart)
 from country.models import (
     Country,
     Currency,
     VatGroup,
-<<<<<<< HEAD
-=======
-    Address,
->>>>>>> 6568e0f (shipping/billing address with setter for cart)
     BillingAddress,
     ShippingAddress,
 )
 from product.models import ProductVariant
-<<<<<<< HEAD
 from product.models import ProductVariant, Product
-=======
->>>>>>> 6568e0f (shipping/billing address with setter for cart)
 from user.models import User
 from parler.models import TranslatableModel, TranslatedFields
 from django.core.validators import MaxValueValidator, MinValueValidator
