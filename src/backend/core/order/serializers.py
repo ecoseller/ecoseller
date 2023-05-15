@@ -1,6 +1,6 @@
 from .models import Order, OrderStatus
 from rest_framework import serializers
-from enumchoicefield import ChoiceEnum, EnumChoiceField
+from enumchoicefield import EnumChoiceField
 
 
 class OrderSerializer(serializers.ModelSerializer):
