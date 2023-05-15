@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from .models import (
     User,
@@ -62,9 +63,6 @@ class UserSerializer(serializers.ModelSerializer):
     #     if user:
     #         instance.user = user
     #     return super().update(instance, validated_data)
-
-
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
 class TokenObtainDashboardSerializer(TokenObtainPairSerializer):

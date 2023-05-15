@@ -1,11 +1,9 @@
 from django.contrib.auth.management import create_permissions
 from django.contrib.auth.models import Group, Permission
 
-from roles.models import ManagerGroup, ManagerPermission
+from roles.models import ManagerGroup
 
 from roles.roles_manager import RolesManager
-
-from . import models
 
 
 def populate_groups(apps, schema_editor):

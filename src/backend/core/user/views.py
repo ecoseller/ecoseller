@@ -109,7 +109,7 @@ class UserViewObs(APIView):
 
     def get(self, request):
         user = request.user
-        auth = request.auth
+        # auth = request.auth
 
         # currently triggers UserAuthBackend
         # user = authenticate(request)
@@ -132,8 +132,8 @@ class CustomTokenObtainPairView(jwt_views.TokenObtainPairView):
             serializedData.is_valid(raise_exception=True)
             dashboardLogin = serializedData.validated_data["dashboard_login"]
             user = User.objects.get(email=request.data["email"])
-            if dashboardLogin == True and not user.is_staff:
+            if dashboardLogin is True and not user.is_staff:
                 return Response({"error": "Not authorized"}, status=400)
             return response
-        except Exception as e:
+        except Exception:
             return Response("Error login", status=400)

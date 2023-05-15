@@ -1,8 +1,6 @@
 from functools import wraps
 from rest_framework.response import Response
 
-from user.models import User
-
 from .roles_manager import RolesManager
 
 
