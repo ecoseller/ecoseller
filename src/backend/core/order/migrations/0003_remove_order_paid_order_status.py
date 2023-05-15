@@ -8,17 +8,21 @@ import order.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('order', '0002_rename_order_id_order_token'),
+        ("order", "0002_rename_order_id_order_token"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='order',
-            name='paid',
+            model_name="order",
+            name="paid",
         ),
         migrations.AddField(
-            model_name='order',
-            name='status',
-            field=enumchoicefield.fields.EnumChoiceField(default=order.models.OrderStatus(1), enum_class=order.models.OrderStatus, max_length=10),
+            model_name="order",
+            name="status",
+            field=enumchoicefield.fields.EnumChoiceField(
+                default=order.models.OrderStatus(1),
+                enum_class=order.models.OrderStatus,
+                max_length=10,
+            ),
         ),
     ]
