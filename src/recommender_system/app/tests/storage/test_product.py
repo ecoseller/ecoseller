@@ -3,12 +3,14 @@ from unittest import TestCase
 
 import pytest
 
-from recommender_system.models.stored.product import ProductModel
-from recommender_system.models.stored.product_product_variant import (
+from recommender_system.models.stored.product.product import ProductModel
+from recommender_system.models.stored.product.product_product_variant import (
     ProductProductVariantModel,
 )
-from recommender_system.models.stored.product_translation import ProductTranslationModel
-from recommender_system.models.stored.product_variant import ProductVariantModel
+from recommender_system.models.stored.product.product_translation import (
+    ProductTranslationModel,
+)
+from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from tests.storage.tools import get_or_create_model, delete_model, default_dicts
 
 

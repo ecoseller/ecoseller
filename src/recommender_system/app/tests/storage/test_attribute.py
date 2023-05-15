@@ -3,12 +3,12 @@ from unittest import TestCase
 
 import pytest
 
-from recommender_system.models.stored.attribute import AttributeModel
-from recommender_system.models.stored.attribute_product_variant import (
+from recommender_system.models.stored.product.attribute import AttributeModel
+from recommender_system.models.stored.product.attribute_product_variant import (
     AttributeProductVariantModel,
 )
-from recommender_system.models.stored.attribute_type import AttributeTypeModel
-from recommender_system.models.stored.product_variant import ProductVariantModel
+from recommender_system.models.stored.product.attribute_type import AttributeTypeModel
+from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from tests.storage.tools import get_or_create_model, delete_model, default_dicts
 
 

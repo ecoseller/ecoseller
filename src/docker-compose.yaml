@@ -79,12 +79,31 @@ services:
     build:
       context: ./recommender_system
       target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
+    command: "sh /usr/src/app/run_server.sh"
     volumes:
       - ./recommender_system/app:/usr/src/app/
     ports:
       - 8086:8086
     env_file:
       - ./recommender_system/docker-compose.env
+    healthcheck:
+      test: curl --fail http://localhost:8086 || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 5
     depends_on:
       postgres_rs:
+        condition: service_healthy
+  recommender_system_trainer:
+    container_name: recommender_system_trainer
+    build:
+      context: ./recommender_system
+      target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
+    command: "sh /usr/src/app/run_trainer.sh"
+    volumes:
+      - ./recommender_system/app:/usr/src/app/
+    env_file:
+      - ./recommender_system/docker-compose.env
+    depends_on:
+      recommender_system:
         condition: service_healthy

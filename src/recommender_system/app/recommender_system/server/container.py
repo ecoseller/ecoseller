@@ -30,6 +30,11 @@ class Container(containers.DeclarativeContainer):
         connection_string=os.environ["RS_FEEDBACK_DB_URL"],
         alembic_location="recommender_system/storage/feedback/alembic.ini",
     )
+    model_storage = providers.Singleton(
+        SQLStorage,
+        connection_string=os.environ["RS_MODEL_DB_URL"],
+        alembic_location="recommender_system/storage/model/alembic.ini",
+    )
     product_storage = providers.Singleton(
         SQLStorage,
         connection_string=os.environ["RS_PRODUCT_DB_URL"],

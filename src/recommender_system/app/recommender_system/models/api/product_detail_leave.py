@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional
 
 from recommender_system.models.api.base import ApiBaseModel
-from recommender_system.models.stored.product_detail_leave import (
+from recommender_system.models.stored.feedback.product_detail_leave import (
     ProductDetailLeaveModel,
 )
 

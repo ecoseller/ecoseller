@@ -2,7 +2,9 @@ from datetime import datetime
 from typing import Optional
 
 from recommender_system.models.api.base import ApiBaseModel
-from recommender_system.models.stored.recommendation_view import RecommendationViewModel
+from recommender_system.models.stored.feedback.recommendation_view import (
+    RecommendationViewModel,
+)
 
 
 class RecommendationView(ApiBaseModel):

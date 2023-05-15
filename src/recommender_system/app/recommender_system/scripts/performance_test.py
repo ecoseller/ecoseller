@@ -10,7 +10,7 @@ from recommender_system.models.prediction.selection.model import (
 from recommender_system.models.prediction.popularity.model import (
     PopularityPredictionModel,
 )
-from recommender_system.models.stored.product_variant import ProductVariantModel
+from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.server.app import create_app
 
 logger = logging.getLogger(__name__)

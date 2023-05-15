@@ -4,7 +4,7 @@ from typing import Any, List, Optional
 from dependency_injector.wiring import inject, Provide
 
 from recommender_system.managers.model_manager import ModelManager
-from recommender_system.models.stored.product_variant import ProductVariantModel
+from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.storage.abstract import AbstractStorage
 from recommender_system.utils.recommendation_type import RecommendationType
 

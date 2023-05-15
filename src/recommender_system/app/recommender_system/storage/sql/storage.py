@@ -1,22 +1,27 @@
 import argparse
+from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple, Type, Union, TYPE_CHECKING
 
 from alembic import command, config
-from sqlalchemy import create_engine, and_, func, case, delete, or_
+from sqlalchemy import create_engine, and_, func, case, or_, false, true
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Query, Session
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from sqlalchemy.sql.functions import random
 
 from recommender_system.models.stored.base import StoredBaseModel
-from recommender_system.models.stored.distance import DistanceModel
+from recommender_system.models.stored.similarity.distance import DistanceModel
 from recommender_system.models.stored.many_to_many_relation import (
     ManyToManyRelationMixin,
+)
+from recommender_system.models.stored.model.trainer_queue_item import (
+    TrainerQueueItemModel,
 )
 from recommender_system.storage.abstract import AbstractStorage
 from recommender_system.storage.exceptions import MultipleObjectsReturned
 from recommender_system.storage.sql.mapper import SQLModelMapper
 from recommender_system.storage.sql.models.feedback import FeedbackBase
+from recommender_system.storage.sql.models.model import SQLTrainerQueueItem
 from recommender_system.storage.sql.models.products import (
     ProductBase,
     SQLAttribute,
@@ -31,7 +36,9 @@ from recommender_system.storage.sql.models.products import (
 from recommender_system.storage.sql.models.similarity import SQLDistance
 
 if TYPE_CHECKING:
-    from recommender_system.models.stored.attribute_type import AttributeTypeModel
+    from recommender_system.models.stored.product.attribute_type import (
+        AttributeTypeModel,
+    )
 
 
 Base = Union[Type[ProductBase], Type[FeedbackBase]]
@@ -311,7 +318,9 @@ class SQLStorage(AbstractStorage):
     def get_product_variant_attribute_values(
         self, attribute_type_id: int, attribute_type_type: "AttributeTypeModel.Type"
     ) -> Dict[str, Optional[Any]]:
-        from recommender_system.models.stored.attribute_type import AttributeTypeModel
+        from recommender_system.models.stored.product.attribute_type import (
+            AttributeTypeModel,
+        )
 
         if attribute_type_type == AttributeTypeModel.Type.NUMERICAL:
             value_column = SQLAttribute.numeric_value
@@ -385,6 +394,24 @@ class SQLStorage(AbstractStorage):
 
         return [row[0] if row[0] != to else row[1] for row in query.all()]
 
+    def get_next_item_from_trainer_queue(self) -> Optional[TrainerQueueItemModel]:
+        query = self.session.query(SQLTrainerQueueItem).select_from(SQLTrainerQueueItem)
+        query = query.filter(SQLTrainerQueueItem.processed == false())
+        query = query.order_by(SQLTrainerQueueItem.create_at.asc())
+
+        result = query.first()
+        if result is None:
+            return None
+
+        return TrainerQueueItemModel(**result.__dict__)
+
+    def set_processed(self, model_name: str) -> None:
+        self.session.query(SQLTrainerQueueItem).filter(
+            SQLTrainerQueueItem.model_name == model_name,
+            SQLTrainerQueueItem.processed == false(),
+            SQLTrainerQueueItem.create_at <= datetime.now(),
+        ).update({SQLTrainerQueueItem.processed: true()})
+
     def store_object(self, model: StoredBaseModel, create: bool = False) -> Any:
         sql_class = SQLModelMapper.map(model.__class__)
         pk_column = getattr(sql_class, model.Meta.primary_key)
@@ -429,13 +456,11 @@ class SQLStorage(AbstractStorage):
         sql_class = SQLModelMapper.map(model_class=model_class)
 
         stmt_filters = []
-        for key, value in kwargs:
+        for key, value in kwargs.items():
             if key == "pk":
                 column = getattr(sql_class, model_class.Meta.primary_key)
             else:
                 column = getattr(sql_class, key)
             stmt_filters.append(column == value)
 
-        stmt = delete(sql_class).where(*stmt_filters)
-
-        self.session.execute(stmt)
+        self.session.query(sql_class).filter(*stmt_filters).delete()

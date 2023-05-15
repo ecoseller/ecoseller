@@ -5,7 +5,7 @@ from recommender_system.models.api.base import ApiBaseModel
 from recommender_system.models.api.product_translation import (
     ProductTranslation,
 )
-from recommender_system.models.stored.product import ProductModel
+from recommender_system.models.stored.product.product import ProductModel
 
 
 class Product(ApiBaseModel):

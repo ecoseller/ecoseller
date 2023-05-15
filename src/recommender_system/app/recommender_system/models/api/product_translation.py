@@ -1,7 +1,9 @@
 from typing import Optional
 
 from recommender_system.models.api.base import ApiBaseModel
-from recommender_system.models.stored.product_translation import ProductTranslationModel
+from recommender_system.models.stored.product.product_translation import (
+    ProductTranslationModel,
+)
 
 
 class ProductTranslation(ApiBaseModel):
