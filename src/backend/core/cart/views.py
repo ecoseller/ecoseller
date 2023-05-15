@@ -136,7 +136,7 @@ class CartUpdateAddressBaseStorefrontView(APIView, ABC):
     Do not use this view directly, use inherited classes instead (and implement `_set_address` method)
     """
 
-    address_serializers = (
+    address_serializer = (
         None  # set in inherited classes (Billing/Shipping address serializers)
     )
 
@@ -147,6 +147,7 @@ class CartUpdateAddressBaseStorefrontView(APIView, ABC):
         """
         pass
 
+    @abstractmethod
     def _get_address(self, cart):
         """
         Get desired type of address
@@ -159,10 +160,10 @@ class CartUpdateAddressBaseStorefrontView(APIView, ABC):
             if self._get_address(cart) is not None:
                 # if we have address already, update it
                 address = self._get_address(cart)
-                serializer = self.address_serializers(address, data=request.data)
+                serializer = self.address_serializer(address, data=request.data)
             else:
                 # if we don't have address, create it
-                serializer = self.address_serializers(data=request.data)
+                serializer = self.address_serializer(data=request.data)
 
             if serializer.is_valid():
                 serializer.save()
@@ -179,7 +180,7 @@ class CartUpdateBillingAddressStorefrontView(CartUpdateAddressBaseStorefrontView
     View for updating cart's billing address
     """
 
-    address_serializers = BillingAddressSerializer
+    address_serializer = BillingAddressSerializer
 
     def _set_address(self, cart, address):
         cart.billing_address = address
@@ -195,7 +196,7 @@ class CartUpdateShippingAddressStorefrontView(CartUpdateAddressBaseStorefrontVie
     View for updating cart's shipping address
     """
 
-    address_serializers = ShippingAddressSerializer
+    address_serializer = ShippingAddressSerializer
 
     def _set_address(self, cart, address):
         cart.shipping_address = address
