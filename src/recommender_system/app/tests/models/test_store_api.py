@@ -3,15 +3,15 @@ from datetime import datetime
 import pytest
 
 from recommender_system.models.api.product_variant import ProductVariant
-from recommender_system.models.stored.attribute import AttributeModel
-from recommender_system.models.stored.attribute_product_variant import (
+from recommender_system.models.stored.product.attribute import AttributeModel
+from recommender_system.models.stored.product.attribute_product_variant import (
     AttributeProductVariantModel,
 )
-from recommender_system.models.stored.product import ProductModel
-from recommender_system.models.stored.product_product_variant import (
+from recommender_system.models.stored.product.product import ProductModel
+from recommender_system.models.stored.product.product_product_variant import (
     ProductProductVariantModel,
 )
-from recommender_system.models.stored.product_variant import ProductVariantModel
+from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from tests.storage.tools import get_or_create_model, delete_model
 
 

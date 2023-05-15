@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 from recommender_system.models.api.base import ApiBaseModel
-from recommender_system.models.stored.attribute import AttributeModel
+from recommender_system.models.stored.product.attribute import AttributeModel
 
 
 class Attribute(ApiBaseModel):

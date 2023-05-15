@@ -2,8 +2,8 @@ from unittest import TestCase
 
 import pytest
 
-from recommender_system.models.stored.product_price import ProductPriceModel
-from recommender_system.models.stored.product_variant import ProductVariantModel
+from recommender_system.models.stored.product.product_price import ProductPriceModel
+from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from tests.storage.tools import get_or_create_model, delete_model, default_dicts
 
 

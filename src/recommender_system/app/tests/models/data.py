@@ -14,25 +14,29 @@ from recommender_system.models.api.product_type import ProductType
 from recommender_system.models.api.product_variant import ProductVariant
 from recommender_system.models.api.recommendation_view import RecommendationView
 from recommender_system.models.api.review import Review
-from recommender_system.models.stored.attribute import AttributeModel
-from recommender_system.models.stored.attribute_type import AttributeTypeModel
+from recommender_system.models.stored.product.attribute import AttributeModel
+from recommender_system.models.stored.product.attribute_type import AttributeTypeModel
 from recommender_system.models.stored.base import StoredBaseModel
-from recommender_system.models.stored.product import ProductModel
-from recommender_system.models.stored.product_add_to_cart import (
+from recommender_system.models.stored.product.product import ProductModel
+from recommender_system.models.stored.feedback.product_add_to_cart import (
     ProductAddToCartModel,
 )
-from recommender_system.models.stored.product_detail_enter import (
+from recommender_system.models.stored.feedback.product_detail_enter import (
     ProductDetailEnterModel,
 )
-from recommender_system.models.stored.product_detail_leave import (
+from recommender_system.models.stored.feedback.product_detail_leave import (
     ProductDetailLeaveModel,
 )
-from recommender_system.models.stored.product_price import ProductPriceModel
-from recommender_system.models.stored.product_translation import ProductTranslationModel
-from recommender_system.models.stored.product_type import ProductTypeModel
-from recommender_system.models.stored.product_variant import ProductVariantModel
-from recommender_system.models.stored.recommendation_view import RecommendationViewModel
-from recommender_system.models.stored.review import ReviewModel
+from recommender_system.models.stored.product.product_price import ProductPriceModel
+from recommender_system.models.stored.product.product_translation import (
+    ProductTranslationModel,
+)
+from recommender_system.models.stored.product.product_type import ProductTypeModel
+from recommender_system.models.stored.product.product_variant import ProductVariantModel
+from recommender_system.models.stored.feedback.recommendation_view import (
+    RecommendationViewModel,
+)
+from recommender_system.models.stored.feedback.review import ReviewModel
 
 
 _now = datetime.now().isoformat()

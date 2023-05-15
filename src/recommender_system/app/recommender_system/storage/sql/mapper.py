@@ -10,6 +10,11 @@ from recommender_system.storage.sql.models.feedback import (
     SQLReview,
     SQLSession,
 )
+from recommender_system.storage.sql.models.model import (
+    ModelBase,
+    SQLLatestIdentifier,
+    SQLTrainerQueueItem,
+)
 from recommender_system.storage.sql.models.products import (
     ProductBase,
     SQLAttribute,
@@ -26,10 +31,12 @@ from recommender_system.storage.sql.models.products import (
     SQLProductType,
     SQLProductVariant,
 )
-from recommender_system.storage.sql.models.similarity import SQLDistance
+from recommender_system.storage.sql.models.similarity import SimilarityBase, SQLDistance
 
 
-Base = Union[Type[FeedbackBase], Type[ProductBase]]
+Base = Union[
+    Type[FeedbackBase], Type[ProductBase], Type[ModelBase], Type[SimilarityBase]
+]
 
 
 _sql_models = [
@@ -39,6 +46,8 @@ _sql_models = [
     SQLRecommendationView,
     SQLReview,
     SQLSession,
+    SQLLatestIdentifier,
+    SQLTrainerQueueItem,
     SQLAttribute,
     SQLAttributeProductVariant,
     SQLAttributeType,

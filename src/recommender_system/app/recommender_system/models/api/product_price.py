@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional
 
 from recommender_system.models.api.base import ApiBaseModel
-from recommender_system.models.stored.product_price import ProductPriceModel
+from recommender_system.models.stored.product.product_price import ProductPriceModel
 
 
 class ProductPrice(ApiBaseModel):

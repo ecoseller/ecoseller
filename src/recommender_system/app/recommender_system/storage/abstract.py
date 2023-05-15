@@ -5,9 +5,14 @@ from recommender_system.models.stored.base import StoredBaseModel
 from recommender_system.models.stored.many_to_many_relation import (
     ManyToManyRelationMixin,
 )
+from recommender_system.models.stored.model.trainer_queue_item import (
+    TrainerQueueItemModel,
+)
 
 if TYPE_CHECKING:
-    from recommender_system.models.stored.attribute_type import AttributeTypeModel
+    from recommender_system.models.stored.product.attribute_type import (
+        AttributeTypeModel,
+    )
 
 
 class AbstractStorage(ABC):
@@ -159,6 +164,14 @@ class AbstractStorage(ABC):
     def get_closest_product_variant_pks(
         self, to: str, limit: Optional[int] = None, **kwargs: Any
     ) -> List[str]:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def get_next_item_from_trainer_queue(self) -> Optional[TrainerQueueItemModel]:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def set_processed(self, model_name: str) -> None:
         raise NotImplementedError()
 
     @abstractmethod

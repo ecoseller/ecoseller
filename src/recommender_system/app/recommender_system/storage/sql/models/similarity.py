@@ -6,7 +6,7 @@ from sqlalchemy.sql.sqltypes import (
 )
 from sqlalchemy.orm import declarative_base, DeclarativeBase
 
-from recommender_system.models.stored.distance import DistanceModel
+from recommender_system.models.stored.similarity.distance import DistanceModel
 from recommender_system.storage.sql.base import SQLSimilarityBase
 
 
@@ -22,6 +22,7 @@ class SQLDistance(SimilarityBase):
     lhs = Column(String(255), nullable=False)
     rhs = Column(String(255), nullable=False)
     distance = Column(DECIMAL(), nullable=False)
+    model_identifier = Column(String(255), nullable=False)
 
     __tablename__ = "distance"
 

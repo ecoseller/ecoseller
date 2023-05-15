@@ -7,18 +7,20 @@ from sqlalchemy.sql.sqltypes import (
 )
 from sqlalchemy.orm import declarative_base, DeclarativeBase
 
-from recommender_system.models.stored.product_add_to_cart import (
+from recommender_system.models.stored.feedback.product_add_to_cart import (
     ProductAddToCartModel,
 )
-from recommender_system.models.stored.product_detail_enter import (
+from recommender_system.models.stored.feedback.product_detail_enter import (
     ProductDetailEnterModel,
 )
-from recommender_system.models.stored.product_detail_leave import (
+from recommender_system.models.stored.feedback.product_detail_leave import (
     ProductDetailLeaveModel,
 )
-from recommender_system.models.stored.recommendation_view import RecommendationViewModel
-from recommender_system.models.stored.review import ReviewModel
-from recommender_system.models.stored.session import SessionModel
+from recommender_system.models.stored.feedback.recommendation_view import (
+    RecommendationViewModel,
+)
+from recommender_system.models.stored.feedback.review import ReviewModel
+from recommender_system.models.stored.feedback.session import SessionModel
 from recommender_system.storage.sql.base import SQLFeedbackBase
 
 

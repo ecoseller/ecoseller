@@ -1,7 +1,7 @@
 from typing import Optional
 
 from recommender_system.models.api.base import ApiBaseModel
-from recommender_system.models.stored.attribute_type import AttributeTypeModel
+from recommender_system.models.stored.product.attribute_type import AttributeTypeModel
 
 
 class AttributeType(ApiBaseModel):

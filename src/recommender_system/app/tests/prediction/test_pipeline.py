@@ -12,9 +12,9 @@ from recommender_system.models.prediction.popularity.model import (
 from recommender_system.models.prediction.selection.model import (
     SelectionPredictionModel,
 )
-from recommender_system.models.stored.order import OrderModel
-from recommender_system.models.stored.product import ProductModel
-from recommender_system.models.stored.product_variant import ProductVariantModel
+from recommender_system.models.stored.product.order import OrderModel
+from recommender_system.models.stored.product.product import ProductModel
+from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.utils.recommendation_type import RecommendationType
 from tests.storage.tools import get_or_create_model, delete_model, default_dicts
 

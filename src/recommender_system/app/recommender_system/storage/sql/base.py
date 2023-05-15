@@ -18,5 +18,9 @@ class SQLFeedbackBase(SQLBase):
     pass
 
 
+class SQLModelBase(SQLBase):
+    pass
+
+
 class SQLSimilarityBase(SQLBase):
     pass

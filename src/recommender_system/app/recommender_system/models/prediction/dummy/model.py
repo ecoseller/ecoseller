@@ -3,11 +3,18 @@ from typing import Optional, List
 from dependency_injector.wiring import inject, Provide
 
 from recommender_system.models.prediction.abstract import AbstractPredictionModel
-from recommender_system.models.stored.product_variant import ProductVariantModel
+from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.storage.abstract import AbstractStorage
 
 
 class DummyPredictionModel(AbstractPredictionModel):
+    class Meta:
+        model_name = "dummy"
+
+    @property
+    def default_identifier(self) -> str:
+        return "dummy"
+
     @inject
     def retrieve(
         self, storage: AbstractStorage = Provide["product_storage"]
@@ -57,3 +64,12 @@ class DummyPredictionModel(AbstractPredictionModel):
         variants_in_cart: List[str],
     ) -> List[str]:
         return self.score(variants=variants)
+
+    def train(self) -> None:
+        pass
+
+    def replace_old(self) -> None:
+        pass
+
+    def delete(self) -> None:
+        pass

@@ -3,10 +3,10 @@ from unittest import TestCase
 
 import pytest
 
-from recommender_system.models.stored.review import (
+from recommender_system.models.stored.feedback.review import (
     ReviewModel,
 )
-from recommender_system.models.stored.session import SessionModel
+from recommender_system.models.stored.feedback.session import SessionModel
 from tests.storage.tools import get_or_create_model, delete_model, default_dicts
 
 

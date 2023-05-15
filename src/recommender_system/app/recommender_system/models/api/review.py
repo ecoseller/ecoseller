@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from recommender_system.models.api.base import ApiBaseModel
-from recommender_system.models.stored.review import ReviewModel
+from recommender_system.models.stored.feedback.review import ReviewModel
 
 
 class Review(ApiBaseModel):

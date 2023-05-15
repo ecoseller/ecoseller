@@ -1,20 +1,31 @@
+from datetime import datetime
 import random
 from typing import List, Optional
 
 from dependency_injector.wiring import inject, Provide
 import numpy as np
 
+from recommender_system.models.stored.model.latest_identifier import (
+    LatestIdentifierModel,
+)
 from recommender_system.models.prediction.abstract import AbstractPredictionModel
 from recommender_system.models.prediction.similarity.tools import (
     prepare_variants,
     compute_numerical_distances,
     compute_categorical_distances,
 )
-from recommender_system.models.stored.distance import DistanceModel
+from recommender_system.models.stored.similarity.distance import DistanceModel
 from recommender_system.storage.abstract import AbstractStorage
 
 
 class SimilarityPredictionModel(AbstractPredictionModel):
+    class Meta:
+        model_name = "similarity"
+
+    @property
+    def default_identifier(self) -> str:
+        return f"similarity_{datetime.now().isoformat()}"
+
     @inject
     def delete_distances(
         self, similarity_storage: AbstractStorage = Provide["similarity_storage"]
@@ -36,6 +47,7 @@ class SimilarityPredictionModel(AbstractPredictionModel):
                         lhs=product_variant_skus[i],
                         rhs=product_variant_skus[j],
                         distance=distances[i, j],
+                        model_identifier=self.identifier,
                     )
                 )
         similarity_storage.bulk_create_objects(models=distance_models)
@@ -124,3 +136,22 @@ class SimilarityPredictionModel(AbstractPredictionModel):
         return similarity_storage.get_closest_product_variant_pks(
             to=random.choice(variants_in_cart), pks=variants
         )
+
+    @inject
+    def delete(
+        self, similarity_storage: AbstractStorage = Provide["similarity_storage"]
+    ) -> None:
+        similarity_storage.delete(
+            model_class=DistanceModel, model_identifier=self.identifier
+        )
+
+    def replace_old(self) -> None:
+        try:
+            latest_identifier = self.get_latest_identifier()
+        except LatestIdentifierModel.DoesNotExist:
+            latest_identifier = None
+        LatestIdentifierModel(
+            model_name=self.Meta.model_name, identifier=self.identifier
+        ).save()
+        if latest_identifier is not None:
+            self.__class__(identifier=latest_identifier).delete()

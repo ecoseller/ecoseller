@@ -7,6 +7,13 @@ from recommender_system.storage.abstract import AbstractStorage
 
 
 class PopularityPredictionModel(AbstractPredictionModel):
+    class Meta:
+        model_name = "popularity"
+
+    @property
+    def default_identifier(self) -> str:
+        return "popularity"
+
     @inject
     def retrieve(
         self, storage: AbstractStorage = Provide["product_storage"]
@@ -61,3 +68,12 @@ class PopularityPredictionModel(AbstractPredictionModel):
         variants_in_cart: List[str],
     ) -> List[str]:
         return self.score(variants=variants)
+
+    def train(self) -> None:
+        pass
+
+    def replace_old(self) -> None:
+        pass
+
+    def delete(self) -> None:
+        pass
