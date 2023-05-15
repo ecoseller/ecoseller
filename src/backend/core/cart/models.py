@@ -5,7 +5,6 @@ from country.models import (
     Country,
     Currency,
     VatGroup,
-    Address,
     BillingAddress,
     ShippingAddress,
 )
