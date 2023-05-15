@@ -18,8 +18,7 @@ interface ICreateRoleProps {
 }
 
 const EditRole = ({ group, setGroup, permissions }: ICreateRoleProps) => {
-
-  const { hasPermission } = usePermission()
+  const { hasPermission } = usePermission();
 
   return (
     <EditorCard>

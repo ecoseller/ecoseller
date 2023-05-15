@@ -23,7 +23,7 @@ import Cookies from "js-cookie";
 // JWT
 import jwt_decode from "jwt-decode";
 
-const LoginBox = ({ }) => {
+const LoginBox = ({}) => {
   const router = useRouter();
 
   const [email, setEmail] = useState<string>("admin@example.com");

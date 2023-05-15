@@ -29,7 +29,7 @@ interface IUserProps {
 const UserGeneralInformation = ({ state, setState }: IUserProps) => {
   // simple select with categories
 
-  const { hasPermission } = usePermission()
+  const { hasPermission } = usePermission();
   return (
     <EditorCard>
       <Typography variant="h6">General information</Typography>

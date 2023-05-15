@@ -108,11 +108,11 @@ const ProductEditorWrapper = ({
             ...state.translations,
             [action.payload.translation.language]:
               state.translations &&
-                action.payload.translation.language in state.translations
+              action.payload.translation.language in state.translations
                 ? {
-                  ...state.translations[action.payload.translation.language],
-                  ...action.payload.translation.data,
-                }
+                    ...state.translations[action.payload.translation.language],
+                    ...action.payload.translation.data,
+                  }
                 : action.payload.translation.data,
           },
         };
@@ -141,15 +141,15 @@ const ProductEditorWrapper = ({
     productData
       ? productData
       : {
-        id: null,
-        published: false,
-        category: null,
-        product_variants: [],
-        translations: {},
-        update_at: undefined,
-        create_at: undefined,
-        media: [],
-      }
+          id: null,
+          published: false,
+          category: null,
+          product_variants: [],
+          translations: {},
+          update_at: undefined,
+          create_at: undefined,
+          media: [],
+        }
   );
 
   const dispatchWrapper: IDispatchWrapper = {
@@ -342,7 +342,9 @@ const ProductEditorWrapper = ({
 
       <Grid container spacing={2}>
         <Grid item md={8} xs={12}>
-          <PermissionProvider allowedPermissions={["product_change_permission"]}>
+          <PermissionProvider
+            allowedPermissions={["product_change_permission"]}
+          >
             <TranslatedFieldsTabList
               state={productState.translations || ({} as IEntityTranslations)}
               dispatchWrapper={dispatchWrapper}
@@ -359,14 +361,18 @@ const ProductEditorWrapper = ({
               pricelistsData={pricelistsData}
             />
           </PermissionProvider>
-          <PermissionProvider allowedPermissions={["productmedia_change_permission"]}>
+          <PermissionProvider
+            allowedPermissions={["productmedia_change_permission"]}
+          >
             <ProductMediaEditor
               disabled={false}
               state={productState}
-            // dispatch={dispatchProductState}
+              // dispatch={dispatchProductState}
             />
           </PermissionProvider>
-          <PermissionProvider allowedPermissions={["productprice_change_permission"]}>
+          <PermissionProvider
+            allowedPermissions={["productprice_change_permission"]}
+          >
             <ProductVariantPricesEditor
               disabled={false}
               state={productState}
@@ -376,7 +382,9 @@ const ProductEditorWrapper = ({
           </PermissionProvider>
         </Grid>
         <Grid item md={4} xs={12}>
-          <PermissionProvider allowedPermissions={["product_change_permission"]}>
+          <PermissionProvider
+            allowedPermissions={["product_change_permission"]}
+          >
             <CategorySelectForm
               categoryId={productState.category}
               setCategoryId={setCategoryId}

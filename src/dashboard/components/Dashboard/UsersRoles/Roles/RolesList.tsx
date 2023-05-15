@@ -22,7 +22,7 @@ const CheckboxList = ({ group, setGroup, permissions }: IGroupListProps) => {
     permissions?.map((perm) => perm.name)
   );
 
-  const { hasPermission } = usePermission()
+  const { hasPermission } = usePermission();
 
   const handleToggle = (permission: IPermission) => () => {
     const checked = group.permissions
@@ -69,7 +69,11 @@ const CheckboxList = ({ group, setGroup, permissions }: IGroupListProps) => {
 
           return (
             <ListItem key={permission.name} disablePadding>
-              <ListItemButton onClick={handleToggle(permission)} dense disabled={!hasPermission}>
+              <ListItemButton
+                onClick={handleToggle(permission)}
+                dense
+                disabled={!hasPermission}
+              >
                 <ListItemIcon>
                   <Checkbox
                     edge="start"

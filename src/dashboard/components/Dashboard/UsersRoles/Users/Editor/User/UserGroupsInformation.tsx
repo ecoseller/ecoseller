@@ -20,7 +20,7 @@ interface IGroupsProps {
 
 const UserGroupsInformation = ({ state, setState, groups }: IGroupsProps) => {
   console.log(groups);
-  const { hasPermission } = usePermission()
+  const { hasPermission } = usePermission();
 
   const handleCheckChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
