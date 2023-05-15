@@ -3,7 +3,7 @@ from typing import Optional, List
 from dependency_injector.wiring import inject, Provide
 
 from recommender_system.models.prediction.abstract import AbstractPredictionModel
-from recommender_system.storage.abstract import AbstractStorage
+from recommender_system.storage.product.abstract import AbstractProductStorage
 
 
 class PopularityPredictionModel(AbstractPredictionModel):
@@ -16,17 +16,17 @@ class PopularityPredictionModel(AbstractPredictionModel):
 
     @inject
     def retrieve(
-        self, storage: AbstractStorage = Provide["product_storage"]
+        self, storage: AbstractProductStorage = Provide["product_storage"]
     ) -> List[str]:
-        return storage.get_popular_product_variant_pks(limit=1000)
+        return storage.get_popular_product_variant_skus(limit=1000)
 
     def score(
-        self, variants: List[str], storage: AbstractStorage = Provide["product_storage"]
+        self,
+        variants: List[str],
+        storage: AbstractProductStorage = Provide["product_storage"],
     ) -> List[str]:
-        popularities = storage.get_product_variant_popularities(pks=variants)
-        return [
-            sku for sku, _ in sorted(popularities, key=lambda x: x[1], reverse=True)
-        ]
+        popularities = storage.get_product_variant_popularities(skus=variants)
+        return [sku for sku in sorted(popularities.keys(), reverse=True)]
 
     def retrieve_homepage(self, session_id: str, user_id: Optional[int]) -> List[str]:
         return self.retrieve()

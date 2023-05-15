@@ -7,7 +7,7 @@ from scipy.spatial.distance import pdist, squareform
 from recommender_system.models.prediction.similarity.train_data import TrainData
 from recommender_system.models.stored.product.attribute_type import AttributeTypeModel
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
-from recommender_system.storage.abstract import AbstractStorage
+from recommender_system.storage.product.abstract import AbstractProductStorage
 
 
 DEFAULT_NUMERIC_VALUE = 0.5
@@ -16,7 +16,7 @@ DEFAULT_CATEGORICAL_VALUE = 0.5
 
 @inject
 def prepare_variants(
-    product_storage: AbstractStorage = Provide["product_storage"],
+    product_storage: AbstractProductStorage = Provide["product_storage"],
 ) -> TrainData:
     """
     Prepares product variants so their distances can be computed by similarity prediction model.
@@ -57,8 +57,7 @@ def prepare_variants(
             for i, value in enumerate(possible_values):
                 value_mapper[value] = i
             variant_attributes = product_storage.get_product_variant_attribute_values(
-                attribute_type_id=type_id,
-                attribute_type_type=AttributeTypeModel.Type.CATEGORICAL,
+                attribute_type_id=type_id
             )
             for sku, value in variant_attributes.items():
                 row = variant_mapper[sku]
@@ -70,14 +69,15 @@ def prepare_variants(
         (len(product_variant_skus), 1), DEFAULT_NUMERIC_VALUE, dtype=np.double
     )
     prices_mask = np.full((len(product_variant_skus), 1), False, dtype=bool)
-    prices_data = product_storage.get_product_variant_prices(pks=product_variant_skus)
-    stats = product_storage.get_price_stats(pks=product_variant_skus)
-    for sku, price in prices_data:
+    prices_data = product_storage.get_product_variant_prices(
+        product_variant_skus=product_variant_skus
+    )
+    stats = product_storage.get_price_stats(product_variant_skus=product_variant_skus)
+    for sku, price in prices_data.items():
         if stats is not None:
-            min, avg, max = stats
-            if min != max:
+            if stats.min != stats.max:
                 # Normalize into [0, 1]
-                normalized_price = (price - min) / (max - min)
+                normalized_price = (price - stats.min) / (stats.max - stats.min)
             else:
                 normalized_price = DEFAULT_NUMERIC_VALUE
             row = variant_mapper[sku]
@@ -115,25 +115,23 @@ def prepare_variants(
         for col, type_id in enumerate(numerical_type_ids, start=1):
             stats = product_storage.get_attribute_type_stats(attribute_type_id=type_id)
             if stats is not None:
-                min, avg, max = stats
                 variant_attributes = (
                     product_storage.get_product_variant_attribute_values(
-                        attribute_type_id=type_id,
-                        attribute_type_type=AttributeTypeModel.Type.NUMERICAL,
+                        attribute_type_id=type_id
                     )
                 )
-                if min != max:
+                if stats.min != stats.max:
                     # Normalize into [0, 1]
-                    normalized_avg = (avg - min) / (max - min)
+                    normalized_avg = (stats.avg - stats.min) / (stats.max - stats.min)
                 else:
                     normalized_avg = DEFAULT_NUMERIC_VALUE
                 numerical[:, col] = normalized_avg
                 for sku, value in variant_attributes.items():
                     row = variant_mapper[sku]
                     numerical_mask[row, col] = True
-                    if min != max:
+                    if stats.min != stats.max:
                         # Normalize into [0, 1]
-                        normalized_value = (value - min) / (max - min)
+                        normalized_value = (value - stats.min) / (stats.max - stats.min)
                     else:
                         normalized_value = DEFAULT_NUMERIC_VALUE
                     numerical[row, col] = normalized_value

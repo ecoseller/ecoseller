@@ -5,7 +5,7 @@ from dependency_injector.wiring import inject, Provide
 
 from recommender_system.managers.model_manager import ModelManager
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
-from recommender_system.storage.abstract import AbstractStorage
+from recommender_system.storage.product.abstract import AbstractProductStorage
 from recommender_system.utils.recommendation_type import RecommendationType
 
 
@@ -20,9 +20,9 @@ class PredictionPipeline:
     def _retrieve_category(
         self,
         category_id: int,
-        product_storage: AbstractStorage = Provide["product_storage"],
+        product_storage: AbstractProductStorage = Provide["product_storage"],
     ) -> List[str]:
-        return product_storage.get_product_variant_pks_in_category(
+        return product_storage.get_product_variant_skus_in_category(
             category_id=category_id
         )
 

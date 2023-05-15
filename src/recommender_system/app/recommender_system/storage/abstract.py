@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Tuple, Type, TYPE_CHECKING
+from typing import Any, List, Optional, Type
 
 from recommender_system.models.stored.base import StoredBaseModel
 from recommender_system.models.stored.many_to_many_relation import (
@@ -8,11 +8,6 @@ from recommender_system.models.stored.many_to_many_relation import (
 from recommender_system.models.stored.model.trainer_queue_item import (
     TrainerQueueItemModel,
 )
-
-if TYPE_CHECKING:
-    from recommender_system.models.stored.product.attribute_type import (
-        AttributeTypeModel,
-    )
 
 
 class AbstractStorage(ABC):
@@ -118,52 +113,6 @@ class AbstractStorage(ABC):
         Searches for target models of relation `relation_model_class` where
         source is `model`.
         """
-        raise NotImplementedError()
-
-    @abstractmethod
-    def get_popular_product_variant_pks(self, limit: Optional[int] = None) -> List[Any]:
-        """
-        Searches for product variants and returns their primary key randomly
-        sampled by number of their orders.
-        """
-        raise NotImplementedError()
-
-    @abstractmethod
-    def get_product_variant_popularities(self, pks: List[str]) -> List[Tuple[str, int]]:
-        raise NotImplementedError
-
-    @abstractmethod
-    def get_raw_attribute_values(self, attribute_type_id: int) -> List[str]:
-        raise NotImplementedError()
-
-    @abstractmethod
-    def get_attribute_type_stats(
-        self, attribute_type_id: int
-    ) -> Optional[Tuple[float, float, float]]:
-        raise NotImplementedError()
-
-    @abstractmethod
-    def get_product_variant_attribute_values(
-        self, attribute_type_id: int, attribute_type_type: "AttributeTypeModel.Type"
-    ) -> Dict[str, Optional[Any]]:
-        raise NotImplementedError()
-
-    @abstractmethod
-    def get_product_variant_pks_in_category(self, category_id: int) -> List[str]:
-        raise NotImplementedError()
-
-    @abstractmethod
-    def get_product_variant_prices(self, pks: List[str]) -> List[Tuple[str, float]]:
-        raise NotImplementedError()
-
-    @abstractmethod
-    def get_price_stats(self, pks: List[str]) -> Optional[Tuple[float, float, float]]:
-        raise NotImplementedError()
-
-    @abstractmethod
-    def get_closest_product_variant_pks(
-        self, to: str, limit: Optional[int] = None, **kwargs: Any
-    ) -> List[str]:
         raise NotImplementedError()
 
     @abstractmethod

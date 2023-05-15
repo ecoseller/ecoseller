@@ -6,7 +6,7 @@ from dependency_injector.wiring import inject, Provide
 from recommender_system.models.stored.model.base import ModelStoredBaseModel
 
 if TYPE_CHECKING:
-    from recommender_system.storage.abstract import AbstractStorage
+    from recommender_system.storage.model.abstract import AbstractModelStorage
 
 
 class TrainerQueueItemModel(ModelStoredBaseModel):
@@ -25,7 +25,7 @@ class TrainerQueueItemModel(ModelStoredBaseModel):
     @classmethod
     @inject
     def get_next_item_from_queue(
-        cls, storage: "AbstractStorage" = Provide["model_storage"]
+        cls, storage: "AbstractModelStorage" = Provide["model_storage"]
     ) -> "TrainerQueueItemModel":
         return storage.get_next_item_from_trainer_queue()
 

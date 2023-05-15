@@ -5,7 +5,7 @@ from dependency_injector.wiring import inject, Provide
 from recommender_system.models.stored.base import StoredBaseModel
 
 if TYPE_CHECKING:
-    from recommender_system.storage.abstract import AbstractStorage
+    from recommender_system.storage.similarity.abstract import AbstractSimilarityStorage
 
 
 class SimilarityStoredBaseModel(StoredBaseModel):
@@ -16,7 +16,7 @@ class SimilarityStoredBaseModel(StoredBaseModel):
     @inject
     def __init__(
         self,
-        _storage: "AbstractStorage" = Provide["similarity_storage"],
+        _storage: "AbstractSimilarityStorage" = Provide["similarity_storage"],
         *args,
         **kwargs
     ):
@@ -25,20 +25,24 @@ class SimilarityStoredBaseModel(StoredBaseModel):
     @classmethod
     @inject
     def get_next_pk(
-        cls, storage: "AbstractStorage" = Provide["similarity_storage"]
+        cls, storage: "AbstractSimilarityStorage" = Provide["similarity_storage"]
     ) -> int:
         return super().get_next_pk(storage=storage)
 
     @classmethod
     @inject
     def get(
-        cls, storage: "AbstractStorage" = Provide["similarity_storage"], **kwargs
+        cls,
+        storage: "AbstractSimilarityStorage" = Provide["similarity_storage"],
+        **kwargs
     ) -> "StoredBaseModel":
         return super().get(storage=storage, **kwargs)
 
     @classmethod
     @inject
     def gets(
-        cls, storage: "AbstractStorage" = Provide["similarity_storage"], **kwargs
+        cls,
+        storage: "AbstractSimilarityStorage" = Provide["similarity_storage"],
+        **kwargs
     ) -> List["StoredBaseModel"]:
         return super().gets(storage=storage, **kwargs)
