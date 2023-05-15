@@ -9,11 +9,16 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+<<<<<<< HEAD
         ("country", "0015_delete_address_shippingaddress_country_and_more"),
+=======
+        ('country', '0015_delete_address_shippingaddress_country_and_more'),
+>>>>>>> 6568e0f (shipping/billing address with setter for cart)
     ]
 
     operations = [
         migrations.AlterField(
+<<<<<<< HEAD
             model_name="billingaddress",
             name="user",
             field=models.ForeignKey(
@@ -32,5 +37,15 @@ class Migration(migrations.Migration):
                 on_delete=django.db.models.deletion.CASCADE,
                 to=settings.AUTH_USER_MODEL,
             ),
+=======
+            model_name='billingaddress',
+            name='user',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+        ),
+        migrations.AlterField(
+            model_name='shippingaddress',
+            name='user',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+>>>>>>> 6568e0f (shipping/billing address with setter for cart)
         ),
     ]

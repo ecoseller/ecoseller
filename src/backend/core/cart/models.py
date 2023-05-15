@@ -1,15 +1,26 @@
 import uuid
 
 from django.db import models
+<<<<<<< HEAD
+=======
+from product.models import ProductVariant, Product, PriceList, ProductPrice
+>>>>>>> 6568e0f (shipping/billing address with setter for cart)
 from country.models import (
     Country,
     Currency,
     VatGroup,
+<<<<<<< HEAD
+=======
+    Address,
+>>>>>>> 6568e0f (shipping/billing address with setter for cart)
     BillingAddress,
     ShippingAddress,
 )
 from product.models import ProductVariant
+<<<<<<< HEAD
 from product.models import ProductVariant, Product
+=======
+>>>>>>> 6568e0f (shipping/billing address with setter for cart)
 from user.models import User
 from parler.models import TranslatableModel, TranslatedFields
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -143,6 +154,23 @@ class Cart(models.Model):
         ShippingMethodCountry, null=True, on_delete=models.SET_NULL, related_name="+"
     )
 
+    def recalculate(self, pricelist: PriceList, country: Country):
+        """
+        Recalculate cart prices.
+        """
+        if (self.pricelist and self.pricelist.code == pricelist.code) and (
+            self.country.code == country.code
+        ):
+            # if pricelist and country is the same as before, we don't need to recalculate
+            return
+
+        self.pricelist = pricelist
+        self.country = country
+        self.save()
+
+        for cart_item in self.cart_items.all():
+            cart_item.recalculate(pricelist, country)
+
 
 class CartItem(models.Model):
     """
@@ -171,3 +199,24 @@ class CartItem(models.Model):
     )  # this is supposed to be discount in percentage
 
     quantity = models.IntegerField(default=1)
+
+    def recalculate(self, pricelist, country):
+        # recalculate price for this cart item based on pricelist and country
+        price = ProductPrice.objects.get(
+            product_variant=self.product_variant, price_list=pricelist
+        )
+        vat = self.product.type.vat_groups.all().filter(country=country).first()
+        if vat:
+            vat = vat.vat
+        else:
+            vat = 0
+
+        self.unit_price_gross = (
+            price.price if not price.discount else price.discounted_price
+        )
+        self.unit_price_net = (
+            price.price_incl_vat(vat)
+            if not price.discount
+            else price.discounted_price_incl_vat(vat)
+        )
+        self.save()
