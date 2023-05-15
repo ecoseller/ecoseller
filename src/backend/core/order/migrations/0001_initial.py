@@ -10,17 +10,30 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('cart', '0017_alter_cart_token'),
+        ("cart", "0017_alter_cart_token"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Order',
+            name="Order",
             fields=[
-                ('order_id', models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False)),
-                ('create_at', models.DateTimeField(auto_now_add=True)),
-                ('paid', models.BooleanField(default=False)),
-                ('cart', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='order', to='cart.cart')),
+                (
+                    "order_id",
+                    models.UUIDField(
+                        default=uuid.uuid4, primary_key=True, serialize=False
+                    ),
+                ),
+                ("create_at", models.DateTimeField(auto_now_add=True)),
+                ("paid", models.BooleanField(default=False)),
+                (
+                    "cart",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="order",
+                        to="cart.cart",
+                    ),
+                ),
             ],
         ),
     ]
