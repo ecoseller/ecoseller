@@ -154,7 +154,7 @@ class CartUpdateAddressBaseStorefrontView(APIView, ABC):
         """
         pass
 
-    def post(self, request, token):
+    def put(self, request, token):
         try:
             cart = Cart.objects.get(token=token)
             if self._get_address(cart) is not None:
