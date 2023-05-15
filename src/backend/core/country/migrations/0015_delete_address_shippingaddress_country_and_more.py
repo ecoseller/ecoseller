@@ -8,33 +8,41 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cart', '0018_alter_cart_billing_address_and_more'),
-        ('country', '0014_billingaddress_shippingaddress_and_more'),
+        ("cart", "0018_alter_cart_billing_address_and_more"),
+        ("country", "0014_billingaddress_shippingaddress_and_more"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.DeleteModel(
-            name='Address',
+            name="Address",
         ),
         migrations.AddField(
-            model_name='shippingaddress',
-            name='country',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='country.country'),
+            model_name="shippingaddress",
+            name="country",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="country.country"
+            ),
         ),
         migrations.AddField(
-            model_name='shippingaddress',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="shippingaddress",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+            ),
         ),
         migrations.AddField(
-            model_name='billingaddress',
-            name='country',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='country.country'),
+            model_name="billingaddress",
+            name="country",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="country.country"
+            ),
         ),
         migrations.AddField(
-            model_name='billingaddress',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="billingaddress",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+            ),
         ),
     ]
