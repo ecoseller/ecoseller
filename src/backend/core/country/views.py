@@ -12,8 +12,16 @@ from .models import (
     Country,
     Currency,
     VatGroup,
+    ShippingAddress,
+    BillingAddress,
 )
-from .serializers import CountrySerializer, CurrencySerializer, VatGroupSerializer
+from .serializers import (
+    CountrySerializer,
+    CurrencySerializer,
+    VatGroupSerializer,
+    ShippingAddressSerializer,
+    BillingAddressSerializer,
+)
 
 
 DEFAULT_LANGUAGE_CODE = settings.PARLER_DEFAULT_LANGUAGE_CODE
@@ -171,3 +179,48 @@ class VatGroupDetailView(RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return VatGroup.objects.all()
+
+
+"""
+Address views
+"""
+
+
+class ShippingAddressDetailView(RetrieveUpdateDestroyAPIView):
+    """
+    Detail of shipping address
+    """
+
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = [
+        "GET",
+        "PUT",
+        "DELETE",
+    ]
+    authentication_classes = []
+    serializer_class = ShippingAddressSerializer
+    lookup_field = "id"
+    lookup_url_kwarg = "id"
+
+    def get_queryset(self):
+        return ShippingAddress.objects.all()
+
+
+class BillingAddressDetailView(RetrieveUpdateDestroyAPIView):
+    """
+    Detail of billing address
+    """
+
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = [
+        "GET",
+        "PUT",
+        "DELETE",
+    ]
+    authentication_classes = []
+    serializer_class = BillingAddressSerializer
+    lookup_field = "id"
+    lookup_url_kwarg = "id"
+
+    def get_queryset(self):
+        return BillingAddress.objects.all()

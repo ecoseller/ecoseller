@@ -1,7 +1,17 @@
 from rest_framework.serializers import (
     ModelSerializer,
+    PrimaryKeyRelatedField,
 )
-from country.models import Country, Currency, VatGroup, Address
+from country.models import (
+    Country,
+    Currency,
+    VatGroup,
+    Address,
+    ShippingAddress,
+    BillingAddress,
+)
+
+from user.models import User
 
 
 class VatGroupSerializer(ModelSerializer):
@@ -51,6 +61,11 @@ class CountrySerializer(ModelSerializer):
         )
 
 
+"""
+Address serializers
+"""
+
+
 class AddressSerializer(ModelSerializer):
     """
     Address serializer that serializes all fields
@@ -58,4 +73,36 @@ class AddressSerializer(ModelSerializer):
 
     class Meta:
         model = Address
+        fields = "__all__"
+
+
+class ShippingAddressSerializer(ModelSerializer):
+    """
+    ShippingAddress serializer that serializes all fields
+    """
+
+    user = PrimaryKeyRelatedField(
+        queryset=User.objects.all(),
+        write_only=True,
+        required=False,
+    )
+
+    class Meta:
+        model = ShippingAddress
+        fields = "__all__"
+
+
+class BillingAddressSerializer(ModelSerializer):
+    """
+    BillingAddress serializer that serializes all fields
+    """
+
+    user = PrimaryKeyRelatedField(
+        queryset=User.objects.all(),
+        write_only=True,
+        required=False,
+    )
+
+    class Meta:
+        model = BillingAddress
         fields = "__all__"

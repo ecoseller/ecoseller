@@ -3,6 +3,7 @@ from rest_framework.serializers import (
     Serializer,
     CharField,
     IntegerField,
+    PrimaryKeyRelatedField,
 )
 from core.mixins import (
     TranslatedSerializerMixin,
@@ -17,6 +18,13 @@ from cart.models import (
 )
 from country.serializers import (
     CountrySerializer,
+    ShippingAddressSerializer,
+    BillingAddressSerializer,
+)
+
+from country.models import (
+    ShippingAddress,
+    BillingAddress,
 )
 
 from drf_extra_fields.fields import Base64FileField
@@ -72,6 +80,20 @@ class CartSerializer(ModelSerializer):
 
     cart_items = CartItemSerializer(many=True, read_only=True)
     country = CountrySerializer(read_only=True)
+    shipping_address_id = PrimaryKeyRelatedField(
+        queryset=ShippingAddress.objects.all(),
+        source="shipping_address",
+        write_only=True,
+        required=False,
+    )
+    billing_address_id = PrimaryKeyRelatedField(
+        queryset=BillingAddress.objects.all(),
+        source="billing_address",
+        write_only=True,
+        required=False,
+    )
+    shipping_address = ShippingAddressSerializer(read_only=True)
+    billing_address = BillingAddressSerializer(read_only=True)
 
     class Meta:
         model = Cart
@@ -81,6 +103,10 @@ class CartSerializer(ModelSerializer):
             "update_at",
             "create_at",
             "cart_items",
+            "shipping_address_id",
+            "billing_address_id",
+            "shipping_address",
+            "billing_address",
         )
 
 

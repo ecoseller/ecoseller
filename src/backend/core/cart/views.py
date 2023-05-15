@@ -37,7 +37,11 @@ from cart.serializers import (
     PaymentMethodCountryFullSerializer,
     CartTokenSerializer,
 )
-from country.serializers import AddressSerializer
+from country.serializers import (
+    AddressSerializer,
+    BillingAddressSerializer,
+    ShippingAddressSerializer,
+)
 from product.models import ProductVariant, ProductPrice
 
 from rest_framework.parsers import (
@@ -133,6 +137,10 @@ class CartUpdateAddressBaseStorefrontView(APIView, ABC):
     Do not use this view directly, use inherited classes instead (and implement `_set_address` method)
     """
 
+    address_serializers = (
+        None  # set in inherited classes (Billing/Shipping address serializers)
+    )
+
     @abstractmethod
     def _set_address(self, cart, address):
         """
@@ -142,7 +150,7 @@ class CartUpdateAddressBaseStorefrontView(APIView, ABC):
 
     def post(self, request, token):
         try:
-            serializer = AddressSerializer(data=request.data)
+            serializer = self.address_serializers(data=request.data)
             if serializer.is_valid():
                 address = serializer.save()
                 cart = Cart.objects.get(token=token)
@@ -150,7 +158,7 @@ class CartUpdateAddressBaseStorefrontView(APIView, ABC):
                 self._set_address(cart, address)
 
                 return Response(status=HTTP_204_NO_CONTENT)
-            return Response(status=HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
         except Cart.DoesNotExist:
             return Response(status=HTTP_404_NOT_FOUND)
 
@@ -160,6 +168,8 @@ class CartUpdateBillingAddressStorefrontView(CartUpdateAddressBaseStorefrontView
     """
     View for updating cart's billing address
     """
+
+    address_serializers = BillingAddressSerializer
 
     def _set_address(self, cart, address):
         cart.billing_address = address
@@ -171,6 +181,8 @@ class CartUpdateShippingAddressStorefrontView(CartUpdateAddressBaseStorefrontVie
     """
     View for updating cart's shipping address
     """
+
+    address_serializers = ShippingAddressSerializer
 
     def _set_address(self, cart, address):
         cart.shipping_address = address
