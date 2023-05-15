@@ -10,7 +10,7 @@ from recommender_system.models.stored.product.product_variant import (
     ProductVariantModel,
 )
 from recommender_system.models.stored.feedback.session import SessionModel
-from recommender_system.storage.abstract import AbstractStorage
+from recommender_system.storage.feedback.abstract import AbstractFeedbackStorage
 
 
 class OrderModel(ProductStoredBaseModel):
@@ -30,7 +30,7 @@ class OrderModel(ProductStoredBaseModel):
     @property
     @inject
     def session(
-        self, feedback_storage: AbstractStorage = Provide["feedback_storage"]
+        self, feedback_storage: AbstractFeedbackStorage = Provide["feedback_storage"]
     ) -> SessionModel:
         return feedback_storage.get_object(model_class=SessionModel, pk=self.session_id)
 

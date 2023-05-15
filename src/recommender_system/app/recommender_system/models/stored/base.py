@@ -1,6 +1,5 @@
 from typing import Any, List, TYPE_CHECKING
 
-from dependency_injector.wiring import inject, Provide
 from pydantic import BaseModel
 
 from recommender_system.models.api.base import ApiBaseModel
@@ -25,9 +24,9 @@ class StoredBaseModel(BaseModel):
     class DoesNotExist(Exception):
         pass
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs):
         self._storage = kwargs.pop("_storage")
-        super().__init__(*args, **kwargs)
+        super().__init__(**kwargs)
 
     @classmethod
     def from_api_model(cls, model: ApiBaseModel, **kwargs: Any) -> "StoredBaseModel":
@@ -63,37 +62,3 @@ class StoredBaseModel(BaseModel):
 
     def delete(self) -> None:
         self._storage.delete_object(model=self)
-
-
-class FeedbackStoredBaseModel(StoredBaseModel):
-    """
-    This model represents base class for all models stored in the feedback database.
-    """
-
-    @inject
-    def __init__(
-        self, _storage: "AbstractStorage" = Provide["feedback_storage"], *args, **kwargs
-    ):
-        self._storage = _storage
-        super().__init__(_storage=_storage, *args, **kwargs)
-
-    @classmethod
-    @inject
-    def get_next_pk(
-        cls, storage: "AbstractStorage" = Provide["feedback_storage"]
-    ) -> int:
-        return super().get_next_pk(storage=storage)
-
-    @classmethod
-    @inject
-    def get(
-        cls, storage: "AbstractStorage" = Provide["feedback_storage"], **kwargs
-    ) -> "StoredBaseModel":
-        return super().get(storage=storage, **kwargs)
-
-    @classmethod
-    @inject
-    def gets(
-        cls, storage: "AbstractStorage" = Provide["feedback_storage"], **kwargs
-    ) -> List["StoredBaseModel"]:
-        return super().gets(storage=storage, **kwargs)
