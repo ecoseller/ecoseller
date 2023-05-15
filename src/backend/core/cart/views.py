@@ -207,20 +207,29 @@ class CartUpdateAddressBaseStorefrontView(APIView, ABC):
         """
         pass
 
+<<<<<<< HEAD
     @abstractmethod
+=======
+>>>>>>> 3884d78 (black)
     def _get_address(self, cart):
         """
         Get desired type of address
         """
         pass
 
+<<<<<<< HEAD
     def put(self, request, token):
         try:
 <<<<<<< HEAD
+=======
+    def post(self, request, token):
+        try:
+>>>>>>> 3884d78 (black)
             cart = Cart.objects.get(token=token)
             if self._get_address(cart) is not None:
                 # if we have address already, update it
                 address = self._get_address(cart)
+<<<<<<< HEAD
                 serializer = self.address_serializer(address, data=request.data)
             else:
                 # if we don't have address, create it
@@ -229,6 +238,13 @@ class CartUpdateAddressBaseStorefrontView(APIView, ABC):
 =======
             serializer = self.address_serializers(data=request.data)
 >>>>>>> 6568e0f (shipping/billing address with setter for cart)
+=======
+                serializer = self.address_serializers(address, data=request.data)
+            else:
+                # if we don't have address, create it
+                serializer = self.address_serializers(data=request.data)
+
+>>>>>>> 3884d78 (black)
             if serializer.is_valid():
                 serializer.save()
                 self._set_address(cart, address)
