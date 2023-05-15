@@ -5,6 +5,7 @@ from dependency_injector.wiring import inject, Provide
 from recommender_system.managers.trainer import Trainer
 from recommender_system.models.prediction.abstract import AbstractPredictionModel
 from recommender_system.models.prediction.mapper import PredictionModelMapper
+from recommender_system.models.stored.model.config import ConfigModel
 from recommender_system.utils.recommendation_type import RecommendationType
 
 if TYPE_CHECKING:
@@ -12,6 +13,10 @@ if TYPE_CHECKING:
 
 
 class ModelManager:
+    @property
+    def config(self) -> ConfigModel:
+        return ConfigModel.get_current()
+
     def get_model(
         self, recommendation_type: RecommendationType, step: "PredictionPipeline.Step"
     ) -> AbstractPredictionModel:

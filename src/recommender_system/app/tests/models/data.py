@@ -4,6 +4,7 @@ from typing import Any, Dict, Optional, Type
 from recommender_system.models.api.attribute import Attribute
 from recommender_system.models.api.attribute_type import AttributeType
 from recommender_system.models.api.base import ApiBaseModel
+from recommender_system.models.api.config import Config
 from recommender_system.models.api.product import Product
 from recommender_system.models.api.product_add_to_cart import ProductAddToCart
 from recommender_system.models.api.product_detail_enter import ProductDetailEnter
@@ -14,6 +15,7 @@ from recommender_system.models.api.product_type import ProductType
 from recommender_system.models.api.product_variant import ProductVariant
 from recommender_system.models.api.recommendation_view import RecommendationView
 from recommender_system.models.api.review import Review
+from recommender_system.models.stored.model.config import ConfigModel
 from recommender_system.models.stored.product.attribute import AttributeModel
 from recommender_system.models.stored.product.attribute_type import AttributeTypeModel
 from recommender_system.models.stored.base import StoredBaseModel
@@ -70,6 +72,14 @@ def _attribute_model(id: int = 0, parent_id: Optional[int] = None) -> Dict[str, 
         "attribute_type_id": id,
         "parent_attribute_id": parent_id,
     }
+
+
+def _config() -> Dict[str, Any]:
+    return {"create_at": _now, "retrieval_size": 1000}
+
+
+def _config_model(id: Optional[int] = None) -> Dict[str, Any]:
+    return {"id": id, "create_at": _now, "retrieval_size": 1000}
 
 
 def _product_translation(id: int = 0) -> Dict[str, Any]:
@@ -253,6 +263,7 @@ def _review(
 api_data: Dict[Type[ApiBaseModel], Any] = {
     Attribute: _root_attribute(),
     AttributeType: _attribute_type(),
+    Config: _config(),
     Product: _product(),
     ProductAddToCart: _product_add_to_cart(),
     ProductDetailEnter: _product_detail_enter(),
@@ -269,6 +280,7 @@ api_data: Dict[Type[ApiBaseModel], Any] = {
 stored_data: Dict[Type[StoredBaseModel], Any] = {
     AttributeModel: _attribute_model(),
     AttributeTypeModel: _attribute_type(),
+    ConfigModel: _config_model(),
     ProductModel: _product_model(),
     ProductAddToCartModel: _product_add_to_cart(),
     ProductDetailEnterModel: _product_detail_enter(),

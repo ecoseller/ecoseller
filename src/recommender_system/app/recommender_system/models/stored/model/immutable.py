@@ -1,12 +1,12 @@
 from typing import List
 
 from recommender_system.models.stored.base import StoredBaseModel
-from recommender_system.models.stored.feedback.base import FeedbackStoredBaseModel
+from recommender_system.models.stored.model.base import ModelStoredBaseModel
 
 
-class ImmutableFeedbackStoredModel(FeedbackStoredBaseModel):
+class ImmutableModelStoredModel(ModelStoredBaseModel):
     """
-    Represents feedback model that is immutable.
+    Represents model model that is immutable.
     """
 
     @classmethod
