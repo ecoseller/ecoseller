@@ -41,11 +41,6 @@ from country.serializers import (
     BillingAddressSerializer,
     ShippingAddressSerializer,
 )
-from product.models import ProductVariant, ProductPrice, Product
-from country.serializers (
-    BillingAddressSerializer,
-    ShippingAddressSerializer,
-)
 from product.models import ProductVariant, ProductPrice
 
 from rest_framework.parsers import (
@@ -192,11 +187,7 @@ class CartUpdateAddressBaseStorefrontView(APIView, ABC):
     Do not use this view directly, use inherited classes instead (and implement `_set_address` method)
     """
 
-<<<<<<< HEAD
     address_serializer = (
-=======
-    address_serializers = (
->>>>>>> 6568e0f (shipping/billing address with setter for cart)
         None  # set in inherited classes (Billing/Shipping address serializers)
     )
 
@@ -207,44 +198,23 @@ class CartUpdateAddressBaseStorefrontView(APIView, ABC):
         """
         pass
 
-<<<<<<< HEAD
     @abstractmethod
-=======
->>>>>>> 3884d78 (black)
     def _get_address(self, cart):
         """
         Get desired type of address
         """
         pass
 
-<<<<<<< HEAD
     def put(self, request, token):
         try:
-<<<<<<< HEAD
-=======
-    def post(self, request, token):
-        try:
->>>>>>> 3884d78 (black)
             cart = Cart.objects.get(token=token)
             if self._get_address(cart) is not None:
                 # if we have address already, update it
                 address = self._get_address(cart)
-<<<<<<< HEAD
                 serializer = self.address_serializer(address, data=request.data)
             else:
                 # if we don't have address, create it
                 serializer = self.address_serializer(data=request.data)
-
-=======
-            serializer = self.address_serializers(data=request.data)
->>>>>>> 6568e0f (shipping/billing address with setter for cart)
-=======
-                serializer = self.address_serializers(address, data=request.data)
-            else:
-                # if we don't have address, create it
-                serializer = self.address_serializers(data=request.data)
-
->>>>>>> 3884d78 (black)
             if serializer.is_valid():
                 serializer.save()
                 self._set_address(cart, address)
@@ -260,11 +230,7 @@ class CartUpdateBillingAddressStorefrontView(CartUpdateAddressBaseStorefrontView
     View for updating cart's billing address
     """
 
-<<<<<<< HEAD
     address_serializer = BillingAddressSerializer
-=======
-    address_serializers = BillingAddressSerializer
->>>>>>> 6568e0f (shipping/billing address with setter for cart)
 
     def _set_address(self, cart, address):
         cart.billing_address = address
@@ -280,11 +246,7 @@ class CartUpdateShippingAddressStorefrontView(CartUpdateAddressBaseStorefrontVie
     View for updating cart's shipping address
     """
 
-<<<<<<< HEAD
     address_serializer = ShippingAddressSerializer
-=======
-    address_serializers = ShippingAddressSerializer
->>>>>>> 6568e0f (shipping/billing address with setter for cart)
 
     def _set_address(self, cart, address):
         cart.shipping_address = address
