@@ -724,3 +724,28 @@ class ProductStorefrontListSerializer(TranslatedSerializerMixin, ModelSerializer
             "price",
             "has_multiple_prices",
         )
+
+
+class ProductCartSerializer(TranslatedSerializerMixin, ModelSerializer):
+    """
+    Product serializer used for cart
+    """
+
+    class Meta:
+        model = Product
+        fields = (
+            "id",
+            "title",
+            "slug",
+        )
+
+
+class ProductVariantCartSerializer(ModelSerializer):
+    base_attributes = BaseAttributeDashboardSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = ProductVariant
+        fields = (
+            "sku",
+            "base_attributes",
+        )

@@ -6,9 +6,9 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ("country", "0015_delete_address_shippingaddress_country_and_more"),
         ("country", "0015_delete_address_shippingaddress_country_and_more"),
     ]
 

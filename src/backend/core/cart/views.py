@@ -68,26 +68,46 @@ class CartDetailStorefrontView(RetrieveAPIView, CreateModelMixin):
 
                 cart = Cart.objects.get(token=token)
                 product_variant = ProductVariant.objects.get(sku=update_data.sku)
-
+                product = update_data.product
+                pricelist = update_data.pricelist
                 price = ProductPrice.objects.get(
-                    product_variant=product_variant, price_list__is_default=True
-                )  # TODO: use selected pricelist
+                    product_variant=product_variant, price_list=pricelist
+                )
+                country = update_data.country
+                vat = product.type.vat_groups.all().filter(country=country).first()
+
+                if not vat:
+                    vat = 0
+                else:
+                    vat = vat.rate
+
+                cart.recalculate(
+                    pricelist=pricelist,
+                    country=country,
+                )
 
                 cart_item = CartItem(
                     cart=cart,
                     product_variant=product_variant,
-                    unit_price_gross=price.price,
-                    unit_price_net=price.price,
+                    product=product,
+                    unit_price_gross=price.price
+                    if not price.discount
+                    else price.discounted_price,
+                    unit_price_net=price.price_incl_vat(vat)
+                    if not price.discount
+                    else price.discounted_price_incl_vat(vat),
                     quantity=update_data.quantity,
                 )
                 cart_item.save()
 
                 return Response(status=HTTP_201_CREATED)
-            return Response(status=HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
         except (Cart.DoesNotExist, ProductVariant.DoesNotExist):
-            return Response(status=HTTP_404_NOT_FOUND)
+            return Response({"error": "Cart does not exist"}, status=HTTP_404_NOT_FOUND)
         except ProductPrice.DoesNotExist:
-            return Response(status=HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "ProductPrice does not exist"}, status=HTTP_400_BAD_REQUEST
+            )
 
 
 @permission_classes([AllowAny])
@@ -98,13 +118,57 @@ class CartCreateStorefrontView(APIView):
 
     def post(self, request):
         cart = Cart.objects.create()
-
         # TODO: set user if logged-in
-
         cart.save()
+        if not request.data:
+            serializer = CartTokenSerializer(cart)
+            return Response(serializer.data)
+        try:
+            print(request.data)
+            item_serializer = CartItemUpdateSerializer(data=request.data)
+            if item_serializer.is_valid():
+                update_data = item_serializer.save()
+                product_variant = ProductVariant.objects.get(sku=update_data.sku)
+                product = update_data.product
+                pricelist = update_data.pricelist
+                price = ProductPrice.objects.get(
+                    product_variant=product_variant, price_list=pricelist
+                )
+                country = update_data.country
+                vat = product.type.vat_groups.all().filter(country=country).first()
 
-        serializer = CartTokenSerializer(cart)
-        return Response(serializer.data)
+                if not vat:
+                    vat = 0
+                else:
+                    vat = vat.rate
+
+                cart.recalculate(
+                    pricelist=pricelist,
+                    country=country,
+                )
+
+                cart_item = CartItem(
+                    cart=cart,
+                    product_variant=product_variant,
+                    product=product,
+                    unit_price_gross=price.price
+                    if not price.discount
+                    else price.discounted_price,
+                    unit_price_net=price.price_incl_vat(vat)
+                    if not price.discount
+                    else price.discounted_price_incl_vat(vat),
+                    quantity=update_data.quantity,
+                )
+                cart_item.save()
+                serializer = CartTokenSerializer(cart)
+                return Response(serializer.data)
+            print(item_serializer.errors)
+            return Response(item_serializer.errors, status=HTTP_400_BAD_REQUEST)
+        except ProductPrice.DoesNotExist:
+            print("ProductPrice does not exist")
+            return Response(
+                {"error": "ProductPrice does not exist"}, status=HTTP_400_BAD_REQUEST
+            )
 
 
 @permission_classes([AllowAny])
@@ -164,7 +228,6 @@ class CartUpdateAddressBaseStorefrontView(APIView, ABC):
             else:
                 # if we don't have address, create it
                 serializer = self.address_serializer(data=request.data)
-
             if serializer.is_valid():
                 serializer.save()
                 self._set_address(cart, address)
