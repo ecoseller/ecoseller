@@ -22,7 +22,7 @@
     "cookies-next": "^2.1.1",
     "eslint": "8.27.0",
     "eslint-config-next": "13.0.3",
-    "js-cookie": "^3.0.1",
+    "js-cookie": "^3.0.5",
     "jwt-decode": "^3.1.2",
     "keen-slider": "^6.8.5",
     "next": "13.0.3",
