@@ -47,7 +47,6 @@ const Menu = ({}: IMenu) => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
-  console.log("isMobile", isMobile);
 
   const { data: categories, error: isError } = useSWR<ICategoryMenu[]>(
     "/api/category",
@@ -119,7 +118,6 @@ const Menu = ({}: IMenu) => {
     e: MouseEvent | KeyboardEvent | React.MouseEvent,
     menuId: string
   ) => {
-    console.log("toggleMegaMenu");
     e.preventDefault();
 
     const nextState = MenuStateMachine(megaTMenuState);
@@ -129,9 +127,7 @@ const Menu = ({}: IMenu) => {
     updateActiveMenus(nextState, menuId);
     if (megaTMenuState === "open") {
       resetMenus();
-      console.log("toggleMegaMenu-open");
     }
-    console.log("setMegaTMenuState", megaTMenuState);
   };
 
   const toggleSubMenu = (

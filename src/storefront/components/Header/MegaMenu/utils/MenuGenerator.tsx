@@ -46,7 +46,6 @@ export const MenuGenerator = (
 
     switch (level) {
       case 0:
-        console.log("level 0 has children", category.title, children);
         // create top level category nav item
         cat = (
           <MainNavItem
@@ -338,6 +337,5 @@ export const MenuGenerator = (
     }
     categoryList.push(cat);
   });
-  console.log("categoryList", categoryList);
   return categoryList;
 };

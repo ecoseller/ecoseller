@@ -53,23 +53,6 @@ const MainNavItemLink = ({
     isActive && "rmm__main-nav-item-link--active",
     className && className
   );
-  console.log(
-    "MainNavItemLink",
-    id,
-    role,
-    href,
-    isBack,
-    isForward,
-    isActive,
-    className,
-    onMouseEnter,
-    onClick,
-    onKeyDown,
-    ariaHaspopup,
-    ariaControls,
-    children,
-    isMobile
-  );
   return (
     <Link
       id={id}

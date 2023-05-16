@@ -23,7 +23,7 @@ export const cartAPI = async (
   switch (method) {
     case "POST":
       return await api
-        .get(url)
+        .post(url)
         .then((response) => response.data)
         .then((data) => {
           return data;
@@ -42,7 +42,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
    */
   const { method } = req;
 
-  if (method == "POTS") {
+  if (method == "POST") {
     return cartAPI("POST", req, res)
       .then((data) => res.status(201).json(data))
       .catch((error) => res.status(400).json(null));

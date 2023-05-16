@@ -22,7 +22,6 @@ import ProductVariants from "@/components/ProductDetail/ProductVariants";
 import { Head } from "next/document";
 import HeadMeta from "@/components/Common/SEO";
 import { useRouter } from "next/router";
-
 interface IProductPageProps {
   data: IProduct;
 }

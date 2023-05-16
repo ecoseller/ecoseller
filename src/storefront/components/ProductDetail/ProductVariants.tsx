@@ -17,6 +17,8 @@ import Paper from "@mui/material/Paper";
 
 // types
 import { IProductVariant } from "@/types/product";
+import { useCart } from "@/utils/context/cart";
+import Button from "@mui/material/Button";
 
 interface IProductVariantsProps {
   variants: IProductVariant[];
@@ -26,6 +28,8 @@ const ProductVariants = ({ variants }: IProductVariantsProps) => {
   /**
    * Purpose of this component is to display all the variants of a product and allow the user to select one of them to add to the cart.
    */
+
+  const { addToCart } = useCart();
 
   return (
     <TableContainer>
@@ -51,7 +55,15 @@ const ProductVariants = ({ variants }: IProductVariantsProps) => {
               <TableCell align="right">{variant.availability}</TableCell>
               <TableCell align="right">{variant.price} / pc</TableCell>
               <TableCell align="right">Select qty</TableCell>
-              <TableCell align="right">add to cart</TableCell>
+              <TableCell align="right">
+                <Button
+                  onClick={() => {
+                    addToCart(variant.sku, 1);
+                  }}
+                >
+                  Add to cart
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

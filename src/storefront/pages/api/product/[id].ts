@@ -1,7 +1,7 @@
 // /api/category/tree
 // call the cart api in the backend
 import type { NextApiRequest, NextApiResponse } from "next";
-import { api } from "@/utils/api";
+import { api } from "@/utils/interceptors/api";
 
 export const productAPI = async (
   id: number,
@@ -10,7 +10,7 @@ export const productAPI = async (
   locale: string
 ) => {
   return await api
-    .get(`/product/storefront/${id}`, {
+    .get(`/product/storefront/${id}?country=CZ&pricelist=CZK_maloobchod`, {
       headers: { "Accept-Language": locale },
     })
     .then((response: any) => response.data)

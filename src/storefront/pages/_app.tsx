@@ -5,10 +5,10 @@ import { CartProvider } from "@/utils/context/cart";
 
 export default function App({ Component, pageProps }: any) {
   return (
-    <RootLayout>
-      <CartProvider>
+    <CartProvider>
+      <RootLayout>
         <Component {...pageProps} />
-      </CartProvider>
-    </RootLayout>
+      </RootLayout>
+    </CartProvider>
   );
 }
