@@ -265,6 +265,7 @@ class SQLProductVariant(ProductBase):
     sku = Column(String(255), primary_key=True)
     ean = Column(String(13), nullable=False)
     weight = Column(DECIMAL(), nullable=True)
+    stock_quantity = Column(Integer(), nullable=False)
     recommendation_weight = Column(DECIMAL(), nullable=False)
     update_at = Column(TIMESTAMP(), nullable=False)
     create_at = Column(TIMESTAMP(), nullable=False)
