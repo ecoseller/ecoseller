@@ -23,10 +23,15 @@ const navigationData: INavigationItem[] = [
     icon: <ShowChartIcon />,
   },
   {
-    title: "Cart",
-    path: "/dashboard/cart",
+    title: "Orders",
+    path: "/dashboard/orders",
     icon: <ShoppingBasketIcon />,
     children: [
+      {
+        title: "Order list",
+        path: "/",
+        icon: undefined,
+      },
       {
         title: "Shipping methods",
         path: "/shipping-method",
