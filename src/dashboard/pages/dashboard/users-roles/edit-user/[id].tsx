@@ -18,6 +18,7 @@ import EditableContentWrapper, {
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 import UserGeneralInformation from "@/components/Dashboard/UsersRoles/Users/Editor/User/UserGeneralInformation";
 import UserGroupsInformation from "@/components/Dashboard/UsersRoles/Users/Editor/User/UserGroupsInformation";
+import { useSnackbarState } from "@/utils/snackbar";
 
 interface IUserEditProps {
   userData: IUser;
@@ -31,11 +32,7 @@ const DashboardUserEditPage = ({ userData, groups }: IUserEditProps) => {
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
   const [state, setState] = useState<IUser>(userData);
 
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   const handleSnackbarClose = (
     event?: React.SyntheticEvent | Event,

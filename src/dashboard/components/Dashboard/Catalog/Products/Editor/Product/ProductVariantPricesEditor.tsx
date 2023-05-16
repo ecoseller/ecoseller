@@ -11,6 +11,7 @@ import {
   deserializeProductVariantPricesToRow,
   serializeProductVariantPricesFromRow,
 } from "@/utils/productSerializer";
+import { useSnackbarState } from "@/utils/snackbar";
 import Typography from "@mui/material/Typography";
 import { DataGrid } from "@mui/x-data-grid/DataGrid";
 import {
@@ -42,11 +43,7 @@ const ProductVariantPricesEditor = ({
   dispatch,
   pricelistsData,
 }: IProductVariantPriceEditorProps) => {
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   const [rows, setRows] = useState<IProductVariantPriceTable[]>([]);
 

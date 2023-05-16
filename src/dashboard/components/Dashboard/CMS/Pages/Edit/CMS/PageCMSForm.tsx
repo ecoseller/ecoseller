@@ -10,6 +10,7 @@ import Snackbar from "@mui/material/Snackbar";
 import { useReducer, useState } from "react";
 import PageCMSTranslatedFieldsWrapper from "./PageCMSTranslatedFields";
 import PageCMSBasicInfo from "./PageCMSBasicInfo";
+import { useSnackbarState } from "@/utils/snackbar";
 
 interface IPageCMSFormProps {
   CMSPageData: IPageCMS;
@@ -64,11 +65,7 @@ const PageCMSForm = ({ CMSPageData }: IPageCMSFormProps) => {
     }
   };
 
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   const [pageCMSState, dispatchPageCMSState] = useReducer(
     setPageStorefrontStateReducer,

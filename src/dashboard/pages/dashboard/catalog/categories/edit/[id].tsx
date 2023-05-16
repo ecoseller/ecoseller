@@ -4,13 +4,9 @@ import DashboardLayout from "@/pages/dashboard/layout";
 import Container from "@mui/material/Container";
 import CategoryEditorWrapper from "@/components/Dashboard/Catalog/Categories/Editor/CategoryEditorWrapper";
 import { ICategoryDetail } from "@/types/category";
-import { deleteCategory, getCategory } from "@/api/category/category";
 import { useRouter } from "next/router";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import EditorCard from "@/components/Dashboard/Generic/EditorCard";
-import CollapsableContentWithTitle from "@/components/Dashboard/Generic/CollapsableContentWithTitle";
-import Box from "@mui/material/Box";
+import { NextApiRequest, NextApiResponse } from "next";
+import { categoryDetailAPI } from "@/pages/api/category/[id]";
 
 interface ICategoryEditPageProps {
   category: ICategoryDetail;
@@ -19,12 +15,6 @@ interface ICategoryEditPageProps {
 const CategoryEditPage = ({ category }: ICategoryEditPageProps) => {
   const router = useRouter();
   const categoryId = category.id.toString();
-
-  async function deleteCat() {
-    deleteCategory(categoryId).then(() => {
-      router.push("/dashboard/catalog/categories");
-    });
-  }
 
   return (
     <DashboardLayout>
@@ -35,29 +25,21 @@ const CategoryEditPage = ({ category }: ICategoryEditPageProps) => {
           title={`Edit category #${categoryId}`}
           categoryId={categoryId}
         />
-        <Grid container spacing={2}>
-          <Grid item md={8} xs={12}>
-            <EditorCard>
-              <CollapsableContentWithTitle title="Delete">
-                <Box>
-                  <Button variant="contained" onClick={deleteCat}>
-                    Delete
-                  </Button>
-                </Box>
-              </CollapsableContentWithTitle>
-            </EditorCard>
-          </Grid>
-        </Grid>
       </Container>
     </DashboardLayout>
   );
 };
 
 export const getServerSideProps = async (context: any) => {
+  const { req, res } = context;
   const { id } = context.params;
 
-  const categoryRes = await getCategory(id);
-  const category = categoryRes.data;
+  const category = await categoryDetailAPI(
+    "GET",
+    id,
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
 
   return {
     props: {

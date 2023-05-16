@@ -32,6 +32,7 @@ import {
   putPageCategoryType,
 } from "@/api/cms/category/type/type";
 import EditorCard from "@/components/Dashboard/Generic/EditorCard";
+import { useSnackbarState } from "@/utils/snackbar";
 
 interface IPageCategoryTypeTable extends IPageCategoryType {
   isNew: boolean;
@@ -77,11 +78,7 @@ const PageCategoryTypeList = ({ types }: IPageTypeListProps) => {
     types as IPageCategoryTypeTable[]
   );
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   const columns: GridColDef[] = [
     {

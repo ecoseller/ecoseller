@@ -16,7 +16,7 @@ import { flattenCategory } from "@/utils/category";
 
 interface ICategorySelectProps {
   categoryId: number | null | undefined;
-  setCategoryId: (categoryId: number) => void;
+  setCategoryId: (categoryId: number | null) => void;
   title?: string;
 }
 
@@ -29,14 +29,12 @@ const CategorySelectForm = ({
 
   // load categories from API
   useEffect(() => {
-    getAllCategories()
-      .then((categories) => categories.data)
-      .then((categories) => {
-        const rows = categories.flatMap((category) => {
-          return flattenCategory(category);
-        });
-        setCategories(rows);
+    getAllCategories().then((categories) => {
+      const rows = categories.flatMap((category) => {
+        return flattenCategory(category);
       });
+      setCategories(rows);
+    });
   }, []);
 
   // const setCategory = (id: number) => {
@@ -47,13 +45,19 @@ const CategorySelectForm = ({
   // };
 
   const handleChange = (event: SelectChangeEvent) => {
-    const category = categories.find(
-      (c) => c.id.toString() === event.target.value
-    );
+    const menuItemValue = event.target.value;
 
-    if (category !== undefined) {
-      console.log(category.id);
-      setCategoryId(category.id);
+    if (menuItemValue === "") {
+      setCategoryId(null);
+    } else {
+      const category = categories.find(
+        (c) => c.id.toString() === event.target.value
+      );
+
+      if (category !== undefined) {
+        console.log(category.id);
+        setCategoryId(category.id);
+      }
     }
   };
 
@@ -70,6 +74,9 @@ const CategorySelectForm = ({
             label="Category"
             onChange={handleChange}
           >
+            <MenuItem key={null} value={""}>
+              None
+            </MenuItem>
             {categories?.map((category: ICategoryLocalized) => {
               return (
                 <MenuItem key={category.id} value={category.id.toString()}>

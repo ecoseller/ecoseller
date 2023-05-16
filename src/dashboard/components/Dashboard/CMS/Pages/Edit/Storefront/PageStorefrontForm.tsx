@@ -25,6 +25,7 @@ import {
   ISetPageStorefrontStateData,
 } from "@/types/cms";
 import PageStorefrontTranslatedFieldsWrapper from "./PageStorefrontTranslatedFields";
+import { useSnackbarState } from "@/utils/snackbar";
 
 interface IPageFrontendFormProps {
   storefrontPageData: IPageFrontend;
@@ -81,11 +82,7 @@ const PageStorefrontForm = ({ storefrontPageData }: IPageFrontendFormProps) => {
     }
   };
 
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   const [pageStorefrontState, dispatchPageStorefrontState] = useReducer(
     setPageStorefrontStateReducer,

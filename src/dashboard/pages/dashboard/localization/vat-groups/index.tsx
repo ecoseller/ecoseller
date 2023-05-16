@@ -42,6 +42,7 @@ import { ICountry, IVatGroup } from "@/types/country";
 import { vatGroupAPI } from "@/pages/api/country/vat-group";
 import RootLayout from "@/pages/layout";
 import { countryListAPI } from "@/pages/api/country";
+import { useSnackbarState } from "@/utils/snackbar";
 
 interface IVatGroupTable extends IVatGroup {
   id: number;
@@ -101,11 +102,7 @@ const DashboardVatGroupPage = ({
     }))
   );
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   const processRowUpdate = (newRow: IVatGroupTable, oldRow: IVatGroupTable) => {
     if (!newRow.name) {

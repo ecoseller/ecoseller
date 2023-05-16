@@ -42,6 +42,7 @@ import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { Typography } from "@mui/material";
+import { useSnackbarState } from "@/utils/snackbar";
 
 interface IShippingMethodCountryTable extends IShippingMethodCountry {
   isNew: boolean;
@@ -109,11 +110,7 @@ const ShippingMethodCountryEditor = ({
     }))
   );
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   const validateRow = (row: IShippingMethodCountryTable) => {
     if (row.price === undefined || row.price === null) {

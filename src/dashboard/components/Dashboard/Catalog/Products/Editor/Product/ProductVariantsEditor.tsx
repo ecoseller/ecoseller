@@ -57,6 +57,7 @@ import {
   serializeProductVariantAttributesFromRow,
   serializeProductVariantPricesFromRow,
 } from "@/utils/productSerializer";
+import { useSnackbarState } from "@/utils/snackbar";
 
 interface IProductVariantTable extends IProductVariant {
   id: string;
@@ -109,11 +110,7 @@ const ProductVariantsEditor = ({
   pricelistsData,
 }: IProductVariantsEditorProps) => {
   const router = useRouter();
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
   console.log("attribtuesData", attributesData);
   const [rows, setRows] = useState<IProductVariantTable[]>([]);
 
