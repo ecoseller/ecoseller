@@ -6,9 +6,8 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cart', '0018_alter_cart_billing_address_and_more'),
-        ('cart', '0019_cartitem_discount'),
+        ("cart", "0018_alter_cart_billing_address_and_more"),
+        ("cart", "0019_cartitem_discount"),
     ]
 
-    operations = [
-    ]
+    operations = []
