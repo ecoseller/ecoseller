@@ -12,6 +12,7 @@ from product.models import ProductVariant
 from product.models import ProductVariant, Product
 from user.models import User
 from parler.models import TranslatableModel, TranslatedFields
+from django.core.validators import MaxValueValidator, MinValueValidator
 import os
 
 
@@ -161,4 +162,12 @@ class CartItem(models.Model):
     unit_price_net = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True
     )
+    discount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+    )  # this is supposed to be discount in percentage
+
     quantity = models.IntegerField(default=1)

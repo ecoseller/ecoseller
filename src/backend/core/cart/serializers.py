@@ -27,9 +27,12 @@ from country.models import (
     BillingAddress,
 )
 
+from country.models import (
+    Country,
+)
+
 from product.models import (
     Product,
-    ProductVariant,
 )
 
 from product.serializers import (
@@ -73,6 +76,7 @@ class CartItemSerializer(ModelSerializer):
             "product",
             "unit_price_gross",
             "unit_price_net",
+            "discount",
             "quantity",
         )
 
@@ -134,6 +138,7 @@ class CartItemUpdateSerializer(Serializer):
     quantity = IntegerField(min_value=1)
     product = PrimaryKeyRelatedField(queryset=Product.objects.all())
     pricelist = PrimaryKeyRelatedField(queryset=PriceList.objects.all())
+    country = PrimaryKeyRelatedField(queryset=Country.objects.all())
 
     def create(self, validated_data):
         return CartItemUpdateData(
@@ -141,16 +146,18 @@ class CartItemUpdateSerializer(Serializer):
             validated_data["quantity"],
             validated_data["product"],
             validated_data["pricelist"],
+            validated_data["country"],
         )
 
 
 class CartItemUpdateData:
-    def __init__(self, sku, quantity, product, pricelist):
-        self.sku, self.quantity, self.product, self.pricelist = (
+    def __init__(self, sku, quantity, product, pricelist, country):
+        self.sku, self.quantity, self.product, self.pricelist, self.country = (
             sku,
             quantity,
             product,
             pricelist,
+            country,
         )
 
 

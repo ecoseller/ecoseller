@@ -75,27 +75,39 @@ class CartDetailStorefrontView(RetrieveAPIView, CreateModelMixin):
                 product_variant = ProductVariant.objects.get(sku=update_data.sku)
                 product = update_data.product
                 pricelist = update_data.pricelist
-
                 price = ProductPrice.objects.get(
                     product_variant=product_variant, price_list=pricelist
                 )
+                country = update_data.country
+                vat = product.type.vat_groups.all().filter(country=country).first()
+
+                if not vat:
+                    vat = 0
+                else:
+                    vat = vat.rate
 
                 cart_item = CartItem(
                     cart=cart,
                     product_variant=product_variant,
                     product=product,
-                    unit_price_gross=price.price,
-                    unit_price_net=price.price,
+                    unit_price_gross=price.price
+                    if not price.discount
+                    else price.discounted_price,
+                    unit_price_net=price.price_incl_vat(vat)
+                    if not price.discount
+                    else price.discounted_price_incl_vat(vat),
                     quantity=update_data.quantity,
                 )
                 cart_item.save()
 
                 return Response(status=HTTP_201_CREATED)
-            return Response(status=HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
         except (Cart.DoesNotExist, ProductVariant.DoesNotExist):
-            return Response(status=HTTP_404_NOT_FOUND)
+            return Response({"error": "Cart does not exist"}, status=HTTP_404_NOT_FOUND)
         except ProductPrice.DoesNotExist:
-            return Response(status=HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "ProductPrice does not exist"}, status=HTTP_400_BAD_REQUEST
+            )
 
 
 @permission_classes([AllowAny])
@@ -121,12 +133,24 @@ class CartCreateStorefrontView(APIView):
                 price = ProductPrice.objects.get(
                     product_variant=product_variant, price_list=pricelist
                 )
+                country = update_data.country
+                vat = product.type.vat_groups.all().filter(country=country).first()
+
+                if not vat:
+                    vat = 0
+                else:
+                    vat = vat.rate
+
                 cart_item = CartItem(
                     cart=cart,
                     product_variant=product_variant,
                     product=product,
-                    unit_price_gross=price.price,
-                    unit_price_net=price.price,
+                    unit_price_gross=price.price
+                    if not price.discount
+                    else price.discounted_price,
+                    unit_price_net=price.price_incl_vat(vat)
+                    if not price.discount
+                    else price.discounted_price_incl_vat(vat),
                     quantity=update_data.quantity,
                 )
                 cart_item.save()
@@ -134,7 +158,9 @@ class CartCreateStorefrontView(APIView):
                 return Response(serializer.data)
             return Response(item_serializer.errors, status=HTTP_400_BAD_REQUEST)
         except ProductPrice.DoesNotExist:
-            return Response(status=HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "ProductPrice does not exist"}, status=HTTP_400_BAD_REQUEST
+            )
 
 
 @permission_classes([AllowAny])
