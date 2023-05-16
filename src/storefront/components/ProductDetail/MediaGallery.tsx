@@ -97,7 +97,10 @@ const MediaGallery = ({ media }: IMediaGalleryProps) => {
           >
             {media?.map((item: IProductMedia, index: number) => {
               return (
-                <div className={`${styles.slide_item} keen-slider__slide`}>
+                <div
+                  className={`${styles.slide_item} keen-slider__slide`}
+                  key={index}
+                >
                   <div className={styles.slide_wrapper}>
                     <Image
                       src={item?.media}
@@ -132,7 +135,10 @@ const MediaGallery = ({ media }: IMediaGalleryProps) => {
           >
             {media?.map((item: IProductMedia, index: number) => {
               return (
-                <div className={`${styles.thumbnail_item} keen-slider__slide`}>
+                <div
+                  className={`${styles.thumbnail_item} keen-slider__slide`}
+                  key={index}
+                >
                   <div className={styles.slide_wrapper_thumnail}>
                     <Image
                       src={item?.media}
