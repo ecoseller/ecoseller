@@ -37,7 +37,10 @@ from cart.serializers import (
     PaymentMethodCountryFullSerializer,
     CartTokenSerializer,
 )
-from country.serializers import AddressSerializer
+from country.serializers import (
+    BillingAddressSerializer,
+    ShippingAddressSerializer,
+)
 from product.models import ProductVariant, ProductPrice
 
 from rest_framework.parsers import (
@@ -133,6 +136,10 @@ class CartUpdateAddressBaseStorefrontView(APIView, ABC):
     Do not use this view directly, use inherited classes instead (and implement `_set_address` method)
     """
 
+    address_serializer = (
+        None  # set in inherited classes (Billing/Shipping address serializers)
+    )
+
     @abstractmethod
     def _set_address(self, cart, address):
         """
@@ -140,17 +147,29 @@ class CartUpdateAddressBaseStorefrontView(APIView, ABC):
         """
         pass
 
-    def post(self, request, token):
+    @abstractmethod
+    def _get_address(self, cart):
+        """
+        Get desired type of address
+        """
+        pass
+
+    def put(self, request, token):
         try:
-            serializer = AddressSerializer(data=request.data)
+            cart = Cart.objects.get(token=token)
+            if self._get_address(cart) is not None:
+                # if we have address already, update it
+                address = self._get_address(cart)
+                serializer = self.address_serializer(address, data=request.data)
+            else:
+                # if we don't have address, create it
+                serializer = self.address_serializer(data=request.data)
+
             if serializer.is_valid():
-                address = serializer.save()
-                cart = Cart.objects.get(token=token)
-
+                serializer.save()
                 self._set_address(cart, address)
-
                 return Response(status=HTTP_204_NO_CONTENT)
-            return Response(status=HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
         except Cart.DoesNotExist:
             return Response(status=HTTP_404_NOT_FOUND)
 
@@ -161,9 +180,14 @@ class CartUpdateBillingAddressStorefrontView(CartUpdateAddressBaseStorefrontView
     View for updating cart's billing address
     """
 
+    address_serializer = BillingAddressSerializer
+
     def _set_address(self, cart, address):
         cart.billing_address = address
         cart.save()
+
+    def _get_address(self, cart):
+        return cart.billing_address
 
 
 @permission_classes([AllowAny])
@@ -172,9 +196,14 @@ class CartUpdateShippingAddressStorefrontView(CartUpdateAddressBaseStorefrontVie
     View for updating cart's shipping address
     """
 
+    address_serializer = ShippingAddressSerializer
+
     def _set_address(self, cart, address):
         cart.shipping_address = address
         cart.save()
+
+    def _get_address(self, cart):
+        return cart.shipping_address
 
 
 class CartUpdateMethodBaseStorefrontView(APIView, ABC):

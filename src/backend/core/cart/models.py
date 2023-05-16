@@ -1,7 +1,13 @@
 import uuid
 
 from django.db import models
-from country.models import Country, Currency, VatGroup, Address
+from country.models import (
+    Country,
+    Currency,
+    VatGroup,
+    BillingAddress,
+    ShippingAddress,
+)
 from product.models import ProductVariant
 from user.models import User
 from parler.models import TranslatableModel, TranslatedFields
@@ -121,12 +127,12 @@ class Cart(models.Model):
 
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     billing_address = models.ForeignKey(
-        Address, null=True, on_delete=models.SET_NULL, related_name="+"
+        BillingAddress, null=True, on_delete=models.SET_NULL, related_name="+"
     )
     # "+" means no backwards relation
     # (see https://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey.related_name)
     shipping_address = models.ForeignKey(
-        Address, null=True, on_delete=models.SET_NULL, related_name="+"
+        ShippingAddress, null=True, on_delete=models.SET_NULL, related_name="+"
     )
     payment_method_country = models.ForeignKey(
         PaymentMethodCountry, null=True, on_delete=models.SET_NULL, related_name="+"
