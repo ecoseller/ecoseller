@@ -1,29 +1,42 @@
 import DashboardLayout from "@/pages/dashboard/layout";
-import { ReactElement } from "react";
+import React, { ReactElement } from "react";
 import RootLayout from "@/pages/layout";
 import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
 import { NextApiRequest, NextApiResponse } from "next";
 import { orderAPI } from "@/pages/api/order";
 import { IOrder } from "@/types/order";
+import { OrderList } from "@/components/Dashboard/Order/OrderList";
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
+import Card from "@mui/material/Card";
 
 interface IDashboardOrderPageProps {
   orders: IOrder[];
 }
 
-const DashboardOrdersPage = ({ orders }: IDashboardOrderPageProps) => {
+const OrderListPage = ({ orders }: IDashboardOrderPageProps) => {
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
-        <Typography variant="h4" sx={{ mb: 5 }}>
-          Order list
-        </Typography>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mb={5}
+        >
+          <Typography variant="h4" gutterBottom>
+            Order list
+          </Typography>
+        </Stack>
+        <Card elevation={0}>
+          <OrderList orders={orders} />
+        </Card>
       </Container>
     </DashboardLayout>
   );
 };
 
-DashboardOrdersPage.getLayout = (page: ReactElement) => {
+OrderListPage.getLayout = (page: ReactElement) => {
   return (
     <RootLayout>
       <DashboardLayout>{page}</DashboardLayout>
@@ -42,4 +55,4 @@ export const getServerSideProps = async (context: any) => {
   return { props: { orders: orders } };
 };
 
-export default DashboardOrdersPage;
+export default OrderListPage;

@@ -7,6 +7,8 @@ import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import LanguageIcon from "@mui/icons-material/Language";
 import MoneyIcon from "@mui/icons-material/Money";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+
 export interface INavigationItem {
   title: string;
   path: string;
@@ -23,15 +25,10 @@ const navigationData: INavigationItem[] = [
     icon: <ShowChartIcon />,
   },
   {
-    title: "Orders",
-    path: "/dashboard/orders",
+    title: "Cart",
+    path: "/dashboard/cart",
     icon: <ShoppingBasketIcon />,
     children: [
-      {
-        title: "Order list",
-        path: "/",
-        icon: undefined,
-      },
       {
         title: "Shipping methods",
         path: "/shipping-method",
@@ -43,6 +40,11 @@ const navigationData: INavigationItem[] = [
         icon: undefined,
       },
     ],
+  },
+  {
+    title: "Orders",
+    path: "/dashboard/orders",
+    icon: <ShoppingCartIcon />,
   },
   {
     title: "Catalog",
