@@ -98,13 +98,32 @@ class CartCreateStorefrontView(APIView):
 
     def post(self, request):
         cart = Cart.objects.create()
-
         # TODO: set user if logged-in
-
         cart.save()
-
-        serializer = CartTokenSerializer(cart)
-        return Response(serializer.data)
+        if not request.data:
+            serializer = CartTokenSerializer(cart)
+            return Response(serializer.data)
+        try:
+            item_serializer = CartItemUpdateSerializer(data=request.data)
+            if item_serializer.is_valid():
+                update_data = item_serializer.save()
+                product_variant = ProductVariant.objects.get(sku=update_data.sku)
+                price = ProductPrice.objects.get(
+                    product_variant=product_variant, price_list__is_default=True
+                )  # TODO: use selected pricelist
+                cart_item = CartItem(
+                    cart=cart,
+                    product_variant=product_variant,
+                    unit_price_gross=price.price,
+                    unit_price_net=price.price,
+                    quantity=update_data.quantity,
+                )
+                cart_item.save()
+                serializer = CartTokenSerializer(cart)
+                return Response(serializer.data)
+            return Response(item_serializer.errors, status=HTTP_400_BAD_REQUEST)
+        except ProductPrice.DoesNotExist:
+            return Response(status=HTTP_400_BAD_REQUEST)
 
 
 @permission_classes([AllowAny])
