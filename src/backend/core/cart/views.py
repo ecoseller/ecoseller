@@ -97,7 +97,9 @@ class CartCreateStorefrontView(APIView):
         cart = Cart.objects.create()
         # TODO: set user if logged-in
         cart.save()
-
+        if not request.data:
+            serializer = CartTokenSerializer(cart)
+            return Response(serializer.data)
         try:
             item_serializer = CartItemUpdateSerializer(data=request.data)
             if item_serializer.is_valid():
@@ -116,7 +118,7 @@ class CartCreateStorefrontView(APIView):
                 cart_item.save()
                 serializer = CartTokenSerializer(cart)
                 return Response(serializer.data)
-            return Response(status=HTTP_400_BAD_REQUEST)
+            return Response(item_serializer.errors, status=HTTP_400_BAD_REQUEST)
         except ProductPrice.DoesNotExist:
             return Response(status=HTTP_400_BAD_REQUEST)
 
