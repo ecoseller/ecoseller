@@ -42,6 +42,7 @@ import SnackbarWithAlert from "@/components/Dashboard/Generic/SnackbarWithAlert"
 import EditorCard from "@/components/Dashboard/Generic/EditorCard";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import DeleteEntityButton from "@/components/Dashboard/Generic/DeleteEntityButton";
 
 export interface ISetProductStateAction {
   type: ActionSetProduct;
@@ -290,6 +291,29 @@ const ProductEditorWrapper = ({
     });
   };
 
+  const deleteProduct = async () => {
+    if (!productData) {
+      return;
+    }
+    await setPreventNavigation(false);
+    fetch(`/api/product/${productData.id}/`, {
+      method: "DELETE",
+    })
+      .then((res) => {
+        console.log("deleteProduct", res);
+        router.replace(
+          {
+            pathname: `/dashboard/catalog/products`,
+          },
+          undefined,
+          {}
+        );
+      })
+      .catch(() => {
+        setSnackbar(generalSnackbarError);
+      });
+  };
+
   // console.log("productState", productState);
 
   return (
@@ -364,45 +388,7 @@ const ProductEditorWrapper = ({
       {snackbar ? (
         <SnackbarWithAlert snackbarData={snackbar} setSnackbar={setSnackbar} />
       ) : null}
-      <Grid container spacing={2}>
-        <Grid item md={8} xs={12}>
-          <EditorCard>
-            <Box>
-              <Button
-                variant="contained"
-                onClick={async () => {
-                  if (!productData) {
-                    return;
-                  }
-                  await setPreventNavigation(false);
-                  fetch(`/api/product/${productData.id}/`, {
-                    method: "DELETE",
-                  })
-                    .then((res) => {
-                      console.log("deleteProduct", res);
-                      router.replace(
-                        {
-                          pathname: `/dashboard/catalog/products`,
-                        },
-                        undefined,
-                        {}
-                      );
-                    })
-                    .catch(() => {
-                      setSnackbar({
-                        open: true,
-                        message: "Something went wrong",
-                        severity: "error",
-                      });
-                    });
-                }}
-              >
-                Delete
-              </Button>
-            </Box>
-          </EditorCard>
-        </Grid>
-      </Grid>
+      {productData ? <DeleteEntityButton onDelete={deleteProduct} /> : null}
     </EditableContentWrapper>
   );
 };

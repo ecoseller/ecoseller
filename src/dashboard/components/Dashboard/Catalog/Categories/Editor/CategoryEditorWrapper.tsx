@@ -25,6 +25,7 @@ import EditorCard from "@/components/Dashboard/Generic/EditorCard";
 import Button from "@mui/material/Button";
 import { generalSnackbarError, useSnackbarState } from "@/utils/snackbar";
 import SnackbarWithAlert from "@/components/Dashboard/Generic/SnackbarWithAlert";
+import DeleteEntityButton from "@/components/Dashboard/Generic/DeleteEntityButton";
 
 interface ICategoryEditorWrapperProps {
   initialCategory: ICategoryEditable;
@@ -261,26 +262,7 @@ const CategoryEditorWrapper = ({
           />
         </Grid>
       </Grid>
-      {creatingNew ? (
-        <></>
-      ) : (
-        <Grid container spacing={2}>
-          <Grid item md={8} xs={12}>
-            <EditorCard>
-              <Box>
-                <Button
-                  variant="contained"
-                  color="error"
-                  startIcon={<DeleteIcon />}
-                  onClick={deleteCat}
-                >
-                  Delete
-                </Button>
-              </Box>
-            </EditorCard>
-          </Grid>
-        </Grid>
-      )}
+      {creatingNew ? null : <DeleteEntityButton onDelete={deleteCat} />}
       {snackbar ? (
         <SnackbarWithAlert snackbarData={snackbar} setSnackbar={setSnackbar} />
       ) : null}
