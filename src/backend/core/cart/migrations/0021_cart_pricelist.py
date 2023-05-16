@@ -7,14 +7,18 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('product', '0035_productprice_discount'),
-        ('cart', '0020_merge_20230516_1846'),
+        ("product", "0035_productprice_discount"),
+        ("cart", "0020_merge_20230516_1846"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='cart',
-            name='pricelist',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='product.pricelist'),
+            model_name="cart",
+            name="pricelist",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="product.pricelist",
+            ),
         ),
     ]
