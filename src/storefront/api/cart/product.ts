@@ -3,7 +3,8 @@ export const postCartProduct = async (
   sku: string,
   quantity: number,
   product: number,
-  pricelist: string
+  pricelist: string,
+  country: string
 ) => {
   // POST cart product to the backend
   // URL: /api/cart/{token}/product/
@@ -13,7 +14,7 @@ export const postCartProduct = async (
   console.log("postCartProduct", token, sku, quantity);
   return await fetch(`/api/cart/${token}/product/`, {
     method: "POST",
-    body: JSON.stringify({ sku, quantity, product, pricelist }),
+    body: JSON.stringify({ sku, quantity, product, pricelist, country }),
   });
 };
 
@@ -22,7 +23,8 @@ export const putCartProduct = async (
   sku: string,
   quantity: number,
   product: number,
-  pricelist: string
+  pricelist: string,
+  country: string
 ) => {
   // PUT cart product to the backend
   // URL: /api/cart/{token}/product/
@@ -31,6 +33,6 @@ export const putCartProduct = async (
   // Return: Promise
   return await fetch(`/api/cart/${token}/product/`, {
     method: "PUT",
-    body: JSON.stringify({ sku, quantity, product, pricelist }),
+    body: JSON.stringify({ sku, quantity, product, pricelist, country }),
   });
 };

@@ -20,6 +20,7 @@ export const cartAPI = async (
 
   const url = `/cart/storefront/`;
   const body = req.body;
+  console.log("body", body);
 
   switch (method) {
     case "POST":

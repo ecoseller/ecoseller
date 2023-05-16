@@ -11,7 +11,8 @@ export const createCart = async (
   sku: string,
   qunatity: number,
   product: number,
-  pricelist: string
+  pricelist: string,
+  country: string
 ) => {
   // Create cart
   // URL: /api/cart/
@@ -25,6 +26,7 @@ export const createCart = async (
       quantity: qunatity,
       product: product,
       pricelist: pricelist,
+      country: country,
     }),
   });
 };

@@ -9,7 +9,7 @@ const ProductPage = ({}) => {
       <Button
         onClick={() => {
           console.log("add to cart");
-          addToCart("espresso250", 1, 1, "CZK_maloobchod"); // id, quantity, productId, priceListCode
+          addToCart("espresso250", 1, 1, "CZK_maloobchod", "cz"); // id, quantity, productId, priceListCode, country
         }}
       >
         add to cart

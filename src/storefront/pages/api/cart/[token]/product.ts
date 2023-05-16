@@ -23,6 +23,8 @@ export const cartProductAPI = async (
 
   const { body } = req;
 
+  console.log("body", body);
+
   switch (method) {
     case "POST":
       return await api

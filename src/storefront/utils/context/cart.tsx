@@ -11,14 +11,21 @@ interface ICartContextProps {
     sku: string,
     qty: number,
     product: number,
-    pricelist: string
+    pricelist: string,
+    country: string
   ) => void;
-  removeFromCart: (sku: string, product: number, pricelist: string) => void;
+  removeFromCart: (
+    sku: string,
+    product: number,
+    pricelist: string,
+    country: string
+  ) => void;
   updateCart: (
     sku: string,
     qty: number,
     product: number,
-    pricelist: string
+    pricelist: string,
+    country: string
   ) => void;
 }
 
@@ -82,11 +89,12 @@ export const CartProvider = ({ children }: ICartProviderProps): JSX.Element => {
     sku: string,
     qty: number,
     product: number,
-    pricelist: string
+    pricelist: string,
+    country: string
   ) => {
     if (!token) {
       // if there is no token, create a new cart and set the token
-      const newCart = await createCart(sku, qty, product, pricelist);
+      const newCart = await createCart(sku, qty, product, pricelist, country);
       const cartData = await newCart.json();
       const newToken = cartData.token;
       setToken(newToken);
@@ -95,31 +103,37 @@ export const CartProvider = ({ children }: ICartProviderProps): JSX.Element => {
     }
     // check if the product is already in the cart and if so, update the quantity instead of adding a new product to the cart
     const productInCart = cart?.cart_items?.find(
-      (product: any) => product.product_variant === sku
+      (product: any) =>
+        product.product_variant === sku && product.product.id == product
     );
     if (productInCart) {
       // if the product is already in the cart, update the quantity
       const newQty = productInCart.quantity + qty;
-      putCartProduct(token, sku, newQty, product, pricelist).then((res) => {
-        refetchCart();
-      });
+      putCartProduct(token, sku, newQty, product, pricelist, country).then(
+        (res) => {
+          refetchCart();
+        }
+      );
     } else {
       // if the product is not in the cart, add it
-      postCartProduct(token, sku, qty, product, pricelist).then((res) => {
-        refetchCart();
-      });
+      postCartProduct(token, sku, qty, product, pricelist, country).then(
+        (res) => {
+          refetchCart();
+        }
+      );
     }
   };
 
   const removeFromCart = async (
     sku: string,
     product: number,
-    pricelist: string
+    pricelist: string,
+    country: string
   ) => {
     if (!token) {
       return;
     }
-    putCartProduct(token, sku, 0, product, pricelist).then((res) => {
+    putCartProduct(token, sku, 0, product, pricelist, country).then((res) => {
       refetchCart();
     });
   };
@@ -128,14 +142,17 @@ export const CartProvider = ({ children }: ICartProviderProps): JSX.Element => {
     sku: string,
     quantity: number,
     product: number,
-    pricelist: string
+    pricelist: string,
+    country: string
   ) => {
     if (!token) {
       return;
     }
-    putCartProduct(token, sku, quantity, product, pricelist).then((res) => {
-      refetchCart();
-    });
+    putCartProduct(token, sku, quantity, product, pricelist, country).then(
+      (res) => {
+        refetchCart();
+      }
+    );
   };
 
   const value = {
