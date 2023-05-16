@@ -14,6 +14,7 @@ Django==4.0.3
 django-ckeditor==6.5.1
 django-cors-headers==3.12.0
 django-editorjs-fields==0.2.7
+django-enumchoicefield==3.0.1
 django-fsm==2.6.0
 django-js-asset==2.0.0
 django-mptt==0.14.0
@@ -27,8 +28,8 @@ djangorestframework-recursive==0.1.2
 djangorestframework-simplejwt==5.2.2
 drf-extra-fields==3.4.1
 drf-yasg==1.20.0
-flake8==5.0.4
 filetype==1.2.0
+flake8==5.0.4
 idna==3.4
 importlib-metadata==4.11.3
 inflection==0.5.1
