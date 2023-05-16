@@ -3,14 +3,14 @@ import {
   ICategoryEditable,
   ICategoryDetail,
 } from "@/types/category";
-import axios from "axios";
-import { axiosNextApiInstance } from "@/utils/axiosNextApiInstance";
 
 /**
  * Get list of all categories
  */
 export const getAllCategories = async () => {
-  return await axiosNextApiInstance.get<ICategoryLocalized[]>("/api/category/");
+  return fetch("/api/category/")
+    .then((res) => res.json())
+    .then((data) => data as ICategoryLocalized[]);
 };
 
 /**
@@ -18,10 +18,12 @@ export const getAllCategories = async () => {
  * @param categoryToAdd
  */
 export const addCategory = async (categoryToAdd: ICategoryEditable) => {
-  return await axiosNextApiInstance.post<ICategoryDetail>(
-    "/api/category/",
-    categoryToAdd
-  );
+  return fetch("/api/category/", {
+    method: "POST",
+    body: JSON.stringify(categoryToAdd),
+  })
+    .then((res) => res.json())
+    .then((data) => data as ICategoryDetail);
 };
 
 /**
@@ -29,9 +31,9 @@ export const addCategory = async (categoryToAdd: ICategoryEditable) => {
  * @param id
  */
 export const getCategory = async (id: string) => {
-  return await axiosNextApiInstance.get<ICategoryDetail>(
-    `/api/category/${id}/`
-  );
+  return fetch(`/api/category/${id}`)
+    .then((res) => res.json())
+    .then((data) => data as ICategoryDetail);
 };
 
 /**
@@ -43,10 +45,10 @@ export const updateCategory = async (
   id: string,
   updatedCategory: ICategoryEditable
 ) => {
-  return await axiosNextApiInstance.put(
-    `/api/category/${id}/`,
-    updatedCategory
-  );
+  return fetch(`/api/category/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(updatedCategory),
+  }).then((res) => res.json());
 };
 
 /**
@@ -54,5 +56,7 @@ export const updateCategory = async (
  * @param id
  */
 export const deleteCategory = async (id: string) => {
-  return await axiosNextApiInstance.delete(`/api/category/${id}/`);
+  return fetch(`/api/category/${id}`, {
+    method: "DELETE",
+  }).then((res) => res.json());
 };

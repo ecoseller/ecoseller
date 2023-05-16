@@ -33,8 +33,7 @@ CategoriesPage.getLayout = (page: ReactElement) => {
 };
 
 export async function getServerSideProps() {
-  const res = await getAllCategories();
-  const categories = res.data;
+  const categories = await getAllCategories();
 
   return { props: { categories: categories } };
 }

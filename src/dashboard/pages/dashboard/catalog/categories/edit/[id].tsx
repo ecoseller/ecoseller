@@ -37,8 +37,7 @@ const CategoryEditPage = ({ category }: ICategoryEditPageProps) => {
 export const getServerSideProps = async (context: any) => {
   const { id } = context.params;
 
-  const categoryRes = await getCategory(id);
-  const category = categoryRes.data;
+  const category = await getCategory(id);
 
   return {
     props: {
