@@ -31,10 +31,17 @@ export const CartProvider = ({ children }: ICartProviderProps): JSX.Element => {
   }, []);
 
   useEffect(() => {
+    if (!token) {
+      setCart(null);
+      return;
+    }
     refetchCart();
   }, [token]);
 
-  useEffect(() => {
+  const promisedSetToken = (newToken: string) =>
+    new Promise((resolve) => setToken(newToken));
+
+  const calculateCartSize = (cart: any) => {
     if (cart?.cart_items) {
       // calculate cart size from cart items quantity and set it to state so we can use it in the UI to display the cart size
       setCartSize(
@@ -46,49 +53,30 @@ export const CartProvider = ({ children }: ICartProviderProps): JSX.Element => {
       return;
     }
     setCartSize(0);
-    console.log("cart", cart, cartSize);
-  }, [cart]);
-
-  const initNewCart = async () => {
-    createCart()
-      .then((res) => res.json())
-      .then(async (data) => {
-        console.log("createCart", data);
-        Cookies.set("cartToken", data.token);
-        await setToken(data.token);
-      });
   };
 
   const refetchCart = async () => {
-    console.log("refetchCart", token);
     if (!token) {
       return;
     }
     getCart(token)
       .then((res) => res.json())
       .then((data) => {
-        console.log("getCart", data);
         setCart(data);
+        calculateCartSize(data);
       });
   };
 
   const addToCart = async (sku: string, qty: number) => {
-    if (
-      !token ||
-      token === "" ||
-      token === "null" ||
-      token === null ||
-      token === "undefined"
-    ) {
-      // if no token, create a new cart
-      await initNewCart();
-    }
-    // now we should have a token for sure (either from cookie or from new cart) so we can call the add to cart endpoint
     if (!token) {
-      console.log("addToCart: no token");
+      // if there is no token, create a new cart and set the token
+      const newCart = await createCart(sku, qty);
+      const cartData = await newCart.json();
+      const newToken = cartData.token;
+      setToken(newToken);
+      setCart(newCart);
       return;
     }
-
     // check if the product is already in the cart and if so, update the quantity instead of adding a new product to the cart
     const productInCart = cart?.cart_items?.find(
       (product: any) => product.product_variant === sku
@@ -109,7 +97,6 @@ export const CartProvider = ({ children }: ICartProviderProps): JSX.Element => {
 
   const removeFromCart = async (product: any) => {
     if (!token) {
-      console.log("removeFromCart: no token");
       return;
     }
     putCartProduct(token, product.product_variant, 0).then((res) => {
@@ -119,7 +106,6 @@ export const CartProvider = ({ children }: ICartProviderProps): JSX.Element => {
 
   const updateCart = async (product: any) => {
     if (!token) {
-      console.log("updateCart: no token");
       return;
     }
     putCartProduct(token, product.product_variant, product.quantity).then(

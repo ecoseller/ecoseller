@@ -57,8 +57,8 @@ const ProductVariants = ({ variants }: IProductVariantsProps) => {
               <TableCell align="right">Select qty</TableCell>
               <TableCell align="right">
                 <Button
-                  onClick={() => {
-                    addToCart(variant.sku, 1);
+                  onClick={async () => {
+                    await addToCart(variant.sku, 1);
                   }}
                 >
                   Add to cart

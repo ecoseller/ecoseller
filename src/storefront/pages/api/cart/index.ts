@@ -11,19 +11,20 @@ import { HTTPMETHOD } from "@/types/common";
 
 export const cartAPI = async (
   method: HTTPMETHOD,
-  req?: NextApiRequest,
-  res?: NextApiResponse
+  req: NextApiRequest,
+  res: NextApiResponse
 ) => {
   if (req && res) {
     setRequestResponse(req, res);
   }
 
   const url = `/cart/storefront/`;
+  const body = req.body;
 
   switch (method) {
     case "POST":
       return await api
-        .post(url)
+        .post(url, body)
         .then((response) => response.data)
         .then((data) => {
           return data;
