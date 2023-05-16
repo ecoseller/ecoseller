@@ -81,6 +81,11 @@ class CartDetailStorefrontView(RetrieveAPIView, CreateModelMixin):
                 else:
                     vat = vat.rate
 
+                cart.recalculate(
+                    pricelist=pricelist,
+                    country=country,
+                )
+
                 cart_item = CartItem(
                     cart=cart,
                     product_variant=product_variant,
@@ -135,6 +140,11 @@ class CartCreateStorefrontView(APIView):
                     vat = 0
                 else:
                     vat = vat.rate
+
+                cart.recalculate(
+                    pricelist=pricelist,
+                    country=country,
+                )
 
                 cart_item = CartItem(
                     cart=cart,

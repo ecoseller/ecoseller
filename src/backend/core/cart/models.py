@@ -127,6 +127,8 @@ class Cart(models.Model):
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
 
+    pricelist = models.ForeignKey(PriceList, null=True, on_delete=models.SET_NULL)
+
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     billing_address = models.ForeignKey(
         BillingAddress, null=True, on_delete=models.SET_NULL, related_name="+"
