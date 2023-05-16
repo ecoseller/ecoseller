@@ -1,7 +1,7 @@
 // /api/category/tree
 // call the cart api in the backend
 import type { NextApiRequest, NextApiResponse } from "next";
-import { api } from "@/utils/api";
+import { api } from "@/utils/interceptors/api";
 
 export const categoryAPI = async (
   req: NextApiRequest,
