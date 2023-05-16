@@ -37,16 +37,12 @@ from cart.serializers import (
     PaymentMethodCountryFullSerializer,
     CartTokenSerializer,
 )
-<<<<<<< HEAD
 from country.serializers import (
     BillingAddressSerializer,
     ShippingAddressSerializer,
 )
-from product.models import ProductVariant, ProductPrice
-=======
 from country.serializers import AddressSerializer
 from product.models import ProductVariant, ProductPrice, Product
->>>>>>> 7aaa8f5 (send ProductID and priceList code with cart item request)
 
 from rest_framework.parsers import (
     MultiPartParser,
