@@ -7,7 +7,12 @@ export const getCart = async (token: string) => {
   return await fetch(`/api/cart/${token}/`);
 };
 
-export const createCart = async (sku: string, qunatity: number) => {
+export const createCart = async (
+  sku: string,
+  qunatity: number,
+  product: number,
+  pricelist: string
+) => {
   // Create cart
   // URL: /api/cart/
   // Method: POST
@@ -18,6 +23,8 @@ export const createCart = async (sku: string, qunatity: number) => {
     body: JSON.stringify({
       sku: sku,
       quantity: qunatity,
+      product: product,
+      pricelist: pricelist,
     }),
   });
 };

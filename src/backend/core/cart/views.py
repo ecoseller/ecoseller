@@ -37,11 +37,16 @@ from cart.serializers import (
     PaymentMethodCountryFullSerializer,
     CartTokenSerializer,
 )
+<<<<<<< HEAD
 from country.serializers import (
     BillingAddressSerializer,
     ShippingAddressSerializer,
 )
 from product.models import ProductVariant, ProductPrice
+=======
+from country.serializers import AddressSerializer
+from product.models import ProductVariant, ProductPrice, Product
+>>>>>>> 7aaa8f5 (send ProductID and priceList code with cart item request)
 
 from rest_framework.parsers import (
     MultiPartParser,
@@ -68,14 +73,17 @@ class CartDetailStorefrontView(RetrieveAPIView, CreateModelMixin):
 
                 cart = Cart.objects.get(token=token)
                 product_variant = ProductVariant.objects.get(sku=update_data.sku)
+                product = update_data.product
+                pricelist = update_data.pricelist
 
                 price = ProductPrice.objects.get(
-                    product_variant=product_variant, price_list__is_default=True
-                )  # TODO: use selected pricelist
+                    product_variant=product_variant, price_list=pricelist
+                )
 
                 cart_item = CartItem(
                     cart=cart,
                     product_variant=product_variant,
+                    product=product,
                     unit_price_gross=price.price,
                     unit_price_net=price.price,
                     quantity=update_data.quantity,
@@ -108,12 +116,15 @@ class CartCreateStorefrontView(APIView):
             if item_serializer.is_valid():
                 update_data = item_serializer.save()
                 product_variant = ProductVariant.objects.get(sku=update_data.sku)
+                product = update_data.product
+                pricelist = update_data.pricelist
                 price = ProductPrice.objects.get(
-                    product_variant=product_variant, price_list__is_default=True
-                )  # TODO: use selected pricelist
+                    product_variant=product_variant, price_list=pricelist
+                )
                 cart_item = CartItem(
                     cart=cart,
                     product_variant=product_variant,
+                    product=product,
                     unit_price_gross=price.price,
                     unit_price_net=price.price,
                     quantity=update_data.quantity,

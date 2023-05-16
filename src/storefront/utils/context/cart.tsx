@@ -7,9 +7,19 @@ import { postCartProduct, putCartProduct } from "@/api/cart/product";
 interface ICartContextProps {
   cart: any | null;
   cartSize: number;
-  addToCart: (sku: string, qty: number) => void;
-  removeFromCart: (sku: string, qty: number) => void;
-  updateCart: (sku: string, qty: number) => void;
+  addToCart: (
+    sku: string,
+    qty: number,
+    product: number,
+    pricelist: string
+  ) => void;
+  removeFromCart: (sku: string, product: number, pricelist: string) => void;
+  updateCart: (
+    sku: string,
+    qty: number,
+    product: number,
+    pricelist: string
+  ) => void;
 }
 
 interface ICartProviderProps {
@@ -68,10 +78,15 @@ export const CartProvider = ({ children }: ICartProviderProps): JSX.Element => {
       });
   };
 
-  const addToCart = async (sku: string, qty: number) => {
+  const addToCart = async (
+    sku: string,
+    qty: number,
+    product: number,
+    pricelist: string
+  ) => {
     if (!token) {
       // if there is no token, create a new cart and set the token
-      const newCart = await createCart(sku, qty);
+      const newCart = await createCart(sku, qty, product, pricelist);
       const cartData = await newCart.json();
       const newToken = cartData.token;
       setToken(newToken);
@@ -85,35 +100,42 @@ export const CartProvider = ({ children }: ICartProviderProps): JSX.Element => {
     if (productInCart) {
       // if the product is already in the cart, update the quantity
       const newQty = productInCart.quantity + qty;
-      putCartProduct(token, sku, newQty).then((res) => {
+      putCartProduct(token, sku, newQty, product, pricelist).then((res) => {
         refetchCart();
       });
     } else {
       // if the product is not in the cart, add it
-      postCartProduct(token, sku, qty).then((res) => {
+      postCartProduct(token, sku, qty, product, pricelist).then((res) => {
         refetchCart();
       });
     }
   };
 
-  const removeFromCart = async (product: any) => {
+  const removeFromCart = async (
+    sku: string,
+    product: number,
+    pricelist: string
+  ) => {
     if (!token) {
       return;
     }
-    putCartProduct(token, product.product_variant, 0).then((res) => {
+    putCartProduct(token, sku, 0, product, pricelist).then((res) => {
       refetchCart();
     });
   };
 
-  const updateCart = async (product: any) => {
+  const updateCart = async (
+    sku: string,
+    quantity: number,
+    product: number,
+    pricelist: string
+  ) => {
     if (!token) {
       return;
     }
-    putCartProduct(token, product.product_variant, product.quantity).then(
-      (res) => {
-        refetchCart();
-      }
-    );
+    putCartProduct(token, sku, quantity, product, pricelist).then((res) => {
+      refetchCart();
+    });
   };
 
   const value = {

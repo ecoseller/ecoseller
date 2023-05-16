@@ -27,6 +27,17 @@ from country.models import (
     BillingAddress,
 )
 
+from product.models import (
+    Product,
+    ProductVariant,
+)
+
+from product.serializers import (
+    ProductCartSerializer,
+    ProductVariantCartSerializer,
+    PriceList,
+)
+
 from drf_extra_fields.fields import Base64FileField
 
 from parler_rest.serializers import (
@@ -52,10 +63,14 @@ class CartItemSerializer(ModelSerializer):
     TODO: add product and product variant serializer (or just save product name and variant attributes as a string?)
     """
 
+    product = ProductCartSerializer(read_only=True)
+    product_variant = ProductVariantCartSerializer(read_only=True)
+
     class Meta:
         model = CartItem
         fields = (
             "product_variant",
+            "product",
             "unit_price_gross",
             "unit_price_net",
             "quantity",
@@ -117,14 +132,26 @@ class CartItemUpdateSerializer(Serializer):
 
     sku = CharField()
     quantity = IntegerField(min_value=1)
+    product = PrimaryKeyRelatedField(queryset=Product.objects.all())
+    pricelist = PrimaryKeyRelatedField(queryset=PriceList.objects.all())
 
     def create(self, validated_data):
-        return CartItemUpdateData(validated_data["sku"], validated_data["quantity"])
+        return CartItemUpdateData(
+            validated_data["sku"],
+            validated_data["quantity"],
+            validated_data["product"],
+            validated_data["pricelist"],
+        )
 
 
 class CartItemUpdateData:
-    def __init__(self, sku, quantity):
-        self.sku, self.quantity = sku, quantity
+    def __init__(self, sku, quantity, product, pricelist):
+        self.sku, self.quantity, self.product, self.pricelist = (
+            sku,
+            quantity,
+            product,
+            pricelist,
+        )
 
 
 class ShippingMethodSerializer(TranslatedSerializerMixin, ModelSerializer):

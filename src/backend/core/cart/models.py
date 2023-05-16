@@ -9,6 +9,7 @@ from country.models import (
     ShippingAddress,
 )
 from product.models import ProductVariant
+from product.models import ProductVariant, Product
 from user.models import User
 from parler.models import TranslatableModel, TranslatedFields
 import os
@@ -153,6 +154,7 @@ class CartItem(models.Model):
     product_variant = models.ForeignKey(
         ProductVariant, null=True, on_delete=models.SET_NULL
     )
+    product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
     unit_price_gross = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True
     )
