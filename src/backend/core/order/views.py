@@ -1,20 +1,19 @@
 # from django.shortcuts import render
 
-from rest_framework.views import APIView
 from rest_framework import permissions
-from rest_framework.response import Response
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListAPIView
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from cart.models import Cart
-
-from .serializers import OrderSerializer
 from .models import Order
+from .serializers import OrderBaseSerializer, OrderListSerializer
 
 
 class OrderDetailDashboardView(RetrieveUpdateDestroyAPIView):
     allowed_methods = ["GET", "PUT", "DELETE"]
     permission_classes = (permissions.AllowAny,)
-    serializer_class = OrderSerializer
+    serializer_class = OrderBaseSerializer
     lookup_field = "token"
 
     def get_queryset(self):
@@ -22,8 +21,11 @@ class OrderDetailDashboardView(RetrieveUpdateDestroyAPIView):
 
 
 class OrderListDashboardView(ListAPIView):
+    """
+    View for listing orders on dashboard
+    """
     permission_classes = (permissions.AllowAny,)
-    serializer_class = OrderSerializer
+    serializer_class = OrderListSerializer
     queryset = Order.objects.all()
 
 
