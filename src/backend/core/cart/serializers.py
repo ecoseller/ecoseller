@@ -3,6 +3,7 @@ from rest_framework.serializers import (
     Serializer,
     CharField,
     IntegerField,
+    PrimaryKeyRelatedField,
 )
 from core.mixins import (
     TranslatedSerializerMixin,
@@ -17,6 +18,27 @@ from cart.models import (
 )
 from country.serializers import (
     CountrySerializer,
+    ShippingAddressSerializer,
+    BillingAddressSerializer,
+)
+
+from country.models import (
+    ShippingAddress,
+    BillingAddress,
+)
+
+from country.models import (
+    Country,
+)
+
+from product.models import (
+    Product,
+)
+
+from product.serializers import (
+    ProductCartSerializer,
+    ProductVariantCartSerializer,
+    PriceList,
 )
 
 from drf_extra_fields.fields import Base64FileField
@@ -44,12 +66,17 @@ class CartItemSerializer(ModelSerializer):
     TODO: add product and product variant serializer (or just save product name and variant attributes as a string?)
     """
 
+    product = ProductCartSerializer(read_only=True)
+    product_variant = ProductVariantCartSerializer(read_only=True)
+
     class Meta:
         model = CartItem
         fields = (
             "product_variant",
+            "product",
             "unit_price_gross",
             "unit_price_net",
+            "discount",
             "quantity",
         )
 
@@ -72,6 +99,20 @@ class CartSerializer(ModelSerializer):
 
     cart_items = CartItemSerializer(many=True, read_only=True)
     country = CountrySerializer(read_only=True)
+    shipping_address_id = PrimaryKeyRelatedField(
+        queryset=ShippingAddress.objects.all(),
+        source="shipping_address",
+        write_only=True,
+        required=False,
+    )
+    billing_address_id = PrimaryKeyRelatedField(
+        queryset=BillingAddress.objects.all(),
+        source="billing_address",
+        write_only=True,
+        required=False,
+    )
+    shipping_address = ShippingAddressSerializer(read_only=True)
+    billing_address = BillingAddressSerializer(read_only=True)
 
     class Meta:
         model = Cart
@@ -81,6 +122,10 @@ class CartSerializer(ModelSerializer):
             "update_at",
             "create_at",
             "cart_items",
+            "shipping_address_id",
+            "billing_address_id",
+            "shipping_address",
+            "billing_address",
         )
 
 
@@ -91,14 +136,29 @@ class CartItemUpdateSerializer(Serializer):
 
     sku = CharField()
     quantity = IntegerField(min_value=1)
+    product = PrimaryKeyRelatedField(queryset=Product.objects.all())
+    pricelist = PrimaryKeyRelatedField(queryset=PriceList.objects.all())
+    country = PrimaryKeyRelatedField(queryset=Country.objects.all())
 
     def create(self, validated_data):
-        return CartItemUpdateData(validated_data["sku"], validated_data["quantity"])
+        return CartItemUpdateData(
+            validated_data["sku"],
+            validated_data["quantity"],
+            validated_data["product"],
+            validated_data["pricelist"],
+            validated_data["country"],
+        )
 
 
 class CartItemUpdateData:
-    def __init__(self, sku, quantity):
-        self.sku, self.quantity = sku, quantity
+    def __init__(self, sku, quantity, product, pricelist, country):
+        self.sku, self.quantity, self.product, self.pricelist, self.country = (
+            sku,
+            quantity,
+            product,
+            pricelist,
+            country,
+        )
 
 
 class ShippingMethodSerializer(TranslatedSerializerMixin, ModelSerializer):

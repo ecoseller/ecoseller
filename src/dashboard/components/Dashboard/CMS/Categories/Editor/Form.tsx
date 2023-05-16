@@ -26,6 +26,7 @@ import {
 import { putPageCategory } from "@/api/cms/category/category";
 import PageCategoryTranslatedFieldsWrapper from "./PageCategoryTranslatedFieldsWrapper";
 import PageCategoryBasicInfo from "./PageCategoryBasicInfo";
+import { useSnackbarState } from "@/utils/snackbar";
 
 interface IPageCategoryFormProps {
   pageCategoryData: IPageCategory;
@@ -84,11 +85,7 @@ const PageCategoryForm = ({ pageCategoryData }: IPageCategoryFormProps) => {
     }
   };
 
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   const [pageCateogryState, dispatchPageCategoryState] = useReducer(
     setPageCategoryStateReducer,

@@ -22,6 +22,7 @@ class DummyPredictionModel(AbstractPredictionModel):
         return storage.get_objects_attribute(
             model_class=ProductVariantModel,
             attribute=ProductVariantModel.Meta.primary_key,
+            stock_quantity__gt=0,
             limit=1000,
         )
 

@@ -22,14 +22,15 @@ django-parler==2.3
 django-parler-rest==2.2
 django-polymorphic==3.1.0
 django-rest-polymorphic==0.1.10
+django-enumchoicefield==3.0.1
 django-rq==2.5.1
 djangorestframework==3.13.1
 djangorestframework-recursive==0.1.2
 djangorestframework-simplejwt==5.2.2
 drf-extra-fields==3.4.1
 drf-yasg==1.20.0
-filetype==1.2.0
 flake8==5.0.4
+filetype==1.2.0
 idna==3.4
 importlib-metadata==4.11.3
 inflection==0.5.1

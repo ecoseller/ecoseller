@@ -42,6 +42,7 @@ import {
   postPriceList,
   putPriceList,
 } from "@/api/country/product/priceList";
+import { useSnackbarState } from "@/utils/snackbar";
 
 interface IPriceListTable extends IPriceList {
   isNew?: boolean;
@@ -92,11 +93,7 @@ const DashboardPriceListsPage = () => {
     mutate: priceListsMutate,
   } = useSWR<IPriceList[]>("/product/dashboard/pricelist/");
 
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   useEffect(() => {
     if (priceListsError) {

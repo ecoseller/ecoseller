@@ -10,4 +10,6 @@ urlpatterns = [
     path("currency/", views.CurrencyListView.as_view()),
     path("currency/<str:code>/", views.CurrencyDetailView.as_view()),
     path("<str:code>/", views.CountryDetailView.as_view()),
+    path("address/shipping/<int:id>/", views.ShippingAddressDetailView.as_view()),
+    path("address/billing/<int:id>/", views.ShippingAddressDetailView.as_view()),
 ]

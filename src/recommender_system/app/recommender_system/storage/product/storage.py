@@ -22,8 +22,8 @@ from recommender_system.storage.sql.storage import SQLStorage
 
 class SQLProductStorage(SQLStorage, AbstractProductStorage):
     def get_popular_product_variant_skus(
-        self, limit: Optional[int] = None
-    ) -> List[Any]:
+        self, filter_in_stock: bool, limit: Optional[int] = None
+    ) -> List[str]:
         amount = case(
             (
                 SQLOrderProductVariant.product_variant_sku.isnot(None),
@@ -54,8 +54,10 @@ class SQLProductStorage(SQLStorage, AbstractProductStorage):
                 number_of_orders,
                 number_of_orders.c.sku == SQLProductVariant.sku,
             )
-            .group_by(SQLProductVariant.sku)
         )
+        if filter_in_stock:
+            query = query.filter(SQLProductVariant.stock_quantity > 0)
+        query = query.group_by(SQLProductVariant.sku)
         query = query.order_by(priority.desc())
         if limit is not None:
             query = query.limit(limit)

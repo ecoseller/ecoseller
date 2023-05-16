@@ -16,6 +16,7 @@ import {
 import { IPermission, IGroup } from "@/types/user";
 import CreateRole from "@/components/Dashboard/UsersRoles/Roles/CreateRole";
 import EditRole from "@/components/Dashboard/UsersRoles/Roles/EditRole";
+import { useSnackbarState } from "@/utils/snackbar";
 
 interface IEditGroupProps {
   group: IGroup;
@@ -28,11 +29,7 @@ const DashboardGroupEditPage = ({ group, permissions }: IEditGroupProps) => {
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
   const [groupState, setGroupState] = useState<IGroup>(group);
 
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   const handleSnackbarClose = (
     event?: React.SyntheticEvent | Event,

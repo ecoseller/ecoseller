@@ -37,9 +37,12 @@ import TranslatedSEOFieldsTabList from "../../../Generic/TranslatedSEOFieldsTabL
 import { IDispatchWrapper } from "@/components/Dashboard/Common/IDispatchWrapper";
 import { IEntityTranslations } from "@/types/common";
 import { OutputData } from "@editorjs/editorjs";
+import { generalSnackbarError, useSnackbarState } from "@/utils/snackbar";
+import SnackbarWithAlert from "@/components/Dashboard/Generic/SnackbarWithAlert";
 import EditorCard from "@/components/Dashboard/Generic/EditorCard";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import DeleteEntityButton from "@/components/Dashboard/Generic/DeleteEntityButton";
 
 export interface ISetProductStateAction {
   type: ActionSetProduct;
@@ -126,11 +129,7 @@ const ProductEditorWrapper = ({
     }
   };
 
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   const router = useRouter();
 
@@ -237,16 +236,6 @@ const ProductEditorWrapper = ({
 
   console.log("productState", productState);
 
-  const handleSnackbarClose = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setSnackbar(null);
-  };
-
   const saveProductAndRedirect = async () => {
     postProduct(productState as IProduct)
       .then((res: any) => {
@@ -265,11 +254,7 @@ const ProductEditorWrapper = ({
       })
       .catch((err: any) => {
         console.log("postProduct", err);
-        setSnackbar({
-          open: true,
-          message: "Something went wrong",
-          severity: "error",
-        });
+        setSnackbar(generalSnackbarError);
       });
   };
 
@@ -288,11 +273,7 @@ const ProductEditorWrapper = ({
       })
       .catch((err: any) => {
         console.log("putProduct", err);
-        setSnackbar({
-          open: true,
-          message: "Something went wrong",
-          severity: "error",
-        });
+        setSnackbar(generalSnackbarError);
       });
   };
 
@@ -303,11 +284,34 @@ const ProductEditorWrapper = ({
     });
   };
 
-  const setCategoryId = (categoryId: number) => {
+  const setCategoryId = (categoryId: number | null) => {
     dispatchProductState({
       type: ActionSetProduct.SETCATEGORY,
       payload: { category: categoryId },
     });
+  };
+
+  const deleteProduct = async () => {
+    if (!productData) {
+      return;
+    }
+    await setPreventNavigation(false);
+    fetch(`/api/product/${productData.id}/`, {
+      method: "DELETE",
+    })
+      .then((res) => {
+        console.log("deleteProduct", res);
+        router.replace(
+          {
+            pathname: `/dashboard/catalog/products`,
+          },
+          undefined,
+          {}
+        );
+      })
+      .catch(() => {
+        setSnackbar(generalSnackbarError);
+      });
   };
 
   // console.log("productState", productState);
@@ -382,59 +386,9 @@ const ProductEditorWrapper = ({
         </Grid>
       </Grid>
       {snackbar ? (
-        <Snackbar
-          open={snackbar.open}
-          autoHideDuration={6000}
-          onClose={handleSnackbarClose}
-        >
-          <Alert
-            onClose={handleSnackbarClose}
-            severity={snackbar.severity}
-            sx={{ width: "100%" }}
-          >
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
+        <SnackbarWithAlert snackbarData={snackbar} setSnackbar={setSnackbar} />
       ) : null}
-      <Grid container spacing={2}>
-        <Grid item md={8} xs={12}>
-          <EditorCard>
-            <Box>
-              <Button
-                variant="contained"
-                onClick={async () => {
-                  if (!productData) {
-                    return;
-                  }
-                  await setPreventNavigation(false);
-                  fetch(`/api/product/${productData.id}/`, {
-                    method: "DELETE",
-                  })
-                    .then((res) => {
-                      console.log("deleteProduct", res);
-                      router.replace(
-                        {
-                          pathname: `/dashboard/catalog/products`,
-                        },
-                        undefined,
-                        {}
-                      );
-                    })
-                    .catch(() => {
-                      setSnackbar({
-                        open: true,
-                        message: "Something went wrong",
-                        severity: "error",
-                      });
-                    });
-                }}
-              >
-                Delete
-              </Button>
-            </Box>
-          </EditorCard>
-        </Grid>
-      </Grid>
+      {productData ? <DeleteEntityButton onDelete={deleteProduct} /> : null}
     </EditableContentWrapper>
   );
 };

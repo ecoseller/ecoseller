@@ -36,6 +36,7 @@ import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
 import { paymentMethodListAPI } from "@/pages/api/cart/payment-method";
 import { IPaymentMethod } from "@/types/cart/methods";
 import imgPath from "@/utils/imgPath";
+import { useSnackbarState } from "@/utils/snackbar";
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -82,11 +83,7 @@ const DashboardPaymentMethodPage = ({
   const [rows, setRows] = useState<IPaymentMethod[]>(paymentMethodsData || []);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   console.log("paymentMethodsData", paymentMethodsData);
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   const handleSnackbarClose = (
     event?: React.SyntheticEvent | Event,

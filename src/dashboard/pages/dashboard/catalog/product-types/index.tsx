@@ -36,6 +36,7 @@ import { IProductType } from "@/types/product";
 import { deleteProductType, postProductType } from "@/api/product/types";
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
 import { productTypeListAPI } from "@/pages/api/product/type";
+import { useSnackbarState } from "@/utils/snackbar";
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -96,11 +97,7 @@ const DashboardProductTypesPage = ({
   const [rows, setRows] = useState<IProductType[]>(productTypesData || []);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   console.log("productTypesData", productTypesData);
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   const handleSnackbarClose = (
     event?: React.SyntheticEvent | Event,

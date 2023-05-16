@@ -104,7 +104,49 @@ class Address(models.Model):
     Object representing address
     """
 
+    user = models.ForeignKey(
+        "user.User", on_delete=models.CASCADE, blank=True, null=True
+    )
+    first_name = models.CharField(max_length=255)
+    surname = models.CharField(max_length=255)
     street = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
     postal_code = models.CharField(max_length=255)
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
+
+    class Meta:
+        abstract = True
+
+
+class BillingAddress(Address):
+    """
+    Object representing billing address
+    """
+
+    company_name = models.CharField(max_length=255, blank=True, null=True)
+    company_id = models.CharField(
+        max_length=255, blank=True, null=True
+    )  # this field is used for company identification number (IČO)
+    vat_number = models.CharField(
+        max_length=255, blank=True, null=True
+    )  # this field is used for VAT number (DIČ)
+
+    class Meta:
+        verbose_name = "Billing Address"
+        verbose_name_plural = "Billing Addresses"
+
+
+class ShippingAddress(Address):
+    """
+    Object representing shipping address
+    """
+
+    email = models.EmailField(max_length=255, blank=True, null=True)
+    phone = models.CharField(max_length=255, blank=True, null=True)
+    additional_info = models.TextField(
+        blank=True, null=True
+    )  # this field is used for additional information about shipping address (e.g. floor, door code, etc.)
+
+    class Meta:
+        verbose_name = "Shipping Address"
+        verbose_name_plural = "Shipping Addresses"
