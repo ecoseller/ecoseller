@@ -278,6 +278,7 @@ def fill_products(
             product_variants[row[1]] = ProductVariantModel(
                 sku=row[1],
                 ean=row[1],
+                stock_quantity=0 if published is None else 1,
                 recommendation_weight=random.random(),
                 update_at=update_at,
                 create_at=update_at,

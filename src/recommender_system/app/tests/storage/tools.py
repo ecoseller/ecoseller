@@ -109,6 +109,7 @@ default_dicts: Dict[Type[StoredBaseModel], Any] = {
         "sku": "sku",
         "ean": "ean",
         "weight": 0.0,
+        "stock_quantity": 1,
         "recommendation_weight": 1.0,
         "update_at": datetime.now(),
         "create_at": datetime.now(),

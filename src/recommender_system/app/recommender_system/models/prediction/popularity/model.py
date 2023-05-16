@@ -18,7 +18,9 @@ class PopularityPredictionModel(AbstractPredictionModel):
     def retrieve(
         self, storage: AbstractProductStorage = Provide["product_storage"]
     ) -> List[str]:
-        return storage.get_popular_product_variant_skus(limit=1000)
+        return storage.get_popular_product_variant_skus(
+            filter_in_stock=True, limit=1000
+        )
 
     def score(
         self,

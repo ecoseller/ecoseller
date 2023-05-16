@@ -13,7 +13,7 @@ class AbstractProductStorage(AbstractStorage, ABC):
 
     @abstractmethod
     def get_popular_product_variant_skus(
-        self, limit: Optional[int] = None
+        self, filter_in_stock: bool, limit: Optional[int] = None
     ) -> List[str]:
         """
         Selects randomly sampled product variants' SKUs weighted by their popularity.
@@ -22,6 +22,8 @@ class AbstractProductStorage(AbstractStorage, ABC):
 
         Parameters
         ----------
+        filter_in_stock : bool
+            Whether to filter and select only product variants in stock.
         limit : Optional[int]
             Maximum number of items to return. Returns all if `None`.
 

@@ -23,6 +23,7 @@ class SelectionPredictionModel(AbstractPredictionModel):
             model_class=ProductVariantModel,
             attribute=ProductVariantModel.Meta.primary_key,
             weight="recommendation_weight",
+            stock_quantity__gt=0,
             limit=1000,
         )
 

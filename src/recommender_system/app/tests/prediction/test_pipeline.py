@@ -37,6 +37,7 @@ def create_product_variants():
         {
             "sku": "unittest1",
             "ean": "ean",
+            "stock_quantity": 1,
             "recommendation_weight": 1.0,
             "create_at": (datetime.now() - timedelta(seconds=2)).isoformat(),
             "update_at": (datetime.now() - timedelta(seconds=2)).isoformat(),
@@ -45,6 +46,7 @@ def create_product_variants():
         {
             "sku": "unittest2",
             "ean": "ean",
+            "stock_quantity": 2,
             "recommendation_weight": 1.0,
             "create_at": (datetime.now() - timedelta(seconds=1)).isoformat(),
             "update_at": (datetime.now() - timedelta(seconds=1)).isoformat(),
@@ -53,6 +55,16 @@ def create_product_variants():
         {
             "sku": "unittest3",
             "ean": "ean",
+            "stock_quantity": 3,
+            "recommendation_weight": 1.0,
+            "create_at": datetime.now().isoformat(),
+            "update_at": datetime.now().isoformat(),
+            "product_id": product.pk,
+        },
+        {
+            "sku": "unittest4",
+            "ean": "ean",
+            "stock_quantity": 0,
             "recommendation_weight": 1.0,
             "create_at": datetime.now().isoformat(),
             "update_at": datetime.now().isoformat(),
@@ -88,12 +100,17 @@ def test_dummy(app, create_product_variants, prediction_pipeline):
         )
 
         for sku in variant_skus:
-            assert sku in predictions
+            if sku == "unittest4":
+                assert sku not in predictions
+            else:
+                assert sku in predictions
 
         variants = [ProductVariantModel.get(pk=sku) for sku in variant_skus]
         variants.sort(key=lambda variant: variant.create_at, reverse=True)
 
-        ordered_skus = [variant.sku for variant in variants]
+        ordered_skus = [
+            variant.sku for variant in variants if variant.sku != "unittest4"
+        ]
 
         indices = [predictions.index(sku) for sku in ordered_skus]
         index = -1
@@ -115,9 +132,12 @@ def test_popularity(app, create_product_variants, prediction_pipeline):
         )
 
         for sku in variant_skus:
-            assert sku in predictions
+            if sku == "unittest4":
+                assert sku not in predictions
+            else:
+                assert sku in predictions
 
-        assert len(predictions) == len(ProductVariantModel.gets())
+        assert len(predictions) == len(ProductVariantModel.gets()) - 1
 
 
 def test_selection(app, create_product_variants, prediction_pipeline):
@@ -133,4 +153,7 @@ def test_selection(app, create_product_variants, prediction_pipeline):
         )
 
         for sku in variant_skus:
-            assert sku in predictions
+            if sku == "unittest4":
+                assert sku not in predictions
+            else:
+                assert sku in predictions

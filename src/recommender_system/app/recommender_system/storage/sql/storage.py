@@ -69,6 +69,22 @@ class SQLStorage(AbstractStorage):
                 if key == "pk":
                     column = getattr(sql_class, model_class.Meta.primary_key)
                 else:
+                    if "__" in key:
+                        field, operator = key.split("__")
+                        column = getattr(sql_class, field)
+                        if operator == "gt":
+                            query_filters.append(column > value)
+                        elif operator == "gte":
+                            query_filters.append(column >= value)
+                        elif operator == "lt":
+                            query_filters.append(column < value)
+                        elif operator == "lte":
+                            query_filters.append(column <= value)
+                        else:
+                            raise ValueError(
+                                f"Unknown operator {operator} on field {field}."
+                            )
+                        continue
                     column = getattr(sql_class, key)
                 query_filters.append(column == value)
 
