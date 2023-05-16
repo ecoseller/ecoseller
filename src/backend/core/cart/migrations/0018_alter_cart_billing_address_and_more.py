@@ -20,14 +20,6 @@ class Migration(migrations.Migration):
                 related_name="+",
                 to="country.billingaddress",
             ),
-            model_name="cart",
-            name="billing_address",
-            field=models.ForeignKey(
-                null=True,
-                on_delete=django.db.models.deletion.SET_NULL,
-                related_name="+",
-                to="country.billingaddress",
-            ),
         ),
         migrations.AlterField(
             model_name="cart",

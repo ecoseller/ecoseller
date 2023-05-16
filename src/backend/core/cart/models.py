@@ -9,7 +9,7 @@ from country.models import (
     ShippingAddress,
 )
 from product.models import ProductVariant
-from product.models import ProductVariant, Product
+from product.models import ProductVariant, Product, PriceList, ProductPrice
 from user.models import User
 from parler.models import TranslatableModel, TranslatedFields
 from django.core.validators import MaxValueValidator, MinValueValidator
