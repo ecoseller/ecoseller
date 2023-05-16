@@ -29,14 +29,12 @@ const CategorySelectForm = ({
 
   // load categories from API
   useEffect(() => {
-    getAllCategories()
-      .then((categories) => categories.data)
-      .then((categories) => {
-        const rows = categories.flatMap((category) => {
-          return flattenCategory(category);
-        });
-        setCategories(rows);
+    getAllCategories().then((categories) => {
+      const rows = categories.flatMap((category) => {
+        return flattenCategory(category);
       });
+      setCategories(rows);
+    });
   }, []);
 
   // const setCategory = (id: number) => {

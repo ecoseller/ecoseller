@@ -4,13 +4,9 @@ import DashboardLayout from "@/pages/dashboard/layout";
 import Container from "@mui/material/Container";
 import CategoryEditorWrapper from "@/components/Dashboard/Catalog/Categories/Editor/CategoryEditorWrapper";
 import { ICategoryDetail } from "@/types/category";
-import { deleteCategory, getCategory } from "@/api/category/category";
 import { useRouter } from "next/router";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import EditorCard from "@/components/Dashboard/Generic/EditorCard";
-import CollapsableContentWithTitle from "@/components/Dashboard/Generic/CollapsableContentWithTitle";
-import Box from "@mui/material/Box";
+import { NextApiRequest, NextApiResponse } from "next";
+import { categoryDetailAPI } from "@/pages/api/category/[id]";
 
 interface ICategoryEditPageProps {
   category: ICategoryDetail;
@@ -35,9 +31,15 @@ const CategoryEditPage = ({ category }: ICategoryEditPageProps) => {
 };
 
 export const getServerSideProps = async (context: any) => {
+  const { req, res } = context;
   const { id } = context.params;
 
-  const category = await getCategory(id);
+  const category = await categoryDetailAPI(
+    "GET",
+    id,
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
 
   return {
     props: {

@@ -109,8 +109,8 @@ const CategoryEditorWrapper = ({
   const save = async () => {
     if (creatingNew) {
       addCategory(category)
-        .then((res) => {
-          const { id } = res.data;
+        .then((data) => {
+          const { id } = data;
           router.push(`/dashboard/catalog/categories/edit/${id}`, undefined, {
             shallow: true,
           });

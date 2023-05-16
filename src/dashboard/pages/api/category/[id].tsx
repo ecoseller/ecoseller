@@ -12,7 +12,7 @@ import { HTTPMETHOD } from "@/types/common";
 
 export const categoryDetailAPI = async (
   method: HTTPMETHOD,
-  id: number,
+  id: string,
   req?: NextApiRequest,
   res?: NextApiResponse,
   body?: any
@@ -53,8 +53,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { method } = req;
   if (method == "PUT" || method == "DELETE" || method == "GET") {
-    return categoryDetailAPI(method, Number(id), req, res, body).then((data) =>
-      res.status(200).json(data)
+    return categoryDetailAPI(method, id?.toString() || "", req, res, body).then(
+      (data) => res.status(200).json(data)
     );
   }
   return res.status(400).json({ message: "Method not supported" });
