@@ -1,18 +1,19 @@
+import os
 import uuid
 
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from parler.models import TranslatableModel, TranslatedFields
+
 from country.models import (
     Country,
     Currency,
     VatGroup,
-    BillingAddress,
-    ShippingAddress,
+    BillingInfo,
+    ShippingInfo,
 )
 from product.models import ProductVariant, Product, PriceList, ProductPrice
 from user.models import User
-from parler.models import TranslatableModel, TranslatedFields
-from django.core.validators import MaxValueValidator, MinValueValidator
-import os
 
 
 def get_shipping_method_image_path(instance, filename):
@@ -129,13 +130,13 @@ class Cart(models.Model):
     pricelist = models.ForeignKey(PriceList, null=True, on_delete=models.SET_NULL)
 
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    billing_address = models.ForeignKey(
-        BillingAddress, null=True, on_delete=models.SET_NULL, related_name="+"
+    billing_info = models.ForeignKey(
+        BillingInfo, null=True, on_delete=models.SET_NULL, related_name="+"
     )
     # "+" means no backwards relation
     # (see https://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey.related_name)
-    shipping_address = models.ForeignKey(
-        ShippingAddress, null=True, on_delete=models.SET_NULL, related_name="+"
+    shipping_info = models.ForeignKey(
+        ShippingInfo, null=True, on_delete=models.SET_NULL, related_name="+"
     )
     payment_method_country = models.ForeignKey(
         PaymentMethodCountry, null=True, on_delete=models.SET_NULL, related_name="+"
