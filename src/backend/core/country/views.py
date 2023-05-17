@@ -19,8 +19,8 @@ from .serializers import (
     CountrySerializer,
     CurrencySerializer,
     VatGroupSerializer,
-    ShippingAddressSerializer,
-    BillingAddressSerializer,
+    ShippingInfoSerializer,
+    BillingInfoSerializer,
 )
 
 DEFAULT_LANGUAGE_CODE = settings.PARLER_DEFAULT_LANGUAGE_CODE
@@ -197,7 +197,7 @@ class ShippingAddressDetailView(RetrieveUpdateDestroyAPIView):
         "DELETE",
     ]
     authentication_classes = []
-    serializer_class = ShippingAddressSerializer
+    serializer_class = ShippingInfoSerializer
     lookup_field = "id"
     lookup_url_kwarg = "id"
 
@@ -217,7 +217,7 @@ class BillingAddressDetailView(RetrieveUpdateDestroyAPIView):
         "DELETE",
     ]
     authentication_classes = []
-    serializer_class = BillingAddressSerializer
+    serializer_class = BillingInfoSerializer
     lookup_field = "id"
     lookup_url_kwarg = "id"
 

@@ -130,12 +130,12 @@ class Cart(models.Model):
     pricelist = models.ForeignKey(PriceList, null=True, on_delete=models.SET_NULL)
 
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    billing_address = models.ForeignKey(
+    billing_info = models.ForeignKey(
         BillingInfo, null=True, on_delete=models.SET_NULL, related_name="+"
     )
     # "+" means no backwards relation
     # (see https://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey.related_name)
-    shipping_address = models.ForeignKey(
+    shipping_info = models.ForeignKey(
         ShippingInfo, null=True, on_delete=models.SET_NULL, related_name="+"
     )
     payment_method_country = models.ForeignKey(

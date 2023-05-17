@@ -1,9 +1,3 @@
-import filetype
-from drf_extra_fields.fields import Base64FileField
-from parler_rest.serializers import (
-    TranslatableModelSerializer,
-    TranslatedFieldsField,
-)
 from rest_framework.serializers import (
     ModelSerializer,
     Serializer,
@@ -32,8 +26,8 @@ from country.models import (
 )
 from country.serializers import (
     CountrySerializer,
-    ShippingAddressSerializer,
-    BillingAddressSerializer,
+    ShippingInfoSerializer,
+    BillingInfoSerializer,
 )
 from product.models import (
     Product,
@@ -93,20 +87,20 @@ class CartSerializer(ModelSerializer):
 
     cart_items = CartItemSerializer(many=True, read_only=True)
     country = CountrySerializer(read_only=True)
-    shipping_address_id = PrimaryKeyRelatedField(
+    shipping_info_id = PrimaryKeyRelatedField(
         queryset=ShippingInfo.objects.all(),
-        source="shipping_address",
+        source="shipping_info",
         write_only=True,
         required=False,
     )
-    billing_address_id = PrimaryKeyRelatedField(
+    billing_info_id = PrimaryKeyRelatedField(
         queryset=BillingInfo.objects.all(),
-        source="billing_address",
+        source="billing_info",
         write_only=True,
         required=False,
     )
-    shipping_address = ShippingAddressSerializer(read_only=True)
-    billing_address = BillingAddressSerializer(read_only=True)
+    shipping_info = ShippingInfoSerializer(read_only=True)
+    billing_info = BillingInfoSerializer(read_only=True)
 
     class Meta:
         model = Cart
@@ -116,10 +110,10 @@ class CartSerializer(ModelSerializer):
             "update_at",
             "create_at",
             "cart_items",
-            "shipping_address_id",
-            "billing_address_id",
-            "shipping_address",
-            "billing_address",
+            "shipping_info_id",
+            "billing_info_id",
+            "shipping_info",
+            "billing_info",
         )
 
 
