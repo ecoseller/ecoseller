@@ -1,28 +1,27 @@
-from rest_framework.views import APIView
+from django.conf import settings
+from rest_framework import permissions
 from rest_framework.generics import (
     GenericAPIView,
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView,
 )
 from rest_framework.response import Response
-from rest_framework import permissions
-from django.conf import settings
+from rest_framework.views import APIView
 
 from .models import (
     Country,
     Currency,
     VatGroup,
-    ShippingAddress,
-    BillingAddress,
+    ShippingInfo,
+    BillingInfo,
 )
 from .serializers import (
     CountrySerializer,
     CurrencySerializer,
     VatGroupSerializer,
-    ShippingAddressSerializer,
-    BillingAddressSerializer,
+    ShippingInfoSerializer,
+    BillingInfoSerializer,
 )
-
 
 DEFAULT_LANGUAGE_CODE = settings.PARLER_DEFAULT_LANGUAGE_CODE
 LANGUAGES = settings.PARLER_LANGUAGES[None]
@@ -198,12 +197,12 @@ class ShippingAddressDetailView(RetrieveUpdateDestroyAPIView):
         "DELETE",
     ]
     authentication_classes = []
-    serializer_class = ShippingAddressSerializer
+    serializer_class = ShippingInfoSerializer
     lookup_field = "id"
     lookup_url_kwarg = "id"
 
     def get_queryset(self):
-        return ShippingAddress.objects.all()
+        return ShippingInfo.objects.all()
 
 
 class BillingAddressDetailView(RetrieveUpdateDestroyAPIView):
@@ -218,9 +217,9 @@ class BillingAddressDetailView(RetrieveUpdateDestroyAPIView):
         "DELETE",
     ]
     authentication_classes = []
-    serializer_class = BillingAddressSerializer
+    serializer_class = BillingInfoSerializer
     lookup_field = "id"
     lookup_url_kwarg = "id"
 
     def get_queryset(self):
-        return BillingAddress.objects.all()
+        return BillingInfo.objects.all()

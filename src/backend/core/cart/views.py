@@ -2,10 +2,16 @@ from abc import ABC, abstractmethod
 
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.decorators import permission_classes
+from rest_framework.generics import ListCreateAPIView
 from rest_framework.generics import RetrieveAPIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework.mixins import CreateModelMixin
+from rest_framework.parsers import (
+    MultiPartParser,
+    FormParser,
+    JSONParser,
+)
 from rest_framework.permissions import AllowAny
-
 from rest_framework.response import Response
 from rest_framework.status import (
     HTTP_404_NOT_FOUND,
@@ -14,8 +20,6 @@ from rest_framework.status import (
     HTTP_201_CREATED,
 )
 from rest_framework.views import APIView
-from rest_framework.generics import ListCreateAPIView
-from rest_framework.generics import RetrieveUpdateDestroyAPIView
 
 from cart.models import (
     Cart,
@@ -38,16 +42,10 @@ from cart.serializers import (
     CartTokenSerializer,
 )
 from country.serializers import (
-    BillingAddressSerializer,
-    ShippingAddressSerializer,
+    BillingInfoSerializer,
+    ShippingInfoSerializer,
 )
 from product.models import ProductVariant, ProductPrice
-
-from rest_framework.parsers import (
-    MultiPartParser,
-    FormParser,
-    JSONParser,
-)
 
 
 @permission_classes([AllowAny])  # TODO: use authentication
@@ -194,43 +192,43 @@ class CartUpdateQuantityStorefrontView(APIView):
             return Response(status=HTTP_404_NOT_FOUND)
 
 
-class CartUpdateAddressBaseStorefrontView(APIView, ABC):
+class CartUpdateInfoBaseStorefrontView(APIView, ABC):
     """
-    Base view for updating cart's billing/shipping address.
-    Do not use this view directly, use inherited classes instead (and implement `_set_address` method)
+    Base view for updating cart's billing/shipping info
+    Do not use this view directly, use inherited classes instead (and implement `_set_info` method)
     """
 
-    address_serializer = (
-        None  # set in inherited classes (Billing/Shipping address serializers)
+    info_serializer = (
+        None  # set in inherited classes (Billing/Shipping info serializers)
     )
 
     @abstractmethod
-    def _set_address(self, cart, address):
+    def _set_info(self, cart, info):
         """
-        Set desired type of address
+        Set desired type of info
         """
         pass
 
     @abstractmethod
-    def _get_address(self, cart):
+    def _get_info(self, cart):
         """
-        Get desired type of address
+        Get desired type of info
         """
         pass
 
     def put(self, request, token):
         try:
             cart = Cart.objects.get(token=token)
-            if self._get_address(cart) is not None:
-                # if we have address already, update it
-                address = self._get_address(cart)
-                serializer = self.address_serializer(address, data=request.data)
+            if self._get_info(cart) is not None:
+                # if we have info already, update it
+                info = self._get_info(cart)
+                serializer = self.info_serializer(info, data=request.data)
             else:
-                # if we don't have address, create it
-                serializer = self.address_serializer(data=request.data)
+                # if we don't have info, create it
+                serializer = self.info_serializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
-                self._set_address(cart, address)
+                self._set_info(cart, info)
                 return Response(status=HTTP_204_NO_CONTENT)
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
         except Cart.DoesNotExist:
@@ -238,35 +236,35 @@ class CartUpdateAddressBaseStorefrontView(APIView, ABC):
 
 
 @permission_classes([AllowAny])
-class CartUpdateBillingAddressStorefrontView(CartUpdateAddressBaseStorefrontView):
+class CartUpdateBillingInfoStorefrontView(CartUpdateInfoBaseStorefrontView):
     """
-    View for updating cart's billing address
+    View for updating cart's billing info
     """
 
-    address_serializer = BillingAddressSerializer
+    info_serializer = BillingInfoSerializer
 
-    def _set_address(self, cart, address):
-        cart.billing_address = address
+    def _set_info(self, cart, info):
+        cart.billing_info = info
         cart.save()
 
-    def _get_address(self, cart):
-        return cart.billing_address
+    def _get_info(self, cart):
+        return cart.billing_info
 
 
 @permission_classes([AllowAny])
-class CartUpdateShippingAddressStorefrontView(CartUpdateAddressBaseStorefrontView):
+class CartUpdateShippingInfoStorefrontView(CartUpdateInfoBaseStorefrontView):
     """
-    View for updating cart's shipping address
+    View for updating cart's shipping info
     """
 
-    address_serializer = ShippingAddressSerializer
+    info_serializer = ShippingInfoSerializer
 
-    def _set_address(self, cart, address):
-        cart.shipping_address = address
+    def _set_info(self, cart, info):
+        cart.shipping_info = info
         cart.save()
 
-    def _get_address(self, cart):
-        return cart.shipping_address
+    def _get_info(self, cart):
+        return cart.shipping_info
 
 
 class CartUpdateMethodBaseStorefrontView(APIView, ABC):

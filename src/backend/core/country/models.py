@@ -118,9 +118,9 @@ class Address(models.Model):
         abstract = True
 
 
-class BillingAddress(Address):
+class BillingInfo(Address):
     """
-    Object representing billing address
+    Object representing billing info of an order
     """
 
     company_name = models.CharField(max_length=255, blank=True, null=True)
@@ -136,9 +136,9 @@ class BillingAddress(Address):
         verbose_name_plural = "Billing Addresses"
 
 
-class ShippingAddress(Address):
+class ShippingInfo(Address):
     """
-    Object representing shipping address
+    Object representing shipping info of an order
     """
 
     email = models.EmailField(max_length=255, blank=True, null=True)

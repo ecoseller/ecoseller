@@ -1,6 +1,6 @@
 from django.urls import path
-from . import views
 
+from . import views
 
 urlpatterns = [
     path("dashboard/payment/method/", views.PaymentMethodListDashboardView.as_view()),
@@ -40,12 +40,12 @@ urlpatterns = [
         views.CartUpdateQuantityStorefrontView.as_view(),
     ),
     path(
-        "storefront/<str:token>/billing-address/",
-        views.CartUpdateBillingAddressStorefrontView.as_view(),
+        "storefront/<str:token>/billing-info/",
+        views.CartUpdateBillingInfoStorefrontView.as_view(),
     ),
     path(
-        "storefront/<str:token>/shipping-address/",
-        views.CartUpdateShippingAddressStorefrontView.as_view(),
+        "storefront/<str:token>/shipping-info/",
+        views.CartUpdateShippingInfoStorefrontView.as_view(),
     ),
     path(
         "storefront/<str:token>/payment-method/<int:id>/",
