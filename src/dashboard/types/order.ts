@@ -9,5 +9,5 @@ export interface IOrder {
   token: string;
   create_at: string;
   status: OrderStatus;
-  customer_name: string;
+  customer_email: string;
 }

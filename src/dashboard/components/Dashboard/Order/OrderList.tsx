@@ -29,8 +29,8 @@ export const OrderList = ({ orders }: IOrderListProps) => {
       flex: 1,
     },
     {
-      field: "customer_name",
-      headerName: "Customer",
+      field: "customer_email",
+      headerName: "Customer email",
       editable: false,
       flex: 1,
     },
