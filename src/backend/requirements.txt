@@ -14,6 +14,7 @@ Django==4.0.3
 django-ckeditor==6.5.1
 django-cors-headers==3.12.0
 django-editorjs-fields==0.2.7
+django-enumchoicefield==3.0.1
 django-fsm==2.6.0
 django-js-asset==2.0.0
 django-mptt==0.14.0
