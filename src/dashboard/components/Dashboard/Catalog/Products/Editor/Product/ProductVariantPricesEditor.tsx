@@ -94,10 +94,10 @@ const ProductVariantPricesEditor = ({
 
     const variantsToSet = rows.map(
       (row) =>
-      ({
-        ...(row as IProductVariant),
-        price: serializeProductVariantPricesFromRow(row, pricelistsData),
-      } as IProductVariant)
+        ({
+          ...(row as IProductVariant),
+          price: serializeProductVariantPricesFromRow(row, pricelistsData),
+        } as IProductVariant)
     );
     console.log("settingrows2", rows, variantsToSet);
 
@@ -122,33 +122,33 @@ const ProductVariantPricesEditor = ({
     },
     ...(pricelistsData
       ? pricelistsData?.flatMap((pricelist: IPriceList) => {
-        const priceColumn = {
-          field: `$PRICE_${pricelist.code}_price`,
-          headerName: `Price`,
-          editable: hasPermission,
-          width: 125,
-          minWidth: 150,
-          maxWidth: 200,
-          sortable: false,
-          disableColumnMenu: true,
-          valueFormatter: ({ value }: { value: number }) =>
-            value ? `${value} ${pricelist?.currency}` : null,
-        };
+          const priceColumn = {
+            field: `$PRICE_${pricelist.code}_price`,
+            headerName: `Price`,
+            editable: hasPermission,
+            width: 125,
+            minWidth: 150,
+            maxWidth: 200,
+            sortable: false,
+            disableColumnMenu: true,
+            valueFormatter: ({ value }: { value: number }) =>
+              value ? `${value} ${pricelist?.currency}` : null,
+          };
 
-        const discountColumn = {
-          field: `$PRICE_${pricelist.code}_discount`,
-          headerName: `Discount`,
-          editable: hasPermission,
-          width: 125,
-          minWidth: 150,
-          maxWidth: 200,
-          sortable: false,
-          disableColumnMenu: true,
-          valueFormatter: ({ value }: { value: number }) =>
-            value ? `${value} %` : null,
-        };
-        return [priceColumn, discountColumn];
-      })
+          const discountColumn = {
+            field: `$PRICE_${pricelist.code}_discount`,
+            headerName: `Discount`,
+            editable: hasPermission,
+            width: 125,
+            minWidth: 150,
+            maxWidth: 200,
+            sortable: false,
+            disableColumnMenu: true,
+            valueFormatter: ({ value }: { value: number }) =>
+              value ? `${value} %` : null,
+          };
+          return [priceColumn, discountColumn];
+        })
       : []), // <-- this generates pricelist columns
 
     //   ({
