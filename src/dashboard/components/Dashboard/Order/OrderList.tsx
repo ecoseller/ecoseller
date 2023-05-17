@@ -17,32 +17,28 @@ export const OrderList = ({ orders }: IOrderListProps) => {
       headerName: "#",
       editable: false,
       flex: 1,
-      sortable: false,
-      disableColumnMenu: true,
+      renderCell: (params) => {
+        return <span>{params.value}</span>;
+      },
+      minWidth: 300,
     },
     {
       field: "create_at",
       headerName: "Created at",
       editable: false,
       flex: 1,
-      sortable: false,
-      disableColumnMenu: true,
     },
     {
       field: "status",
       headerName: "Status",
       editable: false,
       flex: 1,
-      sortable: false,
-      disableColumnMenu: true,
     },
     {
       field: "customer_name",
       headerName: "Customer",
       editable: false,
       flex: 1,
-      sortable: false,
-      disableColumnMenu: true,
     },
     {
       field: "actions",
