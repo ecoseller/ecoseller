@@ -31,7 +31,8 @@ from product.models import (
     Product,
 )
 from product.serializers import (
-    PriceList, )
+    PriceList,
+)
 
 
 class FileImageField(Base64FileField):
@@ -57,7 +58,7 @@ class CartItemDetailSerializer(ModelSerializer):
             "unit_price_gross",
             "unit_price_net",
             "quantity",
-            "discount"
+            "discount",
         )
 
 
@@ -101,12 +102,7 @@ class CartSerializer(ModelSerializer):
 
     class Meta:
         model = Cart
-        fields = (
-            "cart_items",
-            "update_at",
-            "currency_symbol",
-            "symbol_position"
-        )
+        fields = ("cart_items", "update_at", "currency_symbol", "symbol_position")
 
     def get_currency_symbol(self, obj):
         return obj.pricelist.currency.symbol
@@ -156,10 +152,7 @@ class CartItemUpdateSerializer(Serializer):
     quantity = IntegerField(min_value=1)
 
     def create(self, validated_data):
-        return CartItemUpdateData(
-            validated_data["sku"],
-            validated_data["quantity"]
-        )
+        return CartItemUpdateData(validated_data["sku"], validated_data["quantity"])
 
 
 class CartItemUpdateData:

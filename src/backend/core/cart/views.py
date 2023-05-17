@@ -37,7 +37,8 @@ from cart.serializers import (
     PaymentMethodCountrySerializer,
     PaymentMethodCountryFullSerializer,
     CartTokenSerializer,
-    CartItemUpdateSerializer, CartSerializer,
+    CartItemUpdateSerializer,
+    CartSerializer,
 )
 from country.serializers import (
     BillingInfoSerializer,
