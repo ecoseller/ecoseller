@@ -30,7 +30,6 @@ export type ContextPermissions =
 
 interface IPermissionContextProps {
   hasPermission: boolean;
-  permissions: ContextPermissions[];
 }
 
 interface IPermissionProviderProps {
@@ -38,7 +37,9 @@ interface IPermissionProviderProps {
   allowedPermissions?: ContextPermissions[];
 }
 
-const PermissionContext = createContext<Partial<IPermissionContextProps>>({});
+const PermissionContext = createContext<IPermissionContextProps>({
+  hasPermission: true,
+});
 
 export const PermissionProvider = ({
   children,
@@ -74,6 +75,13 @@ export const PermissionProvider = ({
     }
   };
 
+  console.log(
+    "allowedPermissions",
+    allowedPermissions,
+    permissions,
+    hasPermission
+  );
+
   const checkHasPermission = async () => {
     console.log("checkHasPermission");
     if (allowedPermissions?.length == 0) {
@@ -106,4 +114,5 @@ export const PermissionProvider = ({
   );
 };
 
-export const usePermission = (): any => useContext(PermissionContext);
+export const usePermission = (): IPermissionContextProps =>
+  useContext(PermissionContext);

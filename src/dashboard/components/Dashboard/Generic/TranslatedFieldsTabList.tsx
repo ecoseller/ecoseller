@@ -62,7 +62,7 @@ const TranslatedFieldsTab = ({
     }
   }, [state?.title]);
 
-  console.log("Tab rendered");
+  console.log("Tab rendered", hasPermission);
 
   return (
     <FormControl fullWidth margin={"normal"}>
@@ -133,6 +133,7 @@ const TranslatedFieldsTab = ({
           <TextField
             label="Description"
             value={state?.description || ""}
+            disabled={!hasPermission}
             onChange={(
               e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
             ) => {
