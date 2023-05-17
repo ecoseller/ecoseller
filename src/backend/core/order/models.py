@@ -30,5 +30,5 @@ class Order(models.Model):
     )
 
     @property
-    def customer_name(self):
-        return f"{self.cart.billing_address.first_name} {self.cart.billing_address.surname}"
+    def customer_email(self):
+        return self.cart.shipping_address.email

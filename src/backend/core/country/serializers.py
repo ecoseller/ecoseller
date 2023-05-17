@@ -2,15 +2,15 @@ from rest_framework.serializers import (
     ModelSerializer,
     PrimaryKeyRelatedField,
 )
+
 from country.models import (
     Country,
     Currency,
     VatGroup,
     Address,
-    ShippingAddress,
-    BillingAddress,
+    ShippingInfo,
+    BillingInfo,
 )
-
 from user.models import User
 
 
@@ -88,7 +88,7 @@ class ShippingAddressSerializer(ModelSerializer):
     )
 
     class Meta:
-        model = ShippingAddress
+        model = ShippingInfo
         fields = "__all__"
 
 
@@ -104,5 +104,5 @@ class BillingAddressSerializer(ModelSerializer):
     )
 
     class Meta:
-        model = BillingAddress
+        model = BillingInfo
         fields = "__all__"

@@ -1,3 +1,9 @@
+import filetype
+from drf_extra_fields.fields import Base64FileField
+from parler_rest.serializers import (
+    TranslatableModelSerializer,
+    TranslatedFieldsField,
+)
 from rest_framework.serializers import (
     ModelSerializer,
     Serializer,
@@ -5,9 +11,7 @@ from rest_framework.serializers import (
     IntegerField,
     PrimaryKeyRelatedField,
 )
-from core.mixins import (
-    TranslatedSerializerMixin,
-)
+
 from cart.models import (
     Cart,
     CartItem,
@@ -16,39 +20,29 @@ from cart.models import (
     PaymentMethod,
     PaymentMethodCountry,
 )
+from core.mixins import (
+    TranslatedSerializerMixin,
+)
+from country.models import (
+    Country,
+)
+from country.models import (
+    ShippingInfo,
+    BillingInfo,
+)
 from country.serializers import (
     CountrySerializer,
     ShippingAddressSerializer,
     BillingAddressSerializer,
 )
-
-from country.models import (
-    ShippingAddress,
-    BillingAddress,
-)
-
-from country.models import (
-    Country,
-)
-
 from product.models import (
     Product,
 )
-
 from product.serializers import (
     ProductCartSerializer,
     ProductVariantCartSerializer,
     PriceList,
 )
-
-from drf_extra_fields.fields import Base64FileField
-
-from parler_rest.serializers import (
-    TranslatableModelSerializer,
-    TranslatedFieldsField,
-)
-
-import filetype
 
 
 class FileImageField(Base64FileField):
@@ -100,13 +94,13 @@ class CartSerializer(ModelSerializer):
     cart_items = CartItemSerializer(many=True, read_only=True)
     country = CountrySerializer(read_only=True)
     shipping_address_id = PrimaryKeyRelatedField(
-        queryset=ShippingAddress.objects.all(),
+        queryset=ShippingInfo.objects.all(),
         source="shipping_address",
         write_only=True,
         required=False,
     )
     billing_address_id = PrimaryKeyRelatedField(
-        queryset=BillingAddress.objects.all(),
+        queryset=BillingInfo.objects.all(),
         source="billing_address",
         write_only=True,
         required=False,

@@ -17,4 +17,4 @@ class OrderListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ("token", "create_at", "status", "customer_name")
+        fields = ("token", "create_at", "status", "customer_email")

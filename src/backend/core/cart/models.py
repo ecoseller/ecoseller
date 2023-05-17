@@ -1,18 +1,19 @@
+import os
 import uuid
 
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from parler.models import TranslatableModel, TranslatedFields
+
 from country.models import (
     Country,
     Currency,
     VatGroup,
-    BillingAddress,
-    ShippingAddress,
+    BillingInfo,
+    ShippingInfo,
 )
 from product.models import ProductVariant, Product, PriceList, ProductPrice
 from user.models import User
-from parler.models import TranslatableModel, TranslatedFields
-from django.core.validators import MaxValueValidator, MinValueValidator
-import os
 
 
 def get_shipping_method_image_path(instance, filename):
@@ -130,12 +131,12 @@ class Cart(models.Model):
 
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     billing_address = models.ForeignKey(
-        BillingAddress, null=True, on_delete=models.SET_NULL, related_name="+"
+        BillingInfo, null=True, on_delete=models.SET_NULL, related_name="+"
     )
     # "+" means no backwards relation
     # (see https://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey.related_name)
     shipping_address = models.ForeignKey(
-        ShippingAddress, null=True, on_delete=models.SET_NULL, related_name="+"
+        ShippingInfo, null=True, on_delete=models.SET_NULL, related_name="+"
     )
     payment_method_country = models.ForeignKey(
         PaymentMethodCountry, null=True, on_delete=models.SET_NULL, related_name="+"
@@ -149,7 +150,7 @@ class Cart(models.Model):
         Recalculate cart prices.
         """
         if (self.pricelist and self.pricelist.code == pricelist.code) and (
-            self.country.code == country.code
+                self.country.code == country.code
         ):
             # if pricelist and country is the same as before, we don't need to recalculate
             return
