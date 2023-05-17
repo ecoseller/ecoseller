@@ -40,6 +40,7 @@ import { shippingMethodCountryListAPI } from "@/pages/api/cart/shipping-method/[
 import ShippingMethodCountryEditor from "@/components/Dashboard/Cart/Methods/Shipping/ShippingMethodCountryEditor";
 import { ICurrency } from "@/types/localization";
 import { paymentMethodCountryFullListAPI } from "@/pages/api/cart/payment-method/country";
+import { useSnackbarState } from "@/utils/snackbar";
 
 export interface ISetShippingMethodStateAction {
   type: ActionSetShippingMethod;
@@ -117,11 +118,7 @@ const DashboardShippingMethodDetailPage = ({
         }
   );
 
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   const handleSnackbarClose = (
     event?: React.SyntheticEvent | Event,

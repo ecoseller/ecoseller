@@ -34,6 +34,7 @@ import { randomId } from "@mui/x-data-grid-generator";
 // types
 import { IProductType, ISetProductStateData } from "@/types/product";
 import { ICountry, IVatGroup } from "@/types/country";
+import { useSnackbarState } from "@/utils/snackbar";
 
 interface IProductTypeVatGroupProps {
   state: IProductType;
@@ -73,11 +74,7 @@ const ProductTypeVatGroup = ({
 
   console.log("selectedVatGroups", selectedVatGroups);
 
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   const handleSnackbarClose = (
     event?: React.SyntheticEvent | Event,

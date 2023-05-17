@@ -41,6 +41,7 @@ import {
   postCurrency,
   putCurrency,
 } from "@/api/country/country";
+import { useSnackbarState } from "@/utils/snackbar";
 
 interface ICurrencyTable extends ICurrency {
   isNew?: boolean;
@@ -85,11 +86,7 @@ const DashboardCurrencyPage = () => {
     mutate,
   } = useSWR<ICurrency[]>("/country/currency/");
 
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   useEffect(() => {
     if (currenciesError) {

@@ -6,7 +6,11 @@ import { ILanguage } from "@/types/localization";
 import EditableContentWrapper, {
   PrimaryButtonAction,
 } from "@/components/Dashboard/Generic/EditableContentWrapper";
-import { addCategory, updateCategory } from "@/api/category/category";
+import {
+  addCategory,
+  deleteCategory,
+  updateCategory,
+} from "@/api/category/category";
 import { useRouter } from "next/router";
 import { ICategoryEditable } from "@/types/category";
 import EntityVisibilityForm from "@/components/Dashboard/Generic/Forms/EntityVisibilityForm";
@@ -15,6 +19,13 @@ import TranslatedSEOFieldsTabList from "@/components/Dashboard/Generic/Translate
 import { IDispatchWrapper } from "@/components/Dashboard/Common/IDispatchWrapper";
 import { OutputData } from "@editorjs/editorjs";
 import TranslatedFieldsTabList from "@/components/Dashboard/Generic/TranslatedFieldsTabList";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Box from "@mui/material/Box";
+import EditorCard from "@/components/Dashboard/Generic/EditorCard";
+import Button from "@mui/material/Button";
+import { generalSnackbarError, useSnackbarState } from "@/utils/snackbar";
+import SnackbarWithAlert from "@/components/Dashboard/Generic/SnackbarWithAlert";
+import DeleteEntityButton from "@/components/Dashboard/Generic/DeleteEntityButton";
 
 interface ICategoryEditorWrapperProps {
   initialCategory: ICategoryEditable;
@@ -79,6 +90,7 @@ const CategoryEditorWrapper = ({
     reducer,
     initialCategory
   );
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   const router = useRouter();
 
@@ -97,13 +109,28 @@ const CategoryEditorWrapper = ({
 
   const save = async () => {
     if (creatingNew) {
-      addCategory(category).then(() => {
-        router.push("/dashboard/catalog/categories");
-      });
+      addCategory(category)
+        .then((data) => {
+          const { id } = data;
+          router.push(`/dashboard/catalog/categories/edit/${id}`, undefined, {
+            shallow: true,
+          });
+        })
+        .catch(() => {
+          setSnackbar(generalSnackbarError);
+        });
     } else {
-      updateCategory(categoryId, category).then(() => {
-        router.push("/dashboard/catalog/categories");
-      });
+      updateCategory(categoryId, category)
+        .then(() => {
+          setSnackbar({
+            open: true,
+            message: "Category updated",
+            severity: "success",
+          });
+        })
+        .catch(() => {
+          setSnackbar(generalSnackbarError);
+        });
     }
   };
 
@@ -114,7 +141,7 @@ const CategoryEditorWrapper = ({
     });
   };
 
-  const setParentCategory = (categoryId: number) => {
+  const setParentCategory = (categoryId: number | null) => {
     dispatchCategoryState({
       type: SetCategoryActionType.SetParentCategory,
       payload: { parent: categoryId },
@@ -189,6 +216,13 @@ const CategoryEditorWrapper = ({
     },
   };
 
+  async function deleteCat() {
+    setPreventNavigation(false);
+    deleteCategory(categoryId).then(() => {
+      router.push("/dashboard/catalog/categories");
+    });
+  }
+
   return (
     <EditableContentWrapper
       primaryButtonTitle={
@@ -228,6 +262,10 @@ const CategoryEditorWrapper = ({
           />
         </Grid>
       </Grid>
+      {creatingNew ? null : <DeleteEntityButton onDelete={deleteCat} />}
+      {snackbar ? (
+        <SnackbarWithAlert snackbarData={snackbar} setSnackbar={setSnackbar} />
+      ) : null}
     </EditableContentWrapper>
   );
 };

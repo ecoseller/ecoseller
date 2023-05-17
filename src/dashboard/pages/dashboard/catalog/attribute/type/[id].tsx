@@ -25,6 +25,7 @@ import { putAttributeType } from "@/api/product/attributes";
 import AttributeTypeGeneralInformation from "@/components/Dashboard/Catalog/AttributeType/AttributeTypeGeneralInformation";
 import BaseAttributeGrid from "@/components/Dashboard/Catalog/BaseAttribute/BaseAttributeGrid";
 import DeleteAttributeType from "@/components/Dashboard/Catalog/AttributeType/DeleteAttributeType";
+import { useSnackbarState } from "@/utils/snackbar";
 
 interface IProps {
   attributeType: IAttributeType;
@@ -34,11 +35,7 @@ const DashboardAttributeTypeDetailPage = ({ attributeType }: IProps) => {
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
   const [state, setState] = useState<IAttributeType>(attributeType);
 
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   const handleSnackbarClose = (
     event?: React.SyntheticEvent | Event,

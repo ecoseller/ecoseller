@@ -31,6 +31,7 @@ import { NextRequest } from "next/server";
 import { productAttributeTypeAPI } from "@/pages/api/product/attribute/type";
 import { productTypeDetailAPI } from "@/pages/api/product/type/[id]";
 import { vatGroupAPI } from "@/pages/api/country/vat-group";
+import { useSnackbarState } from "@/utils/snackbar";
 
 interface IProps {
   productType: IProductType;
@@ -48,11 +49,7 @@ const DashboardProductTypeDetailPage = ({
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
   const [state, setState] = useState<IProductType>(productType);
 
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   const handleSnackbarClose = (
     event?: React.SyntheticEvent | Event,

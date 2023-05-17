@@ -6,7 +6,7 @@ from recommender_system.models.stored.base import StoredBaseModel
 
 if TYPE_CHECKING:
     from recommender_system.managers.model_manager import ModelManager
-    from recommender_system.storage.abstract import AbstractStorage
+    from recommender_system.storage.product.abstract import AbstractProductStorage
 
 
 class ProductStoredBaseModel(StoredBaseModel):
@@ -16,28 +16,31 @@ class ProductStoredBaseModel(StoredBaseModel):
 
     @inject
     def __init__(
-        self, _storage: "AbstractStorage" = Provide["product_storage"], *args, **kwargs
+        self,
+        _storage: "AbstractProductStorage" = Provide["product_storage"],
+        *args,
+        **kwargs
     ):
         super().__init__(_storage=_storage, *args, **kwargs)
 
     @classmethod
     @inject
     def get_next_pk(
-        cls, storage: "AbstractStorage" = Provide["product_storage"]
+        cls, storage: "AbstractProductStorage" = Provide["product_storage"]
     ) -> int:
         return super().get_next_pk(storage=storage)
 
     @classmethod
     @inject
     def get(
-        cls, storage: "AbstractStorage" = Provide["product_storage"], **kwargs
+        cls, storage: "AbstractProductStorage" = Provide["product_storage"], **kwargs
     ) -> "StoredBaseModel":
         return super().get(storage=storage, **kwargs)
 
     @classmethod
     @inject
     def gets(
-        cls, storage: "AbstractStorage" = Provide["product_storage"], **kwargs
+        cls, storage: "AbstractProductStorage" = Provide["product_storage"], **kwargs
     ) -> List["StoredBaseModel"]:
         return super().gets(storage=storage, **kwargs)
 

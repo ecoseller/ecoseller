@@ -33,6 +33,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { IAttributeType, IAttributeTypePostRequest } from "@/types/product";
 // api
 import { postAttributeType } from "@/api/product/attributes";
+import { useSnackbarState } from "@/utils/snackbar";
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -93,11 +94,7 @@ const DashboardAttributeTypePage = () => {
   const [rows, setRows] = useState<IAttributeType[]>([]);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   const router = useRouter();
 

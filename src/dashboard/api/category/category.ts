@@ -1,4 +1,3 @@
-import { axiosPrivate } from "@/utils/axiosPrivate";
 import {
   ICategoryLocalized,
   ICategoryEditable,
@@ -9,7 +8,9 @@ import {
  * Get list of all categories
  */
 export const getAllCategories = async () => {
-  return await axiosPrivate.get<ICategoryLocalized[]>("/category/dashboard/");
+  return fetch("/api/category/")
+    .then((res) => res.json())
+    .then((data) => data as ICategoryLocalized[]);
 };
 
 /**
@@ -17,7 +18,12 @@ export const getAllCategories = async () => {
  * @param categoryToAdd
  */
 export const addCategory = async (categoryToAdd: ICategoryEditable) => {
-  return await axiosPrivate.post("/category/dashboard/", categoryToAdd);
+  return fetch("/api/category/", {
+    method: "POST",
+    body: JSON.stringify(categoryToAdd),
+  })
+    .then((res) => res.json())
+    .then((data) => data as ICategoryDetail);
 };
 
 /**
@@ -25,7 +31,9 @@ export const addCategory = async (categoryToAdd: ICategoryEditable) => {
  * @param id
  */
 export const getCategory = async (id: string) => {
-  return await axiosPrivate.get<ICategoryDetail>(`/category/dashboard/${id}/`);
+  return fetch(`/api/category/${id}`)
+    .then((res) => res.json())
+    .then((data) => data as ICategoryDetail);
 };
 
 /**
@@ -37,7 +45,10 @@ export const updateCategory = async (
   id: string,
   updatedCategory: ICategoryEditable
 ) => {
-  return await axiosPrivate.put(`/category/dashboard/${id}/`, updatedCategory);
+  return fetch(`/api/category/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(updatedCategory),
+  }).then((res) => res.json());
 };
 
 /**
@@ -45,5 +56,7 @@ export const updateCategory = async (
  * @param id
  */
 export const deleteCategory = async (id: string) => {
-  return await axiosPrivate.delete(`/category/dashboard/${id}/`);
+  return fetch(`/api/category/${id}`, {
+    method: "DELETE",
+  }).then((res) => res.json());
 };

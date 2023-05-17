@@ -1,10 +1,17 @@
 import uuid
 
 from django.db import models
-from country.models import Country, Currency, VatGroup, Address
-from product.models import ProductVariant
+from country.models import (
+    Country,
+    Currency,
+    VatGroup,
+    BillingAddress,
+    ShippingAddress,
+)
+from product.models import ProductVariant, Product, PriceList, ProductPrice
 from user.models import User
 from parler.models import TranslatableModel, TranslatedFields
+from django.core.validators import MaxValueValidator, MinValueValidator
 import os
 
 
@@ -119,14 +126,16 @@ class Cart(models.Model):
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
 
+    pricelist = models.ForeignKey(PriceList, null=True, on_delete=models.SET_NULL)
+
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     billing_address = models.ForeignKey(
-        Address, null=True, on_delete=models.SET_NULL, related_name="+"
+        BillingAddress, null=True, on_delete=models.SET_NULL, related_name="+"
     )
     # "+" means no backwards relation
     # (see https://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey.related_name)
     shipping_address = models.ForeignKey(
-        Address, null=True, on_delete=models.SET_NULL, related_name="+"
+        ShippingAddress, null=True, on_delete=models.SET_NULL, related_name="+"
     )
     payment_method_country = models.ForeignKey(
         PaymentMethodCountry, null=True, on_delete=models.SET_NULL, related_name="+"
@@ -134,6 +143,23 @@ class Cart(models.Model):
     shipping_method_country = models.ForeignKey(
         ShippingMethodCountry, null=True, on_delete=models.SET_NULL, related_name="+"
     )
+
+    def recalculate(self, pricelist: PriceList, country: Country):
+        """
+        Recalculate cart prices.
+        """
+        if (self.pricelist and self.pricelist.code == pricelist.code) and (
+            self.country.code == country.code
+        ):
+            # if pricelist and country is the same as before, we don't need to recalculate
+            return
+
+        self.pricelist = pricelist
+        self.country = country
+        self.save()
+
+        for cart_item in self.cart_items.all():
+            cart_item.recalculate(pricelist, country)
 
 
 class CartItem(models.Model):
@@ -147,10 +173,40 @@ class CartItem(models.Model):
     product_variant = models.ForeignKey(
         ProductVariant, null=True, on_delete=models.SET_NULL
     )
+    product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
     unit_price_gross = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True
     )
     unit_price_net = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True
     )
+    discount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+    )  # this is supposed to be discount in percentage
+
     quantity = models.IntegerField(default=1)
+
+    def recalculate(self, pricelist, country):
+        # recalculate price for this cart item based on pricelist and country
+        price = ProductPrice.objects.get(
+            product_variant=self.product_variant, price_list=pricelist
+        )
+        vat = self.product.type.vat_groups.all().filter(country=country).first()
+        if vat:
+            vat = vat.vat
+        else:
+            vat = 0
+
+        self.unit_price_gross = (
+            price.price if not price.discount else price.discounted_price
+        )
+        self.unit_price_net = (
+            price.price_incl_vat(vat)
+            if not price.discount
+            else price.discounted_price_incl_vat(vat)
+        )
+        self.save()

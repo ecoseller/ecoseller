@@ -40,6 +40,7 @@ class ProductVariant(models.Model):
             "sku": self.sku,
             "ean": self.ean,
             "weight": float(self.weight) if self.weight is not None else None,
+            "stock_quantity": self.stock_quantity,
             "recommendation_weight": 1.0,
             "update_at": self.update_at.isoformat(),
             "create_at": self.create_at.isoformat(),

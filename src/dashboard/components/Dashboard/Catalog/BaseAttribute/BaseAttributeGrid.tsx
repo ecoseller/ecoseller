@@ -44,6 +44,7 @@ import {
   TAttributeTypeValueType,
 } from "@/types/product";
 import Tooltip from "@mui/material/Tooltip";
+import { useSnackbarState } from "@/utils/snackbar";
 
 interface IBaseAttributeTable extends IBaseAttribute {
   id: number;
@@ -126,11 +127,7 @@ const BaseAttributeGrid = ({
       }))
   );
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info" | "warning";
-  } | null>(null);
+  const [snackbar, setSnackbar] = useSnackbarState();
 
   const processRowUpdate = (
     newRow: IBaseAttributeTable,

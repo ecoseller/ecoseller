@@ -14,6 +14,7 @@ class ProductVariant(ApiBaseModel):
     sku: str
     ean: str
     weight: Optional[float]
+    stock_quantity: int
     recommendation_weight: float
     update_at: datetime
     create_at: datetime
