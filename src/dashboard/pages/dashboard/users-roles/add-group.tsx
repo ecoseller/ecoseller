@@ -12,6 +12,7 @@ import CreateRole from "@/components/Dashboard/UsersRoles/Roles/CreateRole";
 import { permissionsAPI } from "@/pages/api/roles/permissions";
 import { NextApiRequest, NextApiResponse } from "next";
 import { PermissionProvider } from "@/utils/context/permission";
+import { useSnackbarState } from "@/utils/snackbar";
 
 interface IPermissionsProps {
   permissions: IPermission[];

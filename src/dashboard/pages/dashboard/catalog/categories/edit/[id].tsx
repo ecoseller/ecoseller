@@ -7,12 +7,6 @@ import { ICategoryDetail } from "@/types/category";
 import { useRouter } from "next/router";
 import { NextApiRequest, NextApiResponse } from "next";
 import { categoryDetailAPI } from "@/pages/api/category/[id]";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import EditorCard from "@/components/Dashboard/Generic/EditorCard";
-import CollapsableContentWithTitle from "@/components/Dashboard/Generic/CollapsableContentWithTitle";
-import Box from "@mui/material/Box";
-import { PermissionProvider } from "@/utils/context/permission";
 
 interface ICategoryEditPageProps {
   category: ICategoryDetail;
@@ -23,31 +17,16 @@ const CategoryEditPage = ({ category }: ICategoryEditPageProps) => {
   const categoryId = category.id.toString();
 
   return (
-    <>
+    <DashboardLayout>
       <Container maxWidth="xl">
-        <PermissionProvider allowedPermissions={["category_change_permission"]}>
-          <CategoryEditorWrapper
-            initialCategory={category}
-            creatingNew={false}
-            title={`Edit category #${categoryId}`}
-            categoryId={categoryId}
-          />
-          <Grid container spacing={2}>
-            <Grid item md={8} xs={12}>
-              <EditorCard>
-                <CollapsableContentWithTitle title="Delete">
-                  <Box>
-                    <Button variant="contained" onClick={deleteCat}>
-                      Delete
-                    </Button>
-                  </Box>
-                </CollapsableContentWithTitle>
-              </EditorCard>
-            </Grid>
-          </Grid>
-        </PermissionProvider>
+        <CategoryEditorWrapper
+          initialCategory={category}
+          creatingNew={false}
+          title={`Edit category #${categoryId}`}
+          categoryId={categoryId}
+        />
       </Container>
-    </>
+    </DashboardLayout>
   );
 };
 

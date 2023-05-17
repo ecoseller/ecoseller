@@ -9,6 +9,7 @@ import EditableContentWrapper, {
 } from "@/components/Dashboard/Generic/EditableContentWrapper";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 import { PermissionProvider } from "@/utils/context/permission";
+import { useSnackbarState } from "@/utils/snackbar";
 
 const DashboardUserAddPage = () => {
   const router = useRouter();
