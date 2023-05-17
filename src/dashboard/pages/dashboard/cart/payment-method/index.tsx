@@ -1,5 +1,3 @@
-// /dashboard/orders/shipping-method/index.tsx
-
 // next.js
 import { useRouter } from "next/router";
 
@@ -58,7 +56,7 @@ const EditToolbar = (props: EditToolbarProps) => {
     }).then((res) => {
       if (res.ok) {
         res.json().then((data) => {
-          router.push(`/dashboard/orders/payment-method/${data.id}`);
+          router.push(`/dashboard/cart/payment-method/${data.id}`);
         });
       }
     });
@@ -168,7 +166,7 @@ const DashboardPaymentMethodPage = ({
             label="Edit"
             className="textPrimary"
             onClick={() => {
-              router.push(`/dashboard/orders/payment-method/${id}`);
+              router.push(`/dashboard/cart/payment-method/${id}`);
             }}
             color="inherit"
             key={"edit"}
