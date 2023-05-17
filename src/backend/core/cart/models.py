@@ -208,6 +208,10 @@ class CartItem(models.Model):
             else product_title
         )
 
+    @property
+    def primary_photo(self):
+        return self.product.get_primary_photo()
+
     def recalculate(self, pricelist, country):
         # recalculate price for this cart item based on pricelist and country
         price = ProductPrice.objects.get(

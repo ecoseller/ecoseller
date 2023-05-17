@@ -1,3 +1,6 @@
+import {IProductMedia} from "@/types/product";
+
+
 export interface CartItem {
   product: number;
   product_variant: string;
@@ -5,6 +8,8 @@ export interface CartItem {
   unit_price_gross: number;
   unit_price_net: number;
   quantity: number;
+  discount: number | null;
+  primary_image: IProductMedia 
 }
 
 export interface Cart {

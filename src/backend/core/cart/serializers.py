@@ -32,6 +32,7 @@ from product.models import (
 )
 from product.serializers import (
     PriceList,
+    ProductMediaBaseSerializer,
 )
 
 
@@ -49,6 +50,10 @@ class CartItemDetailSerializer(ModelSerializer):
     Contains both product and product variant id and numeric price and quantity.
     """
 
+    primary_image = ProductMediaBaseSerializer(
+        read_only=True, many=False, source="primary_photo"
+    )
+
     class Meta:
         model = CartItem
         fields = (
@@ -59,6 +64,7 @@ class CartItemDetailSerializer(ModelSerializer):
             "unit_price_net",
             "quantity",
             "discount",
+            "primary_image",
         )
 
 
