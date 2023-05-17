@@ -5,6 +5,7 @@ import EditorCard from "@/components/Dashboard/Generic/EditorCard";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import React from "react";
+import { usePermission } from "@/utils/context/permission";
 
 interface IDeleteEntityButtonProps {
   onDelete: () => void;
@@ -16,6 +17,8 @@ interface IDeleteEntityButtonProps {
  * @constructor
  */
 const DeleteEntityButton = ({ onDelete }: IDeleteEntityButtonProps) => {
+  const { hasPermission } = usePermission();
+
   return (
     <Grid container spacing={2}>
       <Grid item md={8} xs={12}>
@@ -26,7 +29,7 @@ const DeleteEntityButton = ({ onDelete }: IDeleteEntityButtonProps) => {
               color="error"
               startIcon={<DeleteIcon />}
               onClick={onDelete}
-              // disabled={!hasPermission} // TODO: add permission
+              disabled={!hasPermission} // TODO: add permission
             >
               Delete
             </Button>

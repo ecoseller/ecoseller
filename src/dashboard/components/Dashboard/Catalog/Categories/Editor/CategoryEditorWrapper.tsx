@@ -26,6 +26,7 @@ import Button from "@mui/material/Button";
 import { generalSnackbarError, useSnackbarState } from "@/utils/snackbar";
 import SnackbarWithAlert from "@/components/Dashboard/Generic/SnackbarWithAlert";
 import DeleteEntityButton from "@/components/Dashboard/Generic/DeleteEntityButton";
+import { PermissionProvider } from "@/utils/context/permission";
 
 interface ICategoryEditorWrapperProps {
   initialCategory: ICategoryEditable;

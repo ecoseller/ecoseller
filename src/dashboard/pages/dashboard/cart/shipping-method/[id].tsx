@@ -41,6 +41,7 @@ import ShippingMethodCountryEditor from "@/components/Dashboard/Cart/Methods/Shi
 import { ICurrency } from "@/types/localization";
 import { paymentMethodCountryFullListAPI } from "@/pages/api/cart/payment-method/country";
 import { useSnackbarState } from "@/utils/snackbar";
+import { PermissionProvider } from "@/utils/context/permission";
 
 export interface ISetShippingMethodStateAction {
   type: ActionSetShippingMethod;

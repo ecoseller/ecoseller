@@ -56,7 +56,6 @@ const ProductTypeSelect = ({
     const selectedType = types?.find(
       (t: IProductType) => `${t.id}` == event.target.value
     );
-    console.log("selectedType", selectedType);
     if (selectedType) {
       setProductTypeId(selectedType?.id || undefined);
       setProductTypeObject(selectedType);
@@ -94,15 +93,13 @@ const ProductTypeSelect = ({
             >
               {types?.map((type: IProductType) => {
                 return (
-                  <>
-                    <MenuItem
-                      key={type.id}
-                      value={type.id}
-                      disabled={!hasPermission}
-                    >
-                      {type.name}
-                    </MenuItem>
-                  </>
+                  <MenuItem
+                    key={type.id}
+                    value={type.id}
+                    disabled={!hasPermission}
+                  >
+                    {type.name}
+                  </MenuItem>
                 );
               })}
             </Select>
