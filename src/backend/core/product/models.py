@@ -1,17 +1,18 @@
-from django.db import models
-from parler.models import TranslatableModel, TranslatedFields
 from ckeditor.fields import RichTextField
-from django_editorjs_fields import EditorJsJSONField
-from api.recommender_system import RecommenderSystemApi
 from django.core.validators import MaxValueValidator, MinValueValidator
-from core.models import (
-    SortableModel,
-)
+from django.db import models
+from django.forms import ValidationError as FormValidationError
+from django_editorjs_fields import EditorJsJSONField
+from parler.models import TranslatableModel, TranslatedFields
+
+from api.recommender_system import RecommenderSystemApi
 from category.models import (
     Category,
 )
+from core.models import (
+    SortableModel,
+)
 from country.models import Currency, VatGroup
-from django.forms import ValidationError as FormValidationError
 
 
 class ProductVariant(models.Model):
@@ -26,8 +27,13 @@ class ProductVariant(models.Model):
     def __str__(self) -> str:
         return "sku: {} ean: {}".format(self.sku, self.ean)
 
+    @property
+    def attribute_values(self):
+        variant_attributes = [str(attr) for attr in self.attributes.all()]
+        return ", ".join(variant_attributes)
+
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super().save(
             force_insert=force_insert,
@@ -62,7 +68,7 @@ class ProductType(models.Model):
         return self.name
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super().save(
             force_insert=force_insert,
@@ -141,7 +147,7 @@ class Product(TranslatableModel):
         )
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super().save(
             force_insert=force_insert,
@@ -224,7 +230,7 @@ class AttributeType(models.Model):
         return "{} ({})".format(self.type_name, self.unit)
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super().save(
             force_insert=force_insert,
@@ -253,10 +259,13 @@ class BaseAttribute(models.Model):
     ext_attributes = models.ManyToManyField("ExtensionAttribute", blank=True)
 
     def __str__(self) -> str:
-        return "{}: {}".format(self.type.type_name, self.value)
+        attr_with_value = f"{self.type.type_name}: {self.value}"
+        if self.type.unit:
+            attr_with_value += self.type.unit
+        return attr_with_value
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super().save(
             force_insert=force_insert,
@@ -293,7 +302,7 @@ class ExtAttributeType(models.Model):
         return "{} ({})".format(self.type_name, self.unit)
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super().save(
             force_insert=force_insert,
@@ -320,7 +329,7 @@ class ExtensionAttribute(models.Model):
         return "{}: {}".format(self.type.type_name, self.value)
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super().save(
             force_insert=force_insert,
@@ -437,7 +446,7 @@ class ProductPrice(models.Model):
         return self.discount is not None
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super().save(
             force_insert=force_insert,

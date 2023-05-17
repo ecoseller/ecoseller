@@ -3,9 +3,7 @@ from abc import ABC, abstractmethod
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.decorators import permission_classes
 from rest_framework.generics import ListCreateAPIView
-from rest_framework.generics import RetrieveAPIView
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
-from rest_framework.mixins import CreateModelMixin
 from rest_framework.parsers import (
     MultiPartParser,
     FormParser,
@@ -30,8 +28,7 @@ from cart.models import (
     PaymentMethodCountry,
 )
 from cart.serializers import (
-    CartSerializer,
-    CartItemUpdateSerializer,
+    CartItemAddSerializer,
     ShippingMethodSerializer,
     ShippingMethodDetailSerializer,
     ShippingMethodCountrySerializer,
@@ -40,6 +37,7 @@ from cart.serializers import (
     PaymentMethodCountrySerializer,
     PaymentMethodCountryFullSerializer,
     CartTokenSerializer,
+    CartItemUpdateSerializer, CartItemDetailSerializer,
 )
 from country.serializers import (
     BillingInfoSerializer,
@@ -49,22 +47,26 @@ from product.models import ProductVariant, ProductPrice
 
 
 @permission_classes([AllowAny])  # TODO: use authentication
-class CartDetailStorefrontView(RetrieveAPIView, CreateModelMixin):
+class CartDetailStorefrontView(APIView):
     """
     View used for getting cart detail and adding items into cart
     """
 
-    queryset = Cart.objects.all()
-    serializer_class = CartSerializer
-    lookup_field = "token"
+    def _get_cart(self, token):
+        return Cart.objects.get(token=token)
+
+    def get(self, request, token):
+        cart = self._get_cart(token)
+        serializer = CartItemDetailSerializer(cart.cart_items, many=True)
+        return Response(serializer.data)
 
     def post(self, request, token):
         try:
-            serializer = CartItemUpdateSerializer(data=request.data)
+            serializer = CartItemAddSerializer(data=request.data)
             if serializer.is_valid():
                 update_data = serializer.save()
 
-                cart = Cart.objects.get(token=token)
+                cart = self._get_cart(token)
                 product_variant = ProductVariant.objects.get(sku=update_data.sku)
                 product = update_data.product
                 pricelist = update_data.pricelist
@@ -123,7 +125,7 @@ class CartCreateStorefrontView(APIView):
             return Response(serializer.data)
         try:
             print(request.data)
-            item_serializer = CartItemUpdateSerializer(data=request.data)
+            item_serializer = CartItemAddSerializer(data=request.data)
             if item_serializer.is_valid():
                 update_data = item_serializer.save()
                 product_variant = ProductVariant.objects.get(sku=update_data.sku)

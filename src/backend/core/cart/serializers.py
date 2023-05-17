@@ -39,8 +39,6 @@ from product.models import (
     Product,
 )
 from product.serializers import (
-    ProductCartSerializer,
-    ProductVariantCartSerializer,
     PriceList, PriceListSerializer,
 )
 
@@ -53,24 +51,20 @@ class FileImageField(Base64FileField):
         return kind.extension
 
 
-class CartItemSerializer(ModelSerializer):
+class CartItemDetailSerializer(ModelSerializer):
     """
     Serializer of one line in cart (see cart/models.py)
-    Contains both product and product variant and numeric price and quantity.
-    TODO: add product and product variant serializer (or just save product name and variant attributes as a string?)
+    Contains both product and product variant id and numeric price and quantity.
     """
-
-    product = ProductCartSerializer(read_only=True)
-    product_variant = ProductVariantCartSerializer(read_only=True)
 
     class Meta:
         model = CartItem
         fields = (
-            "product_variant",
             "product",
+            "product_variant",
+            "product_variant_name",
             "unit_price_gross",
             "unit_price_net",
-            "discount",
             "quantity",
         )
 
@@ -91,7 +85,7 @@ class CartSerializer(ModelSerializer):
     Contains list of cart items, country and token defining the cart itself.
     """
 
-    cart_items = CartItemSerializer(many=True, read_only=True)
+    cart_items = CartItemDetailSerializer(many=True, read_only=True)
     country = CountrySerializer(read_only=True)
     shipping_info_id = PrimaryKeyRelatedField(
         queryset=ShippingInfo.objects.all(),
@@ -125,9 +119,9 @@ class CartSerializer(ModelSerializer):
         )
 
 
-class CartItemUpdateSerializer(Serializer):
+class CartItemAddSerializer(Serializer):
     """
-    Serializer used for updating cart items
+    Serializer used for adding cart items
     """
 
     sku = CharField()
@@ -137,7 +131,7 @@ class CartItemUpdateSerializer(Serializer):
     country = PrimaryKeyRelatedField(queryset=Country.objects.all())
 
     def create(self, validated_data):
-        return CartItemUpdateData(
+        return CartItemAddData(
             validated_data["sku"],
             validated_data["quantity"],
             validated_data["product"],
@@ -146,7 +140,7 @@ class CartItemUpdateSerializer(Serializer):
         )
 
 
-class CartItemUpdateData:
+class CartItemAddData:
     def __init__(self, sku, quantity, product, pricelist, country):
         self.sku, self.quantity, self.product, self.pricelist, self.country = (
             sku,
@@ -155,6 +149,26 @@ class CartItemUpdateData:
             pricelist,
             country,
         )
+
+
+class CartItemUpdateSerializer(Serializer):
+    """
+    Serializer used for updating cart items
+    """
+
+    sku = CharField()
+    quantity = IntegerField(min_value=1)
+
+    def create(self, validated_data):
+        return CartItemUpdateData(
+            validated_data["sku"],
+            validated_data["quantity"]
+        )
+
+
+class CartItemUpdateData:
+    def __init__(self, sku, quantity):
+        self.sku, self.quantity = (sku, quantity)
 
 
 class ShippingMethodSerializer(TranslatedSerializerMixin, ModelSerializer):

@@ -191,6 +191,23 @@ class CartItem(models.Model):
 
     quantity = models.IntegerField(default=1)
 
+    @property
+    def product_variant_name(self):
+        """
+        Name of the product variant displayed in the cart
+        """
+        language = self.cart.country.locale
+        product_title = self.product.translations.get(language_code=language).title
+        attribute_values = (
+            self.product_variant.attribute_values
+        )  # TODO: update after attribute localization
+
+        return (
+            f"{product_title}, {attribute_values}"
+            if attribute_values
+            else product_title
+        )
+
     def recalculate(self, pricelist, country):
         # recalculate price for this cart item based on pricelist and country
         price = ProductPrice.objects.get(
