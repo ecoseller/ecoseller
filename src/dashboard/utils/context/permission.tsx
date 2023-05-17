@@ -94,13 +94,11 @@ export const PermissionProvider = ({
       return;
     }
 
-    if (
-      allowedPermissions?.every((permission) =>
-        permissions.some((p) => p.name == permission)
-      )
-    ) {
-      setHasPermission(true);
-    }
+    // check if at leas one users permission is in allowedPermissions
+    const hasPermission = permissions.some((p: IPermission) =>
+      allowedPermissions?.includes(p.name as ContextPermissions)
+    );
+    setHasPermission(hasPermission);
   };
 
   const value = {
