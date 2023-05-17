@@ -1,7 +1,9 @@
+import filetype
 from drf_extra_fields.fields import Base64FileField
-from filetype import filetype
-from parler_rest.fields import TranslatedFieldsField
-from parler_rest.serializers import TranslatableModelSerializer
+from parler_rest.serializers import (
+    TranslatableModelSerializer,
+    TranslatedFieldsField,
+)
 from rest_framework.serializers import (
     ModelSerializer,
     Serializer,
