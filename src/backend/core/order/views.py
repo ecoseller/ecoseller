@@ -24,9 +24,10 @@ class OrderListDashboardView(ListAPIView):
     """
     View for listing orders on dashboard
     """
+
     permission_classes = (permissions.AllowAny,)
     serializer_class = OrderListSerializer
-    queryset = Order.objects.all()
+    queryset = Order.objects.all().order_by("-create_at")
 
 
 class OrderCreateStorefrontView(APIView):

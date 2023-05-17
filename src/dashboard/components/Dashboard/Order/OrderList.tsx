@@ -23,12 +23,6 @@ export const OrderList = ({ orders }: IOrderListProps) => {
       minWidth: 300,
     },
     {
-      field: "create_at",
-      headerName: "Created at",
-      editable: false,
-      flex: 1,
-    },
-    {
       field: "status",
       headerName: "Status",
       editable: false,
@@ -37,6 +31,12 @@ export const OrderList = ({ orders }: IOrderListProps) => {
     {
       field: "customer_name",
       headerName: "Customer",
+      editable: false,
+      flex: 1,
+    },
+    {
+      field: "create_at",
+      headerName: "Created at",
       editable: false,
       flex: 1,
     },
