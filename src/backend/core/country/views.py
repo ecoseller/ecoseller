@@ -223,3 +223,45 @@ class BillingAddressDetailView(RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return BillingInfo.objects.all()
+
+
+class ShippingInfoListView(GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = ["GET", "POST"]
+    serializer_class = ShippingInfoSerializer
+
+    def get_queryset(self):
+        return VatGroup.objects.all()
+
+    def get(self, request):
+        qs = self.get_queryset()
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data, status=200)
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+
+class BillingInfoListView(GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = ["GET", "POST"]
+    serializer_class = BillingInfoSerializer
+
+    def get_queryset(self):
+        return VatGroup.objects.all()
+
+    def get(self, request):
+        qs = self.get_queryset()
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data, status=200)
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
