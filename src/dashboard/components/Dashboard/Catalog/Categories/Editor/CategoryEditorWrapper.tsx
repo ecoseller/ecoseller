@@ -263,9 +263,7 @@ const CategoryEditorWrapper = ({
           />
         </Grid>
       </Grid>
-      <PermissionProvider allowedPermissions={["category_change_permission"]}>
-        {creatingNew ? null : <DeleteEntityButton onDelete={deleteCat} />}
-      </PermissionProvider>
+      {creatingNew ? null : <DeleteEntityButton onDelete={deleteCat} />}
       {snackbar ? (
         <SnackbarWithAlert snackbarData={snackbar} setSnackbar={setSnackbar} />
       ) : null}
