@@ -8,17 +8,17 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('cart', '0021_cart_pricelist'),
-        ('country', '0016_alter_billingaddress_user_alter_shippingaddress_user'),
+        ("cart", "0021_cart_pricelist"),
+        ("country", "0016_alter_billingaddress_user_alter_shippingaddress_user"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='BillingAddress',
-            new_name='BillingInfo',
+            old_name="BillingAddress",
+            new_name="BillingInfo",
         ),
         migrations.RenameModel(
-            old_name='ShippingAddress',
-            new_name='ShippingInfo',
+            old_name="ShippingAddress",
+            new_name="ShippingInfo",
         ),
     ]
