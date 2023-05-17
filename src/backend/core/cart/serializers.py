@@ -41,7 +41,7 @@ from product.models import (
 from product.serializers import (
     ProductCartSerializer,
     ProductVariantCartSerializer,
-    PriceList,
+    PriceList, PriceListSerializer,
 )
 
 
@@ -107,6 +107,7 @@ class CartSerializer(ModelSerializer):
     )
     shipping_info = ShippingInfoSerializer(read_only=True)
     billing_info = BillingInfoSerializer(read_only=True)
+    pricelist = PriceListSerializer(read_only=True, many=False)
 
     class Meta:
         model = Cart
@@ -120,6 +121,7 @@ class CartSerializer(ModelSerializer):
             "billing_info_id",
             "shipping_info",
             "billing_info",
+            "pricelist"
         )
 
 
