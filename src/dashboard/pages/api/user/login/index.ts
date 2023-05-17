@@ -10,7 +10,7 @@ import {
 import { IUser } from "@/types/user";
 import { HTTPMETHOD } from "@/types/common";
 
-export const userDetailAPI = async (
+export const userLoginAPI = async (
   method: HTTPMETHOD,
   req?: NextApiRequest,
   res?: NextApiResponse
@@ -20,11 +20,15 @@ export const userDetailAPI = async (
   }
 
   switch (method) {
-    case "GET":
+    case "POST":
+      const body = req?.body;
+      console.log("BODY", body);
+      if (!body) throw new Error("Body is empty");
+
       return await api
-        .get("/user/detail")
+        .post("/user/login", body)
         .then((response) => response.data)
-        .then((data: IUser) => {
+        .then((data) => {
           return data;
         })
         .catch((error: any) => {
@@ -43,7 +47,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { method } = req;
 
-  return userDetailAPI(method as HTTPMETHOD, req, res)
+  return userLoginAPI(method as HTTPMETHOD, req, res)
     .then((data) => res.status(200).json(data))
     .catch((error) => res.status(400).json(null));
 };

@@ -7,11 +7,12 @@ import {
   backendApiHelper,
   cartApiUrlHelper,
 } from "@/utils/interceptors/api";
-import { IUser } from "@/types/user";
+import { IGroup, IUser } from "@/types/user";
 import { HTTPMETHOD } from "@/types/common";
 
-export const userDetailAPI = async (
+export const concreteGroupAPI = async (
   method: HTTPMETHOD,
+  role_name: string,
   req?: NextApiRequest,
   res?: NextApiResponse
 ) => {
@@ -22,9 +23,31 @@ export const userDetailAPI = async (
   switch (method) {
     case "GET":
       return await api
-        .get("/user/detail")
+        .get(`/roles/groups/${role_name}`)
         .then((response) => response.data)
-        .then((data: IUser) => {
+        .then((data: IGroup[]) => {
+          return data;
+        })
+        .catch((error: any) => {
+          throw error;
+        });
+    case "PUT":
+      const body = req?.body;
+      if (!body) throw new Error("Body is empty");
+      return await api
+        .put(`/roles/groups/${role_name}`, body)
+        .then((response) => response.data)
+        .then((data) => {
+          return data;
+        })
+        .catch((error: any) => {
+          throw error;
+        });
+    case "DELETE":
+      return await api
+        .delete(`/roles/groups/${role_name}`)
+        .then((response) => response.data)
+        .then((data) => {
           return data;
         })
         .catch((error: any) => {
@@ -41,9 +64,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
    * It returns whole cart data from the backend
    */
 
+  const { role_name } = req.query;
   const { method } = req;
 
-  return userDetailAPI(method as HTTPMETHOD, req, res)
+  return concreteGroupAPI(method as HTTPMETHOD, role_name as string, req, res)
     .then((data) => res.status(200).json(data))
     .catch((error) => res.status(400).json(null));
 };

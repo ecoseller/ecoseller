@@ -10,10 +10,11 @@ import {
 import { IUser } from "@/types/user";
 import { HTTPMETHOD } from "@/types/common";
 
-export const userDetailAPI = async (
+export const usersAPI = async (
   method: HTTPMETHOD,
   req?: NextApiRequest,
-  res?: NextApiResponse
+  res?: NextApiResponse,
+  body?: any
 ) => {
   if (req && res) {
     setRequestResponse(req, res);
@@ -22,9 +23,19 @@ export const userDetailAPI = async (
   switch (method) {
     case "GET":
       return await api
-        .get("/user/detail")
+        .get("/user/users")
         .then((response) => response.data)
         .then((data: IUser) => {
+          return data;
+        })
+        .catch((error: any) => {
+          throw error;
+        });
+    case "POST":
+      return await api
+        .post("/user/users", body)
+        .then((response) => response.data)
+        .then((data) => {
           return data;
         })
         .catch((error: any) => {
@@ -42,8 +53,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
    */
 
   const { method } = req;
+  const { body } = req;
 
-  return userDetailAPI(method as HTTPMETHOD, req, res)
+  return usersAPI(method as HTTPMETHOD, req, res, body)
     .then((data) => res.status(200).json(data))
     .catch((error) => res.status(400).json(null));
 };

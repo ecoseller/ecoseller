@@ -7,9 +7,11 @@ import EditableContentWrapper, {
   PrimaryButtonAction,
 } from "@/components/Dashboard/Generic/EditableContentWrapper";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
-import { createGroup, getPermissions } from "@/api/users-roles/users";
 import { IPermission, IGroup } from "@/types/user";
 import CreateRole from "@/components/Dashboard/UsersRoles/Roles/CreateRole";
+import { permissionsAPI } from "@/pages/api/roles/permissions";
+import { NextApiRequest, NextApiResponse } from "next";
+import { PermissionProvider } from "@/utils/context/permission";
 import { useSnackbarState } from "@/utils/snackbar";
 
 interface IPermissionsProps {
@@ -50,66 +52,72 @@ const DashboardGroupAddPage = ({ permissions }: IPermissionsProps) => {
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
-        <EditableContentWrapper
-          primaryButtonTitle={PrimaryButtonAction.Create}
-          preventNavigation={preventNavigation}
-          setPreventNavigation={setPreventNavigation}
-          onButtonClick={async () => {
-            await setPreventNavigation(false);
-            await createGroup(
-              group.name,
-              group.description,
-              group.permissions.map((p) => {
-                return p.name;
+        <PermissionProvider allowedPermissions={["group_add_permission"]}>
+          <EditableContentWrapper
+            primaryButtonTitle={PrimaryButtonAction.Create}
+            preventNavigation={preventNavigation}
+            setPreventNavigation={setPreventNavigation}
+            onButtonClick={async () => {
+              await setPreventNavigation(false);
+              await fetch("/api/roles/groups", {
+                method: "POST",
+                body: JSON.stringify({
+                  name: group.name,
+                  description: group.description,
+                  permissions: group.permissions.map((p) => {
+                    return p.name;
+                  }),
+                }),
               })
-            )
-              .then((res: any) => {
-                setPreventNavigation(false);
-                console.log(preventNavigation);
-                setSnackbar({
-                  open: true,
-                  message: "Group created successfully",
-                  severity: "success",
+                .then((res: any) => {
+                  setPreventNavigation(false);
+                  console.log(preventNavigation);
+                  setSnackbar({
+                    open: true,
+                    message: "Group created successfully",
+                    severity: "success",
+                  });
+                  router.push("/dashboard/users-roles");
+                })
+                .catch((err: any) => {
+                  setPreventNavigation(false);
+                  console.log(preventNavigation);
+                  setSnackbar({
+                    open: true,
+                    message: "Error creating group",
+                    severity: "error",
+                  });
                 });
-                router.push("/dashboard/users-roles");
-              })
-              .catch((err: any) => {
-                setPreventNavigation(false);
-                console.log(preventNavigation);
-                setSnackbar({
-                  open: true,
-                  message: "Error creating group",
-                  severity: "error",
-                });
-              });
-          }}
-          returnPath="/dashboard/users-roles"
-        >
-          <TopLineWithReturn
-            title="Add Group"
+            }}
             returnPath="/dashboard/users-roles"
-          />
-          <CreateRole
-            group={group}
-            setGroup={setGroup}
-            permissions={permissions}
-          />
-          {snackbar ? (
-            <Snackbar
-              open={snackbar.open}
-              autoHideDuration={6000}
-              onClose={handleSnackbarClose}
-            >
-              <Alert
+            checkPermission={true}
+          >
+            <TopLineWithReturn
+              title="Add Group"
+              returnPath="/dashboard/users-roles"
+            />
+            <CreateRole
+              group={group}
+              setGroup={setGroup}
+              permissions={permissions}
+            />
+            {snackbar ? (
+              <Snackbar
+                open={snackbar.open}
+                autoHideDuration={6000}
                 onClose={handleSnackbarClose}
-                severity={snackbar.severity}
-                sx={{ width: "100%" }}
               >
-                {snackbar.message}
-              </Alert>
-            </Snackbar>
-          ) : null}
-        </EditableContentWrapper>
+                <Alert
+                  onClose={handleSnackbarClose}
+                  severity={snackbar.severity}
+                  sx={{ width: "100%" }}
+                >
+                  {snackbar.message}
+                </Alert>
+              </Snackbar>
+            ) : null}
+          </EditableContentWrapper>
+        </PermissionProvider>
       </Container>
     </DashboardLayout>
   );
@@ -124,10 +132,15 @@ DashboardGroupAddPage.getLayout = (page: ReactElement) => {
 };
 
 export const getServerSideProps = async (context: any) => {
-  const permissions = await getPermissions();
+  const { req, res } = context;
+  const permissions = await permissionsAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
 
   return {
-    props: { permissions: permissions.data },
+    props: { permissions: permissions },
   };
 };
 

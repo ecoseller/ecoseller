@@ -7,8 +7,9 @@ import {
   backendApiHelper,
   cartApiUrlHelper,
 } from "@/utils/interceptors/api";
-import { IUser } from "@/types/user";
+import { IGroup, IUser } from "@/types/user";
 import { HTTPMETHOD } from "@/types/common";
+import { getCookie } from "cookies-next";
 
 export const userRoleAPI = async (
   method: HTTPMETHOD,
@@ -20,12 +21,27 @@ export const userRoleAPI = async (
     setRequestResponse(req, res);
   }
 
+  const access = getCookie("accessToken", { req, res }) as string;
+  console.log("userRoleAPI", access);
+
   switch (method) {
     case "GET":
       return await api
         .get(`/roles/user-groups/${email}`)
         .then((response) => response.data)
-        .then((data: IUser) => {
+        .then((data: IGroup[]) => {
+          return data;
+        })
+        .catch((error: any) => {
+          throw error;
+        });
+    case "PUT":
+      const body = req?.body;
+      if (!body) throw new Error("Body is empty");
+      return await api
+        .put(`/roles/user-groups/${email}`, body)
+        .then((response) => response.data)
+        .then((data) => {
           return data;
         })
         .catch((error: any) => {
@@ -44,8 +60,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // get the cart data from the backend
 
   const { email } = req.query;
+  const { method } = req;
 
-  return userRoleAPI("GET", email as string, req, res)
+  return userRoleAPI(method as HTTPMETHOD, email as string, req, res)
     .then((data) => res.status(200).json(data))
     .catch((error) => res.status(400).json(null));
 };

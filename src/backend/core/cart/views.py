@@ -336,7 +336,7 @@ class PaymentMethodListDashboardView(ListCreateAPIView):
         "GET",
         "POST",
     ]
-    authentication_classes = []
+
     serializer_class = PaymentMethodSerializer
     queryset = PaymentMethod.objects.all()
 
@@ -352,7 +352,7 @@ class PaymentMethodDetailDashboardView(RetrieveUpdateDestroyAPIView):
         "PUT",
         "DELETE",
     ]
-    authentication_classes = []
+
     serializer_class = PaymentMethodDetailSerializer
 
     parser_classes = [MultiPartParser, FormParser, JSONParser]
@@ -370,7 +370,7 @@ class PaymentMethodCountryListView(ListCreateAPIView):
         "GET",
         "POST",
     ]
-    authentication_classes = []
+
     serializer_class = PaymentMethodCountrySerializer
 
     def get_queryset(self):
@@ -390,7 +390,6 @@ class PaymentMethodCountryDetailDashboardView(RetrieveUpdateDestroyAPIView):
         "PUT",
         "DELETE",
     ]
-    authentication_classes = []
 
     serializer_class = PaymentMethodCountrySerializer
     lookup_field = "id"
@@ -405,7 +404,7 @@ class PaymentMethodCountryFullListView(ListCreateAPIView):
     allowed_methods = [
         "GET",
     ]
-    authentication_classes = []
+
     serializer_class = PaymentMethodCountryFullSerializer
     queryset = PaymentMethodCountry.objects.all()
 
@@ -416,7 +415,7 @@ class ShippingMethodListDashboardView(ListCreateAPIView):
         "GET",
         "POST",
     ]
-    authentication_classes = []
+
     serializer_class = ShippingMethodSerializer
     queryset = ShippingMethod.objects.all()
 
@@ -432,7 +431,7 @@ class ShippingMethodDetailDashboardView(RetrieveUpdateDestroyAPIView):
         "PUT",
         "DELETE",
     ]
-    authentication_classes = []
+
     serializer_class = ShippingMethodDetailSerializer
 
     parser_classes = [MultiPartParser, FormParser, JSONParser]
@@ -450,7 +449,7 @@ class ShippingMethodCountryListView(ListCreateAPIView):
         "GET",
         "POST",
     ]
-    authentication_classes = []
+
     serializer_class = ShippingMethodCountrySerializer
 
     def get_queryset(self):
@@ -470,7 +469,6 @@ class ShippingMethodCountryDetailDashboardView(RetrieveUpdateDestroyAPIView):
         "PUT",
         "DELETE",
     ]
-    authentication_classes = []
 
     serializer_class = ShippingMethodCountrySerializer
     lookup_field = "id"

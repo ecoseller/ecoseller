@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import SettingsPopover from "@/components/Dashboard/Generic/SettingsPopover";
 import { useRouter } from "next/router";
+import { usePermission } from "@/utils/context/permission";
 
 /**
  * Top-line menu for Categories.
@@ -12,6 +13,8 @@ import { useRouter } from "next/router";
  */
 const CategoryListTopLine = () => {
   const router = useRouter();
+  const { hasPermission } = usePermission();
+
   return (
     <Stack
       direction="row"
@@ -32,6 +35,7 @@ const CategoryListTopLine = () => {
         <Button
           variant="contained"
           startIcon={<AddIcon />}
+          disabled={!hasPermission}
           onClick={() => {
             router.push("/dashboard/catalog/categories/add");
           }}

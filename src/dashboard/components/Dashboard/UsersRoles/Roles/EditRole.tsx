@@ -9,6 +9,7 @@ import { TextField } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import { IPermission, IGroup } from "@/types/user";
 import CheckboxList from "./RolesList";
+import { usePermission } from "@/utils/context/permission";
 
 interface ICreateRoleProps {
   group: IGroup;
@@ -17,6 +18,8 @@ interface ICreateRoleProps {
 }
 
 const EditRole = ({ group, setGroup, permissions }: ICreateRoleProps) => {
+  const { hasPermission } = usePermission();
+
   return (
     <EditorCard>
       <Typography variant="h6">Edit role {group.name}</Typography>
@@ -30,6 +33,7 @@ const EditRole = ({ group, setGroup, permissions }: ICreateRoleProps) => {
         <Stack spacing={2}>
           <TextField
             label="Description"
+            disabled={!hasPermission}
             value={group.description}
             onChange={(
               event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>

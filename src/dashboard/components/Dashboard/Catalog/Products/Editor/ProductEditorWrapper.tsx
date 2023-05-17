@@ -43,6 +43,7 @@ import EditorCard from "@/components/Dashboard/Generic/EditorCard";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import DeleteEntityButton from "@/components/Dashboard/Generic/DeleteEntityButton";
+import { PermissionProvider } from "@/utils/context/permission";
 
 export interface ISetProductStateAction {
   type: ActionSetProduct;
@@ -341,48 +342,64 @@ const ProductEditorWrapper = ({
 
       <Grid container spacing={2}>
         <Grid item md={8} xs={12}>
-          <TranslatedFieldsTabList
-            state={productState.translations || ({} as IEntityTranslations)}
-            dispatchWrapper={dispatchWrapper}
-          />
-          <TranslatedSEOFieldsTabList
-            state={productState.translations || ({} as IEntityTranslations)}
-            dispatchWrapper={dispatchWrapper}
-          />
-          <ProductVariantsEditor
-            disabled={false}
-            state={productState}
-            dispatch={dispatchProductState}
-            attributesData={productState?.type?.allowed_attribute_types || []}
-            pricelistsData={pricelistsData}
-          />
-          <ProductMediaEditor
-            disabled={false}
-            state={productState}
-            // dispatch={dispatchProductState}
-          />
-          <ProductVariantPricesEditor
-            disabled={false}
-            state={productState}
-            dispatch={dispatchProductState}
-            pricelistsData={pricelistsData}
-          />
+          <PermissionProvider
+            allowedPermissions={["product_change_permission"]}
+          >
+            <TranslatedFieldsTabList
+              state={productState.translations || ({} as IEntityTranslations)}
+              dispatchWrapper={dispatchWrapper}
+            />
+            <TranslatedSEOFieldsTabList
+              state={productState.translations || ({} as IEntityTranslations)}
+              dispatchWrapper={dispatchWrapper}
+            />
+            <ProductVariantsEditor
+              disabled={false}
+              state={productState}
+              dispatch={dispatchProductState}
+              attributesData={productState?.type?.allowed_attribute_types || []}
+              pricelistsData={pricelistsData}
+            />
+          </PermissionProvider>
+          <PermissionProvider
+            allowedPermissions={["productmedia_change_permission"]}
+          >
+            <ProductMediaEditor
+              disabled={false}
+              state={productState}
+              // dispatch={dispatchProductState}
+            />
+          </PermissionProvider>
+          <PermissionProvider
+            allowedPermissions={["productprice_change_permission"]}
+          >
+            <ProductVariantPricesEditor
+              disabled={false}
+              state={productState}
+              dispatch={dispatchProductState}
+              pricelistsData={pricelistsData}
+            />
+          </PermissionProvider>
         </Grid>
         <Grid item md={4} xs={12}>
-          <CategorySelectForm
-            categoryId={productState.category}
-            setCategoryId={setCategoryId}
-          />
-          <ProductTypeSelect
-            types={productTypeData}
-            state={productState}
-            dispatch={dispatchProductState}
-            disabled={productData ? true : false}
-          />
-          <EntityVisibilityForm
-            isPublished={productState.published || false}
-            setValue={setPublished}
-          />
+          <PermissionProvider
+            allowedPermissions={["product_change_permission"]}
+          >
+            <CategorySelectForm
+              categoryId={productState.category}
+              setCategoryId={setCategoryId}
+            />
+            <ProductTypeSelect
+              types={productTypeData}
+              state={productState}
+              dispatch={dispatchProductState}
+              disabled={productData ? true : false}
+            />
+            <EntityVisibilityForm
+              isPublished={productState.published || false}
+              setValue={setPublished}
+            />
+          </PermissionProvider>
         </Grid>
       </Grid>
       {snackbar ? (

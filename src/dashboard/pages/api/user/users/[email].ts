@@ -9,9 +9,11 @@ import {
 } from "@/utils/interceptors/api";
 import { IUser } from "@/types/user";
 import { HTTPMETHOD } from "@/types/common";
+import { getCookie } from "cookies-next";
 
-export const userDetailAPI = async (
+export const concreteUserAPI = async (
   method: HTTPMETHOD,
+  email: string,
   req?: NextApiRequest,
   res?: NextApiResponse
 ) => {
@@ -19,12 +21,39 @@ export const userDetailAPI = async (
     setRequestResponse(req, res);
   }
 
+  const access = getCookie("accessToken", { req, res }) as string;
+  console.log("concreteUserAPI", access);
+
   switch (method) {
     case "GET":
       return await api
-        .get("/user/detail")
+        .get(`/user/users/${email}`)
         .then((response) => response.data)
         .then((data: IUser) => {
+          return data;
+        })
+        .catch((error: any) => {
+          throw error;
+        });
+    case "PUT":
+      const body = req?.body;
+      console.log("body", body);
+
+      if (!body) throw new Error("Body is empty");
+      return await api
+        .put(`/user/users/${email}`, body)
+        .then((response) => response.data)
+        .then((data) => {
+          return data;
+        })
+        .catch((error: any) => {
+          throw error;
+        });
+    case "DELETE":
+      return await api
+        .delete(`/user/users/${email}`)
+        .then((response) => response.data)
+        .then((data) => {
           return data;
         })
         .catch((error: any) => {
@@ -42,8 +71,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
    */
 
   const { method } = req;
+  const { email } = req.query;
 
-  return userDetailAPI(method as HTTPMETHOD, req, res)
+  return concreteUserAPI(method as HTTPMETHOD, email as string, req, res)
     .then((data) => res.status(200).json(data))
     .catch((error) => res.status(400).json(null));
 };

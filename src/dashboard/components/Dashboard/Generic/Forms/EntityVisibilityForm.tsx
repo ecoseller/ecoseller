@@ -7,6 +7,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Typography from "@mui/material/Typography";
 import { ISetProductStateAction } from "../../Catalog/Products/Editor/ProductEditorWrapper";
 import React from "react";
+import { usePermission } from "@/utils/context/permission";
 
 interface IEntityVisibilityFormProps {
   isPublished: boolean;
@@ -28,6 +29,8 @@ const EntityVisibilityForm = ({
   isPublished,
   setValue,
 }: IEntityVisibilityFormProps) => {
+  const { hasPermission } = usePermission();
+
   return (
     <EditorCard>
       <Typography variant="h6">Visibility</Typography>
@@ -41,6 +44,7 @@ const EntityVisibilityForm = ({
               }}
             />
           }
+          disabled={!hasPermission}
           label="Published"
         />
       </Box>

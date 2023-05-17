@@ -14,6 +14,7 @@ import CategoryList from "@/components/Dashboard/Catalog/Categories/List/Categor
 import CategoryListTopLine from "@/components/Dashboard/Catalog/Categories/List/TopLine";
 import Card from "@mui/material/Card";
 import { categoryAPI } from "@/pages/api/category";
+import { PermissionProvider } from "@/utils/context/permission";
 
 const CategoriesPage = ({
   categories,
@@ -21,7 +22,9 @@ const CategoriesPage = ({
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
-        <CategoryListTopLine />
+        <PermissionProvider allowedPermissions={["category_add_permission"]}>
+          <CategoryListTopLine />
+        </PermissionProvider>
         <Card elevation={0}>
           <CategoryList categories={categories} />
         </Card>

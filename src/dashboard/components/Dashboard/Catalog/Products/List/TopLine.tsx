@@ -4,8 +4,11 @@ import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import SettingsPopover from "@/components/Dashboard/Generic/SettingsPopover";
 import { useRouter } from "next/router";
+import { usePermission } from "@/utils/context/permission";
 
 const ProductListTopLine = () => {
+  const { hasPermission } = usePermission();
+
   const router = useRouter();
   return (
     <Stack
@@ -31,6 +34,7 @@ const ProductListTopLine = () => {
         <Button
           variant="contained"
           startIcon={<AddIcon />}
+          disabled={!hasPermission}
           onClick={() => {
             router.push("/dashboard/catalog/products/add");
           }}

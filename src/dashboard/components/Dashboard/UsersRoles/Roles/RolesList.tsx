@@ -9,6 +9,7 @@ import Checkbox from "@mui/material/Checkbox";
 import { IPermission, IGroup } from "@/types/user";
 import { useState } from "react";
 import TextField from "@mui/material/TextField";
+import { usePermission } from "@/utils/context/permission";
 
 interface IGroupListProps {
   group: IGroup;
@@ -20,6 +21,8 @@ const CheckboxList = ({ group, setGroup, permissions }: IGroupListProps) => {
   const [filteredPermissions, setFilteredPermissions] = useState<string[]>(
     permissions?.map((perm) => perm.name)
   );
+
+  const { hasPermission } = usePermission();
 
   const handleToggle = (permission: IPermission) => () => {
     const checked = group.permissions
@@ -66,7 +69,11 @@ const CheckboxList = ({ group, setGroup, permissions }: IGroupListProps) => {
 
           return (
             <ListItem key={permission.name} disablePadding>
-              <ListItemButton onClick={handleToggle(permission)} dense>
+              <ListItemButton
+                onClick={handleToggle(permission)}
+                dense
+                disabled={!hasPermission}
+              >
                 <ListItemIcon>
                   <Checkbox
                     edge="start"

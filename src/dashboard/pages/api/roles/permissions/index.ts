@@ -7,10 +7,10 @@ import {
   backendApiHelper,
   cartApiUrlHelper,
 } from "@/utils/interceptors/api";
-import { IUser } from "@/types/user";
+import { IPermission, IUser } from "@/types/user";
 import { HTTPMETHOD } from "@/types/common";
 
-export const userDetailAPI = async (
+export const permissionsAPI = async (
   method: HTTPMETHOD,
   req?: NextApiRequest,
   res?: NextApiResponse
@@ -18,13 +18,13 @@ export const userDetailAPI = async (
   if (req && res) {
     setRequestResponse(req, res);
   }
-
+  console.log("req?.method", req?.method);
   switch (method) {
     case "GET":
       return await api
-        .get("/user/detail")
+        .get("/roles/permissions")
         .then((response) => response.data)
-        .then((data: IUser) => {
+        .then((data: IPermission[]) => {
           return data;
         })
         .catch((error: any) => {
@@ -43,7 +43,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { method } = req;
 
-  return userDetailAPI(method as HTTPMETHOD, req, res)
+  return permissionsAPI(method as HTTPMETHOD, req, res)
     .then((data) => res.status(200).json(data))
     .catch((error) => res.status(400).json(null));
 };

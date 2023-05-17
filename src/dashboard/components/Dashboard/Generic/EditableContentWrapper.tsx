@@ -1,3 +1,4 @@
+import { usePermission } from "@/utils/context/permission";
 import { useOnLeavePageConfirmation } from "@/utils/hooks/useOnLeavePageConfirmation";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -22,6 +23,7 @@ interface IEditableContentWrapperProps {
   setPreventNavigation: (value: boolean) => void;
   primaryButtonTitle?: PrimaryButtonAction;
   returnPath: string;
+  checkPermission?: boolean;
 }
 
 /**
@@ -45,8 +47,10 @@ const EditableContentWrapper = ({
   setPreventNavigation,
   primaryButtonTitle = PrimaryButtonAction.Save,
   returnPath,
+  checkPermission = false,
 }: IEditableContentWrapperProps) => {
   const router = useRouter();
+  const { hasPermission } = usePermission();
 
   const [saveDialogOpen, setSaveDialogOpen] = useState<boolean>(false);
   // const [isSaved, setIsSaved] = useState<boolean>(false);
@@ -124,6 +128,7 @@ const EditableContentWrapper = ({
             </Button>
             <Button
               variant="contained"
+              disabled={!hasPermission}
               onClick={async () => {
                 await innerOnSave();
                 // setIsSaved(true);

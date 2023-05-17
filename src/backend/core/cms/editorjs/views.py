@@ -30,7 +30,6 @@ class EditorJSImageUploadView(APIView):
     allowed_methods = ["POST"]
     parser_classes = (MultiPartParser,)
     permission_classes = (permissions.AllowAny,)
-    authentication_classes = []
 
     def post(self, request, format=None):
         """
@@ -52,7 +51,6 @@ class EditorJSImageUploadView(APIView):
 class EditorJSURLUploadView(APIView):
     allowed_methods = ["POST"]
     permission_classes = (permissions.AllowAny,)
-    authentication_classes = []
 
     def post(self, request, format=None):
         """

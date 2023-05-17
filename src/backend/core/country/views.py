@@ -39,7 +39,7 @@ class CountryListView(ListCreateAPIView):
         "GET",
         "POST",
     ]
-    authentication_classes = []
+
     serializer_class = CountrySerializer
 
     def get_queryset(self):
@@ -95,7 +95,7 @@ class LanguagesView(APIView):
 class CurrencyListView(GenericAPIView):
     permission_classes = (permissions.AllowAny,)
     allowed_methods = ["GET", "POST", "PUT", "DELETE"]
-    authentication_classes = []
+
     serializer_class = CurrencySerializer
 
     def get_queryset(self):
@@ -121,7 +121,7 @@ class CurrencyDetailView(RetrieveUpdateDestroyAPIView):
 
     permission_classes = (permissions.AllowAny,)
     allowed_methods = ["GET", "POST", "PUT", "DELETE"]
-    authentication_classes = []
+
     serializer_class = CurrencySerializer
     lookup_field = "code"
     lookup_url_kwarg = "code"
@@ -141,7 +141,7 @@ class VatGroupListView(GenericAPIView):
         "GET",
         "POST",
     ]
-    authentication_classes = []
+
     serializer_class = VatGroupSerializer
 
     def get_queryset(self):
@@ -171,7 +171,7 @@ class VatGroupDetailView(RetrieveUpdateDestroyAPIView):
         "PUT",
         "DELETE",
     ]
-    authentication_classes = []
+
     serializer_class = VatGroupSerializer
     lookup_field = "id"
     lookup_url_kwarg = "id"
