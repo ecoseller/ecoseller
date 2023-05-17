@@ -2,10 +2,14 @@ from datetime import datetime
 
 import pytest
 
+from recommender_system.models.api.category import Category
 from recommender_system.models.api.product_variant import ProductVariant
 from recommender_system.models.stored.product.attribute import AttributeModel
 from recommender_system.models.stored.product.attribute_product_variant import (
     AttributeProductVariantModel,
+)
+from recommender_system.models.stored.product.category_ancestor import (
+    CategoryAncestorModel,
 )
 from recommender_system.models.stored.product.product import ProductModel
 from recommender_system.models.stored.product.product_product_variant import (
@@ -36,6 +40,36 @@ def delete_products(product_variant_pk: str):
 
 
 @pytest.fixture
+def prepare_categories():
+    new_category_id = 6
+    new_category_parent_id = 3
+
+    ancestors = [
+        CategoryAncestorModel(category_id=2, category_ancestor_id=1),
+        CategoryAncestorModel(category_id=3, category_ancestor_id=2),
+        CategoryAncestorModel(category_id=3, category_ancestor_id=1),
+        CategoryAncestorModel(category_id=4, category_ancestor_id=2),
+        CategoryAncestorModel(category_id=4, category_ancestor_id=1),
+        CategoryAncestorModel(category_id=5, category_ancestor_id=3),
+        CategoryAncestorModel(category_id=5, category_ancestor_id=2),
+        CategoryAncestorModel(category_id=5, category_ancestor_id=1),
+    ]
+
+    for category in range(1, 7):
+        for ancestor in CategoryAncestorModel.gets(category_id=category):
+            ancestor.delete()
+
+    for ancestor in ancestors:
+        ancestor.create()
+
+    yield new_category_id, new_category_parent_id
+
+    for category in range(1, 7):
+        for ancestor in CategoryAncestorModel.gets(category_id=category):
+            ancestor.delete()
+
+
+@pytest.fixture
 def clear_product_variant():
     product_variant_sku = "sku"
     product = get_or_create_model(model_class=ProductModel)
@@ -61,6 +95,20 @@ def create_product_variant():
     delete_products(product_variant_pk=product_variant.pk)
     delete_model(model_class=ProductVariantModel, pk=product_variant.pk)
     delete_model(model_class=ProductModel, pk=product.pk)
+
+
+def test_category(prepare_categories):
+    category_id, category_parent_id = prepare_categories
+
+    assert len(CategoryAncestorModel.gets(category_id=category_id)) == 0
+
+    category = Category(id=category_id, parent_id=category_parent_id)
+    category.save()
+
+    assert {1, 2, 3} == {
+        ancestor.category_ancestor_id
+        for ancestor in CategoryAncestorModel.gets(category_id=category_id)
+    }
 
 
 def test_product_variant_create(clear_product_variant):
