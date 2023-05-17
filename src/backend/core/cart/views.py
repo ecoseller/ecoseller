@@ -37,7 +37,7 @@ from cart.serializers import (
     PaymentMethodCountrySerializer,
     PaymentMethodCountryFullSerializer,
     CartTokenSerializer,
-    CartItemUpdateSerializer, CartItemDetailSerializer,
+    CartItemUpdateSerializer, CartSerializer,
 )
 from country.serializers import (
     BillingInfoSerializer,
@@ -57,7 +57,7 @@ class CartDetailStorefrontView(APIView):
 
     def get(self, request, token):
         cart = self._get_cart(token)
-        serializer = CartItemDetailSerializer(cart.cart_items, many=True)
+        serializer = CartSerializer(cart)
         return Response(serializer.data)
 
     def post(self, request, token):

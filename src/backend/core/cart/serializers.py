@@ -4,6 +4,7 @@ from parler_rest.serializers import (
     TranslatableModelSerializer,
     TranslatedFieldsField,
 )
+from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import (
     ModelSerializer,
     Serializer,
@@ -26,21 +27,11 @@ from core.mixins import (
 from country.models import (
     Country,
 )
-from country.models import (
-    ShippingInfo,
-    BillingInfo,
-)
-from country.serializers import (
-    CountrySerializer,
-    ShippingInfoSerializer,
-    BillingInfoSerializer,
-)
 from product.models import (
     Product,
 )
 from product.serializers import (
-    PriceList, PriceListSerializer,
-)
+    PriceList, )
 
 
 class FileImageField(Base64FileField):
@@ -66,6 +57,7 @@ class CartItemDetailSerializer(ModelSerializer):
             "unit_price_gross",
             "unit_price_net",
             "quantity",
+            "discount"
         )
 
 
@@ -81,42 +73,46 @@ class CartTokenSerializer(ModelSerializer):
 
 class CartSerializer(ModelSerializer):
     """
-    Large serializer of cart (see cart/models.py)
-    Contains list of cart items, country and token defining the cart itself.
+    Serializer of cart (see cart/models.py)
+    Contains list of cart items, currency symbol and symbol position
     """
 
     cart_items = CartItemDetailSerializer(many=True, read_only=True)
-    country = CountrySerializer(read_only=True)
-    shipping_info_id = PrimaryKeyRelatedField(
-        queryset=ShippingInfo.objects.all(),
-        source="shipping_info",
-        write_only=True,
-        required=False,
-    )
-    billing_info_id = PrimaryKeyRelatedField(
-        queryset=BillingInfo.objects.all(),
-        source="billing_info",
-        write_only=True,
-        required=False,
-    )
-    shipping_info = ShippingInfoSerializer(read_only=True)
-    billing_info = BillingInfoSerializer(read_only=True)
-    pricelist = PriceListSerializer(read_only=True, many=False)
+
+    # country = CountrySerializer(read_only=True)
+    # shipping_info_id = PrimaryKeyRelatedField(
+    #     queryset=ShippingInfo.objects.all(),
+    #     source="shipping_info",
+    #     write_only=True,
+    #     required=False,
+    # )
+    # billing_info_id = PrimaryKeyRelatedField(
+    #     queryset=BillingInfo.objects.all(),
+    #     source="billing_info",
+    #     write_only=True,
+    #     required=False,
+    # )
+    # shipping_info = ShippingInfoSerializer(read_only=True)
+    # billing_info = BillingInfoSerializer(read_only=True)
+    # pricelist = PriceListSerializer(read_only=True, many=False)
+
+    currency_symbol = SerializerMethodField()
+    symbol_position = SerializerMethodField()
 
     class Meta:
         model = Cart
         fields = (
-            "token",
-            "country",
-            "update_at",
-            "create_at",
             "cart_items",
-            "shipping_info_id",
-            "billing_info_id",
-            "shipping_info",
-            "billing_info",
-            "pricelist"
+            "update_at",
+            "currency_symbol",
+            "symbol_position"
         )
+
+    def get_currency_symbol(self, obj):
+        return obj.pricelist.currency.symbol
+
+    def get_symbol_position(self, obj):
+        return obj.pricelist.currency.symbol_position
 
 
 class CartItemAddSerializer(Serializer):

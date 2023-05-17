@@ -1,5 +1,7 @@
 export interface CartItem {
+  product: number;
   product_variant: string;
+  product_variant_name: string;
   unit_price_gross: number;
   unit_price_net: number;
   quantity: number;
