@@ -11,7 +11,7 @@ import { useCart } from "@/utils/context/cart";
 import { useRouter } from "next/router";
 
 const Cart = ({}) => {
-  const { cartSize } = useCart();
+  const { getCartSize } = useCart();
   const router = useRouter();
 
   return (
@@ -20,7 +20,7 @@ const Cart = ({}) => {
       sx={{ ml: 2 }}
       onClick={() => router.push("/cart")}
     >
-      <Badge badgeContent={cartSize} color="primary">
+      <Badge badgeContent={getCartSize()} color="primary">
         <ShoppingCartIcon />
       </Badge>
     </IconButton>

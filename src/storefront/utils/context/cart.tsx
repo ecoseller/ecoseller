@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 import { useState, createContext, useContext, useEffect } from "react";
-import { createCart, getCart } from "@/api/cart/cart";
+import { createCart, getCart as fetchCart } from "@/api/cart/cart";
 import {
   deleteCartProduct,
   postCartProduct,
@@ -15,12 +15,12 @@ interface ICartContext {
   /**
    * cart object
    */
-  cart: ICart | null;
+  getCart: () => ICart | null;
 
   /**
    * Number of items in the cart
    */
-  cartSize: number;
+  getCartSize: () => number;
 
   /**
    * Function for adding variant to the cart
@@ -42,7 +42,7 @@ interface ICartContext {
    * Function for removing product variant from the cart
    * @param sku
    */
-  removeFromCart: (sku: string) => void;
+  removeFromCart: (sku: string) => Promise<void>;
 
   /**
    * Function for updating count of product variant in the cart
@@ -99,7 +99,7 @@ export const CartProvider = ({ children }: ICartProviderProps): JSX.Element => {
     if (!token) {
       return;
     }
-    getCart(token).then((data) => {
+    fetchCart(token).then((data) => {
       setCart(data);
       calculateCartSize(data);
     });
@@ -145,7 +145,7 @@ export const CartProvider = ({ children }: ICartProviderProps): JSX.Element => {
     if (!token) {
       return;
     }
-    deleteCartProduct(token, sku).then((res) => {
+    await deleteCartProduct(token, sku).then((res) => {
       refetchCart();
     });
   };
@@ -159,9 +159,12 @@ export const CartProvider = ({ children }: ICartProviderProps): JSX.Element => {
     });
   };
 
+  const getCart = () => cart;
+  const getCartSize = () => cartSize;
+
   const value = {
-    cart,
-    cartSize,
+    getCart,
+    getCartSize,
     addToCart,
     removeFromCart,
     updateQuantity,

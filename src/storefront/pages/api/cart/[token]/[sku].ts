@@ -20,11 +20,11 @@ export const cartProductDeleteAPI = async (
     setRequestResponse(req, res);
   }
 
-  let url = `/cart/storefront/${token}/${sku}`;
+  let url = `/cart/storefront/${token}/${sku}/`;
 
   if (method === "DELETE") {
     return await api
-      .put(url)
+      .delete(url)
       .then((response) => response.data)
       .then((data) => {
         return data;
