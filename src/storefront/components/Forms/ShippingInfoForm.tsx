@@ -103,7 +103,10 @@ export const shippingInfoInitialData = (
           ...prevState,
           phone: { ...prevState.phone, value },
         })),
-      validator: (value: string) => value.length > 0,
+      validator: (value: string) => {
+        const phoneRegex = /^\d+$/;
+        return phoneRegex.test(value);
+      },
       isRequired: true,
       errorMessage: "Phone is required",
       label: "Phone",
