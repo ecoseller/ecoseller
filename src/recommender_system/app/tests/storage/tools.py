@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Any, Dict, Type
 
+from recommender_system.models.stored.model.config import ConfigModel
 from recommender_system.models.stored.product.attribute import AttributeModel
 from recommender_system.models.stored.product.attribute_type import AttributeTypeModel
 from recommender_system.models.stored.base import StoredBaseModel
@@ -40,6 +41,7 @@ default_dicts: Dict[Type[StoredBaseModel], Any] = {
         "attribute_type_id": 0,
         "parent_attribute_id": None,
     },
+    ConfigModel: {"id": 0, "create_at": datetime.now(), "retrieval_size": 1000},
     OrderModel: {
         "id": 0,
         "session_id": "session",

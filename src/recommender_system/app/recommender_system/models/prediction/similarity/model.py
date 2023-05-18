@@ -1,6 +1,6 @@
 from datetime import datetime
 import random
-from typing import List, Optional
+from typing import List, Optional, TYPE_CHECKING
 
 from dependency_injector.wiring import inject, Provide
 import numpy as np
@@ -16,6 +16,9 @@ from recommender_system.models.prediction.similarity.tools import (
 )
 from recommender_system.models.stored.similarity.distance import DistanceModel
 from recommender_system.storage.similarity.abstract import AbstractSimilarityStorage
+
+if TYPE_CHECKING:
+    from recommender_system.managers.model_manager import ModelManager
 
 
 class SimilarityPredictionModel(AbstractPredictionModel):
@@ -79,9 +82,10 @@ class SimilarityPredictionModel(AbstractPredictionModel):
         user_id: Optional[int],
         variant: str,
         similarity_storage: AbstractSimilarityStorage = Provide["similarity_storage"],
+        model_manager: "ModelManager" = Provide["model_manager"],
     ) -> List[str]:
         return similarity_storage.get_closest_product_variant_skus(
-            to=variant, limit=1000
+            to=variant, limit=model_manager.config.retrieval_size
         )
 
     @inject
@@ -91,10 +95,12 @@ class SimilarityPredictionModel(AbstractPredictionModel):
         user_id: Optional[int],
         variants_in_cart: List[str],
         similarity_storage: AbstractSimilarityStorage = Provide["similarity_storage"],
+        model_manager: "ModelManager" = Provide["model_manager"],
     ) -> List[str]:
         # TODO: Check if there are variants in cart in model manager
         return similarity_storage.get_closest_product_variant_skus(
-            to=random.choice(variants_in_cart), limit=1000
+            to=random.choice(variants_in_cart),
+            limit=model_manager.config.retrieval_size,
         )
 
     def score_homepage(

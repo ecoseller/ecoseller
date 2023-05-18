@@ -1,10 +1,13 @@
-from typing import Optional, List
+from typing import Optional, List, TYPE_CHECKING
 
 from dependency_injector.wiring import inject, Provide
 
 from recommender_system.models.prediction.abstract import AbstractPredictionModel
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.storage.product.abstract import AbstractProductStorage
+
+if TYPE_CHECKING:
+    from recommender_system.managers.model_manager import ModelManager
 
 
 class SelectionPredictionModel(AbstractPredictionModel):
@@ -17,14 +20,16 @@ class SelectionPredictionModel(AbstractPredictionModel):
 
     @inject
     def retrieve(
-        self, storage: AbstractProductStorage = Provide["product_storage"]
+        self,
+        storage: AbstractProductStorage = Provide["product_storage"],
+        model_manager: "ModelManager" = Provide["model_manager"],
     ) -> List[str]:
         return storage.get_random_weighted_attribute(
             model_class=ProductVariantModel,
             attribute=ProductVariantModel.Meta.primary_key,
             weight="recommendation_weight",
             stock_quantity__gt=0,
-            limit=1000,
+            limit=model_manager.config.retrieval_size,
         )
 
     def score(
@@ -90,6 +95,7 @@ class SelectionPredictionModel(AbstractPredictionModel):
         user_id: Optional[int],
         variants: Optional[List[str]] = None,
         storage: AbstractProductStorage = Provide["product_storage"],
+        model_manager: "ModelManager" = Provide["model_manager"],
     ) -> List[str]:
         if variants is not None:
             return variants
@@ -97,7 +103,7 @@ class SelectionPredictionModel(AbstractPredictionModel):
             model_class=ProductVariantModel,
             attribute=ProductVariantModel.Meta.primary_key,
             weight="recommendation_weight",
-            limit=1000,
+            limit=model_manager.config.retrieval_size,
         )
 
     def train(self) -> None:
