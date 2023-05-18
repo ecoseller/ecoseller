@@ -15,12 +15,12 @@ interface ICartContext {
   /**
    * cart object
    */
-  getCart: () => ICart | null;
+  cart: ICart | null;
 
   /**
    * Number of items in the cart
    */
-  getCartSize: () => number;
+  cartSize: number;
 
   /**
    * Function for adding variant to the cart
@@ -81,7 +81,7 @@ export const CartProvider = ({ children }: ICartProviderProps): JSX.Element => {
   const promisedSetToken = (newToken: string) =>
     new Promise((resolve) => setToken(newToken));
 
-  const calculateCartSize = (cart: any) => {
+  const calculateCartSize = (cart: ICart | null) => {
     if (cart?.cart_items) {
       // calculate cart size from cart items quantity and set it to state so we can use it in the UI to display the cart size
       setCartSize(
@@ -99,10 +99,10 @@ export const CartProvider = ({ children }: ICartProviderProps): JSX.Element => {
     if (!token) {
       return;
     }
-    fetchCart(token).then((data) => {
-      setCart(data);
-      calculateCartSize(data);
-    });
+    const cart = await fetchCart(token);
+
+    setCart(cart);
+    calculateCartSize(cart);
   };
 
   const addToCart = async (
@@ -145,26 +145,23 @@ export const CartProvider = ({ children }: ICartProviderProps): JSX.Element => {
     if (!token) {
       return;
     }
-    deleteCartProduct(token, sku).then((res) => {
-      refetchCart();
-    });
+
+    await deleteCartProduct(token, sku);
+    await refetchCart();
   };
 
   const updateQuantity = async (sku: string, quantity: number) => {
     if (!token) {
       return;
     }
-    putCartProduct(token, sku, quantity).then((res) => {
-      refetchCart();
-    });
+
+    await putCartProduct(token, sku, quantity);
+    await refetchCart();
   };
 
-  const getCart = () => cart;
-  const getCartSize = () => cartSize;
-
   const value = {
-    getCart,
-    getCartSize,
+    cart,
+    cartSize,
     addToCart,
     removeFromCart,
     updateQuantity,

@@ -26,9 +26,6 @@ export const cartProductDeleteAPI = async (
     return await api
       .delete(url)
       .then((response) => response.data)
-      .then((data) => {
-        return data;
-      })
       .catch((error: any) => {
         throw error;
       });
@@ -54,7 +51,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       req,
       res
     )
-      .then((data) => res.status(204))
+      .then((data) => console.log("204"))
       .catch((error) => res.status(400));
   }
 

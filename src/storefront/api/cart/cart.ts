@@ -23,7 +23,7 @@ export const createCart = async (
   // Method: POST
   // Params: none
   // Return: Promise
-  return await fetch(`/api/cart/`, {
+  return fetch(`/api/cart/`, {
     method: "POST",
     body: JSON.stringify({
       sku: sku,

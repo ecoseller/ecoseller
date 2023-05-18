@@ -41,7 +41,7 @@ export const putCartProduct = async (
   sku: string,
   quantity: number
 ) => {
-  return await fetch(`/api/cart/${token}/product/`, {
+  return fetch(`/api/cart/${token}/product/`, {
     method: "PUT",
     body: JSON.stringify({ sku, quantity }),
   }).then((res) => res.json());
@@ -53,7 +53,7 @@ export const putCartProduct = async (
  * @param sku sku of the product variant
  */
 export const deleteCartProduct = async (token: string, sku: string) => {
-  await fetch(`/api/cart/${token}/${sku}/`, {
+  return fetch(`/api/cart/${token}/${sku}/`, {
     method: "DELETE",
-  });
+  }).then((res) => res.json());
 };
