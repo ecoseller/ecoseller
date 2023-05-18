@@ -8,11 +8,18 @@ import Badge from "@mui/material/Badge";
 import IconButton from "@mui/material/IconButton";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useCart } from "@/utils/context/cart";
+import { useRouter } from "next/router";
 
 const Cart = ({}) => {
   const { cartSize } = useCart();
+  const router = useRouter();
+
   return (
-    <IconButton size="small" sx={{ ml: 2 }}>
+    <IconButton
+      size="small"
+      sx={{ ml: 2 }}
+      onClick={() => router.push("/cart")}
+    >
       <Badge badgeContent={cartSize} color="primary">
         <ShoppingCartIcon />
       </Badge>

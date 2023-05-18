@@ -1,8 +1,9 @@
-import { getCart } from "@/api/cart";
-import { Cart } from "@/types/cart";
+import { ICart } from "@/types/cart";
+import { NextApiRequest, NextApiResponse, NextPageContext } from "next";
+import { cartDetailAPI } from "@/pages/api/cart/[token]";
 
 interface ICartPageProps {
-  cart: Cart;
+  cart: ICart;
 }
 
 const CartPage = ({ cart }: ICartPageProps) => {
@@ -22,8 +23,16 @@ const CartPage = ({ cart }: ICartPageProps) => {
   );
 };
 
-export async function getServerSideProps() {
-  const cart = await getCart();
+export async function getServerSideProps(context: NextPageContext) {
+  const { req, res } = context;
+  const token = "95ad1b42-8011-47c2-8335-b704dbf1ec3a";
+
+  const cart: ICart = await cartDetailAPI(
+    "GET",
+    token,
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
 
   return { props: { cart: cart } };
 }

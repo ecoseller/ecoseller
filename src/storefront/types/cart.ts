@@ -1,7 +1,6 @@
-import {IProductMedia} from "@/types/product";
+import { IProductMedia } from "@/types/product";
 
-
-export interface CartItem {
+export interface ICartItem {
   product: number;
   product_variant: string;
   product_variant_name: string;
@@ -9,12 +8,12 @@ export interface CartItem {
   unit_price_net: number;
   quantity: number;
   discount: number | null;
-  primary_image: IProductMedia 
+  primary_image: IProductMedia;
 }
 
-export interface Cart {
-  token: string;
+export interface ICart {
+  cart_items: ICartItem[];
   update_at: string;
-  create_at: string;
-  cart_items: CartItem[];
+  currency_symbol: string;
+  symbol_position: "BEFORE" | "AFTER";
 }

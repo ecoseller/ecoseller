@@ -9,6 +9,6 @@ export interface IProductSliderData {
 export interface IProductMedia {
   id: number;
   type: "IMAGE" | "VIDEO";
-  product_id: number;
   media: string;
+  alt: string | null;
 }

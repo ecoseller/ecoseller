@@ -1,10 +1,14 @@
+import { ICart } from "@/types/cart";
+
 export const getCart = async (token: string) => {
   // Get cart by token
   // URL: /api/cart/{token}/
   // Method: GET
   // Params: token
   // Return: Promise
-  return await fetch(`/api/cart/${token}/`);
+  return fetch(`/api/cart/${token}/`)
+    .then((res) => res.json())
+    .then((data) => data as ICart);
 };
 
 export const createCart = async (
