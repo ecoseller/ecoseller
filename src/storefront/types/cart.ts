@@ -25,3 +25,25 @@ export interface ICart {
 export interface ICartToken {
   token: string;
 }
+
+export interface Address {
+  id: number;
+  first_name: string;
+  surname: string;
+  street: string;
+  city: string;
+  postal_code: string;
+  country: number;
+}
+
+export interface IBillingInfo extends Address {
+  company_name: string;
+  company_id: string;
+  vat_number: string;
+}
+
+export interface IShippingInfo extends Address {
+  email: string;
+  phone: string;
+  additional_info: string;
+}
