@@ -55,5 +55,5 @@ export const putCartProduct = async (
 export const deleteCartProduct = async (token: string, sku: string) => {
   return fetch(`/api/cart/${token}/${sku}/`, {
     method: "DELETE",
-  }).then((res) => res.json());
+  });
 };

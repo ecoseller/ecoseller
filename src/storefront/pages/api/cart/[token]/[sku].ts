@@ -51,7 +51,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       req,
       res
     )
-      .then((data) => console.log("204"))
+      .then((data) => res.status(204).json(null))
       .catch((error) => res.status(400));
   }
 

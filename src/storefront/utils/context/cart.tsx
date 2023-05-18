@@ -42,7 +42,7 @@ interface ICartContext {
    * Function for removing product variant from the cart
    * @param sku
    */
-  removeFromCart: (sku: string) => Promise<void>;
+  removeFromCart: (sku: string) => void;
 
   /**
    * Function for updating count of product variant in the cart

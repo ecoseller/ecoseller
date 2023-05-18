@@ -37,16 +37,13 @@ const CartItemList = () => {
     return itemPrices.reduce((x, y) => x + y);
   };
 
-  const updateItemQuantity = async (
-    item: ICartItem,
-    addingOne: boolean = true
-  ) => {
+  const updateItemQuantity = (item: ICartItem, addingOne: boolean = true) => {
     if (!addingOne && item.quantity == 1) {
       return;
     }
 
     const diff = addingOne ? 1 : -1;
-    await updateQuantity(item.product_variant_sku, item.quantity + diff);
+    updateQuantity(item.product_variant_sku, item.quantity + diff);
   };
 
   return cart ? (
@@ -84,16 +81,16 @@ const CartItemList = () => {
 
               <TableCell align="center">
                 <IconButton
-                  onClick={async () => {
-                    await updateItemQuantity(item, true);
+                  onClick={() => {
+                    updateItemQuantity(item, true);
                   }}
                 >
                   <AddIcon />
                 </IconButton>
                 {item.quantity}
                 <IconButton
-                  onClick={async () => {
-                    await updateItemQuantity(item, false);
+                  onClick={() => {
+                    updateItemQuantity(item, false);
                   }}
                 >
                   <RemoveIcon />
