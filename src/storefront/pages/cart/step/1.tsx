@@ -24,6 +24,7 @@ import ShippingInfoForm, {
 } from "@/components/Forms/ShippingInfoForm";
 // mui
 import {
+  Box,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -96,6 +97,46 @@ const CartStep1Page = ({
     }
   }
 
+  const submitForm = async () => {
+    if (
+      !validShippingInfo ||
+      (!validBillingInfo && billingRadioSelect === "NEW")
+    ) {
+      return;
+    }
+    // Shipping info
+    const exportedShipping = exportShippingInfo(shippingInfoState);
+    const shippingInfoResp = await putShippingInfo(cartToken, exportedShipping);
+
+    // Billing info
+    let billingInfoResp;
+    if (billingRadioSelect === "SAMEASSHIPPING") {
+      const billingSameAsShipping = {
+        first_name: exportedShipping.first_name,
+        surname: exportedShipping.surname,
+        street: exportedShipping.street,
+        city: exportedShipping.city,
+        postal_code: exportedShipping.postal_code,
+        country: exportedShipping.country,
+        company_name: "",
+        company_id: "",
+        vat_number: "",
+      };
+      console.log("billingSameAsShipping", billingSameAsShipping);
+      billingInfoResp = await putBillingInfo(cartToken, billingSameAsShipping);
+    } else {
+      billingInfoResp = await putBillingInfo(
+        cartToken,
+        exportBillingInfo(billingInfoState)
+      );
+    }
+    console.log("shippingInfoResp", shippingInfoResp);
+    console.log("billingInfoResp", billingInfoResp);
+    if (shippingInfoResp === 201 && billingInfoResp === 201) {
+      router.push("/cart/step/2");
+    }
+  };
+
   console.log("shippingInfoState", shippingInfoState);
   return (
     <div className="container">
@@ -167,68 +208,39 @@ const CartStep1Page = ({
           Billing is valid: {validBillingInfo ? "true" : "false"}
         </Grid>
       </Grid>
-      <Typography
-        variant="h4"
-        onClick={() => {
-          router.push("/cart");
-        }}
+      <Box
+        component="span"
+        m={1}
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
       >
-        Back to cart
-      </Typography>
-      <Button
-        variant={"contained"}
-        disabled={
-          !validShippingInfo ||
-          (!validBillingInfo && billingRadioSelect === "NEW")
-        }
-        onClick={async () => {
-          if (
+        <Typography
+          variant="body1"
+          sx={{
+            cursor: "pointer",
+            textDecoration: "underline",
+            "&:hover": {
+              color: "primary.main",
+            },
+          }}
+          onClick={() => {
+            router.push("/cart");
+          }}
+        >
+          Back to cart
+        </Typography>
+        <Button
+          variant={"contained"}
+          disabled={
             !validShippingInfo ||
             (!validBillingInfo && billingRadioSelect === "NEW")
-          ) {
-            return;
           }
-          // Shipping info
-          const exportedShipping = exportShippingInfo(shippingInfoState);
-          const shippingInfoResp = await putShippingInfo(
-            cartToken,
-            exportedShipping
-          );
-
-          // Billing info
-          let billingInfoResp;
-          if (billingRadioSelect === "SAMEASSHIPPING") {
-            const billingSameAsShipping = {
-              first_name: exportedShipping.first_name,
-              surname: exportedShipping.surname,
-              street: exportedShipping.street,
-              city: exportedShipping.city,
-              postal_code: exportedShipping.postal_code,
-              country: exportedShipping.country,
-              company_name: "",
-              company_id: "",
-              vat_number: "",
-            };
-            console.log("billingSameAsShipping", billingSameAsShipping);
-            billingInfoResp = await putBillingInfo(
-              cartToken,
-              billingSameAsShipping
-            );
-          } else {
-            billingInfoResp = await putBillingInfo(
-              cartToken,
-              exportBillingInfo(billingInfoState)
-            );
-          }
-          console.log("shippingInfoResp", shippingInfoResp);
-          console.log("billingInfoResp", billingInfoResp);
-          if (shippingInfoResp === 201 && billingInfoResp === 201) {
-            router.push("/cart/step/2");
-          }
-        }}
-      >
-        Next
-      </Button>
+          onClick={async () => submitForm()}
+        >
+          Next
+        </Button>
+      </Box>
     </div>
   );
 };
