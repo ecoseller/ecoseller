@@ -1,4 +1,5 @@
 import { IBillingInfo } from "@/types/cart";
+import { IValidatedInputField } from "@/types/common";
 import TextField from "@mui/material/TextField";
 import {
   ChangeEvent,
@@ -7,17 +8,7 @@ import {
   useCallback,
   useEffect,
 } from "react";
-
-export interface IValidatedInputField {
-  value: string;
-  isValid?: boolean;
-  setter: (value: string) => void;
-  setIsValid?: (value: boolean) => void;
-  validator?: (value: string) => boolean;
-  isRequired?: boolean;
-  errorMessage?: string;
-  label?: string;
-}
+import BasicField from "./BasicField";
 
 export interface IBillingInfoFormProps {
   first_name: IValidatedInputField;
@@ -251,143 +242,15 @@ const BillingInfoForm = (props: IBillingInfoFormComponentProps) => {
     <div className="billing-info-form">
       <h2>Billing information</h2>
       <form>
-        <TextField
-          id="first-name"
-          label={first_name.label}
-          variant="outlined"
-          value={first_name.value}
-          onChange={(
-            e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-          ) => {
-            first_name.setter(e.target.value);
-            if (first_name.validator && first_name.setIsValid) {
-              first_name.setIsValid(first_name.validator(e.target.value));
-            }
-          }}
-          error={first_name.isValid === false}
-          helperText={!first_name.isValid ? first_name.errorMessage : ""}
-        />
-        <TextField
-          id="surname"
-          label="Surname"
-          variant="outlined"
-          value={surname.value}
-          onChange={(
-            e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-          ) => {
-            surname.setter(e.target.value);
-            if (surname.validator && surname.setIsValid) {
-              surname.setIsValid(surname.validator(e.target.value));
-            }
-          }}
-          error={surname.isValid === false}
-          helperText={!surname.isValid ? surname.errorMessage : ""}
-        />
-        <TextField
-          id="company-name"
-          label={company_name.label}
-          variant="outlined"
-          value={company_name.value}
-          onChange={(
-            e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-          ) => {
-            company_name.setter(e.target.value);
-            if (company_name.validator && company_name.setIsValid) {
-              company_name.setIsValid(company_name.validator(e.target.value));
-            }
-          }}
-          error={company_name.isValid === false}
-          helperText={!company_name.isValid ? company_name.errorMessage : ""}
-        />
-        <TextField
-          id="company-id"
-          label={company_id.label}
-          variant="outlined"
-          value={company_id.value}
-          onChange={(
-            e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-          ) => {
-            company_id.setter(e.target.value);
-            if (company_id.validator && company_id.setIsValid) {
-              company_id.setIsValid(company_id.validator(e.target.value));
-            }
-          }}
-          error={company_id.isValid === false}
-          helperText={!company_id.isValid ? company_id.errorMessage : ""}
-        />
-        <TextField
-          id="vat-number"
-          label={vat_number.label}
-          variant="outlined"
-          value={vat_number.value}
-          onChange={(
-            e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-          ) => {
-            vat_number.setter(e.target.value);
-            if (vat_number.validator && vat_number.setIsValid) {
-              vat_number.setIsValid(vat_number.validator(e.target.value));
-            }
-          }}
-        />
-        <TextField
-          id="street"
-          label={street.label}
-          variant="outlined"
-          value={street.value}
-          onChange={(
-            e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-          ) => {
-            street.setter(e.target.value);
-            if (street.validator && street.setIsValid) {
-              street.setIsValid(street.validator(e.target.value));
-            }
-          }}
-          error={street.isValid === false}
-          helperText={!street.isValid ? street.errorMessage : ""}
-        />
-        <TextField
-          id="city"
-          label={city.label}
-          variant="outlined"
-          value={city.value}
-          onChange={(
-            e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-          ) => {
-            city.setter(e.target.value);
-            if (city.validator && city.setIsValid) {
-              city.setIsValid(city.validator(e.target.value));
-            }
-          }}
-          error={city.isValid === false}
-          helperText={!city.isValid ? city.errorMessage : ""}
-        />
-        <TextField
-          id="postal-code"
-          label={postal_code.label}
-          variant="outlined"
-          value={postal_code.value}
-          onChange={(
-            e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-          ) => {
-            postal_code.setter(e.target.value);
-            if (postal_code.validator && postal_code.setIsValid) {
-              postal_code.setIsValid(postal_code.validator(e.target.value));
-            }
-          }}
-          error={postal_code.isValid === false}
-          helperText={!postal_code.isValid ? postal_code.errorMessage : ""}
-        />
-        <TextField
-          id="country"
-          label={country.label}
-          variant="outlined"
-          value={country.value}
-          onChange={(e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
-            country.setter(e.target.value)
-          }
-          error={country.isValid === false}
-          helperText={!country.isValid ? country.errorMessage : ""}
-        />
+        <BasicField field={first_name} />
+        <BasicField field={surname} />
+        <BasicField field={company_name} />
+        <BasicField field={company_id} />
+        <BasicField field={vat_number} />
+        <BasicField field={street} />
+        <BasicField field={city} />
+        <BasicField field={postal_code} />
+        <BasicField field={country} />
       </form>
     </div>
   );
