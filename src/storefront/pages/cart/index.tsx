@@ -2,42 +2,33 @@ import { ICart } from "@/types/cart";
 import { NextApiRequest, NextApiResponse, NextPageContext } from "next";
 import { cartDetailAPI } from "@/pages/api/cart/[token]";
 import { useCart } from "@/utils/context/cart";
+import Typography from "@mui/material/Typography";
+import React from "react";
+import Box from "@mui/material/Box";
 
-interface ICartPageProps {
-  cart: ICart;
-}
-
-const CartPage = ({ cart }: ICartPageProps) => {
-  const { addToCart } = useCart();
+const CartPage = () => {
+  const { cart, addToCart, updateQuantity, removeFromCart } = useCart();
 
   return (
-    <>
-      <h1>Cart items</h1>
-      <table>
-        {cart.cart_items.map((i) => (
-          <tr key={i.product_variant}>
-            <td>{i.product_variant}</td>
-            <td>{i.unit_price_gross}</td>
-            <td>{i.quantity}</td>
-          </tr>
-        ))}
-      </table>
-    </>
+    <div className="container">
+      <Typography variant="h4" sx={{ my: 3 }}>
+        Cart
+      </Typography>
+      {cart ? (
+        <table>
+          {cart.cart_items.map((item) => (
+            <tr key={item.product_variant}>
+              <td>{item.product_variant}</td>
+              <td>{item.unit_price_gross}</td>
+              <td>{item.quantity}</td>
+            </tr>
+          ))}
+        </table>
+      ) : (
+        <Typography variant="h6">No items</Typography>
+      )}
+    </div>
   );
 };
-
-export async function getServerSideProps(context: NextPageContext) {
-  const { req, res } = context;
-  const token = "95ad1b42-8011-47c2-8335-b704dbf1ec3a";
-
-  const cart: ICart = await cartDetailAPI(
-    "GET",
-    token,
-    req as NextApiRequest,
-    res as NextApiResponse
-  );
-
-  return { props: { cart: cart } };
-}
 
 export default CartPage;
