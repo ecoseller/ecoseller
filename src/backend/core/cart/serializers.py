@@ -53,12 +53,15 @@ class CartItemDetailSerializer(ModelSerializer):
     primary_image = ProductMediaBaseSerializer(
         read_only=True, many=False, source="primary_photo"
     )
+    product_id = IntegerField(source="product.id")
+    product_variant_sku = CharField(source="product_variant.sku")
 
     class Meta:
         model = CartItem
         fields = (
-            "product",
-            "product_variant",
+            "product_id",
+            "product_variant_sku",
+            "product_slug",
             "product_variant_name",
             "unit_price_gross",
             "unit_price_net",

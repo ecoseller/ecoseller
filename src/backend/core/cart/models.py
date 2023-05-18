@@ -191,12 +191,15 @@ class CartItem(models.Model):
 
     quantity = models.IntegerField(default=1)
 
+    def _get_language(self):
+        return self.cart.country.locale
+
     @property
     def product_variant_name(self):
         """
         Name of the product variant displayed in the cart
         """
-        language = self.cart.country.locale
+        language = self._get_language()
         product_title = self.product.translations.get(language_code=language).title
         attribute_values = (
             self.product_variant.attribute_values
@@ -207,6 +210,11 @@ class CartItem(models.Model):
             if attribute_values
             else product_title
         )
+
+    @property
+    def product_slug(self):
+        language = self._get_language()
+        return self.product.translations.get(language_code=language).slug
 
     @property
     def primary_photo(self):

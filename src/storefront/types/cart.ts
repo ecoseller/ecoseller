@@ -1,8 +1,12 @@
 import { IProductMedia } from "@/types/product";
 
+/**
+ * Interface representing an item in the cart
+ */
 export interface ICartItem {
-  product: number;
-  product_variant: string;
+  product_id: number;
+  product_slug: string;
+  product_variant_sku: string;
   product_variant_name: string;
   unit_price_gross: number;
   unit_price_net: number;
