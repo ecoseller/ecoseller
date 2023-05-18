@@ -17,3 +17,7 @@ export interface ICart {
   currency_symbol: string;
   symbol_position: "BEFORE" | "AFTER";
 }
+
+export interface ICartToken {
+  token: string;
+}

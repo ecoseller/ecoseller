@@ -1,12 +1,15 @@
 import { ICart } from "@/types/cart";
 import { NextApiRequest, NextApiResponse, NextPageContext } from "next";
 import { cartDetailAPI } from "@/pages/api/cart/[token]";
+import { useCart } from "@/utils/context/cart";
 
 interface ICartPageProps {
   cart: ICart;
 }
 
 const CartPage = ({ cart }: ICartPageProps) => {
+  const { addToCart } = useCart();
+
   return (
     <>
       <h1>Cart items</h1>

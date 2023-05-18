@@ -3,6 +3,7 @@ import { useState, createContext, useContext, useEffect } from "react";
 import { useRouter } from "next/router";
 import { createCart, getCart } from "@/api/cart/cart";
 import { postCartProduct, putCartProduct } from "@/api/cart/product";
+import { ICart } from "@/types/cart";
 
 interface ICartContextProps {
   cart: any | null;
@@ -34,16 +35,17 @@ interface ICartProviderProps {
 }
 
 const CartContext = createContext<Partial<ICartContextProps>>({});
+const cartTokenCookie = "cartToken";
 
 export const CartProvider = ({ children }: ICartProviderProps): JSX.Element => {
   // TODO: add types for cart and cart items
 
-  const [cart, setCart] = useState<any | null>(null);
+  const [cart, setCart] = useState<ICart | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [cartSize, setCartSize] = useState<number>(0);
 
   useEffect(() => {
-    const token = Cookies.get("cartToken") || "";
+    const token = Cookies.get(cartTokenCookie) || "";
     setToken(token);
   }, []);
 
@@ -52,7 +54,7 @@ export const CartProvider = ({ children }: ICartProviderProps): JSX.Element => {
       setCart(null);
       return;
     }
-    Cookies.set("cartToken", token); // TODO: set expiry date
+    Cookies.set(cartTokenCookie, token); // TODO: set expiry date
     refetchCart();
   }, [token]);
 
@@ -77,12 +79,10 @@ export const CartProvider = ({ children }: ICartProviderProps): JSX.Element => {
     if (!token) {
       return;
     }
-    getCart(token)
-      .then((res) => res.json())
-      .then((data) => {
-        setCart(data);
-        calculateCartSize(data);
-      });
+    getCart(token).then((data) => {
+      setCart(data);
+      calculateCartSize(data);
+    });
   };
 
   const addToCart = async (
@@ -94,11 +94,10 @@ export const CartProvider = ({ children }: ICartProviderProps): JSX.Element => {
   ) => {
     if (!token) {
       // if there is no token, create a new cart and set the token
-      const newCart = await createCart(sku, qty, product, pricelist, country);
-      const cartData = await newCart.json();
-      const newToken = cartData.token;
-      setToken(newToken);
-      setCart(newCart);
+      const cartToken = await createCart(sku, qty, product, pricelist, country);
+      setToken(cartToken.token);
+
+      refetchCart();
       return;
     }
     // check if the product is already in the cart and if so, update the quantity instead of adding a new product to the cart

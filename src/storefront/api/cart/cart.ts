@@ -1,4 +1,4 @@
-import { ICart } from "@/types/cart";
+import { ICart, ICartToken } from "@/types/cart";
 
 export const getCart = async (token: string) => {
   // Get cart by token
@@ -32,5 +32,7 @@ export const createCart = async (
       pricelist: pricelist,
       country: country,
     }),
-  });
+  })
+    .then((res) => res.json())
+    .then((data) => data as ICartToken);
 };
