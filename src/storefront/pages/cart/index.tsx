@@ -18,6 +18,7 @@ import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
 import { useRouter } from "next/router";
 import Paper from "@mui/material/Paper";
+import imgPath from "@/utils/imgPath";
 
 const CartPage = () => {
   const { getCart, addToCart, updateQuantity, removeFromCart } = useCart();
@@ -60,11 +61,20 @@ const CartPage = () => {
                   </Button>
                 </TableCell>
 
-                <TableCell align="center">
-                  {item.discount ? (
-                    <span className="red-text">-{item.discount} %</span>
-                  ) : null}
-                </TableCell>
+                {item.primary_image ? (
+                  <TableCell>
+                    <img
+                      src={imgPath(item.primary_image.media)}
+                      alt={item.primary_image.alt || ""}
+                      style={{
+                        objectFit: "contain",
+                        position: "relative",
+                        height: "50px",
+                        width: "auto",
+                      }}
+                    />
+                  </TableCell>
+                ) : null}
 
                 <TableCell align="center">
                   <IconButton onClick={() => {}}>
@@ -77,13 +87,17 @@ const CartPage = () => {
                 </TableCell>
 
                 <TableCell align="center">
-                  <b>
-                    {getItemPriceString(
-                      item,
-                      cartState.currency_symbol,
-                      cartState.symbol_position
-                    )}
-                  </b>
+                  {item.discount ? (
+                    <span className="red-text">-{item.discount} %</span>
+                  ) : null}
+                </TableCell>
+
+                <TableCell align="center">
+                  {getItemPriceString(
+                    item,
+                    cartState.currency_symbol,
+                    cartState.symbol_position
+                  )}
                 </TableCell>
 
                 <TableCell align="center">

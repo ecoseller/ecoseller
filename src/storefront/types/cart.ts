@@ -12,7 +12,7 @@ export interface ICartItem {
   unit_price_net: number;
   quantity: number;
   discount: number | null;
-  primary_image: IProductMedia;
+  primary_image: IProductMedia | null;
 }
 
 export interface ICart {
