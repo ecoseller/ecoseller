@@ -1,4 +1,4 @@
-import { IShippingInfo } from "@/types/cart";
+import { IBillingInfo } from "@/types/cart";
 import TextField from "@mui/material/TextField";
 import {
   ChangeEvent,
@@ -19,31 +19,31 @@ export interface IValidatedInputField {
   label?: string;
 }
 
-export interface IShippingInfoFormProps {
+export interface IBillingInfoFormProps {
   first_name: IValidatedInputField;
   surname: IValidatedInputField;
-  email: IValidatedInputField;
-  phone: IValidatedInputField;
-  additional_info: IValidatedInputField;
+  company_name: IValidatedInputField;
+  company_id: IValidatedInputField;
+  vat_number: IValidatedInputField;
   street: IValidatedInputField;
   city: IValidatedInputField;
   postal_code: IValidatedInputField;
   country: IValidatedInputField;
 }
 
-export const shippingInfoInitialData = (
-  shippingInfo: IShippingInfo,
-  setter: Dispatch<SetStateAction<IShippingInfoFormProps>>
-): IShippingInfoFormProps => {
+export const billingInfoInitialData = (
+  billingInfo: IBillingInfo,
+  setter: Dispatch<SetStateAction<IBillingInfoFormProps>>
+): IBillingInfoFormProps => {
   /**
-   * Purpose of this function is to take the shipping info from the API and
-   * convert it into the format that the ShippingInfoForm component expects.
+   * Purpose of this function is to take the billing info from the API and
+   * convert it into the format that the BillingInfoForm component expects.
    * */
 
   return {
     first_name: {
-      value: shippingInfo.first_name,
-      isValid: shippingInfo.first_name != "" ? true : undefined,
+      value: billingInfo.first_name,
+      isValid: billingInfo.first_name != "" ? true : undefined,
       setIsValid: (value: boolean) =>
         setter((prevState) => ({
           ...prevState,
@@ -60,8 +60,8 @@ export const shippingInfoInitialData = (
       label: "First name",
     },
     surname: {
-      value: shippingInfo.surname,
-      isValid: shippingInfo.surname != "" ? true : undefined,
+      value: billingInfo.surname,
+      isValid: billingInfo.surname != "" ? true : undefined,
       setIsValid: (value: boolean) =>
         setter((prevState) => ({
           ...prevState,
@@ -77,58 +77,42 @@ export const shippingInfoInitialData = (
       errorMessage: "Surname is required",
       label: "Surname",
     },
-    email: {
-      value: shippingInfo.email,
-      isValid: shippingInfo.email != "" ? true : undefined,
-      setIsValid: (value: boolean) =>
-        setter((prevState) => ({
-          ...prevState,
-          email: { ...prevState.email, isValid: value },
-        })),
+    company_name: {
+      value: billingInfo.company_name,
+      isValid: true,
       setter: (value: string) =>
         setter((prevState) => ({
           ...prevState,
-          email: { ...prevState.email, value },
-        })),
-      validator: (value: string) => {
-        const emailRegex = /\S+@\S+\.\S+/;
-        return emailRegex.test(value);
-      },
-      isRequired: true,
-      errorMessage: "Email is required",
-      label: "Email",
-    },
-    phone: {
-      value: shippingInfo.phone,
-      isValid: shippingInfo.phone != "" ? true : undefined,
-      setIsValid: (value: boolean) =>
-        setter((prevState) => ({
-          ...prevState,
-          phone: { ...prevState.phone, isValid: value },
-        })),
-      setter: (value: string) =>
-        setter((prevState) => ({
-          ...prevState,
-          phone: { ...prevState.phone, value },
-        })),
-      validator: (value: string) => value.length > 0,
-      isRequired: true,
-      errorMessage: "Phone is required",
-      label: "Phone",
-    },
-    additional_info: {
-      value: shippingInfo.additional_info,
-      setter: (value: string) =>
-        setter((prevState) => ({
-          ...prevState,
-          additional_info: { ...prevState.additional_info, value },
+          email: { ...prevState.company_name, value },
         })),
       isRequired: false,
-      label: "Additional info",
+      label: "Company name",
+    },
+    company_id: {
+      value: billingInfo.company_id,
+      isValid: true,
+      setter: (value: string) =>
+        setter((prevState) => ({
+          ...prevState,
+          company_id: { ...prevState.company_id, value },
+        })),
+      isRequired: false,
+      label: "Company ID",
+    },
+    vat_number: {
+      value: billingInfo.vat_number,
+      isValid: true,
+      setter: (value: string) =>
+        setter((prevState) => ({
+          ...prevState,
+          email: { ...prevState.vat_number, value },
+        })),
+      isRequired: false,
+      label: "VAT ID",
     },
     street: {
-      value: shippingInfo.street,
-      isValid: shippingInfo.street != "" ? true : undefined,
+      value: billingInfo.street,
+      isValid: billingInfo.street != "" ? true : undefined,
       setIsValid: (value: boolean) =>
         setter((prevState) => ({
           ...prevState,
@@ -145,8 +129,8 @@ export const shippingInfoInitialData = (
       label: "Street",
     },
     city: {
-      value: shippingInfo.city,
-      isValid: shippingInfo.city != "" ? true : undefined,
+      value: billingInfo.city,
+      isValid: billingInfo.city != "" ? true : undefined,
       setIsValid: (value: boolean) =>
         setter((prevState) => ({
           ...prevState,
@@ -163,8 +147,8 @@ export const shippingInfoInitialData = (
       label: "City",
     },
     postal_code: {
-      value: shippingInfo.postal_code,
-      isValid: shippingInfo.postal_code != "" ? true : undefined,
+      value: billingInfo.postal_code,
+      isValid: billingInfo.postal_code != "" ? true : undefined,
       setIsValid: (value: boolean) =>
         setter((prevState) => ({
           ...prevState,
@@ -181,8 +165,8 @@ export const shippingInfoInitialData = (
       label: "Postal code",
     },
     country: {
-      value: `${shippingInfo.country}`,
-      isValid: `${shippingInfo.country}` != "" ? true : undefined,
+      value: `${billingInfo.country}`,
+      isValid: `${billingInfo.country}` != "" ? true : undefined,
       setIsValid: (value: boolean) =>
         setter((prevState) => ({
           ...prevState,
@@ -201,18 +185,18 @@ export const shippingInfoInitialData = (
   };
 };
 
-interface IShippingInfoFormComponentProps extends IShippingInfoFormProps {
+interface IBillingInfoFormComponentProps extends IBillingInfoFormProps {
   setIsFormValid: (value: boolean) => void;
 }
 
-const ShippingInfoForm = (props: IShippingInfoFormComponentProps) => {
-  const { setIsFormValid, ...shippingInfo } = props;
+const BillingInfoForm = (props: IBillingInfoFormComponentProps) => {
+  const { setIsFormValid, ...billingInfo } = props;
 
   /**
-   * Purpose of this component is to display the shipping information form
-   * and have it be pre-populated with the shipping information if it exists.
+   * Purpose of this component is to display the billing information form
+   * and have it be pre-populated with the billing information if it exists.
    *
-   * It should be a form with header "Shipping information" and the following fields:
+   * It should be a form with header "Billing information" and the following fields:
    * - First name
    * - Surname
    * - Email
@@ -226,12 +210,12 @@ const ShippingInfoForm = (props: IShippingInfoFormComponentProps) => {
    * And all done in MUI with validation.
    * */
 
-  const validateShippingInfo = useCallback(() => {
-    // iterate through the shipping info and check if all the fields are valid if they're required
-    const shippingInfoValues: IValidatedInputField[] =
-      Object.values(shippingInfo);
-    for (let i = 0; i < shippingInfoValues.length; i++) {
-      const value = shippingInfoValues[i];
+  const validateBillingInfo = useCallback(() => {
+    // iterate through the billing info and check if all the fields are valid if they're required
+    const billingInfoValues: IValidatedInputField[] =
+      Object.values(billingInfo);
+    for (let i = 0; i < billingInfoValues.length; i++) {
+      const value = billingInfoValues[i];
       if (
         value.isRequired &&
         (value.isValid == false || value.isValid == undefined)
@@ -240,32 +224,32 @@ const ShippingInfoForm = (props: IShippingInfoFormComponentProps) => {
         return;
       }
     }
-    if (shippingInfoValues.length === 0) {
+    if (billingInfoValues.length === 0) {
       setIsFormValid(false);
       return;
     }
     setIsFormValid(true);
-  }, [shippingInfo]);
+  }, [billingInfo]);
 
   useEffect(() => {
-    validateShippingInfo();
-  }, [shippingInfo]);
+    validateBillingInfo();
+  }, [billingInfo]);
 
   const {
     first_name,
     surname,
-    email,
-    phone,
-    additional_info,
+    company_name,
+    company_id,
+    vat_number,
     street,
     city,
     postal_code,
     country,
-  } = shippingInfo;
+  } = billingInfo;
 
   return (
-    <div className="shipping-info-form">
-      <h2>Shipping information</h2>
+    <div className="billing-info-form">
+      <h2>Billing information</h2>
       <form>
         <TextField
           id="first-name"
@@ -300,50 +284,48 @@ const ShippingInfoForm = (props: IShippingInfoFormComponentProps) => {
           helperText={!surname.isValid ? surname.errorMessage : ""}
         />
         <TextField
-          id="email"
-          label={email.label}
+          id="company-name"
+          label={company_name.label}
           variant="outlined"
-          value={email.value}
+          value={company_name.value}
           onChange={(
             e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
           ) => {
-            email.setter(e.target.value);
-            if (email.validator && email.setIsValid) {
-              email.setIsValid(email.validator(e.target.value));
+            company_name.setter(e.target.value);
+            if (company_name.validator && company_name.setIsValid) {
+              company_name.setIsValid(company_name.validator(e.target.value));
             }
           }}
-          error={email.isValid === false}
-          helperText={!email.isValid ? email.errorMessage : ""}
+          error={company_name.isValid === false}
+          helperText={!company_name.isValid ? company_name.errorMessage : ""}
         />
         <TextField
-          id="phone"
-          label={phone.label}
+          id="company-id"
+          label={company_id.label}
           variant="outlined"
-          value={phone.value}
+          value={company_id.value}
           onChange={(
             e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
           ) => {
-            phone.setter(e.target.value);
-            if (phone.validator && phone.setIsValid) {
-              phone.setIsValid(phone.validator(e.target.value));
+            company_id.setter(e.target.value);
+            if (company_id.validator && company_id.setIsValid) {
+              company_id.setIsValid(company_id.validator(e.target.value));
             }
           }}
-          error={phone.isValid === false}
-          helperText={!phone.isValid ? phone.errorMessage : ""}
+          error={company_id.isValid === false}
+          helperText={!company_id.isValid ? company_id.errorMessage : ""}
         />
         <TextField
-          id="additional-info"
-          label={additional_info.label}
+          id="vat-number"
+          label={vat_number.label}
           variant="outlined"
-          value={additional_info.value}
+          value={vat_number.value}
           onChange={(
             e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
           ) => {
-            additional_info.setter(e.target.value);
-            if (additional_info.validator && additional_info.setIsValid) {
-              additional_info.setIsValid(
-                additional_info.validator(e.target.value)
-              );
+            vat_number.setter(e.target.value);
+            if (vat_number.validator && vat_number.setIsValid) {
+              vat_number.setIsValid(vat_number.validator(e.target.value));
             }
           }}
         />
@@ -411,4 +393,4 @@ const ShippingInfoForm = (props: IShippingInfoFormComponentProps) => {
   );
 };
 
-export default ShippingInfoForm;
+export default BillingInfoForm;

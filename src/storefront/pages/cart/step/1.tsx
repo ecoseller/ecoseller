@@ -1,3 +1,7 @@
+import BillingInfoForm, {
+  IBillingInfoFormProps,
+  billingInfoInitialData,
+} from "@/components/Forms/BillingInfoForm";
 import ShippingInfoForm, {
   IShippingInfoFormProps,
   shippingInfoInitialData,
@@ -31,6 +35,16 @@ const CartStep1Page = ({ shippingInfo, billingInfo }: ICartStep1PageProps) => {
     );
   }
 
+  const [validBillingInfo, setValidBillingInfo] = useState<boolean>(false);
+  const [billingInfoState, setBillingInfoState] =
+    useState<IBillingInfoFormProps>({} as IBillingInfoFormProps);
+
+  if (Object.keys(billingInfoState)?.length === 0) {
+    setBillingInfoState(
+      billingInfoInitialData(shippingInfo, setBillingInfoState)
+    );
+  }
+
   console.log("shippingInfoState", shippingInfoState);
   return (
     <div className="container">
@@ -47,6 +61,19 @@ const CartStep1Page = ({ shippingInfo, billingInfo }: ICartStep1PageProps) => {
         setIsFormValid={setValidShippingInfo}
       />
       Shipping is valid: {validShippingInfo ? "true" : "false"}
+      <BillingInfoForm
+        first_name={billingInfoState.first_name}
+        surname={billingInfoState.surname}
+        company_name={billingInfoState.company_name}
+        company_id={billingInfoState.company_id}
+        vat_number={billingInfoState.vat_number}
+        street={billingInfoState.street}
+        city={billingInfoState.city}
+        postal_code={billingInfoState.postal_code}
+        country={billingInfoState.country}
+        setIsFormValid={setValidBillingInfo}
+      />
+      Billing is valid: {validBillingInfo ? "true" : "false"}
     </div>
   );
 };
