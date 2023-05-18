@@ -9,6 +9,7 @@ import ProductEditorWrapper from "@/components/Dashboard/Catalog/Products/Editor
 import { IAttributeType, IProductType } from "@/types/product";
 import { IPriceList } from "@/types/localization";
 import { axiosPrivate } from "@/utils/axiosPrivate";
+import { PermissionProvider } from "@/utils/context/permission";
 
 interface IProps {
   attributesData: IAttributeType[];
@@ -24,13 +25,15 @@ const DashboardProductsAddPage = ({
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
-        <ProductEditorWrapper
-          title={"Add product"}
-          returnPath={"/dashboard/catalog/products"}
-          attributesData={attributesData}
-          pricelistsData={pricelistsData}
-          productTypeData={productTypeData}
-        />
+        <PermissionProvider allowedPermissions={["product_add_permission"]}>
+          <ProductEditorWrapper
+            title={"Add product"}
+            returnPath={"/dashboard/catalog/products"}
+            attributesData={attributesData}
+            pricelistsData={pricelistsData}
+            productTypeData={productTypeData}
+          />
+        </PermissionProvider>
       </Container>
     </DashboardLayout>
   );

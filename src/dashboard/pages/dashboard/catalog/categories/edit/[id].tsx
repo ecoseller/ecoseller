@@ -7,6 +7,7 @@ import { ICategoryDetail } from "@/types/category";
 import { useRouter } from "next/router";
 import { NextApiRequest, NextApiResponse } from "next";
 import { categoryDetailAPI } from "@/pages/api/category/[id]";
+import { PermissionProvider } from "@/utils/context/permission";
 
 interface ICategoryEditPageProps {
   category: ICategoryDetail;
@@ -19,12 +20,14 @@ const CategoryEditPage = ({ category }: ICategoryEditPageProps) => {
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
-        <CategoryEditorWrapper
-          initialCategory={category}
-          creatingNew={false}
-          title={`Edit category #${categoryId}`}
-          categoryId={categoryId}
-        />
+        <PermissionProvider allowedPermissions={["category_change_permission"]}>
+          <CategoryEditorWrapper
+            initialCategory={category}
+            creatingNew={false}
+            title={`Edit category #${categoryId}`}
+            categoryId={categoryId}
+          />
+        </PermissionProvider>
       </Container>
     </DashboardLayout>
   );

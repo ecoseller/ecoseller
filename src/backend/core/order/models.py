@@ -1,4 +1,5 @@
 import uuid
+
 from django.db import models
 from enumchoicefield import ChoiceEnum, EnumChoiceField
 
@@ -27,3 +28,7 @@ class Order(models.Model):
     cart = models.ForeignKey(
         Cart, null=True, on_delete=models.SET_NULL, related_name="order"
     )
+
+    @property
+    def customer_email(self):
+        return self.cart.shipping_address.email

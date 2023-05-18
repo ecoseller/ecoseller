@@ -13,6 +13,7 @@ import { Grid } from "@mui/material";
 
 import UserGrid from "@/components/Dashboard/UsersRoles/Users/UsersGeneralInformation";
 import GroupsGrid from "@/components/Dashboard/UsersRoles/Roles/RolesGenerealInformation";
+import { PermissionProvider } from "@/utils/context/permission";
 
 const DashboardRolesAndUsersPage = () => {
   return (
@@ -20,9 +21,13 @@ const DashboardRolesAndUsersPage = () => {
       <Typography variant="h4" gutterBottom>
         Users and roles
       </Typography>
-      <UserGrid />
+      <PermissionProvider allowedPermissions={["user_change_permission"]}>
+        <UserGrid />
+      </PermissionProvider>
       <Grid item xs={12} md={6} lg={8} sx={{ paddingTop: 2 }}></Grid>
-      <GroupsGrid />
+      <PermissionProvider allowedPermissions={["group_change_permission"]}>
+        <GroupsGrid />
+      </PermissionProvider>
     </DashboardLayout>
   );
 };

@@ -22,6 +22,7 @@ import dynamic from "next/dynamic";
 import { OutputData as IEditorJSData } from "@editorjs/editorjs";
 import { IEntityTranslation, IEntityTranslations } from "@/types/common";
 import { IDispatchWrapper } from "@/components/Dashboard/Common/IDispatchWrapper";
+import { usePermission } from "@/utils/context/permission";
 
 let EditorJSField = dynamic(
   () => import("@/components/Dashboard/Common/Fields/EditorJSField"),
@@ -44,6 +45,7 @@ const TranslatedFieldsTab = ({
   // const [title, setTitle] = useState<string>("");
   // const [slug, setSlug] = useState<string>("");
   const [editSlug, setEditSlug] = useState<boolean>(false);
+  const { hasPermission } = usePermission();
 
   useEffect(() => {
     if (!editSlug && state?.title != undefined && dispatchWrapper?.setSlug) {
@@ -60,13 +62,14 @@ const TranslatedFieldsTab = ({
     }
   }, [state?.title]);
 
-  console.log("Tab rendered");
+  console.log("Tab rendered", hasPermission);
 
   return (
     <FormControl fullWidth margin={"normal"}>
       <Stack spacing={2}>
         {dispatchWrapper && dispatchWrapper?.setTitle ? (
           <TextField
+            disabled={!hasPermission}
             label="Title"
             value={state?.title || ""}
             onChange={(
@@ -82,7 +85,7 @@ const TranslatedFieldsTab = ({
           <TextField
             label="Slug"
             value={state?.slug || ""}
-            disabled={!editSlug}
+            disabled={!editSlug || !hasPermission}
             onChange={(
               e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
             ) => {
@@ -118,6 +121,7 @@ const TranslatedFieldsTab = ({
           <EditorJSField
             data={state?.description_editorjs || ({} as IEditorJSData)}
             label={"Description"}
+            disabled={!hasPermission}
             onChange={(data: IEditorJSData) => {
               dispatchWrapper?.setDescription
                 ? dispatchWrapper.setDescription(language, data)
@@ -129,6 +133,7 @@ const TranslatedFieldsTab = ({
           <TextField
             label="Description"
             value={state?.description || ""}
+            disabled={!hasPermission}
             onChange={(
               e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
             ) => {

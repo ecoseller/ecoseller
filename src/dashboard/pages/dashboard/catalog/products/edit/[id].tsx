@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import { IAttributeType, IProduct } from "@/types/product";
 import { axiosPrivate } from "@/utils/axiosPrivate";
 import { IPriceList } from "@/types/localization";
+import { PermissionProvider } from "@/utils/context/permission";
 
 interface IProps {
   product: IProduct; // atributesData are gotten directly from product: IProduct
@@ -27,12 +28,14 @@ const DashboardProductsEditPage = ({ product, pricelistsData }: IProps) => {
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
-        <ProductEditorWrapper
-          title={`Edit product #${id}`}
-          returnPath={"/dashboard/catalog/products"}
-          productData={product}
-          pricelistsData={pricelistsData}
-        />
+        <PermissionProvider allowedPermissions={["product_add_permission"]}>
+          <ProductEditorWrapper
+            title={`Edit product #${id}`}
+            returnPath={"/dashboard/catalog/products"}
+            productData={product}
+            pricelistsData={pricelistsData}
+          />
+        </PermissionProvider>
       </Container>
     </DashboardLayout>
   );

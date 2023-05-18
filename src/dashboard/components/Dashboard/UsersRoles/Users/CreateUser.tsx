@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { usePermission } from "@/utils/context/permission";
 
 interface ICreateUserProps {
   email: string;
@@ -38,6 +39,7 @@ const CreateUser = ({
   ) => {
     event.preventDefault();
   };
+  const { hasPermission } = usePermission();
 
   return (
     <EditorCard>
@@ -48,7 +50,7 @@ const CreateUser = ({
             <TextField
               label="Email"
               value={email}
-              // disabled={true}
+              disabled={!hasPermission}
               onChange={(
                 event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
               ) => {
@@ -67,6 +69,7 @@ const CreateUser = ({
           <OutlinedInput
             id="outlined-adornment-password"
             type={showPassword ? "text" : "password"}
+            disabled={!hasPermission}
             value={password}
             onChange={(
               event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>

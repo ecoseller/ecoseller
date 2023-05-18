@@ -20,6 +20,7 @@ import {
 } from "@/types/product";
 import { ISetProductStateAction } from "../ProductEditorWrapper";
 import Link from "next/link";
+import { usePermission } from "@/utils/context/permission";
 
 interface IProductMediaEditorProps {
   types: IProductType[] | undefined;
@@ -36,7 +37,7 @@ const ProductTypeSelect = ({
 }: IProductMediaEditorProps) => {
   // simple select with categories
   // const [categoryId, setCategoryId] = useState<string>("");
-
+  const { hasPermission } = usePermission();
   const setProductTypeId = (id: number | undefined) => {
     dispatch({
       type: ActionSetProduct.SETPRODUCTTYPEID,
@@ -55,7 +56,6 @@ const ProductTypeSelect = ({
     const selectedType = types?.find(
       (t: IProductType) => `${t.id}` == event.target.value
     );
-    console.log("selectedType", selectedType);
     if (selectedType) {
       setProductTypeId(selectedType?.id || undefined);
       setProductTypeObject(selectedType);
@@ -67,14 +67,19 @@ const ProductTypeSelect = ({
       <Typography variant="h6">Product type</Typography>
       <Box mt={2}>
         {disabled ? (
-          <Link
-            href={{
-              pathname: "/dashboard/catalog/product-types/[id]",
-              query: { id: state?.type?.id },
-            }}
-          >
-            <Typography variant="body1">{state?.type?.name}</Typography>
-          </Link>
+          <>
+            <Link
+              href={{
+                pathname: "/dashboard/catalog/product-types/[id]",
+                query: { id: state?.type?.id },
+              }}
+            >
+              <Typography variant="body1">{state?.type?.name}</Typography>
+            </Link>
+            <Typography variant="body2" color="textSecondary">
+              Product type cannot be changed after product is created.
+            </Typography>
+          </>
         ) : (
           <FormControl fullWidth>
             <InputLabel id="category-select-label">Product type</InputLabel>
@@ -83,11 +88,16 @@ const ProductTypeSelect = ({
               id="category-select"
               value={`${state?.type_id || ""}`}
               label="Product type"
+              disabled={!hasPermission}
               onChange={handleChange}
             >
               {types?.map((type: IProductType) => {
                 return (
-                  <MenuItem key={type.id} value={type.id}>
+                  <MenuItem
+                    key={type.id}
+                    value={type.id}
+                    disabled={!hasPermission}
+                  >
                     {type.name}
                   </MenuItem>
                 );

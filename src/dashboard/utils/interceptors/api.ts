@@ -38,19 +38,18 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  let accessToken = getAccessToken();
-
   let access = "";
+  let refresh = "";
   if (isServer()) {
     access = getCookie("accessToken", { req, res }) as string;
+    refresh = getCookie("refreshToken", { req, res }) as string;
   } else {
     access = Cookies.get("accessToken") || "";
+    refresh = Cookies.get("refreshToken") || "";
   }
-  if (!accessToken) {
-    setAccessToken(access);
-  }
-  if (accessToken) {
-    config.headers.Authorization = `JWT ${accessToken}`;
+
+  if (access) {
+    config.headers.Authorization = `JWT ${access}`;
   }
   return config;
 });
@@ -62,7 +61,7 @@ api.interceptors.response.use(
   (error: AxiosError) => {
     // check conditions to refresh token
     if (
-      error.response?.status === 401 &&
+      (error.response?.status === 401 || error.response?.status === 403) &&
       !error.response?.config?.url?.includes("user/refresh-token") &&
       !error.response?.config?.url?.includes("user/login")
     ) {

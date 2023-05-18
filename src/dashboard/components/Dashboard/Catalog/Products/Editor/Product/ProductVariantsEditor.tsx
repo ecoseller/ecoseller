@@ -58,6 +58,7 @@ import {
   serializeProductVariantPricesFromRow,
 } from "@/utils/productSerializer";
 import { useSnackbarState } from "@/utils/snackbar";
+import { usePermission } from "@/utils/context/permission";
 
 interface IProductVariantTable extends IProductVariant {
   id: string;
@@ -85,10 +86,16 @@ const EditToolbar = (props: EditToolbarProps) => {
       [id]: { mode: GridRowModes.Edit, fieldToFocus: "name" },
     }));
   };
+  const { hasPermission } = usePermission();
 
   return (
     <GridToolbarContainer>
-      <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
+      <Button
+        color="primary"
+        startIcon={<AddIcon />}
+        onClick={handleClick}
+        disabled={!hasPermission}
+      >
         Add variant
       </Button>
     </GridToolbarContainer>
@@ -113,6 +120,8 @@ const ProductVariantsEditor = ({
   const [snackbar, setSnackbar] = useSnackbarState();
   console.log("attribtuesData", attributesData);
   const [rows, setRows] = useState<IProductVariantTable[]>([]);
+
+  const { hasPermission } = usePermission();
 
   const [updateMainState, setUpdateMainState] = useState<boolean>(false);
 
@@ -257,7 +266,6 @@ const ProductVariantsEditor = ({
           ],
         })) || []
       : []), // <-- this generates attributes columns
-
     {
       field: "actions",
       type: "actions",
@@ -270,17 +278,18 @@ const ProductVariantsEditor = ({
       disableColumnMenu: true,
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-
         if (isInEditMode) {
           return [
             <GridActionsCellItem
               icon={<SaveIcon />}
+              disabled={!hasPermission}
               label="Save"
               onClick={handleSaveClick(id)}
               key={"save"}
             />,
             <GridActionsCellItem
               icon={<CancelIcon />}
+              disabled={!hasPermission}
               label="Cancel"
               className="textPrimary"
               onClick={handleCancelClick(id)}
@@ -293,6 +302,7 @@ const ProductVariantsEditor = ({
         return [
           <GridActionsCellItem
             icon={<EditIcon />}
+            disabled={!hasPermission}
             label="Edit"
             className="textPrimary"
             onClick={handleEditClick(id)}
@@ -301,6 +311,7 @@ const ProductVariantsEditor = ({
           />,
           <GridActionsCellItem
             icon={<DeleteIcon />}
+            disabled={!hasPermission}
             label="Delete"
             onClick={handleDeleteClick(id)}
             color="inherit"

@@ -4,6 +4,7 @@ from unittest import TestCase
 
 from recommender_system.models.api.attribute import Attribute
 from recommender_system.models.api.attribute_type import AttributeType
+from recommender_system.models.api.config import Config
 from recommender_system.models.api.product import Product
 from recommender_system.models.api.product_add_to_cart import ProductAddToCart
 from recommender_system.models.api.product_detail_enter import ProductDetailEnter
@@ -14,6 +15,7 @@ from recommender_system.models.api.product_type import ProductType
 from recommender_system.models.api.product_variant import ProductVariant
 from recommender_system.models.api.recommendation_view import RecommendationView
 from recommender_system.models.api.review import Review
+from recommender_system.models.stored.model.config import ConfigModel
 from recommender_system.models.stored.product.attribute import AttributeModel
 from recommender_system.models.stored.product.attribute_type import AttributeTypeModel
 from recommender_system.models.stored.product.product import ProductModel
@@ -60,6 +62,14 @@ def test_attribute_type():
 
     expected = str_to_datetime(stored_data[AttributeTypeModel])
 
+    TestCase().assertDictEqual(model.dict(), expected)
+
+
+def test_config():
+    config = Config.parse_obj(api_data[Config])
+    model = ConfigModel.from_api_model(model=config)
+
+    expected = str_to_datetime(stored_data[ConfigModel])
     TestCase().assertDictEqual(model.dict(), expected)
 
 

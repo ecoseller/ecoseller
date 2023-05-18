@@ -11,6 +11,7 @@ from rest_framework.status import (
     HTTP_404_NOT_FOUND,
 )
 from rest_framework.views import APIView
+from roles.decorator import check_user_access_decorator
 
 from category.models import Category
 from category.serializers import (
@@ -44,6 +45,7 @@ class CategoryDashboardView(APIView):
         )
         return Response(serializer.data)
 
+    @check_user_access_decorator({"category_add_permission"})
     def post(self, request):
         """
         Adds a new category
@@ -60,6 +62,14 @@ class CategoryDetailDashboardView(RetrieveUpdateDestroyAPIView):
     """
     View for getting (by ID), updating and deleting categories.
     """
+
+    @check_user_access_decorator({"category_change_permission"})
+    def put(self, request, pk):
+        return super().put(request, pk)
+
+    @check_user_access_decorator({"category_change_permission"})
+    def delete(self, request, pk):
+        return super().delete(request, pk)
 
     queryset = Category.objects.all()
     serializer_class = CategoryDetailDashboardSerializer

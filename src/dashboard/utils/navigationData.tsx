@@ -7,6 +7,9 @@ import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import LanguageIcon from "@mui/icons-material/Language";
 import MoneyIcon from "@mui/icons-material/Money";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+
+import { ContextPermissions } from "./context/permission";
 export interface INavigationItem {
   title: string;
   path: string;
@@ -14,6 +17,7 @@ export interface INavigationItem {
   info?: React.ReactNode;
   children?: INavigationItem[]; // path of children is relative to parent
   level?: number;
+  permissions?: ContextPermissions[];
 }
 
 const navigationData: INavigationItem[] = [
@@ -40,6 +44,11 @@ const navigationData: INavigationItem[] = [
     ],
   },
   {
+    title: "Orders",
+    path: "/dashboard/orders",
+    icon: <ShoppingCartIcon />,
+  },
+  {
     title: "Catalog",
     path: "/dashboard/catalog",
     icon: <InventoryIcon />,
@@ -48,6 +57,7 @@ const navigationData: INavigationItem[] = [
         title: "Products",
         path: "/products",
         icon: undefined,
+        permissions: ["product_change_permission", "product_add_permission"],
       },
       {
         title: "Product types",
@@ -63,6 +73,7 @@ const navigationData: INavigationItem[] = [
         title: "Categories",
         path: "/categories",
         icon: undefined,
+        permissions: ["category_change_permission", "category_add_permission"],
       },
     ],
   },
@@ -97,6 +108,7 @@ const navigationData: INavigationItem[] = [
     title: "CMS",
     path: "/dashboard/cms",
     icon: <ArticleIcon />,
+    permissions: ["page_change_permission", "page_add_permission"],
     children: [
       {
         title: "Pages",
@@ -114,6 +126,12 @@ const navigationData: INavigationItem[] = [
     title: "Users & Roles",
     path: "/dashboard/users-roles",
     icon: <GroupIcon />,
+    permissions: [
+      "user_change_permission",
+      "user_add_permission",
+      "group_change_permission",
+      "group_add_permission",
+    ],
   },
 ];
 

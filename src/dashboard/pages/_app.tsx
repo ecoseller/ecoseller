@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import fetcher from "@/api/fetcher";
 import axiosFetcher from "@/api/fetcher";
 import { UserProvider } from "@/utils/context/user";
+import { PermissionProvider } from "@/utils/context/permission";
 
 const montserrat = Montserrat({
   weight: ["400", "500", "700"],

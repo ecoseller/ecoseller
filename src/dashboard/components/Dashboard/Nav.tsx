@@ -71,10 +71,15 @@ const DashboardNav = ({ openNav, onCloseNav }: IDashboardNavProps) => {
             <Typography variant="subtitle2" sx={{ color: "text.primary" }}>
               {user?.email}
             </Typography>
-
-            <Typography variant="body2" sx={{ color: "text.secondary" }}>
-              {roles?.map((role: IGroup) => role.name).join(", ")}
-            </Typography>
+            {user?.is_admin ? (
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                Admin
+              </Typography>
+            ) : (
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                {roles?.map((role: IGroup) => role.name).join(", ")}
+              </Typography>
+            )}
           </Box>
         </StyledAccount>
       </Box>

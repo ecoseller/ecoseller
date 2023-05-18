@@ -12,6 +12,7 @@ import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import imgPath from "@/utils/imgPath";
+import { usePermission } from "@/utils/context/permission";
 // types
 
 export interface CardProps {
@@ -63,6 +64,7 @@ const ProductMediaCard = ({
   // this code is highly inspired by official react-dnd example
   const ref = useRef<HTMLDivElement>(null);
   const [previousIndex, setPreviousIndex] = useState<number | undefined>(index);
+  const { hasPermission } = usePermission();
   const [{ handlerId }, drop] = useDrop<
     DragItem,
     void,
@@ -166,6 +168,7 @@ const ProductMediaCard = ({
             onClick={() => {
               removeCard();
             }}
+            disabled={!hasPermission}
           >
             Delete
           </Button>

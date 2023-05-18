@@ -70,14 +70,14 @@ export const EDITOR_TOOLS = {
 interface IEditorJSFieldProps {
   data: IEditorJSData;
   onChange: (data: IEditorJSData) => void;
-  readOnly?: boolean;
+  disabled?: boolean;
   label?: string;
 }
 
 const EditorJSField = ({
   data,
   onChange,
-  readOnly = false,
+  disabled = false,
   label = "Content",
 }: IEditorJSFieldProps) => {
   const ejInstance = useRef<any>();
@@ -89,10 +89,25 @@ const EditorJSField = ({
       holder: "editorjs",
 
       onReady: () => {
+        // if editorjs should be disabled, we have to hack it a bit
+        if (disabled) {
+          // @ts-ignore
+          editor.readOnly.toggle();
+          // make editorjs a bit more transparent to indicate that it's disabled
+
+          let blockElements = document.getElementById("editorjs-wrapper"); // id of editor element
+          // @ts-ignore
+          blockElements.style.pointerEvents = "none";
+          // @ts-ignore
+          blockElements.style.opacity = "0.5";
+          // @ts-ignore
+          blockElements.style.cursor = "not-allowed";
+        }
         ejInstance.current = editor;
       },
       data: data,
       onChange: async () => {
+        if (disabled) return;
         let content = await editor.saver.save();
         console.log(content);
         onChange(content);
@@ -115,6 +130,7 @@ const EditorJSField = ({
 
   return (
     <div
+      id={"editorjs-wrapper"}
       style={{
         position: "relative",
       }}

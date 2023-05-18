@@ -1,11 +1,20 @@
 import csv
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 import logging
 import random
-from typing import Dict, List, Set, Tuple
+from typing import Any, Dict, List, Set, Tuple
+import uuid
 
 from dependency_injector.wiring import inject, Provide
 
+from recommender_system.models.stored.base import StoredBaseModel
+from recommender_system.models.stored.feedback.product_add_to_cart import (
+    ProductAddToCartModel,
+)
+from recommender_system.models.stored.feedback.product_detail_enter import (
+    ProductDetailEnterModel,
+)
+from recommender_system.models.stored.feedback.session import SessionModel
 from recommender_system.models.stored.product.attribute import AttributeModel
 from recommender_system.models.stored.product.attribute_product_variant import (
     AttributeProductVariantModel,
@@ -17,6 +26,10 @@ from recommender_system.models.stored.product.attribute_type_product_type import
 from recommender_system.models.stored.product.category_ancestor import (
     CategoryAncestorModel,
 )
+from recommender_system.models.stored.product.order import OrderModel
+from recommender_system.models.stored.product.order_product_variant import (
+    OrderProductVariantModel,
+)
 from recommender_system.models.stored.product.product import ProductModel
 from recommender_system.models.stored.product.product_price import ProductPriceModel
 from recommender_system.models.stored.product.product_product_variant import (
@@ -25,12 +38,25 @@ from recommender_system.models.stored.product.product_product_variant import (
 from recommender_system.models.stored.product.product_type import ProductTypeModel
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.storage.abstract import AbstractStorage
+from recommender_system.storage.feedback.abstract import AbstractFeedbackStorage
 from recommender_system.storage.product.abstract import AbstractProductStorage
 from recommender_system.server.app import create_app
 
+logging.basicConfig()
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 CHUNK_SIZE = 500_000
+
+
+def bulk_create(models: List[StoredBaseModel], storage: AbstractStorage) -> None:
+    logger.info(f"Saving {len(models):,} objects to database...")
+    index = 0
+    while index + CHUNK_SIZE < len(models):
+        logger.info(f"{index:,} done...")
+        storage.bulk_create_objects(models=models[index : index + CHUNK_SIZE])
+        index += CHUNK_SIZE
+    storage.bulk_create_objects(models=models[index:])
 
 
 def fill_node_ancestors(
@@ -85,7 +111,7 @@ def fill_ancestors(
             node=node, edges=edges, current_ancestors=set(), ancestors=ancestors
         )
 
-    logger.info("Getting category ancestors")
+    logger.info("Getting category ancestors...")
     category_ancestors: List[CategoryAncestorModel] = []
     for category_id, ancestor_ids in ancestors.items():
         for ancestor_id in ancestor_ids:
@@ -95,18 +121,10 @@ def fill_ancestors(
                 )
             )
 
-    logger.info(f"Saving {len(category_ancestors)} category ancestors to database...")
-    index = 0
-    while index + CHUNK_SIZE < len(category_ancestors):
-        logger.info(f"{index} done...")
-        product_storage.bulk_create_objects(
-            models=category_ancestors[index : index + CHUNK_SIZE]
-        )
-        index += CHUNK_SIZE
-    product_storage.bulk_create_objects(models=category_ancestors[index:])
+    bulk_create(models=category_ancestors, storage=product_storage)
 
 
-def fill_categories(product_storage: AbstractStorage) -> None:
+def fill_categories(product_storage: AbstractProductStorage) -> None:
     rows = []
     filename = "../data/category_tree.csv"
     with open(filename, "r") as file:
@@ -144,15 +162,7 @@ def fill_attribute_types(
             )
         )
 
-    logger.info(f"Saving {len(attribute_types)} attribute types to database...")
-    index = 0
-    while index + CHUNK_SIZE < len(attribute_types):
-        logger.info(f"{index} done...")
-        product_storage.bulk_create_objects(
-            models=attribute_types[index : index + CHUNK_SIZE]
-        )
-        index += CHUNK_SIZE
-    product_storage.bulk_create_objects(models=attribute_types[index:])
+    bulk_create(models=attribute_types, storage=product_storage)
 
 
 @inject
@@ -196,16 +206,7 @@ def fill_product_types(
             else:
                 product_types[row[3]].update_at = update_at
 
-    logger.info(f"Saving {len(product_types.values())} product types to database...")
-    product_types_list = list(product_types.values())
-    index = 0
-    while index + CHUNK_SIZE < len(product_types):
-        logger.info(f"{index} done...")
-        product_storage.bulk_create_objects(
-            models=product_types_list[index : index + CHUNK_SIZE]
-        )
-        index += CHUNK_SIZE
-    product_storage.bulk_create_objects(models=product_types_list[index:])
+    bulk_create(models=list(product_types.values()), storage=product_storage)
 
     attribute_type_product_types: List[AttributeTypeProductTypeModel] = []
     logger.info("Getting attribute type product types...")
@@ -218,17 +219,7 @@ def fill_product_types(
                 )
             )
 
-    logger.info(
-        f"Saving {len(attribute_type_product_types)} attribute type product types to database..."
-    )
-    index = 0
-    while index + CHUNK_SIZE < len(attribute_type_product_types):
-        logger.info(f"{index} done...")
-        product_storage.bulk_create_objects(
-            models=attribute_type_product_types[index : index + CHUNK_SIZE]
-        )
-        index += CHUNK_SIZE
-    product_storage.bulk_create_objects(models=attribute_type_product_types[index:])
+    bulk_create(models=attribute_type_product_types, storage=product_storage)
 
 
 @inject
@@ -306,30 +297,10 @@ def fill_products(
                 prices[row[1]].price = price
                 prices[row[1]].update_at = update_at
 
-    logger.info(f"Saving {len(product_variants.keys())} objects to database...")
-    products_list = list(products.values())
-    variants_list = list(product_variants.values())
-    prices_list = list(prices.values())
-    index = 0
-    while index + CHUNK_SIZE < len(products_list):
-        logger.info(f"{index} done...")
-        product_storage.bulk_create_objects(
-            models=products_list[index : index + CHUNK_SIZE]
-        )
-        product_storage.bulk_create_objects(
-            models=variants_list[index : index + CHUNK_SIZE]
-        )
-        product_storage.bulk_create_objects(
-            models=product_product_variants[index : index + CHUNK_SIZE]
-        )
-        product_storage.bulk_create_objects(
-            models=prices_list[index : index + CHUNK_SIZE]
-        )
-        index += CHUNK_SIZE
-    product_storage.bulk_create_objects(models=products_list[index:])
-    product_storage.bulk_create_objects(models=variants_list[index:])
-    product_storage.bulk_create_objects(models=product_product_variants[index:])
-    product_storage.bulk_create_objects(models=prices_list[index:])
+    bulk_create(models=list(products.values()), storage=product_storage)
+    bulk_create(models=list(product_variants.values()), storage=product_storage)
+    bulk_create(models=product_product_variants, storage=product_storage)
+    bulk_create(models=list(prices.values()), storage=product_storage)
 
 
 @inject
@@ -373,24 +344,13 @@ def fill_attributes(
                 attribute_id=attribute.id, product_variant_sku=row[1]
             )
 
-    logger.info(f"Saving {len(attributes.keys())} attributes to database...")
-    attributes_list = list(attributes.values())
-    attribute_product_variants_list = list(attribute_product_variants.values())
-    index = 0
-    while index + CHUNK_SIZE < len(attributes_list):
-        logger.info(f"{index} done...")
-        product_storage.bulk_create_objects(
-            models=attributes_list[index : index + CHUNK_SIZE]
-        )
-        product_storage.bulk_create_objects(
-            models=attribute_product_variants_list[index : index + CHUNK_SIZE]
-        )
-        index += CHUNK_SIZE
-    product_storage.bulk_create_objects(models=attributes_list[index:])
-    product_storage.bulk_create_objects(models=attribute_product_variants_list[index:])
+    bulk_create(models=list(attributes.values()), storage=product_storage)
+    bulk_create(
+        models=list(attribute_product_variants.values()), storage=product_storage
+    )
 
 
-def fill_properties(product_storage: AbstractStorage) -> None:
+def fill_properties(product_storage: AbstractProductStorage) -> None:
     rows = []
     for filename in [
         "../data/item_properties_part1.csv",
@@ -399,7 +359,7 @@ def fill_properties(product_storage: AbstractStorage) -> None:
         with open(filename, "r") as file:
             rows += list(csv.reader(file, delimiter=","))[1:]
 
-    # TODO: sort by timestamp
+    rows.sort(key=lambda row: row[0])
 
     fill_attribute_types(rows=rows, product_storage=product_storage)
     fill_product_types(rows=rows, product_storage=product_storage)
@@ -407,7 +367,99 @@ def fill_properties(product_storage: AbstractStorage) -> None:
     fill_attributes(rows=rows, product_storage=product_storage)
 
 
+def fill_feedback(
+    feedback_storage: AbstractFeedbackStorage, product_storage: AbstractProductStorage
+) -> None:
+    logger.info("Filling feedback...")
+
+    with open("../data/events.csv", "r") as file:
+        rows = list(csv.reader(file, delimiter=","))[1:]
+
+    rows.sort(key=lambda row: row[0])
+
+    session_histories: Dict[int, Any] = {}
+    sessions: List[SessionModel] = []
+    order_ids: Set[int] = set()
+    orders: List[OrderModel] = []
+    order_product_variants: List[OrderProductVariantModel] = []
+    enters: List[ProductDetailEnterModel] = []
+    add_to_carts: List[ProductAddToCartModel] = []
+
+    for row in rows:
+        create_at = datetime.utcfromtimestamp(int(row[0]) / 1_000)
+        user_id = int(row[1])
+        product_variant_sku = row[3]
+        order_id = int(row[4]) if row[4] != "" else None
+        if user_id not in session_histories or session_histories[user_id][
+            "last_event"
+        ].replace(tzinfo=timezone.utc) < datetime.now(timezone.utc) - timedelta(
+            hours=1
+        ):
+            session_id = str(uuid.uuid4())
+            session_histories[user_id] = {
+                "last_event": create_at,
+                "session_id": session_id,
+            }
+            sessions.append(
+                SessionModel(
+                    id=session_id,
+                    user_id=user_id,
+                )
+            )
+        session_histories[user_id]["last_event"] = create_at
+        if row[2] == "view":
+            enters.append(
+                ProductDetailEnterModel(
+                    session_id=session_histories[user_id]["session_id"],
+                    user_id=user_id,
+                    product_id=int(product_variant_sku),
+                    product_variant_sku=product_variant_sku,
+                    recommendation_type=None,
+                    position=None,
+                    create_at=create_at,
+                )
+            )
+        elif row[2] == "addtocart":
+            add_to_carts.append(
+                ProductAddToCartModel(
+                    session_id=session_histories[user_id]["session_id"],
+                    user_id=user_id,
+                    product_id=int(product_variant_sku),
+                    product_variant_sku=product_variant_sku,
+                    create_at=create_at,
+                )
+            )
+        elif row[2] == "transaction":
+            if order_id not in order_ids:
+                order_ids.add(order_id)
+                orders.append(
+                    OrderModel(
+                        id=order_id,
+                        update_at=create_at,
+                        create_at=create_at,
+                        session_id=session_histories[user_id]["session_id"],
+                    )
+                )
+            order_product_variants.append(
+                OrderProductVariantModel(
+                    amount=random.randint(1, 3),
+                    order_id=order_id,
+                    product_variant_sku=product_variant_sku,
+                )
+            )
+
+    bulk_create(models=sessions, storage=feedback_storage)
+    bulk_create(models=orders, storage=product_storage)
+    bulk_create(models=order_product_variants, storage=product_storage)
+    bulk_create(models=add_to_carts, storage=feedback_storage)
+    bulk_create(models=enters, storage=feedback_storage)
+
+
 if __name__ == "__main__":
     app = create_app()
-    fill_categories(app.container.product_storage())
-    fill_properties(app.container.product_storage())
+    fill_categories(product_storage=app.container.product_storage())
+    fill_properties(product_storage=app.container.product_storage())
+    fill_feedback(
+        feedback_storage=app.container.feedback_storage(),
+        product_storage=app.container.product_storage(),
+    )

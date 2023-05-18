@@ -1,6 +1,7 @@
 import { IGroup, IPermission, IUser } from "@/types/user";
 import { useState, createContext, useContext, useEffect } from "react";
 import { useRouter } from "next/router";
+import { ContextPermissions } from "./permission";
 interface IUserContextProps {
   user: IUser | null;
   roles: IGroup[] | [];

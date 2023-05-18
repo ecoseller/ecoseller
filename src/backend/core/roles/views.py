@@ -4,6 +4,8 @@ from rest_framework.response import Response
 
 from rest_framework.generics import GenericAPIView
 
+from roles.decorator import check_user_access_decorator
+
 from .roles_manager import RolesManager, ManagerPermission, ManagerGroup
 from .serializers import (
     ManagerGroupSerializer,
@@ -20,7 +22,6 @@ class UserPermissionView(GenericAPIView):
     allowed_methods = [
         "GET",
     ]
-    authentication_classes = []
     serializer_class = ManagerPermissionSerializer
 
     def get(self, request, id):
@@ -59,7 +60,6 @@ class UserGroupView(GenericAPIView):
         "GET",
         "PUT",
     ]
-    authentication_classes = []
     serializer_class = ManagerGroupSerializer
 
     def get(self, request, id):
@@ -84,6 +84,7 @@ class UserGroupView(GenericAPIView):
             print("Error", e)
             return Response(status=400)
 
+    @check_user_access_decorator({"user_change_permission"})
     def put(self, request, id):
         user = User.objects.get(email=id)
         userGroups = user.groups.all()
@@ -93,7 +94,7 @@ class UserGroupView(GenericAPIView):
             userManagerGroups.append(group)
 
         user.groups.clear()
-        newGroups = request.data["groups"]
+        newGroups = request.data["roles"]
 
         for group in newGroups:
             drfGroup = RolesManager.manager_group_to_django_group(group)
@@ -113,6 +114,7 @@ class UserGroupView(GenericAPIView):
     def get_queryset(self):
         try:
             user = User.objects.get(email=self.kwargs["id"])
+            print(user.groups.all())
             return user.groups.all()
         except Exception:
             return None
@@ -125,7 +127,6 @@ class GroupDetailView(GenericAPIView):
         "DELETE",
         "PUT",
     ]
-    authentication_classes = []
     serializer_class = ManagerGroupSerializer
 
     def get(self, request, id):
@@ -139,15 +140,23 @@ class GroupDetailView(GenericAPIView):
             print(e)
             return Response(status=400)
 
+    @check_user_access_decorator({"group_change_permission"})
     def delete(self, request, id):
-        groups = self.get_queryset()
+        managerGroups = self.get_queryset()
         try:
-            group = groups.get(name=id)
-            group.delete()
+            managerGroup = managerGroups.get(name=id)
+            managerGroup.delete()
+
+            drfGroup = RolesManager.manager_group_to_django_group(id)
+            if drfGroup is None:
+                return Response(status=400)
+            drfGroup.delete()
+
             return Response(status=200)
         except Exception:
             return Response(status=400)
 
+    @check_user_access_decorator({"group_change_permission"})
     def put(self, request, id):
         group = self.serializer_class(data=request.data)
         if not group.is_valid():
@@ -190,7 +199,6 @@ class PermissionDetailView(GenericAPIView):
         "GET",
         "DELETE",
     ]
-    authentication_classes = []
     serializer_class = ManagerPermissionSerializer
 
     def get(self, request, id):
@@ -203,6 +211,7 @@ class PermissionDetailView(GenericAPIView):
         except Exception:
             return Response(status=400)
 
+    @check_user_access_decorator({"group_change_permission"})
     def delete(self, request, id):
         permissions = self.get_queryset()
         try:
@@ -231,7 +240,6 @@ class GroupView(GenericAPIView):
         "GET",
         "POST",
     ]
-    authentication_classes = []
     serializer_class = ManagerGroupSerializer
 
     def get(self, request):
@@ -241,6 +249,7 @@ class GroupView(GenericAPIView):
             serGroups.append(self.serializer_class(group).data)
         return Response(serGroups, status=200)
 
+    @check_user_access_decorator({"group_add_permission"})
     def post(self, request):
         groupName = request.data["name"]
         groupPermissions = request.data["permissions"]
@@ -285,22 +294,31 @@ class PermissionView(GenericAPIView):
     allowed_methods = [
         "GET",
     ]
-    authentication_classes = []
     serializer_class = ManagerPermissionSerializer
 
     def get(self, request):
         # return just a few permissions that actually makes sense
         # maybe put in some config in the future
-        filterModels = ["category", "productprice", "user", "product"]
+        filterModels = [
+            "group",
+            "cart",
+            "category",
+            "page",
+            "productprice",
+            "productmedia",
+            "product",
+            "user",
+        ]
         filterActions = ["change", "add"]
         permissions = self.get_queryset().values()
         perms = []
         for permission in permissions:
             for action in filterActions:
                 for model in filterModels:
+                    modelName = permission["name"].split("_")[0]
                     if (
                         action in permission["name"]
-                        and model in permission["name"]
+                        and model == modelName
                         and permission not in perms
                     ):
                         perms.append(permission)

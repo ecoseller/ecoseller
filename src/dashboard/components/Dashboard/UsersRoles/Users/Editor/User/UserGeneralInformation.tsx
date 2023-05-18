@@ -19,6 +19,7 @@ import {
   ISetProductStateData,
 } from "@/types/product";
 import { IUser } from "@/types/user";
+import { usePermission } from "@/utils/context/permission";
 
 interface IUserProps {
   state: IUser;
@@ -28,6 +29,7 @@ interface IUserProps {
 const UserGeneralInformation = ({ state, setState }: IUserProps) => {
   // simple select with categories
 
+  const { hasPermission } = usePermission();
   return (
     <EditorCard>
       <Typography variant="h6">General information</Typography>
@@ -45,7 +47,7 @@ const UserGeneralInformation = ({ state, setState }: IUserProps) => {
             <TextField
               label="First Name"
               value={state?.first_name}
-              disabled={false}
+              disabled={!hasPermission}
               onChange={(e) => {
                 setState({
                   ...state,
@@ -59,7 +61,7 @@ const UserGeneralInformation = ({ state, setState }: IUserProps) => {
             <TextField
               label="Last Name"
               value={state?.last_name}
-              disabled={false}
+              disabled={!hasPermission}
               onChange={(e) => {
                 setState({
                   ...state,
@@ -75,10 +77,26 @@ const UserGeneralInformation = ({ state, setState }: IUserProps) => {
               control={
                 <Checkbox
                   checked={state.is_admin}
+                  disabled={!hasPermission}
                   onChange={(e) => {
                     setState({
                       ...state,
                       is_admin: e.target.checked,
+                    });
+                  }}
+                />
+              }
+            />
+            <FormControlLabel
+              label="Is Staff"
+              control={
+                <Checkbox
+                  checked={state.is_staff}
+                  disabled={!hasPermission}
+                  onChange={(e) => {
+                    setState({
+                      ...state,
+                      is_staff: e.target.checked,
                     });
                   }}
                 />

@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from .models import (
     User,
@@ -62,3 +63,20 @@ class UserSerializer(serializers.ModelSerializer):
     #     if user:
     #         instance.user = user
     #     return super().update(instance, validated_data)
+
+
+class TokenObtainDashboardSerializer(TokenObtainPairSerializer):
+    """
+    Serializes user profiles.
+    Has following fields: email, password, dashboard_login
+    """
+
+    dashboard_login = serializers.BooleanField(required=False, default=False)
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        refresh = self.get_token(self.user)
+        data["refresh"] = str(refresh)
+        data["access"] = str(refresh.access_token)
+        data["dashboard_login"] = attrs.get("dashboard_login")
+        return data

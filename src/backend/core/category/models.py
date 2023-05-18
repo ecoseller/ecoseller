@@ -5,6 +5,8 @@ from django_editorjs_fields import EditorJsJSONField
 from mptt.models import MPTTModel
 from mptt.fields import TreeForeignKey
 
+from api.recommender_system import RecommenderSystemApi
+
 
 class Category(MPTTModel, TranslatableModel):
     parent = TreeForeignKey(
@@ -44,3 +46,19 @@ class Category(MPTTModel, TranslatableModel):
     @property
     def all_children(self):
         return self.get_children()
+
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )
+        data = {
+            "_model_class": self.__class__.__name__,
+            "id": self.id,
+            "parent_id": self.parent.id if self.parent is not None else None,
+        }
+        RecommenderSystemApi.store_object(data=data)

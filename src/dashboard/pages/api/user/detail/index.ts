@@ -40,8 +40,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
    * This is a wrapper for the cart api in the backend
    * It returns whole cart data from the backend
    */
-  // get the cart data from the backend
-  return userDetailAPI("GET", req, res)
+
+  const { method } = req;
+
+  return userDetailAPI(method as HTTPMETHOD, req, res)
     .then((data) => res.status(200).json(data))
     .catch((error) => res.status(400).json(null));
 };

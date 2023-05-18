@@ -1,5 +1,3 @@
-// /dashboard/orders/shipping-method/index.tsx
-
 // next.js
 import { useRouter } from "next/router";
 
