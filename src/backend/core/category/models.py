@@ -59,6 +59,6 @@ class Category(MPTTModel, TranslatableModel):
         data = {
             "_model_class": self.__class__.__name__,
             "id": self.id,
-            "parent_id": self.parent.id,
+            "parent_id": self.parent.id if self.parent is not None else None,
         }
         RecommenderSystemApi.store_object(data=data)
