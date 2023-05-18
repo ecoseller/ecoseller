@@ -22,6 +22,27 @@ export interface IBillingInfoFormProps {
   country: IValidatedInputField;
 }
 
+export const exportBillingInfo = (
+  billingInfo: IBillingInfoFormProps
+): IBillingInfo => {
+  /**
+   * Purpose of this function is to take the billing info from the BillingInfoForm component
+   * and convert it into the format that the API expects.
+   * */
+
+  return {
+    first_name: billingInfo.first_name.value,
+    surname: billingInfo.surname.value,
+    company_name: billingInfo.company_name.value,
+    company_id: billingInfo.company_id.value,
+    vat_number: billingInfo.vat_number.value,
+    street: billingInfo.street.value,
+    city: billingInfo.city.value,
+    postal_code: billingInfo.postal_code.value,
+    country: billingInfo.country.value,
+  };
+};
+
 export const billingInfoInitialData = (
   billingInfo: IBillingInfo,
   setter: Dispatch<SetStateAction<IBillingInfoFormProps>>
@@ -74,7 +95,7 @@ export const billingInfoInitialData = (
       setter: (value: string) =>
         setter((prevState) => ({
           ...prevState,
-          email: { ...prevState.company_name, value },
+          company_name: { ...prevState.company_name, value },
         })),
       isRequired: false,
       label: "Company name",
@@ -96,7 +117,7 @@ export const billingInfoInitialData = (
       setter: (value: string) =>
         setter((prevState) => ({
           ...prevState,
-          email: { ...prevState.vat_number, value },
+          vat_number: { ...prevState.vat_number, value },
         })),
       isRequired: false,
       label: "VAT ID",
@@ -239,20 +260,17 @@ const BillingInfoForm = (props: IBillingInfoFormComponentProps) => {
   } = billingInfo;
 
   return (
-    <div className="billing-info-form">
-      <h2>Billing information</h2>
-      <form>
-        <BasicField field={first_name} />
-        <BasicField field={surname} />
-        <BasicField field={company_name} />
-        <BasicField field={company_id} />
-        <BasicField field={vat_number} />
-        <BasicField field={street} />
-        <BasicField field={city} />
-        <BasicField field={postal_code} />
-        <BasicField field={country} />
-      </form>
-    </div>
+    <form>
+      <BasicField field={first_name} />
+      <BasicField field={surname} />
+      <BasicField field={company_name} />
+      <BasicField field={company_id} />
+      <BasicField field={vat_number} />
+      <BasicField field={street} />
+      <BasicField field={city} />
+      <BasicField field={postal_code} />
+      <BasicField field={country} />
+    </form>
   );
 };
 

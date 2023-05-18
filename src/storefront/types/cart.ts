@@ -27,13 +27,13 @@ export interface ICartToken {
 }
 
 export interface Address {
-  id: number;
+  id?: number;
   first_name: string;
   surname: string;
   street: string;
   city: string;
   postal_code: string;
-  country: number;
+  country: string;
 }
 
 export interface IBillingInfo extends Address {

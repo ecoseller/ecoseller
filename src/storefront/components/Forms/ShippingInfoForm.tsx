@@ -200,6 +200,22 @@ interface IShippingInfoFormComponentProps extends IShippingInfoFormProps {
   setIsFormValid: (value: boolean) => void;
 }
 
+export const exportShippingInfo = (
+  shippingInfo: IShippingInfoFormProps
+): IShippingInfo => {
+  return {
+    first_name: shippingInfo.first_name.value,
+    surname: shippingInfo.surname.value,
+    email: shippingInfo.email.value,
+    phone: shippingInfo.phone.value,
+    additional_info: shippingInfo.additional_info.value,
+    street: shippingInfo.street.value,
+    city: shippingInfo.city.value,
+    postal_code: shippingInfo.postal_code.value,
+    country: shippingInfo.country.value,
+  };
+};
+
 const ShippingInfoForm = (props: IShippingInfoFormComponentProps) => {
   const { setIsFormValid, ...shippingInfo } = props;
 
@@ -259,20 +275,17 @@ const ShippingInfoForm = (props: IShippingInfoFormComponentProps) => {
   } = shippingInfo;
 
   return (
-    <div className="shipping-info-form">
-      <h2>Shipping information</h2>
-      <form>
-        <BasicField field={first_name} />
-        <BasicField field={surname} />
-        <BasicField field={email} />
-        <BasicField field={phone} />
-        <BasicField field={additional_info} />
-        <BasicField field={street} />
-        <BasicField field={city} />
-        <BasicField field={postal_code} />
-        <BasicField field={country} />
-      </form>
-    </div>
+    <form>
+      <BasicField field={first_name} />
+      <BasicField field={surname} />
+      <BasicField field={email} />
+      <BasicField field={phone} />
+      <BasicField field={additional_info} />
+      <BasicField field={street} />
+      <BasicField field={city} />
+      <BasicField field={postal_code} />
+      <BasicField field={country} />
+    </form>
   );
 };
 
