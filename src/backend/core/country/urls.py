@@ -14,4 +14,6 @@ urlpatterns = [
     path("address/billing/<int:id>/", views.ShippingAddressDetailView.as_view()),
     path("address/shipping/", views.ShippingInfoListView.as_view()),
     path("address/billing/", views.BillingInfoListView.as_view()),
+    path("address/shipping/<str:user_id>/", views.ShippingInfoListUserView.as_view()),
+    path("address/billing/<str:user_id>/", views.BillingInfoListUserView.as_view()),
 ]
