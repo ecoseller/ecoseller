@@ -145,7 +145,7 @@ export const CartProvider = ({ children }: ICartProviderProps): JSX.Element => {
     if (!token) {
       return;
     }
-    await deleteCartProduct(token, sku).then((res) => {
+    deleteCartProduct(token, sku).then((res) => {
       refetchCart();
     });
   };

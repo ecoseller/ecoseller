@@ -48,6 +48,19 @@ const CartPage = () => {
     return itemPrices.reduce((x, y) => x + y);
   };
 
+  const updateItemQuantity = async (
+    item: ICartItem,
+    addingOne: boolean = true
+  ) => {
+    if (!addingOne && item.quantity == 1) {
+      return;
+    }
+
+    const diff = addingOne ? 1 : -1;
+    await updateQuantity(item.product_variant_sku, item.quantity + diff);
+    setCartState(getCart());
+  };
+
   return (
     <div className="container">
       <Typography variant="h4" sx={{ my: 3 }}>
@@ -87,11 +100,19 @@ const CartPage = () => {
                   ) : null}
 
                   <TableCell align="center">
-                    <IconButton onClick={() => {}}>
+                    <IconButton
+                      onClick={() => {
+                        updateItemQuantity(item, true);
+                      }}
+                    >
                       <AddIcon />
                     </IconButton>
                     {item.quantity}
-                    <IconButton onClick={() => {}}>
+                    <IconButton
+                      onClick={() => {
+                        updateItemQuantity(item, false);
+                      }}
+                    >
                       <RemoveIcon />
                     </IconButton>
                   </TableCell>
