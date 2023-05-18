@@ -96,13 +96,13 @@ const CartPage = () => {
                     </IconButton>
                   </TableCell>
 
-                  <TableCell align="center">
+                  <TableCell align="center" sx={{ fontWeight: 700 }}>
                     {item.discount ? (
                       <span className="red-text">-{item.discount} %</span>
                     ) : null}
                   </TableCell>
 
-                  <TableCell align="center">
+                  <TableCell sx={{ fontWeight: 700 }} align="center">
                     {getPriceString(
                       roundedPrice(item),
                       cartState.currency_symbol,
