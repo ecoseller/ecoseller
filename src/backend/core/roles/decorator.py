@@ -62,3 +62,45 @@ def check_user_access_decorator(permissions):
         return _wrapped_view
 
     return decorator
+
+
+def check_user_is_staff(user):
+    print("Check user is staff: user: ", user)
+    if user is None or user.is_anonymous:
+        return False
+    if user.is_admin:
+        print("Check user is staff: user is admin")
+        return True
+    if user.is_staff:
+        print("Check user is staff: user is staff")
+        return True
+    return False
+
+
+def check_user_is_staff_decorator(permissions):
+    """
+    Decorator for checking if user has permission to access view.
+    This decorator should encapsulate GET views for dashboard.
+
+    Example
+    -------
+    To check if user has permission to get data, put following
+    line above the view function:
+
+    @check_user_is_staff_decorator(
+        {"Product_view_permission", "Product_change_permission"}
+    )
+
+    """
+
+    def decorator(view_function):
+        @wraps(view_function)
+        def _wrapped_view(request, *args, **kwargs):
+            user = args[0].user
+            if not check_user_is_staff(user):
+                return Response("User doesnt have permission", status=403)
+            return view_function(request, *args, **kwargs)
+
+        return _wrapped_view
+
+    return decorator
