@@ -43,6 +43,9 @@ export const exportBillingInfo = (
   };
 };
 
+const validateInitialState = (value: string) =>
+  value !== "" && value !== undefined;
+
 export const billingInfoInitialData = (
   billingInfo: IBillingInfo,
   setter: Dispatch<SetStateAction<IBillingInfoFormProps>>
@@ -55,7 +58,7 @@ export const billingInfoInitialData = (
   return {
     first_name: {
       value: billingInfo.first_name,
-      isValid: billingInfo.first_name != "" ? true : undefined,
+      isValid: validateInitialState(billingInfo.first_name) ? true : undefined,
       setIsValid: (value: boolean) =>
         setter((prevState) => ({
           ...prevState,
@@ -73,7 +76,7 @@ export const billingInfoInitialData = (
     },
     surname: {
       value: billingInfo.surname,
-      isValid: billingInfo.surname != "" ? true : undefined,
+      isValid: validateInitialState(billingInfo.surname) ? true : undefined,
       setIsValid: (value: boolean) =>
         setter((prevState) => ({
           ...prevState,
@@ -124,7 +127,7 @@ export const billingInfoInitialData = (
     },
     street: {
       value: billingInfo.street,
-      isValid: billingInfo.street != "" ? true : undefined,
+      isValid: validateInitialState(billingInfo.street) ? true : undefined,
       setIsValid: (value: boolean) =>
         setter((prevState) => ({
           ...prevState,
@@ -142,7 +145,7 @@ export const billingInfoInitialData = (
     },
     city: {
       value: billingInfo.city,
-      isValid: billingInfo.city != "" ? true : undefined,
+      isValid: validateInitialState(billingInfo.city) ? true : undefined,
       setIsValid: (value: boolean) =>
         setter((prevState) => ({
           ...prevState,
@@ -160,7 +163,7 @@ export const billingInfoInitialData = (
     },
     postal_code: {
       value: billingInfo.postal_code,
-      isValid: billingInfo.postal_code != "" ? true : undefined,
+      isValid: validateInitialState(billingInfo.postal_code) ? true : undefined,
       setIsValid: (value: boolean) =>
         setter((prevState) => ({
           ...prevState,
@@ -199,10 +202,11 @@ export const billingInfoInitialData = (
 
 interface IBillingInfoFormComponentProps extends IBillingInfoFormProps {
   setIsFormValid: (value: boolean) => void;
+  radioType?: "NEW" | "SAMEASSHIPPING";
 }
 
 const BillingInfoForm = (props: IBillingInfoFormComponentProps) => {
-  const { setIsFormValid, ...billingInfo } = props;
+  const { setIsFormValid, radioType, ...billingInfo } = props;
 
   /**
    * Purpose of this component is to display the billing information form
@@ -222,10 +226,19 @@ const BillingInfoForm = (props: IBillingInfoFormComponentProps) => {
    * And all done in MUI with validation.
    * */
 
+  useEffect(() => {
+    if (radioType == "SAMEASSHIPPING") {
+      setIsFormValid(true);
+    } else {
+      validateBillingInfo();
+    }
+  }, [radioType]);
+
   const validateBillingInfo = useCallback(() => {
     // iterate through the billing info and check if all the fields are valid if they're required
     const billingInfoValues: IValidatedInputField[] =
       Object.values(billingInfo);
+    console.log("billingInfoValues", billingInfoValues);
     for (let i = 0; i < billingInfoValues.length; i++) {
       const value = billingInfoValues[i];
       if (
