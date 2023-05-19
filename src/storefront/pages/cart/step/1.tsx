@@ -22,6 +22,7 @@ import ShippingInfoForm, {
   exportShippingInfo,
   shippingInfoInitialData,
 } from "@/components/Forms/ShippingInfoForm";
+import CartStepper from "@/components/Cart/Stepper";
 // mui
 import {
   Box,
@@ -36,17 +37,21 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 // types
 import { IBillingInfo, IShippingInfo } from "@/types/cart";
+import { countryListAPI } from "@/pages/api/country";
+import { ICountry } from "@/types/country";
 
 interface ICartStep1PageProps {
   shippingInfo: any;
   billingInfo: any;
   cartToken: string;
+  countries: ICountry[];
 }
 
 const CartStep1Page = ({
   shippingInfo,
   billingInfo,
   cartToken,
+  countries,
 }: ICartStep1PageProps) => {
   /**
    * Step 1 page of the cart consist of the:
@@ -60,8 +65,12 @@ const CartStep1Page = ({
     useState<IShippingInfoFormProps>({} as IShippingInfoFormProps);
 
   if (Object.keys(shippingInfoState)?.length === 0) {
+    // TODO: setting the country to cz is a temporary solution
     setShippingInfoState(
-      shippingInfoInitialData(shippingInfo, setShippingInfoState)
+      shippingInfoInitialData(
+        { ...shippingInfo, country: "cz" },
+        setShippingInfoState
+      )
     );
   }
 
@@ -86,13 +95,21 @@ const CartStep1Page = ({
       !billingInfo.vat_number
     ) {
       setBillingRadioSelect("SAMEASSHIPPING");
+      // TODO: setting the country to cz is a temporary solution
       setBillingInfoState(
-        billingInfoInitialData({} as IBillingInfo, setBillingInfoState)
+        billingInfoInitialData(
+          { country: "cz" } as IBillingInfo,
+          setBillingInfoState
+        )
       );
     } else {
       setBillingRadioSelect("NEW");
+      // TODO: setting the country to cz is a temporary solution
       setBillingInfoState(
-        billingInfoInitialData(billingInfo, setBillingInfoState)
+        billingInfoInitialData(
+          { ...billingInfo, country: "cz" },
+          setBillingInfoState
+        )
       );
     }
   }
@@ -140,12 +157,14 @@ const CartStep1Page = ({
   console.log("shippingInfoState", shippingInfoState);
   return (
     <div className="container">
+      <CartStepper activeStep={1} />
       <Grid
         container
-        spacing={{ xs: 2, md: 3 }}
-        columns={{ xs: 4, sm: 8, md: 12 }}
+        spacing={{ xs: 0, md: 4, lg: 4 }}
+        columns={{ xs: 10, sm: 10, md: 12 }}
+        pt={4}
       >
-        <Grid container item xs={2} sm={4} md={4} direction="column">
+        <Grid container item xs={10} sm={10} md={5} direction="column">
           <div className="shipping-info-form">
             <h2>Shipping information</h2>
             <ShippingInfoForm
@@ -159,11 +178,14 @@ const CartStep1Page = ({
               postal_code={shippingInfoState.postal_code}
               country={shippingInfoState.country}
               setIsFormValid={setValidShippingInfo}
+              countryOptions={countries?.map((country) => ({
+                code: country.code,
+                name: country.name,
+              }))}
             />
           </div>
-          Shipping is valid: {validShippingInfo ? "true" : "false"}
         </Grid>
-        <Grid container item xs={2} sm={4} md={4} direction="column">
+        <Grid container item xs={10} sm={10} md={5} direction="column" pt={4}>
           <div className="billing-info-form">
             <h2>Billing information</h2>
             <FormControl>
@@ -202,45 +224,53 @@ const CartStep1Page = ({
                 postal_code={billingInfoState.postal_code}
                 country={billingInfoState.country}
                 setIsFormValid={setValidBillingInfo}
+                radioType={billingRadioSelect}
+                countryOptions={countries?.map((country) => ({
+                  code: country.code,
+                  name: country.name,
+                }))}
               />
             )}
           </div>
-          Billing is valid: {validBillingInfo ? "true" : "false"}
         </Grid>
       </Grid>
-      <Box
-        component="span"
-        m={1}
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
+      <Grid
+        container
+        spacing={{ xs: 0, md: 4, lg: 4 }}
+        columns={{ xs: 10, sm: 10, md: 12 }}
+        pt={4}
       >
-        <Typography
-          variant="body1"
-          sx={{
-            cursor: "pointer",
-            textDecoration: "underline",
-            "&:hover": {
-              color: "primary.main",
-            },
-          }}
-          onClick={() => {
-            router.push("/cart");
-          }}
-        >
-          Back to cart
-        </Typography>
-        <Button
-          variant={"contained"}
-          disabled={
-            !validShippingInfo ||
-            (!validBillingInfo && billingRadioSelect === "NEW")
-          }
-          onClick={async () => submitForm()}
-        >
-          Next
-        </Button>
-      </Box>
+        <Grid container item xs={2} sm={2} md={2} direction="column" pt={4}>
+          <Typography
+            variant="body1"
+            sx={{
+              cursor: "pointer",
+              textDecoration: "underline",
+              "&:hover": {
+                color: "primary.main",
+              },
+            }}
+            onClick={() => {
+              router.push("/cart");
+            }}
+          >
+            Back to cart
+          </Typography>
+        </Grid>
+        <Grid container item xs={6} sm={7} md={7} direction="column" pt={4} />
+        <Grid container item xs={1} sm={1} md={1} direction="column" pt={4}>
+          <Button
+            variant={"contained"}
+            disabled={
+              !validShippingInfo ||
+              (!validBillingInfo && billingRadioSelect === "NEW")
+            }
+            onClick={async () => submitForm()}
+          >
+            Next
+          </Button>
+        </Grid>
+      </Grid>
     </div>
   );
 };
@@ -291,11 +321,19 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
+  // get countries
+  const countries = await countryListAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
   return {
     props: {
       shippingInfo,
       billingInfo,
       cartToken,
+      countries,
     },
   };
 };

@@ -1,4 +1,4 @@
-import { IBillingInfo } from "@/types/cart";
+import { IBillingInfo, ICountryOption } from "@/types/cart";
 import { IValidatedInputField } from "@/types/common";
 import TextField from "@mui/material/TextField";
 import {
@@ -8,7 +8,7 @@ import {
   useCallback,
   useEffect,
 } from "react";
-import BasicField from "./BasicField";
+import BasicField, { BasicSelect, TwoFieldsOneRowWrapper } from "./BasicField";
 
 export interface IBillingInfoFormProps {
   first_name: IValidatedInputField;
@@ -203,10 +203,18 @@ export const billingInfoInitialData = (
 interface IBillingInfoFormComponentProps extends IBillingInfoFormProps {
   setIsFormValid: (value: boolean) => void;
   radioType?: "NEW" | "SAMEASSHIPPING";
+  countryOptions?: ICountryOption[];
+  allowCountryChange?: boolean;
 }
 
 const BillingInfoForm = (props: IBillingInfoFormComponentProps) => {
-  const { setIsFormValid, radioType, ...billingInfo } = props;
+  const {
+    setIsFormValid,
+    radioType,
+    countryOptions,
+    allowCountryChange = false,
+    ...billingInfo
+  } = props;
 
   /**
    * Purpose of this component is to display the billing information form
@@ -238,12 +246,15 @@ const BillingInfoForm = (props: IBillingInfoFormComponentProps) => {
     // iterate through the billing info and check if all the fields are valid if they're required
     const billingInfoValues: IValidatedInputField[] =
       Object.values(billingInfo);
+    const billingInfoKeys: string[] = Object.keys(billingInfo);
+
     console.log("billingInfoValues", billingInfoValues);
     for (let i = 0; i < billingInfoValues.length; i++) {
       const value = billingInfoValues[i];
       if (
         value.isRequired &&
-        (value.isValid == false || value.isValid == undefined)
+        (value.isValid == false || value.isValid == undefined) &&
+        !(billingInfoKeys[i] == "country" && allowCountryChange)
       ) {
         setIsFormValid(false);
         return;
@@ -271,18 +282,29 @@ const BillingInfoForm = (props: IBillingInfoFormComponentProps) => {
     postal_code,
     country,
   } = billingInfo;
-
   return (
     <form>
-      <BasicField field={first_name} />
-      <BasicField field={surname} />
+      <TwoFieldsOneRowWrapper>
+        <BasicField field={first_name} />
+        <BasicField field={surname} />
+      </TwoFieldsOneRowWrapper>
       <BasicField field={company_name} />
-      <BasicField field={company_id} />
-      <BasicField field={vat_number} />
+      <TwoFieldsOneRowWrapper>
+        <BasicField field={company_id} />
+        <BasicField field={vat_number} />
+      </TwoFieldsOneRowWrapper>
       <BasicField field={street} />
-      <BasicField field={city} />
-      <BasicField field={postal_code} />
-      <BasicField field={country} />
+      <TwoFieldsOneRowWrapper>
+        <BasicField field={city} />
+        <BasicField field={postal_code} />
+      </TwoFieldsOneRowWrapper>
+      {countryOptions && countryOptions?.length > 0 ? (
+        <BasicSelect
+          field={country}
+          options={countryOptions}
+          disabled={!allowCountryChange}
+        />
+      ) : null}
     </form>
   );
 };

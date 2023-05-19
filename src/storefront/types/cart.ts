@@ -47,3 +47,8 @@ export interface IShippingInfo extends Address {
   phone: string;
   additional_info: string;
 }
+
+export interface ICountryOption {
+  code: string;
+  name: string;
+}

@@ -1,4 +1,4 @@
-import { IShippingInfo } from "@/types/cart";
+import { ICountryOption, IShippingInfo } from "@/types/cart";
 import { IValidatedInputField } from "@/types/common";
 import TextField from "@mui/material/TextField";
 import {
@@ -8,8 +8,9 @@ import {
   useCallback,
   useEffect,
 } from "react";
-import BasicFields from "./BasicField";
+import BasicFields, { BasicSelect, TwoFieldsOneRowWrapper } from "./BasicField";
 import BasicField from "./BasicField";
+import Grid from "@mui/material/Grid";
 
 export interface IShippingInfoFormProps {
   first_name: IValidatedInputField;
@@ -198,6 +199,8 @@ export const shippingInfoInitialData = (
 
 interface IShippingInfoFormComponentProps extends IShippingInfoFormProps {
   setIsFormValid: (value: boolean) => void;
+  countryOptions?: ICountryOption[];
+  allowCountryChange?: boolean;
 }
 
 export const exportShippingInfo = (
@@ -217,7 +220,12 @@ export const exportShippingInfo = (
 };
 
 const ShippingInfoForm = (props: IShippingInfoFormComponentProps) => {
-  const { setIsFormValid, ...shippingInfo } = props;
+  const {
+    setIsFormValid,
+    countryOptions,
+    allowCountryChange = false,
+    ...shippingInfo
+  } = props;
 
   /**
    * Purpose of this component is to display the shipping information form
@@ -241,11 +249,13 @@ const ShippingInfoForm = (props: IShippingInfoFormComponentProps) => {
     // iterate through the shipping info and check if all the fields are valid if they're required
     const shippingInfoValues: IValidatedInputField[] =
       Object.values(shippingInfo);
+    const shippingInfoKeys: string[] = Object.keys(shippingInfo);
     for (let i = 0; i < shippingInfoValues.length; i++) {
       const value = shippingInfoValues[i];
       if (
         value.isRequired &&
-        (value.isValid == false || value.isValid == undefined)
+        (value.isValid == false || value.isValid == undefined) &&
+        !(shippingInfoKeys[i] == "country" && allowCountryChange)
       ) {
         setIsFormValid(false);
         return;
@@ -276,15 +286,28 @@ const ShippingInfoForm = (props: IShippingInfoFormComponentProps) => {
 
   return (
     <form>
-      <BasicField field={first_name} />
-      <BasicField field={surname} />
+      <TwoFieldsOneRowWrapper>
+        <BasicField field={first_name} />
+        <BasicField field={surname} />
+      </TwoFieldsOneRowWrapper>
       <BasicField field={email} />
       <BasicField field={phone} />
-      <BasicField field={additional_info} />
-      <BasicField field={street} />
-      <BasicField field={city} />
-      <BasicField field={postal_code} />
-      <BasicField field={country} />
+      <TwoFieldsOneRowWrapper>
+        <BasicField field={street} />
+        <BasicField field={additional_info} />
+      </TwoFieldsOneRowWrapper>
+      <TwoFieldsOneRowWrapper>
+        <BasicField field={city} />
+        <BasicField field={postal_code} />
+      </TwoFieldsOneRowWrapper>
+
+      {countryOptions && countryOptions?.length > 0 ? (
+        <BasicSelect
+          field={country}
+          options={countryOptions}
+          disabled={!allowCountryChange}
+        />
+      ) : null}
     </form>
   );
 };
