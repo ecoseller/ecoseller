@@ -4,6 +4,7 @@ from parler_rest.serializers import (
     TranslatableModelSerializer,
     TranslatedFieldsField,
 )
+from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import (
     ModelSerializer,
     Serializer,
@@ -26,22 +27,12 @@ from core.mixins import (
 from country.models import (
     Country,
 )
-from country.models import (
-    ShippingInfo,
-    BillingInfo,
-)
-from country.serializers import (
-    CountrySerializer,
-    ShippingInfoSerializer,
-    BillingInfoSerializer,
-)
 from product.models import (
     Product,
 )
 from product.serializers import (
-    ProductCartSerializer,
-    ProductVariantCartSerializer,
     PriceList,
+    ProductMediaBaseSerializer,
 )
 
 
@@ -53,25 +44,30 @@ class FileImageField(Base64FileField):
         return kind.extension
 
 
-class CartItemSerializer(ModelSerializer):
+class CartItemDetailSerializer(ModelSerializer):
     """
     Serializer of one line in cart (see cart/models.py)
-    Contains both product and product variant and numeric price and quantity.
-    TODO: add product and product variant serializer (or just save product name and variant attributes as a string?)
+    Contains both product and product variant id and numeric price and quantity.
     """
 
-    product = ProductCartSerializer(read_only=True)
-    product_variant = ProductVariantCartSerializer(read_only=True)
+    primary_image = ProductMediaBaseSerializer(
+        read_only=True, many=False, source="primary_photo"
+    )
+    product_id = IntegerField(source="product.id")
+    product_variant_sku = CharField(source="product_variant.sku")
 
     class Meta:
         model = CartItem
         fields = (
-            "product_variant",
-            "product",
+            "product_id",
+            "product_variant_sku",
+            "product_slug",
+            "product_variant_name",
             "unit_price_gross",
             "unit_price_net",
-            "discount",
             "quantity",
+            "discount",
+            "primary_image",
         )
 
 
@@ -87,39 +83,72 @@ class CartTokenSerializer(ModelSerializer):
 
 class CartSerializer(ModelSerializer):
     """
-    Large serializer of cart (see cart/models.py)
-    Contains list of cart items, country and token defining the cart itself.
+    Serializer of cart (see cart/models.py)
+    Contains list of cart items, currency symbol and symbol position
     """
 
-    cart_items = CartItemSerializer(many=True, read_only=True)
-    country = CountrySerializer(read_only=True)
-    shipping_info_id = PrimaryKeyRelatedField(
-        queryset=ShippingInfo.objects.all(),
-        source="shipping_info",
-        write_only=True,
-        required=False,
-    )
-    billing_info_id = PrimaryKeyRelatedField(
-        queryset=BillingInfo.objects.all(),
-        source="billing_info",
-        write_only=True,
-        required=False,
-    )
-    shipping_info = ShippingInfoSerializer(read_only=True)
-    billing_info = BillingInfoSerializer(read_only=True)
+    cart_items = CartItemDetailSerializer(many=True, read_only=True)
+
+    # country = CountrySerializer(read_only=True)
+    # shipping_info_id = PrimaryKeyRelatedField(
+    #     queryset=ShippingInfo.objects.all(),
+    #     source="shipping_info",
+    #     write_only=True,
+    #     required=False,
+    # )
+    # billing_info_id = PrimaryKeyRelatedField(
+    #     queryset=BillingInfo.objects.all(),
+    #     source="billing_info",
+    #     write_only=True,
+    #     required=False,
+    # )
+    # shipping_info = ShippingInfoSerializer(read_only=True)
+    # billing_info = BillingInfoSerializer(read_only=True)
+    # pricelist = PriceListSerializer(read_only=True, many=False)
+
+    currency_symbol = SerializerMethodField()
+    symbol_position = SerializerMethodField()
 
     class Meta:
         model = Cart
-        fields = (
-            "token",
-            "country",
-            "update_at",
-            "create_at",
-            "cart_items",
-            "shipping_info_id",
-            "billing_info_id",
-            "shipping_info",
-            "billing_info",
+        fields = ("cart_items", "update_at", "currency_symbol", "symbol_position")
+
+    def get_currency_symbol(self, obj):
+        return obj.pricelist.currency.symbol
+
+    def get_symbol_position(self, obj):
+        return obj.pricelist.currency.symbol_position
+
+
+class CartItemAddSerializer(Serializer):
+    """
+    Serializer used for adding cart items
+    """
+
+    sku = CharField()
+    quantity = IntegerField(min_value=1)
+    product = PrimaryKeyRelatedField(queryset=Product.objects.all())
+    pricelist = PrimaryKeyRelatedField(queryset=PriceList.objects.all())
+    country = PrimaryKeyRelatedField(queryset=Country.objects.all())
+
+    def create(self, validated_data):
+        return CartItemAddData(
+            validated_data["sku"],
+            validated_data["quantity"],
+            validated_data["product"],
+            validated_data["pricelist"],
+            validated_data["country"],
+        )
+
+
+class CartItemAddData:
+    def __init__(self, sku, quantity, product, pricelist, country):
+        self.sku, self.quantity, self.product, self.pricelist, self.country = (
+            sku,
+            quantity,
+            product,
+            pricelist,
+            country,
         )
 
 
@@ -130,29 +159,14 @@ class CartItemUpdateSerializer(Serializer):
 
     sku = CharField()
     quantity = IntegerField(min_value=1)
-    product = PrimaryKeyRelatedField(queryset=Product.objects.all())
-    pricelist = PrimaryKeyRelatedField(queryset=PriceList.objects.all())
-    country = PrimaryKeyRelatedField(queryset=Country.objects.all())
 
     def create(self, validated_data):
-        return CartItemUpdateData(
-            validated_data["sku"],
-            validated_data["quantity"],
-            validated_data["product"],
-            validated_data["pricelist"],
-            validated_data["country"],
-        )
+        return CartItemUpdateData(validated_data["sku"], validated_data["quantity"])
 
 
 class CartItemUpdateData:
-    def __init__(self, sku, quantity, product, pricelist, country):
-        self.sku, self.quantity, self.product, self.pricelist, self.country = (
-            sku,
-            quantity,
-            product,
-            pricelist,
-            country,
-        )
+    def __init__(self, sku, quantity):
+        self.sku, self.quantity = (sku, quantity)
 
 
 class ShippingMethodSerializer(TranslatedSerializerMixin, ModelSerializer):

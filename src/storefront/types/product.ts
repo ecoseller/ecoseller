@@ -5,3 +5,10 @@ export interface IProductSliderData {
   image: string;
   url: string;
 }
+
+export interface IProductMedia {
+  id: number;
+  type: "IMAGE" | "VIDEO";
+  media: string;
+  alt: string | null;
+}

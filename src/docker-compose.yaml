@@ -34,7 +34,6 @@ services:
       - ./dashboard/src:/usr/src/app/src
       - ./dashboard/public:/usr/src/app/public
       - ./dashboard/api:/usr/src/app/api
-      - ./http-library/src:/usr/src/http-library/src
     ports:
       - 3030:3000
     depends_on:
@@ -55,7 +54,10 @@ services:
       - ./storefront/styles:/usr/src/app/styles
       - ./storefront/src:/usr/src/app/src
       - ./storefront/public:/usr/src/app/public
-      - ./http-library/src:/usr/src/http-library/src
+      - ./storefront/utils:/usr/src/app/utils
+      - ./storefront/api:/usr/src/app/api
+      - ./storefront/components:/usr/src/app/components
+      - ./storefront/types:/usr/src/app/types
     ports:
       - 3031:3000
     depends_on:

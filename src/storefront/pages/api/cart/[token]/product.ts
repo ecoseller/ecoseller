@@ -46,16 +46,6 @@ export const cartProductAPI = async (
         .catch((error: any) => {
           throw error;
         });
-    // case "DELETE":
-    //   return await api
-    //     .delete(url)
-    //     .then((response) => response.data)
-    //     .then((data) => {
-    //       return data;
-    //     })
-    //     .catch((error: any) => {
-    //       throw error;
-    //     });
     default:
       throw new Error("Method not supported");
   }

@@ -1,10 +1,14 @@
+import { ICart, ICartToken } from "@/types/cart";
+
 export const getCart = async (token: string) => {
   // Get cart by token
   // URL: /api/cart/{token}/
   // Method: GET
   // Params: token
   // Return: Promise
-  return await fetch(`/api/cart/${token}/`);
+  return fetch(`/api/cart/${token}/`)
+    .then((res) => res.json())
+    .then((data) => data as ICart);
 };
 
 export const createCart = async (
@@ -19,7 +23,7 @@ export const createCart = async (
   // Method: POST
   // Params: none
   // Return: Promise
-  return await fetch(`/api/cart/`, {
+  return fetch(`/api/cart/`, {
     method: "POST",
     body: JSON.stringify({
       sku: sku,
@@ -28,5 +32,7 @@ export const createCart = async (
       pricelist: pricelist,
       country: country,
     }),
-  });
+  })
+    .then((res) => res.json())
+    .then((data) => data as ICartToken);
 };

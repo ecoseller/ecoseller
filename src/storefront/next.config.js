@@ -2,6 +2,9 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  experimental: {
+    appDir: false,
+  },
   modularizeImports: {
     "react-bootstrap": {
       transform: "react-bootstrap/{{member}}",

@@ -9,7 +9,7 @@ import {
 } from "@/utils/interceptors/api";
 import { HTTPMETHOD } from "@/types/common";
 
-export const cartAPI = async (
+export const cartDetailAPI = async (
   method: HTTPMETHOD,
   token: string,
   req?: NextApiRequest,
@@ -45,7 +45,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { token } = req.query;
 
   if (method == "GET") {
-    return cartAPI("GET", token as string, req, res)
+    return cartDetailAPI("GET", token as string, req, res)
       .then((data) => res.status(200).json(data))
       .catch((error) => res.status(400).json(null));
   }
