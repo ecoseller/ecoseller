@@ -35,6 +35,11 @@ from product.serializers import (
     ProductMediaBaseSerializer,
 )
 
+from country.serializers import (
+    ShippingInfoSerializer,
+    BillingInfoSerializer,
+)
+
 
 class FileImageField(Base64FileField):
     ALLOWED_TYPES = ["png", "jpg", "jpeg", "gif", "svg"]
@@ -102,8 +107,8 @@ class CartSerializer(ModelSerializer):
     #     write_only=True,
     #     required=False,
     # )
-    # shipping_info = ShippingInfoSerializer(read_only=True)
-    # billing_info = BillingInfoSerializer(read_only=True)
+    shipping_info = ShippingInfoSerializer(read_only=True)
+    billing_info = BillingInfoSerializer(read_only=True)
     # pricelist = PriceListSerializer(read_only=True, many=False)
 
     currency_symbol = SerializerMethodField()
@@ -111,7 +116,14 @@ class CartSerializer(ModelSerializer):
 
     class Meta:
         model = Cart
-        fields = ("cart_items", "update_at", "currency_symbol", "symbol_position")
+        fields = (
+            "cart_items",
+            "update_at",
+            "currency_symbol",
+            "symbol_position",
+            "shipping_info",
+            "billing_info",
+        )
 
     def get_currency_symbol(self, obj):
         return obj.pricelist.currency.symbol

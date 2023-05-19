@@ -15,6 +15,7 @@ from rest_framework.status import (
     HTTP_404_NOT_FOUND,
     HTTP_400_BAD_REQUEST,
     HTTP_204_NO_CONTENT,
+    HTTP_200_OK,
     HTTP_201_CREATED,
 )
 from rest_framework.views import APIView
@@ -219,6 +220,15 @@ class CartUpdateInfoBaseStorefrontView(APIView, ABC):
         """
         pass
 
+    def get(self, request, token):
+        try:
+            cart = Cart.objects.get(token=token)
+            info = self._get_info(cart)
+            serializer = self.info_serializer(info)
+            return Response(status=HTTP_200_OK, data=serializer.data)
+        except Cart.DoesNotExist:
+            return Response(status=HTTP_404_NOT_FOUND)
+
     def put(self, request, token):
         try:
             cart = Cart.objects.get(token=token)
@@ -230,9 +240,10 @@ class CartUpdateInfoBaseStorefrontView(APIView, ABC):
                 # if we don't have info, create it
                 serializer = self.info_serializer(data=request.data)
             if serializer.is_valid():
-                serializer.save()
+                info = serializer.save()
                 self._set_info(cart, info)
                 return Response(status=HTTP_204_NO_CONTENT)
+            print(serializer.errors)
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
         except Cart.DoesNotExist:
             return Response(status=HTTP_404_NOT_FOUND)
