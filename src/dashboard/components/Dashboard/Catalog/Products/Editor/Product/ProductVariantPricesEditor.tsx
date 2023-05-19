@@ -90,16 +90,17 @@ const ProductVariantPricesEditor = ({
       });
       return;
     }
-    console.log("settingrows", rows);
 
     const variantsToSet = rows.map(
       (row) =>
         ({
-          ...(row as IProductVariant),
+          // ...(row as IProductVariant), <-- this line caused the ugly bug where 99% of data of product variant (except for price) was lost
+          ...(state.product_variants as IProductVariant[]).find(
+            (productVariant: IProductVariant) => productVariant.sku == row.sku
+          ), // <-- this line fixes the bug by finding the product variant in the state and using it's data
           price: serializeProductVariantPricesFromRow(row, pricelistsData),
         } as IProductVariant)
     );
-    console.log("settingrows2", rows, variantsToSet);
 
     dispatch({
       type: ActionSetProduct.SETPRODUCTVARIANTS,

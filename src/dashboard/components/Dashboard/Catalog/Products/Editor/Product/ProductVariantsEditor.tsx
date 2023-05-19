@@ -158,7 +158,6 @@ const ProductVariantsEditor = ({
     if (!updateMainState) {
       return;
     }
-    console.log("updateMainState-Variant", updateMainState);
     setUpdateMainState(false);
 
     if (!rows || rows?.length == 0) {
@@ -181,7 +180,6 @@ const ProductVariantsEditor = ({
           price: serializeProductVariantPricesFromRow(row, pricelistsData),
         } as IProductVariant)
     );
-    console.log("settingrows2", rows, variantsToSet);
 
     dispatch({
       type: ActionSetProduct.SETPRODUCTVARIANTS,
