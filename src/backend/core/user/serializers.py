@@ -80,3 +80,12 @@ class TokenObtainDashboardSerializer(TokenObtainPairSerializer):
         data["access"] = str(refresh.access_token)
         data["dashboard_login"] = attrs.get("dashboard_login")
         return data
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    """
+    Serializer for password change endpoint.
+    """
+
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)

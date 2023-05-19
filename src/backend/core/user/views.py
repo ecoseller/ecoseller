@@ -1,9 +1,10 @@
 from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
+from rest_framework.generics import UpdateAPIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework_simplejwt import views as jwt_views
 
 from roles.decorator import check_user_access_decorator
@@ -14,6 +15,7 @@ from .serializers import (
     RegistrationSerializer,
     TokenObtainDashboardSerializer,
     UserSerializer,
+    ChangePasswordSerializer,
 )
 
 
@@ -137,3 +139,72 @@ class CustomTokenObtainPairView(jwt_views.TokenObtainPairView):
             return response
         except Exception:
             return Response("Error login", status=400)
+
+
+class PasswordView(UpdateAPIView):
+    """
+    View for users to change their password.
+    """
+
+    serializer_class = ChangePasswordSerializer
+    permission_classes = (permissions.AllowAny,)
+
+    def get_object(self, queryset=None):
+        obj = self.request.user
+        return obj
+
+    @check_user_access_decorator({"user_change_permission"})
+    def update(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            # Check old password
+            if not self.object.check_password(serializer.data.get("old_password")):
+                return Response({"old_password": ["Wrong password."]}, status=400)
+            # set_password also hashes the password that the user will get
+            self.object.set_password(serializer.data.get("new_password"))
+            self.object.save()
+            response = {
+                "status": "success",
+                "code": "200",
+                "message": "Password updated successfully",
+                "data": [],
+            }
+
+            return Response(response)
+
+        return Response(serializer.errors, status=400)
+
+
+class PasswordAdminView(UpdateAPIView):
+    """
+    View for admins to change users password.
+    """
+
+    serializer_class = ChangePasswordSerializer
+    permission_classes = (permissions.AllowAny,)
+
+    def get_object(self, queryset=None):
+        obj = User.objects.get(email=self.kwargs["email"])
+        return obj
+
+    @check_user_access_decorator({"user_change_permission"})
+    def update(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            # set_password also hashes the password that the user will get
+            self.object.set_password(serializer.data.get("new_password"))
+            self.object.save()
+            response = {
+                "status": "success",
+                "code": "200",
+                "message": "Password updated successfully",
+                "data": [],
+            }
+
+            return Response(response)
+
+        return Response(serializer.errors, status=400)
