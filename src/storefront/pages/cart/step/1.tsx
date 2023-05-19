@@ -39,6 +39,7 @@ import Grid from "@mui/material/Grid";
 import { IBillingInfo, IShippingInfo } from "@/types/cart";
 import { countryListAPI } from "@/pages/api/country";
 import { ICountry } from "@/types/country";
+import CartButtonRow from "@/components/Cart/ButtonRow";
 
 interface ICartStep1PageProps {
   shippingInfo: any;
@@ -234,43 +235,22 @@ const CartStep1Page = ({
           </div>
         </Grid>
       </Grid>
-      <Grid
-        container
-        spacing={{ xs: 0, md: 4, lg: 4 }}
-        columns={{ xs: 10, sm: 10, md: 12 }}
-        pt={4}
-      >
-        <Grid container item xs={2} sm={2} md={2} direction="column" pt={4}>
-          <Typography
-            variant="body1"
-            sx={{
-              cursor: "pointer",
-              textDecoration: "underline",
-              "&:hover": {
-                color: "primary.main",
-              },
-            }}
-            onClick={() => {
-              router.push("/cart");
-            }}
-          >
-            Back to cart
-          </Typography>
-        </Grid>
-        <Grid container item xs={6} sm={7} md={7} direction="column" pt={4} />
-        <Grid container item xs={1} sm={1} md={1} direction="column" pt={4}>
-          <Button
-            variant={"contained"}
-            disabled={
-              !validShippingInfo ||
-              (!validBillingInfo && billingRadioSelect === "NEW")
-            }
-            onClick={async () => submitForm()}
-          >
-            Next
-          </Button>
-        </Grid>
-      </Grid>
+      <CartButtonRow
+        prev={{
+          title: "Back to cart",
+          onClick: () => {
+            router.push("/cart");
+          },
+          disabled: false,
+        }}
+        next={{
+          title: "Next",
+          onClick: async () => submitForm(),
+          disabled:
+            !validShippingInfo ||
+            (!validBillingInfo && billingRadioSelect === "NEW"),
+        }}
+      />
     </div>
   );
 };
