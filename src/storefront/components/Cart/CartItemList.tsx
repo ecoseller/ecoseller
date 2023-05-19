@@ -82,18 +82,18 @@ const CartItemList = () => {
               <TableCell align="center">
                 <IconButton
                   onClick={() => {
-                    updateItemQuantity(item, true);
-                  }}
-                >
-                  <AddIcon />
-                </IconButton>
-                {item.quantity}
-                <IconButton
-                  onClick={() => {
                     updateItemQuantity(item, false);
                   }}
                 >
                   <RemoveIcon />
+                </IconButton>
+                {item.quantity}
+                <IconButton
+                  onClick={() => {
+                    updateItemQuantity(item, true);
+                  }}
+                >
+                  <AddIcon />
                 </IconButton>
               </TableCell>
 
