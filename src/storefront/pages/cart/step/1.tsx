@@ -7,7 +7,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 // api
 import { putBillingInfo, putShippingInfo } from "@/api/cart/info";
-import { cartAPI } from "@/pages/api/cart/[token]";
 import { cartBillingInfoAPI } from "@/pages/api/cart/[token]/billing-info";
 import { cartShippingInfoAPI } from "@/pages/api/cart/[token]/shipping-info";
 
