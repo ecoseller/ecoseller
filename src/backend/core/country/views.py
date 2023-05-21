@@ -8,6 +8,8 @@ from rest_framework.generics import (
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from user.models import User
+
 from .models import (
     Country,
     Currency,
@@ -21,6 +23,7 @@ from .serializers import (
     VatGroupSerializer,
     ShippingInfoSerializer,
     BillingInfoSerializer,
+    ShippingInfoListUserSerializer,
 )
 
 DEFAULT_LANGUAGE_CODE = settings.PARLER_DEFAULT_LANGUAGE_CODE
@@ -223,3 +226,95 @@ class BillingAddressDetailView(RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return BillingInfo.objects.all()
+
+
+class ShippingInfoListView(GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = ["GET", "POST"]
+    serializer_class = ShippingInfoSerializer
+
+    def get_queryset(self):
+        return ShippingInfo.objects.all()
+
+    def get(self, request):
+        qs = self.get_queryset()
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data, status=200)
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+
+class BillingInfoListView(GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = ["GET", "POST"]
+    serializer_class = BillingInfoSerializer
+
+    def get_queryset(self):
+        return BillingInfo.objects.all()
+
+    def get(self, request):
+        qs = self.get_queryset()
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data, status=200)
+
+    def post(self, request, user_id):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=user_id)
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+
+class ShippingInfoListUserView(GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = ["GET", "POST"]
+    serializer_class = ShippingInfoListUserSerializer
+
+    def get(self, request, user_id):
+        qs = self.get_queryset()
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data, status=200)
+
+    def post(self, request, user_id):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            try:
+                user = User.objects.get(email=user_id)
+                serializer.save(user=user)
+                return Response(serializer.data, status=201)
+            except User.DoesNotExist:
+                return Response({"error": "User does not exist"}, status=400)
+        return Response(serializer.errors, status=400)
+
+    def get_queryset(self):
+        return ShippingInfo.objects.filter(user=self.kwargs["user_id"])
+
+
+class BillingInfoListUserView(GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = ["GET", "POST"]
+    serializer_class = BillingInfoSerializer
+
+    def get(self, request, user_id):
+        qs = self.get_queryset()
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data, status=200)
+
+    def post(self, request, user_id):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            try:
+                user = User.objects.get(email=user_id)
+                serializer.save(user=user)
+                return Response(serializer.data, status=201)
+            except User.DoesNotExist:
+                return Response({"error": "User does not exist"}, status=400)
+        return Response(serializer.errors, status=400)
+
+    def get_queryset(self):
+        return BillingInfo.objects.filter(user=self.kwargs["user_id"])

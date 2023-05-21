@@ -12,4 +12,14 @@ urlpatterns = [
     path("<str:code>/", views.CountryDetailView.as_view()),
     path("address/shipping/<int:id>/", views.ShippingAddressDetailView.as_view()),
     path("address/billing/<int:id>/", views.ShippingAddressDetailView.as_view()),
+    path("dashboard/address/shipping/", views.ShippingInfoListView.as_view()),
+    path("dashboard/address/billing/", views.BillingInfoListView.as_view()),
+    path(
+        "dashboard/address/shipping/<str:user_id>/",
+        views.ShippingInfoListUserView.as_view(),
+    ),
+    path(
+        "dashboard/address/billing/<str:user_id>/",
+        views.BillingInfoListUserView.as_view(),
+    ),
 ]

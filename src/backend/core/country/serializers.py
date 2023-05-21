@@ -92,6 +92,26 @@ class ShippingInfoSerializer(ModelSerializer):
         fields = "__all__"
 
 
+class ShippingInfoListUserSerializer(ShippingInfoSerializer):
+    """
+    Shippinginfo serializer that serializes all fields
+    """
+
+    class Meta:
+        model = ShippingInfo
+        fields = (
+            "first_name",
+            "surname",
+            "street",
+            "city",
+            "postal_code",
+            "country",
+            "email",
+            "phone",
+            "additional_info",
+        )
+
+
 class BillingInfoSerializer(ModelSerializer):
     """
     BillingInfo serializer that serializes all fields
