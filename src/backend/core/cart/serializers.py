@@ -35,11 +35,6 @@ from product.serializers import (
     ProductMediaBaseSerializer,
 )
 
-from country.serializers import (
-    ShippingInfoSerializer,
-    BillingInfoSerializer,
-)
-
 
 class FileImageField(Base64FileField):
     ALLOWED_TYPES = ["png", "jpg", "jpeg", "gif", "svg"]
