@@ -93,24 +93,6 @@ class CartSerializer(ModelSerializer):
     """
 
     cart_items = CartItemDetailSerializer(many=True, read_only=True)
-
-    # country = CountrySerializer(read_only=True)
-    # shipping_info_id = PrimaryKeyRelatedField(
-    #     queryset=ShippingInfo.objects.all(),
-    #     source="shipping_info",
-    #     write_only=True,
-    #     required=False,
-    # )
-    # billing_info_id = PrimaryKeyRelatedField(
-    #     queryset=BillingInfo.objects.all(),
-    #     source="billing_info",
-    #     write_only=True,
-    #     required=False,
-    # )
-    shipping_info = ShippingInfoSerializer(read_only=True)
-    billing_info = BillingInfoSerializer(read_only=True)
-    # pricelist = PriceListSerializer(read_only=True, many=False)
-
     currency_symbol = SerializerMethodField()
     symbol_position = SerializerMethodField()
 
@@ -121,8 +103,6 @@ class CartSerializer(ModelSerializer):
             "update_at",
             "currency_symbol",
             "symbol_position",
-            "shipping_info",
-            "billing_info",
         )
 
     def get_currency_symbol(self, obj):
