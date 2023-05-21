@@ -6,9 +6,6 @@ export const putShippingInfo = async (
 ) => {
   const response = await fetch(`/api/cart/${token}/shipping-info/`, {
     method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify(shippingInfo),
   });
 
@@ -21,9 +18,6 @@ export const putBillingInfo = async (
 ) => {
   const response = await fetch(`/api/cart/${token}/billing-info/`, {
     method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify(billingInfo),
   });
 
