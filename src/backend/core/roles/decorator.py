@@ -77,7 +77,7 @@ def check_user_is_staff(user):
     return False
 
 
-def check_user_is_staff_decorator(permissions):
+def check_user_is_staff_decorator():
     """
     Decorator for checking if user has permission to access view.
     This decorator should encapsulate GET views for dashboard.

@@ -3,6 +3,7 @@ from rest_framework import permissions
 from rest_framework.response import Response
 
 from rest_framework.generics import GenericAPIView
+from roles.decorator import check_user_is_staff_decorator
 
 from roles.decorator import check_user_access_decorator
 
@@ -296,6 +297,7 @@ class PermissionView(GenericAPIView):
     ]
     serializer_class = ManagerPermissionSerializer
 
+    @check_user_is_staff_decorator()
     def get(self, request):
         # return just a few permissions that actually makes sense
         # maybe put in some config in the future
