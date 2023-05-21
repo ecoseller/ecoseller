@@ -116,7 +116,6 @@ class CartCreateStorefrontView(APIView):
 
     def post(self, request):
         cart = Cart.objects.create()
-        # TODO: set user if logged-in
         user = request.user
         if user is not None and not user.is_anonymous:
             cart.user = user
