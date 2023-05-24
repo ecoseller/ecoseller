@@ -15,28 +15,6 @@ const CartItemList = () => {
   const { cart, updateQuantity, removeFromCart } = useCart();
   const router = useRouter();
 
-  const roundedPrice = (item: ICartItem) => {
-    const price = item.quantity * item.unit_price_net;
-    return Math.round(price * 100) / 100;
-  };
-
-  const getPriceString = (
-    price: number,
-    currencySymbol: string,
-    symbolPosition: "BEFORE" | "AFTER"
-  ) => {
-    if (symbolPosition == "BEFORE") {
-      return `${currencySymbol} ${price}`;
-    } else {
-      return `${price} ${currencySymbol}`;
-    }
-  };
-
-  const getTotalPrice = (items: ICartItem[]) => {
-    const itemPrices = items.map((i) => i.unit_price_net * i.quantity);
-    return itemPrices.reduce((x, y) => x + y);
-  };
-
   const updateItemQuantity = (item: ICartItem, addingOne: boolean = true) => {
     if (!addingOne && item.quantity == 1) {
       return;
