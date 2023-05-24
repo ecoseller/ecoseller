@@ -1,9 +1,12 @@
 from rest_framework import serializers
 
+from cart.serializers import CartSerializer
 from .models import Order
 
 
-class OrderBaseSerializer(serializers.ModelSerializer):
+class OrderDetailSerializer(serializers.ModelSerializer):
+    cart = CartSerializer()
+
     class Meta:
         model = Order
         fields = "__all__"
