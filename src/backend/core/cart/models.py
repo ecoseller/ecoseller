@@ -66,6 +66,20 @@ class ShippingMethodCountry(models.Model):
             f"{self.shipping_method} - {self.country} - {self.vat_group} - {self.price}"
         )
 
+    @property
+    def price_incl_vat(self):
+        if not self.vat_group:
+            return self.price
+        return self.price * (1 + self.vat_group.rate / 100)
+
+    @property
+    def formatted_price_incl_vat(self):
+        price_str = f"{self.price_incl_vat:.2f}".replace(".", ",")
+        if not self.currency:
+            return price_str
+
+        return self.currency.format_price(price_str)
+
 
 def get_payment_method_image_path(instance, filename):
     filename, file_extension = os.path.splitext(filename)
@@ -115,6 +129,20 @@ class PaymentMethodCountry(models.Model):
         return (
             f"{self.payment_method} - {self.country} - {self.vat_group} - {self.price}"
         )
+
+    @property
+    def price_incl_vat(self):
+        if not self.vat_group:
+            return self.price
+        return self.price * (1 + self.vat_group.rate / 100)
+
+    @property
+    def formatted_price_incl_vat(self):
+        price_str = f"{self.price_incl_vat:.2f}".replace(".", ",")
+        if not self.currency:
+            return price_str
+
+        return self.currency.format_price(price_str)
 
 
 class Cart(models.Model):
