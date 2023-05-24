@@ -17,6 +17,7 @@ export interface ICartItem {
 }
 
 export interface ICart {
+  token: string;
   cart_items: ICartItem[];
   update_at: string;
   total_price_net_formatted: string;
