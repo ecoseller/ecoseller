@@ -85,7 +85,7 @@ const CartStep2Page = ({ cart, methods, cartToken }: ICartStep2PageProps) => {
     );
     const paymentRes = await setPaymentMethod(
       cartToken,
-      shippingMethodCountryId
+      paymentMethodCountryId
     );
 
     if (shippingRes === 200 && paymentRes === 200) {
