@@ -4,7 +4,6 @@ from parler_rest.serializers import (
     TranslatableModelSerializer,
     TranslatedFieldsField,
 )
-from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import (
     ModelSerializer,
     Serializer,
@@ -65,6 +64,7 @@ class CartItemDetailSerializer(ModelSerializer):
             "product_variant_name",
             "unit_price_gross",
             "unit_price_net",
+            "total_price_net_formatted",
             "quantity",
             "discount",
             "primary_image",
@@ -88,23 +88,10 @@ class CartSerializer(ModelSerializer):
     """
 
     cart_items = CartItemDetailSerializer(many=True, read_only=True)
-    currency_symbol = SerializerMethodField()
-    symbol_position = SerializerMethodField()
 
     class Meta:
         model = Cart
-        fields = (
-            "cart_items",
-            "update_at",
-            "currency_symbol",
-            "symbol_position",
-        )
-
-    def get_currency_symbol(self, obj):
-        return obj.pricelist.currency.symbol
-
-    def get_symbol_position(self, obj):
-        return obj.pricelist.currency.symbol_position
+        fields = ("cart_items", "update_at", "total_price_net_formatted")
 
 
 class CartItemAddSerializer(Serializer):

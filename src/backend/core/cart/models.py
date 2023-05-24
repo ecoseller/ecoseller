@@ -145,12 +145,25 @@ class Cart(models.Model):
         ShippingMethodCountry, null=True, on_delete=models.SET_NULL, related_name="+"
     )
 
+    @property
+    def total_price_net_formatted(self):
+        """
+        Get total price (unit price * quantity) of the cart items with currency symbol
+
+        This price is intended to be shown to the user.
+        """
+        total_price = sum(
+            [item.unit_price_net * item.quantity for item in self.cart_items.all()]
+        )
+
+        return _format_price(total_price, self.pricelist)
+
     def recalculate(self, pricelist: PriceList, country: Country):
         """
         Recalculate cart prices.
         """
         if (self.pricelist and self.pricelist.code == pricelist.code) and (
-            self.country.code == country.code
+                self.country.code == country.code
         ):
             # if pricelist and country is the same as before, we don't need to recalculate
             return
@@ -220,6 +233,17 @@ class CartItem(models.Model):
     def primary_photo(self):
         return self.product.get_primary_photo()
 
+    @property
+    def total_price_net_formatted(self):
+        """
+        Get total price (unit price * quantity) of this item with currency symbol
+
+        This price is intended to be shown to the user.
+        """
+        total_price = self.unit_price_net * self.quantity
+
+        return _format_price(total_price, self.cart.pricelist)
+
     def recalculate(self, pricelist, country):
         # recalculate price for this cart item based on pricelist and country
         price = ProductPrice.objects.get(
@@ -240,3 +264,13 @@ class CartItem(models.Model):
             else price.discounted_price_incl_vat(vat)
         )
         self.save()
+
+
+def _format_price(price, pricelist):
+    if price % 1 == 0:  # If it's a whole number, convert it to int, to make sure there aren't any decimal places
+        price = int(price)
+
+    symbol = pricelist.currency.symbol
+    symbol_position = pricelist.currency.symbol_position
+
+    return f"{price} {symbol}" if symbol_position == "AFTER" else f"{symbol} {price}"

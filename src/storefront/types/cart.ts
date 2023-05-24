@@ -10,6 +10,7 @@ export interface ICartItem {
   product_variant_name: string;
   unit_price_gross: number;
   unit_price_net: number;
+  total_price_net_formatted: string;
   quantity: number;
   discount: number | null;
   primary_image: IProductMedia | null;
@@ -18,8 +19,7 @@ export interface ICartItem {
 export interface ICart {
   cart_items: ICartItem[];
   update_at: string;
-  currency_symbol: string;
-  symbol_position: "BEFORE" | "AFTER";
+  total_price_net_formatted: string;
 }
 
 export interface ICartToken {
