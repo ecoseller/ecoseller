@@ -74,7 +74,7 @@ class ShippingMethodCountry(models.Model):
 
     @property
     def formatted_price_incl_vat(self):
-        price_str = f"{self.price_incl_vat:.2f}".replace(".", ",")
+        price_str = f"{self.price_incl_vat:.2f}"
         if not self.currency:
             return price_str
 
@@ -138,7 +138,7 @@ class PaymentMethodCountry(models.Model):
 
     @property
     def formatted_price_incl_vat(self):
-        price_str = f"{self.price_incl_vat:.2f}".replace(".", ",")
+        price_str = f"{self.price_incl_vat:.2f}"
         if not self.currency:
             return price_str
 
