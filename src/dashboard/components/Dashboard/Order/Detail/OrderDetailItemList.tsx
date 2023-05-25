@@ -2,7 +2,7 @@ import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
-import { ICart, ICartItem } from "@/types/cart";
+import { ICart, ICartItem } from "@/types/cart/cart";
 import { Grid, Table, TableBody, TableCell, TableRow } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";

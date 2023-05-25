@@ -1,4 +1,4 @@
-import { ICart } from "@/types/cart";
+import { ICart } from "@/types/cart/cart";
 
 export enum OrderStatus {
   Pending = "PENDING",

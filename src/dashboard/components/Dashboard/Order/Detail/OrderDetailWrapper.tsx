@@ -1,4 +1,4 @@
-import { IOrderDetail } from "@/types/order";
+import { IOrderDetail, OrderStatus } from "@/types/order";
 import EditableContentWrapper, {
   PrimaryButtonAction,
 } from "@/components/Dashboard/Generic/EditableContentWrapper";
@@ -13,6 +13,7 @@ import EntityVisibilityForm from "@/components/Dashboard/Generic/Forms/EntityVis
 import DeleteEntityButton from "@/components/Dashboard/Generic/DeleteEntityButton";
 import SnackbarWithAlert from "@/components/Dashboard/Generic/SnackbarWithAlert";
 import { useSnackbarState } from "@/utils/snackbar";
+import OrderDetailStatus from "@/components/Dashboard/Order/Detail/OrderDetailStatus";
 
 interface IOrderDetailWrapperProps {
   order: IOrderDetail;
@@ -21,8 +22,14 @@ interface IOrderDetailWrapperProps {
 const OrderDetailWrapper = ({ order }: IOrderDetailWrapperProps) => {
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
   const [snackbar, setSnackbar] = useSnackbarState();
+  const [orderState, setOrderState] = useState<IOrderDetail>(order);
 
   const save = async () => {};
+
+  const setOrderStatus = (orderStatus: OrderStatus) => {
+    setPreventNavigation(true);
+    setOrderState({ ...orderState, status: orderStatus });
+  };
 
   return (
     <EditableContentWrapper
@@ -34,15 +41,18 @@ const OrderDetailWrapper = ({ order }: IOrderDetailWrapperProps) => {
       returnPath={"/dashboard/orders"}
     >
       <TopLineWithReturn
-        title={`Order #${order.token} detail`}
+        title={`Order #${orderState.token} detail`}
         returnPath="/dashboard/orders"
       />
       <Grid container spacing={2}>
         <Grid item md={8} xs={12}>
-          <OrderDetailItemList cart={order.cart} />
+          <OrderDetailItemList cart={orderState.cart} />
         </Grid>
         <Grid item md={4} xs={12}>
-          Nothing...
+          <OrderDetailStatus
+            orderStatus={orderState.status}
+            setOrderStatus={setOrderStatus}
+          />
         </Grid>
       </Grid>
       {snackbar ? (
