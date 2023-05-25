@@ -3,7 +3,15 @@ import React, { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import { ICart, ICartItem } from "@/types/cart/cart";
-import { Grid, Table, TableBody, TableCell, TableRow } from "@mui/material";
+import {
+  Grid,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  TextField,
+} from "@mui/material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
@@ -19,6 +27,7 @@ interface IOrderDetailItemListProps {
 
 const OrderDetailItemList = ({ cart }: IOrderDetailItemListProps) => {
   const router = useRouter();
+  const [editing, setEditing] = useState(false);
 
   const updateItemQuantity = (item: ICartItem, addingOne: boolean = true) => {
     if (!addingOne && item.quantity == 1) {
@@ -33,6 +42,15 @@ const OrderDetailItemList = ({ cart }: IOrderDetailItemListProps) => {
     <EditorCard>
       <CollapsableContentWithTitle title="Order items">
         <Table sx={{ minWidth: 650 }}>
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">Product variant name</TableCell>
+              <TableCell align="center">SKU</TableCell>
+              <TableCell align="center">Quantity</TableCell>
+              <TableCell align="center">Net price</TableCell>
+              <TableCell align="center"></TableCell>
+            </TableRow>
+          </TableHead>
           <TableBody>
             {cart.cart_items.map((item) => (
               <TableRow key={item.product_variant_sku}>
@@ -48,43 +66,18 @@ const OrderDetailItemList = ({ cart }: IOrderDetailItemListProps) => {
                   </Button>
                 </TableCell>
 
-                {item.primary_image ? (
-                  <TableCell>
-                    <img
-                      src={imgPath(item.primary_image.media)}
-                      alt={item.primary_image.alt || ""}
-                      style={{
-                        objectFit: "contain",
-                        position: "relative",
-                        height: "50px",
-                        width: "auto",
-                      }}
-                    />
-                  </TableCell>
-                ) : null}
+                <TableCell align="center">{item.product_variant_sku}</TableCell>
 
-                <TableCell align="center">
-                  <IconButton
-                    onClick={() => {
-                      updateItemQuantity(item, false);
+                <TableCell align="center" width="50">
+                  <TextField
+                    id="quantity"
+                    type="number"
+                    InputLabelProps={{
+                      shrink: true,
                     }}
-                  >
-                    <RemoveIcon />
-                  </IconButton>
-                  {item.quantity}
-                  <IconButton
-                    onClick={() => {
-                      updateItemQuantity(item, true);
-                    }}
-                  >
-                    <AddIcon />
-                  </IconButton>
-                </TableCell>
-
-                <TableCell align="center" sx={{ fontWeight: 700 }}>
-                  {item.discount ? (
-                    <span className="red-text">-{item.discount} %</span>
-                  ) : null}
+                    value={item.quantity}
+                    disabled={!editing}
+                  />
                 </TableCell>
 
                 <TableCell sx={{ fontWeight: 700 }} align="center">
@@ -92,13 +85,15 @@ const OrderDetailItemList = ({ cart }: IOrderDetailItemListProps) => {
                 </TableCell>
 
                 <TableCell align="center">
-                  <IconButton
-                    onClick={() => {
-                      // removeFromCart(item.product_variant_sku);
-                    }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
+                  {editing ? (
+                    <IconButton
+                      onClick={() => {
+                        // removeFromCart(item.product_variant_sku);
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  ) : null}
                 </TableCell>
               </TableRow>
             ))}
