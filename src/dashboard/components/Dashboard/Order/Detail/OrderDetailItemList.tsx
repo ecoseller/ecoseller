@@ -39,6 +39,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import EditIcon from "@mui/icons-material/Edit";
 import { randomId } from "@mui/x-data-grid-generator";
+import Link from "next/link";
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -79,22 +80,24 @@ interface IOrderDetailItemListProps {
 interface ICartItemRow extends ICartItem {
   isNew: boolean;
   valid: boolean;
+  id: number;
 }
 
 const OrderDetailItemList = ({ cart }: IOrderDetailItemListProps) => {
   const router = useRouter();
-  const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
+  const [rowModes, setRowModes] = useState<GridRowModesModel>({});
 
   const [rows, setRows] = useState<ICartItemRow[]>(
-    cart.cart_items.map((ci) => ({
+    cart.cart_items.map((ci, index) => ({
       ...ci,
       isNew: false,
       valid: true,
+      id: index,
     }))
   );
 
-  const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
-    setRowModesModel(newRowModesModel);
+  const handleRowModesChange = (newRowModesModel: GridRowModesModel) => {
+    setRowModes(newRowModesModel);
   };
 
   const processRowUpdate = (newRow: ICartItemRow, oldRow: ICartItemRow) => {
@@ -186,14 +189,11 @@ const OrderDetailItemList = ({ cart }: IOrderDetailItemListProps) => {
   };
 
   const handleEditClick = (id: GridRowId) => () => {
-    const row = rows.find((row) => row.product_variant_name === id);
-    if (!row) return;
-
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+    setRowModes({ ...rowModes, [id]: { mode: GridRowModes.Edit } });
   };
 
   const handleSaveClick = (id: GridRowId) => () => {
-    // setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+    setRowModes({ ...rowModes, [id]: { mode: GridRowModes.View } });
   };
 
   const handleDeleteClick = (id: GridRowId) => () => {
@@ -214,15 +214,15 @@ const OrderDetailItemList = ({ cart }: IOrderDetailItemListProps) => {
   };
 
   const handleCancelClick = (id: GridRowId) => () => {
-    // setRowModesModel({
-    //   ...rowModesModel,
-    //   [id]: { mode: GridRowModes.View, ignoreModifications: true },
-    // });
-    //
-    // const editedRow = rows.find((row) => row.id === id);
-    // if (editedRow!.isNew) {
-    //   setRows(rows.filter((row) => row.id !== id));
-    // }
+    setRowModes({
+      ...rowModes,
+      [id]: { mode: GridRowModes.View, ignoreModifications: true },
+    });
+
+    const editedRow = rows.find((row) => row.id === id);
+    if (editedRow!.isNew) {
+      setRows(rows.filter((row) => row.id !== id));
+    }
   };
 
   const columns: GridColDef[] = [
@@ -230,6 +230,13 @@ const OrderDetailItemList = ({ cart }: IOrderDetailItemListProps) => {
       field: "product_variant_name",
       headerName: "Product variant name",
       minWidth: 200,
+      renderCell: (params) => (
+        <Link
+          href={`/dashboard/catalog/products/edit/${params.row.product_id}`}
+        >
+          {params.value}
+        </Link>
+      ),
     },
     {
       field: "product_variant_sku",
@@ -239,7 +246,11 @@ const OrderDetailItemList = ({ cart }: IOrderDetailItemListProps) => {
     {
       field: "quantity",
       headerName: "Quantity",
+      align: "left", // for some reason, we need to manually set alignment, otherwise it's aligned to right
+      headerAlign: "left",
       type: "number",
+      editable: true,
+      minWidth: 150,
     },
     {
       field: "total_price_net_formatted",
@@ -257,7 +268,7 @@ const OrderDetailItemList = ({ cart }: IOrderDetailItemListProps) => {
 
       disableColumnMenu: true,
       getActions: ({ id }) => {
-        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+        const isInEditMode = rowModes[id]?.mode === GridRowModes.Edit;
 
         if (isInEditMode) {
           return [
@@ -308,8 +319,8 @@ const OrderDetailItemList = ({ cart }: IOrderDetailItemListProps) => {
           editMode={"row"}
           hideFooter={true}
           autoHeight={true}
-          rowModesModel={rowModesModel}
-          onRowModesModelChange={handleRowModesModelChange}
+          rowModesModel={rowModes}
+          onRowModesModelChange={handleRowModesChange}
           onRowEditStart={handleRowEditStart}
           onRowEditStop={handleRowEditStop}
           processRowUpdate={processRowUpdate}
@@ -317,9 +328,8 @@ const OrderDetailItemList = ({ cart }: IOrderDetailItemListProps) => {
             toolbar: EditToolbar,
           }}
           slotProps={{
-            toolbar: { setRows, setRowModesModel },
+            toolbar: { setRows, setRowModes },
           }}
-          getRowId={(row) => row.product_variant_name}
           sx={{ overflowX: "scroll" }}
         />
         <Grid container justifyContent="center" sx={{ my: 3 }}>
