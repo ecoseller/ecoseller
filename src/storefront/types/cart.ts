@@ -52,3 +52,32 @@ export interface ICountryOption {
   code: string;
   name: string;
 }
+
+export interface ICartDetail {
+  token: string;
+  user: string;
+  shipping_method_country: number;
+  payment_method_country: number;
+  country: string;
+  pricelist: string;
+}
+
+export interface IShippingPaymentMethod {
+  id: number;
+  title: string;
+  image: string;
+}
+
+interface IShippingPaymentMethodCountry {
+  id: number;
+  price_incl_vat: string;
+}
+
+export interface IShippingMethodCountry extends IShippingPaymentMethodCountry {
+  shipping_method: IShippingPaymentMethod;
+  payment_methods: IPaymentMethodCountry[];
+}
+
+export interface IPaymentMethodCountry extends IShippingPaymentMethodCountry {
+  payment_method: IShippingPaymentMethod;
+}

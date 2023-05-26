@@ -4,6 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.decorators import permission_classes
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from rest_framework.generics import GenericAPIView
 from rest_framework.parsers import (
     MultiPartParser,
     FormParser,
@@ -19,6 +20,10 @@ from rest_framework.status import (
     HTTP_201_CREATED,
 )
 from rest_framework.views import APIView
+
+from country.models import (
+    Country,
+)
 
 from cart.models import (
     Cart,
@@ -39,13 +44,23 @@ from cart.serializers import (
     PaymentMethodCountryFullSerializer,
     CartTokenSerializer,
     CartItemUpdateSerializer,
+    CartShippingMethodCountrySerializer,
     CartSerializer,
+    CartDetailSerializer,
 )
 from country.serializers import (
     BillingInfoSerializer,
     ShippingInfoSerializer,
 )
 from product.models import ProductVariant, ProductPrice
+
+
+@permission_classes([AllowAny])  # TODO: use authentication
+class CartDetailShortStorefrontView(GenericAPIView):
+    def get(self, request, token):
+        cart = Cart.objects.get(token=token)
+        serializer = CartDetailSerializer(cart)
+        return Response(serializer.data)
 
 
 @permission_classes([AllowAny])  # TODO: use authentication
@@ -281,6 +296,58 @@ class CartUpdateShippingInfoStorefrontView(CartUpdateInfoBaseStorefrontView):
 
     def _get_info(self, cart):
         return cart.shipping_info
+
+
+@permission_classes([AllowAny])
+class CartCountryMethodsStorefrontView(GenericAPIView):
+    serializer_class = CartShippingMethodCountrySerializer
+
+    def get_queryset(self):
+        return ShippingMethodCountry.objects.filter(
+            country=self.country,
+            is_active=True,
+        )
+
+    def get(self, request, country_code):
+        try:
+            self.country = Country.objects.get(code=country_code)
+            serializer = self.get_serializer(self.get_queryset(), many=True)
+            return Response(serializer.data)
+        except Cart.DoesNotExist:
+            return Response(status=HTTP_404_NOT_FOUND)
+
+
+@permission_classes([AllowAny])
+class CartSelectedMethodGenericStorefrontView(GenericAPIView):
+    """
+    Base view for getting cart's selected payment/shipping method country.
+    """
+
+    field = None  # set in inherited classes (shipping_method_country/payment_method_country)
+
+    def get_value(self, cart):
+        return getattr(cart, self.field)
+
+    def get(self, request, token):
+        try:
+            cart = Cart.objects.get(token=token)
+            return Response(
+                {
+                    self.field: self.get_value(cart),
+                }
+            )
+        except Cart.DoesNotExist:
+            return Response(status=HTTP_404_NOT_FOUND)
+
+
+@permission_classes([AllowAny])
+class CartSelectedShippingMethodStorefrontView(CartSelectedMethodGenericStorefrontView):
+    field = "shipping_method_country"
+
+
+@permission_classes([AllowAny])
+class CartSelectedPaymentMethodStorefrontView(CartSelectedMethodGenericStorefrontView):
+    field = "payment_method_country"
 
 
 class CartUpdateMethodBaseStorefrontView(APIView, ABC):
