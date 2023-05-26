@@ -21,6 +21,8 @@ from .serializers import (
     PageCateogryTypeDashboardSerializer,
 )
 
+from roles.decorator import check_user_is_staff_decorator
+
 
 class PageDashboardView(APIView):
     """
@@ -29,6 +31,7 @@ class PageDashboardView(APIView):
 
     permission_classes = (AllowAny,)
 
+    @check_user_is_staff_decorator()
     def get(self, request):
         """
         Gets all pages.
@@ -57,6 +60,10 @@ class PageFrontendDashboardDetailView(RetrieveUpdateDestroyAPIView):
 
     permission_classes = (AllowAny,)
 
+    @check_user_is_staff_decorator()
+    def get(self, request, pk):
+        return super().get(request, pk)
+
     queryset = PageFrontend.objects.all()
     serializer_class = PageFrontendDashboardSerializer
 
@@ -67,6 +74,10 @@ class PageCMSDashboardDetailView(RetrieveUpdateDestroyAPIView):
     """
 
     permission_classes = (AllowAny,)
+
+    @check_user_is_staff_decorator()
+    def get(self, request, pk):
+        return super().get(request, pk)
 
     queryset = PageCMS.objects.all()
     serializer_class = PageCMSDashboardSerializer
@@ -79,6 +90,7 @@ class PageCategoryDashboardView(APIView):
 
     permission_classes = (AllowAny,)
 
+    @check_user_is_staff_decorator()
     def get(self, request):
         """
         Gets all page category.
@@ -109,6 +121,10 @@ class PageCategoryDashboardDetailView(
 
     permission_classes = (AllowAny,)
 
+    @check_user_is_staff_decorator()
+    def get(self, request, pk):
+        return super().get(request, pk)
+
     queryset = PageCategory.objects.all()
     serializer_class = PageCategoryDashboardSerializer
 
@@ -120,6 +136,7 @@ class PageCategoryPagesDashboardView(APIView):
 
     permission_classes = (AllowAny,)
 
+    # @check_user_is_staff_decorator()
     def get(self, request, pk):
         """
         Gets all pages in a category.
@@ -134,6 +151,7 @@ class PageCategoryTypeDashboardView(APIView):
 
     permission_classes = (AllowAny,)
 
+    @check_user_is_staff_decorator()
     def get(self, request):
         """
         Gets all page types.
@@ -163,6 +181,10 @@ class PageTypeDashboardDetailView(RetrieveUpdateDestroyAPIView):
 
     permission_classes = (AllowAny,)
 
+    @check_user_is_staff_decorator()
+    def get(self, request, pk):
+        return super().get(request, pk)
+
     queryset = PageCategoryType.objects.all()
     serializer_class = PageCateogryTypeDashboardSerializer
 
@@ -174,6 +196,7 @@ class PageTypePagesDashboardView(APIView):
 
     permission_classes = (AllowAny,)
 
+    # @check_user_is_staff_decorator()
     def get(self, request, pk):
         """
         Gets all pages in a type.
