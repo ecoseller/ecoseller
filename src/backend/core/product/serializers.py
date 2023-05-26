@@ -611,7 +611,7 @@ class ProductVariantStorefrontDetailSerializer(ProductVariantSerializer):
                     price.discounted_price_incl_vat(vat_group.rate)
                 ),
             }
-            if price.discount is not None
+            if price.discount is not None and price.discount > 0
             else None,
         }
 
