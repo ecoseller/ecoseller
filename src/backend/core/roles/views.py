@@ -25,6 +25,7 @@ class UserPermissionView(GenericAPIView):
     ]
     serializer_class = ManagerPermissionSerializer
 
+    @check_user_is_staff_decorator()
     def get(self, request, id):
         userPerms = self.get_queryset()
         if userPerms is None:
@@ -63,6 +64,7 @@ class UserGroupView(GenericAPIView):
     ]
     serializer_class = ManagerGroupSerializer
 
+    @check_user_is_staff_decorator()
     def get(self, request, id):
         try:
             groups = self.get_queryset()
@@ -130,6 +132,7 @@ class GroupDetailView(GenericAPIView):
     ]
     serializer_class = ManagerGroupSerializer
 
+    @check_user_is_staff_decorator()
     def get(self, request, id):
         groups = self.get_queryset()
         try:
@@ -202,6 +205,7 @@ class PermissionDetailView(GenericAPIView):
     ]
     serializer_class = ManagerPermissionSerializer
 
+    @check_user_is_staff_decorator()
     def get(self, request, id):
         permissions = self.get_queryset()
         try:
@@ -243,6 +247,7 @@ class GroupView(GenericAPIView):
     ]
     serializer_class = ManagerGroupSerializer
 
+    @check_user_is_staff_decorator()
     def get(self, request):
         groups = self.get_queryset()
         serGroups = []
