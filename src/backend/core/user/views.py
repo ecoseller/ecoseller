@@ -6,7 +6,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework_simplejwt import views as jwt_views
 
-from roles.decorator import check_user_access_decorator
+from roles.decorator import (
+    check_user_access_decorator,
+    check_user_is_staff_decorator,
+)
 
 from .models import User
 
@@ -26,6 +29,7 @@ class UserView(GenericAPIView):
 
     serializer_class = RegistrationSerializer
 
+    @check_user_is_staff_decorator()
     def get(self, request):
         users = self.get_queryset()
         serializer = UserSerializer(users, many=True)
@@ -50,6 +54,7 @@ class UserDetailView(RetrieveUpdateDestroyAPIView):
     lookup_field = "email"
     lookup_url_kwarg = "id"
 
+    @check_user_is_staff_decorator()
     def get(self, request, id):
         return super().get(request, id)
 
@@ -107,6 +112,7 @@ class UserViewObs(APIView):
     Print user data from token passed in header.
     """
 
+    @check_user_is_staff_decorator()
     def get(self, request):
         user = request.user
         # auth = request.auth
