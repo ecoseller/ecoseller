@@ -96,7 +96,12 @@ const ProductPage = ({ data, country, pricelist }: IProductPageProps) => {
         url={basePath}
       />
       <div className={`container`}>
-        <Breadcrumbs aria-label="breadcrumb">
+        <Breadcrumbs
+          aria-label="breadcrumb"
+          sx={{
+            pt: 2,
+          }}
+        >
           {data?.breadcrumbs?.map((item, index) => (
             <Link
               href={{

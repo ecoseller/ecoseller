@@ -119,10 +119,11 @@ const MediaGallery = ({ media }: IMediaGalleryProps) => {
       <div
         className={`${styles.slider}`}
         style={{
-          height: `100px`,
+          height: `120px`,
           width: "100px",
           paddingLeft: 0,
           paddingRight: 0,
+          paddingTop: "20px",
         }}
       >
         <div className={styles.slider_holder}>
