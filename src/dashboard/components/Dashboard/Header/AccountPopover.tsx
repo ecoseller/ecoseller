@@ -20,18 +20,16 @@ import { axiosPrivate } from "@/utils/axiosPrivate";
 
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
-const MENU_OPTIONS = [
-  {
-    label: "Profile",
-    icon: "eva:person-fill",
-  },
-];
+import { useUser } from "@/utils/context/user";
+
 
 const AccountPopover = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [id, setId] = useState<string | undefined>(undefined);
 
   const router = useRouter();
+
+  const { user, roles } = useUser();
 
   useEffect(() => {
     setId(Boolean(anchorEl) ? "avatar-popover" : undefined);
@@ -57,6 +55,10 @@ const AccountPopover = () => {
     setAnchorEl(null);
 
     router.replace("/login");
+  };
+
+  const handleProfile = () => {
+    router.replace(`/dashboard/users-roles/edit-user-self/${user?.email}`);
   };
 
   return (
@@ -90,22 +92,18 @@ const AccountPopover = () => {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            John Doe
+            {user?.first_name} {user?.last_name}
           </Typography>
           <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
-            jdoe@example.com
+            {user?.email}
           </Typography>
         </Box>
 
         <Divider sx={{ borderColor: "#E6E8EA" }} />
 
-        <Stack sx={{ p: 1 }}>
-          {MENU_OPTIONS.map((option) => (
-            <MenuItem key={option.label} onClick={handleClose}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </Stack>
+        <MenuItem onClick={handleProfile} sx={{ m: 1 }}>
+          Profile
+        </MenuItem>
 
         <Divider sx={{ borderStyle: "dashed" }} />
 
