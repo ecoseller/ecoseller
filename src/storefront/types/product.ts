@@ -27,13 +27,24 @@ export interface IBaseAttribute {
   type: IAttributeType;
 }
 
+export interface IProductPrice {
+  net: string;
+  gross: string;
+  vat: string;
+  discount: {
+    percentage: number;
+    net: string;
+    gross: string;
+  };
+}
+
 export interface IProductVariant {
   sku: string;
   ean: string;
   weight: number;
-  availability: number;
-  price: string;
-  attribtues: IBaseAttribute[];
+  stock_quantity: number;
+  price: IProductPrice;
+  attributes: IBaseAttribute[];
 }
 
 export interface IProductMedia {
@@ -50,6 +61,7 @@ export interface IProduct {
   meta_title: string;
   meta_description: string;
   description: string;
+  short_description: string;
   description_editorjs: DataProp;
   slug: string;
   product_variants: IProductVariant[];
