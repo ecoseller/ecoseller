@@ -332,12 +332,10 @@ class ProductDetailStorefront(APIView):
 
     def get_country(self, request):
         # obtain country id from request query params or default to `is_default=True`
-        country_code = request.GET.get("country", None)
-        if country_code:
-            try:
-                country = Country.objects.get(code=country_code)
-            except Country.DoesNotExist:
-                country = Country.objects.all().first()
+        try:
+            country = Country.objects.get(code=request.GET.get("country", None))
+        except Country.DoesNotExist:
+            country = Country.objects.all().first()
 
         return country
 
