@@ -47,6 +47,7 @@ def check_user_access_decorator(permissions):
     @check_user_access_decorator(
         {"Product_view_permission", "Product_change_permission"}
     )
+    <view_function>
 
     """
 
@@ -87,9 +88,8 @@ def check_user_is_staff_decorator():
     To check if user has permission to get data, put following
     line above the view function:
 
-    @check_user_is_staff_decorator(
-        {"Product_view_permission", "Product_change_permission"}
-    )
+    @check_user_is_staff_decorator()
+    <view_function>
 
     """
 
