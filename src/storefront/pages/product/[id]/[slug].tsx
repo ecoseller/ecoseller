@@ -104,6 +104,7 @@ const ProductPage = ({ data, country, pricelist }: IProductPageProps) => {
         >
           {data?.breadcrumbs?.map((item, index) => (
             <Link
+              key={index}
               href={{
                 pathname: `/category/${item.id}/${item.slug}`,
               }}
