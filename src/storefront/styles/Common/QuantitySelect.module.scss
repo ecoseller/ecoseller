@@ -4,10 +4,10 @@
 
   justify-content: center;
   align-items: center;
-    border: 0 solid #dbdbdb;
+  border: 0 solid #dbdbdb;
   border-radius: 3px;
   cursor: pointer;
-  
+
   &:focus {
     background: red;
   }
@@ -21,25 +21,25 @@
 
 .quantity_input__modifier {
   // margin: .875rem;
-//   width: .875rem;
-  font-size: .875rem;
-  
+  //   width: .875rem;
+  font-size: 0.875rem;
+
   background: #f3f3f3;
   color: #888;
   border: 0 solid #dbdbdb;
   text-align: center;
-  
+
   cursor: pointer;
-  
+
   &:not(&__disabled):hover {
     background: darken(#f3f3f3, 10%);
-    color: darken(#888, 20%)
+    color: darken(#888, 20%);
   }
-  
+
   &__left {
     border-radius: 3px 0 0 3px;
   }
-  
+
   &__right {
     border-radius: 0 3px 3px 0;
   }
@@ -48,17 +48,15 @@
     color: #b0b0b0;
     cursor: not-allowed;
   }
-
 }
 
 .quantity_input__screen {
   width: 3rem;
   // padding: .5rem;
   font-size: 1rem;
-  
+
   border: 0;
-  border-top: 0 solid #dbdbdb;;
-  border-bottom: 0 solid #dbdbdb;;
+  border-top: 0 solid #dbdbdb;
+  border-bottom: 0 solid #dbdbdb;
   text-align: center;
 }
-
