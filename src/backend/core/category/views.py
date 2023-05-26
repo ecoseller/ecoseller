@@ -23,6 +23,8 @@ from category.serializers import (
 from product.models import Product, PriceList
 from product.serializers import ProductStorefrontListSerializer
 
+from roles.decorator import check_user_is_staff_decorator
+
 
 @permission_classes([AllowAny])  # TODO: use authentication
 class CategoryDashboardView(APIView):
@@ -31,6 +33,7 @@ class CategoryDashboardView(APIView):
     Used for dashboard.
     """
 
+    @check_user_is_staff_decorator()
     def get(self, request):
         """
         Gets all published categories.
@@ -63,6 +66,10 @@ class CategoryDetailDashboardView(RetrieveUpdateDestroyAPIView):
     View for getting (by ID), updating and deleting categories.
     """
 
+    @check_user_is_staff_decorator()
+    def get(self, request, pk):
+        return super().get(request, pk)
+
     @check_user_access_decorator({"category_change_permission"})
     def put(self, request, pk):
         return super().put(request, pk)
@@ -90,6 +97,7 @@ class CategoryStorefrontView(APIView):
     Used for storefront.
     """
 
+    @check_user_is_staff_decorator()
     def get(self, request):
         """
         Gets all published categories for storefront.
@@ -110,6 +118,7 @@ class CategoryDetailStorefrontView(APIView):
     Used for storefront.
     """
 
+    @check_user_is_staff_decorator()
     def get(self, request, pk):
         """
         Gets detail of the given category.
@@ -135,6 +144,7 @@ class CategoryDetailProductsStorefrontView(APIView):
 
     PRICE_LIST_URL_PARAM = "price_list"
 
+    @check_user_is_staff_decorator()
     def get(self, request, pk):
         try:
             category = Category.objects.get(id=pk, published=True)
