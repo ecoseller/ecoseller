@@ -37,7 +37,11 @@ urlpatterns = [
     path("storefront/<str:token>/", views.CartDetailStorefrontView.as_view()),
     path(
         "storefront/<str:token>/update-quantity/",
-        views.CartUpdateQuantityStorefrontView.as_view(),
+        views.CartUpdateQuantityView.as_view(),
+    ),
+    path(
+        "dashboard/<str:token>/update-quantity/",
+        views.CartUpdateQuantityView.as_view(),
     ),
     path(
         "storefront/<str:token>/billing-info/",
@@ -57,6 +61,10 @@ urlpatterns = [
     ),
     path(
         "storefront/<str:token>/<str:sku>/",
-        views.CartItemDeleteStorefrontView.as_view(),
+        views.CartItemDeleteView.as_view(),
+    ),
+    path(
+        "dashboard/<str:token>/<str:sku>/",
+        views.CartItemDeleteView.as_view(),
     ),
 ]

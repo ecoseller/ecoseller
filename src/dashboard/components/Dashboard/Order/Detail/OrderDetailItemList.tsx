@@ -1,23 +1,9 @@
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
-import IconButton from "@mui/material/IconButton";
 import { ICart, ICartItem } from "@/types/cart/cart";
-import {
-  Grid,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  TextField,
-} from "@mui/material";
-import RemoveIcon from "@mui/icons-material/Remove";
-import AddIcon from "@mui/icons-material/Add";
-import Button from "@mui/material/Button";
+import { Grid } from "@mui/material";
 import { useRouter } from "next/router";
-import imgPath from "@/utils/imgPath";
-import { IOrderDetail } from "@/types/order";
 import CollapsableContentWithTitle from "../../Generic/CollapsableContentWithTitle";
 import EditorCard from "../../Generic/EditorCard";
 import {
@@ -29,49 +15,12 @@ import {
   GridRowModes,
   GridRowModesModel,
   GridRowParams,
-  GridRowsProp,
-  GridToolbarContainer,
   MuiEvent,
 } from "@mui/x-data-grid";
-import { ICountry, IVatGroup } from "@/types/country";
-import { ICurrency } from "@/types/localization";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import EditIcon from "@mui/icons-material/Edit";
-import { randomId } from "@mui/x-data-grid-generator";
 import Link from "next/link";
-
-interface EditToolbarProps {
-  setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
-  setRowModesModel: (
-    newModel: (oldModel: ICartItemRow) => ICartItemRow
-  ) => void;
-  productTypeId: number;
-}
-
-const EditToolbar = (props: EditToolbarProps) => {
-  const { setRows, setRowModesModel, productTypeId } = props;
-
-  const handleClick = () => {
-    const id = randomId();
-    setRows((oldRows) => [
-      ...oldRows,
-      { id, product_type: productTypeId, isNew: true },
-    ]);
-    setRowModesModel((oldModel) => ({
-      ...oldModel,
-      [id]: { mode: GridRowModes.Edit },
-    }));
-  };
-
-  return (
-    <GridToolbarContainer>
-      <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-        Add
-      </Button>
-    </GridToolbarContainer>
-  );
-};
 
 interface IOrderDetailItemListProps {
   cart: ICart;

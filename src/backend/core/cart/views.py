@@ -176,7 +176,7 @@ class CartCreateStorefrontView(APIView):
 
 
 @permission_classes([AllowAny])
-class CartUpdateQuantityStorefrontView(APIView):
+class CartUpdateQuantityView(APIView):
     """
     View for updating cart items quantity
     """
@@ -329,7 +329,7 @@ class CartUpdatePaymentMethodStorefrontView(CartUpdateMethodBaseStorefrontView):
 
 
 @permission_classes([AllowAny])
-class CartItemDeleteStorefrontView(APIView):
+class CartItemDeleteView(APIView):
     """
     View used for deleting cart items
     """
