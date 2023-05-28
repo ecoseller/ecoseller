@@ -20,12 +20,13 @@ import Alert from "@mui/material/Alert";
 import { IAttributeType, IBaseAttribute } from "@/types/product";
 // api
 import { axiosPrivate } from "@/utils/axiosPrivate";
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
 import { putAttributeType } from "@/api/product/attributes";
 import AttributeTypeGeneralInformation from "@/components/Dashboard/Catalog/AttributeType/AttributeTypeGeneralInformation";
 import BaseAttributeGrid from "@/components/Dashboard/Catalog/BaseAttribute/BaseAttributeGrid";
 import DeleteAttributeType from "@/components/Dashboard/Catalog/AttributeType/DeleteAttributeType";
 import { useSnackbarState } from "@/utils/snackbar";
+import { productAttributeTypeDetailAPI } from "@/pages/api/product/attribute/type/[id]";
 
 interface IProps {
   attributeType: IAttributeType;
@@ -140,13 +141,15 @@ DashboardAttributeTypeDetailPage.getLayout = (page: ReactElement) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const params = context.params;
-  const id = params?.id;
+  const { id } = context.query;
+  const { req, res } = context;
 
-  const attributeTypeRequest = await axiosPrivate.get(
-    `/product/dashboard/attribute/type/${id}/`
+  const attributeType = await productAttributeTypeDetailAPI(
+    "GET",
+    id as string,
+    req as NextApiRequest,
+    res as NextApiResponse
   );
-  const attributeType = attributeTypeRequest.data;
 
   return {
     props: {

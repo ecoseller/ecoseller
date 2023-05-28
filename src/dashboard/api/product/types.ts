@@ -8,7 +8,10 @@ export const postProductType = async (data: IProductType) => {
   // Params: data
   // Return: Promise
   console.log("postProductType", data);
-  return await axiosPrivate.post(`/product/dashboard/type/`, data);
+  return await fetch("/api/product/type", {
+    method: "POST",
+    body: JSON.stringify(data),
+  }).then((res) => res.json());
 };
 
 export const putProductType = async (data: IProductType) => {
@@ -19,7 +22,10 @@ export const putProductType = async (data: IProductType) => {
   // Return: Promise
   if (!data.id) throw new Error("ProductType id is required to update product");
   console.log("putProductType", data);
-  return await axiosPrivate.put(`/product/dashboard/type/${data.id}/`, data);
+  return await fetch(`/api/product/type/${data.id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  }).then((res) => res.json());
 };
 
 export const deleteProductType = async (id: number | string) => {
@@ -29,5 +35,7 @@ export const deleteProductType = async (id: number | string) => {
   // Params: id
   // Return: Promise
   console.log("deleteProductType", id);
-  return await axiosPrivate.delete(`/product/dashboard/type/${id}/`);
+  return await fetch(`/api/product/type/${id}`, {
+    method: "DELETE",
+  }).then((res) => res.json());
 };

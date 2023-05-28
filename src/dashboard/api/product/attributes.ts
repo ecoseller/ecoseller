@@ -12,8 +12,6 @@ export const postAttributeType = async (data: IAttributeTypePostRequest) => {
   // Method: POST
   // Params: data
   // Return: Promise
-  // console.log("postAttributeType", data);
-  // return await axiosPrivate.post(`/product/dashboard/attribute/type/`, data);
   return await fetch("/api/product/attribute/type", {
     method: "POST",
     body: JSON.stringify(data),

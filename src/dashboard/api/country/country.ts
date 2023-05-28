@@ -79,5 +79,5 @@ export const putCurrency = async (code: string, data: ICurrency) => {
 export const getLanguages = async () => {
   return fetch(`/api/country/language/`, {
     method: "GET",
-  });
+  }).then((response) => response.json());
 };

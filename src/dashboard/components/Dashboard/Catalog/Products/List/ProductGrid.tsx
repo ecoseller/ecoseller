@@ -26,7 +26,10 @@ const PAGE_SIZE = 30;
 
 const useProducts = (page: number, pageSize: number) => {
   const { data, error, mutate } = useSWR<IProductList | undefined>(
-    `/product/dashboard/?page=${page + 1}&limit=${pageSize}`
+    `/api//product/?page=${page + 1}&limit=${pageSize}`,
+    {
+      fetcher: (url) => fetch(url).then((res) => res.json()),
+    }
   );
 
   return {

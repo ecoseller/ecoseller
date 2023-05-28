@@ -9,22 +9,28 @@ import {
 } from "@/utils/interceptors/api";
 import { ICountry } from "@/types/country";
 import { HTTPMETHOD } from "@/types/common";
+import { IProductList, IProductListItem } from "@/types/product";
 
-export const countryListAPI = async (
+export const productListAPI = async (
   method: HTTPMETHOD,
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
+  queryParams?: string
 ) => {
   if (req && res) {
     setRequestResponse(req, res);
   }
+  let url = `/product/dashboard/`;
 
   switch (method) {
     case "GET":
+      if (queryParams) {
+        url += `?${queryParams}`;
+      }
       return await api
-        .get("/country/")
+        .get(url)
         .then((response) => response.data)
-        .then((data: ICountry[]) => {
+        .then((data: IProductList[]) => {
           console.log("data", data);
           return data;
         })
@@ -32,14 +38,16 @@ export const countryListAPI = async (
           throw error;
         });
     case "POST":
+      url += `detail/`;
+
       const body = req?.body;
       console.log("body", body);
       if (!body) throw new Error("Body is empty");
 
       return await api
-        .post("/country/", body)
+        .post(url, body)
         .then((response) => response.data)
-        .then((data: ICountry[]) => {
+        .then((data: IProductListItem) => {
           return data;
         })
         .catch((error: any) => {
@@ -51,18 +59,25 @@ export const countryListAPI = async (
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  /**
-   * This is a wrapper for the country list api in the backend
-   */
-  // get the cart data from the backend
   const method = req.method as HTTPMETHOD;
 
+  const queryParam = req.query;
+
+  // convert queryParam to string
+  const queryParamString = Object.keys(queryParam)
+    .map((key) => {
+      return `${key}=${queryParam[key]}`;
+    })
+    .join("&");
+
+  console.log("queryParam", queryParam);
+
   if (method === "POST") {
-    return countryListAPI("POST", req, res)
+    return productListAPI("POST", req, res)
       .then((data) => res.status(201).json(data))
       .catch((error) => res.status(400).json(null));
   } else if (method === "GET") {
-    return countryListAPI("GET", req, res)
+    return productListAPI("GET", req, res, `?${queryParamString}`)
       .then((data) => res.status(200).json(data))
       .catch((error) => res.status(400).json(null));
   }

@@ -10,6 +10,10 @@ import { IAttributeType, IProductType } from "@/types/product";
 import { IPriceList } from "@/types/localization";
 import { axiosPrivate } from "@/utils/axiosPrivate";
 import { PermissionProvider } from "@/utils/context/permission";
+import { productAttributeTypeAPI } from "@/pages/api/product/attribute/type";
+import { NextApiRequest, NextApiResponse } from "next";
+import { pricelistListAPI } from "@/pages/api/product/price-list";
+import { productTypeListAPI } from "@/pages/api/product/type";
 
 interface IProps {
   attributesData: IAttributeType[];
@@ -55,20 +59,28 @@ export const getServerSideProps = async (context: any) => {
    *
    * We don't fetch product data here because we are creating new product
    */
+  const { req, res } = context;
 
   console.log("Dashboard product add");
   // fetch attributes data
-  const attributesRes = await axiosPrivate.get(
-    "product/dashboard/attribute/type/"
+  const attributesData = await productAttributeTypeAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
   );
-  const attributesData = attributesRes.data;
 
-  const productTypeRes = await axiosPrivate.get("product/dashboard/type/");
-  const productTypeData = productTypeRes.data;
+  const productTypeData = await productTypeListAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
 
   // fetch pricelists data
-  const pricelistsRes = await axiosPrivate.get("product/dashboard/pricelist/");
-  const pricelistsData = pricelistsRes.data;
+  const pricelistsData = await pricelistListAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
 
   return {
     props: {

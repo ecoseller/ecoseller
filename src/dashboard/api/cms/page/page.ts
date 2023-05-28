@@ -67,10 +67,10 @@ export const createNewCMSPage = async () => {
   // URL: /cms/
   // Method: POST
   // Return: Promise
-  const response = await axiosPrivate.post("/cms/", {
-    resourcetype: "PageCMS",
-  });
-  return response.data;
+  return fetch(`/api/cms/page/`, {
+    method: "POST",
+    body: JSON.stringify({ resourcetype: "PageCMS" }),
+  }).then((res) => res.json());
 };
 
 export const putCMSPage = async (id: number, data: Partial<IPageCMS>) => {
