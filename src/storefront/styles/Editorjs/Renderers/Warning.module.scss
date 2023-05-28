@@ -1,0 +1,18 @@
+.warning_holder {
+  width: 100%;
+  height: auto;
+  padding: 20px;
+  font-size: 1.125rem;
+  font-weight: 400;
+  border: 2px solid black;
+  border-radius: 8px;
+  margin-bottom: 40px;
+
+  .title {
+    font-weight: 700;
+  }
+
+  @media screen and (max-width: 600px) {
+    font-size: 1rem;
+  }
+}

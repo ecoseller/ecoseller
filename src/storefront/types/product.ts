@@ -1,3 +1,5 @@
+import { DataProp } from "@/utils/editorjs/Output";
+
 export interface IProductSliderData {
   id: number;
   title: string;
@@ -6,9 +8,62 @@ export interface IProductSliderData {
   url: string;
 }
 
+export interface IBreadcrumb {
+  id: number;
+  title: string;
+  slug: string;
+}
+
+export interface IAttributeType {
+  id: number;
+  type_name: string;
+  unit: string;
+}
+
+export interface IBaseAttribute {
+  id: number;
+  order: number;
+  value: string;
+  type: IAttributeType;
+}
+
+export interface IProductPrice {
+  net: string;
+  gross: string;
+  vat: string;
+  discount: {
+    percentage: number;
+    net: string;
+    gross: string;
+  };
+}
+
+export interface IProductVariant {
+  sku: string;
+  ean: string;
+  weight: number;
+  stock_quantity: number;
+  price: IProductPrice;
+  attributes: IBaseAttribute[];
+}
+
 export interface IProductMedia {
   id: number;
-  type: "IMAGE" | "VIDEO";
   media: string;
-  alt: string | null;
+  type: "IMAGE" | "VIDEO";
+  alt: string;
+}
+
+export interface IProduct {
+  id: number;
+  breadcrumbs: IBreadcrumb[];
+  title: string;
+  meta_title: string;
+  meta_description: string;
+  description: string;
+  short_description: string;
+  description_editorjs: DataProp;
+  slug: string;
+  product_variants: IProductVariant[];
+  media: IProductMedia[];
 }
