@@ -44,7 +44,6 @@ class CountryListView(ListCreateAPIView):
 
     serializer_class = CountrySerializer
 
-    @check_user_is_staff_decorator()
     def get(self, request):
         return super().get(request)
 

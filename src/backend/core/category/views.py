@@ -97,7 +97,6 @@ class CategoryStorefrontView(APIView):
     Used for storefront.
     """
 
-    @check_user_is_staff_decorator()
     def get(self, request):
         """
         Gets all published categories for storefront.
@@ -118,7 +117,6 @@ class CategoryDetailStorefrontView(APIView):
     Used for storefront.
     """
 
-    @check_user_is_staff_decorator()
     def get(self, request, pk):
         """
         Gets detail of the given category.
@@ -144,7 +142,6 @@ class CategoryDetailProductsStorefrontView(APIView):
 
     PRICE_LIST_URL_PARAM = "price_list"
 
-    @check_user_is_staff_decorator()
     def get(self, request, pk):
         try:
             category = Category.objects.get(id=pk, published=True)
