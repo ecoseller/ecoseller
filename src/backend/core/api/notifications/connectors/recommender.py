@@ -1,5 +1,4 @@
 from .base import NotificationConnector
-import requests
 
 
 class RecommenderSystemConnector(NotificationConnector):
