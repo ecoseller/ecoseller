@@ -39,8 +39,11 @@ import { Alert, Snackbar } from "@mui/material";
 // types
 import { ICurrency, IPriceList } from "@/types/localization";
 import {
+  deleteCountry,
   deleteCurrency,
+  postCoutry,
   postCurrency,
+  putCountry,
   putCurrency,
 } from "@/api/country/country";
 import { ICountry } from "@/types/country";
@@ -238,9 +241,7 @@ const DashboardCountryPage = ({ countries, pricelists }: IProps) => {
   const handleDeleteClick = (id: GridRowId) => () => {
     const deletedRow = rows.find((row) => row.id === id);
     if (deletedRow && !deletedRow!.isNew) {
-      fetch(`/api/country/${deletedRow.code}/`, {
-        method: "DELETE",
-      })
+      deleteCountry(deletedRow!.code)
         .then(() => {
           setSnackbar({
             open: true,
@@ -324,10 +325,7 @@ const DashboardCountryPage = ({ countries, pricelists }: IProps) => {
     // POST or PUT
     if (updatedRow && !postNew) {
       // update currency
-      fetch(`/api/country/${updatedRow.code}/`, {
-        method: "PUT",
-        body: JSON.stringify(updatedRow as ICountry),
-      })
+      putCountry(updatedRow.code, updatedRow as ICountry)
         .then(() => {
           setSnackbar({
             open: true,
@@ -345,10 +343,7 @@ const DashboardCountryPage = ({ countries, pricelists }: IProps) => {
         });
     } else {
       // create currency
-      fetch(`/api/country/`, {
-        method: "POST",
-        body: JSON.stringify(updatedRow as ICountry),
-      })
+      postCoutry(updatedRow as ICountry)
         .then(() => {
           setSnackbar({
             open: true,

@@ -144,17 +144,20 @@ const DashboardVatGroupPage = ({
     }
 
     // check if the is_default is unique for the country
-    const isDefaultUnique = rows.every(
-      (row) =>
-        row.country !== newRow.country || row.is_default !== newRow.is_default
-    );
-    if (!isDefaultUnique) {
-      setSnackbar({
-        open: true,
-        message: "Default is not unique for the country",
-        severity: "error",
-      });
-      throw new Error("Default is not unique");
+    if (newRow.is_default) {
+      const isDefaultUnique = rows.filter(
+        (row) =>
+          row.country == newRow.country && row.is_default && row.id != newRow.id
+      );
+      console.log("rows", rows, "newRow", newRow, isDefaultUnique);
+      if (isDefaultUnique?.length > 0) {
+        setSnackbar({
+          open: true,
+          message: "Default is not unique for the country",
+          severity: "error",
+        });
+        throw new Error("Default is not unique");
+      }
     }
 
     const updatedRow = { ...newRow, isNew: false };

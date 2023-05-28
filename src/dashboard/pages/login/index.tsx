@@ -35,7 +35,7 @@ LoginPage.getLayout = (page: ReactElement) => {
   );
 };
 
-export const getServersideProps = async (context: any) => {
+export const getServerSideProps = async (context: any) => {
   console.log("Login");
   return {
     props: {},
