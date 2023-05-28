@@ -12,11 +12,15 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
 
 from datetime import timedelta
+from api.notifications.api import NotificationsAPI
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
@@ -219,3 +223,13 @@ AUTH_USER_MODEL = "user.User"
 
 RS_URL = os.environ.get("RS_URL", "")
 RS_ENABLED = os.environ.get("RS_ENABLED", "TRUE").upper() == "TRUE"
+
+# Notifications API
+NOTIFICATIONS_CONFIG_PATH = os.environ.get(
+    "NOTIFICATIONS_CONFIG_PATH", "./config/notifications.json"
+)
+try:
+    NOTIFICATIONS_API = NotificationsAPI()
+except Exception as e:
+    print(e)
+    NOTIFICATIONS_API = None

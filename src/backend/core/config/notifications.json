@@ -1,0 +1,24 @@
+{
+    "PRODUCT_SAVE": [
+        {
+            "type": "RECOMMENDERAPI",
+            "method": "store_object"
+        },
+        {
+            "type": "HTTP",
+            "method": "POST",
+            "url": "http://example.com/api/product"
+        }
+    ],
+    "ORDER_SAVE": [
+        {
+            "type": "HTTP",
+            "method": "POST",
+            "url": "http://example.com/api/order"
+        },
+        {
+            "type": "EMAIL",
+            "method": "send_order_confirmation"
+        }
+    ]
+}
