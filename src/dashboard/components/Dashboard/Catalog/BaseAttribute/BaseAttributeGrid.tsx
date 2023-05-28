@@ -165,22 +165,20 @@ const BaseAttributeGrid = ({
       postBaseAttribute({
         value: newRow.value,
         type: newRow.type,
-      } as IBaseAttributePostRequest)
-        .then((res) => res.data)
-        .then((data) => {
-          setSnackbar({
-            open: true,
-            message: "Attribute created",
-            severity: "success",
-          });
-          // get id from response and update row
-          const { id } = data;
-          // remove row with newRow.id from rows and add row with id from response
-          setRows((rows) => [
-            ...rows.filter((row) => row.id !== newRow.id),
-            updatedRow,
-          ]);
+      } as IBaseAttributePostRequest).then((data) => {
+        setSnackbar({
+          open: true,
+          message: "Attribute created",
+          severity: "success",
         });
+        // get id from response and update row
+        const { id } = data;
+        // remove row with newRow.id from rows and add row with id from response
+        setRows((rows) => [
+          ...rows.filter((row) => row.id !== newRow.id),
+          updatedRow,
+        ]);
+      });
       return updatedRow;
     }
 
