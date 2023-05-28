@@ -86,7 +86,7 @@ const PageCategoriesList = ({ categories }: PagesListProps) => {
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={handleDeleteClick(id as number)}
+            onClick={async () => handleDeleteClick(id as number)}
             color="inherit"
             key={"delete"}
           />,
@@ -95,8 +95,8 @@ const PageCategoriesList = ({ categories }: PagesListProps) => {
     },
   ];
 
-  const handleDeleteClick = (id: number) => () => {
-    deletePageCategory(id);
+  const handleDeleteClick = async (id: number) => {
+    await deletePageCategory(id);
     refreshData();
   };
 

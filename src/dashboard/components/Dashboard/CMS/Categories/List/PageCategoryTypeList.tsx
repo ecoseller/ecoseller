@@ -218,7 +218,7 @@ const PageCategoryTypeList = ({ types }: IPageTypeListProps) => {
       // create a new row on the server and get the id from the response
       const resp = await createPageCategoryType({
         identifier: updatedRow.identifier,
-      } as IPageCategoryType);
+      } as IPageCategoryType).then((res) => res.json());
       const { id } = resp;
       updatedRow.id = id;
 
