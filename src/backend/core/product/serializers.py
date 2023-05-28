@@ -23,6 +23,9 @@ from country.models import (
     VatGroup,
 )
 
+from drf_extra_fields.fields import Base64FileField
+import filetype
+
 from category.serializers import (
     CategorySerializer,
     CategoryMinimalSerializer,
@@ -48,8 +51,17 @@ Common serializers
 """
 
 
+class FileImageField(Base64FileField):
+    ALLOWED_TYPES = ["png", "jpg", "jpeg", "gif", "svg"]
+
+    def get_file_extension(self, filename, decoded_file):
+        kind = filetype.guess(decoded_file)
+        return kind.extension
+
+
 class ProductMediaBaseSerializer(ModelSerializer):
-    media = serializers.ImageField(required=False, use_url=True)
+    # media = serializers.ImageField(required=False, use_url=True, read_only=True)
+    media = FileImageField(required=False, use_url=True)
     type = serializers.ChoiceField(choices=ProductMediaTypes.CHOICES, required=False)
 
     class Meta:
