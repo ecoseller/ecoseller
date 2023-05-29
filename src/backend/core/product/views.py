@@ -14,7 +14,7 @@ from .models import (
     PriceList,
     AttributeType,
     TranslatableAttributeType,
-    BaseAttribute,
+    TranslatableBaseAttribute,
     ProductMedia,
     ProductType,
 )
@@ -275,7 +275,7 @@ class BaseAttributeDashboardView(GenericAPIView):
     serializer_class = BaseAttributeDashboardSerializer
 
     def get_queryset(self):
-        return BaseAttribute.objects.all()
+        return TranslatableBaseAttribute.objects.all()
 
     def get(self, request):
         attribute_types = self.get_queryset()
@@ -308,7 +308,7 @@ class BaseAttributeDashboardDetailView(RetrieveUpdateDestroyAPIView):
         return super().delete(request, id)
 
     def get_queryset(self):
-        return BaseAttribute.objects.all()
+        return TranslatableBaseAttribute.objects.all()
 
 
 """
