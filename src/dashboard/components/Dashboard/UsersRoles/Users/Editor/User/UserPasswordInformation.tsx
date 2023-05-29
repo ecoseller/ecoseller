@@ -24,12 +24,16 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { GridActionsCellItem, GridToolbarContainer } from "@mui/x-data-grid";
 import { api } from "@/utils/interceptors/api";
 import { useUser } from "@/utils/context/user";
+import { useSnackbarState } from "@/utils/snackbar";
 
 interface PasswordProps {
-    isAdmin: boolean
+    selfEdit: boolean
+    email: string
+    snackbar: any,
+    setSnackbar: any
 }
 
-const UserPasswordInformation = ({ isAdmin = false }: PasswordProps) => {
+const UserPasswordInformation = ({ selfEdit = true, email, snackbar, setSnackbar }: PasswordProps) => {
     // simple select with categories
 
     const [showPassword, setShowPassword] = useState(false);
@@ -40,13 +44,13 @@ const UserPasswordInformation = ({ isAdmin = false }: PasswordProps) => {
         event.preventDefault();
     };
 
+    const { user, roles } = useUser();
+
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [newPasswordConfirmation, setNewPasswordConfirmation] = useState("");
     const [error, setError] = useState(false);
     const [helperText, setHelperText] = useState("");
-
-    const { user, roles } = useUser();
 
     const handlePasswordChange = () => {
         if (newPassword !== newPasswordConfirmation) {
@@ -58,13 +62,13 @@ const UserPasswordInformation = ({ isAdmin = false }: PasswordProps) => {
             setHelperText("");
         }
 
-        if (!isAdmin && oldPassword === newPassword) {
+        if (selfEdit && oldPassword === newPassword) {
             setError(true);
             setHelperText("New password cannot be the same as old password");
             return;
         }
 
-        if (!isAdmin && oldPassword === "") {
+        if (selfEdit && oldPassword === "") {
             setError(true);
             setHelperText("Old password cannot be empty");
             return;
@@ -76,23 +80,36 @@ const UserPasswordInformation = ({ isAdmin = false }: PasswordProps) => {
             return;
         }
 
-        // TODO: send request to change password
         fetch(`/api/user/password`, {
             method: "PUT",
             body: JSON.stringify({
                 old_password: oldPassword,
                 new_password: newPassword,
-                admin: isAdmin,
-                email: user.email,
+                selfEdit: selfEdit,
+                email: email,
             }),
         })
-            .then((res) => res.json())
-            .then((data) => {
-                console.log(data);
+            .then((res: any) => {
+                if (res.ok) {
+                    console.log("User updated");
+                    console.log(snackbar)
+                    setSnackbar({
+                        open: true,
+                        message: "Password updated",
+                        severity: "success",
+                    });
+                }
             })
+            .catch((err: any) => {
+                console.log("updateUser", err);
+                setSnackbar({
+                    open: true,
+                    message: "Something went wrong",
+                    severity: "error",
+                });
+            });
     };
 
-    console.log("isAdmin", isAdmin)
 
     return (
         <EditorCard>
@@ -100,7 +117,7 @@ const UserPasswordInformation = ({ isAdmin = false }: PasswordProps) => {
             <Box mt={2}>
                 <FormControl fullWidth>
                     <Stack spacing={2}>
-                        {!isAdmin ? (
+                        {selfEdit ? (
                             <FormControl fullWidth variant="outlined">
                                 <InputLabel htmlFor="outlined-adornment-password">
                                     Old Password
@@ -129,6 +146,7 @@ const UserPasswordInformation = ({ isAdmin = false }: PasswordProps) => {
                         <TextField
                             label="New password"
                             error={error}
+                            disabled={!selfEdit && !user?.is_admin}
                             helperText={helperText}
                             InputLabelProps={{
                                 shrink: Boolean(true),
@@ -139,6 +157,7 @@ const UserPasswordInformation = ({ isAdmin = false }: PasswordProps) => {
                         <TextField
                             label="New password confirmation"
                             error={error}
+                            disabled={!selfEdit && !user?.is_admin}
                             helperText={helperText}
                             InputLabelProps={{
                                 shrink: Boolean(true),
@@ -147,7 +166,12 @@ const UserPasswordInformation = ({ isAdmin = false }: PasswordProps) => {
                             onChange={(e) => setNewPasswordConfirmation(e.target.value)}
                         />
                         <Box m={3} marginRight={10}>
-                            <Button variant="outlined" color="primary" onClick={handlePasswordChange}>
+                            <Button
+                                variant="outlined"
+                                disabled={!selfEdit && !user?.is_admin}
+                                color="primary"
+                                onClick={handlePasswordChange}
+                            >
                                 Set new password
                             </Button>
                         </Box>

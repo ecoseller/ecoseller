@@ -23,13 +23,11 @@ export const passwordUserAPI = async (
     switch (method) {
         case "PUT":
             const body = req?.body;
-            console.log("body", body);
             const parsedBody = JSON.parse(body)
 
-            console.log("IS ADMIN AFTER PARS", parsedBody.admin)
             if (!body) throw new Error("Body is empty");
 
-            if (parsedBody.admin) {
+            if (!parsedBody.selfEdit) {
                 return await api
                     .put(`/user/password/${parsedBody.email}`, body)
                     .then((response) => response.data)

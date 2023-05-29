@@ -16,6 +16,8 @@ import { userRoleAPI } from "@/pages/api/roles/user/[email]";
 import { groupsAPI } from "@/pages/api/roles/groups";
 import { PermissionProvider } from "@/utils/context/permission";
 import { useSnackbarState } from "@/utils/snackbar";
+import { useUser } from "@/utils/context/user";
+import UserPasswordInformation from "@/components/Dashboard/UsersRoles/Users/Editor/User/UserPasswordInformation";
 
 interface IUserEditProps {
   userData: IUser;
@@ -25,6 +27,7 @@ interface IUserEditProps {
 const DashboardUserEditPage = ({ userData, groups }: IUserEditProps) => {
   const router = useRouter();
   const { id } = router.query;
+  const { user, roles } = useUser();
 
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
   const [state, setState] = useState<IUser>(userData);
@@ -71,6 +74,7 @@ const DashboardUserEditPage = ({ userData, groups }: IUserEditProps) => {
               })
                 .then((res: any) => {
                   if (res.ok) {
+                    console.log("SNACKBAR", snackbar)
                     setSnackbar({
                       open: true,
                       message: "User updated",
@@ -97,6 +101,12 @@ const DashboardUserEditPage = ({ userData, groups }: IUserEditProps) => {
             <UserGeneralInformation
               state={state}
               setState={(v: IUser) => setState(v)}
+            />
+            <UserPasswordInformation
+              selfEdit={user?.email === state.email}
+              email={state.email}
+              snackbar={snackbar}
+              setSnackbar={(v: any) => setSnackbar(v)}
             />
             <UserGroupsInformation
               state={state}

@@ -58,7 +58,7 @@ const AccountPopover = () => {
   };
 
   const handleProfile = () => {
-    router.replace(`/dashboard/users-roles/edit-user-self/${user?.email}`);
+    router.replace(`/dashboard/users-roles/edit-user/${user?.email}`);
   };
 
   return (
