@@ -13,10 +13,8 @@ import { getCookie } from "cookies-next";
 
 export const passwordUserAPI = async (
     method: HTTPMETHOD,
-    email: string,
-    admin: boolean,
     req?: NextApiRequest,
-    res?: NextApiResponse
+    res?: NextApiResponse,
 ) => {
     if (req && res) {
         setRequestResponse(req, res);
@@ -26,12 +24,14 @@ export const passwordUserAPI = async (
         case "PUT":
             const body = req?.body;
             console.log("body", body);
+            const parsedBody = JSON.parse(body)
 
+            console.log("IS ADMIN AFTER PARS", parsedBody.admin)
             if (!body) throw new Error("Body is empty");
 
-            if (admin) {
+            if (parsedBody.admin) {
                 return await api
-                    .put(`/user/password/${email}`, body)
+                    .put(`/user/password/${parsedBody.email}`, body)
                     .then((response) => response.data)
                     .then((data) => {
                         return data;
@@ -41,7 +41,7 @@ export const passwordUserAPI = async (
                     });
             } else {
                 return await api
-                    .put(`/user/password/`, body)
+                    .put(`/user/password`, body)
                     .then((response) => response.data)
                     .then((data) => {
                         return data;
@@ -62,9 +62,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
      */
 
     const { method } = req;
-    const { email } = req.query;
 
-    return passwordUserAPI(method as HTTPMETHOD, email as string, req, res)
+    return passwordUserAPI(method as HTTPMETHOD, req, res)
         .then((data) => res.status(200).json(data))
         .catch((error) => res.status(400).json(null));
 };

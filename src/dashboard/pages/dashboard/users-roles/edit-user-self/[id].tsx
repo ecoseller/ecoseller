@@ -99,7 +99,7 @@ const DashboardUserEditPage = ({ userData, groups }: IUserEditProps) => {
                         setState={(v: IUser) => setState(v)}
                     />
                     <UserPasswordInformation
-                        password=""
+                        isAdmin={userData.is_admin}
                     />
                     <UserGroupsInformation
                         state={state}

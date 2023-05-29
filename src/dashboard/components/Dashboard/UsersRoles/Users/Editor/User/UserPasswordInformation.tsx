@@ -22,13 +22,14 @@ import { IUser } from "@/types/user";
 import { usePermission } from "@/utils/context/permission";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { GridActionsCellItem, GridToolbarContainer } from "@mui/x-data-grid";
+import { api } from "@/utils/interceptors/api";
+import { useUser } from "@/utils/context/user";
 
 interface PasswordProps {
-    password: string
     isAdmin: boolean
 }
 
-const UserPasswordInformation = ({ password, isAdmin = false }: PasswordProps) => {
+const UserPasswordInformation = ({ isAdmin = false }: PasswordProps) => {
     // simple select with categories
 
     const [showPassword, setShowPassword] = useState(false);
@@ -45,6 +46,8 @@ const UserPasswordInformation = ({ password, isAdmin = false }: PasswordProps) =
     const [error, setError] = useState(false);
     const [helperText, setHelperText] = useState("");
 
+    const { user, roles } = useUser();
+
     const handlePasswordChange = () => {
         if (newPassword !== newPasswordConfirmation) {
             setError(true);
@@ -55,13 +58,13 @@ const UserPasswordInformation = ({ password, isAdmin = false }: PasswordProps) =
             setHelperText("");
         }
 
-        if (oldPassword === newPassword) {
+        if (!isAdmin && oldPassword === newPassword) {
             setError(true);
             setHelperText("New password cannot be the same as old password");
             return;
         }
 
-        if (oldPassword === "") {
+        if (!isAdmin && oldPassword === "") {
             setError(true);
             setHelperText("Old password cannot be empty");
             return;
@@ -74,8 +77,22 @@ const UserPasswordInformation = ({ password, isAdmin = false }: PasswordProps) =
         }
 
         // TODO: send request to change password
+        fetch(`/api/user/password`, {
+            method: "PUT",
+            body: JSON.stringify({
+                old_password: oldPassword,
+                new_password: newPassword,
+                admin: isAdmin,
+                email: user.email,
+            }),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data);
+            })
     };
 
+    console.log("isAdmin", isAdmin)
 
     return (
         <EditorCard>
