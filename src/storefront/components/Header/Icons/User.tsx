@@ -15,7 +15,7 @@ import PersonIcon from "@mui/icons-material/Person";
 
 import LoginModal from "../Modals/Login";
 
-interface IUser { }
+interface IUser {}
 
 interface IUserIconProps {
   user: IUser | null;
