@@ -119,7 +119,7 @@ export interface IAttributeTypeTranslations {
 export interface IAttributeTypePostRequest {
   id?: number;
   type_name: string;
-  translations: IAttributeTypeTranslations;
+  translations?: IAttributeTypeTranslations;
   unit?: string;
   value_type?: TAttributeTypeValueType;
   base_attributes: IBaseAttribute[];

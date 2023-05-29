@@ -64,10 +64,14 @@ const DashboardAttributeTypeDetailPage = ({ attributeType }: IProps) => {
         ...state,
         translations: {
           ...state.translations,
-          [language]: {
-            ...state.translations[language],
-            name,
-          },
+          [language]: state?.translations
+            ? {
+                ...state.translations[language],
+                name,
+              }
+            : {
+                name,
+              },
         },
       });
     },

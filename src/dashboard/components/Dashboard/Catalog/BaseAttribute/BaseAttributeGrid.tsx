@@ -423,7 +423,7 @@ const BaseAttributeGrid = ({
     <EditorCard>
       <Typography variant="h6">Attributes</Typography>
       <Typography variant="body2" color="textSecondary">
-        If the attribute type is set as "Text", it's allowed to set translation
+        If the attribute type is set as Text, it is allowed to set translation
         for the attribute values.
       </Typography>
       <Box mt={2}>
