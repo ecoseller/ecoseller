@@ -38,7 +38,9 @@ from product.models import (
     PriceList,
     ProductMedia,
     AttributeType,
+    TranslatableAttributeType,
     BaseAttribute,
+    TranslatableBaseAttribute,
     ProductMediaTypes,
     ProductType,
 )
@@ -327,17 +329,19 @@ class BaseAttributeDashboardSerializer(ModelSerializer):
         )
 
 
-class AtrributeTypeDashboardSerializer(ModelSerializer):
+class AtrributeTypeDashboardSerializer(TranslatableModelSerializer, ModelSerializer):
     base_attributes = BaseAttributeDashboardSerializer(many=True, read_only=True)
+    translations = TranslatedFieldsField(shared_model=TranslatableAttributeType)
 
     class Meta:
-        model = AttributeType
+        model = TranslatableAttributeType
         fields = (
             "id",
             "type_name",
             "unit",
             "base_attributes",
             "value_type",
+            "translations",
         )
 
 

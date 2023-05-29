@@ -13,6 +13,7 @@ from .models import (
     ProductVariant,
     PriceList,
     AttributeType,
+    TranslatableAttributeType,
     BaseAttribute,
     ProductMedia,
     ProductType,
@@ -261,7 +262,7 @@ class AttributeTypeDashboardDetailView(RetrieveUpdateDestroyAPIView):
         return super().delete(request, id)
 
     def get_queryset(self):
-        return AttributeType.objects.all()
+        return TranslatableAttributeType.objects.all()
 
 
 class BaseAttributeDashboardView(GenericAPIView):
