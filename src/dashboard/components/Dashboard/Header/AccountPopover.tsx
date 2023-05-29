@@ -22,7 +22,6 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 import { useUser } from "@/utils/context/user";
 
-
 const AccountPopover = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [id, setId] = useState<string | undefined>(undefined);

@@ -74,7 +74,7 @@ const DashboardUserEditPage = ({ userData, groups }: IUserEditProps) => {
               })
                 .then((res: any) => {
                   if (res.ok) {
-                    console.log("SNACKBAR", snackbar)
+                    console.log("SNACKBAR", snackbar);
                     setSnackbar({
                       open: true,
                       message: "User updated",
