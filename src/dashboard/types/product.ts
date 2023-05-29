@@ -91,10 +91,17 @@ export interface IProductList extends IPaginated {
   data: IProductListItem[];
 }
 
+export interface IBaseAttributeTranslations {
+  [locale: string]: {
+    name: string;
+  };
+}
+
 export interface IBaseAttributePostRequest {
   id?: number;
   value: string;
   type: number;
+  translations?: IBaseAttributeTranslations;
 }
 
 export interface IBaseAttribute extends IBaseAttributePostRequest {
