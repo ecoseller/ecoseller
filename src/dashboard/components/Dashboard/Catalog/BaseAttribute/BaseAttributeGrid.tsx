@@ -133,7 +133,7 @@ const BaseAttributeGrid = ({
   };
 
   const serializeTranslations = (object: any) => {
-    if (attribtueTypeValueType !== "TEXT") return {};
+    // if (attribtueTypeValueType !== "TEXT") return {};
     const serializedTranslations: any = {};
     languages?.forEach((language) => {
       serializedTranslations[language.code] = {
