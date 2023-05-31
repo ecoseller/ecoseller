@@ -166,13 +166,10 @@ class PasswordView(UpdateAPIView):
             self.object.set_password(serializer.data.get("new_password"))
             self.object.save()
             response = {
-                "status": "success",
-                "code": "200",
                 "message": "Password updated successfully",
                 "data": [],
             }
-
-            return Response(response)
+            return Response(response, status=200)
 
         return Response(serializer.errors, status=400)
 
@@ -203,13 +200,11 @@ class PasswordAdminView(UpdateAPIView):
                 self.object.set_password(serializer.data.get("new_password"))
                 self.object.save()
                 response = {
-                    "status": "success",
-                    "code": "200",
                     "message": "Password updated successfully",
                     "data": [],
                 }
+                return Response(response, status=200)
 
-                return Response(response)
         except Exception as e:
             print("Error", e.message)
             return Response(status=400)
