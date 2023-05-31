@@ -315,20 +315,24 @@ class ProductVariantSerializer(ModelSerializer):
         return instance
 
 
-class BaseAttributeDashboardSerializer(ModelSerializer):
+class BaseAttributeDashboardSerializer(TranslatableModelSerializer, ModelSerializer):
+    translations = TranslatedFieldsField(shared_model=BaseAttribute, required=False)
+
     class Meta:
         model = BaseAttribute
         fields = (
             "id",
             "value",
             "type",
+            "translations",
             # "order",
             # "ext_attributes",
         )
 
 
-class AtrributeTypeDashboardSerializer(ModelSerializer):
+class AtrributeTypeDashboardSerializer(TranslatableModelSerializer, ModelSerializer):
     base_attributes = BaseAttributeDashboardSerializer(many=True, read_only=True)
+    translations = TranslatedFieldsField(shared_model=AttributeType, required=False)
 
     class Meta:
         model = AttributeType
@@ -338,6 +342,7 @@ class AtrributeTypeDashboardSerializer(ModelSerializer):
             "unit",
             "base_attributes",
             "value_type",
+            "translations",
         )
 
 

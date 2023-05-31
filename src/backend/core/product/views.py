@@ -301,6 +301,7 @@ class BaseAttributeDashboardView(GenericAPIView):
         if serializer.is_valid():
             instance = serializer.save()
             return Response({**serializer.data, "id": instance.id}, status=201)
+        print(serializer.errors)
         return Response(serializer.errors, status=400)
 
 
