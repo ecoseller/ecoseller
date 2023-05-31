@@ -283,3 +283,82 @@ class PaymentMethodCountryFullSerializer(ModelSerializer):
             "update_at",
             "create_at",
         )
+
+
+class CartPaymentMethodSerializer(TranslatedSerializerMixin, ModelSerializer):
+    """
+    Serializer used for serializing shipping methods in step 2 of the order
+    """
+
+    class Meta:
+        model = PaymentMethod
+        fields = (
+            "title",
+            "description",
+            "image",
+        )
+
+
+class CartShippingMethodSerializer(TranslatedSerializerMixin, ModelSerializer):
+    """
+    Serializer used for serializing shipping methods in step 2 of the order
+    """
+
+    class Meta:
+        model = ShippingMethod
+        fields = (
+            "title",
+            "description",
+            "image",
+        )
+
+
+class CartPaymentMethodCountrySerializer(ModelSerializer):
+    """
+    Serializer used for serializing payment methods in step 2 of the the order nested
+    into CartShippingMethodCountrySerializer
+    """
+
+    payment_method = CartPaymentMethodSerializer(read_only=True)
+    price_incl_vat = CharField(source="formatted_price_incl_vat")
+
+    class Meta:
+        model = PaymentMethodCountry
+        fields = (
+            "id",
+            "payment_method",
+            "price_incl_vat",
+        )
+
+
+class CartShippingMethodCountrySerializer(ModelSerializer):
+    """
+    Serializer used for serializing shipping methods in step 2 of the order
+    with nested shipping methods countries
+    """
+
+    shipping_method = CartShippingMethodSerializer(read_only=True)
+    payment_methods = CartPaymentMethodCountrySerializer(many=True, read_only=True)
+    price_incl_vat = CharField(source="formatted_price_incl_vat")
+
+    class Meta:
+        model = ShippingMethodCountry
+        fields = (
+            "id",
+            "shipping_method",
+            "payment_methods",
+            "price_incl_vat",
+        )
+
+
+class CartDetailSerializer(ModelSerializer):
+    class Meta:
+        model = Cart
+        fields = (
+            "token",
+            "user",
+            "shipping_method_country",
+            "payment_method_country",
+            "country",
+            "pricelist",
+        )

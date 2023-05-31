@@ -17,7 +17,7 @@ const ProductsSlider = ({ data }: IProductSliderProps) => {
   const [sliderRef, slider] = useKeenSlider<HTMLDivElement>(
     {
       loop: true,
-      slides: { perView: 1, spacing: 10, origin: "center" },
+      slides: { perView: 2, spacing: 10, origin: "center" },
       breakpoints: {
         "(min-width: 768px)": {
           slides: { perView: 2, spacing: 5, origin: "center" },

@@ -9,12 +9,18 @@ from cart.models import Cart
 from .models import Order
 from .serializers import OrderDetailSerializer, OrderListSerializer
 
+from roles.decorator import check_user_is_staff_decorator
+
 
 class OrderDetailDashboardView(RetrieveUpdateAPIView):
     allowed_methods = ["GET", "PUT"]
     permission_classes = (permissions.AllowAny,)
     serializer_class = OrderDetailSerializer
     lookup_field = "token"
+
+    @check_user_is_staff_decorator()
+    def get(self, request, token):
+        return super().get(request, token)
 
     def get_queryset(self):
         return Order.objects.all()
@@ -28,6 +34,10 @@ class OrderListDashboardView(ListAPIView):
     permission_classes = (permissions.AllowAny,)
     serializer_class = OrderListSerializer
     queryset = Order.objects.all().order_by("-create_at")
+
+    @check_user_is_staff_decorator()
+    def get(self, request):
+        return super().get(request)
 
 
 class OrderCreateStorefrontView(APIView):

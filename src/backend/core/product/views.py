@@ -3,7 +3,10 @@ from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import permissions
-from roles.decorator import check_user_access_decorator
+from roles.decorator import (
+    check_user_access_decorator,
+    check_user_is_staff_decorator,
+)
 from core.pagination import (
     DashboardPagination,
 )
@@ -48,6 +51,7 @@ Dashboard views
 class ProductVariantDashboard(APIView):
     permission_classes = (permissions.AllowAny,)
 
+    @check_user_is_staff_decorator()
     def get(self, requests, sku):
         try:
             product_variant = ProductVariant.objects.get(sku=sku)
@@ -68,6 +72,7 @@ class ProductListDashboard(APIView, DashboardPagination):
 
     locale = "en"
 
+    @check_user_is_staff_decorator()
     def get(self, request):
         self.locale = request.GET.get("locale", "en")
         products = Product.objects.all()
@@ -91,6 +96,7 @@ class ProductDashboardView(GenericAPIView):
     def get_queryset(self):
         return Product.objects.all()
 
+    @check_user_is_staff_decorator()
     def get(self, request):
         products = self.get_queryset()
         serializer = self.serializer_class(products, many=True)
@@ -113,6 +119,10 @@ class ProductDetailDashboardView(RetrieveUpdateDestroyAPIView):
     serializer_class = ProductDashboardDetailSerializer
     lookup_field = "id"
     lookup_url_kwarg = "id"
+
+    @check_user_is_staff_decorator()
+    def get(self, request, id):
+        return super().get(request, id)
 
     @check_user_access_decorator({"product_change_permission"})
     def put(self, request, id):
@@ -138,6 +148,7 @@ class PriceListDashboardView(GenericAPIView):
     def get_queryset(self):
         return PriceList.objects.all()
 
+    @check_user_is_staff_decorator()
     def get(self, request):
         price_lists = self.get_queryset()
         serializer = self.serializer_class(price_lists, many=True)
@@ -184,6 +195,7 @@ class ProductTypeDashboardView(GenericAPIView):
     def get_queryset(self):
         return ProductType.objects.all()
 
+    @check_user_is_staff_decorator()
     def get(self, request):
         product_types = self.get_queryset()
         serializer = self.serializer_class(product_types, many=True)
@@ -230,6 +242,7 @@ class AttributeTypeDashboardView(GenericAPIView):
     def get_queryset(self):
         return AttributeType.objects.all()
 
+    @check_user_is_staff_decorator()
     def get(self, request):
         attribute_types = self.get_queryset()
         serializer = self.serializer_class(attribute_types, many=True)
@@ -276,6 +289,7 @@ class BaseAttributeDashboardView(GenericAPIView):
     def get_queryset(self):
         return BaseAttribute.objects.all()
 
+    @check_user_is_staff_decorator()
     def get(self, request):
         attribute_types = self.get_queryset()
         serializer = self.serializer_class(attribute_types, many=True)
@@ -332,12 +346,10 @@ class ProductDetailStorefront(APIView):
 
     def get_country(self, request):
         # obtain country id from request query params or default to `is_default=True`
-        country_code = request.GET.get("country", None)
-        if country_code:
-            try:
-                country = Country.objects.get(code=country_code)
-            except Country.DoesNotExist:
-                country = Country.objects.all().first()
+        try:
+            country = Country.objects.get(code=request.GET.get("country", None))
+        except Country.DoesNotExist:
+            country = Country.objects.all().first()
 
         return country
 
