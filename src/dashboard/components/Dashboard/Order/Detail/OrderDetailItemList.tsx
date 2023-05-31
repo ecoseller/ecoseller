@@ -21,9 +21,13 @@ import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import EditIcon from "@mui/icons-material/Edit";
 import Link from "next/link";
+import { deleteItem, updateItemQuantity } from "@/api/cart/cart";
+import { generalSnackbarError, useSnackbarState } from "@/utils/snackbar";
+import SnackbarWithAlert from "@/components/Dashboard/Generic/SnackbarWithAlert";
 
 interface IOrderDetailItemListProps {
   cart: ICart;
+  recalculateOrderPrice: () => Promise<void>;
 }
 
 interface ICartItemRow extends ICartItem {
@@ -32,8 +36,10 @@ interface ICartItemRow extends ICartItem {
   id: number;
 }
 
-const OrderDetailItemList = ({ cart }: IOrderDetailItemListProps) => {
-  const router = useRouter();
+const OrderDetailItemList = ({
+  cart,
+  recalculateOrderPrice,
+}: IOrderDetailItemListProps) => {
   const [rowModes, setRowModes] = useState<GridRowModesModel>({});
 
   const [rows, setRows] = useState<ICartItemRow[]>(
@@ -45,82 +51,51 @@ const OrderDetailItemList = ({ cart }: IOrderDetailItemListProps) => {
     }))
   );
 
+  const [snackbar, setSnackbar] = useSnackbarState();
+
+  const getRowById = (id: GridRowId) => {
+    return rows.find((i) => i.id == id);
+  };
+
   const handleRowModesChange = (newRowModesModel: GridRowModesModel) => {
     setRowModes(newRowModesModel);
   };
 
+  const validateRow = (row: ICartItemRow) => {
+    return row.quantity >= 1;
+  };
+
   const processRowUpdate = (newRow: ICartItemRow, oldRow: ICartItemRow) => {
-    return newRow;
-    // if (!validateRow(newRow)) {
-    //   throw new Error("Invalid row");
-    // }
-    //
-    // const updatedRow = { ...newRow, isNew: false };
-    // console.log("updatedRow", updatedRow);
-    //
-    // // if row is new, save it to the database
-    // if (newRow.isNew) {
-    //   console.log("newRow", newRow);
-    //   fetch(`/api/cart/payment-method/${paymentMethod.id}/country`, {
-    //     method: "POST",
-    //     body: JSON.stringify({
-    //       payment_method: paymentMethod.id,
-    //       country: newRow.country,
-    //       vat_group: newRow.vat_group,
-    //       currency: newRow.currency,
-    //       price: newRow.price,
-    //       is_active: newRow.is_active,
-    //     }),
-    //   })
-    //     .then((res) => res.json())
-    //     .then((data) => {
-    //       setSnackbar({
-    //         open: true,
-    //         message: "Variant created",
-    //         severity: "success",
-    //       });
-    //       // get id from response and update row,
-    //       console.log("data", data);
-    //       if (data.error) throw new Error(data.error);
-    //       const { id } = data;
-    //       // remove row with newRow.id from rows and add row with id from response
-    //       setRows((rows) => [
-    //         ...rows.filter((row) => row.id !== newRow.id),
-    //         { ...updatedRow, id },
-    //       ]);
-    //     });
-    //   return updatedRow;
-    // }
-    // // if row is not new, update it in the database and update the row in the grid
-    // fetch(
-    //   `/api/cart/payment-method/${paymentMethod.id}/country/${newRow.id}/`,
-    //   {
-    //     method: "PUT",
-    //     body: JSON.stringify({
-    //       payment_method: paymentMethod.id,
-    //       country: newRow.country,
-    //       vat_group: newRow.vat_group,
-    //       currency: newRow.currency,
-    //       price: newRow.price,
-    //       is_active: newRow.is_active,
-    //     }),
-    //   }
-    // )
-    //   .then((res) => res.json())
-    //   .then(() => {
-    //     setSnackbar({
-    //       open: true,
-    //       message: "Variant updated",
-    //       severity: "success",
-    //     });
-    //     // update row in the grid
-    //     setRows((rows) => [
-    //       ...rows.filter((row) => row.id !== newRow.id),
-    //       updatedRow,
-    //     ]);
-    //   });
-    //
-    // return updatedRow;
+    if (!validateRow(newRow)) {
+      setSnackbar({
+        open: true,
+        severity: "error",
+        message: "Quantity must be >= 1",
+      });
+      throw new Error("Invalid row");
+    }
+
+    const updatedRow = { ...newRow, isNew: false };
+
+    updateItemQuantity(
+      cart.token,
+      updatedRow.product_variant_sku,
+      updatedRow.quantity
+    ).then(() => {
+      setRows((rows) => [
+        ...rows.filter((row) => row.id != newRow.id),
+        updatedRow,
+      ]);
+      recalculateOrderPrice().then(() =>
+        setSnackbar({
+          open: true,
+          message: "Quantity updated",
+          severity: "success",
+        })
+      );
+    });
+
+    return updatedRow;
   };
 
   const handleRowEditStart = (
@@ -146,20 +121,21 @@ const OrderDetailItemList = ({ cart }: IOrderDetailItemListProps) => {
   };
 
   const handleDeleteClick = (id: GridRowId) => () => {
-    // // delete row with id
-    // fetch(`/api/cart/payment-method/${paymentMethod.id}/country/${id}`, {
-    //   method: "DELETE",
-    // })
-    //   .then((res) => res.json())
-    //   .then(() => {
-    //     setSnackbar({
-    //       open: true,
-    //       message: "Variant deleted",
-    //       severity: "success",
-    //     });
-    //     // remove row with id from rows
-    //     setRows((rows) => rows.filter((row) => row.id !== id));
-    //   });
+    const row = getRowById(id);
+    if (row?.product_variant_sku) {
+      deleteItem(cart.token, row.product_variant_sku).then(() => {
+        const remainingRows = rows.filter((row) => row.id != id);
+        setRows(remainingRows);
+
+        recalculateOrderPrice().then(() =>
+          setSnackbar({
+            open: true,
+            message: "Item deleted",
+            severity: "success",
+          })
+        );
+      });
+    }
   };
 
   const handleCancelClick = (id: GridRowId) => () => {
@@ -260,36 +236,38 @@ const OrderDetailItemList = ({ cart }: IOrderDetailItemListProps) => {
   ];
 
   return (
-    <EditorCard>
-      <CollapsableContentWithTitle title="Order items">
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          editMode={"row"}
-          hideFooter={true}
-          autoHeight={true}
-          rowModesModel={rowModes}
-          onRowModesModelChange={handleRowModesChange}
-          onRowEditStart={handleRowEditStart}
-          onRowEditStop={handleRowEditStop}
-          processRowUpdate={processRowUpdate}
-          slots={{
-            toolbar: EditToolbar,
-          }}
-          slotProps={{
-            toolbar: { setRows, setRowModes },
-          }}
-          sx={{ overflowX: "scroll" }}
-        />
-        <Grid container justifyContent="center" sx={{ my: 3 }}>
-          <Grid item>
-            <Typography variant="h6">
-              Total price:&nbsp;{cart.total_price_net_formatted}
-            </Typography>
+    <>
+      <EditorCard>
+        <CollapsableContentWithTitle title="Order items">
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            editMode={"row"}
+            hideFooter={true}
+            autoHeight={true}
+            rowModesModel={rowModes}
+            onRowModesModelChange={handleRowModesChange}
+            onRowEditStart={handleRowEditStart}
+            onRowEditStop={handleRowEditStop}
+            processRowUpdate={processRowUpdate}
+            slotProps={{
+              toolbar: { setRows, setRowModes },
+            }}
+            sx={{ overflowX: "scroll" }}
+          />
+          <Grid container justifyContent="center" sx={{ my: 3 }}>
+            <Grid item>
+              <Typography variant="h6">
+                Total price:&nbsp;{cart.total_price_net_formatted}
+              </Typography>
+            </Grid>
           </Grid>
-        </Grid>
-      </CollapsableContentWithTitle>
-    </EditorCard>
+        </CollapsableContentWithTitle>
+      </EditorCard>
+      {snackbar ? (
+        <SnackbarWithAlert snackbarData={snackbar} setSnackbar={setSnackbar} />
+      ) : null}
+    </>
   );
 };
 

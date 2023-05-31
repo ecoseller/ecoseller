@@ -14,6 +14,7 @@ import DeleteEntityButton from "@/components/Dashboard/Generic/DeleteEntityButto
 import SnackbarWithAlert from "@/components/Dashboard/Generic/SnackbarWithAlert";
 import { useSnackbarState } from "@/utils/snackbar";
 import OrderDetailStatus from "@/components/Dashboard/Order/Detail/OrderDetailStatus";
+import { getOrder } from "@/api/order/order";
 
 interface IOrderDetailWrapperProps {
   order: IOrderDetail;
@@ -31,6 +32,17 @@ const OrderDetailWrapper = ({ order }: IOrderDetailWrapperProps) => {
     setOrderState({ ...orderState, status: orderStatus });
   };
 
+  const recalculateOrderPrice = async () => {
+    const order = await getOrder(orderState.token);
+    setOrderState({
+      ...orderState,
+      cart: {
+        ...orderState.cart,
+        total_price_net_formatted: order.cart.total_price_net_formatted,
+      },
+    });
+  };
+
   return (
     <EditableContentWrapper
       preventNavigation={preventNavigation}
@@ -46,7 +58,10 @@ const OrderDetailWrapper = ({ order }: IOrderDetailWrapperProps) => {
       />
       <Grid container spacing={2}>
         <Grid item md={8} xs={12}>
-          <OrderDetailItemList cart={orderState.cart} />
+          <OrderDetailItemList
+            cart={orderState.cart}
+            recalculateOrderPrice={recalculateOrderPrice}
+          />
         </Grid>
         <Grid item md={4} xs={12}>
           <OrderDetailStatus
