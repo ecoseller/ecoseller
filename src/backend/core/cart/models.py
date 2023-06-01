@@ -60,6 +60,7 @@ class ShippingMethodCountry(models.Model):
     is_active = models.BooleanField(default=True)
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
+    api_request = models.CharField(max_length=42, blank=True, null=True)
 
     def __str__(self) -> str:
         return (
