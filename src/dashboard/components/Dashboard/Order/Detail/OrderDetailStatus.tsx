@@ -8,6 +8,7 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { ICategoryLocalized } from "@/types/category";
 import { OrderStatus } from "@/types/order";
+import { updateOrderStatus } from "@/api/order/order";
 
 interface IOrderDetailStatusProps {
   orderStatus: OrderStatus;

@@ -14,7 +14,7 @@ import DeleteEntityButton from "@/components/Dashboard/Generic/DeleteEntityButto
 import SnackbarWithAlert from "@/components/Dashboard/Generic/SnackbarWithAlert";
 import { useSnackbarState } from "@/utils/snackbar";
 import OrderDetailStatus from "@/components/Dashboard/Order/Detail/OrderDetailStatus";
-import { getOrder } from "@/api/order/order";
+import { getOrder, updateOrderStatus } from "@/api/order/order";
 
 interface IOrderDetailWrapperProps {
   order: IOrderDetail;
@@ -25,7 +25,14 @@ const OrderDetailWrapper = ({ order }: IOrderDetailWrapperProps) => {
   const [snackbar, setSnackbar] = useSnackbarState();
   const [orderState, setOrderState] = useState<IOrderDetail>(order);
 
-  const save = async () => {};
+  const save = async () => {
+    await updateOrderStatus(order.token, orderState.status);
+    setSnackbar({
+      open: true,
+      message: "Order updated",
+      severity: "success",
+    });
+  };
 
   const setOrderStatus = (orderStatus: OrderStatus) => {
     setPreventNavigation(true);
@@ -47,9 +54,7 @@ const OrderDetailWrapper = ({ order }: IOrderDetailWrapperProps) => {
     <EditableContentWrapper
       preventNavigation={preventNavigation}
       setPreventNavigation={setPreventNavigation}
-      onButtonClick={async () => {
-        await save();
-      }}
+      onButtonClick={save}
       returnPath={"/dashboard/orders"}
     >
       <TopLineWithReturn

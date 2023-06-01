@@ -46,7 +46,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;
 
   if (method == "GET" || method == "PUT") {
-    return orderDetailAPI("GET", id?.toString() || "", req, res, body).then(
+    return orderDetailAPI(method, id?.toString() || "", req, res, body).then(
       (data) => res.status(200).json(data)
     );
   }

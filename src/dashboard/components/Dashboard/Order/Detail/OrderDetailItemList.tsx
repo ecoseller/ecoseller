@@ -24,6 +24,7 @@ import Link from "next/link";
 import { deleteItem, updateItemQuantity } from "@/api/cart/cart";
 import { generalSnackbarError, useSnackbarState } from "@/utils/snackbar";
 import SnackbarWithAlert from "@/components/Dashboard/Generic/SnackbarWithAlert";
+import Box from "@mui/material/Box";
 
 interface IOrderDetailItemListProps {
   cart: ICart;
@@ -239,6 +240,7 @@ const OrderDetailItemList = ({
     <>
       <EditorCard>
         <CollapsableContentWithTitle title="Order items">
+          <Box sx={{ my: 3 }} />
           <DataGrid
             rows={rows}
             columns={columns}
@@ -258,7 +260,7 @@ const OrderDetailItemList = ({
           <Grid container justifyContent="center" sx={{ my: 3 }}>
             <Grid item>
               <Typography variant="h6">
-                Total price:&nbsp;{cart.total_price_net_formatted}
+                Total net price:&nbsp;{cart.total_price_net_formatted}
               </Typography>
             </Grid>
           </Grid>
