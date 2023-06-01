@@ -13,6 +13,7 @@ import {
   Button,
   Checkbox,
   FormControlLabel,
+  FormHelperText,
   IconButton,
   InputAdornment,
   OutlinedInput,
@@ -49,9 +50,17 @@ const UserPasswordInformation = ({
 }: PasswordProps) => {
   // simple select with categories
 
-  const [showPassword, setShowPassword] = useState(false);
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const handleClickShowPassword = () => setShowOldPassword((show) => !show);
   const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
+
+  const handleClickShowNewPassword = () => setShowNewPassword((show) => !show);
+  const handleMouseDownNewPassword = (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
     event.preventDefault();
@@ -136,7 +145,7 @@ const UserPasswordInformation = ({
                 </InputLabel>
                 <OutlinedInput
                   id="outlined-adornment-password"
-                  type={showPassword ? "text" : "password"}
+                  type={showOldPassword ? "text" : "password"}
                   value={oldPassword}
                   onChange={(e) => setOldPassword(e.target.value)}
                   endAdornment={
@@ -147,7 +156,7 @@ const UserPasswordInformation = ({
                         onMouseDown={handleMouseDownPassword}
                         edge="end"
                       >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                        {showOldPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
                     </InputAdornment>
                   }
@@ -155,28 +164,66 @@ const UserPasswordInformation = ({
                 />
               </FormControl>
             ) : null}
-            <TextField
-              label="New password"
-              error={error}
-              disabled={!selfEdit && !user?.is_admin}
-              helperText={helperText}
-              InputLabelProps={{
-                shrink: Boolean(true),
-              }}
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-            <TextField
-              label="New password confirmation"
-              error={error}
-              disabled={!selfEdit && !user?.is_admin}
-              helperText={helperText}
-              InputLabelProps={{
-                shrink: Boolean(true),
-              }}
-              value={newPasswordConfirmation}
-              onChange={(e) => setNewPasswordConfirmation(e.target.value)}
-            />
+            <FormControl fullWidth variant="outlined" error={error}>
+              {error ? (
+                <FormHelperText id="outlined-adornment-password">
+                  {helperText}
+                </FormHelperText>
+              ) : (
+                <InputLabel htmlFor="outlined-adornment-password">
+                  New Password
+                </InputLabel>
+              )}
+              <OutlinedInput
+                id="outlined-adornment-password"
+                type={showNewPassword ? "text" : "password"}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowNewPassword}
+                      onMouseDown={handleMouseDownNewPassword}
+                      edge="end"
+                    >
+                      {showNewPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="New Password"
+              />
+            </FormControl>
+            <FormControl fullWidth variant="outlined" error={error}>
+              {error ? (
+                <FormHelperText id="outlined-adornment-password">
+                  {helperText}
+                </FormHelperText>
+              ) : (
+                <InputLabel htmlFor="outlined-adornment-password">
+                  New Password Confirmation
+                </InputLabel>
+              )}
+              <OutlinedInput
+                id="outlined-adornment-password"
+                type={showNewPassword ? "text" : "password"}
+                value={newPasswordConfirmation}
+                onChange={(e) => setNewPasswordConfirmation(e.target.value)}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowNewPassword}
+                      onMouseDown={handleMouseDownNewPassword}
+                      edge="end"
+                    >
+                      {showNewPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="New Password Confirmation"
+              />
+            </FormControl>
             <Box m={3} marginRight={10}>
               <Button
                 variant="outlined"
