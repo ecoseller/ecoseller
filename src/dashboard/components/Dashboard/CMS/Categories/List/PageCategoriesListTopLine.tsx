@@ -39,12 +39,14 @@ const PageCategoriesListTopLine = () => {
           variant="contained"
           startIcon={<AddIcon />}
           onClick={async () => {
-            await createPageCategory().then((data) => {
-              const { id } = data;
-              if (!id) return;
+            await createPageCategory()
+              .then((response) => response.json())
+              .then((data) => {
+                const { id } = data;
+                if (!id) return;
 
-              router.push(`/dashboard/cms/categories/${data.id}`);
-            });
+                router.push(`/dashboard/cms/categories/${data.id}`);
+              });
           }}
         >
           New page category

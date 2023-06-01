@@ -1,12 +1,13 @@
 import { getFrontendPage } from "@/api/cms/page/page";
 import PageEditorWrapper from "@/components/Dashboard/CMS/Pages/Edit/Editor";
+import { cmsPageDetailAPI } from "@/pages/api/cms/page/[type]/[id]";
 import DashboardLayout from "@/pages/dashboard/layout";
 import RootLayout from "@/pages/layout";
 import { IPageFrontend } from "@/types/cms";
 import { axiosPrivate } from "@/utils/axiosPrivate";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
 import { useRouter } from "next/router";
 import { ReactElement } from "react";
 
@@ -37,11 +38,16 @@ StorefrontPageEdit.getLayout = (page: ReactElement) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const params = context.params;
-  const id = params?.id;
+  const { req, res } = context;
+  const { id } = context.query;
 
-  const pageDetail = await getFrontendPage(Number(id));
-
+  const pageDetail = await cmsPageDetailAPI(
+    "GET",
+    "frontend",
+    id as string,
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
   return {
     props: {
       pageDetail,

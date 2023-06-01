@@ -6,7 +6,12 @@ import RootLayout from "@/pages/layout";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { getAllCategories } from "@/api/category/category";
-import { InferGetServerSidePropsType } from "next";
+import {
+  GetServerSideProps,
+  InferGetServerSidePropsType,
+  NextApiRequest,
+  NextApiResponse,
+} from "next";
 import Card from "@mui/material/Card";
 // api
 import { getAllPages } from "@/api/cms/page/page";
@@ -14,6 +19,7 @@ import { getAllPages } from "@/api/cms/page/page";
 import DashboardLayout from "@/pages/dashboard/layout";
 import PagesList from "@/components/Dashboard/CMS/Pages/List/PagesList";
 import PagesListTopLine from "@/components/Dashboard/CMS/Pages/List/TopLine";
+import { cmsPageListAPI } from "@/pages/api/cms/page";
 
 const CMSPagesPage = ({
   pages,
@@ -38,11 +44,16 @@ CMSPagesPage.getLayout = (page: ReactElement) => {
   );
 };
 
-export async function getServerSideProps() {
-  const res = await getAllPages();
-  const pages = res;
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { req, res } = context;
+
+  const pages = await cmsPageListAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
 
   return { props: { pages: pages } };
-}
+};
 
 export default CMSPagesPage;

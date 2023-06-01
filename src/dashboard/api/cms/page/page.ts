@@ -7,8 +7,9 @@ export const getAllPages = async (): Promise<TPage[]> => {
   // Method: GET
   // Params: data
   // Return: Promise
-  const { data } = await axiosPrivate.get("/cms/");
-  return data;
+  return fetch(`/api/cms/`, {
+    method: "GET",
+  }).then((res) => res.json());
 };
 
 export const createNewFrontendPage = async () => {
@@ -16,11 +17,11 @@ export const createNewFrontendPage = async () => {
   // URL: /cms/
   // Method: POST
   // Return: Promise
-  const response = await axiosPrivate.post("/cms/", {
-    resourcetype: "PageFrontend",
-    frontend_path: "/",
-  });
-  return response.data;
+
+  return fetch(`/api/cms/page/`, {
+    method: "POST",
+    body: JSON.stringify({ resourcetype: "PageFrontend", frontend_path: "/" }),
+  }).then((res) => res.json());
 };
 
 export const putFrontendPage = async (
@@ -32,25 +33,33 @@ export const putFrontendPage = async (
   // Method: PUT
   // Params: id, data
   // Return: Promise
-  const response = await axiosPrivate.put(`/cms/page/frontend/${id}/`, data);
-  return response.data;
+
+  return fetch(`/api/cms/page/frontend/${id}/`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  }).then((res) => res.json());
 };
 export const deleteFrontendPage = async (id: number) => {
   // Delete Frontend Page
   // URL: /cms/frontend/{id}/
   // Method: DELETE
   // Params: id
-  const response = await axiosPrivate.delete(`/cms/page/frontend/${id}/`);
-  return response.data;
+
+  return fetch(`/api/cms/page/frontend/${id}/`, {
+    method: "DELETE",
+  }).then((res) => res.json());
 };
+
 export const getFrontendPage = async (id: number): Promise<IPageFrontend> => {
   // GET Frontend Page
   // URL: /cms/frontend/{id}/
   // Method: GET
   // Params: id
   // Return: Promise<IPageFrontend>
-  const response = await axiosPrivate.get(`/cms/page/frontend/${id}/`);
-  return response.data;
+
+  return fetch(`/api/cms/page/frontend/${id}/`, {
+    method: "GET",
+  }).then((res) => res.json());
 };
 
 export const createNewCMSPage = async () => {
@@ -58,10 +67,10 @@ export const createNewCMSPage = async () => {
   // URL: /cms/
   // Method: POST
   // Return: Promise
-  const response = await axiosPrivate.post("/cms/", {
-    resourcetype: "PageCMS",
-  });
-  return response.data;
+  return fetch(`/api/cms/page/`, {
+    method: "POST",
+    body: JSON.stringify({ resourcetype: "PageCMS" }),
+  }).then((res) => res.json());
 };
 
 export const putCMSPage = async (id: number, data: Partial<IPageCMS>) => {
@@ -70,16 +79,21 @@ export const putCMSPage = async (id: number, data: Partial<IPageCMS>) => {
   // Method: PUT
   // Params: id, data
   // Return: Promise
-  const response = await axiosPrivate.put(`/cms/page/cms/${id}/`, data);
-  return response.data;
+
+  return fetch(`/api/cms/page/cms/${id}/`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  }).then((res) => res.json());
 };
 export const deleteCMSPage = async (id: number) => {
   // Delete CMS Page
   // URL: /cms/cms/{id}/
   // Method: DELETE
   // Params: id
-  const response = await axiosPrivate.delete(`/cms/page/cms/${id}/`);
-  return response.data;
+
+  return fetch(`/api/cms/page/cms/${id}/`, {
+    method: "DELETE",
+  }).then((res) => res.json());
 };
 export const getCMSPage = async (id: number): Promise<IPageFrontend> => {
   // GET CMS Page
@@ -87,6 +101,8 @@ export const getCMSPage = async (id: number): Promise<IPageFrontend> => {
   // Method: GET
   // Params: id
   // Return: Promise<IPageFrontend>
-  const response = await axiosPrivate.get(`/cms/page/cms/${id}/`);
-  return response.data;
+
+  return fetch(`/api/cms/page/cms/${id}/`, {
+    method: "GET",
+  }).then((res) => res.json());
 };
