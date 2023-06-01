@@ -37,11 +37,9 @@ const style = {
 interface ILoginModal {
   open: boolean;
   setOpen: (open: boolean) => void;
-  user: IUser | null;
-  setUser: (user: IUser) => void;
 }
 
-const LoginModal = ({ open, setOpen, user, setUser }: ILoginModal) => {
+const LoginModal = ({ open, setOpen }: ILoginModal) => {
   const handleOpen = () => setOpen(true);
   const router = useRouter();
 
