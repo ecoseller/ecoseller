@@ -8,7 +8,7 @@ interface IUserProviderProps {
     children: React.ReactNode;
 }
 
-const UserContext = createContext<IUserContextProps>({} as IUserContextProps);
+const UserContext = createContext<Partial<IUserContextProps>>({});
 
 export const UserProvider = ({ children }: IUserProviderProps): JSX.Element => {
     const [user, setUser] = useState<IUser | null>(null);
@@ -20,10 +20,16 @@ export const UserProvider = ({ children }: IUserProviderProps): JSX.Element => {
 
 
     const getUser = async () => {
-        console.log("GETTING USER CONTEXT")
         await fetch(`/api/user/detail`)
             .then((res) => res.json())
-            .then((data) => setUser(data))
+            .then((data) => {
+                console.log(data);
+                setUser({
+                    email: data['email'],
+                    first_name: data['first_name'],
+                    last_name: data['last_name']
+                } as IUser)
+            })
             .catch((error) => {
                 console.log(error);
                 setUser(null);
