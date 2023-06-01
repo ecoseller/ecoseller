@@ -58,8 +58,8 @@ const InfoToolBarNarrow = styled(Toolbar)(({ theme }) => ({
   maxWidth: MAXWIDTH,
 }));
 
-interface IDashboardHeaderProps {}
-const DashboardHeader = ({}: IDashboardHeaderProps) => {
+interface IDashboardHeaderProps { }
+const DashboardHeader = ({ }: IDashboardHeaderProps) => {
   const theme = useTheme();
   const largeScreen = useMediaQuery(theme.breakpoints.up("lg"));
   const [openMobileMenu, setOpenMobileMenu] = useState(false);
@@ -71,7 +71,7 @@ const DashboardHeader = ({}: IDashboardHeaderProps) => {
     setOpenMobileMenu(false);
   };
 
-  const user = null; //{};
+  const [user, setUser] = useState(null);
 
   return (
     <StyledRoot>

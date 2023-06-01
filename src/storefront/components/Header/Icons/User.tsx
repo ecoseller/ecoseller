@@ -14,14 +14,14 @@ import IconButton from "@mui/material/IconButton";
 import PersonIcon from "@mui/icons-material/Person";
 
 import LoginModal from "../Modals/Login";
-
-interface IUser {}
+import { IUser } from "@/types/user";
 
 interface IUserIconProps {
   user: IUser | null;
+  setUser: (user: IUser | null) => void;
 }
 
-const User = ({ user }: IUserIconProps) => {
+const User = ({ user, setUser }: IUserIconProps) => {
   const [anchorUserMenuEl, setAnchorUserMenuEl] = useState<null | HTMLElement>(
     null
   );
@@ -62,7 +62,7 @@ const User = ({ user }: IUserIconProps) => {
           <PersonIcon />
         </IconButton>
       )}
-      <LoginModal open={openLoginModal} setOpen={setOpenLoginModal} />
+      <LoginModal open={openLoginModal} setOpen={setOpenLoginModal} user={user} setUser={setUser} />
       <Menu
         anchorEl={anchorUserMenuEl}
         id="account-menu"

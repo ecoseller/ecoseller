@@ -131,7 +131,6 @@ class UserViewObs(APIView):
 
 
 class CustomTokenObtainPairView(jwt_views.TokenObtainPairView):
-    # Replace the serializer with your custom
     serializer_class = TokenObtainDashboardSerializer
 
     def post(self, request, *args, **kwargs):
