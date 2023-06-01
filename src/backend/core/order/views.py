@@ -1,18 +1,17 @@
 # from django.shortcuts import render
 
 from rest_framework import permissions
-from rest_framework.generics import ListAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from cart.models import Cart
-from .models import Order
-from .serializers import OrderDetailSerializer, OrderListSerializer
-
 from roles.decorator import check_user_is_staff_decorator
+from .models import Order
+from .serializers import OrderDetailSerializer, OrderListSerializer, OrderStatusSerializer
 
 
-class OrderDetailDashboardView(RetrieveUpdateAPIView):
+class OrderDetailDashboardView(RetrieveAPIView):
     allowed_methods = ["GET", "PUT"]
     permission_classes = (permissions.AllowAny,)
     serializer_class = OrderDetailSerializer
@@ -21,6 +20,18 @@ class OrderDetailDashboardView(RetrieveUpdateAPIView):
     @check_user_is_staff_decorator()
     def get(self, request, token):
         return super().get(request, token)
+
+    def put(self, request, token):
+        try:
+            order = Order.objects.get(token=token)
+            serializer = OrderStatusSerializer(order, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(status=204)
+            else:
+                return Response(serializer.errors, status=400)
+        except Order.DoesNotExist:
+            return Response(status=404)
 
     def get_queryset(self):
         return Order.objects.all()
