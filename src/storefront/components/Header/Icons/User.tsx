@@ -14,18 +14,17 @@ import IconButton from "@mui/material/IconButton";
 import PersonIcon from "@mui/icons-material/Person";
 
 import LoginModal from "../Modals/Login";
-import { IUser } from "@/types/user";
+import { useUser } from "@/utils/context/user";
 
-interface IUserIconProps {
-  user: IUser | null;
-  setUser: (user: IUser | null) => void;
-}
 
-const User = ({ user, setUser }: IUserIconProps) => {
+const User = () => {
   const [anchorUserMenuEl, setAnchorUserMenuEl] = useState<null | HTMLElement>(
     null
   );
   const [openLoginModal, setOpenLoginModal] = useState(false);
+
+  const { user } = useUser();
+  console.log("USER", user);
 
   const openUserMenu = Boolean(anchorUserMenuEl);
   const handleUserMenuClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -62,7 +61,7 @@ const User = ({ user, setUser }: IUserIconProps) => {
           <PersonIcon />
         </IconButton>
       )}
-      <LoginModal open={openLoginModal} setOpen={setOpenLoginModal} user={user} setUser={setUser} />
+      <LoginModal open={openLoginModal} setOpen={setOpenLoginModal} />
       <Menu
         anchorEl={anchorUserMenuEl}
         id="account-menu"

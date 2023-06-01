@@ -71,8 +71,6 @@ const DashboardHeader = ({ }: IDashboardHeaderProps) => {
     setOpenMobileMenu(false);
   };
 
-  const [user, setUser] = useState(null);
-
   return (
     <StyledRoot>
       <InfoBar text="Free shipping on all orders over $100" />
@@ -91,7 +89,7 @@ const DashboardHeader = ({ }: IDashboardHeaderProps) => {
               }}
             >
               <Search />
-              <User user={user} />
+              <User />
               <Cart />
             </Stack>
           </StyledToolbar>
