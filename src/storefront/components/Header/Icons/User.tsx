@@ -26,6 +26,7 @@ const User = () => {
   );
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const [user, setUser] = useState<IUser | null>(null);
+  const [refetch, setRefetch] = useState<boolean>(false);
 
   console.log(user);
   const router = useRouter();
@@ -40,6 +41,11 @@ const User = () => {
   };
 
   useEffect(() => {
+    const refreshToken = Cookies.get("refreshToken") || null;
+    if (refreshToken == null) {
+      setUser(null);
+      return;
+    }
     fetch(`/api/user/detail`)
       .then((res) => res.json())
       .then((data) => {
@@ -53,7 +59,7 @@ const User = () => {
           last_name: data?.last_name
         } as IUser)
       });
-  }, [openLoginModal]);
+  }, [openLoginModal, refetch]);
 
   const handleLogout = () => {
     const refreshToken = Cookies.get("refreshToken") || null;
@@ -68,6 +74,7 @@ const User = () => {
 
     setAnchorUserMenuEl(null);
     router.replace("/");
+    setRefetch(!refetch);
   };
 
   return (
