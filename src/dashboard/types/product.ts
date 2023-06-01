@@ -91,10 +91,17 @@ export interface IProductList extends IPaginated {
   data: IProductListItem[];
 }
 
+export interface IBaseAttributeTranslations {
+  [locale: string]: {
+    name: string;
+  };
+}
+
 export interface IBaseAttributePostRequest {
   id?: number;
   value: string;
   type: number;
+  translations?: IBaseAttributeTranslations;
 }
 
 export interface IBaseAttribute extends IBaseAttributePostRequest {
@@ -103,9 +110,16 @@ export interface IBaseAttribute extends IBaseAttributePostRequest {
 
 export type TAttributeTypeValueType = "TEXT" | "INTEGER" | "DECIMAL";
 
+export interface IAttributeTypeTranslations {
+  [locale: string]: {
+    name: string;
+  };
+}
+
 export interface IAttributeTypePostRequest {
   id?: number;
   type_name: string;
+  translations?: IAttributeTypeTranslations;
   unit?: string;
   value_type?: TAttributeTypeValueType;
   base_attributes: IBaseAttribute[];

@@ -27,6 +27,9 @@ import BaseAttributeGrid from "@/components/Dashboard/Catalog/BaseAttribute/Base
 import DeleteAttributeType from "@/components/Dashboard/Catalog/AttributeType/DeleteAttributeType";
 import { useSnackbarState } from "@/utils/snackbar";
 import { productAttributeTypeDetailAPI } from "@/pages/api/product/attribute/type/[id]";
+import TranslatedFieldsTabList from "@/components/Dashboard/Generic/TranslatedFieldsTabList";
+import { IEntityTranslations } from "@/types/common";
+import { IDispatchWrapper } from "@/components/Dashboard/Common/IDispatchWrapper";
 
 interface IProps {
   attributeType: IAttributeType;
@@ -55,6 +58,25 @@ const DashboardAttributeTypeDetailPage = ({ attributeType }: IProps) => {
       setPreventNavigation(true);
     }
   }, [state]);
+
+  const dispatchWrapper: IDispatchWrapper = {
+    setName(language: string, name: string): void {
+      setState({
+        ...state,
+        translations: {
+          ...state.translations,
+          [language]: state?.translations
+            ? {
+                ...state.translations[language],
+                name,
+              }
+            : {
+                name,
+              },
+        },
+      });
+    },
+  };
 
   return (
     <DashboardLayout>
@@ -97,6 +119,10 @@ const DashboardAttributeTypeDetailPage = ({ attributeType }: IProps) => {
             <AttributeTypeGeneralInformation
               state={state}
               setState={(v: IAttributeType) => setState(v)}
+            />
+            <TranslatedFieldsTabList
+              state={state.translations || ({} as IEntityTranslations)}
+              dispatchWrapper={dispatchWrapper}
             />
             <BaseAttributeGrid
               attributeTypeId={state.id}

@@ -26,6 +26,8 @@ from .serializers import (
     ShippingInfoListUserSerializer,
 )
 
+from roles.decorator import check_user_is_staff_decorator
+
 DEFAULT_LANGUAGE_CODE = settings.PARLER_DEFAULT_LANGUAGE_CODE
 LANGUAGES = settings.PARLER_LANGUAGES[None]
 # from parler.utils.conf import LanguagesSetting
@@ -44,6 +46,9 @@ class CountryListView(ListCreateAPIView):
     ]
 
     serializer_class = CountrySerializer
+
+    def get(self, request):
+        return super().get(request)
 
     def get_queryset(self):
         return Country.objects.all()
@@ -66,6 +71,10 @@ class CountryDetailView(RetrieveUpdateDestroyAPIView):
     lookup_field = "code"
     lookup_url_kwarg = "code"
 
+    @check_user_is_staff_decorator()
+    def get(self, request, code):
+        return super().get(request, code)
+
     def get_queryset(self):
         return Country.objects.all()
 
@@ -83,6 +92,7 @@ class LanguagesView(APIView):
     # TODO: add permissions for dashboard views (only for staff) <- testing purposes
     permission_classes = (permissions.AllowAny,)
 
+    @check_user_is_staff_decorator()
     def get(self, request):
         langs = [
             {
@@ -104,6 +114,7 @@ class CurrencyListView(GenericAPIView):
     def get_queryset(self):
         return Currency.objects.all()
 
+    @check_user_is_staff_decorator()
     def get(self, request):
         qs = self.get_queryset()
         serializer = self.get_serializer(qs, many=True)
@@ -129,6 +140,10 @@ class CurrencyDetailView(RetrieveUpdateDestroyAPIView):
     lookup_field = "code"
     lookup_url_kwarg = "code"
 
+    @check_user_is_staff_decorator()
+    def get(self, request, code):
+        return super().get(request, code)
+
     def get_queryset(self):
         return Currency.objects.all()
 
@@ -150,6 +165,7 @@ class VatGroupListView(GenericAPIView):
     def get_queryset(self):
         return VatGroup.objects.all()
 
+    @check_user_is_staff_decorator()
     def get(self, request):
         qs = self.get_queryset()
         serializer = self.get_serializer(qs, many=True)
@@ -179,6 +195,10 @@ class VatGroupDetailView(RetrieveUpdateDestroyAPIView):
     lookup_field = "id"
     lookup_url_kwarg = "id"
 
+    @check_user_is_staff_decorator()
+    def get(self, request, id):
+        return super().get(request, id)
+
     def get_queryset(self):
         return VatGroup.objects.all()
 
@@ -204,6 +224,10 @@ class ShippingAddressDetailView(RetrieveUpdateDestroyAPIView):
     lookup_field = "id"
     lookup_url_kwarg = "id"
 
+    @check_user_is_staff_decorator()
+    def get(self, request, id):
+        return super().get(request, id)
+
     def get_queryset(self):
         return ShippingInfo.objects.all()
 
@@ -223,6 +247,10 @@ class BillingAddressDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = BillingInfoSerializer
     lookup_field = "id"
     lookup_url_kwarg = "id"
+
+    @check_user_is_staff_decorator()
+    def get(self, request, id):
+        return super().get(request, id)
 
     def get_queryset(self):
         return BillingInfo.objects.all()

@@ -7,7 +7,10 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt import views as jwt_views
 
-from roles.decorator import check_user_access_decorator
+from roles.decorator import (
+    check_user_access_decorator,
+    check_user_is_staff_decorator,
+)
 
 from .models import User
 
@@ -16,6 +19,7 @@ from .serializers import (
     TokenObtainDashboardSerializer,
     UserSerializer,
     ChangePasswordSerializer,
+    ChangePasswordSerializerAdmin,
 )
 
 
@@ -28,6 +32,7 @@ class UserView(GenericAPIView):
 
     serializer_class = RegistrationSerializer
 
+    @check_user_is_staff_decorator()
     def get(self, request):
         users = self.get_queryset()
         serializer = UserSerializer(users, many=True)
@@ -52,6 +57,7 @@ class UserDetailView(RetrieveUpdateDestroyAPIView):
     lookup_field = "email"
     lookup_url_kwarg = "id"
 
+    @check_user_is_staff_decorator()
     def get(self, request, id):
         return super().get(request, id)
 
@@ -109,6 +115,7 @@ class UserViewObs(APIView):
     Print user data from token passed in header.
     """
 
+    @check_user_is_staff_decorator()
     def get(self, request):
         user = request.user
         # auth = request.auth
@@ -153,8 +160,7 @@ class PasswordView(UpdateAPIView):
         obj = self.request.user
         return obj
 
-    @check_user_access_decorator({"user_change_permission"})
-    def update(self, request, *args, **kwargs):
+    def put(self, request):
         self.object = self.get_object()
         serializer = self.get_serializer(data=request.data)
 
@@ -166,13 +172,10 @@ class PasswordView(UpdateAPIView):
             self.object.set_password(serializer.data.get("new_password"))
             self.object.save()
             response = {
-                "status": "success",
-                "code": "200",
                 "message": "Password updated successfully",
                 "data": [],
             }
-
-            return Response(response)
+            return Response(response, status=200)
 
         return Response(serializer.errors, status=400)
 
@@ -182,29 +185,32 @@ class PasswordAdminView(UpdateAPIView):
     View for admins to change users password.
     """
 
-    serializer_class = ChangePasswordSerializer
+    serializer_class = ChangePasswordSerializerAdmin
     permission_classes = (permissions.AllowAny,)
 
     def get_object(self, queryset=None):
-        obj = User.objects.get(email=self.kwargs["email"])
+        obj = User.objects.get(email=self.kwargs["id"])
         return obj
 
     @check_user_access_decorator({"user_change_permission"})
-    def update(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        serializer = self.get_serializer(data=request.data)
+    def put(self, request, id):
+        try:
+            self.object = self.get_object()
+            serializer = self.get_serializer(data=request.data)
 
-        if serializer.is_valid():
-            # set_password also hashes the password that the user will get
-            self.object.set_password(serializer.data.get("new_password"))
-            self.object.save()
-            response = {
-                "status": "success",
-                "code": "200",
-                "message": "Password updated successfully",
-                "data": [],
-            }
+            print("AFTER SERIALIZER", serializer)
 
-            return Response(response)
+            if serializer.is_valid():
+                print("AFTER SERIALIZER VALID")
+                # set_password also hashes the password that the user will get
+                self.object.set_password(serializer.data.get("new_password"))
+                self.object.save()
+                response = {
+                    "message": "Password updated successfully",
+                    "data": [],
+                }
+                return Response(response, status=200)
 
-        return Response(serializer.errors, status=400)
+        except Exception as e:
+            print("Error", e.message)
+            return Response(status=400)

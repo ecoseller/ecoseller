@@ -54,6 +54,8 @@ from country.serializers import (
 )
 from product.models import ProductVariant, ProductPrice
 
+from roles.decorator import check_user_is_staff_decorator
+
 
 @permission_classes([AllowAny])  # TODO: use authentication
 class CartDetailShortStorefrontView(GenericAPIView):
@@ -423,6 +425,10 @@ class PaymentMethodListDashboardView(ListCreateAPIView):
     serializer_class = PaymentMethodSerializer
     queryset = PaymentMethod.objects.all()
 
+    @check_user_is_staff_decorator()
+    def get(self, request):
+        return super().get(request)
+
 
 class PaymentMethodDetailDashboardView(RetrieveUpdateDestroyAPIView):
     """
@@ -443,6 +449,10 @@ class PaymentMethodDetailDashboardView(RetrieveUpdateDestroyAPIView):
     lookup_field = "id"
     lookup_url_kwarg = "id"
 
+    @check_user_is_staff_decorator()
+    def get(self, request, id):
+        return super().get(request, id)
+
     def get_queryset(self):
         return PaymentMethod.objects.all()
 
@@ -455,6 +465,10 @@ class PaymentMethodCountryListView(ListCreateAPIView):
     ]
 
     serializer_class = PaymentMethodCountrySerializer
+
+    @check_user_is_staff_decorator()
+    def get(self, request, method_id):
+        return super().get(request, method_id)
 
     def get_queryset(self):
         method_id = self.kwargs.get("method_id")
@@ -478,6 +492,10 @@ class PaymentMethodCountryDetailDashboardView(RetrieveUpdateDestroyAPIView):
     lookup_field = "id"
     lookup_url_kwarg = "id"
 
+    @check_user_is_staff_decorator()
+    def get(self, request, id):
+        return super().get(request, id)
+
     def get_queryset(self):
         return PaymentMethodCountry.objects.all()
 
@@ -491,6 +509,10 @@ class PaymentMethodCountryFullListView(ListCreateAPIView):
     serializer_class = PaymentMethodCountryFullSerializer
     queryset = PaymentMethodCountry.objects.all()
 
+    @check_user_is_staff_decorator()
+    def get(self, request):
+        return super().get(request)
+
 
 class ShippingMethodListDashboardView(ListCreateAPIView):
     permission_classes = (AllowAny,)
@@ -501,6 +523,10 @@ class ShippingMethodListDashboardView(ListCreateAPIView):
 
     serializer_class = ShippingMethodSerializer
     queryset = ShippingMethod.objects.all()
+
+    @check_user_is_staff_decorator()
+    def get(self, request):
+        return super().get(request)
 
 
 class ShippingMethodDetailDashboardView(RetrieveUpdateDestroyAPIView):
@@ -522,6 +548,10 @@ class ShippingMethodDetailDashboardView(RetrieveUpdateDestroyAPIView):
     lookup_field = "id"
     lookup_url_kwarg = "id"
 
+    @check_user_is_staff_decorator()
+    def get(self, request, id):
+        return super().get(request, id)
+
     def get_queryset(self):
         return ShippingMethod.objects.all()
 
@@ -534,6 +564,10 @@ class ShippingMethodCountryListView(ListCreateAPIView):
     ]
 
     serializer_class = ShippingMethodCountrySerializer
+
+    @check_user_is_staff_decorator()
+    def get(self, request, method_id):
+        return super().get(request, method_id)
 
     def get_queryset(self):
         method_id = self.kwargs.get("method_id")
@@ -556,6 +590,10 @@ class ShippingMethodCountryDetailDashboardView(RetrieveUpdateDestroyAPIView):
     serializer_class = ShippingMethodCountrySerializer
     lookup_field = "id"
     lookup_url_kwarg = "id"
+
+    @check_user_is_staff_decorator()
+    def get(self, request, id):
+        return super().get(request, id)
 
     def get_queryset(self):
         return ShippingMethodCountry.objects.all()
