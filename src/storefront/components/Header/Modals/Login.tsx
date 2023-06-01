@@ -21,6 +21,7 @@ import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { IUser } from "@/types/user";
+import { useUser } from "@/utils/context/user";
 
 const style = {
   position: "absolute" as "absolute",
