@@ -15,6 +15,8 @@ import SnackbarWithAlert from "@/components/Dashboard/Generic/SnackbarWithAlert"
 import { useSnackbarState } from "@/utils/snackbar";
 import OrderDetailStatus from "@/components/Dashboard/Order/Detail/OrderDetailStatus";
 import { getOrder, updateOrderStatus } from "@/api/order/order";
+import OrderDetailBillingShippingInfo from "@/components/Dashboard/Order/Detail/OrderDetailBillingShippingInfo";
+import { PermissionProvider } from "@/utils/context/permission";
 
 interface IOrderDetailWrapperProps {
   order: IOrderDetail;
@@ -63,16 +65,24 @@ const OrderDetailWrapper = ({ order }: IOrderDetailWrapperProps) => {
       />
       <Grid container spacing={2}>
         <Grid item md={8} xs={12}>
-          <OrderDetailItemList
-            cart={orderState.cart}
-            recalculateOrderPrice={recalculateOrderPrice}
-          />
+          <PermissionProvider allowedPermissions={["cart_change_permission"]}>
+            <OrderDetailItemList
+              cart={orderState.cart}
+              recalculateOrderPrice={recalculateOrderPrice}
+              orderStatus={orderState.status}
+            />
+          </PermissionProvider>
+          <PermissionProvider allowedPermissions={["order_change_permission"]}>
+            <OrderDetailBillingShippingInfo />
+          </PermissionProvider>
         </Grid>
         <Grid item md={4} xs={12}>
-          <OrderDetailStatus
-            orderStatus={orderState.status}
-            setOrderStatus={setOrderStatus}
-          />
+          <PermissionProvider allowedPermissions={["order_change_permission"]}>
+            <OrderDetailStatus
+              orderStatus={orderState.status}
+              setOrderStatus={setOrderStatus}
+            />
+          </PermissionProvider>
         </Grid>
       </Grid>
       {snackbar ? (

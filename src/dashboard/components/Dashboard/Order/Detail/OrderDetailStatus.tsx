@@ -9,6 +9,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { ICategoryLocalized } from "@/types/category";
 import { OrderStatus } from "@/types/order";
 import { updateOrderStatus } from "@/api/order/order";
+import { usePermission } from "@/utils/context/permission";
 
 interface IOrderDetailStatusProps {
   orderStatus: OrderStatus;
@@ -19,7 +20,7 @@ const OrderDetailStatus = ({
   orderStatus,
   setOrderStatus,
 }: IOrderDetailStatusProps) => {
-  // const { hasPermission } = usePermission();
+  const { hasPermission } = usePermission();
 
   const statuses = [
     OrderStatus.Pending,
@@ -45,6 +46,7 @@ const OrderDetailStatus = ({
             // disabled={!hasPermission}
             onChange={handleChange}
             label="Status"
+            disabled={!hasPermission}
           >
             {statuses?.map((status) => {
               return (

@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { ICart, ICartItem } from "@/types/cart/cart";
 import { Grid } from "@mui/material";
-import { useRouter } from "next/router";
 import CollapsableContentWithTitle from "../../Generic/CollapsableContentWithTitle";
 import EditorCard from "../../Generic/EditorCard";
 import {
@@ -22,12 +21,15 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import EditIcon from "@mui/icons-material/Edit";
 import Link from "next/link";
 import { deleteItem, updateItemQuantity } from "@/api/cart/cart";
-import { generalSnackbarError, useSnackbarState } from "@/utils/snackbar";
+import { useSnackbarState } from "@/utils/snackbar";
 import SnackbarWithAlert from "@/components/Dashboard/Generic/SnackbarWithAlert";
 import Box from "@mui/material/Box";
+import { OrderStatus } from "@/types/order";
+import { usePermission } from "@/utils/context/permission";
 
 interface IOrderDetailItemListProps {
   cart: ICart;
+  orderStatus: OrderStatus;
   recalculateOrderPrice: () => Promise<void>;
 }
 
@@ -40,6 +42,7 @@ interface ICartItemRow extends ICartItem {
 const OrderDetailItemList = ({
   cart,
   recalculateOrderPrice,
+  orderStatus,
 }: IOrderDetailItemListProps) => {
   const [rowModes, setRowModes] = useState<GridRowModesModel>({});
 
@@ -53,6 +56,7 @@ const OrderDetailItemList = ({
   );
 
   const [snackbar, setSnackbar] = useSnackbarState();
+  const { hasPermission } = usePermission();
 
   const getRowById = (id: GridRowId) => {
     return rows.find((i) => i.id == id);
@@ -61,6 +65,10 @@ const OrderDetailItemList = ({
   const handleRowModesChange = (newRowModesModel: GridRowModesModel) => {
     setRowModes(newRowModesModel);
   };
+
+  const canEditItems = [OrderStatus.Pending, OrderStatus.Processing].includes(
+    orderStatus
+  );
 
   const validateRow = (row: ICartItemRow) => {
     return row.quantity >= 1;
@@ -183,58 +191,62 @@ const OrderDetailItemList = ({
       headerName: "Total net price",
       minWidth: 150,
     },
-    {
-      field: "actions",
-      type: "actions",
-      headerName: "Actions",
-      width: 125,
-      minWidth: 150,
-      maxWidth: 200,
-      cellClassName: "actions",
+  ];
 
-      disableColumnMenu: true,
-      getActions: ({ id }) => {
-        const isInEditMode = rowModes[id]?.mode === GridRowModes.Edit;
+  const actionsColumn = {
+    field: "actions",
+    type: "actions",
+    headerName: "Actions",
+    width: 125,
+    minWidth: 150,
+    maxWidth: 200,
+    cellClassName: "actions",
+    disableColumnMenu: true,
+    getActions: ({ id }) => {
+      const isInEditMode = rowModes[id]?.mode === GridRowModes.Edit;
 
-        if (isInEditMode) {
-          return [
-            <GridActionsCellItem
-              icon={<SaveIcon />}
-              label="Save"
-              onClick={handleSaveClick(id)}
-              key={"save"}
-            />,
-            <GridActionsCellItem
-              icon={<CancelIcon />}
-              label="Cancel"
-              className="textPrimary"
-              onClick={handleCancelClick(id)}
-              color="inherit"
-              key={"cancel"}
-            />,
-          ];
-        }
-
+      if (isInEditMode) {
         return [
           <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleEditClick(id)}
-            color="inherit"
-            key={"edit"}
+            icon={<SaveIcon />}
+            label="Save"
+            onClick={handleSaveClick(id)}
+            key={"save"}
           />,
           <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            onClick={handleDeleteClick(id)}
+            icon={<CancelIcon />}
+            label="Cancel"
+            className="textPrimary"
+            onClick={handleCancelClick(id)}
             color="inherit"
-            key={"delete"}
+            key={"cancel"}
           />,
         ];
-      },
+      }
+
+      return [
+        <GridActionsCellItem
+          icon={<EditIcon />}
+          label="Edit"
+          className="textPrimary"
+          onClick={handleEditClick(id)}
+          color="inherit"
+          key={"edit"}
+        />,
+        <GridActionsCellItem
+          icon={<DeleteIcon />}
+          label="Delete"
+          onClick={handleDeleteClick(id)}
+          color="inherit"
+          key={"delete"}
+        />,
+      ];
     },
-  ];
+  };
+
+  if (hasPermission && canEditItems) {
+    columns.push(actionsColumn);
+  }
 
   return (
     <>
