@@ -2,9 +2,9 @@ from abc import ABC, abstractmethod
 
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.decorators import permission_classes
+from rest_framework.generics import GenericAPIView
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
-from rest_framework.generics import GenericAPIView
 from rest_framework.parsers import (
     MultiPartParser,
     FormParser,
@@ -20,10 +20,6 @@ from rest_framework.status import (
     HTTP_201_CREATED,
 )
 from rest_framework.views import APIView
-
-from country.models import (
-    Country,
-)
 
 from cart.models import (
     Cart,
@@ -48,13 +44,15 @@ from cart.serializers import (
     CartSerializer,
     CartDetailSerializer,
 )
+from country.models import (
+    Country,
+)
 from country.serializers import (
     BillingInfoSerializer,
     ShippingInfoSerializer,
 )
 from product.models import ProductVariant, ProductPrice
-
-from roles.decorator import check_user_is_staff_decorator
+from roles.decorator import check_user_is_staff_decorator, check_user_access_decorator
 
 
 @permission_classes([AllowAny])  # TODO: use authentication
@@ -192,10 +190,10 @@ class CartCreateStorefrontView(APIView):
             )
 
 
-@permission_classes([AllowAny])
-class CartUpdateQuantityView(APIView):
+class CartUpdateQuantityBaseView(APIView):
     """
-    View for updating cart items quantity
+    Base view for updating cart items quantity.
+    Do not use it directly, use inherited views instead
     """
 
     def put(self, request, token):
@@ -213,6 +211,18 @@ class CartUpdateQuantityView(APIView):
             return Response(status=HTTP_400_BAD_REQUEST)
         except (Cart.DoesNotExist, CartItem.DoesNotExist):
             return Response(status=HTTP_404_NOT_FOUND)
+
+
+class CartUpdateQuantityDashboardView(CartUpdateQuantityBaseView):
+    @check_user_access_decorator({"cart_change_permission"})
+    def put(self, request, token):
+        return super().put(request, token)
+
+
+@permission_classes([AllowAny])
+class CartUpdateQuantityStorefrontView(CartUpdateQuantityBaseView):
+    def put(self, request, token):
+        return super().put(request, token)
 
 
 class CartUpdateInfoBaseStorefrontView(APIView, ABC):
@@ -397,10 +407,10 @@ class CartUpdatePaymentMethodStorefrontView(CartUpdateMethodBaseStorefrontView):
         cart.save()
 
 
-@permission_classes([AllowAny])
-class CartItemDeleteView(APIView):
+class CartItemDeleteBaseView(APIView):
     """
-    View used for deleting cart items
+    Base View used for deleting cart items.
+    Do not use it directly, rather use inherited classes
     """
 
     def delete(self, request, token, sku):
@@ -413,6 +423,18 @@ class CartItemDeleteView(APIView):
             return Response(status=HTTP_204_NO_CONTENT)
         except (Cart.DoesNotExist, CartItem.DoesNotExist):
             return Response(status=HTTP_404_NOT_FOUND)
+
+
+class CartItemDeleteDashboardView(CartItemDeleteBaseView):
+    @check_user_access_decorator({"cart_change_permission"})
+    def delete(self, request, token, sku):
+        return super().delete(request, token, sku)
+
+
+@permission_classes([AllowAny])
+class CartItemDeleteStorefrontView(CartItemDeleteBaseView):
+    def delete(self, request, token, sku):
+        return super().delete(request, token, sku)
 
 
 class PaymentMethodListDashboardView(ListCreateAPIView):
