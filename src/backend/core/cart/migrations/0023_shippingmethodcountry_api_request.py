@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cart', '0022_rename_billing_address_cart_billing_info_and_more'),
+        ("cart", "0022_rename_billing_address_cart_billing_info_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='shippingmethodcountry',
-            name='api_request',
+            model_name="shippingmethodcountry",
+            name="api_request",
             field=models.CharField(blank=True, max_length=42, null=True),
         ),
     ]
