@@ -338,14 +338,12 @@ class CartPaymentMethodCountrySerializer(ModelSerializer):
         )
 
 
-class CartShippingMethodCountrySerializer(ModelSerializer):
+class CartShippingMethodCountryBaseSerializer(ModelSerializer):
     """
-    Serializer used for serializing shipping methods in step 2 of the order
-    with nested shipping methods countries
+    Serializer used for serializing shipping method country
     """
 
     shipping_method = CartShippingMethodSerializer(read_only=True)
-    payment_methods = CartPaymentMethodCountrySerializer(many=True, read_only=True)
     price_incl_vat = CharField(source="formatted_price_incl_vat")
 
     class Meta:
@@ -353,9 +351,21 @@ class CartShippingMethodCountrySerializer(ModelSerializer):
         fields = (
             "id",
             "shipping_method",
-            "payment_methods",
             "price_incl_vat",
         )
+
+
+class CartShippingMethodCountrySerializer(CartShippingMethodCountryBaseSerializer):
+    """
+    Serializer used for serializing shipping methods in step 2 of the order
+    with nested shipping methods countries
+    """
+
+    payment_methods = CartPaymentMethodCountrySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = ShippingMethodCountry
+        fields = CartShippingMethodCountryBaseSerializer.Meta.fields + ("payment_methods",)
 
 
 class CartDetailSerializer(ModelSerializer):

@@ -30,7 +30,7 @@ urlpatterns = [
         views.ShippingMethodCountryListView.as_view(),
     ),
     path(
-        "dashboard/shipping/method/<int:method_id>/country/<int:id>/",
+        "dashboard/shipping/method/country/<int:id>/",
         views.ShippingMethodCountryDetailDashboardView.as_view(),
     ),
     path("storefront/", views.CartCreateStorefrontView.as_view()),

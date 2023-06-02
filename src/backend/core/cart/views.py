@@ -43,7 +43,7 @@ from cart.serializers import (
     CartItemUpdateSerializer,
     CartShippingMethodCountrySerializer,
     CartSerializer,
-    CartDetailSerializer, CartPaymentMethodCountrySerializer,
+    CartDetailSerializer, CartPaymentMethodCountrySerializer, CartShippingMethodCountryBaseSerializer,
 )
 from country.models import (
     Country,
@@ -639,7 +639,7 @@ class ShippingMethodCountryListView(ListCreateAPIView):
         return ShippingMethodCountry.objects.filter(shipping_method__id=method_id)
 
 
-class ShippingMethodCountryDetailDashboardView(RetrieveUpdateDestroyAPIView):
+class ShippingMethodCountryDetailDashboardView(GenericAPIView, UpdateModelMixin, DestroyModelMixin):
     """
     List all products for dashboard
     """
@@ -655,9 +655,14 @@ class ShippingMethodCountryDetailDashboardView(RetrieveUpdateDestroyAPIView):
     lookup_field = "id"
     lookup_url_kwarg = "id"
 
-    @check_user_is_staff_decorator()
-    def get(self, request, id):
-        return super().get(request, id)
-
     def get_queryset(self):
         return ShippingMethodCountry.objects.all()
+
+    @check_user_is_staff_decorator()
+    def get(self, request, id):
+        try:
+            payment_method_country = ShippingMethodCountry.objects.get(id=id)
+            serializer = CartShippingMethodCountryBaseSerializer(payment_method_country, context={"request": request})
+            return Response(serializer.data)
+        except ShippingMethodCountry.DoesNotExist:
+            return Response(status=HTTP_404_NOT_FOUND)
