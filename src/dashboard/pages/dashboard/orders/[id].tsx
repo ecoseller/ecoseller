@@ -82,6 +82,8 @@ export const getServerSideProps = async (context: any) => {
     req as NextApiRequest,
     res as NextApiResponse
   );
+  
+  const paymentMethod = order.cart.payment_method_country ? await  : null;
 
   return {
     props: {

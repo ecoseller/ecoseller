@@ -91,7 +91,14 @@ class CartSerializer(ModelSerializer):
 
     class Meta:
         model = Cart
-        fields = ("token", "cart_items", "update_at", "total_price_net_formatted")
+        fields = (
+            "token",
+            "cart_items",
+            "update_at",
+            "total_price_net_formatted",
+            "shipping_method_country",
+            "payment_method_country",
+        )
 
 
 class CartItemAddSerializer(Serializer):

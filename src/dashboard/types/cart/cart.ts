@@ -19,6 +19,8 @@ export interface ICart {
   cart_items: ICartItem[];
   update_at: string;
   total_price_net_formatted: string;
+  shipping_method_country: number | null;
+  payment_method_country: number | null;
 }
 
 export interface ICartToken {

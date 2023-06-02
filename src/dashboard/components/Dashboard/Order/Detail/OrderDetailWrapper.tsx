@@ -13,6 +13,7 @@ import { IBillingInfo, IShippingInfo } from "@/types/cart/cart";
 import OrderDetailBillingInfo from "@/components/Dashboard/Order/Detail/OrderDetailBillingInfo";
 import { ICountryBase } from "@/types/country";
 import OrderDetailShippingInfo from "@/components/Dashboard/Order/Detail/OrderDetailShippingInfo";
+import { updateBillingInfo, updateShippingInfo } from "@/api/cart/cart";
 
 interface IOrderDetailWrapperProps {
   order: IOrderDetail;
@@ -34,7 +35,25 @@ const OrderDetailWrapper = ({
   const [shippingInfoState, setShippingInfoState] = useState(shippingInfo);
 
   const save = async () => {
-    await updateOrderStatus(order.token, orderState.status);
+    const updateOrderRequest = updateOrderStatus(
+      order.token,
+      orderState.status
+    );
+    const updateBillingInfoRequest = updateBillingInfo(
+      order.cart.token,
+      billingInfoState
+    );
+    const updateShippingInfoRequest = updateShippingInfo(
+      order.cart.token,
+      shippingInfoState
+    );
+
+    await Promise.all([
+      updateOrderRequest,
+      updateBillingInfoRequest,
+      updateShippingInfoRequest,
+    ]);
+
     setSnackbar({
       open: true,
       message: "Order updated",
@@ -83,15 +102,15 @@ const OrderDetailWrapper = ({
             />
           </PermissionProvider>
           <PermissionProvider allowedPermissions={["order_change_permission"]}>
-            <OrderDetailBillingInfo
-              billingInfo={billingInfoState}
-              setBillingInfo={setBillingInfoState}
-              countryOptions={countryOptions}
-              isEditable={editableForms}
-            />
             <OrderDetailShippingInfo
               shippingInfo={shippingInfoState}
               setShippingInfo={setShippingInfoState}
+              countryOptions={countryOptions}
+              isEditable={editableForms}
+            />
+            <OrderDetailBillingInfo
+              billingInfo={billingInfoState}
+              setBillingInfo={setBillingInfoState}
               countryOptions={countryOptions}
               isEditable={editableForms}
             />
