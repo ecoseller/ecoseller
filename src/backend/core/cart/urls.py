@@ -17,7 +17,7 @@ urlpatterns = [
         views.PaymentMethodCountryFullListView.as_view(),
     ),
     path(
-        "dashboard/payment/method/<int:method_id>/country/<int:id>/",
+        "dashboard/payment/method/country/<int:id>/",
         views.PaymentMethodCountryDetailDashboardView.as_view(),
     ),
     path("dashboard/shipping/method/", views.ShippingMethodListDashboardView.as_view()),

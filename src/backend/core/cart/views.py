@@ -5,6 +5,7 @@ from rest_framework.decorators import permission_classes
 from rest_framework.generics import GenericAPIView
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from rest_framework.mixins import UpdateModelMixin, DestroyModelMixin
 from rest_framework.parsers import (
     MultiPartParser,
     FormParser,
@@ -42,7 +43,7 @@ from cart.serializers import (
     CartItemUpdateSerializer,
     CartShippingMethodCountrySerializer,
     CartSerializer,
-    CartDetailSerializer,
+    CartDetailSerializer, CartPaymentMethodCountrySerializer,
 )
 from country.models import (
     Country,
@@ -534,7 +535,7 @@ class PaymentMethodCountryListView(ListCreateAPIView):
         return PaymentMethodCountry.objects.filter(payment_method__id=method_id)
 
 
-class PaymentMethodCountryDetailDashboardView(RetrieveUpdateDestroyAPIView):
+class PaymentMethodCountryDetailDashboardView(GenericAPIView, UpdateModelMixin, DestroyModelMixin):
     """
     Detail of payment method country
     """
@@ -550,12 +551,17 @@ class PaymentMethodCountryDetailDashboardView(RetrieveUpdateDestroyAPIView):
     lookup_field = "id"
     lookup_url_kwarg = "id"
 
-    @check_user_is_staff_decorator()
-    def get(self, request, id):
-        return super().get(request, id)
-
     def get_queryset(self):
         return PaymentMethodCountry.objects.all()
+
+    @check_user_is_staff_decorator()
+    def get(self, request, id):
+        try:
+            payment_method_country = PaymentMethodCountry.objects.get(id=id)
+            serializer = CartPaymentMethodCountrySerializer(payment_method_country, context={"request": request})
+            return Response(serializer.data)
+        except PaymentMethodCountry.DoesNotExist:
+            return Response(status=HTTP_404_NOT_FOUND)
 
 
 class PaymentMethodCountryFullListView(ListCreateAPIView):
