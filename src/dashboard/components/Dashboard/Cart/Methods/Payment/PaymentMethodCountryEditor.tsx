@@ -168,6 +168,7 @@ const PaymentMethodCountryEditor = ({
           currency: newRow.currency,
           price: newRow.price,
           is_active: newRow.is_active,
+          api_request: newRow.api_request,
         }),
       })
         .then((res) => res.json())
@@ -202,6 +203,7 @@ const PaymentMethodCountryEditor = ({
           currency: newRow.currency,
           price: newRow.price,
           is_active: newRow.is_active,
+          api_request: newRow.api_request,
         }),
       }
     )
@@ -343,6 +345,17 @@ const PaymentMethodCountryEditor = ({
         value: currency.code,
         label: `${currency.symbol}`,
       })),
+    },
+    {
+      field: "api_request",
+      headerName: "API Request",
+      type: "string",
+      editable: true,
+      width: 125,
+      minWidth: 150,
+      maxWidth: 200,
+      sortable: false,
+      disableColumnMenu: true,
     },
     {
       field: "is_active",
