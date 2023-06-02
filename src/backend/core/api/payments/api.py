@@ -1,7 +1,3 @@
-from cart.models import (
-    PaymentMethod,
-    Cart,
-)
 from order.models import (
     Order,
 )

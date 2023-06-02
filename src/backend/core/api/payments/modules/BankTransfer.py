@@ -1,4 +1,3 @@
-from random import random
 from .BasePaymentMethod import PayBySquareMethod
 from ..conf import PaymentStatus
 

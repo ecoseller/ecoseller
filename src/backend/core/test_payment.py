@@ -5,8 +5,6 @@ from cart.models import (
     ShippingInfo,
     BillingInfo,
     ShippingMethodCountry,
-    ShippingMethod,
-    PaymentMethod,
     PaymentMethodCountry,
 )
 from country.models import Country
