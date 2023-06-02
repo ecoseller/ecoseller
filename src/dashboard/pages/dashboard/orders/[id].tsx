@@ -12,7 +12,10 @@ import { IBillingInfo, IShippingInfo } from "@/types/cart/cart";
 import { ICountryBase } from "@/types/country";
 import { countryListAPI } from "@/pages/api/country";
 import { paymentMethodCountryDetailAPI } from "@/pages/api/cart/payment-method/country/[payment_country_id]";
-import { ITranslatedMethodCountryBase } from "@/types/cart/methods";
+import {
+  ITranslatedPaymentMethodCountryBase,
+  ITranslatedShippingMethodCountryBase,
+} from "@/types/cart/methods";
 import { shippingMethodCountryDetailAPI } from "@/pages/api/cart/shipping-method/country/[shipping_country_id]";
 
 interface IOrderDetailPageProps {
@@ -20,8 +23,8 @@ interface IOrderDetailPageProps {
   billingInfo: IBillingInfo;
   shippingInfo: IShippingInfo;
   countryOptions: ICountryBase[];
-  paymentMethodCountry: ITranslatedMethodCountryBase | null;
-  shippingMethodCountry: ITranslatedMethodCountryBase | null;
+  paymentMethodCountry: ITranslatedPaymentMethodCountryBase | null;
+  shippingMethodCountry: ITranslatedShippingMethodCountryBase | null;
 }
 
 const OrderDetailPage = ({

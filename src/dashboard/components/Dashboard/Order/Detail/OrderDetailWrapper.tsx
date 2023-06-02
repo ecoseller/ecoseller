@@ -14,15 +14,21 @@ import OrderDetailBillingInfo from "@/components/Dashboard/Order/Detail/OrderDet
 import { ICountryBase } from "@/types/country";
 import OrderDetailShippingInfo from "@/components/Dashboard/Order/Detail/OrderDetailShippingInfo";
 import { updateBillingInfo, updateShippingInfo } from "@/api/cart/cart";
-import { ITranslatedMethodCountryBase } from "@/types/cart/methods";
+import {
+  ITranslatedPaymentMethodCountryBase,
+  ITranslatedShippingMethodCountryBase,
+} from "@/types/cart/methods";
+import OrderDetailMethod from "@/components/Dashboard/Order/Detail/OrderDetailMethod";
+import CollapsableContentWithTitle from "@/components/Dashboard/Generic/CollapsableContentWithTitle";
+import EditorCard from "@/components/Dashboard/Generic/EditorCard";
 
 interface IOrderDetailWrapperProps {
   order: IOrderDetail;
   billingInfo: IBillingInfo;
   shippingInfo: IShippingInfo;
   countryOptions: ICountryBase[];
-  paymentMethodCountry: ITranslatedMethodCountryBase | null;
-  shippingMethodCountry: ITranslatedMethodCountryBase | null;
+  paymentMethodCountry: ITranslatedPaymentMethodCountryBase | null;
+  shippingMethodCountry: ITranslatedShippingMethodCountryBase | null;
 }
 
 const OrderDetailWrapper = ({
@@ -119,6 +125,22 @@ const OrderDetailWrapper = ({
               countryOptions={countryOptions}
               isEditable={editableForms}
             />
+            <EditorCard>
+              <CollapsableContentWithTitle title="Shipping & payment method">
+                {shippingMethodCountry ? (
+                  <OrderDetailMethod
+                    method={shippingMethodCountry.shipping_method}
+                    formattedPrice={shippingMethodCountry.price_incl_vat}
+                  />
+                ) : null}
+                {paymentMethodCountry ? (
+                  <OrderDetailMethod
+                    method={paymentMethodCountry.payment_method}
+                    formattedPrice={paymentMethodCountry.price_incl_vat}
+                  />
+                ) : null}
+              </CollapsableContentWithTitle>
+            </EditorCard>
           </PermissionProvider>
         </Grid>
         <Grid item md={4} xs={12}>
