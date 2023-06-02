@@ -236,7 +236,7 @@ except Exception as e:
 
 
 # Online payment method APIs
-PAYMENT_CONFIG_PATH = os.environ.get("PAYMENT_CONFIG_PATH", "./config/payment.json")
+PAYMENT_CONFIG_PATH = os.environ.get("PAYMENT_CONFIG_PATH", "./config/payments.json")
 try:
     PAYMENT_METHOD_APIS = None
 except Exception as e:
