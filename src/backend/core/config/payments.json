@@ -1,6 +1,6 @@
 {
     "BANKTRANSFER_EUR": {
-        "implementation": "BankTransfer",
+        "implementation": "api.payments.modules.BankTransfer.BankTransfer",
         "kwargs": {
             "currency": "EUR",
             "bankName": "Deutsche Bank",
@@ -9,7 +9,7 @@
         }
     },
     "BANKTRANSFER_CZK": {
-        "implementation": "BankTransfer",
+        "implementation": "api.payments.modules.BankTransfer.BankTransfer",
         "kwargs": {
             "currency": "CZK",
             "bankName": "CŠOB",
@@ -17,8 +17,8 @@
             "swiftCode": "CEKOCZPP"
         }
     },
-    "COMGATE_API": {
-        "implementation": "Comgate",
+    "TEST_API": {
+        "implementation": "api.payments.modules.TestGateway.TestGateway",
         "kwargs": {
             "merchant": "123456",
             "secret": "1234567890abcdef1234567890abcdef",

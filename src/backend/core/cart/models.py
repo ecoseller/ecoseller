@@ -60,7 +60,6 @@ class ShippingMethodCountry(models.Model):
     is_active = models.BooleanField(default=True)
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
-    api_request = models.CharField(max_length=42, blank=True, null=True)
 
     def __str__(self) -> str:
         return (
@@ -123,6 +122,7 @@ class PaymentMethodCountry(models.Model):
     vat_group = models.ForeignKey(VatGroup, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     is_active = models.BooleanField(default=True)
+    api_request = models.CharField(max_length=42, blank=True, null=True)
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
 
