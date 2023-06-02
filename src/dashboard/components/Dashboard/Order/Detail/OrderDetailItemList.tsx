@@ -29,7 +29,7 @@ import { usePermission } from "@/utils/context/permission";
 
 interface IOrderDetailItemListProps {
   cart: ICart;
-  orderStatus: OrderStatus;
+  isEditable: boolean;
   recalculateOrderPrice: () => Promise<void>;
 }
 
@@ -42,7 +42,7 @@ interface ICartItemRow extends ICartItem {
 const OrderDetailItemList = ({
   cart,
   recalculateOrderPrice,
-  orderStatus,
+  isEditable,
 }: IOrderDetailItemListProps) => {
   const [rowModes, setRowModes] = useState<GridRowModesModel>({});
 
@@ -65,10 +65,6 @@ const OrderDetailItemList = ({
   const handleRowModesChange = (newRowModesModel: GridRowModesModel) => {
     setRowModes(newRowModesModel);
   };
-
-  const canEditItems = [OrderStatus.Pending, OrderStatus.Processing].includes(
-    orderStatus
-  );
 
   const validateRow = (row: ICartItemRow) => {
     return row.quantity >= 1;
@@ -244,7 +240,7 @@ const OrderDetailItemList = ({
     },
   };
 
-  if (hasPermission && canEditItems) {
+  if (isEditable && hasPermission) {
     columns.push(actionsColumn);
   }
 

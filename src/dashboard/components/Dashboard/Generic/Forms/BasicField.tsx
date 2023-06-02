@@ -9,6 +9,7 @@ export interface IBasicFieldProps {
   setter: (value: string) => void;
   isRequired?: boolean;
   label?: string;
+  disabled?: boolean;
 }
 
 interface IBasicSelectOption {
@@ -95,6 +96,7 @@ const BasicField = ({ props }: { props: IBasicFieldProps }) => {
           display: "block",
         }}
         required={props.isRequired || false}
+        disabled={props.disabled || false}
       />
     </Box>
   );

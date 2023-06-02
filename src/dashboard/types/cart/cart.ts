@@ -47,11 +47,6 @@ export interface IShippingInfo extends Address {
   additional_info: string;
 }
 
-export interface ICountryOption {
-  code: string;
-  name: string;
-}
-
 export interface ICartProductMedia {
   id: number;
   type: "IMAGE" | "VIDEO";

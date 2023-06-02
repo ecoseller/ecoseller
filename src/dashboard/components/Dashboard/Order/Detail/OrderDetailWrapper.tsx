@@ -1,23 +1,16 @@
 import { IOrderDetail, OrderStatus } from "@/types/order";
-import EditableContentWrapper, {
-  PrimaryButtonAction,
-} from "@/components/Dashboard/Generic/EditableContentWrapper";
+import EditableContentWrapper from "@/components/Dashboard/Generic/EditableContentWrapper";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 import React, { useState } from "react";
 import OrderDetailItemList from "@/components/Dashboard/Order/Detail/OrderDetailItemList";
 import Grid from "@mui/material/Grid";
-import TranslatedFieldsTabList from "@/components/Dashboard/Generic/TranslatedFieldsTabList";
-import TranslatedSEOFieldsTabList from "@/components/Dashboard/Generic/TranslatedSEOFieldsTabList";
-import CategorySelectForm from "@/components/Dashboard/Generic/Forms/CategorySelectForm";
-import EntityVisibilityForm from "@/components/Dashboard/Generic/Forms/EntityVisibilityForm";
-import DeleteEntityButton from "@/components/Dashboard/Generic/DeleteEntityButton";
 import SnackbarWithAlert from "@/components/Dashboard/Generic/SnackbarWithAlert";
 import { useSnackbarState } from "@/utils/snackbar";
 import OrderDetailStatus from "@/components/Dashboard/Order/Detail/OrderDetailStatus";
 import { getOrder, updateOrderStatus } from "@/api/order/order";
-import OrderDetailBillingShippingInfo from "@/components/Dashboard/Order/Detail/OrderDetailBillingShippingInfo";
 import { PermissionProvider } from "@/utils/context/permission";
 import { IBillingInfo, IShippingInfo } from "@/types/cart/cart";
+import OrderDetailBillingInfo from "@/components/Dashboard/Order/Detail/OrderDetailBillingInfo";
 
 interface IOrderDetailWrapperProps {
   order: IOrderDetail;
@@ -59,6 +52,10 @@ const OrderDetailWrapper = ({
     });
   };
 
+  const editableForms = [OrderStatus.Pending, OrderStatus.Processing].includes(
+    orderState.status
+  );
+
   return (
     <EditableContentWrapper
       preventNavigation={preventNavigation}
@@ -76,13 +73,14 @@ const OrderDetailWrapper = ({
             <OrderDetailItemList
               cart={orderState.cart}
               recalculateOrderPrice={recalculateOrderPrice}
-              orderStatus={orderState.status}
+              isEditable={editableForms}
             />
           </PermissionProvider>
           <PermissionProvider allowedPermissions={["order_change_permission"]}>
-            <OrderDetailBillingShippingInfo
+            <OrderDetailBillingInfo
               billingInfo={billingInfo}
-              shippingInfo={shippingInfo}
+              countryOptions={[]}
+              isEditable={editableForms}
             />
           </PermissionProvider>
         </Grid>
