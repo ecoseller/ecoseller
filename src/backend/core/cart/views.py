@@ -225,9 +225,9 @@ class CartUpdateQuantityStorefrontView(CartUpdateQuantityBaseView):
         return super().put(request, token)
 
 
-class CartUpdateInfoBaseStorefrontView(APIView, ABC):
+class CartInfoBaseView(APIView, ABC):
     """
-    Base view for updating cart's billing/shipping info
+    Base view for getting & updating cart's billing/shipping info
     Do not use this view directly, use inherited classes instead (and implement `_set_info` method)
     """
 
@@ -278,10 +278,9 @@ class CartUpdateInfoBaseStorefrontView(APIView, ABC):
             return Response(status=HTTP_404_NOT_FOUND)
 
 
-@permission_classes([AllowAny])
-class CartUpdateBillingInfoStorefrontView(CartUpdateInfoBaseStorefrontView):
+class CartBillingInfoBaseView(CartInfoBaseView):
     """
-    View for updating cart's billing info
+    Base view for updating cart's billing info
     """
 
     info_serializer = BillingInfoSerializer
@@ -294,10 +293,9 @@ class CartUpdateBillingInfoStorefrontView(CartUpdateInfoBaseStorefrontView):
         return cart.billing_info
 
 
-@permission_classes([AllowAny])
-class CartUpdateShippingInfoStorefrontView(CartUpdateInfoBaseStorefrontView):
+class CartShippingInfoBaseView(CartInfoBaseView):
     """
-    View for updating cart's shipping info
+    Base view for updating cart's shipping info
     """
 
     info_serializer = ShippingInfoSerializer
@@ -308,6 +306,44 @@ class CartUpdateShippingInfoStorefrontView(CartUpdateInfoBaseStorefrontView):
 
     def _get_info(self, cart):
         return cart.shipping_info
+
+
+@permission_classes([AllowAny])
+class CartBillingInfoStorefrontView(CartBillingInfoBaseView):
+    def get(self, request, token):
+        return super().get(request, token)
+
+    def put(self, request, token):
+        return super().put(request, token)
+
+
+@permission_classes([AllowAny])
+class CartShippingInfoStorefrontView(CartShippingInfoBaseView):
+    def get(self, request, token):
+        return super().get(request, token)
+
+    def put(self, request, token):
+        return super().put(request, token)
+
+
+class CartBillingInfoDashboardView(CartBillingInfoBaseView):
+    @check_user_is_staff_decorator()
+    def get(self, request, token):
+        return super().get(request, token)
+
+    @check_user_access_decorator({"order_change_permission"})
+    def put(self, request, token):
+        return super().put(request, token)
+
+
+class CartShippingInfoDashboardView(CartShippingInfoBaseView):
+    @check_user_is_staff_decorator()
+    def get(self, request, token):
+        return super().get(request, token)
+
+    @check_user_access_decorator({"order_change_permission"})
+    def put(self, request, token):
+        return super().put(request, token)
 
 
 @permission_classes([AllowAny])

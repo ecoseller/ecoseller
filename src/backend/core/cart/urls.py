@@ -48,11 +48,19 @@ urlpatterns = [
     ),
     path(
         "storefront/<str:token>/billing-info/",
-        views.CartUpdateBillingInfoStorefrontView.as_view(),
+        views.CartBillingInfoStorefrontView.as_view(),
     ),
     path(
         "storefront/<str:token>/shipping-info/",
-        views.CartUpdateShippingInfoStorefrontView.as_view(),
+        views.CartShippingInfoStorefrontView.as_view(),
+    ),
+    path(
+        "dashboard/<str:token>/billing-info/",
+        views.CartBillingInfoDashboardView.as_view(),
+    ),
+    path(
+        "dashboard/<str:token>/shipping-info/",
+        views.CartShippingInfoDashboardView.as_view(),
     ),
     path(
         "storefront/methods/<str:country_code>/",
