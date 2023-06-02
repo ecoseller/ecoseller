@@ -12,8 +12,10 @@ export const postAttributeType = async (data: IAttributeTypePostRequest) => {
   // Method: POST
   // Params: data
   // Return: Promise
-  console.log("postAttributeType", data);
-  return await axiosPrivate.post(`/product/dashboard/attribute/type/`, data);
+  return await fetch("/api/product/attribute/type", {
+    method: "POST",
+    body: JSON.stringify(data),
+  }).then((response) => response.json());
 };
 
 export const putAttributeType = async (data: IAttributeType) => {
@@ -24,11 +26,11 @@ export const putAttributeType = async (data: IAttributeType) => {
   // Return: Promise
   if (!data.id)
     throw new Error("AttributeType id is required to update product");
-  console.log("putAttributeType", data);
-  return await axiosPrivate.put(
-    `/product/dashboard/attribute/type/${data.id}/`,
-    data
-  );
+
+  return await fetch(`/api/product/attribute/type/${data.id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  }).then((response) => response.json());
 };
 
 export const deleteAttribtueType = async (id: number | string) => {
@@ -37,8 +39,9 @@ export const deleteAttribtueType = async (id: number | string) => {
   // Method: DELETE
   // Params: id
   // Return: Promise
-  console.log("deleteAttribtueType", id);
-  return await axiosPrivate.delete(`/product/dashboard/attribute/type/${id}/`);
+  return await fetch(`/api/product/attribute/type/${id}`, {
+    method: "DELETE",
+  }).then((response) => response.json());
 };
 
 export const postBaseAttribute = async (data: IBaseAttributePostRequest) => {
@@ -47,8 +50,10 @@ export const postBaseAttribute = async (data: IBaseAttributePostRequest) => {
   // Method: POST
   // Params: data
   // Return: Promise
-  console.log("postBaseAttribute", data);
-  return await axiosPrivate.post(`/product/dashboard/attribute/`, data);
+  return await fetch("/api/product/attribute", {
+    method: "POST",
+    body: JSON.stringify(data),
+  }).then((response) => response.json());
 };
 
 export const putBaseAttribute = async (data: IBaseAttribute) => {
@@ -59,11 +64,11 @@ export const putBaseAttribute = async (data: IBaseAttribute) => {
   // Return: Promise
   if (!data.id)
     throw new Error("BaseAttribute id is required to update product");
-  console.log("putBaseAttribute", data);
-  return await axiosPrivate.put(
-    `/product/dashboard/attribute/${data.id}/`,
-    data
-  );
+
+  return await fetch(`/api/product/attribute/${data.id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  }).then((response) => response.json());
 };
 
 export const deleteBaseAttribtue = async (id: number | string) => {
@@ -72,6 +77,7 @@ export const deleteBaseAttribtue = async (id: number | string) => {
   // Method: DELETE
   // Params: id
   // Return: Promise
-  console.log("deleteAttribtueType", id);
-  return await axiosPrivate.delete(`/product/dashboard/attribute/${id}/`);
+  return await fetch(`/api/product/attribute/${id}`, {
+    method: "DELETE",
+  }).then((response) => response.json());
 };

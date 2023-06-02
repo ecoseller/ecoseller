@@ -42,6 +42,8 @@ import {
   putCurrency,
 } from "@/api/country/country";
 import { useSnackbarState } from "@/utils/snackbar";
+import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
+import { currencyListAPI } from "@/pages/api/country/currency";
 
 interface ICurrencyTable extends ICurrency {
   isNew?: boolean;
@@ -79,24 +81,8 @@ const EditToolbar = (props: EditToolbarProps) => {
   );
 };
 
-const DashboardCurrencyPage = () => {
-  const {
-    data: currencies,
-    error: currenciesError,
-    mutate,
-  } = useSWR<ICurrency[]>("/country/currency/");
-
+const DashboardCurrencyPage = ({ currencies }: { currencies: ICurrency[] }) => {
   const [snackbar, setSnackbar] = useSnackbarState();
-
-  useEffect(() => {
-    if (currenciesError) {
-      setSnackbar({
-        open: true,
-        message: "Something went wrong",
-        severity: "error",
-      });
-    }
-  }, [currenciesError]);
 
   useEffect(() => {
     if (currencies) {
@@ -291,7 +277,7 @@ const DashboardCurrencyPage = () => {
     // POST or PUT
     if (updatedRow && !postNew) {
       // update currency
-      putCurrency(updatedRow as ICurrency)
+      putCurrency(updatedRow.code, updatedRow as ICurrency)
         .then(() => {
           setSnackbar({
             open: true,
@@ -407,10 +393,18 @@ DashboardCurrencyPage.getLayout = (page: ReactElement) => {
   );
 };
 
-export const getServersideProps = async (context: any) => {
-  console.log("Dashboard pricelists");
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { req, res } = context;
+  const currencies = await currencyListAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
   return {
-    props: {},
+    props: {
+      currencies,
+    },
   };
 };
 

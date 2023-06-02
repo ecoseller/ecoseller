@@ -81,6 +81,20 @@ const TranslatedFieldsTab = ({
             }}
           />
         ) : null}
+        {dispatchWrapper && dispatchWrapper?.setName ? (
+          <TextField
+            disabled={!hasPermission}
+            label="Title"
+            value={state?.name || ""}
+            onChange={(
+              e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+            ) => {
+              dispatchWrapper?.setName
+                ? dispatchWrapper.setName(language, e.target.value)
+                : null;
+            }}
+          />
+        ) : null}
         {dispatchWrapper && dispatchWrapper?.setSlug ? (
           <TextField
             label="Slug"

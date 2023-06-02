@@ -239,9 +239,8 @@ const ProductEditorWrapper = ({
 
   const saveProductAndRedirect = async () => {
     postProduct(productState as IProduct)
-      .then((res: any) => {
-        console.log("postProduct", res);
-        const { data } = res;
+      .then((data: any) => {
+        console.log("postProduct", data);
         const { id } = data;
         setPreventNavigation(false);
         router.replace(
@@ -263,8 +262,8 @@ const ProductEditorWrapper = ({
     console.log("updateAction", productState);
 
     putProduct(productState as IProduct)
-      .then((res: any) => {
-        console.log("putProduct", res);
+      .then((data: any) => {
+        console.log("putProduct", data);
         setPreventNavigation(false);
         setSnackbar({
           open: true,

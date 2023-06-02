@@ -34,6 +34,7 @@ import EditorCard from "@/components/Dashboard/Generic/EditorCard";
 // types
 import { IProductMedia, ISetProductStateData } from "@/types/product";
 import { usePermission } from "@/utils/context/permission";
+import convertBase64 from "@/utils/base64";
 
 export interface IProductMediaEditorState extends IProductMedia {
   name: string;
@@ -157,13 +158,20 @@ const ProductMediaEditor = ({ disabled, state }: IProductMediaEditorProps) => {
     // and then update the state with the new media
     for (let i = 0; i < e.target.files.length; i++) {
       if (!e.target.files || (e.target.files && !e.target.files[i])) continue;
-      const formData = new FormData();
-      formData.append(`media`, e.target.files[i], e.target.files[i].name);
-      formData.append("product_id", `${state.id}`);
-      formData.append("type", "IMAGE");
-      await postProductMedia(formData)
+      console.log("about to convert base64");
+      const file = e.target.files?.[i];
+      if (!file) return;
+      const base64 = await convertBase64(file);
+      console.log("base64", base64);
+
+      // await postProductMedia(formData)
+      await postProductMedia({
+        media: base64,
+        product_id: state.id,
+        type: "IMAGE",
+      })
         .then((res) => {
-          const media = res.data;
+          const media = res;
           setProductMedia([
             ...productMedia,
             {

@@ -2,26 +2,36 @@ import { IPageCategory } from "@/types/cms";
 import { axiosPrivate } from "@/utils/axiosPrivate";
 
 export const getAllPageCategories = async () => {
-  const { data } = await axiosPrivate.get("/cms/category/");
-  return data;
+  const { body } = await fetch(`/api/cms/category/`, {
+    method: "GET",
+  });
+  return body;
 };
 
 export const createPageCategory = async () => {
-  const { data } = await axiosPrivate.post("/cms/category/", { type: [] });
-  return data;
+  return await fetch(`/api/cms/category/`, {
+    method: "POST",
+    body: JSON.stringify({ type: [] }),
+  });
 };
 
 export const getPageCategory = async (id: number) => {
-  const { data } = await axiosPrivate.get(`/cms/category/${id}/`);
-  return data;
+  const { body } = await fetch(`/api/cms/category/${id}/`, {
+    method: "GET",
+  });
+  return body;
 };
 
-export const putPageCategory = async (id: number, body: IPageCategory) => {
-  const { data } = await axiosPrivate.put(`/cms/category/${id}/`, body);
-  return data;
+export const putPageCategory = async (id: number, data: IPageCategory) => {
+  const { body } = await fetch(`/api/cms/category/${id}/`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+  return body;
 };
 
 export const deletePageCategory = async (id: number) => {
-  const { data } = await axiosPrivate.delete(`/cms/category/${id}/`);
-  return data;
+  return await fetch(`/api/cms/category/${id}/`, {
+    method: "DELETE",
+  });
 };

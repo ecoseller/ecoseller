@@ -31,9 +31,9 @@ const DeleteAttributeType = ({ id }: IDeleteAttributeTypeProps) => {
                 maxWidth: "200px",
               }}
               startIcon={<DeleteIcon />}
-              onClick={() => {
+              onClick={async () => {
                 console.log("delete");
-                deleteAttribtueType(id)
+                await deleteAttribtueType(id)
                   .then((res) => {
                     console.log(res);
                     router.push("/dashboard/catalog/attribute/type");

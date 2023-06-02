@@ -205,7 +205,7 @@ class AttributeTypeValueType:
     ]
 
 
-class AttributeType(models.Model):
+class AttributeType(TranslatableModel, models.Model):
     type_name = models.CharField(
         max_length=200,
         help_text="Type name of attribute (e.g. weight, size)",
@@ -213,6 +213,11 @@ class AttributeType(models.Model):
         null=True,
         # blank=False,
         # null=False,
+    )
+    translations = TranslatedFields(
+        name=models.CharField(
+            max_length=200, blank=True, help_text="Attribute type in given language"
+        ),
     )
     unit = models.CharField(
         max_length=200,
@@ -248,13 +253,30 @@ class AttributeType(models.Model):
         RecommenderSystemApi.store_object(data=data)
 
 
-class BaseAttribute(models.Model):
+# class TranslatableAttributeType(TranslatableModel, AttributeType):
+#     # https://django-parler.readthedocs.io/en/stable/advanced/existing.html
+#     class Meta:
+#         proxy = True
+
+#     translations = TranslatedFields(
+#         name=models.CharField(
+#             max_length=200, blank=True, help_text="Attribute type in given language"
+#         ),
+#     )
+
+
+class BaseAttribute(TranslatableModel, models.Model):
     type = models.ForeignKey(
         "AttributeType", on_delete=models.CASCADE, related_name="base_attributes"
     )
     value = models.CharField(
         max_length=200, blank=True, null=True
     )  # it must be set to blank=True, null=True to allow empty string because of initial POST
+    translations = TranslatedFields(
+        name=models.CharField(
+            max_length=200, blank=True, help_text="Base Attribute in given language"
+        ),
+    )
     order = models.IntegerField(blank=True, null=True)
     ext_attributes = models.ManyToManyField("ExtensionAttribute", blank=True)
 
@@ -282,6 +304,18 @@ class BaseAttribute(models.Model):
             "ext_attributes": [attribute.id for attribute in self.ext_attributes.all()],
         }
         RecommenderSystemApi.store_object(data=data)
+
+
+# class TranslatableBaseAttribute(TranslatableModel, BaseAttribute):
+#     # https://django-parler.readthedocs.io/en/stable/advanced/existing.html
+#     class Meta:
+#         proxy = True
+
+#     translations = TranslatedFields(
+#         name=models.CharField(
+#             max_length=200, blank=True, help_text="Base Attribute in given language"
+#         ),
+#     )
 
 
 class ExtAttributeType(models.Model):

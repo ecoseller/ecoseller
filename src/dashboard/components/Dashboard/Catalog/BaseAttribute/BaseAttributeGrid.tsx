@@ -32,6 +32,8 @@ import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import { randomId } from "@mui/x-data-grid-generator";
 // api
+import useSWRImmutable from "swr/immutable";
+
 import {
   deleteBaseAttribtue,
   postBaseAttribute,
@@ -45,6 +47,7 @@ import {
 } from "@/types/product";
 import Tooltip from "@mui/material/Tooltip";
 import { useSnackbarState } from "@/utils/snackbar";
+import { ILanguage } from "@/types/localization";
 
 interface IBaseAttributeTable extends IBaseAttribute {
   id: number;
@@ -115,6 +118,31 @@ const BaseAttributeGrid = ({
   baseAttributes,
   setState,
 }: IBaseAttributeGridProps) => {
+  const { data: languages } = useSWRImmutable<ILanguage[]>(
+    "/country/languages/"
+  );
+
+  const deserializeTranslations = (object: any) => {
+    if (attribtueTypeValueType !== "TEXT") return {};
+    const deserializedTranslations: any = {};
+    Object.keys(object?.translations)?.forEach((key: string) => {
+      deserializedTranslations[`$NAME_${key}`] =
+        object?.translations[key]?.name || "";
+    });
+    return deserializedTranslations;
+  };
+
+  const serializeTranslations = (object: any) => {
+    // if (attribtueTypeValueType !== "TEXT") return {};
+    const serializedTranslations: any = {};
+    languages?.forEach((language) => {
+      serializedTranslations[language.code] = {
+        name: object[`$NAME_${language.code}`] || "",
+      };
+    });
+    return serializedTranslations;
+  };
+
   const [rows, setRows] = useState<IBaseAttributeTable[]>(
     // filter out rows that are not yet saved to the database (have no ID) and map them to the correct type (id is a number)
     baseAttributes
@@ -124,8 +152,30 @@ const BaseAttributeGrid = ({
         id: row.id as number,
         isNew: false,
         valid: true,
+        ...(attribtueTypeValueType === "TEXT"
+          ? // check translations field and set it in the format $NAME_${LANGUAGE_CODE} for each language
+            deserializeTranslations(row)
+          : {}),
       }))
   );
+
+  // console.log(
+  //   "baseAttributes",
+  //   rows,
+  //   baseAttributes
+  //     .filter((row: IBaseAttribute) => typeof row.id == "number")
+  //     .map((row: IBaseAttribute) => ({
+  //       ...row,
+  //       id: row.id as number,
+  //       isNew: false,
+  //       valid: true,
+  //       ...(attribtueTypeValueType === "TEXT"
+  //         ? // check translations field and set it in the format $NAME_${LANGUAGE_CODE} for each language
+  //           deserializeTranslations(row)
+  //         : {}),
+  //     }))
+  // );
+
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [snackbar, setSnackbar] = useSnackbarState();
 
@@ -158,13 +208,20 @@ const BaseAttributeGrid = ({
       );
     }
 
-    const updatedRow = { ...newRow, isNew: false };
+    const updatedRow = {
+      ...newRow,
+      isNew: false,
+      translations: serializeTranslations(newRow),
+    };
+
+    console.log("updated row", updatedRow);
 
     // if row is new, save it to the database
     if (newRow.isNew) {
       postBaseAttribute({
         value: newRow.value,
         type: newRow.type,
+        translations: serializeTranslations(newRow),
       } as IBaseAttributePostRequest)
         .then((res) => res.data)
         .then((data) => {
@@ -288,34 +345,18 @@ const BaseAttributeGrid = ({
       sortable: false,
       disableColumnMenu: true,
     },
-    // {
-    //   field: "valid",
-    //   headerName: "Valid type",
-    //   width: 125,
-    //   minWidth: 150,
-    //   maxWidth: 200,
-    //   sortable: false,
-    //   disableColumnMenu: true,
-    //   renderCell: (params: GridCellParams) => {
-    //     // const { valid } = params.row;
-    //     const valid = validateValueAgainstValueType(
-    //       params.row.value,
-    //       attribtueTypeValueType
-    //     );
-    //     console.log("valid", valid, params.row.value, attribtueTypeValueType);
-    //     return valid ? (
-    //       <Tooltip title={"Value has correct type."}>
-    //         <CheckCircleIcon className="textSuccess" />
-    //       </Tooltip>
-    //     ) : (
-    //       <Tooltip
-    //         title={`Value has incorrect type. Please provide value with type ${attribtueTypeValueType.toLowerCase()}`}
-    //       >
-    //         <CancelIcon className="textError" />
-    //       </Tooltip>
-    //     );
-    //   },
-    // },
+    ...(languages && attribtueTypeValueType === "TEXT"
+      ? languages.map((language) => ({
+          field: `$NAME_${language.code}`,
+          headerName: `${language.code}`,
+          editable: true,
+          width: 125,
+          minWidth: 150,
+          maxWidth: 200,
+          sortable: false,
+          disableColumnMenu: true,
+        }))
+      : []),
     {
       field: "actions",
       type: "actions",
@@ -381,6 +422,10 @@ const BaseAttributeGrid = ({
   return (
     <EditorCard>
       <Typography variant="h6">Attributes</Typography>
+      <Typography variant="body2" color="textSecondary">
+        If the attribute type is set as Text, it is allowed to set translation
+        for the attribute values.
+      </Typography>
       <Box mt={2}>
         <FormControl fullWidth>
           <Stack spacing={2}>

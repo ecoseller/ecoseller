@@ -40,6 +40,7 @@ from .serializers import (
 from rest_framework.parsers import (
     MultiPartParser,
     FormParser,
+    JSONParser,
 )
 
 
@@ -301,6 +302,7 @@ class BaseAttributeDashboardView(GenericAPIView):
         if serializer.is_valid():
             instance = serializer.save()
             return Response({**serializer.data, "id": instance.id}, status=201)
+        print(serializer.errors)
         return Response(serializer.errors, status=400)
 
 
@@ -377,11 +379,16 @@ class ProductDetailStorefront(APIView):
 class ProductMediaUpload(GenericAPIView):
     allowed_methods = ["POST"]
     permission_classes = (permissions.AllowAny,)
-    parser_classes = (MultiPartParser, FormParser)
+    parser_classes = (
+        MultiPartParser,
+        FormParser,
+        JSONParser,
+    )
     serializer_class = ProductMediaDetailsSerializer
 
     @check_user_access_decorator({"productmedia_add_permission"})
     def post(self, request, *args, **kwargs):
+        print(request.data)
         product_media_serializer = self.serializer_class(
             data=request.data, context={"request": request}
         )
@@ -389,6 +396,7 @@ class ProductMediaUpload(GenericAPIView):
             product_media_serializer.save()
             return Response(product_media_serializer.data, status=201)
         else:
+            print(product_media_serializer.errors)
             return Response(product_media_serializer.errors, status=400)
 
 

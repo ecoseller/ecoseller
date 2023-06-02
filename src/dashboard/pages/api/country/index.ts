@@ -19,8 +19,6 @@ export const countryListAPI = async (
     setRequestResponse(req, res);
   }
 
-  ("http://localhost:8000/api/country/");
-
   switch (method) {
     case "GET":
       return await api

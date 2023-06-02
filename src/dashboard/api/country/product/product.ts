@@ -8,7 +8,10 @@ export const postProduct = async (data: IProduct) => {
   // Params: data
   // Return: Promise
   console.log("postProduct", data);
-  return await axiosPrivate.post(`/product/dashboard/detail/`, data);
+  return await fetch("/api/product", {
+    method: "POST",
+    body: JSON.stringify(data),
+  }).then((res) => res.json());
 };
 
 export const putProduct = async (data: IProduct) => {
@@ -19,5 +22,8 @@ export const putProduct = async (data: IProduct) => {
   // Return: Promise
   if (!data.id) throw new Error("Product id is required to update product");
   console.log("putProduct", data);
-  return await axiosPrivate.put(`/product/dashboard/detail/${data.id}/`, data);
+  return await fetch(`/api/product/${data.id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  }).then((res) => res.json());
 };

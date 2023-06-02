@@ -12,7 +12,6 @@ import { INavigationItem } from "@/utils/navigationData";
 import { useEffect, useState } from "react";
 import { ExpandLess, ExpandMore, StarBorder } from "@mui/icons-material";
 import Collapse from "@mui/material/Collapse";
-import { useUser } from "@/utils/context/user";
 import { PermissionProvider, usePermission } from "@/utils/context/permission";
 
 interface INavigationProps {
@@ -76,8 +75,6 @@ function NavigationItem({ item, sx, onClick, dense }: INavigationItemProps) {
    */
 
   const { title, path, icon, info, children, level, permissions } = item;
-
-  const { checkHasPermission } = useUser();
 
   return (
     <PermissionProvider allowedPermissions={item.permissions}>

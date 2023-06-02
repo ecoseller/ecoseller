@@ -23,6 +23,9 @@ from country.models import (
     VatGroup,
 )
 
+from drf_extra_fields.fields import Base64FileField
+import filetype
+
 from category.serializers import (
     CategorySerializer,
     CategoryMinimalSerializer,
@@ -48,8 +51,17 @@ Common serializers
 """
 
 
+class FileImageField(Base64FileField):
+    ALLOWED_TYPES = ["png", "jpg", "jpeg", "gif", "svg"]
+
+    def get_file_extension(self, filename, decoded_file):
+        kind = filetype.guess(decoded_file)
+        return kind.extension
+
+
 class ProductMediaBaseSerializer(ModelSerializer):
-    media = serializers.ImageField(required=False, use_url=True)
+    # media = serializers.ImageField(required=False, use_url=True, read_only=True)
+    media = FileImageField(required=False, use_url=True)
     type = serializers.ChoiceField(choices=ProductMediaTypes.CHOICES, required=False)
 
     class Meta:
@@ -315,20 +327,24 @@ class ProductVariantSerializer(ModelSerializer):
         return instance
 
 
-class BaseAttributeDashboardSerializer(ModelSerializer):
+class BaseAttributeDashboardSerializer(TranslatableModelSerializer, ModelSerializer):
+    translations = TranslatedFieldsField(shared_model=BaseAttribute, required=False)
+
     class Meta:
         model = BaseAttribute
         fields = (
             "id",
             "value",
             "type",
+            "translations",
             # "order",
             # "ext_attributes",
         )
 
 
-class AtrributeTypeDashboardSerializer(ModelSerializer):
+class AtrributeTypeDashboardSerializer(TranslatableModelSerializer, ModelSerializer):
     base_attributes = BaseAttributeDashboardSerializer(many=True, read_only=True)
+    translations = TranslatedFieldsField(shared_model=AttributeType, required=False)
 
     class Meta:
         model = AttributeType
@@ -338,6 +354,7 @@ class AtrributeTypeDashboardSerializer(ModelSerializer):
             "unit",
             "base_attributes",
             "value_type",
+            "translations",
         )
 
 
