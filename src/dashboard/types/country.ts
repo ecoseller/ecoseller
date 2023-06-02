@@ -1,6 +1,9 @@
-export interface ICountry {
+export interface ICountryBase {
   code: string;
   name: string;
+}
+
+export interface ICountry extends ICountryBase {
   locale: string;
   default_price_list: string;
 }

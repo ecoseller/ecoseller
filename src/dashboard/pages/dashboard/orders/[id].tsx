@@ -11,16 +11,29 @@ import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import { OrderList } from "@/components/Dashboard/Order/List/OrderList";
 import OrderDetailWrapper from "@/components/Dashboard/Order/Detail/OrderDetailWrapper";
+import { cartBillingInfoAPI } from "@/pages/api/cart/[token]/billing-info";
+import { cartShippingInfoAPI } from "@/pages/api/cart/[token]/shipping-info";
+import { IBillingInfo, IShippingInfo } from "@/types/cart/cart";
 
 interface IOrderDetailPageProps {
   order: IOrderDetail;
+  billingInfo: IBillingInfo;
+  shippingInfo: IShippingInfo;
 }
 
-const OrderDetailPage = ({ order }: IOrderDetailPageProps) => {
+const OrderDetailPage = ({
+  order,
+  billingInfo,
+  shippingInfo,
+}: IOrderDetailPageProps) => {
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
-        <OrderDetailWrapper order={order} />
+        <OrderDetailWrapper
+          order={order}
+          billingInfo={billingInfo}
+          shippingInfo={shippingInfo}
+        />
       </Container>
     </DashboardLayout>
   );
@@ -38,9 +51,23 @@ export const getServerSideProps = async (context: any) => {
   const { req, res } = context;
   const { id } = context.params;
 
-  const order = await orderDetailAPI(
+  const order: IOrderDetail = await orderDetailAPI(
     "GET",
     id,
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
+  const billingInfo = await cartBillingInfoAPI(
+    "GET",
+    order.cart.token,
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
+  const shippingInfo = await cartShippingInfoAPI(
+    "GET",
+    order.cart.token,
     req as NextApiRequest,
     res as NextApiResponse
   );
@@ -48,6 +75,8 @@ export const getServerSideProps = async (context: any) => {
   return {
     props: {
       order,
+      billingInfo,
+      shippingInfo,
     },
   };
 };

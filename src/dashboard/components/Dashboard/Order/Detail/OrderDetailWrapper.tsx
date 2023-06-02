@@ -17,12 +17,19 @@ import OrderDetailStatus from "@/components/Dashboard/Order/Detail/OrderDetailSt
 import { getOrder, updateOrderStatus } from "@/api/order/order";
 import OrderDetailBillingShippingInfo from "@/components/Dashboard/Order/Detail/OrderDetailBillingShippingInfo";
 import { PermissionProvider } from "@/utils/context/permission";
+import { IBillingInfo, IShippingInfo } from "@/types/cart/cart";
 
 interface IOrderDetailWrapperProps {
   order: IOrderDetail;
+  billingInfo: IBillingInfo;
+  shippingInfo: IShippingInfo;
 }
 
-const OrderDetailWrapper = ({ order }: IOrderDetailWrapperProps) => {
+const OrderDetailWrapper = ({
+  order,
+  billingInfo,
+  shippingInfo,
+}: IOrderDetailWrapperProps) => {
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
   const [snackbar, setSnackbar] = useSnackbarState();
   const [orderState, setOrderState] = useState<IOrderDetail>(order);
@@ -73,7 +80,10 @@ const OrderDetailWrapper = ({ order }: IOrderDetailWrapperProps) => {
             />
           </PermissionProvider>
           <PermissionProvider allowedPermissions={["order_change_permission"]}>
-            <OrderDetailBillingShippingInfo />
+            <OrderDetailBillingShippingInfo
+              billingInfo={billingInfo}
+              shippingInfo={shippingInfo}
+            />
           </PermissionProvider>
         </Grid>
         <Grid item md={4} xs={12}>
