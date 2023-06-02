@@ -130,7 +130,7 @@ export const shippingInfoInitialData = (
         })),
       isRequired: true,
       label: "Country",
-      disabled: !editable,
+      disabled: true, // can't change shipping country after the order is created
     },
   };
 };

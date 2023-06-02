@@ -12,7 +12,6 @@ import { HTTPMETHOD } from "@/types/common";
 
 export const shippingMethodCountryDetailAPI = async (
   method: HTTPMETHOD,
-  id: number,
   shipping_country_id: number,
   req?: NextApiRequest,
   res?: NextApiResponse
@@ -21,9 +20,7 @@ export const shippingMethodCountryDetailAPI = async (
     setRequestResponse(req, res);
   }
 
-  if (!id) throw new Error("Provide ID");
-
-  const url = `/cart/dashboard/shipping/method/${id}/country/${shipping_country_id}/`;
+  const url = `/cart/dashboard/shipping/method/country/${shipping_country_id}/`;
 
   switch (method) {
     case "GET":
@@ -69,13 +66,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
    * This is a wrapper for the shipping method dashboard API in the backend
    */
 
-  const { id, shipping_country_id } = req.query;
+  const { shipping_country_id } = req.query;
 
   const { method } = req;
   if (method == "GET") {
     return shippingMethodCountryDetailAPI(
       "GET",
-      Number(id),
       Number(shipping_country_id),
       req,
       res
@@ -85,7 +81,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   } else if (method == "PUT") {
     return shippingMethodCountryDetailAPI(
       "PUT",
-      Number(id),
       Number(shipping_country_id),
       req,
       res
@@ -95,7 +90,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   } else if (method == "DELETE") {
     return shippingMethodCountryDetailAPI(
       "DELETE",
-      Number(id),
       Number(shipping_country_id),
       req,
       res

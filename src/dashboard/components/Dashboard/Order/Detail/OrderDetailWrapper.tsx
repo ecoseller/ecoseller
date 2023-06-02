@@ -14,12 +14,15 @@ import OrderDetailBillingInfo from "@/components/Dashboard/Order/Detail/OrderDet
 import { ICountryBase } from "@/types/country";
 import OrderDetailShippingInfo from "@/components/Dashboard/Order/Detail/OrderDetailShippingInfo";
 import { updateBillingInfo, updateShippingInfo } from "@/api/cart/cart";
+import { ITranslatedMethodCountryBase } from "@/types/cart/methods";
 
 interface IOrderDetailWrapperProps {
   order: IOrderDetail;
   billingInfo: IBillingInfo;
   shippingInfo: IShippingInfo;
   countryOptions: ICountryBase[];
+  paymentMethodCountry: ITranslatedMethodCountryBase | null;
+  shippingMethodCountry: ITranslatedMethodCountryBase | null;
 }
 
 const OrderDetailWrapper = ({
@@ -27,6 +30,8 @@ const OrderDetailWrapper = ({
   billingInfo,
   shippingInfo,
   countryOptions,
+  paymentMethodCountry,
+  shippingMethodCountry,
 }: IOrderDetailWrapperProps) => {
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
   const [snackbar, setSnackbar] = useSnackbarState();

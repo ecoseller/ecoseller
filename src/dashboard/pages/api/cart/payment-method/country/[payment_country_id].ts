@@ -12,7 +12,6 @@ import { HTTPMETHOD } from "@/types/common";
 
 export const paymentMethodCountryDetailAPI = async (
   method: HTTPMETHOD,
-  id: number,
   payment_country_id: number,
   req?: NextApiRequest,
   res?: NextApiResponse
@@ -21,9 +20,7 @@ export const paymentMethodCountryDetailAPI = async (
     setRequestResponse(req, res);
   }
 
-  if (!id) throw new Error("Provide ID");
-
-  const url = `/cart/dashboard/payment/method/${id}/country/${payment_country_id}/`;
+  const url = `/cart/dashboard/payment/method/country/${payment_country_id}/`;
 
   switch (method) {
     case "GET":
@@ -69,13 +66,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
    * This is a wrapper for the payment method dashboard API in the backend
    */
 
-  const { id, payment_country_id } = req.query;
+  const { payment_country_id } = req.query;
 
   const { method } = req;
   if (method == "GET") {
     return paymentMethodCountryDetailAPI(
       "GET",
-      Number(id),
       Number(payment_country_id),
       req,
       res
@@ -85,7 +81,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   } else if (method == "PUT") {
     return paymentMethodCountryDetailAPI(
       "PUT",
-      Number(id),
       Number(payment_country_id),
       req,
       res
@@ -95,7 +90,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   } else if (method == "DELETE") {
     return paymentMethodCountryDetailAPI(
       "DELETE",
-      Number(id),
       Number(payment_country_id),
       req,
       res
