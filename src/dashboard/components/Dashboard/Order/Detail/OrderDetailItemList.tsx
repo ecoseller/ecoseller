@@ -198,7 +198,7 @@ const OrderDetailItemList = ({
     maxWidth: 200,
     cellClassName: "actions",
     disableColumnMenu: true,
-    getActions: ({ id }) => {
+    getActions: ({ id }: { id: GridRowId }) => {
       const isInEditMode = rowModes[id]?.mode === GridRowModes.Edit;
 
       if (isInEditMode) {

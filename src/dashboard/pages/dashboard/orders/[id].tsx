@@ -14,17 +14,21 @@ import OrderDetailWrapper from "@/components/Dashboard/Order/Detail/OrderDetailW
 import { cartBillingInfoAPI } from "@/pages/api/cart/[token]/billing-info";
 import { cartShippingInfoAPI } from "@/pages/api/cart/[token]/shipping-info";
 import { IBillingInfo, IShippingInfo } from "@/types/cart/cart";
+import { ICountryBase } from "@/types/country";
+import { countryListAPI } from "@/pages/api/country";
 
 interface IOrderDetailPageProps {
   order: IOrderDetail;
   billingInfo: IBillingInfo;
   shippingInfo: IShippingInfo;
+  countryOptions: ICountryBase[];
 }
 
 const OrderDetailPage = ({
   order,
   billingInfo,
   shippingInfo,
+  countryOptions,
 }: IOrderDetailPageProps) => {
   return (
     <DashboardLayout>
@@ -33,6 +37,7 @@ const OrderDetailPage = ({
           order={order}
           billingInfo={billingInfo}
           shippingInfo={shippingInfo}
+          countryOptions={countryOptions}
         />
       </Container>
     </DashboardLayout>
@@ -72,11 +77,18 @@ export const getServerSideProps = async (context: any) => {
     res as NextApiResponse
   );
 
+  const countryOptions = await countryListAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
   return {
     props: {
       order,
       billingInfo,
       shippingInfo,
+      countryOptions,
     },
   };
 };

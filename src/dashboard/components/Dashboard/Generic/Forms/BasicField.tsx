@@ -20,14 +20,9 @@ interface IBasicSelectOption {
 interface IBasicSelectProps {
   props: IBasicFieldProps;
   options: IBasicSelectOption[];
-  disabled?: boolean;
 }
 
-export const BasicSelect = ({
-  props,
-  options,
-  disabled,
-}: IBasicSelectProps) => {
+export const BasicSelect = ({ props, options }: IBasicSelectProps) => {
   return (
     <Box pt={2} pr={2}>
       <TextField
@@ -37,14 +32,14 @@ export const BasicSelect = ({
         value={props.value}
         defaultValue={props.value}
         onChange={(e: ChangeEvent<HTMLInputElement>) => {
-          if (disabled) {
+          if (props.disabled) {
             return;
           }
           props.setter(e.target.value);
         }}
         variant="outlined"
         fullWidth
-        disabled={disabled}
+        disabled={props.disabled}
         required={props.isRequired || false}
       >
         {options.map((option) => (

@@ -1,40 +1,40 @@
-import { IBillingInfo } from "@/types/cart/cart";
 import React, { Dispatch, SetStateAction } from "react";
+import EditorCard from "@/components/Dashboard/Generic/EditorCard";
+import CollapsableContentWithTitle from "@/components/Dashboard/Generic/CollapsableContentWithTitle";
 import BasicField, {
   BasicSelect,
   IBasicFieldProps,
   TwoFieldsOneRowWrapper,
 } from "../../Generic/Forms/BasicField";
+import { IShippingInfo } from "@/types/cart/cart";
 import { ICountryBase } from "@/types/country";
-import CollapsableContentWithTitle from "@/components/Dashboard/Generic/CollapsableContentWithTitle";
-import EditorCard from "@/components/Dashboard/Generic/EditorCard";
 import { usePermission } from "@/utils/context/permission";
 
-export interface IBillingInfoFormProps {
+export interface IShippingInfoFormProps {
   first_name: IBasicFieldProps;
   surname: IBasicFieldProps;
-  company_name: IBasicFieldProps;
-  company_id: IBasicFieldProps;
-  vat_number: IBasicFieldProps;
+  email: IBasicFieldProps;
+  phone: IBasicFieldProps;
+  additional_info: IBasicFieldProps;
   street: IBasicFieldProps;
   city: IBasicFieldProps;
   postal_code: IBasicFieldProps;
   country: IBasicFieldProps;
 }
 
-export const getFormData = (
-  billingInfo: IBillingInfo,
-  setter: Dispatch<SetStateAction<IBillingInfo>>,
+export const shippingInfoInitialData = (
+  shippingInfo: IShippingInfo,
+  setter: Dispatch<SetStateAction<IShippingInfo>>,
   editable: boolean
-): IBillingInfoFormProps => {
+): IShippingInfoFormProps => {
   /**
-   * Purpose of this function is to take the billing info from the API and
-   * convert it into the format that the OrderDetailBillingInfo component expects.
+   * Purpose of this function is to take the shipping info from the API and
+   * convert it into the format that the ShippingInfo component expects.
    * */
 
   return {
     first_name: {
-      value: billingInfo.first_name,
+      value: shippingInfo.first_name,
       setter: (value: string) =>
         setter((prevState) => ({
           ...prevState,
@@ -45,7 +45,7 @@ export const getFormData = (
       disabled: !editable,
     },
     surname: {
-      value: billingInfo.surname,
+      value: shippingInfo.surname,
       setter: (value: string) =>
         setter((prevState) => ({
           ...prevState,
@@ -55,41 +55,41 @@ export const getFormData = (
       label: "Surname",
       disabled: !editable,
     },
-    company_name: {
-      value: billingInfo.company_name,
+    email: {
+      value: shippingInfo.email,
       setter: (value: string) =>
         setter((prevState) => ({
           ...prevState,
-          company_name: value,
+          email: value,
         })),
-      isRequired: false,
-      label: "Company name",
+      isRequired: true,
+      label: "Email",
       disabled: !editable,
     },
-    company_id: {
-      value: billingInfo.company_id,
+    phone: {
+      value: shippingInfo.phone,
       setter: (value: string) =>
         setter((prevState) => ({
           ...prevState,
-          company_id: value,
+          phone: value,
         })),
-      isRequired: false,
-      label: "Company ID",
+      isRequired: true,
+      label: "Phone",
       disabled: !editable,
     },
-    vat_number: {
-      value: billingInfo.vat_number,
+    additional_info: {
+      value: shippingInfo.additional_info,
       setter: (value: string) =>
         setter((prevState) => ({
           ...prevState,
-          vat_number: value,
+          additional_info: value,
         })),
       isRequired: false,
-      label: "VAT ID",
+      label: "Additional info",
       disabled: !editable,
     },
     street: {
-      value: billingInfo.street,
+      value: shippingInfo.street,
       setter: (value: string) =>
         setter((prevState) => ({
           ...prevState,
@@ -100,7 +100,7 @@ export const getFormData = (
       disabled: !editable,
     },
     city: {
-      value: billingInfo.city,
+      value: shippingInfo.city,
       setter: (value: string) =>
         setter((prevState) => ({
           ...prevState,
@@ -111,7 +111,7 @@ export const getFormData = (
       disabled: !editable,
     },
     postal_code: {
-      value: billingInfo.postal_code,
+      value: shippingInfo.postal_code,
       setter: (value: string) =>
         setter((prevState) => ({
           ...prevState,
@@ -122,7 +122,7 @@ export const getFormData = (
       disabled: !editable,
     },
     country: {
-      value: `${billingInfo.country}`,
+      value: `${shippingInfo.country}`,
       setter: (value: string) =>
         setter((prevState) => ({
           ...prevState,
@@ -135,18 +135,18 @@ export const getFormData = (
   };
 };
 
-interface IOrderDetailBillingInfoProps {
-  billingInfo: IBillingInfo;
-  setBillingInfo: Dispatch<SetStateAction<IBillingInfo>>;
+interface IOrderDetailShippingInfoProps {
+  shippingInfo: IShippingInfo;
+  setShippingInfo: Dispatch<SetStateAction<IShippingInfo>>;
   countryOptions: ICountryBase[];
   isEditable: boolean;
 }
 
 /**
- * Purpose of this component is to display the billing information form
- * and have it be pre-populated with the billing information if it exists.
+ * Purpose of this component is to display the shipping information form
+ * and have it be pre-populated with the shipping information if it exists.
  *
- * It should be a form with header "Billing information" and the following fields:
+ * It should be a form with header "Shipping information" and the following fields:
  * - First name
  * - Surname
  * - Email
@@ -158,40 +158,41 @@ interface IOrderDetailBillingInfoProps {
  * - Country
  *
  */
-const OrderDetailBillingInfo = ({
-  billingInfo,
-  setBillingInfo,
+const OrderDetailShippingInfo = ({
+  shippingInfo,
+  setShippingInfo,
   countryOptions,
   isEditable,
-}: IOrderDetailBillingInfoProps) => {
+}: IOrderDetailShippingInfoProps) => {
   const { hasPermission } = usePermission();
 
-  const billingFormData = getFormData(
-    billingInfo,
-    setBillingInfo,
+  const shippingFormData = shippingInfoInitialData(
+    shippingInfo,
+    setShippingInfo,
     hasPermission && isEditable
   );
 
   return (
     <EditorCard>
-      <CollapsableContentWithTitle title="Billing info">
+      <CollapsableContentWithTitle title="Shipping info">
         <form>
           <TwoFieldsOneRowWrapper>
-            <BasicField props={billingFormData.first_name} />
-            <BasicField props={billingFormData.surname} />
+            <BasicField props={shippingFormData.first_name} />
+            <BasicField props={shippingFormData.surname} />
           </TwoFieldsOneRowWrapper>
-          <BasicField props={billingFormData.company_name} />
+          <BasicField props={shippingFormData.email} />
+          <BasicField props={shippingFormData.phone} />
           <TwoFieldsOneRowWrapper>
-            <BasicField props={billingFormData.company_id} />
-            <BasicField props={billingFormData.vat_number} />
+            <BasicField props={shippingFormData.street} />
+            <BasicField props={shippingFormData.additional_info} />
           </TwoFieldsOneRowWrapper>
-          <BasicField props={billingFormData.street} />
           <TwoFieldsOneRowWrapper>
-            <BasicField props={billingFormData.city} />
-            <BasicField props={billingFormData.postal_code} />
+            <BasicField props={shippingFormData.city} />
+            <BasicField props={shippingFormData.postal_code} />
           </TwoFieldsOneRowWrapper>
+
           <BasicSelect
-            props={billingFormData.country}
+            props={shippingFormData.country}
             options={countryOptions}
           />
         </form>
@@ -200,4 +201,4 @@ const OrderDetailBillingInfo = ({
   );
 };
 
-export default OrderDetailBillingInfo;
+export default OrderDetailShippingInfo;
