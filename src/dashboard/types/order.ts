@@ -1,3 +1,5 @@
+import { ICart } from "@/types/cart/cart";
+
 export enum OrderStatus {
   Pending = "PENDING",
   Processing = "PROCESSING",
@@ -5,9 +7,16 @@ export enum OrderStatus {
   Cancelled = "CANCELLED",
 }
 
-export interface IOrder {
+interface IOrderBase {
   token: string;
   create_at: string;
   status: OrderStatus;
+}
+
+export interface IOrder extends IOrderBase {
   customer_email: string;
+}
+
+export interface IOrderDetail extends IOrderBase {
+  cart: ICart;
 }

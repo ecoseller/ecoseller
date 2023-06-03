@@ -2,9 +2,10 @@ from abc import ABC, abstractmethod
 
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.decorators import permission_classes
+from rest_framework.generics import GenericAPIView
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
-from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import UpdateModelMixin, DestroyModelMixin
 from rest_framework.parsers import (
     MultiPartParser,
     FormParser,
@@ -20,10 +21,6 @@ from rest_framework.status import (
     HTTP_201_CREATED,
 )
 from rest_framework.views import APIView
-
-from country.models import (
-    Country,
-)
 
 from cart.models import (
     Cart,
@@ -47,14 +44,18 @@ from cart.serializers import (
     CartShippingMethodCountrySerializer,
     CartSerializer,
     CartDetailSerializer,
+    CartPaymentMethodCountrySerializer,
+    CartShippingMethodCountryBaseSerializer,
+)
+from country.models import (
+    Country,
 )
 from country.serializers import (
     BillingInfoSerializer,
     ShippingInfoSerializer,
 )
 from product.models import ProductVariant, ProductPrice
-
-from roles.decorator import check_user_is_staff_decorator
+from roles.decorator import check_user_is_staff_decorator, check_user_access_decorator
 
 
 @permission_classes([AllowAny])  # TODO: use authentication
@@ -192,10 +193,10 @@ class CartCreateStorefrontView(APIView):
             )
 
 
-@permission_classes([AllowAny])
-class CartUpdateQuantityStorefrontView(APIView):
+class CartUpdateQuantityBaseView(APIView):
     """
-    View for updating cart items quantity
+    Base view for updating cart items quantity.
+    Do not use it directly, use inherited views instead
     """
 
     def put(self, request, token):
@@ -215,9 +216,21 @@ class CartUpdateQuantityStorefrontView(APIView):
             return Response(status=HTTP_404_NOT_FOUND)
 
 
-class CartUpdateInfoBaseStorefrontView(APIView, ABC):
+class CartUpdateQuantityDashboardView(CartUpdateQuantityBaseView):
+    @check_user_access_decorator({"cart_change_permission"})
+    def put(self, request, token):
+        return super().put(request, token)
+
+
+@permission_classes([AllowAny])
+class CartUpdateQuantityStorefrontView(CartUpdateQuantityBaseView):
+    def put(self, request, token):
+        return super().put(request, token)
+
+
+class CartInfoBaseView(APIView, ABC):
     """
-    Base view for updating cart's billing/shipping info
+    Base view for getting & updating cart's billing/shipping info
     Do not use this view directly, use inherited classes instead (and implement `_set_info` method)
     """
 
@@ -268,10 +281,9 @@ class CartUpdateInfoBaseStorefrontView(APIView, ABC):
             return Response(status=HTTP_404_NOT_FOUND)
 
 
-@permission_classes([AllowAny])
-class CartUpdateBillingInfoStorefrontView(CartUpdateInfoBaseStorefrontView):
+class CartBillingInfoBaseView(CartInfoBaseView):
     """
-    View for updating cart's billing info
+    Base view for updating cart's billing info
     """
 
     info_serializer = BillingInfoSerializer
@@ -284,10 +296,9 @@ class CartUpdateBillingInfoStorefrontView(CartUpdateInfoBaseStorefrontView):
         return cart.billing_info
 
 
-@permission_classes([AllowAny])
-class CartUpdateShippingInfoStorefrontView(CartUpdateInfoBaseStorefrontView):
+class CartShippingInfoBaseView(CartInfoBaseView):
     """
-    View for updating cart's shipping info
+    Base view for updating cart's shipping info
     """
 
     info_serializer = ShippingInfoSerializer
@@ -298,6 +309,44 @@ class CartUpdateShippingInfoStorefrontView(CartUpdateInfoBaseStorefrontView):
 
     def _get_info(self, cart):
         return cart.shipping_info
+
+
+@permission_classes([AllowAny])
+class CartBillingInfoStorefrontView(CartBillingInfoBaseView):
+    def get(self, request, token):
+        return super().get(request, token)
+
+    def put(self, request, token):
+        return super().put(request, token)
+
+
+@permission_classes([AllowAny])
+class CartShippingInfoStorefrontView(CartShippingInfoBaseView):
+    def get(self, request, token):
+        return super().get(request, token)
+
+    def put(self, request, token):
+        return super().put(request, token)
+
+
+class CartBillingInfoDashboardView(CartBillingInfoBaseView):
+    @check_user_is_staff_decorator()
+    def get(self, request, token):
+        return super().get(request, token)
+
+    @check_user_access_decorator({"order_change_permission"})
+    def put(self, request, token):
+        return super().put(request, token)
+
+
+class CartShippingInfoDashboardView(CartShippingInfoBaseView):
+    @check_user_is_staff_decorator()
+    def get(self, request, token):
+        return super().get(request, token)
+
+    @check_user_access_decorator({"order_change_permission"})
+    def put(self, request, token):
+        return super().put(request, token)
 
 
 @permission_classes([AllowAny])
@@ -397,10 +446,10 @@ class CartUpdatePaymentMethodStorefrontView(CartUpdateMethodBaseStorefrontView):
         cart.save()
 
 
-@permission_classes([AllowAny])
-class CartItemDeleteStorefrontView(APIView):
+class CartItemDeleteBaseView(APIView):
     """
-    View used for deleting cart items
+    Base View used for deleting cart items.
+    Do not use it directly, rather use inherited classes
     """
 
     def delete(self, request, token, sku):
@@ -413,6 +462,18 @@ class CartItemDeleteStorefrontView(APIView):
             return Response(status=HTTP_204_NO_CONTENT)
         except (Cart.DoesNotExist, CartItem.DoesNotExist):
             return Response(status=HTTP_404_NOT_FOUND)
+
+
+class CartItemDeleteDashboardView(CartItemDeleteBaseView):
+    @check_user_access_decorator({"cart_change_permission"})
+    def delete(self, request, token, sku):
+        return super().delete(request, token, sku)
+
+
+@permission_classes([AllowAny])
+class CartItemDeleteStorefrontView(CartItemDeleteBaseView):
+    def delete(self, request, token, sku):
+        return super().delete(request, token, sku)
 
 
 class PaymentMethodListDashboardView(ListCreateAPIView):
@@ -476,7 +537,9 @@ class PaymentMethodCountryListView(ListCreateAPIView):
         return PaymentMethodCountry.objects.filter(payment_method__id=method_id)
 
 
-class PaymentMethodCountryDetailDashboardView(RetrieveUpdateDestroyAPIView):
+class PaymentMethodCountryDetailDashboardView(
+    GenericAPIView, UpdateModelMixin, DestroyModelMixin
+):
     """
     Detail of payment method country
     """
@@ -492,12 +555,19 @@ class PaymentMethodCountryDetailDashboardView(RetrieveUpdateDestroyAPIView):
     lookup_field = "id"
     lookup_url_kwarg = "id"
 
-    @check_user_is_staff_decorator()
-    def get(self, request, id):
-        return super().get(request, id)
-
     def get_queryset(self):
         return PaymentMethodCountry.objects.all()
+
+    @check_user_is_staff_decorator()
+    def get(self, request, id):
+        try:
+            payment_method_country = PaymentMethodCountry.objects.get(id=id)
+            serializer = CartPaymentMethodCountrySerializer(
+                payment_method_country, context={"request": request}
+            )
+            return Response(serializer.data)
+        except PaymentMethodCountry.DoesNotExist:
+            return Response(status=HTTP_404_NOT_FOUND)
 
 
 class PaymentMethodCountryFullListView(ListCreateAPIView):
@@ -575,7 +645,9 @@ class ShippingMethodCountryListView(ListCreateAPIView):
         return ShippingMethodCountry.objects.filter(shipping_method__id=method_id)
 
 
-class ShippingMethodCountryDetailDashboardView(RetrieveUpdateDestroyAPIView):
+class ShippingMethodCountryDetailDashboardView(
+    GenericAPIView, UpdateModelMixin, DestroyModelMixin
+):
     """
     List all products for dashboard
     """
@@ -591,9 +663,16 @@ class ShippingMethodCountryDetailDashboardView(RetrieveUpdateDestroyAPIView):
     lookup_field = "id"
     lookup_url_kwarg = "id"
 
-    @check_user_is_staff_decorator()
-    def get(self, request, id):
-        return super().get(request, id)
-
     def get_queryset(self):
         return ShippingMethodCountry.objects.all()
+
+    @check_user_is_staff_decorator()
+    def get(self, request, id):
+        try:
+            payment_method_country = ShippingMethodCountry.objects.get(id=id)
+            serializer = CartShippingMethodCountryBaseSerializer(
+                payment_method_country, context={"request": request}
+            )
+            return Response(serializer.data)
+        except ShippingMethodCountry.DoesNotExist:
+            return Response(status=HTTP_404_NOT_FOUND)

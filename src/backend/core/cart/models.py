@@ -5,6 +5,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from parler.models import TranslatableModel, TranslatedFields
 
+from common.prices import format_price
 from country.models import (
     Country,
     Currency,
@@ -173,6 +174,19 @@ class Cart(models.Model):
         ShippingMethodCountry, null=True, on_delete=models.SET_NULL, related_name="+"
     )
 
+    @property
+    def total_price_net_formatted(self):
+        """
+        Get total price (unit price * quantity) of the cart items with currency symbol
+
+        This price is intended to be shown to the user.
+        """
+        total_price = sum(
+            [item.unit_price_net * item.quantity for item in self.cart_items.all()]
+        )
+
+        return format_price(total_price, self.pricelist)
+
     def recalculate(self, pricelist: PriceList, country: Country):
         """
         Recalculate cart prices.
@@ -247,6 +261,26 @@ class CartItem(models.Model):
     @property
     def primary_photo(self):
         return self.product.get_primary_photo()
+
+    @property
+    def total_price_net_formatted(self):
+        """
+        Get total price (unit price * quantity) of this item with currency symbol
+
+        This price is intended to be shown to the user.
+        """
+        total_price = self.unit_price_net * self.quantity
+
+        return format_price(total_price, self.cart.pricelist)
+
+    @property
+    def unit_price_net_formatted(self):
+        """
+        Get unit price of this item with currency symbol
+
+        This price is intended to be shown to the user.
+        """
+        return format_price(self.unit_price_net, self.cart.pricelist)
 
     def recalculate(self, pricelist, country):
         # recalculate price for this cart item based on pricelist and country

@@ -5,7 +5,7 @@ import Container from "@mui/material/Container";
 import { NextApiRequest, NextApiResponse } from "next";
 import { orderAPI } from "@/pages/api/order";
 import { IOrder } from "@/types/order";
-import { OrderList } from "@/components/Dashboard/Order/OrderList";
+import { OrderList } from "@/components/Dashboard/Order/List/OrderList";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Card from "@mui/material/Card";

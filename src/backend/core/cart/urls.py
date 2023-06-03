@@ -17,7 +17,7 @@ urlpatterns = [
         views.PaymentMethodCountryFullListView.as_view(),
     ),
     path(
-        "dashboard/payment/method/<int:method_id>/country/<int:id>/",
+        "dashboard/payment/method/country/<int:id>/",
         views.PaymentMethodCountryDetailDashboardView.as_view(),
     ),
     path("dashboard/shipping/method/", views.ShippingMethodListDashboardView.as_view()),
@@ -30,7 +30,7 @@ urlpatterns = [
         views.ShippingMethodCountryListView.as_view(),
     ),
     path(
-        "dashboard/shipping/method/<int:method_id>/country/<int:id>/",
+        "dashboard/shipping/method/country/<int:id>/",
         views.ShippingMethodCountryDetailDashboardView.as_view(),
     ),
     path("storefront/", views.CartCreateStorefrontView.as_view()),
@@ -43,12 +43,24 @@ urlpatterns = [
         views.CartUpdateQuantityStorefrontView.as_view(),
     ),
     path(
+        "dashboard/<str:token>/update-quantity/",
+        views.CartUpdateQuantityDashboardView.as_view(),
+    ),
+    path(
         "storefront/<str:token>/billing-info/",
-        views.CartUpdateBillingInfoStorefrontView.as_view(),
+        views.CartBillingInfoStorefrontView.as_view(),
     ),
     path(
         "storefront/<str:token>/shipping-info/",
-        views.CartUpdateShippingInfoStorefrontView.as_view(),
+        views.CartShippingInfoStorefrontView.as_view(),
+    ),
+    path(
+        "dashboard/<str:token>/billing-info/",
+        views.CartBillingInfoDashboardView.as_view(),
+    ),
+    path(
+        "dashboard/<str:token>/shipping-info/",
+        views.CartShippingInfoDashboardView.as_view(),
     ),
     path(
         "storefront/methods/<str:country_code>/",
@@ -73,5 +85,9 @@ urlpatterns = [
     path(
         "storefront/<str:token>/<str:sku>/",
         views.CartItemDeleteStorefrontView.as_view(),
+    ),
+    path(
+        "dashboard/<str:token>/<str:sku>/",
+        views.CartItemDeleteDashboardView.as_view(),
     ),
 ]

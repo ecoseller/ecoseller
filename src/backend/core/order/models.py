@@ -31,4 +31,4 @@ class Order(models.Model):
 
     @property
     def customer_email(self):
-        return self.cart.shipping_address.email
+        return self.cart.shipping_info.email

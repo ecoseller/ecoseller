@@ -4,7 +4,6 @@ from parler_rest.serializers import (
     TranslatableModelSerializer,
     TranslatedFieldsField,
 )
-from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import (
     ModelSerializer,
     Serializer,
@@ -65,6 +64,8 @@ class CartItemDetailSerializer(ModelSerializer):
             "product_variant_name",
             "unit_price_gross",
             "unit_price_net",
+            "total_price_net_formatted",
+            "unit_price_net_formatted",
             "quantity",
             "discount",
             "primary_image",
@@ -88,23 +89,17 @@ class CartSerializer(ModelSerializer):
     """
 
     cart_items = CartItemDetailSerializer(many=True, read_only=True)
-    currency_symbol = SerializerMethodField()
-    symbol_position = SerializerMethodField()
 
     class Meta:
         model = Cart
         fields = (
+            "token",
             "cart_items",
             "update_at",
-            "currency_symbol",
-            "symbol_position",
+            "total_price_net_formatted",
+            "shipping_method_country",
+            "payment_method_country",
         )
-
-    def get_currency_symbol(self, obj):
-        return obj.pricelist.currency.symbol
-
-    def get_symbol_position(self, obj):
-        return obj.pricelist.currency.symbol_position
 
 
 class CartItemAddSerializer(Serializer):
@@ -344,14 +339,12 @@ class CartPaymentMethodCountrySerializer(ModelSerializer):
         )
 
 
-class CartShippingMethodCountrySerializer(ModelSerializer):
+class CartShippingMethodCountryBaseSerializer(ModelSerializer):
     """
-    Serializer used for serializing shipping methods in step 2 of the order
-    with nested shipping methods countries
+    Serializer used for serializing shipping method country
     """
 
     shipping_method = CartShippingMethodSerializer(read_only=True)
-    payment_methods = CartPaymentMethodCountrySerializer(many=True, read_only=True)
     price_incl_vat = CharField(source="formatted_price_incl_vat")
 
     class Meta:
@@ -359,8 +352,22 @@ class CartShippingMethodCountrySerializer(ModelSerializer):
         fields = (
             "id",
             "shipping_method",
-            "payment_methods",
             "price_incl_vat",
+        )
+
+
+class CartShippingMethodCountrySerializer(CartShippingMethodCountryBaseSerializer):
+    """
+    Serializer used for serializing shipping methods in step 2 of the order
+    with nested shipping methods countries
+    """
+
+    payment_methods = CartPaymentMethodCountrySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = ShippingMethodCountry
+        fields = CartShippingMethodCountryBaseSerializer.Meta.fields + (
+            "payment_methods",
         )
 
 

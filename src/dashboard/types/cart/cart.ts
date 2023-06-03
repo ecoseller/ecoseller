@@ -1,5 +1,3 @@
-import { IProductMedia } from "@/types/product";
-
 /**
  * Interface representing an item in the cart
  */
@@ -10,10 +8,11 @@ export interface ICartItem {
   product_variant_name: string;
   unit_price_gross: number;
   unit_price_net: number;
+  unit_price_net_formatted: string;
   total_price_net_formatted: string;
   quantity: number;
   discount: number | null;
-  primary_image: IProductMedia | null;
+  primary_image: ICartProductMedia | null;
 }
 
 export interface ICart {
@@ -51,36 +50,9 @@ export interface IShippingInfo extends Address {
   additional_info: string;
 }
 
-export interface ICountryOption {
-  code: string;
-  name: string;
-}
-
-export interface ICartDetail {
-  token: string;
-  user: string;
-  shipping_method_country: number;
-  payment_method_country: number;
-  country: string;
-  pricelist: string;
-}
-
-export interface IShippingPaymentMethod {
+export interface ICartProductMedia {
   id: number;
-  title: string;
-  image: string;
-}
-
-interface IShippingPaymentMethodCountry {
-  id: number;
-  price_incl_vat: string;
-}
-
-export interface IShippingMethodCountry extends IShippingPaymentMethodCountry {
-  shipping_method: IShippingPaymentMethod;
-  payment_methods: IPaymentMethodCountry[];
-}
-
-export interface IPaymentMethodCountry extends IShippingPaymentMethodCountry {
-  payment_method: IShippingPaymentMethod;
+  type: "IMAGE" | "VIDEO";
+  media: string;
+  alt: string | null;
 }
