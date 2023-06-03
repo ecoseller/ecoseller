@@ -118,12 +118,14 @@ const OrderDetailWrapper = ({
               setShippingInfo={setShippingInfoState}
               countryOptions={countryOptions}
               isEditable={editableForms}
+              preventNavigation={() => setPreventNavigation(true)}
             />
             <OrderDetailBillingInfo
               billingInfo={billingInfoState}
               setBillingInfo={setBillingInfoState}
               countryOptions={countryOptions}
               isEditable={editableForms}
+              preventNavigation={() => setPreventNavigation(true)}
             />
             <EditorCard>
               <CollapsableContentWithTitle title="Shipping & payment method">

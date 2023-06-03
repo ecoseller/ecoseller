@@ -19,7 +19,7 @@ const OrderDetailMethod = ({
         borderRadius: 1,
         border: "1px solid",
         borderColor: "primary.main",
-        mb: 2,
+        my: 3,
       }}
     >
       <Grid

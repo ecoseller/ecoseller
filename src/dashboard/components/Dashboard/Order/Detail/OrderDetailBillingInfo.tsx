@@ -10,7 +10,7 @@ import CollapsableContentWithTitle from "@/components/Dashboard/Generic/Collapsa
 import EditorCard from "@/components/Dashboard/Generic/EditorCard";
 import { usePermission } from "@/utils/context/permission";
 
-export interface IBillingInfoFormProps {
+interface IBillingInfoFormProps {
   first_name: IBasicFieldProps;
   surname: IBasicFieldProps;
   company_name: IBasicFieldProps;
@@ -22,124 +22,12 @@ export interface IBillingInfoFormProps {
   country: IBasicFieldProps;
 }
 
-export const getFormData = (
-  billingInfo: IBillingInfo,
-  setter: Dispatch<SetStateAction<IBillingInfo>>,
-  editable: boolean
-): IBillingInfoFormProps => {
-  /**
-   * Purpose of this function is to take the billing info from the API and
-   * convert it into the format that the OrderDetailBillingInfo component expects.
-   * */
-
-  return {
-    first_name: {
-      value: billingInfo.first_name,
-      setter: (value: string) =>
-        setter((prevState) => ({
-          ...prevState,
-          first_name: value,
-        })),
-      isRequired: true,
-      label: "First name",
-      disabled: !editable,
-    },
-    surname: {
-      value: billingInfo.surname,
-      setter: (value: string) =>
-        setter((prevState) => ({
-          ...prevState,
-          surname: value,
-        })),
-      isRequired: true,
-      label: "Surname",
-      disabled: !editable,
-    },
-    company_name: {
-      value: billingInfo.company_name,
-      setter: (value: string) =>
-        setter((prevState) => ({
-          ...prevState,
-          company_name: value,
-        })),
-      isRequired: false,
-      label: "Company name",
-      disabled: !editable,
-    },
-    company_id: {
-      value: billingInfo.company_id,
-      setter: (value: string) =>
-        setter((prevState) => ({
-          ...prevState,
-          company_id: value,
-        })),
-      isRequired: false,
-      label: "Company ID",
-      disabled: !editable,
-    },
-    vat_number: {
-      value: billingInfo.vat_number,
-      setter: (value: string) =>
-        setter((prevState) => ({
-          ...prevState,
-          vat_number: value,
-        })),
-      isRequired: false,
-      label: "VAT ID",
-      disabled: !editable,
-    },
-    street: {
-      value: billingInfo.street,
-      setter: (value: string) =>
-        setter((prevState) => ({
-          ...prevState,
-          street: value,
-        })),
-      isRequired: true,
-      label: "Street",
-      disabled: !editable,
-    },
-    city: {
-      value: billingInfo.city,
-      setter: (value: string) =>
-        setter((prevState) => ({
-          ...prevState,
-          city: value,
-        })),
-      isRequired: true,
-      label: "City",
-      disabled: !editable,
-    },
-    postal_code: {
-      value: billingInfo.postal_code,
-      setter: (value: string) =>
-        setter((prevState) => ({
-          ...prevState,
-          postal_code: value,
-        })),
-      isRequired: true,
-      label: "Postal code",
-      disabled: !editable,
-    },
-    country: {
-      value: `${billingInfo.country}`,
-      setter: (value: string) =>
-        setter((prevState) => ({
-          ...prevState,
-          country: value,
-        })),
-      isRequired: true,
-      label: "Country",
-      disabled: !editable,
-    },
-  };
-};
-
 interface IOrderDetailBillingInfoProps {
   billingInfo: IBillingInfo;
   setBillingInfo: Dispatch<SetStateAction<IBillingInfo>>;
   countryOptions: ICountryBase[];
   isEditable: boolean;
+  preventNavigation: () => void;
 }
 
 /**
@@ -163,14 +51,139 @@ const OrderDetailBillingInfo = ({
   setBillingInfo,
   countryOptions,
   isEditable,
+  preventNavigation,
 }: IOrderDetailBillingInfoProps) => {
   const { hasPermission } = usePermission();
 
-  const billingFormData = getFormData(
-    billingInfo,
-    setBillingInfo,
-    hasPermission && isEditable
-  );
+  const editableForms = isEditable && hasPermission;
+
+  const getFormData = (): IBillingInfoFormProps => {
+    /**
+     * Purpose of this function is to take the billing info from the API and
+     * convert it into the format that the OrderDetailBillingInfo component expects.
+     * */
+    return {
+      first_name: {
+        value: billingInfo.first_name,
+        setter: (value: string) => {
+          setBillingInfo((prevState) => ({
+            ...prevState,
+            first_name: value,
+          }));
+          preventNavigation();
+        },
+        isRequired: true,
+        label: "First name",
+        disabled: !editableForms,
+      },
+      surname: {
+        value: billingInfo.surname,
+        setter: (value: string) => {
+          setBillingInfo((prevState) => ({
+            ...prevState,
+            surname: value,
+          }));
+          preventNavigation();
+        },
+        isRequired: true,
+        label: "Surname",
+        disabled: !editableForms,
+      },
+      company_name: {
+        value: billingInfo.company_name,
+        setter: (value: string) => {
+          setBillingInfo((prevState) => ({
+            ...prevState,
+            company_name: value,
+          }));
+          preventNavigation();
+        },
+        isRequired: false,
+        label: "Company name",
+        disabled: !editableForms,
+      },
+      company_id: {
+        value: billingInfo.company_id,
+        setter: (value: string) => {
+          setBillingInfo((prevState) => ({
+            ...prevState,
+            company_id: value,
+          }));
+          preventNavigation();
+        },
+        isRequired: false,
+        label: "Company ID",
+        disabled: !editableForms,
+      },
+      vat_number: {
+        value: billingInfo.vat_number,
+        setter: (value: string) => {
+          setBillingInfo((prevState) => ({
+            ...prevState,
+            vat_number: value,
+          }));
+          preventNavigation();
+        },
+        isRequired: false,
+        label: "VAT ID",
+        disabled: !editableForms,
+      },
+      street: {
+        value: billingInfo.street,
+        setter: (value: string) => {
+          setBillingInfo((prevState) => ({
+            ...prevState,
+            street: value,
+          }));
+          preventNavigation();
+        },
+        isRequired: true,
+        label: "Street",
+        disabled: !editableForms,
+      },
+      city: {
+        value: billingInfo.city,
+        setter: (value: string) => {
+          setBillingInfo((prevState) => ({
+            ...prevState,
+            city: value,
+          }));
+          preventNavigation();
+        },
+        isRequired: true,
+        label: "City",
+        disabled: !editableForms,
+      },
+      postal_code: {
+        value: billingInfo.postal_code,
+        setter: (value: string) => {
+          setBillingInfo((prevState) => ({
+            ...prevState,
+            postal_code: value,
+          }));
+          preventNavigation();
+        },
+        isRequired: true,
+        label: "Postal code",
+        disabled: !editableForms,
+      },
+      country: {
+        value: `${billingInfo.country}`,
+        setter: (value: string) => {
+          setBillingInfo((prevState) => ({
+            ...prevState,
+            country: value,
+          }));
+          preventNavigation();
+        },
+        isRequired: true,
+        label: "Country",
+        disabled: !editableForms,
+      },
+    };
+  };
+
+  const billingFormData = getFormData();
 
   return (
     <EditorCard>

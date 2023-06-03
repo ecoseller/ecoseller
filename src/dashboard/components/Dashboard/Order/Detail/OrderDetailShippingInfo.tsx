@@ -10,7 +10,7 @@ import { IShippingInfo } from "@/types/cart/cart";
 import { ICountryBase } from "@/types/country";
 import { usePermission } from "@/utils/context/permission";
 
-export interface IShippingInfoFormProps {
+interface IShippingInfoFormProps {
   first_name: IBasicFieldProps;
   surname: IBasicFieldProps;
   email: IBasicFieldProps;
@@ -22,124 +22,12 @@ export interface IShippingInfoFormProps {
   country: IBasicFieldProps;
 }
 
-export const shippingInfoInitialData = (
-  shippingInfo: IShippingInfo,
-  setter: Dispatch<SetStateAction<IShippingInfo>>,
-  editable: boolean
-): IShippingInfoFormProps => {
-  /**
-   * Purpose of this function is to take the shipping info from the API and
-   * convert it into the format that the ShippingInfo component expects.
-   * */
-
-  return {
-    first_name: {
-      value: shippingInfo.first_name,
-      setter: (value: string) =>
-        setter((prevState) => ({
-          ...prevState,
-          first_name: value,
-        })),
-      isRequired: true,
-      label: "First name",
-      disabled: !editable,
-    },
-    surname: {
-      value: shippingInfo.surname,
-      setter: (value: string) =>
-        setter((prevState) => ({
-          ...prevState,
-          surname: value,
-        })),
-      isRequired: true,
-      label: "Surname",
-      disabled: !editable,
-    },
-    email: {
-      value: shippingInfo.email,
-      setter: (value: string) =>
-        setter((prevState) => ({
-          ...prevState,
-          email: value,
-        })),
-      isRequired: true,
-      label: "Email",
-      disabled: !editable,
-    },
-    phone: {
-      value: shippingInfo.phone,
-      setter: (value: string) =>
-        setter((prevState) => ({
-          ...prevState,
-          phone: value,
-        })),
-      isRequired: true,
-      label: "Phone",
-      disabled: !editable,
-    },
-    additional_info: {
-      value: shippingInfo.additional_info,
-      setter: (value: string) =>
-        setter((prevState) => ({
-          ...prevState,
-          additional_info: value,
-        })),
-      isRequired: false,
-      label: "Additional info",
-      disabled: !editable,
-    },
-    street: {
-      value: shippingInfo.street,
-      setter: (value: string) =>
-        setter((prevState) => ({
-          ...prevState,
-          street: value,
-        })),
-      isRequired: true,
-      label: "Street",
-      disabled: !editable,
-    },
-    city: {
-      value: shippingInfo.city,
-      setter: (value: string) =>
-        setter((prevState) => ({
-          ...prevState,
-          city: value,
-        })),
-      isRequired: true,
-      label: "City",
-      disabled: !editable,
-    },
-    postal_code: {
-      value: shippingInfo.postal_code,
-      setter: (value: string) =>
-        setter((prevState) => ({
-          ...prevState,
-          postal_code: value,
-        })),
-      isRequired: true,
-      label: "Postal code",
-      disabled: !editable,
-    },
-    country: {
-      value: `${shippingInfo.country}`,
-      setter: (value: string) =>
-        setter((prevState) => ({
-          ...prevState,
-          country: value,
-        })),
-      isRequired: true,
-      label: "Country",
-      disabled: true, // can't change shipping country after the order is created
-    },
-  };
-};
-
 interface IOrderDetailShippingInfoProps {
   shippingInfo: IShippingInfo;
   setShippingInfo: Dispatch<SetStateAction<IShippingInfo>>;
   countryOptions: ICountryBase[];
   isEditable: boolean;
+  preventNavigation: () => void;
 }
 
 /**
@@ -156,21 +44,145 @@ interface IOrderDetailShippingInfoProps {
  * - City
  * - Postal code
  * - Country
- *
  */
 const OrderDetailShippingInfo = ({
   shippingInfo,
   setShippingInfo,
   countryOptions,
   isEditable,
+  preventNavigation,
 }: IOrderDetailShippingInfoProps) => {
   const { hasPermission } = usePermission();
 
-  const shippingFormData = shippingInfoInitialData(
-    shippingInfo,
-    setShippingInfo,
-    hasPermission && isEditable
-  );
+  const editableForms = hasPermission && isEditable;
+
+  /**
+   * Purpose of this function is to take the shipping info from the API and
+   * convert it into the format that the ShippingInfo component expects.
+   * */
+  const shippingInfoInitialData = (): IShippingInfoFormProps => {
+    return {
+      first_name: {
+        value: shippingInfo.first_name,
+        setter: (value: string) => {
+          setShippingInfo((prevState) => ({
+            ...prevState,
+            first_name: value,
+          }));
+          preventNavigation();
+        },
+        isRequired: true,
+        label: "First name",
+        disabled: !editableForms,
+      },
+      surname: {
+        value: shippingInfo.surname,
+        setter: (value: string) => {
+          setShippingInfo((prevState) => ({
+            ...prevState,
+            surname: value,
+          }));
+          preventNavigation();
+        },
+        isRequired: true,
+        label: "Surname",
+        disabled: !editableForms,
+      },
+      email: {
+        value: shippingInfo.email,
+        setter: (value: string) => {
+          setShippingInfo((prevState) => ({
+            ...prevState,
+            email: value,
+          }));
+          preventNavigation();
+        },
+        isRequired: true,
+        label: "Email",
+        disabled: !editableForms,
+      },
+      phone: {
+        value: shippingInfo.phone,
+        setter: (value: string) => {
+          setShippingInfo((prevState) => ({
+            ...prevState,
+            phone: value,
+          }));
+          preventNavigation();
+        },
+        isRequired: true,
+        label: "Phone",
+        disabled: !editableForms,
+      },
+      additional_info: {
+        value: shippingInfo.additional_info,
+        setter: (value: string) => {
+          setShippingInfo((prevState) => ({
+            ...prevState,
+            additional_info: value,
+          }));
+          preventNavigation();
+        },
+        isRequired: false,
+        label: "Additional info",
+        disabled: !editableForms,
+      },
+      street: {
+        value: shippingInfo.street,
+        setter: (value: string) => {
+          setShippingInfo((prevState) => ({
+            ...prevState,
+            street: value,
+          }));
+          preventNavigation();
+        },
+        isRequired: true,
+        label: "Street",
+        disabled: !editableForms,
+      },
+      city: {
+        value: shippingInfo.city,
+        setter: (value: string) => {
+          setShippingInfo((prevState) => ({
+            ...prevState,
+            city: value,
+          }));
+          preventNavigation();
+        },
+        isRequired: true,
+        label: "City",
+        disabled: !editableForms,
+      },
+      postal_code: {
+        value: shippingInfo.postal_code,
+        setter: (value: string) => {
+          setShippingInfo((prevState) => ({
+            ...prevState,
+            postal_code: value,
+          }));
+          preventNavigation();
+        },
+        isRequired: true,
+        label: "Postal code",
+        disabled: !editableForms,
+      },
+      country: {
+        value: `${shippingInfo.country}`,
+        setter: (value: string) => {
+          setShippingInfo((prevState) => ({
+            ...prevState,
+            country: value,
+          }));
+          preventNavigation();
+        },
+        isRequired: true,
+        label: "Country",
+        disabled: true, // can't change shipping country after the order is created
+      },
+    };
+  };
+
+  const shippingFormData = shippingInfoInitialData();
 
   return (
     <EditorCard>
