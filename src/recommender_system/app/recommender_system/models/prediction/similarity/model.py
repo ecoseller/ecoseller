@@ -5,9 +5,6 @@ from typing import List, Optional, TYPE_CHECKING
 from dependency_injector.wiring import inject, Provide
 import numpy as np
 
-from recommender_system.models.stored.model.latest_identifier import (
-    LatestIdentifierModel,
-)
 from recommender_system.models.prediction.abstract import AbstractPredictionModel
 from recommender_system.models.prediction.similarity.tools import (
     prepare_variants,
@@ -27,7 +24,7 @@ class SimilarityPredictionModel(AbstractPredictionModel):
 
     @property
     def default_identifier(self) -> str:
-        return f"similarity_{datetime.now().isoformat()}"
+        return f"{self.Meta.model_name}_{datetime.now().isoformat()}"
 
     @inject
     def delete_distances(
@@ -152,14 +149,3 @@ class SimilarityPredictionModel(AbstractPredictionModel):
         similarity_storage.delete(
             model_class=DistanceModel, model_identifier=self.identifier
         )
-
-    def replace_old(self) -> None:
-        try:
-            latest_identifier = self.get_latest_identifier()
-        except LatestIdentifierModel.DoesNotExist:
-            latest_identifier = None
-        LatestIdentifierModel(
-            model_name=self.Meta.model_name, identifier=self.identifier
-        ).save()
-        if latest_identifier is not None:
-            self.__class__(identifier=latest_identifier).delete()
