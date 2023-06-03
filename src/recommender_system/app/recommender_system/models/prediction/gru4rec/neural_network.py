@@ -1,16 +1,20 @@
 import logging
-from typing import Dict
+from typing import Dict, List
 
 from dependency_injector.wiring import inject, Provide
 import torch
 import torch.backends.mps
 import torch.utils.data
 
-from recommender_system.models.prediction.gru4rec.dataset import SessionDataset
+from recommender_system.models.prediction.gru4rec.dataset import (
+    SessionDataset,
+    sequence_to_tensor,
+)
 from recommender_system.models.prediction.gru4rec.select_gru_output import (
     SelectGRUOutput,
 )
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
+from recommender_system.storage.feedback.abstract import AbstractFeedbackStorage
 from recommender_system.storage.product.abstract import AbstractProductStorage
 from recommender_system.storage.gru4rec.abstract import AbstractGRU4RecStorage
 
@@ -32,6 +36,15 @@ class NeuralNetwork:
         num_product_variants: int,
         product_storage: AbstractProductStorage = Provide["product_storage"],
     ):
+        if torch.cuda.is_available():
+            self.device = torch.device("cuda:0")
+        elif torch.backends.mps.is_available():
+            self.device = torch.device("mps:0")
+        else:
+            self.device = torch.device("cpu")
+        self.device = torch.device("cpu")
+        logging.info(f"Using device {self.device}")
+
         skus = product_storage.get_objects_attribute(
             model_class=ProductVariantModel, attribute="sku"
         )
@@ -50,17 +63,13 @@ class NeuralNetwork:
             self.gru,
             SelectGRUOutput(),
             self.feedforward,
-        )
+        ).to(self.device)
         self.optimizer = torch.optim.SGD(self.net.parameters(), lr=0.0001)
         self.loss = torch.nn.CrossEntropyLoss()
-        if torch.cuda.is_available():
-            self.device = torch.device("cuda:0")
-        elif torch.backends.mps.is_available():
-            self.device = torch.device("mps:0")
-        else:
-            self.device = torch.device("cpu")
-        self.net.to(self.device)
-        logging.info(f"Using device {self.device}")
+
+    @property
+    def num_features(self) -> int:
+        return len(self.mapping.keys())
 
     def _get_data_loader(self) -> torch.utils.data.DataLoader:
         return torch.utils.data.DataLoader(
@@ -97,6 +106,30 @@ class NeuralNetwork:
             )
 
         logging.info("Training finished")
+
+    def predict(
+        self,
+        session_id: str,
+        variants: List[str],
+        feedback_storage: AbstractFeedbackStorage = Provide["feedback_storage"],
+    ) -> List[str]:
+        sequences = feedback_storage.get_session_sequences(session_ids=[session_id])
+        if len(sequences) == 0:
+            logging.warning(f"No session sequence found for session_id={session_id}")
+            seq = []
+        else:
+            seq = [self.mapping[item] for item in sequences[0] if item in self.mapping]
+        inputs = sequence_to_tensor(seq=seq, num_features=self.num_features).to(
+            self.device
+        )
+        inputs = inputs.resize(1, inputs.size(dim=0))
+        predictions = self.net(inputs)
+        scores = {
+            sku: predictions[0][self.mapping[sku]] if sku in self.mapping else 0
+            for sku in variants
+        }
+        ordered_scores = sorted(scores.items(), key=lambda item: item[1], reverse=True)
+        return [item[0] for item in ordered_scores]
 
     @inject
     def save(

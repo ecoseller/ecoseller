@@ -1,4 +1,5 @@
 from datetime import datetime
+import logging
 from typing import List, Optional
 
 from dependency_injector.wiring import inject, Provide
@@ -17,8 +18,12 @@ class GRU4RecPredictionModel(AbstractPredictionModel):
 
     def __init__(self, identifier: Optional[str] = None):
         super().__init__(identifier=identifier)
-        # TODO: Load NN from file
-        # TODO: Load mapping from file
+        try:
+            self.network = NeuralNetwork.load(identifier=identifier)
+        except Exception as e:
+            logging.warning(
+                f"Unable to load model {self.Meta.model_name}: {self.identifier} ({e})"
+            )
 
     @property
     def default_identifier(self) -> str:
@@ -55,7 +60,7 @@ class GRU4RecPredictionModel(AbstractPredictionModel):
         )
 
     def _score(self, session_id: str, variants: List[str]) -> List[str]:
-        raise NotImplementedError()
+        return self.network.predict(session_id=session_id, variants=variants)
 
     def score_homepage(
         self, session_id: str, user_id: Optional[int], variants: List[str]

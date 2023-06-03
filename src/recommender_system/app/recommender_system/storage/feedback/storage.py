@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from recommender_system.models.stored.feedback.product_detail_enter import (
     ProductDetailEnterModel,
@@ -9,13 +9,17 @@ from recommender_system.storage.sql.storage import SQLStorage
 
 
 class SQLFeedbackStorage(SQLStorage, AbstractFeedbackStorage):
-    def get_session_sequences(self) -> List[List[str]]:
+    def get_session_sequences(
+        self, session_ids: Optional[List[str]] = None
+    ) -> List[List[str]]:
         sql_class = SQLModelMapper.map(model_class=ProductDetailEnterModel)
         query = self.session.query(
             sql_class.product_variant_sku,
             sql_class.session_id,
         )
         query = query.select_from(sql_class)
+        if session_ids is not None:
+            query = query.filter(sql_class.session_id.in_(session_ids))
         query = query.order_by(sql_class.session_id, sql_class.create_at)
 
         result = []
@@ -29,4 +33,6 @@ class SQLFeedbackStorage(SQLStorage, AbstractFeedbackStorage):
                     result.append(current_session_skus)
                 current_session_skus = []
                 current_session = row[1]
+        if len(current_session_skus) > 0:
+            result.append(current_session_skus)
         return result

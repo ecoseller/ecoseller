@@ -7,22 +7,23 @@ from torch.utils.data import Dataset
 from recommender_system.storage.feedback.abstract import AbstractFeedbackStorage
 
 
+def sequence_to_tensor(seq: List[int], num_features: int) -> torch.Tensor:
+    row = torch.zeros(num_features)
+
+    if len(seq) == 0:
+        return row
+
+    for item in seq:
+        torch.mul(row, 0.9)
+        row[item] = 1
+
+    return torch.div(row, torch.sum(row))
+
+
 class SessionDataset(Dataset):
     X: torch.Tensor
     y: torch.Tensor
     num_features: int
-
-    def _sequence_to_tensor(self, seq: List[int]) -> torch.Tensor:
-        row = torch.zeros(self.num_features)
-
-        if len(seq) == 0:
-            return row
-
-        for item in seq:
-            torch.mul(row, 0.9)
-            row[item] = 1
-
-        return torch.div(row, torch.sum(row))
 
     @inject
     def __init__(
@@ -41,7 +42,9 @@ class SessionDataset(Dataset):
             for i in range(1, len(filtered_sequence)):
                 x_indices = [mapping[item] for item in filtered_sequence[:i]]
                 y_index = mapping[filtered_sequence[i]]
-                X_rows.append(self._sequence_to_tensor(x_indices))
+                X_rows.append(
+                    sequence_to_tensor(seq=x_indices, num_features=self.num_features)
+                )
                 y_rows.append(y_index)
 
         self.X = torch.vstack(X_rows).to(device)
