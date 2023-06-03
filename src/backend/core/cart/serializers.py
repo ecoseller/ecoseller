@@ -65,6 +65,7 @@ class CartItemDetailSerializer(ModelSerializer):
             "unit_price_gross",
             "unit_price_net",
             "total_price_net_formatted",
+            "unit_price_net_formatted",
             "quantity",
             "discount",
             "primary_image",

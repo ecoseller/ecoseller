@@ -183,8 +183,8 @@ const OrderDetailItemList = ({
       minWidth: 150,
     },
     {
-      field: "total_price_net_formatted",
-      headerName: "Total net price",
+      field: "unit_price_net_formatted",
+      headerName: "Unit net price",
       minWidth: 150,
     },
   ];

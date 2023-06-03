@@ -5,6 +5,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from parler.models import TranslatableModel, TranslatedFields
 
+from common.prices import format_price
 from country.models import (
     Country,
     Currency,
@@ -184,14 +185,14 @@ class Cart(models.Model):
             [item.unit_price_net * item.quantity for item in self.cart_items.all()]
         )
 
-        return _format_price(total_price, self.pricelist)
+        return format_price(total_price, self.pricelist)
 
     def recalculate(self, pricelist: PriceList, country: Country):
         """
         Recalculate cart prices.
         """
         if (self.pricelist and self.pricelist.code == pricelist.code) and (
-            self.country.code == country.code
+                self.country.code == country.code
         ):
             # if pricelist and country is the same as before, we don't need to recalculate
             return
@@ -270,7 +271,16 @@ class CartItem(models.Model):
         """
         total_price = self.unit_price_net * self.quantity
 
-        return _format_price(total_price, self.cart.pricelist)
+        return format_price(total_price, self.cart.pricelist)
+
+    @property
+    def unit_price_net_formatted(self):
+        """
+        Get unit price of this item with currency symbol
+
+        This price is intended to be shown to the user.
+        """
+        return format_price(self.unit_price_net, self.cart.pricelist)
 
     def recalculate(self, pricelist, country):
         # recalculate price for this cart item based on pricelist and country
@@ -292,15 +302,3 @@ class CartItem(models.Model):
             else price.discounted_price_incl_vat(vat)
         )
         self.save()
-
-
-def _format_price(price, pricelist):
-    if (
-        price % 1 == 0
-    ):  # If it's a whole number, convert it to int, to make sure there aren't any decimal places
-        price = int(price)
-
-    symbol = pricelist.currency.symbol
-    symbol_position = pricelist.currency.symbol_position
-
-    return f"{price} {symbol}" if symbol_position == "AFTER" else f"{symbol} {price}"

@@ -8,6 +8,7 @@ export interface ICartItem {
   product_variant_name: string;
   unit_price_gross: number;
   unit_price_net: number;
+  unit_price_net_formatted: string;
   total_price_net_formatted: string;
   quantity: number;
   discount: number | null;
