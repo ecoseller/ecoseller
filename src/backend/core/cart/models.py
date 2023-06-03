@@ -191,7 +191,7 @@ class Cart(models.Model):
         Recalculate cart prices.
         """
         if (self.pricelist and self.pricelist.code == pricelist.code) and (
-                self.country.code == country.code
+            self.country.code == country.code
         ):
             # if pricelist and country is the same as before, we don't need to recalculate
             return
@@ -295,7 +295,9 @@ class CartItem(models.Model):
 
 
 def _format_price(price, pricelist):
-    if price % 1 == 0:  # If it's a whole number, convert it to int, to make sure there aren't any decimal places
+    if (
+        price % 1 == 0
+    ):  # If it's a whole number, convert it to int, to make sure there aren't any decimal places
         price = int(price)
 
     symbol = pricelist.currency.symbol

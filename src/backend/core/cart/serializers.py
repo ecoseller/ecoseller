@@ -365,7 +365,9 @@ class CartShippingMethodCountrySerializer(CartShippingMethodCountryBaseSerialize
 
     class Meta:
         model = ShippingMethodCountry
-        fields = CartShippingMethodCountryBaseSerializer.Meta.fields + ("payment_methods",)
+        fields = CartShippingMethodCountryBaseSerializer.Meta.fields + (
+            "payment_methods",
+        )
 
 
 class CartDetailSerializer(ModelSerializer):

@@ -43,7 +43,9 @@ from cart.serializers import (
     CartItemUpdateSerializer,
     CartShippingMethodCountrySerializer,
     CartSerializer,
-    CartDetailSerializer, CartPaymentMethodCountrySerializer, CartShippingMethodCountryBaseSerializer,
+    CartDetailSerializer,
+    CartPaymentMethodCountrySerializer,
+    CartShippingMethodCountryBaseSerializer,
 )
 from country.models import (
     Country,
@@ -535,7 +537,9 @@ class PaymentMethodCountryListView(ListCreateAPIView):
         return PaymentMethodCountry.objects.filter(payment_method__id=method_id)
 
 
-class PaymentMethodCountryDetailDashboardView(GenericAPIView, UpdateModelMixin, DestroyModelMixin):
+class PaymentMethodCountryDetailDashboardView(
+    GenericAPIView, UpdateModelMixin, DestroyModelMixin
+):
     """
     Detail of payment method country
     """
@@ -558,7 +562,9 @@ class PaymentMethodCountryDetailDashboardView(GenericAPIView, UpdateModelMixin, 
     def get(self, request, id):
         try:
             payment_method_country = PaymentMethodCountry.objects.get(id=id)
-            serializer = CartPaymentMethodCountrySerializer(payment_method_country, context={"request": request})
+            serializer = CartPaymentMethodCountrySerializer(
+                payment_method_country, context={"request": request}
+            )
             return Response(serializer.data)
         except PaymentMethodCountry.DoesNotExist:
             return Response(status=HTTP_404_NOT_FOUND)
@@ -639,7 +645,9 @@ class ShippingMethodCountryListView(ListCreateAPIView):
         return ShippingMethodCountry.objects.filter(shipping_method__id=method_id)
 
 
-class ShippingMethodCountryDetailDashboardView(GenericAPIView, UpdateModelMixin, DestroyModelMixin):
+class ShippingMethodCountryDetailDashboardView(
+    GenericAPIView, UpdateModelMixin, DestroyModelMixin
+):
     """
     List all products for dashboard
     """
@@ -662,7 +670,9 @@ class ShippingMethodCountryDetailDashboardView(GenericAPIView, UpdateModelMixin,
     def get(self, request, id):
         try:
             payment_method_country = ShippingMethodCountry.objects.get(id=id)
-            serializer = CartShippingMethodCountryBaseSerializer(payment_method_country, context={"request": request})
+            serializer = CartShippingMethodCountryBaseSerializer(
+                payment_method_country, context={"request": request}
+            )
             return Response(serializer.data)
         except ShippingMethodCountry.DoesNotExist:
             return Response(status=HTTP_404_NOT_FOUND)

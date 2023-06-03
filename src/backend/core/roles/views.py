@@ -315,7 +315,7 @@ class PermissionView(GenericAPIView):
             "productmedia",
             "product",
             "user",
-            "order"
+            "order",
         ]
         filterActions = ["change", "add"]
         permissions = self.get_queryset().values()

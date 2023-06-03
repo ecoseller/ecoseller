@@ -8,7 +8,11 @@ from rest_framework.views import APIView
 from cart.models import Cart
 from roles.decorator import check_user_is_staff_decorator
 from .models import Order
-from .serializers import OrderDetailSerializer, OrderListSerializer, OrderStatusSerializer
+from .serializers import (
+    OrderDetailSerializer,
+    OrderListSerializer,
+    OrderStatusSerializer,
+)
 
 
 class OrderDetailDashboardView(RetrieveAPIView):
