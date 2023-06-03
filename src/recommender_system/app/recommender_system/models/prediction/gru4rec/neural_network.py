@@ -42,7 +42,6 @@ class NeuralNetwork:
             self.device = torch.device("mps:0")
         else:
             self.device = torch.device("cpu")
-        self.device = torch.device("cpu")
         logging.info(f"Using device {self.device}")
 
         skus = product_storage.get_objects_attribute(
