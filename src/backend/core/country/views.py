@@ -346,3 +346,62 @@ class BillingInfoListUserView(GenericAPIView):
 
     def get_queryset(self):
         return BillingInfo.objects.filter(user=self.kwargs["user_id"])
+
+
+class ShippingInfoUserView(GenericAPIView):
+    permissions_classes = (permissions.AllowAny,)
+    allowed_methods = ["GET", "PUT"]
+    serializer_class = ShippingInfoSerializer
+
+    def get(self, request):
+        user_id = request.user
+        qs = self.get_queryset(user_id)
+        if qs is None:
+            return Response({"error": "Not logged in user"}, status=400)
+        serializer = self.serializer_class(qs)
+        return Response(serializer.data, status=200)
+    
+    def put(self, request):
+        user_id = request.user
+        qs = self.get_queryset(user_id)
+        if qs is None:
+            return Response({"error": "Not logged in user"}, status=400)
+        serializer = self.serializer_class(qs, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        return Response({"error": serializer.errors}, status=400)
+
+    def get_queryset(self, user_id):
+        if user_id is None:
+            return None
+        return ShippingInfo.objects.filter(user=user_id)
+
+class BillingInfoUserView(GenericAPIView):
+    permissions_classes = (permissions.AllowAny,)
+    allowed_methods = ["GET", "PUT"]
+    serializer_class = BillingInfoSerializer
+
+    def get(self, request):
+        user_id = request.user
+        qs = self.get_queryset(user_id)
+        if qs is None:
+            return Response({"error": "Not logged in user"}, status=400)
+        serializer = self.serializer_class(qs)
+        return Response(serializer.data, status=200)
+    
+    def put(self, request):
+        user_id = request.user
+        qs = self.get_queryset(user_id)
+        if qs is None:
+            return Response({"error": "Not logged in user"}, status=400)
+        serializer = self.serializer_class(qs, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        return Response({"error": serializer.errors}, status=400)
+
+    def get_queryset(self, user_id):
+        if user_id is None:
+            return None
+        return BillingInfo.objects.filter(user=user_id)

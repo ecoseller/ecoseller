@@ -28,7 +28,6 @@ const User = () => {
   const [user, setUser] = useState<IUser | null>(null);
   const [refetch, setRefetch] = useState<boolean>(false);
 
-  console.log(user);
   const router = useRouter();
 
 
@@ -60,6 +59,11 @@ const User = () => {
         } as IUser)
       });
   }, [openLoginModal, refetch]);
+
+  const handleProfile = () => {
+    router.replace(`/user/detail`);
+  };
+
 
   const handleLogout = () => {
     const refreshToken = Cookies.get("refreshToken") || null;
@@ -149,7 +153,7 @@ const User = () => {
           </Typography>
         </Box>
         <Divider sx={{ borderColor: "#E6E8EA" }} />
-        <MenuItem sx={{ m: 1 }}>
+        <MenuItem onClick={handleProfile} sx={{ m: 1 }}>
           Profile
         </MenuItem>
         <MenuItem sx={{ m: 1 }}>
