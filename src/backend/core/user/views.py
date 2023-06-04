@@ -115,7 +115,6 @@ class UserViewObs(APIView):
     Print user data from token passed in header.
     """
 
-    @check_user_is_staff_decorator()
     def get(self, request):
         user = request.user
         # auth = request.auth
@@ -123,7 +122,7 @@ class UserViewObs(APIView):
         # currently triggers UserAuthBackend
         # user = authenticate(request)
 
-        if user is None:
+        if user is None or not user.is_authenticated:
             return Response({"error": "User does not exist"}, status=400)
 
         serializer = UserSerializer(user)
