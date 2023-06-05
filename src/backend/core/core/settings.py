@@ -233,3 +233,12 @@ try:
 except Exception as e:
     print(e)
     NOTIFICATIONS_API = None
+
+
+# Online payment method APIs
+PAYMENT_CONFIG_PATH = os.environ.get("PAYMENT_CONFIG_PATH", "./config/payments.json")
+try:
+    PAYMENT_METHOD_APIS = None
+except Exception as e:
+    print(e)
+    PAYMENT_METHOD_APIS = None

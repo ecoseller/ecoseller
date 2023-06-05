@@ -168,6 +168,7 @@ const PaymentMethodCountryEditor = ({
           currency: newRow.currency,
           price: newRow.price,
           is_active: newRow.is_active,
+          api_request: newRow.api_request,
         }),
       })
         .then((res) => res.json())
@@ -191,17 +192,21 @@ const PaymentMethodCountryEditor = ({
     }
 
     // // if row is not new, update it in the database and update the row in the grid
-    fetch(`/api/cart/payment-method/country/${newRow.id}/`, {
-      method: "PUT",
-      body: JSON.stringify({
-        payment_method: paymentMethod.id,
-        country: newRow.country,
-        vat_group: newRow.vat_group,
-        currency: newRow.currency,
-        price: newRow.price,
-        is_active: newRow.is_active,
-      }),
-    })
+    fetch(
+      `/api/cart/payment-method/${paymentMethod.id}/country/${newRow.id}/`,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          payment_method: paymentMethod.id,
+          country: newRow.country,
+          vat_group: newRow.vat_group,
+          currency: newRow.currency,
+          price: newRow.price,
+          is_active: newRow.is_active,
+          api_request: newRow.api_request,
+        }),
+      }
+    )
       .then((res) => res.json())
       .then(() => {
         setSnackbar({
@@ -340,6 +345,17 @@ const PaymentMethodCountryEditor = ({
         value: currency.code,
         label: `${currency.symbol}`,
       })),
+    },
+    {
+      field: "api_request",
+      headerName: "API Request",
+      type: "string",
+      editable: true,
+      width: 125,
+      minWidth: 150,
+      maxWidth: 200,
+      sortable: false,
+      disableColumnMenu: true,
     },
     {
       field: "is_active",

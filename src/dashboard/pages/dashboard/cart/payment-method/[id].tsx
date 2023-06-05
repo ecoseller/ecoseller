@@ -211,12 +211,12 @@ const DashboardPaymentMethodDetailPage = ({
                 .then((data) => {
                   setSnackbar({
                     open: true,
-                    message: "Shipping method updated",
+                    message: "Payment method updated",
                     severity: "success",
                   });
                 })
                 .catch((err) => {
-                  console.log("Shipping Method put", err);
+                  console.log("Payment Method put", err);
                   setSnackbar({
                     open: true,
                     message: "Something went wrong",

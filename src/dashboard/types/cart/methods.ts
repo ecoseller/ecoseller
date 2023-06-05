@@ -89,6 +89,7 @@ export interface IPaymentMethodCountry {
   is_active: boolean;
   create_at: string;
   update_at: string;
+  api_request: string;
 }
 
 export interface IPaymentMethodCountryFullList {

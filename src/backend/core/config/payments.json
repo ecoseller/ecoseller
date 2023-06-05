@@ -1,0 +1,28 @@
+{
+    "BANKTRANSFER_EUR": {
+        "implementation": "api.payments.modules.BankTransfer.BankTransfer",
+        "kwargs": {
+            "currency": "EUR",
+            "bankName": "Deutsche Bank",
+            "accountNumber": "DE12500105170648489890",
+            "swiftCode": "DEUTDEDBBER"
+        }
+    },
+    "BANKTRANSFER_CZK": {
+        "implementation": "api.payments.modules.BankTransfer.BankTransfer",
+        "kwargs": {
+            "currency": "CZK",
+            "bankName": "CŠOB",
+            "accountNumber": "CZ5855000000001265098001",
+            "swiftCode": "CEKOCZPP"
+        }
+    },
+    "TEST_API": {
+        "implementation": "api.payments.modules.TestGateway.TestGateway",
+        "kwargs": {
+            "merchant": "123456",
+            "secret": "1234567890abcdef1234567890abcdef",
+            "url": "https://payments.comgate.cz/v1.0/"
+        }
+    }
+}
