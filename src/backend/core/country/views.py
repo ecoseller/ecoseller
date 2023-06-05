@@ -355,17 +355,19 @@ class ShippingInfoUserView(GenericAPIView):
 
     def get(self, request):
         user_id = request.user
-        qs = self.get_queryset(user_id)
-        if qs is None:
+        if user_id is None or not user_id.is_authenticated:
             return Response({"error": "Not logged in user"}, status=400)
+        qs = self.get_queryset(user_id)
+        if qs.count() == 0:
+            return Response({}, status=200) 
         serializer = self.serializer_class(qs)
         return Response(serializer.data, status=200)
     
     def put(self, request):
         user_id = request.user
-        qs = self.get_queryset(user_id)
-        if qs is None:
+        if user_id is None or not user_id.is_authenticated:
             return Response({"error": "Not logged in user"}, status=400)
+        qs = self.get_queryset(user_id)
         serializer = self.serializer_class(qs, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -384,17 +386,19 @@ class BillingInfoUserView(GenericAPIView):
 
     def get(self, request):
         user_id = request.user
-        qs = self.get_queryset(user_id)
-        if qs is None:
+        if user_id is None or not user_id.is_authenticated:
             return Response({"error": "Not logged in user"}, status=400)
+        qs = self.get_queryset(user_id)
+        if qs.count() == 0:
+            return Response({}, status=200)
         serializer = self.serializer_class(qs)
         return Response(serializer.data, status=200)
     
     def put(self, request):
         user_id = request.user
-        qs = self.get_queryset(user_id)
-        if qs is None:
+        if user_id is None or not user_id.is_authenticated:
             return Response({"error": "Not logged in user"}, status=400)
+        qs = self.get_queryset(user_id)
         serializer = self.serializer_class(qs, data=request.data)
         if serializer.is_valid():
             serializer.save()

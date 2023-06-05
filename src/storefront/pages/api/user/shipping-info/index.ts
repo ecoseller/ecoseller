@@ -18,7 +18,7 @@ export const userShippingInfoAPI = async (
         setRequestResponse(req, res);
     }
 
-    let url = `/storefront/address/shipping/`;
+    let url = `/country/storefront/address/shipping/`;
 
     const { body } = req;
 

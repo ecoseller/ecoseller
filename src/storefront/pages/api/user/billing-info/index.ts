@@ -18,7 +18,7 @@ export const userBillingInfoAPI = async (
         setRequestResponse(req, res);
     }
 
-    let url = `/storefront/address/billing/`;
+    let url = `/country/storefront/address/billing/`;
 
     const { body } = req;
 

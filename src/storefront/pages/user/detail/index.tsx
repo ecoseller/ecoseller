@@ -1,15 +1,25 @@
 import { useRouter } from "next/router";
 import RootLayout from "@/pages/layout";
 import { ReactElement, useEffect, useState } from "react";
-import { Alert, Box, Button, Container, Snackbar, Stack } from "@mui/material";
+import { Alert, Box, Button, Container, Snackbar, Stack, Typography } from "@mui/material";
 import { IUser } from "@/types/user";
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
 import UserGeneralInformation from "@/components/User/UserGeneralInformation";
 import { useSnackbarState } from "@/utils/snackbar";
 import { useUser } from "@/utils/context/user";
 import UserPasswordInformation from "@/components/User/UserPasswordInformation";
+import { userShippingInfoAPI } from "@/pages/api/user/shipping-info";
+import { userBillingInfoAPI } from "@/pages/api/user/billing-info";
+import { IBillingInfo, IShippingInfo } from "@/types/cart";
+import BillingInfoForm, { IBillingInfoFormProps, billingInfoInitialData } from "@/components/Forms/BillingInfoForm";
+import ShippingInfoForm, { IShippingInfoFormProps, shippingInfoInitialData } from "@/components/Forms/ShippingInfoForm";
 
-const StorefrontUserEditPage = () => {
+interface IUserProps {
+    billingInfo: IBillingInfo;
+    shippingInfo: IShippingInfo;
+}
+
+const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
     const router = useRouter();
     const { id } = router.query;
 
@@ -62,7 +72,30 @@ const StorefrontUserEditPage = () => {
         }
     };
 
-    console.log("STATE", state);
+    const [validBillingInfo, setValidBillingInfo] = useState<boolean>(false);
+    const [billingInfoState, setBillingInfoState] =
+        useState<IBillingInfoFormProps>({} as IBillingInfoFormProps);
+
+    if (Object.keys(billingInfoState)?.length === 0) {
+        setBillingInfoState(
+            billingInfoInitialData(
+                { ...billingInfo, } as IBillingInfo,
+                setBillingInfoState
+            ));
+    }
+
+    const [validShippingInfo, setValidShippingInfo] = useState<boolean>(false);
+    const [shippingInfoState, setShippingInfoState] =
+        useState<IShippingInfoFormProps>({} as IShippingInfoFormProps);
+
+    if (Object.keys(shippingInfoState)?.length === 0) {
+        setShippingInfoState(
+            shippingInfoInitialData(
+                { ...shippingInfo },
+                setShippingInfoState
+            )
+        );
+    }
 
     return (
         <Container maxWidth="xl">
@@ -76,6 +109,34 @@ const StorefrontUserEditPage = () => {
                 snackbar={snackbar}
                 setSnackbar={(v: any) => setSnackbar(v)}
             />
+            <Box pl={3} mt={2}>
+                <Typography variant="h6">Billing info</Typography>
+                <BillingInfoForm
+                    first_name={billingInfoState?.first_name}
+                    surname={billingInfoState?.surname}
+                    company_name={billingInfoState?.company_name}
+                    company_id={billingInfoState?.company_id}
+                    vat_number={billingInfoState?.vat_number}
+                    street={billingInfoState?.street}
+                    city={billingInfoState?.city}
+                    postal_code={billingInfoState?.postal_code}
+                    country={billingInfoState?.country}
+                    setIsFormValid={setValidBillingInfo}
+                />
+                <Typography variant="h6">Shipping info</Typography>
+                <ShippingInfoForm
+                    first_name={shippingInfoState?.first_name}
+                    surname={shippingInfoState?.surname}
+                    email={shippingInfoState?.email}
+                    phone={shippingInfoState?.phone}
+                    additional_info={shippingInfoState?.additional_info}
+                    street={shippingInfoState?.street}
+                    city={shippingInfoState?.city}
+                    postal_code={shippingInfoState?.postal_code}
+                    country={shippingInfoState?.country}
+                    setIsFormValid={setValidShippingInfo}
+                />
+            </Box>
             <Box m={3} marginRight={10}>
                 <Stack
                     direction="row"
@@ -103,29 +164,74 @@ const StorefrontUserEditPage = () => {
                     </Button>
                 </Stack>
             </Box>
-            {snackbar ? (
-                <Snackbar
-                    open={snackbar.open}
-                    autoHideDuration={6000}
-                    onClose={handleSnackbarClose}
-                >
-                    <Alert
+            {
+                snackbar ? (
+                    <Snackbar
+                        open={snackbar.open}
+                        autoHideDuration={6000}
                         onClose={handleSnackbarClose}
-                        severity={snackbar.severity}
-                        sx={{ width: "100%" }}
                     >
-                        {snackbar.message}
-                    </Alert>
-                </Snackbar>
-            ) : null}
-        </Container>
+                        <Alert
+                            onClose={handleSnackbarClose}
+                            severity={snackbar.severity}
+                            sx={{ width: "100%" }}
+                        >
+                            {snackbar.message}
+                        </Alert>
+                    </Snackbar>
+                ) : null
+            }
+        </Container >
     );
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 
+    const { req, res } = context;
+
+    const shippingInfoBE = await userShippingInfoAPI(
+        "GET",
+        req as NextApiRequest,
+        res as NextApiResponse
+    );
+
+    const shippingInfo = {
+        id: shippingInfoBE?.id || "",
+        first_name: shippingInfoBE?.first_name || "",
+        surname: shippingInfoBE?.surname || "",
+        street: shippingInfoBE?.street || "",
+        city: shippingInfoBE?.city || "",
+        postal_code: shippingInfoBE?.postal_code || "",
+        country: shippingInfoBE?.country || "",
+        email: shippingInfoBE?.email || "",
+        phone: shippingInfoBE?.phone || "",
+        additional_info: shippingInfoBE?.additional_info || "",
+    }
+
+    const billingInfoBE = await userBillingInfoAPI(
+        "GET",
+        req as NextApiRequest,
+        res as NextApiResponse
+    );
+
+    const billingInfo = {
+        id: billingInfoBE?.id || "",
+        first_name: billingInfoBE?.first_name || "",
+        surname: billingInfoBE?.surname || "",
+        company_name: billingInfoBE?.company_name || "",
+        company_id: billingInfoBE?.company_id || "",
+        vat_number: billingInfoBE?.vat_number || "",
+        street: billingInfoBE?.street || "",
+        city: billingInfoBE?.city || "",
+        postal_code: billingInfoBE?.postal_code || "",
+        country: billingInfoBE?.country || "",
+    }
+
     return {
-        props: {},
+        props: {
+            billingInfo,
+            shippingInfo,
+        },
     };
 };
 
