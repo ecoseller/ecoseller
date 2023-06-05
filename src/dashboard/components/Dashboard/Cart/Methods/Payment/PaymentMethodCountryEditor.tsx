@@ -261,7 +261,7 @@ const PaymentMethodCountryEditor = ({
 
   const handleDeleteClick = (id: GridRowId) => () => {
     // delete row with id
-    fetch(`/api/cart/payment-method/${paymentMethod.id}/country/${id}`, {
+    fetch(`/api/cart/payment-method/country/${id}`, {
       method: "DELETE",
     })
       .then((res) => res.json())

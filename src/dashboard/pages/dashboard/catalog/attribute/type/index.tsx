@@ -34,6 +34,8 @@ import { IAttributeType, IAttributeTypePostRequest } from "@/types/product";
 // api
 import { postAttributeType } from "@/api/product/attributes";
 import { useSnackbarState } from "@/utils/snackbar";
+import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
+import { productAttributeTypeAPI } from "@/pages/api/product/attribute/type";
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -46,7 +48,7 @@ const EditToolbar = (props: EditToolbarProps) => {
   const { setRows, setRowModesModel } = props;
   const router = useRouter();
 
-  const handleClick = () => {
+  const handleClick = async () => {
     // post new row with empty name and obtain ID and set it
     const newRow = {
       type_name: "",
@@ -57,18 +59,19 @@ const EditToolbar = (props: EditToolbarProps) => {
       base_attributes: [],
     } as IAttributeTypePostRequest)
       .then((res) => {
+        console.log("res", res);
         setRows((oldRows) => [
           ...oldRows,
           {
             ...newRow,
-            id: res.data.id,
+            id: res.id,
           },
         ]);
         setRowModesModel((oldModel) => ({
           ...oldModel,
-          [res.data.id]: GridRowModes.Edit,
+          [res.id]: GridRowModes.Edit,
         }));
-        router.push(`/dashboard/catalog/attribute/type/${res.data.id}`);
+        router.push(`/dashboard/catalog/attribute/type/${res.id}`);
       })
       .catch((err) => {
         console.log(err);
@@ -84,12 +87,16 @@ const EditToolbar = (props: EditToolbarProps) => {
   );
 };
 
-const DashboardAttributeTypePage = () => {
-  const {
-    data: productAttributeTypeData,
-    error: productAttributeTypeError,
-    mutate: productAttributeTypeMutate,
-  } = useSWR<IAttributeType[]>("/product/dashboard/attribute/type/");
+const DashboardAttributeTypePage = ({
+  productAttributeTypeData,
+}: {
+  productAttributeTypeData: IAttributeType[];
+}) => {
+  // const {
+  //   data: productAttributeTypeData,
+  //   error: productAttributeTypeError,
+  //   mutate: productAttributeTypeMutate,
+  // } = useSWR<IAttributeType[]>("/product/dashboard/attribute/type/");
 
   const [rows, setRows] = useState<IAttributeType[]>([]);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
@@ -214,10 +221,17 @@ DashboardAttributeTypePage.getLayout = (page: ReactElement) => {
   );
 };
 
-export const getServersideProps = async (context: any) => {
-  console.log("Dashboard attribute type");
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { req, res } = context;
+
+  const productAttributeTypeData = await productAttributeTypeAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
   return {
-    props: {},
+    props: { productAttributeTypeData },
   };
 };
 

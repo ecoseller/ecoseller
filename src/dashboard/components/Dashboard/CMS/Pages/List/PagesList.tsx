@@ -105,7 +105,7 @@ const PagesList = ({ pages }: PagesListProps) => {
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={handleDeleteClick(id as number)}
+            onClick={async () => await handleDeleteClick(id as number)}
             color="inherit"
             key={"delete"}
           />,
@@ -114,13 +114,13 @@ const PagesList = ({ pages }: PagesListProps) => {
     },
   ];
 
-  const handleDeleteClick = (id: number) => () => {
+  const handleDeleteClick = async (id: number) => {
     const item = pages.find((page) => page.id === id);
     if (!item) return;
     if (item.resourcetype == "PageCMS") {
-      deleteCMSPage(id);
+      await deleteCMSPage(id);
     } else if (item.resourcetype == "PageFrontend") {
-      deleteFrontendPage(id);
+      await deleteFrontendPage(id);
     }
 
     refreshData();

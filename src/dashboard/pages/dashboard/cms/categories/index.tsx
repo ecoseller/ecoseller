@@ -6,7 +6,12 @@ import RootLayout from "@/pages/layout";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { getAllCategories } from "@/api/category/category";
-import { InferGetServerSidePropsType } from "next";
+import {
+  GetServerSideProps,
+  InferGetServerSidePropsType,
+  NextApiRequest,
+  NextApiResponse,
+} from "next";
 import Card from "@mui/material/Card";
 // api
 // components
@@ -17,6 +22,8 @@ import PageCategoriesList from "@/components/Dashboard/CMS/Categories/List/PageC
 import { getAllPageCategoryTypes } from "@/api/cms/category/type/type";
 import PageCategoryTypeListTopLine from "@/components/Dashboard/CMS/Categories/List/PageCategoryTypeListTopLine";
 import PageCategoryTypeList from "@/components/Dashboard/CMS/Categories/List/PageCategoryTypeList";
+import { cmsCategoryListAPI } from "@/pages/api/cms/category";
+import { cmsCategoryTypeListAPI } from "@/pages/api/cms/category/type";
 
 const PageCategoriesPage = ({
   categories,
@@ -44,11 +51,21 @@ PageCategoriesPage.getLayout = (page: ReactElement) => {
   );
 };
 
-export async function getServerSideProps() {
-  const categories = await getAllPageCategories();
-  const types = await getAllPageCategoryTypes();
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { req, res } = context;
+
+  const categories = await cmsCategoryListAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+  const types = await cmsCategoryTypeListAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
 
   return { props: { categories: categories, types: types } };
-}
+};
 
 export default PageCategoriesPage;

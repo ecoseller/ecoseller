@@ -15,28 +15,6 @@ const CartItemList = () => {
   const { cart, updateQuantity, removeFromCart } = useCart();
   const router = useRouter();
 
-  const roundedPrice = (item: ICartItem) => {
-    const price = item.quantity * item.unit_price_net;
-    return Math.round(price * 100) / 100;
-  };
-
-  const getPriceString = (
-    price: number,
-    currencySymbol: string,
-    symbolPosition: "BEFORE" | "AFTER"
-  ) => {
-    if (symbolPosition == "BEFORE") {
-      return `${currencySymbol} ${price}`;
-    } else {
-      return `${price} ${currencySymbol}`;
-    }
-  };
-
-  const getTotalPrice = (items: ICartItem[]) => {
-    const itemPrices = items.map((i) => i.unit_price_net * i.quantity);
-    return itemPrices.reduce((x, y) => x + y);
-  };
-
   const updateItemQuantity = (item: ICartItem, addingOne: boolean = true) => {
     if (!addingOne && item.quantity == 1) {
       return;
@@ -104,11 +82,7 @@ const CartItemList = () => {
               </TableCell>
 
               <TableCell sx={{ fontWeight: 700 }} align="center">
-                {getPriceString(
-                  roundedPrice(item),
-                  cart.currency_symbol,
-                  cart.symbol_position
-                )}
+                {item.total_price_net_formatted}
               </TableCell>
 
               <TableCell align="center">
@@ -127,12 +101,7 @@ const CartItemList = () => {
       <Grid container justifyContent="center" sx={{ my: 3 }}>
         <Grid item>
           <Typography variant="h6">
-            Total price:&nbsp;
-            {getPriceString(
-              getTotalPrice(cart.cart_items),
-              cart.currency_symbol,
-              cart.symbol_position
-            )}
+            Total price:&nbsp;{cart.total_price_net_formatted}
           </Typography>
         </Grid>
       </Grid>

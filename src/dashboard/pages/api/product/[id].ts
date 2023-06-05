@@ -21,7 +21,7 @@ export const productDetailAPI = async (
     setRequestResponse(req, res);
   }
 
-  const url = `/product/dashboard/detail/${id}`;
+  const url = `/product/dashboard/detail/${id}/`;
 
   switch (method) {
     case "GET":
@@ -37,6 +37,18 @@ export const productDetailAPI = async (
     case "DELETE":
       return await api
         .delete(url)
+        .then((response) => response.data)
+        .then((data: IProduct) => {
+          return data;
+        })
+        .catch((error: any) => {
+          throw error;
+        });
+    case "PUT":
+      const body = req?.body;
+      if (!body) throw new Error("Body is empty");
+      return await api
+        .put(url, body)
         .then((response) => response.data)
         .then((data: IProduct) => {
           return data;

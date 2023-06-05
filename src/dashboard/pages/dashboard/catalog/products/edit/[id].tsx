@@ -15,6 +15,9 @@ import { IAttributeType, IProduct } from "@/types/product";
 import { axiosPrivate } from "@/utils/axiosPrivate";
 import { IPriceList } from "@/types/localization";
 import { PermissionProvider } from "@/utils/context/permission";
+import { pricelistListAPI } from "@/pages/api/product/price-list";
+import { productDetailAPI } from "@/pages/api/product/[id]";
+import { NextApiRequest, NextApiResponse } from "next";
 
 interface IProps {
   product: IProduct; // atributesData are gotten directly from product: IProduct
@@ -59,11 +62,15 @@ export const getServerSideProps = async (context: any) => {
    * If id is not provided or product is not found, return 404
    */
 
-  const { id } = context.params;
-  console.log("id", id);
+  const { req, res } = context;
+  const { id } = context.query;
   // feth product data
-  const productRes = await axiosPrivate.get(`/product/dashboard/detail/${id}/`);
-  const product = productRes.data;
+  const product = await productDetailAPI(
+    "GET",
+    id,
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
 
   console.log("product", product);
   if (!product) {
@@ -73,8 +80,11 @@ export const getServerSideProps = async (context: any) => {
   }
 
   // fetch pricelists data
-  const pricelistsRes = await axiosPrivate.get("product/dashboard/pricelist/");
-  const pricelistsData = pricelistsRes.data;
+  const pricelistsData = await pricelistListAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
 
   return {
     props: {

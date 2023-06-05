@@ -5,7 +5,6 @@ import { useUser } from "./user";
 export type ContextPermissions =
   // cart
   | "cart_change_permission"
-  | "cart_add_permission"
   // productprice
   | "productprice_change_permission"
   | "productprice_add_permission"
@@ -26,7 +25,9 @@ export type ContextPermissions =
   | "user_add_permission"
   // group
   | "group_change_permission"
-  | "group_add_permission";
+  | "group_add_permission"
+  // order
+  | "order_change_permission";
 
 interface IPermissionContextProps {
   hasPermission: boolean;

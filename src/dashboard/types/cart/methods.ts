@@ -106,3 +106,30 @@ export interface IPaymentMethodCountryFullList {
   create_at: string;
   update_at: string;
 }
+
+/**
+ * Base interface for translated shipping/payment methods
+ */
+export interface ITranslatedMethodBase {
+  title: string;
+  description: string;
+  image: string;
+}
+
+/**
+ * Interface representing translated payment method country
+ */
+export interface ITranslatedPaymentMethodCountryBase {
+  id: number;
+  payment_method: ITranslatedMethodBase;
+  price_incl_vat: string;
+}
+
+/**
+ * Interface representing translated payment method country
+ */
+export interface ITranslatedShippingMethodCountryBase {
+  id: number;
+  shipping_method: ITranslatedMethodBase;
+  price_incl_vat: string;
+}

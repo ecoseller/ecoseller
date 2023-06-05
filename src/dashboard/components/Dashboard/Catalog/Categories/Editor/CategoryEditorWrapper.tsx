@@ -97,7 +97,7 @@ const CategoryEditorWrapper = ({
 
   useEffect(() => {
     getLanguages().then((langs) => {
-      setLanguages(langs.data);
+      setLanguages(langs);
     });
   }, []);
 

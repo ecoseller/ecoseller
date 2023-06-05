@@ -43,6 +43,9 @@ import {
   putPriceList,
 } from "@/api/country/product/priceList";
 import { useSnackbarState } from "@/utils/snackbar";
+import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
+import { pricelistListAPI } from "@/pages/api/product/price-list";
+import { currencyListAPI } from "@/pages/api/country/currency";
 
 interface IPriceListTable extends IPriceList {
   isNew?: boolean;
@@ -80,40 +83,14 @@ const EditToolbar = (props: EditToolbarProps) => {
   );
 };
 
-const DashboardPriceListsPage = () => {
-  const {
-    data: currencies,
-    error: currenciesError,
-    mutate: currenciesMutate,
-  } = useSWR<ICurrency[]>("/country/currency/");
-
-  const {
-    data: priceLists,
-    error: priceListsError,
-    mutate: priceListsMutate,
-  } = useSWR<IPriceList[]>("/product/dashboard/pricelist/");
-
+const DashboardPriceListsPage = ({
+  priceLists,
+  currencies,
+}: {
+  priceLists: IPriceList[];
+  currencies: ICurrency[];
+}) => {
   const [snackbar, setSnackbar] = useSnackbarState();
-
-  useEffect(() => {
-    if (priceListsError) {
-      setSnackbar({
-        open: true,
-        message: "Something went wrong, could not fetch price lists",
-        severity: "error",
-      });
-    }
-  }, [priceListsError]);
-
-  useEffect(() => {
-    if (currenciesError) {
-      setSnackbar({
-        open: true,
-        message: "Something went wrong, could not fetch currencies",
-        severity: "error",
-      });
-    }
-  }, [currenciesError]);
 
   useEffect(() => {
     if (priceLists) {
@@ -318,24 +295,27 @@ const DashboardPriceListsPage = () => {
     // check if there's a duplicate default
     // if yes, show error
     // if no, save row
-    const isDuplicateDefault = rows.some(
-      (row) =>
-        row.is_default === updatedRow.is_default && row.id !== updatedRow.id
-    );
 
-    if (isDuplicateDefault) {
-      setSnackbar({
-        open: true,
-        message: "Default already exists",
-        severity: "error",
-      });
-      throw new Error("Default already exists");
+    if (updatedRow.is_default) {
+      const isDuplicateDefault = rows.filter(
+        (row) =>
+          row.is_default === updatedRow.is_default && row.id !== updatedRow.id
+      );
+
+      if (isDuplicateDefault?.length > 0) {
+        setSnackbar({
+          open: true,
+          message: "Default already exists",
+          severity: "error",
+        });
+        throw new Error("Default already exists");
+      }
     }
 
     // POST or PUT
     if (updatedRow && !postNew) {
       // update currency
-      putPriceList(updatedRow as IPriceList)
+      putPriceList(updatedRow.code, updatedRow as IPriceList)
         .then(() => {
           setSnackbar({
             open: true,
@@ -451,10 +431,27 @@ DashboardPriceListsPage.getLayout = (page: ReactElement) => {
   );
 };
 
-export const getServersideProps = async (context: any) => {
-  console.log("Dashboard pricelists");
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { req, res } = context;
+  const priceLists = await pricelistListAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
+  console.log("pricelistListAPI", priceLists);
+
+  const currencies = await currencyListAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
   return {
-    props: {},
+    props: {
+      priceLists,
+      currencies,
+    },
   };
 };
 

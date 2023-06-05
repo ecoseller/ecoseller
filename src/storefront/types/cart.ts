@@ -10,16 +10,19 @@ export interface ICartItem {
   product_variant_name: string;
   unit_price_gross: number;
   unit_price_net: number;
+  total_price_net_formatted: string;
   quantity: number;
   discount: number | null;
   primary_image: IProductMedia | null;
 }
 
 export interface ICart {
+  token: string;
   cart_items: ICartItem[];
   update_at: string;
-  currency_symbol: string;
-  symbol_position: "BEFORE" | "AFTER";
+  total_price_net_formatted: string;
+  shipping_method_country: number | null;
+  payment_method_country: number | null;
 }
 
 export interface ICartToken {

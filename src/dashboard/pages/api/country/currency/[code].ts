@@ -10,27 +10,27 @@ import {
 import { ICountry } from "@/types/country";
 import { HTTPMETHOD } from "@/types/common";
 
-export const shippingMethodCountryDetailAPI = async (
+export const currencyDetailAPI = async (
   method: HTTPMETHOD,
-  id: number,
-  shipping_country_id: number,
-  req?: NextApiRequest,
-  res?: NextApiResponse
+  req: NextApiRequest,
+  res: NextApiResponse
 ) => {
   if (req && res) {
     setRequestResponse(req, res);
   }
 
-  if (!id) throw new Error("Provide ID");
+  const { code } = req.query;
 
-  const url = `/cart/dashboard/shipping/method/${id}/country/${shipping_country_id}/`;
+  if (!code) throw new Error("Code is empty");
+
+  const url = `/country/currency/${code}/`;
 
   switch (method) {
     case "GET":
       return await api
         .get(url)
         .then((response) => response.data)
-        .then((data) => {
+        .then((data: ICountry) => {
           return data;
         })
         .catch((error: any) => {
@@ -38,22 +38,22 @@ export const shippingMethodCountryDetailAPI = async (
         });
     case "PUT":
       const body = req?.body;
+      console.log("body", body);
       if (!body) throw new Error("Body is empty");
       return await api
         .put(url, body)
         .then((response) => response.data)
-        .then((data) => {
+        .then((data: ICountry) => {
           return data;
         })
         .catch((error: any) => {
-          console.log("error", error?.response?.data);
           throw error;
         });
     case "DELETE":
       return await api
-        .delete(url, body)
+        .delete(url)
         .then((response) => response.data)
-        .then((data) => {
+        .then((data: ICountry) => {
           return data;
         })
         .catch((error: any) => {
@@ -66,44 +66,17 @@ export const shippingMethodCountryDetailAPI = async (
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   /**
-   * This is a wrapper for the shipping method dashboard API in the backend
+   * This is a wrapper for the currency detail api in the backend
    */
+  // get the cart data from the backend
+  const method = req.method as HTTPMETHOD;
 
-  const { id, shipping_country_id } = req.query;
-
-  const { method } = req;
-  if (method == "GET") {
-    return shippingMethodCountryDetailAPI(
-      "GET",
-      Number(id),
-      Number(shipping_country_id),
-      req,
-      res
-    )
-      .then((data) => res.status(200).json(data))
-      .catch((error) => res.status(400).json(null));
-  } else if (method == "PUT") {
-    return shippingMethodCountryDetailAPI(
-      "PUT",
-      Number(id),
-      Number(shipping_country_id),
-      req,
-      res
-    )
-      .then((data) => res.status(200).json(data))
-      .catch((error) => res.status(400).json(error));
-  } else if (method == "DELETE") {
-    return shippingMethodCountryDetailAPI(
-      "DELETE",
-      Number(id),
-      Number(shipping_country_id),
-      req,
-      res
-    )
+  if (method === "PUT" || method === "GET" || method === "DELETE") {
+    return currencyDetailAPI(method, req, res)
       .then((data) => res.status(200).json(data))
       .catch((error) => res.status(400).json(null));
   }
-  return res.status(404).json({ message: "Method not supported" });
+  return res.status(400).json({ message: "Method not supported" });
 };
 
 export default handler;

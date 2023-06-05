@@ -170,7 +170,7 @@ const ShippingMethodCountryEditor = ({
     // if row is new, save it to the database
     if (newRow.isNew) {
       console.log("newRow", newRow);
-      fetch(`/api/cart/shipping-method/${shippingMethod.id}/country`, {
+      fetch(`/api/cart/shipping-method/country`, {
         method: "POST",
         body: JSON.stringify({
           shipping_method: shippingMethod.id,
@@ -203,21 +203,18 @@ const ShippingMethodCountryEditor = ({
     }
 
     // // if row is not new, update it in the database and update the row in the grid
-    fetch(
-      `/api/cart/shipping-method/${shippingMethod.id}/country/${newRow.id}/`,
-      {
-        method: "PUT",
-        body: JSON.stringify({
-          shipping_method: shippingMethod.id,
-          country: newRow.country,
-          vat_group: newRow.vat_group,
-          currency: newRow.currency,
-          price: newRow.price,
-          is_active: newRow.is_active,
-          payment_methods: newRow.payment_methods,
-        }),
-      }
-    )
+    fetch(`/api/cart/shipping-method/country/${newRow.id}/`, {
+      method: "PUT",
+      body: JSON.stringify({
+        shipping_method: shippingMethod.id,
+        country: newRow.country,
+        vat_group: newRow.vat_group,
+        currency: newRow.currency,
+        price: newRow.price,
+        is_active: newRow.is_active,
+        payment_methods: newRow.payment_methods,
+      }),
+    })
       .then((res) => res.json())
       .then(() => {
         setSnackbar({
@@ -272,7 +269,7 @@ const ShippingMethodCountryEditor = ({
 
   const handleDeleteClick = (id: GridRowId) => () => {
     // delete row with id
-    fetch(`/api/cart/shipping-method/${shippingMethod.id}/country/${id}`, {
+    fetch(`/api/cart/shipping-method/country/${id}`, {
       method: "DELETE",
     })
       .then((res) => res.json())

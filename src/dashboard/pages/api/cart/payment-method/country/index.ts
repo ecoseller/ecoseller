@@ -1,4 +1,4 @@
-// /api/cart/payment-method/country.ts
+// /api/cart/payment-method/index.ts
 // call the payment method full country list api in the backend and return the data (list of payment method countries)
 import type { NextApiRequest, NextApiResponse } from "next";
 import {
