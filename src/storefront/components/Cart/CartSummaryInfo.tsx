@@ -1,4 +1,3 @@
-import { IBillingInfo } from "@/types/cart";
 import {
   Table,
   TableBody,

@@ -60,6 +60,7 @@ import CartSummaryInfo, {
 interface ICartSummaryPageProps {
   billingInfo: IBillingInfo;
   shippingInfo: IShippingInfo;
+  countries: ICountry[];
 }
 
 /**
@@ -68,8 +69,12 @@ interface ICartSummaryPageProps {
 const CartSummaryPage = ({
   billingInfo,
   shippingInfo,
+  countries,
 }: ICartSummaryPageProps) => {
   const router = useRouter();
+
+  const getCountryName = (countryId: string) =>
+    countries.find((c) => c.code == countryId)?.name || "";
 
   const shippingInfoRows: ICartInfoTableRow[] = [
     {
@@ -106,7 +111,7 @@ const CartSummaryPage = ({
     },
     {
       label: "Country",
-      value: shippingInfo.country,
+      value: getCountryName(shippingInfo.country),
     },
   ];
 
@@ -145,7 +150,7 @@ const CartSummaryPage = ({
     },
     {
       label: "Country",
-      value: billingInfo.country,
+      value: getCountryName(billingInfo.country),
     },
   ];
 
@@ -227,10 +232,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     res as NextApiResponse
   );
 
+  const countries = await countryListAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
   return {
     props: {
       billingInfo,
       shippingInfo,
+      countries,
     },
   };
 };
