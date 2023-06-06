@@ -11,7 +11,11 @@ import Button from "@mui/material/Button";
 import { useRouter } from "next/router";
 import imgPath from "@/utils/imgPath";
 
-const CartItemList = () => {
+interface ICartItemListProps {
+  editable: boolean;
+}
+
+const CartItemList = ({ editable }: ICartItemListProps) => {
   const { cart, updateQuantity, removeFromCart } = useCart();
   const router = useRouter();
 
@@ -58,21 +62,27 @@ const CartItemList = () => {
               ) : null}
 
               <TableCell align="center">
-                <IconButton
-                  onClick={() => {
-                    updateItemQuantity(item, false);
-                  }}
-                >
-                  <RemoveIcon />
-                </IconButton>
+                {editable ? (
+                  <IconButton
+                    onClick={() => {
+                      updateItemQuantity(item, false);
+                    }}
+                  >
+                    <RemoveIcon />
+                  </IconButton>
+                ) : null}
+
                 {item.quantity}
-                <IconButton
-                  onClick={() => {
-                    updateItemQuantity(item, true);
-                  }}
-                >
-                  <AddIcon />
-                </IconButton>
+
+                {editable ? (
+                  <IconButton
+                    onClick={() => {
+                      updateItemQuantity(item, true);
+                    }}
+                  >
+                    <AddIcon />
+                  </IconButton>
+                ) : null}
               </TableCell>
 
               <TableCell align="center" sx={{ fontWeight: 700 }}>
@@ -85,15 +95,17 @@ const CartItemList = () => {
                 {item.total_price_net_formatted}
               </TableCell>
 
-              <TableCell align="center">
-                <IconButton
-                  onClick={() => {
-                    removeFromCart(item.product_variant_sku);
-                  }}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </TableCell>
+              {editable ? (
+                <TableCell align="center">
+                  <IconButton
+                    onClick={() => {
+                      removeFromCart(item.product_variant_sku);
+                    }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              ) : null}
             </TableRow>
           ))}
         </TableBody>

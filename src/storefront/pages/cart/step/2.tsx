@@ -89,7 +89,7 @@ const CartStep2Page = ({ cart, methods, cartToken }: ICartStep2PageProps) => {
     );
 
     if (shippingRes === 200 && paymentRes === 200) {
-      router.push("/cart/step/3");
+      router.push("/cart/summary");
     }
   };
 
