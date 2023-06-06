@@ -201,13 +201,24 @@ const UserPasswordInformation = ({
               />
             </FormControl>
             <Box m={3} marginRight={10}>
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={handlePasswordChange}
+              <Stack
+                direction="row"
+                justifyContent="end"
+                spacing={5}
+                marginRight={7}
+                sx={{
+                  msTransform: "translateY(-40%)",
+                  transform: "translateY(-30%)",
+                }}
               >
-                Set new password
-              </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handlePasswordChange}
+                >
+                  Set new password
+                </Button>
+              </Stack>
             </Box>
             {/* <TextField label="Name" /> */}
           </Stack>

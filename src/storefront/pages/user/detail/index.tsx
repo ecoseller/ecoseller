@@ -11,8 +11,9 @@ import UserPasswordInformation from "@/components/User/UserPasswordInformation";
 import { userShippingInfoAPI } from "@/pages/api/user/shipping-info";
 import { userBillingInfoAPI } from "@/pages/api/user/billing-info";
 import { IBillingInfo, IShippingInfo } from "@/types/cart";
-import BillingInfoForm, { IBillingInfoFormProps, billingInfoInitialData } from "@/components/Forms/BillingInfoForm";
-import ShippingInfoForm, { IShippingInfoFormProps, shippingInfoInitialData } from "@/components/Forms/ShippingInfoForm";
+import BillingInfoForm, { IBillingInfoFormProps, billingInfoInitialData, exportBillingInfo } from "@/components/Forms/BillingInfoForm";
+import ShippingInfoForm, { IShippingInfoFormProps, exportShippingInfo, shippingInfoInitialData } from "@/components/Forms/ShippingInfoForm";
+import { error } from "console";
 
 interface IUserProps {
     billingInfo: IBillingInfo;
@@ -48,40 +49,18 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
         }
     }, [state]);
 
-
-    const handleSave = async () => {
-        if (state) {
-            const res = await fetch(`/api/user/${id}`, {
-                method: "PUT",
-                body: JSON.stringify(state),
-            });
-            const data = await res.json();
-            if (data?.error) {
-                setSnackbar({
-                    open: true,
-                    message: data?.error,
-                    severity: "error",
-                });
-            } else {
-                setSnackbar({
-                    open: true,
-                    message: "User updated",
-                    severity: "success",
-                });
-            }
-        }
-    };
-
     const [validBillingInfo, setValidBillingInfo] = useState<boolean>(false);
     const [billingInfoState, setBillingInfoState] =
         useState<IBillingInfoFormProps>({} as IBillingInfoFormProps);
 
     if (Object.keys(billingInfoState)?.length === 0) {
+        // TODO: setting the country to cz is a temporary solution
         setBillingInfoState(
             billingInfoInitialData(
-                { ...billingInfo, } as IBillingInfo,
+                { ...billingInfo, country: "cz" } as IBillingInfo,
                 setBillingInfoState
             ));
+        console.log(billingInfoState)
     }
 
     const [validShippingInfo, setValidShippingInfo] = useState<boolean>(false);
@@ -90,12 +69,135 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
 
     if (Object.keys(shippingInfoState)?.length === 0) {
         setShippingInfoState(
+            // TODO: setting the country to cz is a temporary solution
             shippingInfoInitialData(
-                { ...shippingInfo },
+                { ...shippingInfo, country: "cz" },
                 setShippingInfoState
             )
         );
     }
+
+    const hanldleGeneralInfoSave = async () => {
+        // save user details
+        const res = await fetch(`/api/user/detail`, {
+            method: "PUT",
+            body: JSON.stringify(state),
+        });
+        if (!res?.ok) {
+            setSnackbar({
+                open: true,
+                message: res?.statusText,
+                severity: "error",
+            });
+        }
+        else {
+            setSnackbar({
+                open: true,
+                message: "User general information updated",
+                severity: "success",
+            });
+        }
+    };
+
+    const hanleBillingInfoSave = async () => {
+        const billingInfo = exportBillingInfo(billingInfoState);
+        const res = await fetch(`/api/user/billing-info`, {
+            method: "PUT",
+            body: JSON.stringify(billingInfo),
+        });
+        if (!res?.ok) {
+            console.log(res)
+            setSnackbar({
+                open: true,
+                message: res?.statusText,
+                severity: "error",
+            });
+        }
+        else {
+            setSnackbar({
+                open: true,
+                message: "User billing information updated",
+                severity: "success",
+            });
+        }
+    };
+
+    const hanleShippingInfoSave = async () => {
+        const shippingInfo = exportShippingInfo(shippingInfoState);
+        const res = await fetch(`/api/user/shipping-info`, {
+            method: "PUT",
+            body: JSON.stringify(shippingInfo),
+        });
+        if (!res?.ok) {
+            setSnackbar({
+                open: true,
+                message: res?.statusText,
+                severity: "error",
+            });
+        }
+        else {
+            setSnackbar({
+                open: true,
+                message: "User shipping information updated",
+                severity: "success",
+            });
+        }
+    };
+
+
+
+    const handleSave = async () => {
+        // save user details
+
+        let error: boolean = false;
+        let res = await fetch(`/api/user/detail`, {
+            method: "PUT",
+            body: JSON.stringify(state),
+        });
+        if (!res?.ok) {
+            error = true;
+            setSnackbar({
+                open: true,
+                message: res?.statusText,
+                severity: "error",
+            });
+        }
+
+        const shippingInfo = exportShippingInfo(shippingInfoState);
+        res = await fetch(`/api/user/shipping-info`, {
+            method: "PUT",
+            body: JSON.stringify(shippingInfo),
+        });
+        if (!res?.ok) {
+            error = true;
+            setSnackbar({
+                open: true,
+                message: res?.statusText,
+                severity: "error",
+            });
+        }
+
+        const billingInfo = exportBillingInfo(billingInfoState);
+        res = await fetch(`/api/user/billing-info`, {
+            method: "PUT",
+            body: JSON.stringify(billingInfo),
+        });
+        if (!res?.ok) {
+            error = true;
+            setSnackbar({
+                open: true,
+                message: res?.statusText,
+                severity: "error",
+            });
+        }
+        if (!error) {
+            setSnackbar({
+                open: true,
+                message: "User updated",
+                severity: "success",
+            });
+        }
+    };
 
     return (
         <Container maxWidth="xl">
@@ -103,6 +205,31 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
                 state={state}
                 setState={(v: IUser) => setState(v)}
             />
+            <Box m={3} marginRight={10}>
+                <Stack
+                    direction="row"
+                    justifyContent="end"
+                    spacing={5}
+                    sx={{
+                        msTransform: "translateY(-40%)",
+                        transform: "translateY(-30%)",
+                    }}
+                >
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                    >
+                        Clear general information
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={hanldleGeneralInfoSave}
+                    >
+                        Save general information
+                    </Button>
+                </Stack>
+            </Box>
             <UserPasswordInformation
                 selfEdit={user?.email === state?.email}
                 email={state?.email}
@@ -123,6 +250,31 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
                     country={billingInfoState?.country}
                     setIsFormValid={setValidBillingInfo}
                 />
+                <Box m={3} marginLeft={0}>
+                    <Stack
+                        direction="row"
+                        justifyContent="end"
+                        spacing={5}
+                        sx={{
+                            msTransform: "translateY(-40%)",
+                            transform: "translateY(-30%)",
+                        }}
+                    >
+                        <Button
+                            variant="outlined"
+                            color="primary"
+                        >
+                            Clear billing info
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={hanleBillingInfoSave}
+                        >
+                            Save billing info
+                        </Button>
+                    </Stack>
+                </Box>
                 <Typography variant="h6">Shipping info</Typography>
                 <ShippingInfoForm
                     first_name={shippingInfoState?.first_name}
@@ -136,6 +288,31 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
                     country={shippingInfoState?.country}
                     setIsFormValid={setValidShippingInfo}
                 />
+                <Box m={3} marginLeft={0}>
+                    <Stack
+                        direction="row"
+                        justifyContent="end"
+                        spacing={5}
+                        sx={{
+                            msTransform: "translateY(-40%)",
+                            transform: "translateY(-30%)",
+                        }}
+                    >
+                        <Button
+                            variant="outlined"
+                            color="primary"
+                        >
+                            Clear shipping info
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={hanleShippingInfoSave}
+                        >
+                            Save shipping info
+                        </Button>
+                    </Stack>
+                </Box>
             </Box>
             <Box m={3} marginRight={10}>
                 <Stack
@@ -160,7 +337,7 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
                         variant="contained"
                         onClick={handleSave}
                     >
-                        Save
+                        Save All
                     </Button>
                 </Stack>
             </Box>
@@ -189,43 +366,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const { req, res } = context;
 
-    const shippingInfoBE = await userShippingInfoAPI(
+    const shippingInfo = await userShippingInfoAPI(
         "GET",
         req as NextApiRequest,
         res as NextApiResponse
     );
 
-    const shippingInfo = {
-        id: shippingInfoBE?.id || "",
-        first_name: shippingInfoBE?.first_name || "",
-        surname: shippingInfoBE?.surname || "",
-        street: shippingInfoBE?.street || "",
-        city: shippingInfoBE?.city || "",
-        postal_code: shippingInfoBE?.postal_code || "",
-        country: shippingInfoBE?.country || "",
-        email: shippingInfoBE?.email || "",
-        phone: shippingInfoBE?.phone || "",
-        additional_info: shippingInfoBE?.additional_info || "",
-    }
-
-    const billingInfoBE = await userBillingInfoAPI(
+    const billingInfo = await userBillingInfoAPI(
         "GET",
         req as NextApiRequest,
         res as NextApiResponse
     );
-
-    const billingInfo = {
-        id: billingInfoBE?.id || "",
-        first_name: billingInfoBE?.first_name || "",
-        surname: billingInfoBE?.surname || "",
-        company_name: billingInfoBE?.company_name || "",
-        company_id: billingInfoBE?.company_id || "",
-        vat_number: billingInfoBE?.vat_number || "",
-        street: billingInfoBE?.street || "",
-        city: billingInfoBE?.city || "",
-        postal_code: billingInfoBE?.postal_code || "",
-        country: billingInfoBE?.country || "",
-    }
 
     return {
         props: {

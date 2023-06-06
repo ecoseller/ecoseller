@@ -12,22 +12,39 @@ import { HTTPMETHOD } from "@/types/common";
 
 export const userDetailAPI = async (
     method: HTTPMETHOD,
-    req?: NextApiRequest,
+    req: NextApiRequest,
     res?: NextApiResponse
 ) => {
     if (req && res) {
         setRequestResponse(req, res);
     }
 
+    const { body } = req;
+    let url = `/user/detail`;
+
+    console.log("IN USER DETAIL API", body)
+
     switch (method) {
         case "GET":
             return await api
-                .get("/user/detail")
+                .get(url)
                 .then((response) => response.data)
                 .then((data: IUser) => {
                     return data;
                 })
                 .catch((error: any) => {
+                    throw error;
+                });
+        case "PUT":
+            return await api
+                .put(url, body)
+                .then((response) => response.data)
+                .then((data: IUser) => {
+                    console.log("IN USER DETAIL API AFTER", data)
+                    return data;
+                })
+                .catch((error: any) => {
+                    console.log("IN USER DETAIL API AFTER ERROR", error)
                     throw error;
                 });
         default:
