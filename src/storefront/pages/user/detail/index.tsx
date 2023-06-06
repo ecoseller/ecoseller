@@ -77,27 +77,38 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
         );
     }
 
-    const hanldleGeneralInfoSave = async () => {
-        // save user details
-        const res = await fetch(`/api/user/detail`, {
-            method: "PUT",
-            body: JSON.stringify(state),
-        });
+    const showSnackbar = (res: Response, messageSuccess: string, messageError: string) => {
         if (!res?.ok) {
             setSnackbar({
                 open: true,
-                message: res?.statusText,
+                message: messageError,
                 severity: "error",
             });
         }
         else {
             setSnackbar({
                 open: true,
-                message: "User general information updated",
+                message: messageSuccess,
                 severity: "success",
             });
         }
     };
+
+
+    const hanldleGeneralInfoSave = async () => {
+        // save user details
+        const res = await fetch(`/api/user/detail`, {
+            method: "PUT",
+            body: JSON.stringify(state),
+        });
+        showSnackbar(res, "User general information updated", res?.statusText);
+    };
+
+    const handleGeneralInfoClear = async () => {
+        setState({ ...state, first_name: "", last_name: "" } as IUser);
+        hanldleGeneralInfoSave();
+    };
+
 
     const hanleBillingInfoSave = async () => {
         const billingInfo = exportBillingInfo(billingInfoState);
@@ -105,21 +116,16 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
             method: "PUT",
             body: JSON.stringify(billingInfo),
         });
-        if (!res?.ok) {
-            console.log(res)
-            setSnackbar({
-                open: true,
-                message: res?.statusText,
-                severity: "error",
-            });
-        }
-        else {
-            setSnackbar({
-                open: true,
-                message: "User billing information updated",
-                severity: "success",
-            });
-        }
+        showSnackbar(res, "User billing information updated", res?.statusText);
+    };
+
+    const handleBillingInfoClear = async () => {
+        setBillingInfoState(billingInfoInitialData({} as IBillingInfo, setBillingInfoState));
+        const res = await fetch(`/api/user/billing-info`, {
+            method: "DELETE",
+            body: JSON.stringify(billingInfo),
+        });
+        showSnackbar(res, "User billing information updated", res?.statusText);
     };
 
     const hanleShippingInfoSave = async () => {
@@ -128,20 +134,16 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
             method: "PUT",
             body: JSON.stringify(shippingInfo),
         });
-        if (!res?.ok) {
-            setSnackbar({
-                open: true,
-                message: res?.statusText,
-                severity: "error",
-            });
-        }
-        else {
-            setSnackbar({
-                open: true,
-                message: "User shipping information updated",
-                severity: "success",
-            });
-        }
+        showSnackbar(res, "User shipping information updated", res?.statusText);
+    };
+
+    const handleShippingInfoClear = async () => {
+        setShippingInfoState(shippingInfoInitialData({} as IShippingInfo, setShippingInfoState));
+        const res = await fetch(`/api/user/shipping-info`, {
+            method: "DELETE",
+            body: JSON.stringify(shippingInfo),
+        });
+        showSnackbar(res, "User shipping information updated", res?.statusText);
     };
 
 
@@ -218,6 +220,7 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
                     <Button
                         variant="outlined"
                         color="primary"
+                        onClick={handleGeneralInfoClear}
                     >
                         Clear general information
                     </Button>
@@ -263,6 +266,7 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
                         <Button
                             variant="outlined"
                             color="primary"
+                            onClick={handleBillingInfoClear}
                         >
                             Clear billing info
                         </Button>
@@ -301,6 +305,7 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
                         <Button
                             variant="outlined"
                             color="primary"
+                            onClick={handleShippingInfoClear}
                         >
                             Clear shipping info
                         </Button>

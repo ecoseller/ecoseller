@@ -45,6 +45,16 @@ export const userShippingInfoAPI = async (
                 .catch((error: any) => {
                     throw error;
                 });
+        case "DELETE":
+            return await api
+                .delete(url)
+                .then((response) => response.data)
+                .then((data) => {
+                    return data;
+                })
+                .catch((error: any) => {
+                    throw error;
+                });
         default:
             throw new Error("Method not supported");
     }
@@ -63,6 +73,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     } else if (method == "PUT") {
         return userShippingInfoAPI("PUT", req, res)
             .then((data) => res.status(201).json(data))
+            .catch((error) => res.status(400).json(null));
+    } else if (method == "DELETE") {
+        return userShippingInfoAPI("DELETE", req, res)
+            .then((data) => res.status(200).json(data))
             .catch((error) => res.status(400).json(null));
     }
 
