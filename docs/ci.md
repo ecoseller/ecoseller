@@ -11,7 +11,6 @@ If it's a linter/formatter error, see the README file of corresponding component
 - [backend](../src/backend/README.md)
 - [dashboard](../src/dashboard/README.md)
 - [storefront](../src/storefront/README.md)
-- [HTTP library](../src/http-library/README.md)
 
 Follow the instructions for linting / formatting.
 

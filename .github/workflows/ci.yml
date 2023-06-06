@@ -77,31 +77,6 @@ jobs:
       - name: Lint
         run: npx next lint
 
-  http-library:
-    runs-on: ubuntu-latest
-    env:
-      SOURCE_FILES: src
-    defaults:
-      run:
-        working-directory: src/http-library
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18.x"
-      - name: Install dependencies
-        run: npm ci
-      # - name: Build
-      #   run: npm run build
-      # - name: Test
-      #   run: npm test
-      - name: Lint
-        run: npx eslint $SOURCE_FILES
-      - name: Check formatting
-        run: npx prettier --check .
-
   recommender_system:
     runs-on: ubuntu-latest
     env:
