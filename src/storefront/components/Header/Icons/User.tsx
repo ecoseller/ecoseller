@@ -5,7 +5,7 @@
  */
 
 // react
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // mui
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -14,18 +14,22 @@ import IconButton from "@mui/material/IconButton";
 import PersonIcon from "@mui/icons-material/Person";
 
 import LoginModal from "../Modals/Login";
+import { Box, Typography } from "@mui/material";
+import Cookies from "js-cookie";
+import { useRouter } from "next/router";
+import { IUser } from "@/types/user";
 
-interface IUser {}
 
-interface IUserIconProps {
-  user: IUser | null;
-}
-
-const User = ({ user }: IUserIconProps) => {
+const User = () => {
   const [anchorUserMenuEl, setAnchorUserMenuEl] = useState<null | HTMLElement>(
     null
   );
   const [openLoginModal, setOpenLoginModal] = useState(false);
+  const [user, setUser] = useState<IUser | null>(null);
+  const [refetch, setRefetch] = useState<boolean>(false);
+
+  const router = useRouter();
+
 
   const openUserMenu = Boolean(anchorUserMenuEl);
   const handleUserMenuClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -33,6 +37,48 @@ const User = ({ user }: IUserIconProps) => {
   };
   const handleUserMenuClose = () => {
     setAnchorUserMenuEl(null);
+  };
+
+  useEffect(() => {
+    const refreshToken = Cookies.get("refreshToken") || null;
+    if (refreshToken == null) {
+      setUser(null);
+      return;
+    }
+    fetch(`/api/user/detail`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.email === undefined) {
+          setUser(null);
+          return;
+        }
+        setUser({
+          email: data?.email,
+          first_name: data?.first_name,
+          last_name: data?.last_name
+        } as IUser)
+      });
+  }, [openLoginModal, refetch]);
+
+  const handleProfile = () => {
+    router.replace(`/user/detail`);
+  };
+
+
+  const handleLogout = () => {
+    const refreshToken = Cookies.get("refreshToken") || null;
+    if (refreshToken != null) {
+      fetch("/api/user/logout", {
+        method: "POST",
+        body: JSON.stringify({ refresh: refreshToken }),
+      });
+    }
+    Cookies.remove("accessToken");
+    Cookies.remove("refreshToken");
+
+    setAnchorUserMenuEl(null);
+    router.replace("/");
+    setRefetch(!refetch);
   };
 
   return (
@@ -98,10 +144,25 @@ const User = ({ user }: IUserIconProps) => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem>Profile</MenuItem>
-        <MenuItem>Orders</MenuItem>
-        <Divider />
-        <MenuItem>Logout</MenuItem>
+        <Box sx={{ my: 1.5, px: 2.5 }}>
+          <Typography variant="subtitle2" noWrap>
+            {user?.first_name} {user?.last_name}
+          </Typography>
+          <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
+            {user?.email}
+          </Typography>
+        </Box>
+        <Divider sx={{ borderColor: "#E6E8EA" }} />
+        <MenuItem onClick={handleProfile} sx={{ m: 1 }}>
+          Profile
+        </MenuItem>
+        <MenuItem sx={{ m: 1 }}>
+          Orders
+        </MenuItem>
+        <Divider sx={{ borderStyle: "dashed" }} />
+        <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
+          Logout
+        </MenuItem>
       </Menu>
     </>
   );

@@ -4,11 +4,24 @@
  * Its fired from outside (see props) and it opens user login modal
  */
 
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
+import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from "@mui/material";
+import { useRouter } from "next/router";
+
+import styles from "./Login.module.scss"
+
+// Cookies
+// @ts-ignore
+import Cookies from "js-cookie";
+// JWT
+import jwt_decode from "jwt-decode";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { IUser } from "@/types/user";
+import { useUser } from "@/utils/context/user";
 
 const style = {
   position: "absolute" as "absolute",
@@ -29,7 +42,25 @@ interface ILoginModal {
 
 const LoginModal = ({ open, setOpen }: ILoginModal) => {
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const router = useRouter();
+
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+  function handleClose() {
+    setEmail("");
+    setPassword("");
+    setOpen(false);
+  }
+
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
+
   return (
     <Modal
       open={open}
@@ -38,9 +69,103 @@ const LoginModal = ({ open, setOpen }: ILoginModal) => {
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
+        <h1 className={styles.welcome}>
+          Welcome back!
+        </h1>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="email"
+          label="E-mail Address"
+          name="e-mail"
+          autoComplete="email"
+          autoFocus
+          defaultValue={email}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setEmail(e.target.value);
+          }}
+        />
+        <FormControl fullWidth variant="outlined">
+          <InputLabel htmlFor="outlined-adornment-password">
+            Password
+          </InputLabel>
+          <OutlinedInput
+            id="outlined-adornment-password"
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(
+              event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+            ) => {
+              setPassword(event.target.value);
+            }}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+            label="Password"
+          />
+        </FormControl>
+        {/* <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            /> */}
+        <Button
+          type="submit"
+          color="primary"
+          fullWidth
+          variant="contained"
+          sx={{ mt: 2, mb: 2, height: 60 }}
+          onClick={async () => {
+            // validate
+            await fetch("/api/user/login", {
+              method: "POST",
+              body: JSON.stringify({
+                email,
+                password,
+                dashboard_login: false,
+              }),
+            })
+              .then((res) => res.json())
+              .then((data: any) => {
+                const accessToken = data.access;
+                const refreshToken = data.refresh;
+
+                const accessTokenDecoded: any = jwt_decode(accessToken);
+                const refreshTokenDecoded: any = jwt_decode(refreshToken);
+
+                const expiresAccessToken = new Date(
+                  accessTokenDecoded.exp * 1000
+                );
+                const expiresRefreshToken = new Date(
+                  refreshTokenDecoded.exp * 1000
+                );
+
+                Cookies.set("accessToken", accessToken, {
+                  expires: expiresAccessToken,
+                });
+                Cookies.set("refreshToken", refreshToken, {
+                  expires: expiresRefreshToken,
+                });
+
+                //redirect
+                handleClose();
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          }}
+        >
           Login
-        </Typography>
+        </Button>
       </Box>
     </Modal>
   );
