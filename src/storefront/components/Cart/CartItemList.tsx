@@ -10,6 +10,7 @@ import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
 import { useRouter } from "next/router";
 import imgPath from "@/utils/imgPath";
+import TableHead from "@mui/material/TableHead";
 
 interface ICartItemListProps {
   editable: boolean;
@@ -31,6 +32,14 @@ const CartItemList = ({ editable }: ICartItemListProps) => {
   return cart ? (
     <>
       <Table sx={{ minWidth: 650 }}>
+        {editable ? null : (
+          <TableHead>
+            <TableCell align="center">Product</TableCell>
+            <TableCell align="center">Quantity</TableCell>
+            <TableCell align="center">Discount</TableCell>
+            <TableCell align="center">Total price</TableCell>
+          </TableHead>
+        )}
         <TableBody>
           {cart.cart_items.map((item) => (
             <TableRow key={item.product_variant_sku}>
@@ -110,13 +119,15 @@ const CartItemList = ({ editable }: ICartItemListProps) => {
           ))}
         </TableBody>
       </Table>
-      <Grid container justifyContent="center" sx={{ my: 3 }}>
-        <Grid item>
-          <Typography variant="h6">
-            Total price:&nbsp;{cart.total_price_net_formatted}
-          </Typography>
+      {editable ? (
+        <Grid container justifyContent="center" sx={{ my: 3 }}>
+          <Grid item>
+            <Typography variant="h6">
+              Total price:&nbsp;{cart.total_price_net_formatted}
+            </Typography>
+          </Grid>
         </Grid>
-      </Grid>
+      ) : null}
     </>
   ) : (
     <Typography variant="h6" sx={{ my: 3 }}>
