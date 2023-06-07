@@ -115,6 +115,7 @@ class UserViewObs(APIView):
     Print user data from token passed in header.
     """
 
+    @check_user_is_staff_decorator()
     def get(self, request):
         user = request.user
         # auth = request.auth
@@ -122,7 +123,7 @@ class UserViewObs(APIView):
         # currently triggers UserAuthBackend
         # user = authenticate(request)
 
-        if user is None or not user.is_authenticated:
+        if user is None:
             return Response({"error": "User does not exist"}, status=400)
 
         serializer = UserSerializer(user)
@@ -130,6 +131,7 @@ class UserViewObs(APIView):
 
 
 class CustomTokenObtainPairView(jwt_views.TokenObtainPairView):
+    # Replace the serializer with your custom
     serializer_class = TokenObtainDashboardSerializer
 
     def post(self, request, *args, **kwargs):

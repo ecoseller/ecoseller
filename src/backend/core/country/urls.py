@@ -22,6 +22,4 @@ urlpatterns = [
         "dashboard/address/billing/<str:user_id>/",
         views.BillingInfoListUserView.as_view(),
     ),
-    path("storefront/address/shipping/", views.ShippingInfoUserView.as_view()),
-    path("storefront/address/billing/", views.BillingInfoUserView.as_view()),
 ]
