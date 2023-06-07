@@ -1,4 +1,5 @@
 // mui
+import imgPath from "@/utils/imgPath";
 import { Box, Radio, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 
@@ -42,7 +43,7 @@ const ShippingPaymentMethodItem = ({
         </Grid>
         <Grid item xs={1} sm={2} md={2}>
           <img
-            src={image}
+            src={imgPath(image)}
             alt={title}
             style={{
               width: "auto",

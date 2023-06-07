@@ -2,6 +2,7 @@ import React from "react";
 import Typography from "@mui/material/Typography";
 import { ITranslatedMethodBase } from "@/types/cart/methods";
 import { Box, Grid } from "@mui/material";
+import imgPath from "@/utils/imgPath";
 
 interface IOrderDetailMethodsProps {
   method: ITranslatedMethodBase;
@@ -31,7 +32,7 @@ const OrderDetailMethod = ({
       >
         <Grid item xs={1} sm={2} md={2}>
           <img
-            src={method.image}
+            src={imgPath(method.image)}
             alt={method.title}
             style={{
               width: "auto",
