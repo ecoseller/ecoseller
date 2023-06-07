@@ -1,45 +1,13 @@
-// next
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
 import { useRouter } from "next/router";
-
-// react
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-
-// api
-import { putBillingInfo, putShippingInfo } from "@/api/cart/info";
+import React from "react";
 import { cartBillingInfoAPI } from "@/pages/api/cart/[token]/billing-info";
 import { cartShippingInfoAPI } from "@/pages/api/cart/[token]/shipping-info";
-
-// components
-import BillingInfoForm, {
-  IBillingInfoFormProps,
-  billingInfoInitialData,
-  exportBillingInfo,
-} from "@/components/Forms/BillingInfoForm";
-import ShippingInfoForm, {
-  IShippingInfoFormProps,
-  exportShippingInfo,
-  shippingInfoInitialData,
-} from "@/components/Forms/ShippingInfoForm";
 import CartStepper from "@/components/Cart/Stepper";
-import ShippingMethodList from "@/components/Cart/Methods/ShippingMethodList";
-
-// mui
-import {
-  Box,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
-  Typography,
-} from "@mui/material";
-import Button from "@mui/material/Button";
+import { Box, Table, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
-// types
 import {
   IBillingInfo,
-  ICartDetail,
   IPaymentMethodCountry,
   IShippingInfo,
   IShippingMethodCountry,
@@ -47,20 +15,20 @@ import {
 import { countryListAPI } from "@/pages/api/country";
 import { ICountry } from "@/types/country";
 import CartButtonRow from "@/components/Cart/ButtonRow";
-import { cartAPI } from "@/pages/api/cart";
-import { cartDetailAPI } from "@/pages/api/cart/[token]/detail";
-import { cartShippingPaymentMethodsAPI } from "@/pages/api/cart/methods/[country]";
-import PaymentMethodList from "@/components/Cart/Methods/PaymentMethodList";
-import { setPaymentMethod, setShippingMethod } from "@/api/cart/methods";
 import CartItemList from "@/components/Cart/CartItemList";
 import CartSummaryInfo, {
   ICartInfoTableRow,
 } from "@/components/Cart/CartSummaryInfo";
+import CartMethodSummaryInfoRow from "@/components/Cart/Methods/CartMethodSummaryInfoRow";
+import { cartPaymentMethodAPI } from "@/pages/api/cart/[token]/payment-method";
+import { cartShippingMethodAPI } from "@/pages/api/cart/[token]/shipping-method";
 
 interface ICartSummaryPageProps {
   billingInfo: IBillingInfo;
   shippingInfo: IShippingInfo;
   countries: ICountry[];
+  selectedPaymentMethod: IPaymentMethodCountry;
+  selectedShippingMethod: IShippingMethodCountry;
 }
 
 /**
@@ -70,6 +38,8 @@ const CartSummaryPage = ({
   billingInfo,
   shippingInfo,
   countries,
+  selectedPaymentMethod,
+  selectedShippingMethod,
 }: ICartSummaryPageProps) => {
   const router = useRouter();
 
@@ -160,15 +130,27 @@ const CartSummaryPage = ({
 
       <Grid container spacing={2}>
         <Grid item xs={12} md={8}>
-          <Typography variant="h4" sx={{ my: 3 }}>
-            Order summary
+          <Typography variant="h5" sx={{ my: 3 }}>
+            Items
           </Typography>
           <CartItemList editable={false} />
         </Grid>
         <Grid item xs={12} md={4}>
-          <Typography variant="h5" sx={{ my: 3 }}>
-            Shipping &amp; payment method
-          </Typography>
+          <Box sx={{ ml: 5 }}>
+            <Typography variant="h5" sx={{ my: 3 }}>
+              Shipping &amp; payment method
+            </Typography>
+            <Table>
+              <CartMethodSummaryInfoRow
+                method={selectedShippingMethod.shipping_method}
+                formattedPrice={selectedShippingMethod.price_incl_vat}
+              />
+              <CartMethodSummaryInfoRow
+                method={selectedPaymentMethod.payment_method}
+                formattedPrice={selectedPaymentMethod.price_incl_vat}
+              />
+            </Table>
+          </Box>
         </Grid>
         <Grid item xs={12} md={4}>
           <Typography variant="h5" sx={{ my: 3 }}>
@@ -201,11 +183,10 @@ const CartSummaryPage = ({
   );
 };
 
+/**
+ * Fetch the cart from the API
+ */
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  /**
-   * Fetch the cart from the API
-   */
-
   const { req, res } = context;
   const { cartToken } = req.cookies;
 
@@ -238,11 +219,27 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     res as NextApiResponse
   );
 
+  const selectedPaymentMethod = await cartPaymentMethodAPI(
+    "GET",
+    cartToken,
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
+  const selectedShippingMethod = await cartShippingMethodAPI(
+    "GET",
+    cartToken,
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
   return {
     props: {
       billingInfo,
       shippingInfo,
       countries,
+      selectedPaymentMethod,
+      selectedShippingMethod,
     },
   };
 };

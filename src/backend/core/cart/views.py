@@ -369,36 +369,59 @@ class CartCountryMethodsStorefrontView(GenericAPIView):
 
 
 @permission_classes([AllowAny])
-class CartSelectedMethodGenericStorefrontView(GenericAPIView):
+class MethodCountryDetailBaseView(GenericAPIView):
     """
-    Base view for getting cart's selected payment/shipping method country.
+    Base view for getting detailed info about payment/shipping method country
+
+    Do not use this view directly, use inherited views instead
     """
 
-    field = None  # set in inherited classes (shipping_method_country/payment_method_country)
+    entity_class = None
+    serializer_detail = None
 
-    def get_value(self, cart):
-        return getattr(cart, self.field)
+    def get(self, request, id):
+        try:
+            method_country = self.entity_class.objects.get(id=id)
+            serializer = self.serializer_detail(
+                method_country, context={"request": request}
+            )
+            return Response(serializer.data)
+        except (ShippingMethodCountry.DoesNotExist, PaymentMethodCountry.DoesNotExist):
+            return Response(status=HTTP_404_NOT_FOUND)
+
+
+@permission_classes([AllowAny])
+class CartSelectedShippingMethodCountryStorefrontView(MethodCountryDetailBaseView):
+    """
+    View for getting cart's selected shipping method country
+    """
+
+    serializer_detail = CartShippingMethodCountryBaseSerializer
+    entity_class = ShippingMethodCountry
 
     def get(self, request, token):
         try:
             cart = Cart.objects.get(token=token)
-            return Response(
-                {
-                    self.field: self.get_value(cart),
-                }
-            )
+            return super().get(request, cart.shipping_method_country_id)
         except Cart.DoesNotExist:
             return Response(status=HTTP_404_NOT_FOUND)
 
 
 @permission_classes([AllowAny])
-class CartSelectedShippingMethodStorefrontView(CartSelectedMethodGenericStorefrontView):
-    field = "shipping_method_country"
+class CartSelectedPaymentMethodCountryStorefrontView(MethodCountryDetailBaseView):
+    """
+    View for getting cart's selected payment method country
+    """
 
+    serializer_detail = CartPaymentMethodCountrySerializer
+    entity_class = PaymentMethodCountry
 
-@permission_classes([AllowAny])
-class CartSelectedPaymentMethodStorefrontView(CartSelectedMethodGenericStorefrontView):
-    field = "payment_method_country"
+    def get(self, request, token):
+        try:
+            cart = Cart.objects.get(token=token)
+            return super().get(request, cart.payment_method_country_id)
+        except Cart.DoesNotExist:
+            return Response(status=HTTP_404_NOT_FOUND)
 
 
 class CartUpdateMethodBaseStorefrontView(APIView, ABC):
@@ -538,7 +561,7 @@ class PaymentMethodCountryListView(ListCreateAPIView):
 
 
 class PaymentMethodCountryDetailDashboardView(
-    GenericAPIView, UpdateModelMixin, DestroyModelMixin
+    MethodCountryDetailBaseView, UpdateModelMixin, DestroyModelMixin
 ):
     """
     Detail of payment method country
@@ -555,19 +578,15 @@ class PaymentMethodCountryDetailDashboardView(
     lookup_field = "id"
     lookup_url_kwarg = "id"
 
+    serializer_detail = CartPaymentMethodCountrySerializer
+    entity_class = PaymentMethodCountry
+
     def get_queryset(self):
         return PaymentMethodCountry.objects.all()
 
     @check_user_is_staff_decorator()
     def get(self, request, id):
-        try:
-            payment_method_country = PaymentMethodCountry.objects.get(id=id)
-            serializer = CartPaymentMethodCountrySerializer(
-                payment_method_country, context={"request": request}
-            )
-            return Response(serializer.data)
-        except PaymentMethodCountry.DoesNotExist:
-            return Response(status=HTTP_404_NOT_FOUND)
+        return super().get(request, id)
 
 
 class PaymentMethodCountryFullListView(ListCreateAPIView):
@@ -646,10 +665,10 @@ class ShippingMethodCountryListView(ListCreateAPIView):
 
 
 class ShippingMethodCountryDetailDashboardView(
-    GenericAPIView, UpdateModelMixin, DestroyModelMixin
+    MethodCountryDetailBaseView, UpdateModelMixin, DestroyModelMixin
 ):
     """
-    List all products for dashboard
+    Detail of shipping method country
     """
 
     permission_classes = (AllowAny,)
@@ -663,16 +682,12 @@ class ShippingMethodCountryDetailDashboardView(
     lookup_field = "id"
     lookup_url_kwarg = "id"
 
+    serializer_detail = CartShippingMethodCountryBaseSerializer
+    entity_class = ShippingMethodCountry
+
     def get_queryset(self):
         return ShippingMethodCountry.objects.all()
 
     @check_user_is_staff_decorator()
     def get(self, request, id):
-        try:
-            payment_method_country = ShippingMethodCountry.objects.get(id=id)
-            serializer = CartShippingMethodCountryBaseSerializer(
-                payment_method_country, context={"request": request}
-            )
-            return Response(serializer.data)
-        except ShippingMethodCountry.DoesNotExist:
-            return Response(status=HTTP_404_NOT_FOUND)
+        return super().get(request, id)

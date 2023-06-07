@@ -76,11 +76,16 @@ interface IShippingPaymentMethodCountry {
   price_incl_vat: string;
 }
 
-export interface IShippingMethodCountry extends IShippingPaymentMethodCountry {
+export interface IShippingMethodCountryWithPaymentMethod
+  extends IShippingPaymentMethodCountry {
   shipping_method: IShippingPaymentMethod;
   payment_methods: IPaymentMethodCountry[];
 }
 
 export interface IPaymentMethodCountry extends IShippingPaymentMethodCountry {
   payment_method: IShippingPaymentMethod;
+}
+
+export interface IShippingMethodCountry extends IShippingPaymentMethodCountry {
+  shipping_method: IShippingPaymentMethod;
 }

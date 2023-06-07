@@ -35,6 +35,7 @@ const CartItemList = ({ editable }: ICartItemListProps) => {
         {editable ? null : (
           <TableHead>
             <TableCell align="center">Product</TableCell>
+            <TableCell align="center">Image</TableCell>
             <TableCell align="center">Quantity</TableCell>
             <TableCell align="center">Discount</TableCell>
             <TableCell align="center">Total price</TableCell>
@@ -55,8 +56,8 @@ const CartItemList = ({ editable }: ICartItemListProps) => {
                 </Button>
               </TableCell>
 
-              {item.primary_image ? (
-                <TableCell>
+              <TableCell align="center">
+                {item.primary_image ? (
                   <img
                     src={imgPath(item.primary_image.media)}
                     alt={item.primary_image.alt || ""}
@@ -67,8 +68,8 @@ const CartItemList = ({ editable }: ICartItemListProps) => {
                       width: "auto",
                     }}
                   />
-                </TableCell>
-              ) : null}
+                ) : null}
+              </TableCell>
 
               <TableCell align="center">
                 {editable ? (
