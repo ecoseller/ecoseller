@@ -127,6 +127,7 @@ class UserViewObs(APIView):
 
         serializer = UserSerializer(user, data=request.data)
         if not serializer.is_valid():
+            print(serializer.errors)
             return Response(serializer.errors, status=400)
         serializer.save()
         return Response(serializer.data)

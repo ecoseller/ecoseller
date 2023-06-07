@@ -60,7 +60,6 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
                 { ...billingInfo, country: "cz" } as IBillingInfo,
                 setBillingInfoState
             ));
-        console.log(billingInfoState)
     }
 
     const [validShippingInfo, setValidShippingInfo] = useState<boolean>(false);
@@ -106,7 +105,11 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
 
     const handleGeneralInfoClear = async () => {
         setState({ ...state, first_name: "", last_name: "" } as IUser);
-        hanldleGeneralInfoSave();
+        const res = await fetch(`/api/user/detail`, {
+            method: "PUT",
+            body: JSON.stringify({ email: state.email, first_name: "", last_name: "" } as IUser),
+        });
+        showSnackbar(res, "User general information updated", res?.statusText);
     };
 
 

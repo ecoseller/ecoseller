@@ -22,7 +22,6 @@ export const userDetailAPI = async (
     const { body } = req;
     let url = `/user/detail`;
 
-    console.log("IN USER DETAIL API", body)
 
     switch (method) {
         case "GET":
@@ -40,11 +39,9 @@ export const userDetailAPI = async (
                 .put(url, body)
                 .then((response) => response.data)
                 .then((data: IUser) => {
-                    console.log("IN USER DETAIL API AFTER", data)
                     return data;
                 })
                 .catch((error: any) => {
-                    console.log("IN USER DETAIL API AFTER ERROR", error)
                     throw error;
                 });
         default:
