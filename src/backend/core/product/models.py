@@ -33,7 +33,7 @@ class ProductVariant(models.Model):
         return ", ".join(variant_attributes)
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super().save(
             force_insert=force_insert,
@@ -68,7 +68,7 @@ class ProductType(models.Model):
         return self.name
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super().save(
             force_insert=force_insert,
@@ -147,7 +147,7 @@ class Product(TranslatableModel):
         )
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super().save(
             force_insert=force_insert,
@@ -235,7 +235,7 @@ class AttributeType(TranslatableModel, models.Model):
         return "{} ({})".format(self.type_name, self.unit)
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super().save(
             force_insert=force_insert,
@@ -287,7 +287,7 @@ class BaseAttribute(TranslatableModel, models.Model):
         return attr_with_value
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super().save(
             force_insert=force_insert,
@@ -336,7 +336,7 @@ class ExtAttributeType(models.Model):
         return "{} ({})".format(self.type_name, self.unit)
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super().save(
             force_insert=force_insert,
@@ -363,7 +363,7 @@ class ExtensionAttribute(models.Model):
         return "{}: {}".format(self.type.type_name, self.value)
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super().save(
             force_insert=force_insert,
@@ -416,9 +416,7 @@ class PriceList(models.Model):
         """
         Formats price according to rounding and currency
         """
-        print("ROUNDING", self.rounding, price)
         price = round(price) if self.rounding else round(price, 2)
-        price = f"{price:,}".replace(",", " ")
         return self.currency.format_price(price)
 
 
@@ -480,7 +478,7 @@ class ProductPrice(models.Model):
         return self.discount is not None
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super().save(
             force_insert=force_insert,
