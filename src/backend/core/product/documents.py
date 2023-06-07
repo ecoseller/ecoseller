@@ -26,7 +26,7 @@ language_bias_analyzers = {
 
 @registry.register_document
 class ProductDocument(Document):
-    id = fields.IntegerField()
+    id = fields.TextField()
     title = fields.ObjectField(
         properties={
             f"{lang['code']}": fields.TextField(
@@ -63,6 +63,9 @@ class ProductDocument(Document):
 
     class Django:
         model = Product
+
+    def prepare_id(self, instance):
+        return f"{instance.id}"
 
     def prepare_title(self, instance):
         title = {}
