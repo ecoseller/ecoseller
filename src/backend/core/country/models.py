@@ -58,14 +58,18 @@ class Currency(models.Model):
         """
         Formats price according to currency symbol and position
         """
-        decimal_point = "."
+        if (
+            price % 1 == 0
+        ):  # If it's a whole number, convert it to int, to make sure there aren't any decimal places
+            price = int(price)
 
         price_str = f"{price:,}".replace(",", " ")  # add space between thousands
 
-        if decimal_point in price_str:  # remove trailing zeros and decimal point (if not necessary)
-            price_str = price_str.rstrip('0').rstrip(decimal_point)
-
-        return f"{self.symbol} {price_str}" if self.symbol_position == "BEFORE" else f"{price_str} {self.symbol}"
+        return (
+            f"{self.symbol} {price_str}"
+            if self.symbol_position == "BEFORE"
+            else f"{price_str} {self.symbol}"
+        )
 
 
 class VatGroup(models.Model):

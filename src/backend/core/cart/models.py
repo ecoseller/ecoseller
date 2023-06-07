@@ -211,14 +211,16 @@ class Cart(models.Model):
             else 0
         )
 
-        return self.pricelist.format_price(items_price + payment_method_price + shipping_method_price)
+        return self.pricelist.format_price(
+            items_price + payment_method_price + shipping_method_price
+        )
 
     def recalculate(self, pricelist: PriceList, country: Country):
         """
         Recalculate cart prices.
         """
         if (self.pricelist and self.pricelist.code == pricelist.code) and (
-                self.country.code == country.code
+            self.country.code == country.code
         ):
             # if pricelist and country is the same as before, we don't need to recalculate
             return
