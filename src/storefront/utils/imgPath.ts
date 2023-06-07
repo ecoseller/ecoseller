@@ -4,7 +4,7 @@
  * @param relative Is the given path relative?
  */
 const imgPath = (path: string, relative: boolean = false) => {
-  const backendApiUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL;
+  const backendApiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
   const clientApiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   if (relative) {
