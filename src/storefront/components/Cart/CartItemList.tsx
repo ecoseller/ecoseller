@@ -11,6 +11,9 @@ import Button from "@mui/material/Button";
 import { useRouter } from "next/router";
 import imgPath from "@/utils/imgPath";
 import TableHead from "@mui/material/TableHead";
+import ImageThumbnail from "@/components/Generic/ImageThumbnail";
+import NextLink from "next/link";
+import MUILink from "@mui/material/Link";
 
 interface ICartItemListProps {
   editable: boolean;
@@ -45,28 +48,20 @@ const CartItemList = ({ editable }: ICartItemListProps) => {
           {cart.cart_items.map((item) => (
             <TableRow key={item.product_variant_sku}>
               <TableCell align="center">
-                <Button
-                  onClick={() =>
-                    router.push(
-                      `/product/${item.product_id}/${item.product_slug}`
-                    )
-                  }
+                <NextLink
+                  href={`/product/${item.product_id}/${item.product_slug}`}
                 >
-                  {item.product_variant_name}
-                </Button>
+                  <MUILink underline="none">
+                    {item.product_variant_name}
+                  </MUILink>
+                </NextLink>
               </TableCell>
 
               <TableCell align="center">
                 {item.primary_image ? (
-                  <img
-                    src={imgPath(item.primary_image.media)}
+                  <ImageThumbnail
+                    imagePath={imgPath(item.primary_image.media, true)}
                     alt={item.primary_image.alt || ""}
-                    style={{
-                      objectFit: "contain",
-                      position: "relative",
-                      height: "50px",
-                      width: "auto",
-                    }}
                   />
                 ) : null}
               </TableCell>
@@ -124,7 +119,7 @@ const CartItemList = ({ editable }: ICartItemListProps) => {
         <Grid container justifyContent="center" sx={{ my: 3 }}>
           <Grid item>
             <Typography variant="h6">
-              Total price:&nbsp;{cart.total_price_net_formatted}
+              Total price:&nbsp;{cart.total_items_price_net_formatted}
             </Typography>
           </Grid>
         </Grid>

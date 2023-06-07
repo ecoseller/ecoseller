@@ -22,7 +22,7 @@ export interface ICartInfoTableRow {
  * @param rows
  * @constructor
  */
-const CartSummaryInfo = ({ rows }: ICartSummaryBillingInfoProps) => {
+const CartInfoSummary = ({ rows }: ICartSummaryBillingInfoProps) => {
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -39,4 +39,4 @@ const CartSummaryInfo = ({ rows }: ICartSummaryBillingInfoProps) => {
   );
 };
 
-export default CartSummaryInfo;
+export default CartInfoSummary;

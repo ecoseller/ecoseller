@@ -3,6 +3,7 @@ import Typography from "@mui/material/Typography";
 import { Box, Grid, TableCell, TableRow } from "@mui/material";
 import { IShippingPaymentMethod } from "@/types/cart";
 import imgPath from "@/utils/imgPath";
+import ImageThumbnail from "@/components/Generic/ImageThumbnail";
 
 interface ICartMethodSummaryInfoRowProps {
   method: IShippingPaymentMethod;
@@ -16,16 +17,7 @@ const CartMethodSummaryInfoRow = ({
   return (
     <TableRow>
       <TableCell align="center">
-        <img
-          src={imgPath(method.image)}
-          alt={method.title}
-          style={{
-            objectFit: "contain",
-            position: "relative",
-            height: "50px",
-            width: "auto",
-          }}
-        />
+        <ImageThumbnail imagePath={imgPath(method.image)} alt={method.title} />
       </TableCell>
       <TableCell>{method.title}</TableCell>
       <TableCell align="center" sx={{ fontWeight: "bold" }}>

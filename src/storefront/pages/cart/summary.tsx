@@ -16,12 +16,18 @@ import { countryListAPI } from "@/pages/api/country";
 import { ICountry } from "@/types/country";
 import CartButtonRow from "@/components/Cart/ButtonRow";
 import CartItemList from "@/components/Cart/CartItemList";
-import CartSummaryInfo, {
+import CartInfoSummary, {
   ICartInfoTableRow,
-} from "@/components/Cart/CartSummaryInfo";
+} from "@/components/Cart/CartInfoSummary";
 import CartMethodSummaryInfoRow from "@/components/Cart/Methods/CartMethodSummaryInfoRow";
 import { cartPaymentMethodAPI } from "@/pages/api/cart/[token]/payment-method";
 import { cartShippingMethodAPI } from "@/pages/api/cart/[token]/shipping-method";
+import { useTheme } from "@mui/material/styles";
+import Divider from "@mui/material/Divider";
+import { useCart } from "@/utils/context/cart";
+import CollapsableContentWithTitle from "@/components/Generic/CollapsableContentWithTitle";
+import Button from "@mui/material/Button";
+import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 
 interface ICartSummaryPageProps {
   billingInfo: IBillingInfo;
@@ -42,6 +48,8 @@ const CartSummaryPage = ({
   selectedShippingMethod,
 }: ICartSummaryPageProps) => {
   const router = useRouter();
+  const theme = useTheme();
+  const { cart } = useCart();
 
   const getCountryName = (countryId: string) =>
     countries.find((c) => c.code == countryId)?.name || "";
@@ -130,14 +138,14 @@ const CartSummaryPage = ({
 
       <Grid container spacing={2}>
         <Grid item xs={12} md={8}>
-          <Typography variant="h5" sx={{ my: 3 }}>
-            Items
+          <Typography variant="h4" sx={{ my: 3 }}>
+            Order summary
           </Typography>
           <CartItemList editable={false} />
         </Grid>
         <Grid item xs={12} md={4}>
-          <Box sx={{ ml: 5 }}>
-            <Typography variant="h5" sx={{ my: 3 }}>
+          <Box sx={{ [theme.breakpoints.up("md")]: { ml: 5 } }}>
+            <Typography variant="h6" sx={{ my: 3 }}>
               Shipping &amp; payment method
             </Typography>
             <Table>
@@ -153,17 +161,36 @@ const CartSummaryPage = ({
           </Box>
         </Grid>
         <Grid item xs={12} md={4}>
-          <Typography variant="h5" sx={{ my: 3 }}>
-            Shipping Info
-          </Typography>
-          <CartSummaryInfo rows={shippingInfoRows} />
+          <CollapsableContentWithTitle title="Shipping info">
+            <CartInfoSummary rows={shippingInfoRows} />
+          </CollapsableContentWithTitle>
         </Grid>
         <Grid item xs={12} md={4}>
-          <Typography variant="h5" sx={{ my: 3 }}>
-            Billing Info
-          </Typography>
-          <CartSummaryInfo rows={billingInfoRows} />
+          <CollapsableContentWithTitle title="Billing info">
+            <CartInfoSummary rows={billingInfoRows} />
+          </CollapsableContentWithTitle>
         </Grid>
+
+        {cart ? (
+          <Grid item xs={12} md={8} textAlign="center">
+            <Divider />
+            <Typography variant="h5" sx={{ my: 3 }}>
+              Total price: {cart.total_price_net_formatted}
+            </Typography>
+            <>
+              <Button
+                variant="contained"
+                startIcon={<ShoppingCartCheckoutIcon />}
+                size="large"
+                onClick={() => {
+                  router.push("/order/completed");
+                }}
+              >
+                Complete order
+              </Button>
+            </>
+          </Grid>
+        ) : null}
       </Grid>
       <CartButtonRow
         prev={{
