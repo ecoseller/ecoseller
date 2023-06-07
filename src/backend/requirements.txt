@@ -11,6 +11,8 @@ croniter==1.3.7
 debugpy==1.6.6
 Deprecated==1.2.13
 Django==4.0.3
+django-elasticsearch-dsl==7.3
+django-elasticsearch-dsl-drf==0.22.5
 django-ckeditor==6.5.1
 django-cors-headers==3.12.0
 django-editorjs-fields==0.2.7

@@ -242,3 +242,28 @@ try:
 except Exception as e:
     print(e)
     PAYMENT_METHOD_APIS = None
+
+
+USE_ELASTIC = bool(int(os.environ.get("USE_ELASTIC", "0")))
+
+if USE_ELASTIC:
+    INSTALLED_APPS += [
+        "django_elasticsearch_dsl",
+        "django_elasticsearch_dsl_drf",
+    ]
+    ELASTICSEARCH_INDEX_NAMES = {
+        "product.documents.product": "product",
+    }
+    ELASTICSEARCH_DSL = {
+        "default": {
+            "hosts": os.environ.get("ELASTIC_HOST", "elastic:9200"),
+        },
+    }
+    if os.environ.get("ELASTICSEARCH_USERNAME") and os.environ.get(
+        "ELASTICSEARCH_PASSWORD"
+    ):
+        ELASTICSEARCH_DSL["default"]["http_auth"] = (
+            os.environ.get("ELASTICSEARCH_USERNAME")
+            + ":"
+            + os.environ.get("ELASTICSEARCH_PASSWORD")
+        )

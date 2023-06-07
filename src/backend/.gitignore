@@ -141,3 +141,7 @@ GitHub.sublime-settings
 
 # Django static files
 core/static
+
+
+# Elastic search data
+elasticsearch/data
