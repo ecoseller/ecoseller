@@ -83,7 +83,8 @@ const OrderDetailWrapper = ({
       ...orderState,
       cart: {
         ...orderState.cart,
-        total_price_net_formatted: order.cart.total_price_net_formatted,
+        total_items_price_net_formatted:
+          order.cart.total_items_price_net_formatted,
       },
     });
   };

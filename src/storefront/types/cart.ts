@@ -20,6 +20,7 @@ export interface ICart {
   token: string;
   cart_items: ICartItem[];
   update_at: string;
+  total_items_price_net_formatted: string;
   total_price_net_formatted: string;
   shipping_method_country: number | null;
   payment_method_country: number | null;
@@ -76,11 +77,16 @@ interface IShippingPaymentMethodCountry {
   price_incl_vat: string;
 }
 
-export interface IShippingMethodCountry extends IShippingPaymentMethodCountry {
+export interface IShippingMethodCountryWithPaymentMethod
+  extends IShippingPaymentMethodCountry {
   shipping_method: IShippingPaymentMethod;
   payment_methods: IPaymentMethodCountry[];
 }
 
 export interface IPaymentMethodCountry extends IShippingPaymentMethodCountry {
   payment_method: IShippingPaymentMethod;
+}
+
+export interface IShippingMethodCountry extends IShippingPaymentMethodCountry {
+  shipping_method: IShippingPaymentMethod;
 }

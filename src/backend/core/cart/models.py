@@ -5,7 +5,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from parler.models import TranslatableModel, TranslatedFields
 
-from common.prices import format_price
 from country.models import (
     Country,
     Currency,
@@ -75,7 +74,7 @@ class ShippingMethodCountry(models.Model):
 
     @property
     def formatted_price_incl_vat(self):
-        price_str = f"{self.price_incl_vat:.2f}"
+        price_str = round(self.price_incl_vat, 2)
         if not self.currency:
             return price_str
 
@@ -140,7 +139,7 @@ class PaymentMethodCountry(models.Model):
 
     @property
     def formatted_price_incl_vat(self):
-        price_str = f"{self.price_incl_vat:.2f}"
+        price_str = round(self.price_incl_vat, 2)
         if not self.currency:
             return price_str
 
@@ -176,17 +175,45 @@ class Cart(models.Model):
     )
 
     @property
-    def total_price_net_formatted(self):
+    def total_items_price_net(self):
+        """
+        Get total price (unit price * quantity) of the cart items
+        """
+        return sum(
+            [item.unit_price_net * item.quantity for item in self.cart_items.all()]
+        )
+
+    @property
+    def total_items_price_net_formatted(self):
         """
         Get total price (unit price * quantity) of the cart items with currency symbol
 
         This price is intended to be shown to the user.
         """
-        total_price = sum(
-            [item.unit_price_net * item.quantity for item in self.cart_items.all()]
+        return self.pricelist.format_price(self.total_items_price_net)
+
+    @property
+    def total_price_net_formatted(self):
+        """
+        Get total price of the cart (sum of prices of items, payment method and shipping method) with currency symbol
+
+        This price is intended to be shown to the user.
+        """
+        items_price = self.total_items_price_net
+        payment_method_price = (
+            self.payment_method_country.price_incl_vat
+            if self.payment_method_country
+            else 0
+        )
+        shipping_method_price = (
+            self.shipping_method_country.price_incl_vat
+            if self.payment_method_country
+            else 0
         )
 
-        return format_price(total_price, self.pricelist)
+        return self.pricelist.format_price(
+            items_price + payment_method_price + shipping_method_price
+        )
 
     def recalculate(self, pricelist: PriceList, country: Country):
         """
@@ -272,7 +299,7 @@ class CartItem(models.Model):
         """
         total_price = self.unit_price_net * self.quantity
 
-        return format_price(total_price, self.cart.pricelist)
+        return self.cart.pricelist.format_price(total_price)
 
     @property
     def unit_price_net_formatted(self):
@@ -281,7 +308,7 @@ class CartItem(models.Model):
 
         This price is intended to be shown to the user.
         """
-        return format_price(self.unit_price_net, self.cart.pricelist)
+        return self.cart.pricelist.format_price(self.unit_price_net)
 
     def recalculate(self, pricelist, country):
         # recalculate price for this cart item based on pricelist and country

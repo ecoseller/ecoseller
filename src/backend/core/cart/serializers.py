@@ -96,6 +96,7 @@ class CartSerializer(ModelSerializer):
             "token",
             "cart_items",
             "update_at",
+            "total_items_price_net_formatted",
             "total_price_net_formatted",
             "shipping_method_country",
             "payment_method_country",

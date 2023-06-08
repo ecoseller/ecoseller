@@ -42,7 +42,7 @@ import {
   ICartDetail,
   IPaymentMethodCountry,
   IShippingInfo,
-  IShippingMethodCountry,
+  IShippingMethodCountryWithPaymentMethod,
 } from "@/types/cart";
 import { countryListAPI } from "@/pages/api/country";
 import { ICountry } from "@/types/country";
@@ -55,7 +55,7 @@ import { setPaymentMethod, setShippingMethod } from "@/api/cart/methods";
 
 interface ICartStep2PageProps {
   cart: ICartDetail;
-  methods: IShippingMethodCountry[];
+  methods: IShippingMethodCountryWithPaymentMethod[];
   cartToken: string;
 }
 
@@ -89,7 +89,7 @@ const CartStep2Page = ({ cart, methods, cartToken }: ICartStep2PageProps) => {
     );
 
     if (shippingRes === 200 && paymentRes === 200) {
-      router.push("/cart/step/3");
+      router.push("/cart/summary");
     }
   };
 

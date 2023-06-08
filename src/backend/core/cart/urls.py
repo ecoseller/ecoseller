@@ -68,11 +68,11 @@ urlpatterns = [
     ),
     path(
         "storefront/<str:token>/payment-method/",
-        views.CartSelectedPaymentMethodStorefrontView.as_view(),
+        views.CartSelectedPaymentMethodCountryStorefrontView.as_view(),
     ),
     path(
         "storefront/<str:token>/shipping-method/",
-        views.CartSelectedShippingMethodStorefrontView.as_view(),
+        views.CartSelectedShippingMethodCountryStorefrontView.as_view(),
     ),
     path(
         "storefront/<str:token>/payment-method/<int:id>/",

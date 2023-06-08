@@ -1,8 +1,8 @@
-import { IShippingMethodCountry } from "@/types/cart";
+import { IShippingMethodCountryWithPaymentMethod } from "@/types/cart";
 import ShippingPaymentMethodItem from "./ShippingPaymentMethodItem";
 
 interface IShippingMethodListProps {
-  methods: IShippingMethodCountry[];
+  methods: IShippingMethodCountryWithPaymentMethod[];
   selected: number | null;
   setSelected: (id: number) => void;
 }
@@ -14,7 +14,7 @@ const ShippingMethodList = ({
 }: IShippingMethodListProps) => {
   return (
     <>
-      {methods?.map((method: IShippingMethodCountry) => (
+      {methods?.map((method: IShippingMethodCountryWithPaymentMethod) => (
         <ShippingPaymentMethodItem
           key={method.id}
           id={method.id}

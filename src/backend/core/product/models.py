@@ -416,9 +416,7 @@ class PriceList(models.Model):
         """
         Formats price according to rounding and currency
         """
-        print("ROUNDING", self.rounding, price)
         price = round(price) if self.rounding else round(price, 2)
-        price = f"{price:,}".replace(",", " ")
         return self.currency.format_price(price)
 
 

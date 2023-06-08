@@ -10,8 +10,16 @@ import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
 import { useRouter } from "next/router";
 import imgPath from "@/utils/imgPath";
+import TableHead from "@mui/material/TableHead";
+import ImageThumbnail from "@/components/Generic/ImageThumbnail";
+import NextLink from "next/link";
+import MUILink from "@mui/material/Link";
 
-const CartItemList = () => {
+interface ICartItemListProps {
+  editable: boolean;
+}
+
+const CartItemList = ({ editable }: ICartItemListProps) => {
   const { cart, updateQuantity, removeFromCart } = useCart();
   const router = useRouter();
 
@@ -27,52 +35,59 @@ const CartItemList = () => {
   return cart ? (
     <>
       <Table sx={{ minWidth: 650 }}>
+        {editable ? null : (
+          <TableHead>
+            <TableCell align="center">Product</TableCell>
+            <TableCell align="center">Image</TableCell>
+            <TableCell align="center">Quantity</TableCell>
+            <TableCell align="center">Discount</TableCell>
+            <TableCell align="center">Total price</TableCell>
+          </TableHead>
+        )}
         <TableBody>
           {cart.cart_items.map((item) => (
             <TableRow key={item.product_variant_sku}>
               <TableCell align="center">
-                <Button
-                  onClick={() =>
-                    router.push(
-                      `/product/${item.product_id}/${item.product_slug}`
-                    )
-                  }
+                <NextLink
+                  href={`/product/${item.product_id}/${item.product_slug}`}
                 >
-                  {item.product_variant_name}
-                </Button>
+                  <MUILink underline="none">
+                    {item.product_variant_name}
+                  </MUILink>
+                </NextLink>
               </TableCell>
 
-              {item.primary_image ? (
-                <TableCell>
-                  <img
-                    src={imgPath(item.primary_image.media)}
+              <TableCell align="center">
+                {item.primary_image ? (
+                  <ImageThumbnail
+                    imagePath={imgPath(item.primary_image.media, true)}
                     alt={item.primary_image.alt || ""}
-                    style={{
-                      objectFit: "contain",
-                      position: "relative",
-                      height: "50px",
-                      width: "auto",
-                    }}
                   />
-                </TableCell>
-              ) : null}
+                ) : null}
+              </TableCell>
 
               <TableCell align="center">
-                <IconButton
-                  onClick={() => {
-                    updateItemQuantity(item, false);
-                  }}
-                >
-                  <RemoveIcon />
-                </IconButton>
+                {editable ? (
+                  <IconButton
+                    onClick={() => {
+                      updateItemQuantity(item, false);
+                    }}
+                  >
+                    <RemoveIcon />
+                  </IconButton>
+                ) : null}
+
                 {item.quantity}
-                <IconButton
-                  onClick={() => {
-                    updateItemQuantity(item, true);
-                  }}
-                >
-                  <AddIcon />
-                </IconButton>
+
+                {editable ? (
+                  <IconButton
+                    onClick={() => {
+                      updateItemQuantity(item, true);
+                    }}
+                  >
+                    <AddIcon />
+                  </IconButton>
+                ) : null}
               </TableCell>
 
               <TableCell align="center" sx={{ fontWeight: 700 }}>
@@ -85,26 +100,30 @@ const CartItemList = () => {
                 {item.total_price_net_formatted}
               </TableCell>
 
-              <TableCell align="center">
-                <IconButton
-                  onClick={() => {
-                    removeFromCart(item.product_variant_sku);
-                  }}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </TableCell>
+              {editable ? (
+                <TableCell align="center">
+                  <IconButton
+                    onClick={() => {
+                      removeFromCart(item.product_variant_sku);
+                    }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              ) : null}
             </TableRow>
           ))}
         </TableBody>
       </Table>
-      <Grid container justifyContent="center" sx={{ my: 3 }}>
-        <Grid item>
-          <Typography variant="h6">
-            Total price:&nbsp;{cart.total_price_net_formatted}
-          </Typography>
+      {editable ? (
+        <Grid container justifyContent="center" sx={{ my: 3 }}>
+          <Grid item>
+            <Typography variant="h6">
+              Total price:&nbsp;{cart.total_items_price_net_formatted}
+            </Typography>
+          </Grid>
         </Grid>
-      </Grid>
+      ) : null}
     </>
   ) : (
     <Typography variant="h6" sx={{ my: 3 }}>

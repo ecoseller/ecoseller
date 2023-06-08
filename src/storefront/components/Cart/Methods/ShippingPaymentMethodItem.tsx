@@ -2,6 +2,7 @@
 import imgPath from "@/utils/imgPath";
 import { Box, Radio, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
+import ImageThumbnail from "@/components/Generic/ImageThumbnail";
 
 export interface IShippingPaymentMethodItemProps {
   id: number;
@@ -42,16 +43,7 @@ const ShippingPaymentMethodItem = ({
           <Radio checked={selected} />
         </Grid>
         <Grid item xs={1} sm={2} md={2}>
-          <img
-            src={imgPath(image)}
-            alt={title}
-            style={{
-              width: "auto",
-              height: "auto",
-              maxHeight: "30px",
-              maxWidth: "70px",
-            }}
-          />
+          <ImageThumbnail imagePath={imgPath(image)} alt={title} />
         </Grid>
         <Grid item xs={1} sm={6} md={7}>
           <Typography variant="h6" sx={{ mt: 1, pl: 2 }}>

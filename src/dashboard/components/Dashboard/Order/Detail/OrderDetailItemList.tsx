@@ -268,7 +268,7 @@ const OrderDetailItemList = ({
           <Grid container justifyContent="center" sx={{ my: 3 }}>
             <Grid item>
               <Typography variant="h6">
-                Total net price:&nbsp;{cart.total_price_net_formatted}
+                Total net price:&nbsp;{cart.total_items_price_net_formatted}
               </Typography>
             </Grid>
           </Grid>
