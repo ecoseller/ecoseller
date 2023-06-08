@@ -26,8 +26,7 @@ import { useTheme } from "@mui/material/styles";
 import Divider from "@mui/material/Divider";
 import { useCart } from "@/utils/context/cart";
 import CollapsableContentWithTitle from "@/components/Generic/CollapsableContentWithTitle";
-import Button from "@mui/material/Button";
-import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
+import CartCompleteOrder from "@/components/Cart/CartCompleteOrder";
 
 interface ICartSummaryPageProps {
   billingInfo: IBillingInfo;
@@ -173,22 +172,7 @@ const CartSummaryPage = ({
 
         {cart ? (
           <Grid item xs={12} md={8} textAlign="center">
-            <Divider />
-            <Typography variant="h5" sx={{ my: 3 }}>
-              Total price: {cart.total_price_net_formatted}
-            </Typography>
-            <>
-              <Button
-                variant="contained"
-                startIcon={<ShoppingCartCheckoutIcon />}
-                size="large"
-                onClick={() => {
-                  router.push("/order/completed");
-                }}
-              >
-                Complete order
-              </Button>
-            </>
+            <CartCompleteOrder cart={cart} />
           </Grid>
         ) : null}
       </Grid>
