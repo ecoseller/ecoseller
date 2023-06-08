@@ -64,6 +64,10 @@ const User = () => {
     router.replace(`/user/detail`);
   };
 
+  const handleOrders = () => {
+    router.replace(`/user/orders`);
+  };
+
 
   const handleLogout = () => {
     const refreshToken = Cookies.get("refreshToken") || null;
@@ -156,7 +160,7 @@ const User = () => {
         <MenuItem onClick={handleProfile} sx={{ m: 1 }}>
           Profile
         </MenuItem>
-        <MenuItem sx={{ m: 1 }}>
+        <MenuItem onClick={handleOrders} sx={{ m: 1 }}>
           Orders
         </MenuItem>
         <Divider sx={{ borderStyle: "dashed" }} />
