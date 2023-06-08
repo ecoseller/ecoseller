@@ -12,13 +12,11 @@ class SearchConfig(AppConfig):
             # rebuild search index after server restart
             # but only if elastic is used and is currently running
 
-            import os
-            import time
             from django.core import management
 
             # rebuild search index
             try:
                 management.call_command("search_index", "--rebuild", "-f")
-            except:
-                print("search index rebuild failed")
+            except Exception as e:
+                print("search index rebuild failed", e)
                 pass
