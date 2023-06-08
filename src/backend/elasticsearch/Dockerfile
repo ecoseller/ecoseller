@@ -7,6 +7,7 @@ RUN echo "TARGETOS=${TARGETOS} TARGETARCH=${TARGETARCH} TARGETVARIANT=${TARGETVA
 FROM elastic-${TARGETOS}-${TARGETARCH}${TARGETVARIANT}
 # main
 WORKDIR /usr/share/elasticsearch
+RUN  yum install wget
 COPY ./download_hunspell.sh /usr/share/elasticsearch/config/
 COPY ./tmp/hunspell.txt /usr/share/elasticsearch/tmp/
 RUN chmod +x ./config/download_hunspell.sh
