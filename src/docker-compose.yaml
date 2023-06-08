@@ -14,6 +14,30 @@ services:
       - 8001:8001
     env_file:
       - ./backend/docker-compose.env
+  redis:
+    container_name: redis
+    image: redis
+    restart: always
+    ports:
+      - 6379:6379
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - ./cache:/data
+    depends_on:
+      - backend
+  rq-worker:
+    build:
+        context: ./backend
+        dockerfile: ./Dockerfile
+        target: development
+    volumes:
+      - ./backend/core:/usr/src/app/core
+    depends_on:
+    - backend
+    - redis
+    env_file:
+      - ./backend/docker-compose.env
+    command: python -u /usr/src/app/core/manage.py rqworker high low default
   frontend_dashboard:
     container_name: dashboard
     build:
