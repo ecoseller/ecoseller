@@ -39,30 +39,10 @@ export const OrderList = ({ orders }: IOrderListProps) => {
             headerName: "Items",
             editable: false,
             flex: 1,
+            valueParser: (params) => {
+                return params.value.join(" | ");
+            },
         }
-        // {
-        //     field: "actions",
-        //     type: "actions",
-        //     headerName: "Actions",
-        //     width: 100,
-        //     cellClassName: "actions",
-        //     flex: 1,
-        //     disableColumnMenu: true,
-        //     getActions: ({ id }) => {
-        //         return [
-        //             <GridActionsCellItem
-        //                 icon={<EditIcon />}
-        //                 label="Edit"
-        //                 className="textPrimary"
-        //                 onClick={() => {
-        //                     router.push(`/dashboard/orders/${id}`);
-        //                 }}
-        //                 color="inherit"
-        //                 key={"edit"}
-        //             />,
-        //         ];
-        //     },
-        // },
     ];
 
     return (
@@ -70,14 +50,6 @@ export const OrderList = ({ orders }: IOrderListProps) => {
             rows={orders}
             columns={columns}
             hideFooter
-            // pageSizeOptions={[PAGE_SIZE, 60, 90]}
-            // initialState={{
-            //   pagination: {
-            //     paginationModel: {
-            //       pageSize: PAGE_SIZE,
-            //     },
-            //   },
-            // }}
             autoHeight={true}
             disableRowSelectionOnClick
             getRowId={(row: any) => row.token}

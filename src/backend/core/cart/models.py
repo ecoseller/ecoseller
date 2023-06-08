@@ -182,7 +182,6 @@ class Cart(models.Model):
         return sum(
             [item.unit_price_net * item.quantity for item in self.cart_items.all()]
         )
-<<<<<<< HEAD
 
     @property
     def total_items_price_net_formatted(self):
@@ -193,17 +192,10 @@ class Cart(models.Model):
         """
         return self.pricelist.format_price(self.total_items_price_net)
 
-=======
-    
->>>>>>> 84309d7 (WIP order list)
     @property
     def total_price_net_formatted(self):
         """
         Get total price of the cart (sum of prices of items, payment method and shipping method) with currency symbol
-<<<<<<< HEAD
-
-=======
->>>>>>> 84309d7 (WIP order list)
         This price is intended to be shown to the user.
         """
         items_price = self.total_items_price_net
@@ -222,17 +214,6 @@ class Cart(models.Model):
             items_price + payment_method_price + shipping_method_price
         )
 
-<<<<<<< HEAD
-=======
-    @property
-    def total_items_price_net_formatted(self):
-        """
-        Get total price (unit price * quantity) of the cart items with currency symbol
-        This price is intended to be shown to the user.
-        """
-        return self.pricelist.format_price(self.total_items_price_net)
-
->>>>>>> 84309d7 (WIP order list)
     def recalculate(self, pricelist: PriceList, country: Country):
         """
         Recalculate cart prices.

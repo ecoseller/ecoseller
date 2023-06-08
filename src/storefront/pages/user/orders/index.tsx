@@ -80,6 +80,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     if (orders?.length != 0) {
         for (const order of orders) {
+            order.items = [];
             const items = await orderItemsAPI(
                 "GET",
                 order.token,
@@ -87,7 +88,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 res as NextApiResponse
             );
             console.log("Items", items);
-            order.items = items;
+            if (items?.length != 0) {
+                for (const item of items.items) {
+                    console.log("Item", item)
+                    console.log("item variant name", item.product_variant_name)
+                    order.items.push(item.product_variant_name);
+                }
+            }
         }
     }
 

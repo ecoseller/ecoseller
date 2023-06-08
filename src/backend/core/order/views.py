@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from cart.models import Cart, CartItem
+from cart.serializers import CartItemDetailSerializer
 from .models import Order
 from .serializers import OrderListSerializer
 
@@ -110,6 +111,7 @@ class OrderItemsListStorefrontView(ListAPIView):
         items = []
         for cartItem in cartItems:
             if cartItem.product is not None:
-                print("ITEMS", cartItem)
-                items.append(cartItem.product.to_json())
+                serializedItem = CartItemDetailSerializer(cartItem)
+                print("ITEMS", serializedItem.data)
+                items.append(serializedItem.data)
         return Response({"items": items}, status=200)
