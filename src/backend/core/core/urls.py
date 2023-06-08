@@ -13,6 +13,7 @@ urlpatterns = [
     path("cart/", include("cart.urls")),
     path("category/", include("category.urls")),
     path("cms/", include("cms.urls")),
+    path("email/", include("emails.urls")),
     path("order/", include("order.urls")),
     path("product/", include("product.urls")),
     path("review/", include("review.urls")),
@@ -20,4 +21,5 @@ urlpatterns = [
     path("roles/", include("roles.urls")),
     path("country/", include("country.urls")),
     path("editorjs/", include("cms.editorjs.urls")),
+    path("django-rq/", include("django_rq.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
