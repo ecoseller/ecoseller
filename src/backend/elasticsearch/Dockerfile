@@ -7,4 +7,5 @@ RUN echo "TARGETOS=${TARGETOS} TARGETARCH=${TARGETARCH} TARGETVARIANT=${TARGETVA
 FROM elastic-${TARGETOS}-${TARGETARCH}${TARGETVARIANT}
 # main
 WORKDIR /usr/share/elasticsearch
-COPY ./hunspell /usr/share/elasticsearch/config/hunspell/
+COPY ./download_hunspell.sh /usr/share/elasticsearch/config/
+RUN ./config/download_hunspell.sh
