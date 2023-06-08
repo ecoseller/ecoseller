@@ -8,4 +8,5 @@ FROM elastic-${TARGETOS}-${TARGETARCH}${TARGETVARIANT}
 # main
 WORKDIR /usr/share/elasticsearch
 COPY ./download_hunspell.sh /usr/share/elasticsearch/config/
+RUN chmod +x ./config/download_hunspell.sh
 RUN ./config/download_hunspell.sh
