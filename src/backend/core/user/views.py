@@ -133,8 +133,6 @@ class UserViewObs(APIView):
         return Response(serializer.data)
 
 
-
-
 class CustomTokenObtainPairView(jwt_views.TokenObtainPairView):
     serializer_class = TokenObtainDashboardSerializer
 

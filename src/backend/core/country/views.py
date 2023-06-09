@@ -359,10 +359,10 @@ class ShippingInfoUserView(GenericAPIView):
             return Response({"error": "Not logged in user"}, status=400)
         qs = self.get_queryset(user_id)
         if qs.count() == 0:
-            return Response({}, status=200) 
+            return Response({}, status=200)
         serializer = self.serializer_class(qs.first())
         return Response(serializer.data, status=200)
-    
+
     def put(self, request):
         user_id = request.user
         if user_id is None or not user_id.is_authenticated:
@@ -378,7 +378,7 @@ class ShippingInfoUserView(GenericAPIView):
             return Response(serializer.data, status=200)
         print(serializer.errors)
         return Response({"error": serializer.errors}, status=400)
-    
+
     def delete(self, request):
         user_id = request.user
         if user_id is None or not user_id.is_authenticated:
@@ -394,6 +394,7 @@ class ShippingInfoUserView(GenericAPIView):
             return None
         return ShippingInfo.objects.filter(user=user_id)
 
+
 class BillingInfoUserView(GenericAPIView):
     permissions_classes = (permissions.AllowAny,)
     allowed_methods = ["GET", "PUT", "DELETE"]
@@ -408,7 +409,7 @@ class BillingInfoUserView(GenericAPIView):
             return Response({}, status=200)
         serializer = self.serializer_class(qs.first())
         return Response(serializer.data, status=200)
-    
+
     def put(self, request):
         user_id = request.user
         if user_id is None or not user_id.is_authenticated:
@@ -424,7 +425,7 @@ class BillingInfoUserView(GenericAPIView):
             return Response(serializer.data, status=200)
         print(serializer.errors)
         return Response({"error": serializer.errors}, status=400)
-    
+
     def delete(self, request):
         user_id = request.user
         if user_id is None or not user_id.is_authenticated:
