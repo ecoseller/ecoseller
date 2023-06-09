@@ -76,7 +76,7 @@ const CountrySelectModal = ({
         </Typography>
         <List>
           {countryList?.map((c) => (
-            <ListItem disablePadding>
+            <ListItem disablePadding key={c.code}>
               <ListItemButton
                 selected={country && c.code == country.code ? true : false}
               >
