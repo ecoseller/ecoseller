@@ -10,8 +10,9 @@ import {
 import { ICountry } from "@/types/country";
 import { HTTPMETHOD } from "@/types/common";
 
-export const countryListAPI = async (
+export const countryDetailAPI = async (
   method: HTTPMETHOD,
+  code: string,
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
@@ -22,9 +23,9 @@ export const countryListAPI = async (
   switch (method) {
     case "GET":
       return await api
-        .get("/country/storefront/")
+        .get(`/country/storefront/${code}/`)
         .then((response) => response.data)
-        .then((data: ICountry[]) => {
+        .then((data: ICountry) => {
           console.log("data", data);
           return data;
         })
@@ -42,9 +43,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
    */
   // get the cart data from the backend
   const method = req.method as HTTPMETHOD;
-
+  const { code } = req.query;
   if (method === "GET") {
-    return countryListAPI("GET", req, res)
+    return countryDetailAPI("GET", code as string, req, res)
       .then((data) => res.status(200).json(data))
       .catch((error) => res.status(400).json(null));
   }
