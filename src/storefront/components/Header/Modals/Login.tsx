@@ -178,8 +178,7 @@ const LoginModal = ({ open, setOpen }: ILoginModal) => {
             onClick={() => {
               handleClose();
               router.push("/user/register");
-            }
-            }
+            }}
           >
             Sign Up
           </a>
