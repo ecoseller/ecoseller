@@ -172,7 +172,7 @@ const LoginModal = ({ open, setOpen }: ILoginModal) => {
           Login
         </Button>
         <Typography variant="body2" align="center">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <a
             href="#"
             onClick={() => {
