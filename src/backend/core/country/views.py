@@ -54,6 +54,18 @@ class CountryListView(ListCreateAPIView):
         return Country.objects.all()
 
 
+class CountryListStorefrontView(CountryListView):
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = [
+        "GET",
+    ]
+
+    serializer_class = CountrySerializer
+
+    def get_queryset(self):
+        return Country.objects.all()
+
+
 class CountryDetailView(RetrieveUpdateDestroyAPIView):
     """
     Detail of country
@@ -72,6 +84,28 @@ class CountryDetailView(RetrieveUpdateDestroyAPIView):
     lookup_url_kwarg = "code"
 
     @check_user_is_staff_decorator()
+    def get(self, request, code):
+        return super().get(request, code)
+
+    def get_queryset(self):
+        return Country.objects.all()
+
+
+class CountryDetailStorefrontView(RetrieveUpdateDestroyAPIView):
+    """
+    Detail of country for storefront
+    """
+
+    permission_classes = (permissions.AllowAny,)
+    allowed_methods = [
+        "GET",
+    ]
+    authentication_classes = []
+
+    serializer_class = CountrySerializer
+    lookup_field = "code"
+    lookup_url_kwarg = "code"
+
     def get(self, request, code):
         return super().get(request, code)
 
