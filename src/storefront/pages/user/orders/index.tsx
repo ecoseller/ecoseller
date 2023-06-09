@@ -104,11 +104,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         req as NextApiRequest,
         res as NextApiResponse
       );
-      console.log("Items", items);
       if (items?.length != 0) {
         for (const item of items.items) {
-          console.log("Item", item);
-          console.log("item variant name", item.product_variant_name);
           order.items.push(item.product_variant_name);
         }
       }
