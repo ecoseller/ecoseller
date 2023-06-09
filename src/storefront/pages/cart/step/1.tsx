@@ -25,6 +25,7 @@ import CartStepper from "@/components/Cart/Stepper";
 // mui
 import {
   Box,
+  Checkbox,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -39,6 +40,9 @@ import { IBillingInfo, IShippingInfo } from "@/types/cart";
 import { countryListAPI } from "@/pages/api/country";
 import { ICountry } from "@/types/country";
 import CartButtonRow from "@/components/Cart/ButtonRow";
+import { userBillingInfoAPI } from "@/pages/api/user/billing-info";
+import { useUser } from "@/utils/context/user";
+import { Check, CheckBox } from "@mui/icons-material";
 
 interface ICartStep1PageProps {
   shippingInfo: any;
@@ -60,6 +64,8 @@ const CartStep1Page = ({
    */
 
   const router = useRouter();
+  const { user } = useUser();
+  const [shippingInfoChecked, setShippingInfoChecked] = useState<boolean>(false);
   const [validShippingInfo, setValidShippingInfo] = useState<boolean>(false);
   const [shippingInfoState, setShippingInfoState] =
     useState<IShippingInfoFormProps>({} as IShippingInfoFormProps);
@@ -75,7 +81,7 @@ const CartStep1Page = ({
   }
 
   const [billingRadioSelect, setBillingRadioSelect] = useState<
-    "SAMEASSHIPPING" | "NEW"
+    "SAMEASSHIPPING" | "NEW" | "PROFILE"
   >("SAMEASSHIPPING");
   const [validBillingInfo, setValidBillingInfo] = useState<boolean>(false);
   const [billingInfoState, setBillingInfoState] =
@@ -113,6 +119,92 @@ const CartStep1Page = ({
       );
     }
   }
+
+  console.log("billingRadioSelect", billingRadioSelect);
+
+  const setBillingInfoFromProfile = async () => {
+    if (user) {
+      await fetch("/api/user/billing-info", {
+        method: "GET",
+      })
+        .then((res) => res.json())
+        .then((data: any) => {
+          if (data != null || data != undefined) {
+            setBillingRadioSelect("PROFILE");
+            setBillingInfoState(
+              billingInfoInitialData(
+                { ...data, country: "cz" },
+                setBillingInfoState
+              )
+            )
+          }
+        })
+    }
+  };
+
+  const setShippingInfoFromProfile = async () => {
+    if (user) {
+      await fetch("/api/user/shipping-info", {
+        method: "GET",
+      })
+        .then((res) => res.json())
+        .then((data: any) => {
+          if (data != null || data != undefined) {
+            setShippingInfoState(
+              shippingInfoInitialData(
+                { ...data, country: "cz" },
+                setShippingInfoState
+              )
+            )
+          }
+        })
+    }
+  }
+
+  const clearBillingInfo = async () => {
+    setBillingInfoState(
+      billingInfoInitialData(
+        {
+          first_name: "",
+          surname: "",
+          street: "",
+          city: "",
+          postal_code: "",
+          country: "cz",
+          company_name: "",
+          company_id: "",
+          vat_number: "",
+        } as IBillingInfo,
+        setBillingInfoState
+      )
+    );
+  }
+
+  const clearShippingInfo = async () => {
+    setShippingInfoState(
+      shippingInfoInitialData(
+        {
+          first_name: "",
+          surname: "",
+          street: "",
+          city: "",
+          postal_code: "",
+          country: "cz"
+        } as IShippingInfo,
+        setShippingInfoState
+      )
+    );
+  }
+
+  const handleChangeShippingInfoCheck = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    setShippingInfoChecked(event.target.checked);
+    if (event.target.checked) {
+      await setShippingInfoFromProfile();
+    }
+    else {
+      await clearShippingInfo();
+    }
+  };
 
   const submitForm = async () => {
     if (
@@ -167,6 +259,15 @@ const CartStep1Page = ({
         <Grid container item xs={10} sm={10} md={5} direction="column">
           <div className="shipping-info-form">
             <h2>Shipping information</h2>
+            {user && (
+              <FormControlLabel control={
+                <Checkbox
+                  checked={shippingInfoChecked}
+                  onChange={handleChangeShippingInfoCheck}
+                  inputProps={{ 'aria-label': 'controlled' }}
+                />
+              } label="Use profile info" />
+            )}
             <ShippingInfoForm
               first_name={shippingInfoState.first_name}
               surname={shippingInfoState.surname}
@@ -195,7 +296,7 @@ const CartStep1Page = ({
                 name="radio-buttons-billing-info-group"
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setBillingRadioSelect(
-                    event.target.value as "SAMEASSHIPPING" | "NEW"
+                    event.target.value as "SAMEASSHIPPING" | "NEW" | "PROFILE"
                   );
                 }}
               >
@@ -208,7 +309,16 @@ const CartStep1Page = ({
                   value="NEW"
                   control={<Radio />}
                   label="New billing info"
+                  onClick={clearBillingInfo}
                 />
+                {user && (
+                  <FormControlLabel
+                    value="PROFILE"
+                    control={<Radio />}
+                    label="Use profile info"
+                    onClick={setBillingInfoFromProfile}
+                  />
+                )}
               </RadioGroup>
             </FormControl>
 
@@ -318,3 +428,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 export default CartStep1Page;
+
