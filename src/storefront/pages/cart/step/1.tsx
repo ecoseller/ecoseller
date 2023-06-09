@@ -65,7 +65,8 @@ const CartStep1Page = ({
 
   const router = useRouter();
   const { user } = useUser();
-  const [shippingInfoChecked, setShippingInfoChecked] = useState<boolean>(false);
+  const [shippingInfoChecked, setShippingInfoChecked] =
+    useState<boolean>(false);
   const [validShippingInfo, setValidShippingInfo] = useState<boolean>(false);
   const [shippingInfoState, setShippingInfoState] =
     useState<IShippingInfoFormProps>({} as IShippingInfoFormProps);
@@ -136,9 +137,9 @@ const CartStep1Page = ({
                 { ...data, country: "cz" },
                 setBillingInfoState
               )
-            )
+            );
           }
-        })
+        });
     }
   };
 
@@ -155,11 +156,11 @@ const CartStep1Page = ({
                 { ...data, country: "cz" },
                 setShippingInfoState
               )
-            )
+            );
           }
-        })
+        });
     }
-  }
+  };
 
   const clearBillingInfo = async () => {
     setBillingInfoState(
@@ -178,7 +179,7 @@ const CartStep1Page = ({
         setBillingInfoState
       )
     );
-  }
+  };
 
   const clearShippingInfo = async () => {
     setShippingInfoState(
@@ -189,19 +190,20 @@ const CartStep1Page = ({
           street: "",
           city: "",
           postal_code: "",
-          country: "cz"
+          country: "cz",
         } as IShippingInfo,
         setShippingInfoState
       )
     );
-  }
+  };
 
-  const handleChangeShippingInfoCheck = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeShippingInfoCheck = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setShippingInfoChecked(event.target.checked);
     if (event.target.checked) {
       await setShippingInfoFromProfile();
-    }
-    else {
+    } else {
       await clearShippingInfo();
     }
   };
@@ -260,13 +262,16 @@ const CartStep1Page = ({
           <div className="shipping-info-form">
             <h2>Shipping information</h2>
             {user && (
-              <FormControlLabel control={
-                <Checkbox
-                  checked={shippingInfoChecked}
-                  onChange={handleChangeShippingInfoCheck}
-                  inputProps={{ 'aria-label': 'controlled' }}
-                />
-              } label="Use profile info" />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={shippingInfoChecked}
+                    onChange={handleChangeShippingInfoCheck}
+                    inputProps={{ "aria-label": "controlled" }}
+                  />
+                }
+                label="Use profile info"
+              />
             )}
             <ShippingInfoForm
               first_name={shippingInfoState.first_name}
@@ -428,4 +433,3 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 export default CartStep1Page;
-

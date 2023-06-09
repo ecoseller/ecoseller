@@ -19,7 +19,6 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { IUser } from "@/types/user";
 
-
 const User = () => {
   const [anchorUserMenuEl, setAnchorUserMenuEl] = useState<null | HTMLElement>(
     null
@@ -29,7 +28,6 @@ const User = () => {
   const [refetch, setRefetch] = useState<boolean>(false);
 
   const router = useRouter();
-
 
   const openUserMenu = Boolean(anchorUserMenuEl);
   const handleUserMenuClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -55,8 +53,8 @@ const User = () => {
         setUser({
           email: data?.email,
           first_name: data?.first_name,
-          last_name: data?.last_name
-        } as IUser)
+          last_name: data?.last_name,
+        } as IUser);
       });
   }, [openLoginModal, refetch]);
 
@@ -67,7 +65,6 @@ const User = () => {
   const handleOrders = () => {
     router.replace(`/user/orders`);
   };
-
 
   const handleLogout = () => {
     const refreshToken = Cookies.get("refreshToken") || null;

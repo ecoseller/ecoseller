@@ -9,10 +9,17 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from "@mui/material";
+import {
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+  TextField,
+} from "@mui/material";
 import { useRouter } from "next/router";
 
-import styles from "./Login.module.scss"
+import styles from "./Login.module.scss";
 
 // Cookies
 // @ts-ignore
@@ -69,9 +76,7 @@ const LoginModal = ({ open, setOpen }: ILoginModal) => {
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <h1 className={styles.welcome}>
-          Welcome back!
-        </h1>
+        <h1 className={styles.welcome}>Welcome back!</h1>
         <TextField
           margin="normal"
           required
