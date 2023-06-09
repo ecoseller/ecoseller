@@ -1,8 +1,8 @@
-import { IOrder } from "@types/order";
 import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import React from "react";
 import { useRouter } from "next/router";
+import { IOrder } from "@/types/order";
 
 interface IOrderListProps {
   orders: IOrder[];
