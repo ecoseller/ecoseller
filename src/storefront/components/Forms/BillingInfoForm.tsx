@@ -202,7 +202,7 @@ export const billingInfoInitialData = (
 
 interface IBillingInfoFormComponentProps extends IBillingInfoFormProps {
   setIsFormValid: (value: boolean) => void;
-  radioType?: "NEW" | "SAMEASSHIPPING";
+  radioType?: "NEW" | "SAMEASSHIPPING" | "PROFILE";
   countryOptions?: ICountryOption[];
   allowCountryChange?: boolean;
 }

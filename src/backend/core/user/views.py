@@ -110,28 +110,30 @@ class BlacklistTokenView(APIView):
 
 # create view that returns user data from token
 class UserViewObs(APIView):
-    """
-    View for testing purposes.
-    Print user data from token passed in header.
-    """
+    permission_classes = (permissions.AllowAny,)
 
-    @check_user_is_staff_decorator()
     def get(self, request):
         user = request.user
-        # auth = request.auth
-
-        # currently triggers UserAuthBackend
-        # user = authenticate(request)
-
-        if user is None:
+        if user is None or not user.is_authenticated:
             return Response({"error": "User does not exist"}, status=400)
 
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
+    def put(self, request):
+        user = request.user
+        if user is None or not user.is_authenticated:
+            return Response({"error": "User does not exist"}, status=400)
+
+        serializer = UserSerializer(user, data=request.data)
+        if not serializer.is_valid():
+            print(serializer.errors)
+            return Response(serializer.errors, status=400)
+        serializer.save()
+        return Response(serializer.data)
+
 
 class CustomTokenObtainPairView(jwt_views.TokenObtainPairView):
-    # Replace the serializer with your custom
     serializer_class = TokenObtainDashboardSerializer
 
     def post(self, request, *args, **kwargs):
