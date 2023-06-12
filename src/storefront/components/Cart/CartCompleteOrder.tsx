@@ -12,6 +12,9 @@ import React, { useState } from "react";
 import Checkbox from "@mui/material/Checkbox";
 import Divider from "@mui/material/Divider";
 import { useRouter } from "next/router";
+import { orderSubmitAPI } from "@/api/order/submit";
+import { useSnackbarState } from "@/utils/snackbar";
+import { useCart } from "@/utils/context/cart";
 
 interface ICartCompleteOrderProps {
   cart: ICart;
@@ -25,7 +28,8 @@ interface ICartCompleteOrderProps {
 const CartCompleteOrder = ({ cart }: ICartCompleteOrderProps) => {
   const [agreeWithTerms, setAgreeWithTerms] = useState(false);
   const [agreeWithDataProcessing, setAgreeWithDataProcessing] = useState(false);
-
+  const [snackbar, setSnackbar] = useSnackbarState();
+  const { clearCart } = useCart();
   const router = useRouter();
 
   return (
@@ -67,8 +71,31 @@ const CartCompleteOrder = ({ cart }: ICartCompleteOrderProps) => {
           startIcon={<ShoppingCartCheckoutIcon />}
           size="large"
           disabled={!agreeWithTerms}
-          onClick={() => {
-            router.push("/order/completed");
+          onClick={async () => {
+            const response = await orderSubmitAPI(cart.token, {
+              agreeWithTerms: agreeWithTerms,
+              agreeWithDataProcessing: agreeWithDataProcessing,
+            });
+
+            const data = await response.json();
+            if (response.status != 201) {
+              console.log("complete order", data?.error);
+              setSnackbar({
+                open: true,
+                message: data?.error,
+                severity: "error",
+              });
+              return;
+            }
+            setSnackbar({
+              open: true,
+              message: "Order completed",
+              severity: "success",
+            });
+            console.log("complete order", response, data?.token);
+            clearCart();
+            router.push(`/order/${data?.token}/completed`);
+            // router.push("/order/completed");
           }}
         >
           Complete order

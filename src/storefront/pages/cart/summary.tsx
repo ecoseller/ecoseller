@@ -184,11 +184,6 @@ const CartSummaryPage = ({
           },
           disabled: false,
         }}
-        next={{
-          title: "Next",
-          onClick: () => {},
-          disabled: true,
-        }}
       />
     </div>
   );

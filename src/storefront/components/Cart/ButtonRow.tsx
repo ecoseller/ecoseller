@@ -9,8 +9,8 @@ interface IButton {
 }
 
 interface ICartButtonRowProps {
-  prev: IButton;
-  next: IButton;
+  prev?: IButton;
+  next?: IButton;
 }
 
 const CartButtonRow = (props: ICartButtonRowProps) => {
@@ -23,29 +23,33 @@ const CartButtonRow = (props: ICartButtonRowProps) => {
       pt={4}
     >
       <Grid container item xs={2} sm={2} md={2} direction="column" pt={4}>
-        <Typography
-          variant="body1"
-          sx={{
-            cursor: "pointer",
-            textDecoration: "underline",
-            "&:hover": {
-              color: "primary.main",
-            },
-          }}
-          onClick={prev.onClick}
-        >
-          {prev.title}
-        </Typography>
+        {prev ? (
+          <Typography
+            variant="body1"
+            sx={{
+              cursor: "pointer",
+              textDecoration: "underline",
+              "&:hover": {
+                color: "primary.main",
+              },
+            }}
+            onClick={prev.onClick}
+          >
+            {prev.title}
+          </Typography>
+        ) : null}
       </Grid>
       <Grid container item xs={6} sm={7} md={7} direction="column" pt={4} />
       <Grid container item xs={1} sm={1} md={1} direction="column" pt={4}>
-        <Button
-          variant={"contained"}
-          disabled={next.disabled}
-          onClick={next.onClick}
-        >
-          {next.title}
-        </Button>
+        {next ? (
+          <Button
+            variant={"contained"}
+            disabled={next.disabled}
+            onClick={next.onClick}
+          >
+            {next.title}
+          </Button>
+        ) : null}
       </Grid>
     </Grid>
   );
