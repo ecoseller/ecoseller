@@ -1,8 +1,17 @@
 const OrderCompleted = ({ id }: { id: string }) => {
   return (
-    <>
-      <h2>Order {id} is now completed</h2>
-    </>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: "10vh",
+      }}
+    >
+      <h1>Thank you!</h1>
+      <h3>We sent you an e-mail with order confirmation.</h3>
+    </div>
   );
 };
 
