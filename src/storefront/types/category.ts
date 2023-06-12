@@ -1,13 +1,20 @@
-export interface ICategory extends ICategoryMenu {
-  desciption: string;
+import { DataProp } from "@/utils/editorjs/EditorJsOutput";
+
+/**
+ * Interface containing basic info about a category
+ */
+export interface ICategoryBase {
+  id: number;
+  title: string;
+  meta_title: string;
+  slug: string;
+  children: ICategoryBase[];
 }
 
-export interface ICategoryMenu {
-  id: number;
-  published: boolean;
-  title: string;
-  slug: string;
-  create_at: string;
-  update_at: string;
-  children: ICategoryMenu[];
+/**
+ * Interface containing detailed info about a category
+ */
+export interface ICategoryDetail extends ICategoryBase {
+  description_editorjs: DataProp;
+  meta_description: string;
 }

@@ -6,7 +6,7 @@ import Link from "next/link";
 
 // libs
 import { productAPI } from "@/pages/api/product/[id]";
-import Output from "@/utils/editorjs/Output";
+import EditorJsOutput from "@/utils/editorjs/EditorJsOutput";
 
 // components
 import MediaGallery from "@/components/ProductDetail/MediaGallery";
@@ -163,7 +163,7 @@ const ProductPage = ({ data, country, pricelist }: IProductPageProps) => {
             </>
           </Grid>
           <Box sx={{ pt: 5, pl: 3 }}>
-            <Output data={data.description_editorjs} />
+            <EditorJsOutput data={data.description_editorjs} />
           </Box>
         </Grid>
         <Box sx={{ pt: 5 }}>

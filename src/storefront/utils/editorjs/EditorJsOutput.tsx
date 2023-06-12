@@ -38,7 +38,7 @@ interface IRenderers {
   [key: string]: Object;
 }
 
-const Output = ({ data, renderers }: IOutput) => {
+const EditorJsOutput = ({ data, renderers }: IOutput) => {
   let availableRenderers: any = {
     quote: DelimeterRenderer,
     delimiter: DelimeterRenderer,
@@ -96,4 +96,4 @@ export function contentGetter(data: any) {
   return content;
 }
 
-export default Output;
+export default EditorJsOutput;

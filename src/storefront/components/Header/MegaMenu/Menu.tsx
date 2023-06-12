@@ -21,7 +21,7 @@ import MainList from "./components/MainList";
 
 // State Machines
 import { TMenuState, MenuStateMachine } from "./utils/MenuStateMachine";
-import { ICategoryMenu } from "@/types/category";
+import { ICategoryBase } from "@/types/category";
 import Stack from "@mui/material/Stack";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
@@ -49,7 +49,7 @@ const Menu = ({}: IMenu) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
   console.log("isMobile", isMobile);
 
-  const { data: categories, error: isError } = useSWR<ICategoryMenu[]>(
+  const { data: categories, error: isError } = useSWR<ICategoryBase[]>(
     "/api/category",
     (url: string) => fetch(url).then((res) => res.json())
   );
@@ -61,7 +61,7 @@ const Menu = ({}: IMenu) => {
   }, [router.asPath]);
 
   const categoryGenerator = useCallback(
-    (categories: ICategoryMenu[], level: number = 0) =>
+    (categories: ICategoryBase[], level: number = 0) =>
       MenuGenerator(
         categories,
         level,

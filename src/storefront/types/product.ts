@@ -1,4 +1,4 @@
-import { DataProp } from "@/utils/editorjs/Output";
+import { DataProp } from "@/utils/editorjs/EditorJsOutput";
 
 export interface IProductSliderData {
   id: number;

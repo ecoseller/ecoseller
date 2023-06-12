@@ -65,7 +65,7 @@ class CategoryDetailStorefrontSerializer(CategoryRecursiveStorefrontSerializer):
     class Meta(CategoryRecursiveStorefrontSerializer.Meta):
         model = Category
         fields = CategoryRecursiveStorefrontSerializer.Meta.fields + (
-            "description",
+            "description_editorjs",
             "meta_description",
         )
 
