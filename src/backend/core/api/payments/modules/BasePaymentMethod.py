@@ -23,6 +23,7 @@ class PayBySquareMethod(BasePaymentMethod):
         Create pay by square payment and return QR code and payment data (amount, currency, variable symbol, and back account number)
         {
             "qr_code": "base64 encoded image",
+            "payment_id": "1234567890",
             "payment_data": {
                 "amount": 100,
                 "currency": "EUR",

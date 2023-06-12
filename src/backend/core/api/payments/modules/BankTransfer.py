@@ -12,6 +12,7 @@ class BankTransfer(PayBySquareMethod):
 
         return {
             "qr_code": "base64 encoded image",
+            "payment_id": self.variable_symbol,
             "payment_data": {
                 "amount": self.amount,
                 "currency": self.currency,
@@ -23,10 +24,7 @@ class BankTransfer(PayBySquareMethod):
 
     def status(self) -> PaymentStatus:
         """
-        Moc status and return paid with some probability
+        Mock status and return paid with some probability
         """
-        import random
 
-        if random.random() < 0.5:
-            return PaymentStatus.PAID
         return PaymentStatus.PENDING
