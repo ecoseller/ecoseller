@@ -72,10 +72,9 @@ const BasicField = ({ field }: { field: IValidatedInputField }) => {
   return (
     <Box pt={2} pr={2}>
       <TextField
-        id="first-name"
-        label={field.label}
+        label={field.label || ""}
         variant="outlined"
-        value={field.value}
+        value={field.value || ""}
         onChange={(e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
           field.setter(e.target.value);
           if (field.validator && field.setIsValid) {
