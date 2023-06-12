@@ -19,12 +19,11 @@ from .serializers import (
     OrderStatusSerializer,
     OrderSubmitSerializer,
 )
-
-NotificationsApi = settings.NOTIFICATIONS_API
-
 from api.notifications.conf import (
     EventTypes,
 )
+
+NotificationsApi = settings.NOTIFICATIONS_API
 
 
 class OrderDetailDashboardView(RetrieveAPIView):
