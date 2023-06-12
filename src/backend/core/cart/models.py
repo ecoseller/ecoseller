@@ -295,6 +295,13 @@ class CartItem(models.Model):
     def _get_language(self):
         return self.cart.country.locale
 
+    def deduct_from_inventory(self):
+        """
+        Deduct quantity of this cart item from inventory
+        """
+        self.product_variant.stock_quantity -= self.quantity
+        self.product_variant.save()
+
     @property
     def product_variant_name(self):
         """

@@ -4,6 +4,7 @@ from rest_framework import permissions
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.conf import settings
 
 from cart.models import Cart, CartItem
 from cart.serializers import CartItemDetailSerializer
@@ -17,6 +18,12 @@ from .serializers import (
     OrderListSerializer,
     OrderStatusSerializer,
     OrderSubmitSerializer,
+)
+
+NotificationsApi = settings.NOTIFICATIONS_API
+
+from api.notifications.conf import (
+    EventTypes,
 )
 
 
@@ -68,7 +75,6 @@ class OrderCreateStorefrontView(APIView):
         serializer = self.serializer_class(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=400)
-        print(serializer.validated_data)
         cart_token = serializer.validated_data["cart_token"]
         marketing_flag = serializer.validated_data["marketing_flag"]
         agreed_to_terms = serializer.validated_data["agreed_to_terms"]
@@ -90,6 +96,22 @@ class OrderCreateStorefrontView(APIView):
         order = Order.objects.create(
             cart=cart, marketing_flag=marketing_flag, agreed_to_terms=agreed_to_terms
         )
+        # deduct quantity from inventory
+        for item in cart.cart_items.all():
+            item.deduct_from_inventory()
+
+        try:
+            NotificationsApi.notify(
+                event=EventTypes.ORDER_SAVE,
+                data={
+                    "order_token": str(order.token),
+                    "customer_email": order.customer_email,
+                    "order": OrderDetailSerializer(order).data,
+                },
+            )
+        except Exception as e:
+            print("NotificationApi Error", e)
+
         return Response({"token": order.token}, status=201)
 
 

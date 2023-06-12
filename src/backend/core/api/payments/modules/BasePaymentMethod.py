@@ -27,8 +27,8 @@ class PayBySquareMethod(BasePaymentMethod):
             "payment_data": {
                 "amount": 100,
                 "currency": "EUR",
-                "variable_symbol": "1234567890",
-                "iban": "CZ0123456789"
+                "reference": "1234567890",
+                "iban": "CZ0123456789",
                 "bic": "ABCD1234"
             }
         }
