@@ -22,7 +22,7 @@ export const countryListAPI = async (
   switch (method) {
     case "GET":
       return await api
-        .get("/country/")
+        .get("/country/storefront/")
         .then((response) => response.data)
         .then((data: ICountry[]) => {
           console.log("data", data);

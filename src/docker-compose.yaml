@@ -38,6 +38,20 @@ services:
     env_file:
       - ./backend/docker-compose.env
     command: python -u /usr/src/app/core/manage.py rqworker high low default
+  elasticsearch:
+    container_name: elasticsearch
+    build:
+      context: ./backend/elasticsearch
+    environment:
+      - discovery.type=single-node
+      - cluster.routing.allocation.disk.threshold_enabled=false
+    volumes:
+      - ./backend/elasticsearch/data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    depends_on:
+      - backend
   frontend_dashboard:
     container_name: dashboard
     build:

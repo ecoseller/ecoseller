@@ -196,7 +196,6 @@ class Cart(models.Model):
     def total_price_net_formatted(self):
         """
         Get total price of the cart (sum of prices of items, payment method and shipping method) with currency symbol
-
         This price is intended to be shown to the user.
         """
         items_price = self.total_items_price_net

@@ -10,8 +10,6 @@ from recommender_system.models.stored.model.trainer_queue_item import (
 if TYPE_CHECKING:
     from recommender_system.managers.model_manager import ModelManager
 
-logger = logging.getLogger(__name__)
-
 
 class Trainer:
     def schedule_train(self, model_name: str) -> None:
@@ -41,15 +39,15 @@ class Trainer:
         queue_item = TrainerQueueItemModel.get_next_item_from_queue()
 
         if queue_item is None:
-            logger.info("No item found in queue. Skipping training.")
+            logging.info("No item found in queue. Skipping training.")
             return False
 
-        logger.info(f"Training of model {queue_item.model_name} started.")
+        logging.info(f"Training of model {queue_item.model_name} started.")
         queue_item.set_processed()
         model = model_manager.create_model(model_name=queue_item.model_name)
         model.train()
         model.replace_old()
-        logger.info(f"Training of model {queue_item.model_name} finished.")
+        logging.info(f"Training of model {queue_item.model_name} finished.")
 
         # TODO: Save training stats.
 

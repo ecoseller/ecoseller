@@ -1,4 +1,4 @@
-from sqlalchemy.sql.schema import Column
+from sqlalchemy.sql.schema import Column, Index
 from sqlalchemy.sql.sqltypes import (
     DECIMAL,
     Integer,
@@ -62,6 +62,11 @@ class SQLProductDetailEnter(FeedbackBase):
     session_id = Column(String(100), nullable=False)
 
     __tablename__ = "product_detail_enter"
+
+    __table_args__ = (
+        Index("product_detail_enter_session_id_idx", session_id),
+        Index("product_detail_enter_create_at_idx", create_at),
+    )
 
     class Meta:
         origin_model = ProductDetailEnterModel

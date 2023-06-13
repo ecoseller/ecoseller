@@ -15,7 +15,7 @@ class PopularityPredictionModel(AbstractPredictionModel):
 
     @property
     def default_identifier(self) -> str:
-        return "popularity"
+        return self.Meta.model_name
 
     @inject
     def retrieve(

@@ -35,6 +35,7 @@ DEBUG = os.environ.get("DEBUG", 1)
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(" ")
 
+
 # Application definition
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -280,3 +281,31 @@ EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", None)
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", None)
 EMAIL_FROM = os.environ.get("EMAIL_FROM", None)
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+USE_ELASTIC = bool(int(os.environ.get("USE_ELASTIC", "0")))
+ELASTIC_AUTO_REBUILD_INDEX = bool(
+    int(os.environ.get("ELASTIC_AUTO_REBUILD_INDEX", "0"))
+)
+
+if USE_ELASTIC:
+    ELASTICSEARCH_INDEX_NAMES = {
+        "product.documents.product": "product",
+    }
+    ELASTICSEARCH_DSL = {
+        "default": {
+            "hosts": os.environ.get("ELASTIC_HOST", "elastic:9200"),
+        },
+    }
+    if os.environ.get("ELASTICSEARCH_USERNAME") and os.environ.get(
+        "ELASTICSEARCH_PASSWORD"
+    ):
+        ELASTICSEARCH_DSL["default"]["http_auth"] = (
+            os.environ.get("ELASTICSEARCH_USERNAME")
+            + ":"
+            + os.environ.get("ELASTICSEARCH_PASSWORD")
+        )
+    INSTALLED_APPS += [
+        "django_elasticsearch_dsl",
+        "django_elasticsearch_dsl_drf",
+        "search.apps.SearchConfig",
+    ]

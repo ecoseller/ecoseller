@@ -3,6 +3,8 @@ from . import views
 
 
 urlpatterns = [
+    path("storefront/", views.CountryListStorefrontView.as_view()),
+    path("storefront/<str:code>/", views.CountryDetailStorefrontView.as_view()),
     path("", views.CountryListView.as_view()),
     path("vat-group/", views.VatGroupListView.as_view()),
     path("vat-group/<int:id>/", views.VatGroupDetailView.as_view()),
@@ -22,4 +24,6 @@ urlpatterns = [
         "dashboard/address/billing/<str:user_id>/",
         views.BillingInfoListUserView.as_view(),
     ),
+    path("storefront/address/shipping/", views.ShippingInfoUserView.as_view()),
+    path("storefront/address/billing/", views.BillingInfoUserView.as_view()),
 ]
