@@ -302,6 +302,32 @@ class CartItem(models.Model):
         return self.cart.pricelist.format_price(total_price)
 
     @property
+    def total_price_gross_formatted(self):
+        """
+        Get total price (unit price * quantity) of this item with currency symbol
+
+        This price is intended to be shown to the user.
+        """
+        total_price = self.unit_price_gross * self.quantity
+
+        return self.cart.pricelist.format_price(total_price)
+
+    @property
+    def total_price_gross_before_discount_formatted(self):
+        """
+        Get total price before discount (unit price * quantity) of this item with currency symbol
+
+        This price is intended to be shown to the user.
+        """
+        if not self.discount or (self.discount == 0):
+            return self.total_price_gross_formatted
+
+        total_price = self.unit_price_gross * self.quantity
+        total_price_before_discount = total_price / (1 - self.discount / 100)
+
+        return self.cart.pricelist.format_price(total_price_before_discount)
+
+    @property
     def unit_price_net_formatted(self):
         """
         Get unit price of this item with currency symbol

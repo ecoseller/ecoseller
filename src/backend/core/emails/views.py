@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from .email.order import (
     EmailOrderConfirmation,
 )
@@ -22,6 +23,10 @@ class OrderConfirmation(APIView):
             return Response({"status": "NOTFOUND"}, status=404)
         customer_email = order.customer_email
         email = EmailOrderConfirmation(order, [customer_email], use_rq=True)
+
+        if request.GET.get("render", False):
+            return HttpResponse(email.render_to_string())
+
         email.send()
         return Response({"status": "OK"}, status=status.HTTP_200_OK)
 
@@ -35,5 +40,9 @@ class OrderReview(APIView):
             return Response({"status": "NOTFOUND"}, status=404)
         customer_email = order.customer_email
         email = EmailOrderReview(order, [customer_email], use_rq=True)
+
+        if request.GET.get("render", False):
+            return HttpResponse(email.render_to_string())
+
         email.send()
         return Response({"status": "OK"}, status=status.HTTP_200_OK)
