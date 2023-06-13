@@ -206,7 +206,7 @@ class Cart(models.Model):
         )
         shipping_method_price = (
             self.shipping_method_country.price_incl_vat
-            if self.payment_method_country
+            if self.shipping_method_country
             else 0
         )
 
