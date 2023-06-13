@@ -30,6 +30,8 @@ import {
   NextApiRequest,
   NextApiResponse,
 } from "next/types";
+import { countryDetailAPI } from "@/pages/api/country/[code]";
+import { ICountry } from "@/types/country";
 
 interface IProductPageProps {
   data: IProduct;
@@ -192,13 +194,21 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const country = "cz";
+  const { country } = req.cookies;
+
+  const countryDetail: ICountry = await countryDetailAPI(
+    "GET",
+    country || "cz",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
   const pricelist = "CZK_maloobchod";
 
   const data: IProduct = await productAPI(
     idNumber,
-    country,
-    pricelist,
+    countryDetail?.code,
+    countryDetail?.default_price_list,
     req as NextApiRequest,
     res as NextApiResponse,
     language

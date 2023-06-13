@@ -3,8 +3,7 @@ import logging
 from recommender_system.server.container import Container
 from recommender_system.server.run import run_trainer
 
-logging.basicConfig()
-logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
 
 if __name__ == "__main__":

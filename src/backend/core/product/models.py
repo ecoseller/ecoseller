@@ -146,6 +146,17 @@ class Product(TranslatableModel):
             .first()
         )
 
+    def get_attribute_list(self, language_code):
+        attributes = []
+        for variant in self.product_variants.all():
+            for attribute in variant.attributes.all():
+                attributes.append(
+                    attribute.safe_translation_getter(
+                        "name", language_code=language_code
+                    )
+                )
+        return attributes
+
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):

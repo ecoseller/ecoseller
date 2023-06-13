@@ -580,6 +580,7 @@ class ProductVariantStorefrontDetailSerializer(ProductVariantSerializer):
     attributes = BaseAttributeStorefrontSerializer(many=True, read_only=True)
 
     def get_price(self, obj):
+        print("CONTEXT", self.context)
         if (
             "pricelist" not in self.context
             or "country" not in self.context
