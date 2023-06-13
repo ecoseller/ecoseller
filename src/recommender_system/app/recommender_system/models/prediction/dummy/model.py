@@ -16,7 +16,7 @@ class DummyPredictionModel(AbstractPredictionModel):
 
     @property
     def default_identifier(self) -> str:
-        return "dummy"
+        return self.Meta.model_name
 
     @inject
     def retrieve(

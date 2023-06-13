@@ -1,9 +1,8 @@
 import csv
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
 import logging
 import random
 from typing import Any, Dict, List, Set, Tuple
-import uuid
 
 from dependency_injector.wiring import inject, Provide
 
@@ -42,18 +41,16 @@ from recommender_system.storage.feedback.abstract import AbstractFeedbackStorage
 from recommender_system.storage.product.abstract import AbstractProductStorage
 from recommender_system.server.app import create_app
 
-logging.basicConfig()
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
 
 CHUNK_SIZE = 500_000
 
 
 def bulk_create(models: List[StoredBaseModel], storage: AbstractStorage) -> None:
-    logger.info(f"Saving {len(models):,} objects to database...")
+    logging.info(f"Saving {len(models):,} objects to database...")
     index = 0
     while index + CHUNK_SIZE < len(models):
-        logger.info(f"{index:,} done...")
+        logging.info(f"{index:,} done...")
         storage.bulk_create_objects(models=models[index : index + CHUNK_SIZE])
         index += CHUNK_SIZE
     storage.bulk_create_objects(models=models[index:])
@@ -94,7 +91,7 @@ def fill_ancestors(
     edges = {(row[0], row[1]) for row in rows if row[1] != ""}
 
     roots = []
-    logger.info("Finding roots...")
+    logging.info("Finding roots...")
     for node in nodes:
         is_root = True
         for child, parent in edges:
@@ -105,13 +102,13 @@ def fill_ancestors(
             roots.append(node)
 
     ancestors: Dict[str, Set[str]] = {}
-    logger.info("Finding ancestors...")
+    logging.info("Finding ancestors...")
     for node in roots:
         fill_node_ancestors(
             node=node, edges=edges, current_ancestors=set(), ancestors=ancestors
         )
 
-    logger.info("Getting category ancestors...")
+    logging.info("Getting category ancestors...")
     category_ancestors: List[CategoryAncestorModel] = []
     for category_id, ancestor_ids in ancestors.items():
         for ancestor_id in ancestor_ids:
@@ -138,9 +135,9 @@ def fill_attribute_types(
     rows: List[List[str]],
     product_storage: AbstractProductStorage = Provide["product_storage"],
 ) -> None:
-    logger.info("Filling attribute types...")
+    logging.info("Filling attribute types...")
 
-    logger.info("Getting numerical attribute types...")
+    logging.info("Getting numerical attribute types...")
     is_numerical = {}
     for row in rows:
         if row[2] not in ["available", "categoryid", "790"]:  # "790" is price
@@ -150,7 +147,7 @@ def fill_attribute_types(
                 is_numerical[row[2]] and row[3].startswith("n") and " " not in row[3]
             )
 
-    logger.info("Getting attribute types...")
+    logging.info("Getting attribute types...")
     attribute_types = []
     for attribute_type, is_num in is_numerical.items():
         attribute_types.append(
@@ -170,9 +167,9 @@ def fill_product_types(
     rows: List[List[str]],
     product_storage: AbstractProductStorage = Provide["product_storage"],
 ) -> None:
-    logger.info("Filling product types...")
+    logging.info("Filling product types...")
 
-    logger.info("Getting categories and attribute types...")
+    logging.info("Getting categories and attribute types...")
     categories: Dict[str, str] = {}
     attribute_types: Dict[str, Set[str]] = {}
     for row in rows:
@@ -183,7 +180,7 @@ def fill_product_types(
                 attribute_types[row[1]] = set()
             attribute_types[row[1]].add(row[2])
 
-    logger.info("Getting common attribute types for categories...")
+    logging.info("Getting common attribute types for categories...")
     intersections: Dict[str, Set[str]] = {}
     for product_type_id, category in categories.items():
         types = attribute_types.get(product_type_id, set())
@@ -191,7 +188,7 @@ def fill_product_types(
             intersections[category] = types
         intersections[category] = intersections[category].intersection(types)
 
-    logger.info("Getting product types...")
+    logging.info("Getting product types...")
     product_types: Dict[str, ProductTypeModel] = {}
     for row in rows:
         if row[2] == "categoryid":
@@ -209,7 +206,7 @@ def fill_product_types(
     bulk_create(models=list(product_types.values()), storage=product_storage)
 
     attribute_type_product_types: List[AttributeTypeProductTypeModel] = []
-    logger.info("Getting attribute type product types...")
+    logging.info("Getting attribute type product types...")
     for product_type_id, attribute_type_ids in intersections.items():
         for attribute_type_id in attribute_type_ids:
             attribute_type_product_types.append(
@@ -227,15 +224,15 @@ def fill_products(
     rows: List[List[str]],
     product_storage: AbstractProductStorage = Provide["product_storage"],
 ) -> None:
-    logger.info("Filling products and product variants...")
+    logging.info("Filling products and product variants...")
 
-    logger.info("Getting categories...")
+    logging.info("Getting categories...")
     categories: Dict[str, str] = {}
     for row in rows:
         if row[2] == "categoryid":
             categories[row[1]] = row[3]
 
-    logger.info("Getting products and product variants...")
+    logging.info("Getting products and product variants...")
     products: Dict[str, ProductModel] = {}
     product_variants: Dict[str, ProductVariantModel] = {}
     product_product_variants: List[ProductProductVariantModel] = []
@@ -308,9 +305,9 @@ def fill_attributes(
     rows: List[List[str]],
     product_storage: AbstractProductStorage = Provide["product_storage"],
 ) -> None:
-    logger.info("Filling attributes...")
+    logging.info("Filling attributes...")
 
-    logger.info("Getting numerical attribute types...")
+    logging.info("Getting numerical attribute types...")
     is_numerical = {}
     for row in rows:
         if row[2] not in ["available", "categoryid", "790"]:  # "790" is price
@@ -320,7 +317,7 @@ def fill_attributes(
                 is_numerical[row[2]] and row[3].startswith("n") and " " not in row[3]
             )
 
-    logger.info("Getting attribute objects...")
+    logging.info("Getting attribute objects...")
     attributes: Dict[Tuple[str, str], AttributeModel] = {}
     attribute_product_variants: Dict[Tuple[str, str], AttributeProductVariantModel] = {}
     i = AttributeModel.get_next_pk()
@@ -370,7 +367,7 @@ def fill_properties(product_storage: AbstractProductStorage) -> None:
 def fill_feedback(
     feedback_storage: AbstractFeedbackStorage, product_storage: AbstractProductStorage
 ) -> None:
-    logger.info("Filling feedback...")
+    logging.info("Filling feedback...")
 
     with open("../data/events.csv", "r") as file:
         rows = list(csv.reader(file, delimiter=","))[1:]
@@ -390,23 +387,16 @@ def fill_feedback(
         user_id = int(row[1])
         product_variant_sku = row[3]
         order_id = int(row[4]) if row[4] != "" else None
-        if user_id not in session_histories or session_histories[user_id][
-            "last_event"
-        ].replace(tzinfo=timezone.utc) < datetime.now(timezone.utc) - timedelta(
-            hours=1
-        ):
-            session_id = str(uuid.uuid4())
+        if user_id not in session_histories:
             session_histories[user_id] = {
-                "last_event": create_at,
-                "session_id": session_id,
+                "session_id": str(user_id),
             }
             sessions.append(
                 SessionModel(
-                    id=session_id,
+                    id=str(user_id),
                     user_id=user_id,
                 )
             )
-        session_histories[user_id]["last_event"] = create_at
         if row[2] == "view":
             enters.append(
                 ProductDetailEnterModel(

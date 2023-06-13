@@ -37,7 +37,7 @@ class PredictionPipeline:
     ) -> List[str]:
         model = model_manager.get_model(
             recommendation_type=recommendation_type,
-            step=PredictionPipeline.Step.FILTERING,
+            step=PredictionPipeline.Step.RETRIEVAL,
         )
         if recommendation_type == RecommendationType.HOMEPAGE:
             return model.retrieve_homepage(session_id=session_id, user_id=user_id)
@@ -67,7 +67,7 @@ class PredictionPipeline:
     ) -> List[str]:
         model = model_manager.get_model(
             recommendation_type=recommendation_type,
-            step=PredictionPipeline.Step.FILTERING,
+            step=PredictionPipeline.Step.SCORING,
         )
         if recommendation_type == RecommendationType.HOMEPAGE:
             return model.score_homepage(

@@ -13,19 +13,16 @@ from recommender_system.models.prediction.popularity.model import (
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.server.app import create_app
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-
 
 def test_model_performance(model_class: Type[AbstractPredictionModel]) -> None:
-    logger.info(f"Testing performance of model {model_class.__name__}")
+    logging.info(f"Testing performance of model {model_class.__name__}")
 
     start = time.time()
     result = model_class().predict(session_id="session_id", user_id=None)
     end = time.time()
 
-    logger.info(f"Prediction finished in {end - start:.4f} seconds")
-    logger.info(f"{len(result)} product variants returned")
+    logging.info(f"Prediction finished in {end - start:.4f} seconds")
+    logging.info(f"{len(result)} product variants returned")
 
 
 if __name__ == "__main__":
@@ -34,7 +31,7 @@ if __name__ == "__main__":
         model_class=ProductVariantModel
     )
 
-    logger.info(
+    logging.info(
         f"Testing performance with {product_variants:,} product variants in the database"
     )
 

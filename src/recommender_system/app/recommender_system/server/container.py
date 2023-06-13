@@ -10,6 +10,7 @@ from recommender_system.managers.prediction_pipeline import PredictionPipeline
 from recommender_system.managers.request_manager import RequestManager
 from recommender_system.managers.trainer import Trainer
 from recommender_system.storage.feedback.storage import SQLFeedbackStorage
+from recommender_system.storage.gru4rec.storage import FileGRU4RecStorage
 from recommender_system.storage.model.storage import SQLModelStorage
 from recommender_system.storage.product.storage import SQLProductStorage
 from recommender_system.storage.similarity.storage import SQLSimilarityStorage
@@ -32,6 +33,9 @@ class Container(containers.DeclarativeContainer):
         SQLFeedbackStorage,
         connection_string=os.environ["RS_FEEDBACK_DB_URL"],
         alembic_location="recommender_system/storage/feedback/alembic.ini",
+    )
+    gru4rec_storage = providers.Singleton(
+        FileGRU4RecStorage, directory=os.path.join("data", "gru4rec")
     )
     model_storage = providers.Singleton(
         SQLModelStorage,

@@ -18,7 +18,7 @@ class AbstractPredictionModel(ABC):
     @property
     @abstractmethod
     def default_identifier(self) -> str:
-        raise NotImplementedError
+        raise NotImplementedError()
 
     @abstractmethod
     def delete(self) -> None:
@@ -72,10 +72,17 @@ class AbstractPredictionModel(ABC):
     def train(self) -> None:
         raise NotImplementedError()
 
-    @abstractmethod
-    def replace_old(self) -> None:
-        raise NotImplementedError()
-
     @classmethod
     def get_latest_identifier(cls) -> str:
         return LatestIdentifierModel.get(model_name=cls.Meta.model_name).identifier
+
+    def replace_old(self) -> None:
+        try:
+            latest_identifier = self.get_latest_identifier()
+        except LatestIdentifierModel.DoesNotExist:
+            latest_identifier = None
+        LatestIdentifierModel(
+            model_name=self.Meta.model_name, identifier=self.identifier
+        ).save()
+        if latest_identifier is not None:
+            self.__class__(identifier=latest_identifier).delete()
