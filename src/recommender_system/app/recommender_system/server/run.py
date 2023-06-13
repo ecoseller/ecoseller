@@ -7,9 +7,7 @@ from dependency_injector.wiring import inject, Provide
 from recommender_system.managers.trainer import Trainer
 from recommender_system.server.app import create_app
 
-logging.basicConfig()
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
 
 
 def run_server() -> None:
@@ -25,5 +23,5 @@ def run_server() -> None:
 def run_trainer(trainer: Trainer = Provide["trainer"]) -> None:
     while True:
         trainer.train()
-        logger.info("waiting")
+        logging.info("waiting")
         time.sleep(60)

@@ -16,7 +16,7 @@ class SelectionPredictionModel(AbstractPredictionModel):
 
     @property
     def default_identifier(self) -> str:
-        return "selection"
+        return self.Meta.model_name
 
     @inject
     def retrieve(

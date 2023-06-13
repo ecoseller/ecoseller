@@ -82,17 +82,17 @@ const ProductVariantRow = ({
       </Grid>
       <Grid container item xs={5} sm={3} md={4} lg={2}>
         <Typography>
-          {variant.price.discount
-            ? variant.price.discount.gross
-            : variant.price.gross}{" "}
-          {variant.price.discount ? (
+          {variant?.price?.discount
+            ? variant?.price?.discount.gross
+            : variant?.price?.gross}{" "}
+          {variant?.price?.discount ? (
             <span
               className="red-text"
               style={{
                 fontSize: "0.8rem",
               }}
             >
-              (-{variant.price.discount.percentage} %)
+              (-{variant?.price?.discount?.percentage} %)
             </span>
           ) : null}
         </Typography>

@@ -6,11 +6,15 @@ from recommender_system.managers.model_manager import ModelManager
 from recommender_system.managers.prediction_pipeline import PredictionPipeline
 from recommender_system.models.prediction.abstract import AbstractPredictionModel
 from recommender_system.models.prediction.dummy.model import DummyPredictionModel
+from recommender_system.models.prediction.gru4rec.model import GRU4RecPredictionModel
 from recommender_system.models.prediction.popularity.model import (
     PopularityPredictionModel,
 )
 from recommender_system.models.prediction.selection.model import (
     SelectionPredictionModel,
+)
+from recommender_system.models.stored.feedback.product_detail_enter import (
+    ProductDetailEnterModel,
 )
 from recommender_system.models.stored.product.order import OrderModel
 from recommender_system.models.stored.product.product import ProductModel
@@ -20,14 +24,22 @@ from tests.storage.tools import get_or_create_model, delete_model, default_dicts
 
 
 class MockModelManager(ModelManager):
-    def __init__(self, model: AbstractPredictionModel):
+    def __init__(
+        self,
+        retrieval_model: AbstractPredictionModel,
+        scoring_model: AbstractPredictionModel,
+    ):
         super().__init__()
-        self.model = model
+        self.retrieval_model = retrieval_model
+        self.scoring_model = scoring_model
 
     def get_model(
         self, recommendation_type: RecommendationType, step: PredictionPipeline.Step
     ) -> AbstractPredictionModel:
-        return self.model
+        if step == PredictionPipeline.Step.RETRIEVAL:
+            return self.retrieval_model
+        else:
+            return self.scoring_model
 
 
 @pytest.fixture
@@ -75,6 +87,7 @@ def create_product_variants():
     variants = [ProductVariantModel.parse_obj(var) for var in data]
     for variant in variants:
         variant.save()
+        product.add_product_variant(variant)
 
     variants[0].add_order(
         order=OrderModel.parse_obj(default_dicts[OrderModel]), amount=1
@@ -87,9 +100,36 @@ def create_product_variants():
     delete_model(model_class=ProductModel, pk=product.pk)
 
 
+@pytest.fixture
+def create_product_detail_enters():
+    session_id = "unittest"
+
+    variants = [ProductVariantModel.get(pk=f"unittest{i}") for i in range(1, 5)]
+
+    enters = [
+        ProductDetailEnterModel(
+            session_id=session_id,
+            product_id=variant.products[0].id,
+            product_variant_sku=variant.sku,
+            create_at=datetime.now(),
+        )
+        for variant in variants
+    ]
+
+    for enter in enters:
+        enter.create()
+
+    yield session_id
+
+    for enter in enters:
+        delete_model(model_class=ProductDetailEnterModel, pk=enter.pk)
+
+
 def test_dummy(app, create_product_variants, prediction_pipeline):
     with app.container.model_manager.override(
-        MockModelManager(model=DummyPredictionModel())
+        MockModelManager(
+            retrieval_model=DummyPredictionModel(), scoring_model=DummyPredictionModel()
+        )
     ):
         variant_skus = create_product_variants
 
@@ -121,7 +161,10 @@ def test_dummy(app, create_product_variants, prediction_pipeline):
 
 def test_popularity(app, create_product_variants, prediction_pipeline):
     with app.container.model_manager.override(
-        MockModelManager(model=PopularityPredictionModel())
+        MockModelManager(
+            retrieval_model=PopularityPredictionModel(),
+            scoring_model=PopularityPredictionModel(),
+        )
     ):
         variant_skus = create_product_variants
 
@@ -142,13 +185,41 @@ def test_popularity(app, create_product_variants, prediction_pipeline):
 
 def test_selection(app, create_product_variants, prediction_pipeline):
     with app.container.model_manager.override(
-        MockModelManager(model=SelectionPredictionModel())
+        MockModelManager(
+            retrieval_model=SelectionPredictionModel(),
+            scoring_model=SelectionPredictionModel(),
+        )
     ):
         variant_skus = create_product_variants
 
         predictions = prediction_pipeline.run(
             recommendation_type=RecommendationType.HOMEPAGE,
             session_id="unittest",
+            user_id=None,
+        )
+
+        for sku in variant_skus:
+            if sku == "unittest4":
+                assert sku not in predictions
+            else:
+                assert sku in predictions
+
+
+def test_gru4rec(
+    app, create_product_variants, create_product_detail_enters, prediction_pipeline
+):
+    variant_skus = create_product_variants
+    session_id = create_product_detail_enters
+
+    model = GRU4RecPredictionModel()
+    model.train()
+
+    with app.container.model_manager.override(
+        MockModelManager(retrieval_model=DummyPredictionModel(), scoring_model=model)
+    ):
+        predictions = prediction_pipeline.run(
+            recommendation_type=RecommendationType.HOMEPAGE,
+            session_id=session_id,
             user_id=None,
         )
 
