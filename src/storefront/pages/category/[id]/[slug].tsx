@@ -9,6 +9,7 @@ import { ICategoryDetail } from "@/types/category";
 import { categoryDetailAPI } from "@/pages/api/category/[id]";
 import EditorJsOutput from "@/utils/editorjs/EditorJsOutput";
 import Typography from "@mui/material/Typography";
+import SubCategoryList from "@/components/Category/SubCategoryList";
 
 interface ICategoryPageProps {
   category: ICategoryDetail;
@@ -16,10 +17,15 @@ interface ICategoryPageProps {
 
 const CategoryPage = ({ category }: ICategoryPageProps) => {
   return (
-    <div className="container">
-      <Typography variant="h4">{category.title}</Typography>
-      <EditorJsOutput data={category.description_editorjs} />
-    </div>
+    <>
+      <div className="container">
+        <Typography variant="h4">{category.title}</Typography>
+        <EditorJsOutput data={category.description_editorjs} />
+      </div>
+      {category.children.length > 0 ? (
+        <SubCategoryList subCategories={category.children} />
+      ) : null}
+    </>
   );
 };
 
