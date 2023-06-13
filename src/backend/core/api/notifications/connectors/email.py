@@ -19,6 +19,8 @@ class EmailConnector(NotificationConnector):
         """
         Call Email service
         """
+
+        # import it here to avoid error on not initialized django app
         from emails.email.order import EmailOrderConfirmation
         from order.models import Order
 

@@ -1,4 +1,3 @@
-from api.notifications.api import NotificationsAPI
 from order.models import Order
 from order.serializers import (
     OrderDetailSerializer,
