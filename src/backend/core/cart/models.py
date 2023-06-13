@@ -189,7 +189,7 @@ class Cart(models.Model):
         if not items or len(items) == 0:
             raise "Cart is empty"
         for item in items:
-            if item.product_variant.stock_quantity < 1:
+            if item.product_variant.stock_quantity <= item.quantity:
                 raise f"Product {item.product_variant} is out of stock"
 
         if not self.shipping_info:
