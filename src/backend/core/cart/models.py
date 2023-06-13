@@ -215,6 +215,63 @@ class Cart(models.Model):
             items_price + payment_method_price + shipping_method_price
         )
 
+    @property
+    def total_items_price_gross(self):
+        """
+        Get total price (unit price * quantity) of the cart items
+        """
+        return sum(
+            [item.unit_price_gross * item.quantity for item in self.cart_items.all()]
+        )
+
+    @property
+    def total_items_price_gross_formatted(self):
+        """
+        Get total price (unit price * quantity) of the cart items with currency symbol
+
+        This price is intended to be shown to the user.
+        """
+        return self.pricelist.format_price(self.total_items_price_gross)
+
+    @property
+    def price_shipping_gross(self):
+        return (
+            self.shipping_method_country.price_incl_vat
+            if self.shipping_method_country
+            else 0
+        )
+
+    @property
+    def price_shipping_gross_formatted(self):
+        return self.pricelist.format_price(self.price_shipping_gross)
+
+    @property
+    def price_payment_gross(self):
+        return (
+            self.payment_method_country.price_incl_vat
+            if self.payment_method_country
+            else 0
+        )
+
+    @property
+    def price_payment_gross_formatted(self):
+        return self.pricelist.format_price(self.price_payment_gross)
+
+    @property
+    def total_price_gross_formatted(self):
+        """
+        Get total price of the cart (sum of prices of items, payment method and shipping method) with currency symbol
+
+        This price is intended to be shown to the user.
+        """
+        items_price = self.total_items_price_gross
+        payment_method_price = self.price_payment_gross
+        shipping_method_price = self.price_shipping_gross
+
+        return self.pricelist.format_price(
+            items_price + payment_method_price + shipping_method_price
+        )
+
     def recalculate(self, pricelist: PriceList, country: Country):
         """
         Recalculate cart prices.

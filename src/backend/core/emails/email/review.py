@@ -29,6 +29,6 @@ class EmailOrderReview(Email):
             "main_title": _("Please review your order"),
             "subtitle": _("Hello,"),
             "body": _("We would like to ask you to review your order. "),
-            "button_text": _("Review your order"),
-            "button_url": f"https://www.example.com/order/{self.order.id}/review",
+            "button_title": _("Review your order"),
+            "button_link": f"https://www.example.com/order/{self.order.id}/review",
         }

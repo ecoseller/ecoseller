@@ -615,7 +615,7 @@
                     text-align: right;
                   "
                 >
-                  {{ product.discount_price }} {{ currency }}<span
+                  {{ product.discount_price }}<span
                     class="standard_price"
                     style="
                       -moz-box-sizing: border-box;
@@ -626,7 +626,7 @@
                       color: #6f6f6f;
                       padding-left: 5px;
                     "
-                    >{{ product.base_price }} {{ currency }}</span
+                    >{{ product.base_price }} </span
                   >
                 </p>
                 {% else %}
@@ -647,7 +647,7 @@
                     text-align: right;
                   "
                 >
-                  {{ product.base_price }} {{ currency }}
+                  {{ product.base_price }} 
                 </p>
                 {% endif %}
               </td>
@@ -717,7 +717,7 @@
                   text-align: right;
                 "
               >
-                {{ price_products_incl_vat }} {{ currency }}
+                {{ price_products_incl_vat }} 
               </td>
             </tr>
             <tr
@@ -758,7 +758,7 @@
                   text-align: right;
                 "
               >
-                {{ price_shipping_payment_incl_vat }} {{ currency }}
+                {{ price_shipping_payment_incl_vat }} 
               </td>
             </tr>
             <tr
@@ -801,7 +801,7 @@
                   text-align: right;
                 "
               >
-                {{ price_total_incl_vat }} {{ currency }}
+                {{ price_total_incl_vat }} 
               </td>
             </tr>
           </table>
@@ -973,14 +973,15 @@
                 line-height: 22px;
               "
             >
-              {{ billing_info.name }}<br />
-              {{ billing_info.company }}<br />
-              {{ billing_info.company_identification_number }}<br />
-              {{ billing_info.company_vat_number }}<br />
-              {{ billing_info.street }}<br />
-              {{ billing_info.city }}<br />
-              {{ billing_info.postal_code }}<br />
-              {{ billing_info.country }}<br />
+              {% if billing_info.name %} {{ billing_info.name }}<br />{% endif %} 
+              {% if billing_info.company %} {{ billing_info.company }}<br />{% endif %} 
+              {% if billing_info.company_identification_number %} {{ billing_info.company_identification_number }}<br />{% endif %} 
+              {% if billing_info.company_vat_number %} {{ billing_info.company_vat_number }}<br />{% endif %} 
+              {% if billing_info.company_vat_number %} {{ billing_info.company_vat_number }}<br />{% endif %} 
+              {% if billing_info.street %} {{ billing_info.street }}<br />{% endif %} 
+              {% if billing_info.city %} {{ billing_info.city }}<br />{% endif %} 
+              {% if billing_info.postal_code %} {{ billing_info.postal_code }}<br />{% endif %} 
+              {% if billing_info.country %} {{ billing_info.country }}<br />{% endif %} 
             </p>
           </div>
           <div
