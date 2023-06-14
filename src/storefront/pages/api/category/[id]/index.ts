@@ -1,10 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import {
-  api,
-  setRequestResponse,
-  backendApiHelper,
-} from "@/utils/interceptors/api";
-import { HTTPMETHOD } from "@/types/common";
+import { api, setRequestResponse } from "@/utils/interceptors/api";
 
 export const categoryDetailAPI = async (
   id: string,
@@ -28,7 +23,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query;
 
   if (method == "GET") {
-    return categoryDetailAPI("GET", id?.toString() || "", req, res)
+    return categoryDetailAPI(id?.toString() || "", req, res)
       .then((data) => res.json(data))
       .catch((error) => res.status(400).json(null));
   }

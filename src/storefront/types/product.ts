@@ -51,19 +51,31 @@ export interface IProductMedia {
   id: number;
   media: string;
   type: "IMAGE" | "VIDEO";
-  alt: string;
+  alt: string | null;
 }
 
-export interface IProduct {
+interface IProductBase {
   id: number;
-  breadcrumbs: IBreadcrumb[];
   title: string;
   meta_title: string;
   meta_description: string;
+  slug: string;
+}
+
+export interface IProductDetail extends IProductBase {
+  breadcrumbs: IBreadcrumb[];
   description: string;
   short_description: string;
   description_editorjs: DataProp;
-  slug: string;
   product_variants: IProductVariant[];
   media: IProductMedia[];
+}
+
+/**
+ * Interface representing product record
+ */
+export interface IProductRecord extends IProductBase {
+  primary_image: IProductMedia;
+  price: string;
+  has_multiple_prices: boolean;
 }

@@ -24,7 +24,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import Box from "@mui/material/Box";
 
 // types
-import { IProduct, IProductSliderData } from "@/types/product";
+import { IProductDetail, IProductSliderData } from "@/types/product";
 import {
   GetServerSideProps,
   NextApiRequest,
@@ -34,7 +34,7 @@ import { countryDetailAPI } from "@/pages/api/country/[code]";
 import { ICountry } from "@/types/country";
 
 interface IProductPageProps {
-  data: IProduct;
+  data: IProductDetail;
   country: string;
   pricelist: string;
 }
@@ -205,7 +205,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const pricelist = "CZK_maloobchod";
 
-  const data: IProduct = await productAPI(
+  const data: IProductDetail = await productAPI(
     idNumber,
     countryDetail?.code,
     countryDetail?.default_price_list,

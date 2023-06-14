@@ -3,22 +3,24 @@ import {
   NextApiRequest,
   NextApiResponse,
 } from "next/types";
-import { IProduct } from "@/types/product";
-import { productAPI } from "@/pages/api/product/[id]";
 import { ICategoryDetail } from "@/types/category";
-import { categoryDetailAPI } from "@/pages/api/category/[id]";
 import EditorJsOutput from "@/utils/editorjs/EditorJsOutput";
 import Typography from "@mui/material/Typography";
 import SubCategoryList from "@/components/Category/SubCategoryList";
 import HeadMeta from "@/components/Common/SEO";
 import { useRouter } from "next/router";
 import ProductList from "@/components/Category/ProductList";
+import { IProductRecord } from "@/types/product";
+import { categoryProductsAPI } from "@/pages/api/category/[id]/products";
+import { categoryDetailAPI } from "@/pages/api/category/[id]";
+import Divider from "@mui/material/Divider";
 
 interface ICategoryPageProps {
   category: ICategoryDetail;
+  products: IProductRecord[];
 }
 
-const CategoryPage = ({ category }: ICategoryPageProps) => {
+const CategoryPage = ({ category, products }: ICategoryPageProps) => {
   const router = useRouter();
 
   return (
@@ -29,12 +31,15 @@ const CategoryPage = ({ category }: ICategoryPageProps) => {
         url={router.basePath}
       />
       <div className="container">
-        <Typography variant="h4">{category.title}</Typography>
+        <Typography variant="h4" mt={3}>
+          {category.title}
+        </Typography>
         <EditorJsOutput data={category.description_editorjs} />
         {category.children.length > 0 ? (
           <SubCategoryList subCategories={category.children} />
         ) : null}
-        <ProductList />
+        <Divider sx={{ my: 3 }} />
+        <ProductList products={products} />
       </div>
     </>
   );
@@ -59,6 +64,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     res as NextApiResponse
   );
 
+  const products: IProductRecord[] = await categoryProductsAPI(
+    idNumber.toString(),
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
   // if (!category) {
   //   return {
   //     notFound: true,
@@ -75,6 +86,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       category,
+      products,
     },
   };
 };

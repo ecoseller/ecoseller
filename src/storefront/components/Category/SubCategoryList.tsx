@@ -23,11 +23,9 @@ const SubCategoryList = ({ subCategories }: ISubCategoryListProps) => {
       <Grid container spacing={{ xs: 1, sm: 2 }}>
         {subCategories.map((c) => (
           <Grid item xs={12} sm={6} md={4} lg={3}>
-            <PaperItem>
-              <NextLink href={`/category/${c.id}/${c.slug}`}>
-                {c.title}
-              </NextLink>
-            </PaperItem>
+            <NextLink href={`/category/${c.id}/${c.slug}`}>
+              <PaperItem>{c.title}</PaperItem>
+            </NextLink>
           </Grid>
         ))}
       </Grid>
