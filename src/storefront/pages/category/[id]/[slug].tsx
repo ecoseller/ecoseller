@@ -31,7 +31,7 @@ const CategoryPage = ({ category, products }: ICategoryPageProps) => {
         url={router.basePath}
       />
       <div className="container">
-        <Typography variant="h4" mt={3}>
+        <Typography variant="h4" mt={3} gutterBottom>
           {category.title}
         </Typography>
         <EditorJsOutput data={category.description_editorjs} />

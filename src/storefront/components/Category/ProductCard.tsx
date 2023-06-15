@@ -5,6 +5,8 @@ import { CardActions, CardContent, CardMedia } from "@mui/material";
 import imgPath from "@/utils/imgPath";
 import Typography from "@mui/material/Typography";
 import React from "react";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 interface IProductCardProps {
   product: IProductRecord;
@@ -16,6 +18,16 @@ interface IProductCardProps {
  * @constructor
  */
 const ProductCard = ({ product }: IProductCardProps) => {
+  const theme = useTheme();
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between("sm", "xl"));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const imgHeight = isSmallScreen
+    ? "100px"
+    : isMediumScreen
+    ? "150px"
+    : "200px";
+
   return (
     <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
       <NextLink
@@ -23,9 +35,13 @@ const ProductCard = ({ product }: IProductCardProps) => {
         style={{ height: "100%" }}
       >
         <CardMedia
-          sx={{ height: 140 }}
+          component="img"
+          height={imgHeight}
+          sx={{
+            objectFit: "contain",
+          }}
           image={imgPath(product.primary_image.media)}
-          title="green iguana"
+          title={product.primary_image.alt || ""}
         />
         <CardContent>
           <Typography gutterBottom variant="h6" component="div">
