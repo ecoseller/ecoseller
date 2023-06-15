@@ -28,6 +28,11 @@ class Order(models.Model):
     cart = models.ForeignKey(
         Cart, null=True, on_delete=models.SET_NULL, related_name="order"
     )
+    marketing_flag = models.BooleanField(default=False)
+    agreed_to_terms = models.BooleanField(default=False)
+    payment_id = models.CharField(
+        max_length=100, null=True, help_text="Payment ID from payment gateway or bank"
+    )
 
     @property
     def customer_email(self):

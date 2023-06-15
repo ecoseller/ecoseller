@@ -96,6 +96,7 @@ services:
       - ./storefront/api:/usr/src/app/api
       - ./storefront/components:/usr/src/app/components
       - ./storefront/types:/usr/src/app/types
+      - ./storefront/next.config.js:/usr/src/app/next.config.js
     ports:
       - 3031:3000
     depends_on:

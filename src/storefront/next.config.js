@@ -32,7 +32,7 @@ const nextConfig = {
   },
   // output: "standalone",
   images: {
-    domains: ["127.0.0.1", "localhost"],
+    domains: ["127.0.0.1", "localhost", "backend"],
   },
   i18n: {
     // These are all the locales you want to support in

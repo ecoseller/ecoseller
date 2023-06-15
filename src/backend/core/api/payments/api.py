@@ -76,11 +76,11 @@ class PaymentResolver:
             raise ValueError("Order not set")
 
         payment_method = self.order.cart.payment_method_country
-        api_id = payment_method.api_request
+        self.api_id = payment_method.api_request
         try:
-            return self.config[api_id]
+            return self.config[self.api_id]
         except KeyError:
-            raise KeyError(f"Unknown payment method: {api_id}")
+            raise KeyError(f"Unknown payment method: {self.api_id}")
 
     def pay(self):
         """
@@ -100,15 +100,22 @@ class PaymentResolver:
 
         # if api is type PayBySquare, then we need to return the QR code as well as all
         if issubclass(implementation, PayBySquareMethod):
+            self.order.payment_id = data["payment_id"]
+            self.order.save()
             return {
                 "qr_code": data["qr_code"],
                 "payment_data": data["payment_data"],
+                "payment_id": data["payment_id"],
+                "payment_type": "PayBySquareMethod",
                 **data,
             }
         if issubclass(implementation, OnlinePaymentMethod):
+            self.order.payment_id = data["payment_id"]
+            self.order.save()
             return {
                 "payment_url": data["payment_url"],
                 "payment_id": data["payment_id"],
+                "payment_type": "OnlinePaymentMethod",
                 **data,
             }
         return data

@@ -1,20 +1,23 @@
 {
     "BANKTRANSFER_EUR": {
-        "implementation": "api.payments.modules.BankTransfer.BankTransfer",
+        "implementation": "api.payments.modules.BankTransfer.BankTransferEUR",
         "kwargs": {
             "currency": "EUR",
             "bankName": "Deutsche Bank",
-            "accountNumber": "DE12500105170648489890",
-            "swiftCode": "DEUTDEDBBER"
+            "iban": "DE12500105170648489890",
+            "bic": "DEUTDEDBBER",
+            "note": "Payment for order"
         }
     },
     "BANKTRANSFER_CZK": {
-        "implementation": "api.payments.modules.BankTransfer.BankTransfer",
+        "implementation": "api.payments.modules.BankTransfer.BankTransferCZK",
         "kwargs": {
             "currency": "CZK",
             "bankName": "CŠOB",
-            "accountNumber": "CZ5855000000001265098001",
-            "swiftCode": "CEKOCZPP"
+            "bank_account": "1265098001/0300",
+            "iban": "CZ6503000000001265098001",
+            "bic": "CEKOCZPP",
+            "note": "Payment for order"
         }
     },
     "TEST_API": {
