@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("cart", "0022_rename_billing_address_cart_billing_info_and_more"),
     ]

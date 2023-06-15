@@ -5,7 +5,6 @@ import uuid
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("cart", "0016_rename_shippping_method_country_cart_shipping_method_country"),
     ]

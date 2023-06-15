@@ -7,7 +7,6 @@ import parler.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("product", "0035_productprice_discount"),
     ]
