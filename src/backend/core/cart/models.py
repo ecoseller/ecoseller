@@ -80,6 +80,14 @@ class ShippingMethodCountry(models.Model):
 
         return self.currency.format_price(price_str)
 
+    @property
+    def formatted_price_without_vat(self):
+        price_str = round(self.price, 2)
+        if not self.currency:
+            return price_str
+
+        return self.currency.format_price(price_str)
+
 
 def get_payment_method_image_path(instance, filename):
     filename, file_extension = os.path.splitext(filename)
@@ -136,6 +144,14 @@ class PaymentMethodCountry(models.Model):
         if not self.vat_group:
             return self.price
         return self.price * (1 + self.vat_group.rate / 100)
+
+    @property
+    def formatted_price_without_vat(self):
+        price_str = round(self.price, 2)
+        if not self.currency:
+            return price_str
+
+        return self.currency.format_price(price_str)
 
     @property
     def formatted_price_incl_vat(self):
@@ -311,7 +327,7 @@ class Cart(models.Model):
         Recalculate cart prices.
         """
         if (self.pricelist and self.pricelist.code == pricelist.code) and (
-                self.country.code == country.code
+            self.country.code == country.code
         ):
             # if pricelist and country is the same as before, we don't need to recalculate
             return

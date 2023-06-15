@@ -336,14 +336,11 @@ class CartPaymentMethodCountrySerializer(ModelSerializer):
 
     payment_method = CartPaymentMethodSerializer(read_only=True)
     price_incl_vat = CharField(source="formatted_price_incl_vat")
+    price_without_vat = CharField(source="formatted_price_without_vat")
 
     class Meta:
         model = PaymentMethodCountry
-        fields = (
-            "id",
-            "payment_method",
-            "price_incl_vat",
-        )
+        fields = ("id", "payment_method", "price_incl_vat", "price_without_vat")
 
 
 class CartShippingMethodCountryBaseSerializer(ModelSerializer):
@@ -353,14 +350,11 @@ class CartShippingMethodCountryBaseSerializer(ModelSerializer):
 
     shipping_method = CartShippingMethodSerializer(read_only=True)
     price_incl_vat = CharField(source="formatted_price_incl_vat")
+    price_without_vat = CharField(source="formatted_price_without_vat")
 
     class Meta:
         model = ShippingMethodCountry
-        fields = (
-            "id",
-            "shipping_method",
-            "price_incl_vat",
-        )
+        fields = ("id", "shipping_method", "price_incl_vat", "price_without_vat")
 
 
 class CartShippingMethodCountrySerializer(CartShippingMethodCountryBaseSerializer):
