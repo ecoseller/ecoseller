@@ -97,7 +97,7 @@ class CartDetailStorefrontView(APIView):
                     cart_item_filter.exists()
                 ):  # if already present, update its quantity instead of creating new `CartItem`
                     cart_item = cart_item_filter.first()
-                    cart_item.quantity = update_data.quantity
+                    cart_item.quantity += update_data.quantity
                     cart_item.save()
                     return Response(status=HTTP_200_OK)
 
