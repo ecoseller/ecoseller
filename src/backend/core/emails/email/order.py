@@ -88,10 +88,10 @@ class EmailOrderConfirmation(Email):
                 for item in self.order.cart.cart_items.all()
             ],
             "currency": self.order.cart.pricelist.currency,
-            "price_products_incl_vat": self.order.cart.total_items_price_without_vat_formatted,
+            "price_products_incl_vat": self.order.cart.total_items_price_incl_vat_formatted,
             "price_shipping_payment_incl_vat": self.order.cart.pricelist.format_price(
                 self.order.cart.price_payment_incl_vat
                 + self.order.cart.price_shipping_incl_vat
             ),
-            "price_total_incl_vat": self.order.cart.total_price_without_vat_formatted,
+            "price_total_incl_vat": self.order.cart.total_price_incl_vat_formatted,
         }
