@@ -7,5 +7,11 @@ class EmailConnector(NotificationConnector):
         """
         Send Email notification
         """
-        print("EmailConnector called")
-        # TODO: implement after email service is ready
+
+        data = kwargs.get("data", None)
+        try:
+            _method = getattr(EmailConnector, kwargs["method"])
+        except AttributeError:
+            raise AttributeError(f"EmailConnector has no method {kwargs['method']}")
+        print("Sending email...", data, _method)
+        # TODO: in #285

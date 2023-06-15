@@ -10,8 +10,4 @@ class TestGateway(OnlinePaymentMethod):
         """
         Moc status and return paid with some probability
         """
-        import random
-
-        if random.random() < 0.5:
-            return PaymentStatus.PAID
         return PaymentStatus.PENDING
