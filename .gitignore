@@ -153,6 +153,8 @@ GitHub.sublime-settings
 # Recommender system dataset
 src/recommender_system/data
 
+# Elastic
+src/backend/elasticsearch/data
 
 # Django cache
 src/cache

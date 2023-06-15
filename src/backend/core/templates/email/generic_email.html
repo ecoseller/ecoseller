@@ -1,0 +1,472 @@
+{% load i18n %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html
+  style="
+    width: 100%;
+    height: auto;
+    font-family: Arial, sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    background-color: #fbfaf9;
+    color: black;
+  "
+>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
+      html {
+        width: 100%;
+        height: auto;
+        font-family: Arial, sans-serif;
+        font-weight: 400;
+        font-style: normal;
+        background-color: #fbfaf9;
+        color: black;
+      }
+      body {
+        width: 100%;
+        height: auto;
+        margin: 0px auto;
+        background-color: #fbfaf9;
+      }
+      body * {
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        text-rendering: geometricPrecision;
+      }
+      .body {
+        background-color: #fbfaf9;
+        padding: 30px 0;
+        font-family: Arial, sans-serif;
+      }
+      .body .email_template_holder {
+        width: 100%;
+        max-width: 600px;
+        margin: 0px auto;
+        background-color: white;
+        border-radius: 5px;
+        padding: 20px;
+      }
+      .body .email_template_holder .logo {
+        width: 120px;
+        height: 45px;
+        margin-bottom: 30px;
+      }
+      .body .email_template_holder .logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: left center;
+      }
+      .body .email_template_holder h1 {
+        padding: 0;
+        margin: 0;
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 26px;
+      }
+      .body .email_template_holder h2 {
+        padding: 0;
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 5px;
+      }
+      .body .email_template_holder p {
+        padding: 0;
+        margin: 0;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 22px;
+      }
+      .body .email_template_holder p.heading_desc {
+        margin-bottom: 15px;
+      }
+      .body .email_template_holder a {
+        text-decoration: underline;
+        color: #8e44ad;
+      }
+      .body .email_template_holder .bold {
+        font-weight: 700;
+      }
+      .body .email_template_holder .small {
+        font-size: 85%;
+      }
+      .body .email_template_holder .clearfix {
+        clear: both;
+      }
+      .body .email_template_holder .section_separator {
+        width: 100%;
+        height: 1px;
+        background-color: #8e44ad;
+        margin-top: 25px;
+        margin-bottom: 25px;
+      }
+      .body .email_template_holder .contact_info_holder .info_item {
+        width: 33%;
+        float: left;
+      }
+      .body
+        .email_template_holder
+        .contact_info_holder
+        .info_item.side_padding {
+        padding: 0 5px;
+      }
+      .body .email_template_holder .contact_info_holder table {
+        width: 100%;
+      }
+      .body .email_template_holder .contact_info_holder table tr td {
+        vertical-align: top;
+      }
+      .body .email_template_holder .products_list {
+        margin-top: 15px;
+      }
+      .body .email_template_holder .products_list .product_image_td {
+        width: 60px;
+      }
+      .body
+        .email_template_holder
+        .products_list
+        .product_image_td
+        .product_image {
+        width: 60px;
+        height: 77px;
+        background-color: grey;
+        border-radius: 3px;
+      }
+      .body
+        .email_template_holder
+        .products_list
+        .product_image_td
+        .product_image
+        img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center center;
+      }
+      .body .email_template_holder .products_list table {
+        width: 100%;
+      }
+      .body .email_template_holder .products_list table tr td {
+        padding-bottom: 10px;
+      }
+      .body .email_template_holder .products_list table tr td p {
+        line-height: normal;
+      }
+      .body .email_template_holder .products_list table tr td.price_td {
+        width: 10px;
+        white-space: nowrap;
+      }
+      .body .email_template_holder .products_list table tr td .price {
+        border-left: 1px solid black;
+        padding-left: 10px;
+        text-align: right;
+      }
+      .body
+        .email_template_holder
+        .products_list
+        table
+        tr
+        td
+        .price
+        .standard_price {
+        text-decoration: line-through;
+        color: #6f6f6f;
+        padding-left: 5px;
+      }
+      .body
+        .email_template_holder
+        .products_list
+        table
+        tr
+        td
+        .breakLine_mobile {
+        display: none;
+      }
+      .body .email_template_holder .price_summary {
+        width: 80%;
+        padding: 20px;
+        border-radius: 8px;
+        background-color: #ebebeb;
+        float: right;
+        margin-top: 20px;
+      }
+      .body .email_template_holder .price_summary table {
+        width: 100%;
+      }
+      .body .email_template_holder .price_summary table tr td {
+        font-size: 16px;
+        vertical-align: baseline;
+        padding-top: 5px;
+        padding-bottom: 5px;
+      }
+      .body .email_template_holder .price_summary table tr td.value {
+        font-weight: 700;
+        padding-left: 10px;
+        text-align: right;
+      }
+      .body
+        .email_template_holder
+        .price_summary
+        table
+        tr
+        td.value.total_price {
+        font-size: 24px;
+      }
+      @media screen and (max-width: 500px) {
+        .body
+          .email_template_holder
+          .price_summary
+          table
+          tr
+          td.value.total_price {
+          font-size: 18px !important;
+        }
+      }
+      .body .email_template_holder .frequent_questions .column {
+        width: calc(100% - 125px);
+        float: left;
+      }
+      .body .email_template_holder .frequent_questions .column.heading {
+        width: 125px;
+        padding-right: 50px;
+      }
+      .body .email_template_holder .info_table {
+        padding: 0 15px;
+      }
+      .body .email_template_holder .info_table table {
+        width: 100%;
+        border-radius: 10px;
+        box-shadow: 0 0 0 1px #979797;
+        overflow: hidden;
+      }
+      .body .email_template_holder .info_table table tr th {
+        padding-left: 20px;
+      }
+      .body .email_template_holder .info_table table tr td {
+        height: 50px;
+        text-align: right;
+        padding-right: 20px;
+      }
+      .body .email_template_holder .info_table table tr td.qr_img img {
+        width: 120px;
+        height: 120px;
+        object-fit: contain;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+      .body .email_template_holder .info_table table tr:nth-child(even) th,
+      .body .email_template_holder .info_table table tr:nth-child(even) td {
+        background-color: #f0f0f0;
+      }
+      .body .email_template_holder .buttons_holder .button {
+        border: none;
+        width: 100%;
+        max-width: 330px;
+        height: 64px;
+        font-size: 24px;
+        font-weight: 700;
+        color: white;
+        display: block;
+        margin: 5px auto;
+        border-radius: 5px;
+        background-color: black;
+      }
+      .body .email_template_holder .buttons_holder .button.primary {
+        background-color: #8e44ad;
+      }
+      @media screen and (max-width: 480px) {
+        .body .email_template_holder .contact_info_holder .info_item {
+          width: 100% !important;
+          margin-bottom: 10px !important;
+        }
+        .body
+          .email_template_holder
+          .contact_info_holder
+          .info_item.side_padding {
+          padding: 0 !important;
+        }
+        .body
+          .email_template_holder
+          .products_list
+          table
+          tr
+          td
+          .standard_price {
+          display: block !important;
+        }
+        .body .email_template_holder .price_summary {
+          width: 100% !important;
+        }
+        .body .email_template_holder .frequent_questions .column {
+          width: 100% !important;
+        }
+        .body .email_template_holder .frequent_questions .column.heading {
+          width: 100% !important;
+          padding-right: 0px !important;
+        }
+      }
+    </style>
+  </head>
+  <body
+    style="
+      width: 100%;
+      height: auto;
+      margin: 0px auto;
+      background-color: #fbfaf9;
+    "
+  >
+    <div
+      class="body"
+      style="
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        text-rendering: geometricPrecision;
+        background-color: #fbfaf9;
+        padding: 30px 0;
+        font-family: Arial, sans-serif;
+      "
+    >
+      <div
+        class="email_template_holder"
+        style="
+          -moz-box-sizing: border-box;
+          -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+          text-rendering: geometricPrecision;
+          width: 100%;
+          max-width: 600px;
+          margin: 0px auto;
+          background-color: white;
+          border-radius: 5px;
+          padding: 20px;
+        "
+      >
+        <div
+          class="logo"
+          style="
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            text-rendering: geometricPrecision;
+            width: 120px;
+            height: 45px;
+            margin-bottom: 30px;
+          "
+        >
+          <h1
+            width="120"
+            height="45"
+            style="
+              -moz-box-sizing: border-box;
+              -webkit-box-sizing: border-box;
+              box-sizing: border-box;
+              text-rendering: geometricPrecision;
+              width: 100%;
+              height: 100%;
+              object-fit: contain;
+              object-position: left center;
+            "
+          >
+            Company
+          </h1>
+        </div>
+        <h1
+          style="
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            text-rendering: geometricPrecision;
+            padding: 0;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 26px;
+          "
+        >
+          {{main_title}}
+        </h1>
+        <h2
+          style="
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            text-rendering: geometricPrecision;
+            padding: 0;
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 5px;
+          "
+        >
+          {{subtitle}}
+        </h2>
+        <p
+          class="heading_desc"
+          style="
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            text-rendering: geometricPrecision;
+            padding: 0;
+            margin: 0;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 22px;
+            margin-bottom: 15px;
+          "
+        >
+          {{body}}
+        </p>
+        {% if button_link %}
+        <div
+          class="buttons_holder"
+          style="
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            text-rendering: geometricPrecision;
+          "
+        >
+          <a
+            href="{{ button_link }}"
+            style="
+              -moz-box-sizing: border-box;
+              -webkit-box-sizing: border-box;
+              box-sizing: border-box;
+              text-rendering: geometricPrecision;
+              text-decoration: underline;
+              color: #8e44ad;
+            "
+            ><button
+              class="button primary"
+              style="
+                -moz-box-sizing: border-box;
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+                text-rendering: geometricPrecision;
+                border: none;
+                width: 100%;
+                max-width: 330px;
+                height: 64px;
+                font-size: 24px;
+                font-weight: 700;
+                color: white;
+                display: block;
+                margin: 5px auto;
+                border-radius: 5px;
+                background-color: #8e44ad;
+              "
+            >
+              {{ button_title }}
+            </button></a
+          >
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </body>
+</html>

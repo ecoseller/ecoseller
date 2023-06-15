@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "rest_framework.authtoken",
     "rest_framework_simplejwt.token_blacklist",
+    "django_rq",
 ]
 
 MIDDLEWARE = [
@@ -244,6 +245,42 @@ except Exception as e:
     print(e)
     PAYMENT_METHOD_APIS = None
 
+# Redis queue
+USING_REDIS_QUEUE = bool(int(os.environ.get("USING_REDIS_QUEUE", 0)))
+if USING_REDIS_QUEUE:
+    RQ_QUEUES = {
+        "default": {
+            "HOST": os.environ.get("REDIS_QUEUE_LOCATION", "redis"),
+            "PORT": 6379,
+            "DB": 0,
+            "PASSWORD": os.environ.get("REDIS_PASSWORD", ""),
+            "DEFAULT_TIMEOUT": 500,
+        },
+        "high": {
+            "HOST": os.environ.get("REDIS_QUEUE_LOCATION", "redis"),
+            "PORT": 6379,
+            "DB": 0,
+            "PASSWORD": os.environ.get("REDIS_PASSWORD", ""),
+            "DEFAULT_TIMEOUT": 500,
+        },
+        "low": {
+            "HOST": os.environ.get("REDIS_QUEUE_LOCATION", "redis"),
+            "PORT": 6379,
+            "DB": 0,
+            "PASSWORD": os.environ.get("REDIS_PASSWORD", ""),
+            "DEFAULT_TIMEOUT": 360,
+        },
+    }
+
+
+# Email configuration
+EMAIL_USE_SSL = bool(int(os.environ.get("EMAIL_USE_SSL", 0)))
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", 465))
+EMAIL_HOST = os.environ.get("EMAIL_HOST", None)
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", None)
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", None)
+EMAIL_FROM = os.environ.get("EMAIL_FROM", None)
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 USE_ELASTIC = bool(int(os.environ.get("USE_ELASTIC", "0")))
 ELASTIC_AUTO_REBUILD_INDEX = bool(
