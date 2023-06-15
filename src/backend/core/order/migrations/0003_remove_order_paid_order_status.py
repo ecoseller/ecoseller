@@ -6,7 +6,6 @@ import order.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("order", "0002_rename_order_id_order_token"),
     ]

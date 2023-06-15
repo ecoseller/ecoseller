@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("cart", "0015_cart_payment_method_country_and_more"),
     ]

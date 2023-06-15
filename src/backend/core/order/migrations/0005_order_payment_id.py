@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("order", "0004_order_agreed_to_terms_order_marketing_flag"),
     ]
