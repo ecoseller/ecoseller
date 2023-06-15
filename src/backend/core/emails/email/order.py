@@ -1,5 +1,5 @@
-from django.utils.translation import gettext as _
 from django.utils import translation
+from django.utils.translation import gettext as _
 
 from .base import Email
 
@@ -81,17 +81,17 @@ class EmailOrderConfirmation(Email):
                             for attribute in item.product_variant.attributes.all()
                         ]
                     ),
-                    "base_price": item.total_price_gross_before_discount_formatted,
+                    "base_price": item.total_price_without_vat_before_discount_formatted,
                     "is_discounted": item.discount and item.discount > 0,
-                    "discount_price": item.total_price_gross_formatted,
+                    "discount_price": item.total_price_without_vat_formatted,
                 }
                 for item in self.order.cart.cart_items.all()
             ],
             "currency": self.order.cart.pricelist.currency,
-            "price_products_incl_vat": self.order.cart.total_items_price_gross_formatted,
+            "price_products_incl_vat": self.order.cart.total_items_price_without_vat_formatted,
             "price_shipping_payment_incl_vat": self.order.cart.pricelist.format_price(
-                self.order.cart.price_payment_gross
-                + self.order.cart.price_shipping_gross
+                self.order.cart.price_payment_incl_vat
+                + self.order.cart.price_shipping_incl_vat
             ),
-            "price_total_incl_vat": self.order.cart.total_price_gross_formatted,
+            "price_total_incl_vat": self.order.cart.total_price_without_vat_formatted,
         }

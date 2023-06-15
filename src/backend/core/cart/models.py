@@ -207,30 +207,30 @@ class Cart(models.Model):
         return True
 
     @property
-    def total_items_price_net(self):
+    def total_items_price_incl_vat(self):
         """
-        Get total price (unit price * quantity) of the cart items
+        Get total price (unit price * quantity) of the cart items including VAT
         """
         return sum(
-            [item.unit_price_net * item.quantity for item in self.cart_items.all()]
+            [item.unit_price_incl_vat * item.quantity for item in self.cart_items.all()]
         )
 
     @property
-    def total_items_price_net_formatted(self):
+    def total_items_price_incl_vat_formatted(self):
         """
-        Get total price (unit price * quantity) of the cart items with currency symbol
+        Get total price (unit price * quantity) of the cart items including VAT with currency symbol
 
         This price is intended to be shown to the user.
         """
-        return self.pricelist.format_price(self.total_items_price_net)
+        return self.pricelist.format_price(self.total_items_price_incl_vat)
 
     @property
-    def total_price_net_formatted(self):
+    def total_price_incl_vat_formatted(self):
         """
-        Get total price of the cart (sum of prices of items, payment method and shipping method) with currency symbol
+        Get total price of the cart (sum of prices of items, payment method and shipping method) including VAT with currency symbol
         This price is intended to be shown to the user.
         """
-        items_price = self.total_items_price_net
+        items_price = self.total_items_price_incl_vat
         payment_method_price = (
             self.payment_method_country.price_incl_vat
             if self.payment_method_country
@@ -247,25 +247,25 @@ class Cart(models.Model):
         )
 
     @property
-    def total_items_price_gross(self):
+    def total_items_price_without_vat(self):
         """
-        Get total price (unit price * quantity) of the cart items
+        Get total price (unit price * quantity) of the cart items without VAT
         """
         return sum(
-            [item.unit_price_gross * item.quantity for item in self.cart_items.all()]
+            [item.unit_price_without_vat * item.quantity for item in self.cart_items.all()]
         )
 
     @property
-    def total_items_price_gross_formatted(self):
+    def total_items_price_without_vat_formatted(self):
         """
-        Get total price (unit price * quantity) of the cart items with currency symbol
+        Get total price (unit price * quantity) of the cart items (without VAT) with currency symbol
 
         This price is intended to be shown to the user.
         """
-        return self.pricelist.format_price(self.total_items_price_gross)
+        return self.pricelist.format_price(self.total_items_price_without_vat)
 
     @property
-    def price_shipping_gross(self):
+    def price_shipping_incl_vat(self):
         return (
             self.shipping_method_country.price_incl_vat
             if self.shipping_method_country
@@ -273,11 +273,11 @@ class Cart(models.Model):
         )
 
     @property
-    def price_shipping_gross_formatted(self):
-        return self.pricelist.format_price(self.price_shipping_gross)
+    def price_shipping_incl_vat_formatted(self):
+        return self.pricelist.format_price(self.price_shipping_incl_vat)
 
     @property
-    def price_payment_gross(self):
+    def price_payment_incl_vat(self):
         return (
             self.payment_method_country.price_incl_vat
             if self.payment_method_country
@@ -285,19 +285,19 @@ class Cart(models.Model):
         )
 
     @property
-    def price_payment_gross_formatted(self):
-        return self.pricelist.format_price(self.price_payment_gross)
+    def price_payment_incl_vat_formatted(self):
+        return self.pricelist.format_price(self.price_payment_incl_vat)
 
     @property
-    def total_price_gross_formatted(self):
+    def total_price_without_vat_formatted(self):
         """
         Get total price of the cart (sum of prices of items, payment method and shipping method) with currency symbol
 
         This price is intended to be shown to the user.
         """
-        items_price = self.total_items_price_gross
-        payment_method_price = self.price_payment_gross
-        shipping_method_price = self.price_shipping_gross
+        items_price = self.total_items_price_without_vat
+        payment_method_price = self.price_payment_incl_vat
+        shipping_method_price = self.price_shipping_incl_vat
 
         return self.pricelist.format_price(
             items_price + payment_method_price + shipping_method_price
@@ -308,7 +308,7 @@ class Cart(models.Model):
         Recalculate cart prices.
         """
         if (self.pricelist and self.pricelist.code == pricelist.code) and (
-            self.country.code == country.code
+                self.country.code == country.code
         ):
             # if pricelist and country is the same as before, we don't need to recalculate
             return
@@ -333,10 +333,10 @@ class CartItem(models.Model):
         ProductVariant, null=True, on_delete=models.SET_NULL
     )
     product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
-    unit_price_gross = models.DecimalField(
+    unit_price_without_vat = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True
     )
-    unit_price_net = models.DecimalField(
+    unit_price_incl_vat = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True
     )
     discount = models.DecimalField(
@@ -386,50 +386,50 @@ class CartItem(models.Model):
         return self.product.get_primary_photo()
 
     @property
-    def total_price_net_formatted(self):
+    def total_price_incl_vat_formatted(self):
         """
-        Get total price (unit price * quantity) of this item with currency symbol
+        Get total price (unit price * quantity) including VAT of this item with currency symbol
 
         This price is intended to be shown to the user.
         """
-        total_price = self.unit_price_net * self.quantity
+        total_price = self.unit_price_incl_vat * self.quantity
 
         return self.cart.pricelist.format_price(total_price)
 
     @property
-    def total_price_gross_formatted(self):
+    def total_price_without_vat_formatted(self):
         """
-        Get total price (unit price * quantity) of this item with currency symbol
+        Get total price (unit price * quantity) without VAT of this item with currency symbol
 
         This price is intended to be shown to the user.
         """
-        total_price = self.unit_price_gross * self.quantity
+        total_price = self.unit_price_without_vat * self.quantity
 
         return self.cart.pricelist.format_price(total_price)
 
     @property
-    def total_price_gross_before_discount_formatted(self):
+    def total_price_without_vat_before_discount_formatted(self):
         """
-        Get total price before discount (unit price * quantity) of this item with currency symbol
+        Get total price without VAT before discount (unit price * quantity) of this item with currency symbol
 
         This price is intended to be shown to the user.
         """
         if not self.discount or (self.discount == 0):
-            return self.total_price_gross_formatted
+            return self.total_price_without_vat_formatted
 
-        total_price = self.unit_price_gross * self.quantity
+        total_price = self.unit_price_without_vat * self.quantity
         total_price_before_discount = total_price / (1 - self.discount / 100)
 
         return self.cart.pricelist.format_price(total_price_before_discount)
 
     @property
-    def unit_price_net_formatted(self):
+    def unit_price_incl_vat_formatted(self):
         """
         Get unit price of this item with currency symbol
 
         This price is intended to be shown to the user.
         """
-        return self.cart.pricelist.format_price(self.unit_price_net)
+        return self.cart.pricelist.format_price(self.unit_price_incl_vat)
 
     def recalculate(self, pricelist, country):
         # recalculate price for this cart item based on pricelist and country
@@ -442,10 +442,10 @@ class CartItem(models.Model):
         else:
             vat = 0
 
-        self.unit_price_gross = (
+        self.unit_price_without_vat = (
             price.price if not price.discount else price.discounted_price
         )
-        self.unit_price_net = (
+        self.unit_price_incl_vat = (
             price.price_incl_vat(vat)
             if not price.discount
             else price.discounted_price_incl_vat(vat)

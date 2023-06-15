@@ -110,10 +110,10 @@ class CartDetailStorefrontView(APIView):
                     cart=cart,
                     product_variant=product_variant,
                     product=product,
-                    unit_price_gross=price.price
+                    unit_price_without_vat=price.price
                     if not price.discount
                     else price.discounted_price,
-                    unit_price_net=price.price_incl_vat(vat)
+                    unit_price_incl_vat=price.price_incl_vat(vat)
                     if not price.discount
                     else price.discounted_price_incl_vat(vat),
                     quantity=update_data.quantity,
@@ -173,10 +173,10 @@ class CartCreateStorefrontView(APIView):
                     cart=cart,
                     product_variant=product_variant,
                     product=product,
-                    unit_price_gross=price.price
+                    unit_price_without_vat=price.price
                     if not price.discount
                     else price.discounted_price,
-                    unit_price_net=price.price_incl_vat(vat)
+                    unit_price_incl_vat=price.price_incl_vat(vat)
                     if not price.discount
                     else price.discounted_price_incl_vat(vat),
                     quantity=update_data.quantity,
