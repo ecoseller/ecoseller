@@ -20,6 +20,7 @@ import {
 import { IProductMedia } from "@/types/product";
 // styles
 import styles from "@/styles/ProductDetail/MediaGallery.module.scss";
+import imgPath from "@/utils/imgPath";
 
 function ThumbnailPlugin(
   mainRef: MutableRefObject<KeenSliderInstance | null>
