@@ -1,4 +1,5 @@
-import { DataProp } from "@/utils/editorjs/EditorJsOutput";
+import { IEditorJsField } from "@/utils/editorjs/EditorJsOutput";
+import { IBreadcrumbObject } from "@/types/common";
 
 /**
  * Interface containing basic info about a category
@@ -14,7 +15,7 @@ export interface ICategoryBase {
 /**
  * Interface containing detailed info about a category
  */
-export interface ICategoryDetail extends ICategoryBase {
-  description_editorjs: DataProp;
+export interface ICategoryDetail extends ICategoryBase, IBreadcrumbObject {
+  description_editorjs: IEditorJsField;
   meta_description: string;
 }

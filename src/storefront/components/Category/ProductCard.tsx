@@ -54,7 +54,7 @@ const ProductCard = ({ product }: IProductCardProps) => {
       </NextLink>
       <CardActions sx={{ mt: "auto" }}>
         <Typography gutterBottom variant="h6" component="div">
-          {product.has_multiple_prices ? <span>From </span> : null}{" "}
+          {product.has_multiple_prices ? <span>From&nbsp;&nbsp;</span> : null}
           {product.price}
         </Typography>
       </CardActions>

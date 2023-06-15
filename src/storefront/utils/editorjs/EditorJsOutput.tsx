@@ -24,13 +24,13 @@ export interface Block {
   data: Record<string, any>;
 }
 
-export interface DataProp {
+export interface IEditorJsField {
   time: number;
   version: string;
   blocks: Block[];
 }
 interface IOutput {
-  data: DataProp;
+  data: IEditorJsField;
   renderers?: IRenderers[];
 }
 

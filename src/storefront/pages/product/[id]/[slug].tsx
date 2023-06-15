@@ -32,6 +32,7 @@ import {
 } from "next/types";
 import { countryDetailAPI } from "@/pages/api/country/[code]";
 import { ICountry } from "@/types/country";
+import BreadcrumbCategoryNav from "@/components/Common/BreadcrumbCategoryNav";
 
 interface IProductPageProps {
   data: IProductDetail;
@@ -98,37 +99,7 @@ const ProductPage = ({ data, country, pricelist }: IProductPageProps) => {
         url={basePath}
       />
       <div className={`container`}>
-        <Breadcrumbs
-          aria-label="breadcrumb"
-          sx={{
-            pt: 2,
-          }}
-        >
-          {data?.breadcrumbs?.map((item, index) => (
-            <Link
-              key={index}
-              href={{
-                pathname: `/category/${item.id}/${item.slug}`,
-              }}
-            >
-              {item.title}
-            </Link>
-          ))}
-          <Link
-            href={{
-              pathname: `/product/${data.id}/${data.slug}`,
-            }}
-          >
-            {
-              /**
-               * Crop title to 20 characters
-               */
-              data.title.length > 20
-                ? `${data.title.substring(0, 20)}...`
-                : data.title
-            }
-          </Link>
-        </Breadcrumbs>
+        <BreadcrumbCategoryNav breadcrumbs={data.breadcrumbs} product={data} />
         <Grid
           container
           spacing={{ xs: 4, md: 4, lg: 4 }}

@@ -10,3 +10,16 @@ export interface IValidatedInputField {
   errorMessage?: string;
   label?: string;
 }
+
+export interface IBreadcrumb {
+  id: number;
+  title: string;
+  slug: string;
+}
+
+/**
+ * Represents an object with breadcrumbs
+ */
+export interface IBreadcrumbObject {
+  breadcrumbs: IBreadcrumb[];
+}

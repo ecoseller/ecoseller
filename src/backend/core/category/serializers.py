@@ -4,6 +4,7 @@ from parler_rest.serializers import (
 )
 from rest_framework.serializers import (
     ModelSerializer,
+    SerializerMethodField
 )
 from rest_framework_recursive.fields import RecursiveField
 
@@ -62,12 +63,22 @@ class CategoryDetailStorefrontSerializer(CategoryRecursiveStorefrontSerializer):
     Only one translation is returned (see TranslatedSerializerMixin)
     """
 
+    breadcrumbs = SerializerMethodField()
+
     class Meta(CategoryRecursiveStorefrontSerializer.Meta):
         model = Category
         fields = CategoryRecursiveStorefrontSerializer.Meta.fields + (
             "description_editorjs",
             "meta_description",
+            "breadcrumbs"
         )
+
+    def get_breadcrumbs(self, obj):
+        breadcrumbs = obj.get_ancestors(include_self=True)
+        serializer = CategoryMinimalSerializer(
+            breadcrumbs, many=True, context=self.context
+        )
+        return serializer.data
 
 
 class CategoryRecursiveDashboardSerializer(TranslatedSerializerMixin, ModelSerializer):

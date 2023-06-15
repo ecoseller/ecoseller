@@ -1,4 +1,5 @@
-import { DataProp } from "@/utils/editorjs/EditorJsOutput";
+import { IEditorJsField } from "@/utils/editorjs/EditorJsOutput";
+import { IBreadcrumbObject } from "@/types/common";
 
 export interface IProductSliderData {
   id: number;
@@ -6,12 +7,6 @@ export interface IProductSliderData {
   price: string;
   image: string;
   url: string;
-}
-
-export interface IBreadcrumb {
-  id: number;
-  title: string;
-  slug: string;
 }
 
 export interface IAttributeType {
@@ -62,11 +57,10 @@ interface IProductBase {
   slug: string;
 }
 
-export interface IProductDetail extends IProductBase {
-  breadcrumbs: IBreadcrumb[];
+export interface IProductDetail extends IProductBase, IBreadcrumbObject {
   description: string;
   short_description: string;
-  description_editorjs: DataProp;
+  description_editorjs: IEditorJsField;
   product_variants: IProductVariant[];
   media: IProductMedia[];
 }

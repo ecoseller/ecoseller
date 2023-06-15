@@ -14,6 +14,8 @@ import { IProductRecord } from "@/types/product";
 import { categoryProductsAPI } from "@/pages/api/category/[id]/products";
 import { categoryDetailAPI } from "@/pages/api/category/[id]";
 import Divider from "@mui/material/Divider";
+import BreadcrumbCategoryNav from "@/components/Common/BreadcrumbCategoryNav";
+import ProductFilters from "@/components/Category/ProductFilters";
 
 interface ICategoryPageProps {
   category: ICategoryDetail;
@@ -31,13 +33,18 @@ const CategoryPage = ({ category, products }: ICategoryPageProps) => {
         url={router.basePath}
       />
       <div className="container">
+        <BreadcrumbCategoryNav breadcrumbs={category.breadcrumbs} />
         <Typography variant="h4" mt={3} gutterBottom>
           {category.title}
         </Typography>
         <EditorJsOutput data={category.description_editorjs} />
         {category.children.length > 0 ? (
-          <SubCategoryList subCategories={category.children} />
+          <>
+            <SubCategoryList subCategories={category.children} />
+            <Divider sx={{ my: 3 }} />
+          </>
         ) : null}
+        <ProductFilters />
         <Divider sx={{ my: 3 }} />
         <ProductGrid products={products} />
       </div>
