@@ -252,7 +252,10 @@ class Cart(models.Model):
         Get total price (unit price * quantity) of the cart items without VAT
         """
         return sum(
-            [item.unit_price_without_vat * item.quantity for item in self.cart_items.all()]
+            [
+                item.unit_price_without_vat * item.quantity
+                for item in self.cart_items.all()
+            ]
         )
 
     @property
@@ -308,7 +311,7 @@ class Cart(models.Model):
         Recalculate cart prices.
         """
         if (self.pricelist and self.pricelist.code == pricelist.code) and (
-                self.country.code == country.code
+            self.country.code == country.code
         ):
             # if pricelist and country is the same as before, we don't need to recalculate
             return

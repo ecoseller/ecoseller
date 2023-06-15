@@ -6,18 +6,18 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cart', '0024_remove_shippingmethodcountry_api_request_and_more'),
+        ("cart", "0024_remove_shippingmethodcountry_api_request_and_more"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='cartitem',
-            old_name='unit_price_gross',
-            new_name='unit_price_incl_vat',
+            model_name="cartitem",
+            old_name="unit_price_gross",
+            new_name="unit_price_incl_vat",
         ),
         migrations.RenameField(
-            model_name='cartitem',
-            old_name='unit_price_net',
-            new_name='unit_price_without_vat',
+            model_name="cartitem",
+            old_name="unit_price_net",
+            new_name="unit_price_without_vat",
         ),
     ]
