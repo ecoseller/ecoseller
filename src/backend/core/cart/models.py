@@ -311,7 +311,7 @@ class Cart(models.Model):
         Recalculate cart prices.
         """
         if (self.pricelist and self.pricelist.code == pricelist.code) and (
-            self.country.code == country.code
+                self.country.code == country.code
         ):
             # if pricelist and country is the same as before, we don't need to recalculate
             return
@@ -428,11 +428,20 @@ class CartItem(models.Model):
     @property
     def unit_price_incl_vat_formatted(self):
         """
-        Get unit price of this item with currency symbol
+        Get unit price including VAT of this item with currency symbol
 
         This price is intended to be shown to the user.
         """
         return self.cart.pricelist.format_price(self.unit_price_incl_vat)
+
+    @property
+    def unit_price_without_vat_formatted(self):
+        """
+        Get unit price without VAT of this item with currency symbol
+
+        This price is intended to be shown to the user.
+        """
+        return self.cart.pricelist.format_price(self.unit_price_without_vat)
 
     def recalculate(self, pricelist, country):
         # recalculate price for this cart item based on pricelist and country
