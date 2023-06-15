@@ -578,9 +578,9 @@ class ProductVariantStorefrontDetailSerializer(ProductVariantSerializer):
     def get_price(self, obj):
         print("CONTEXT", self.context)
         if (
-                "pricelist" not in self.context
-                or "country" not in self.context
-                or "product_type" not in self.context
+            "pricelist" not in self.context
+            or "country" not in self.context
+            or "product_type" not in self.context
         ):
             return None
         try:
@@ -620,7 +620,9 @@ class ProductVariantStorefrontDetailSerializer(ProductVariantSerializer):
             "vat": vat_group.rate,
             "discount": {
                 "percentage": price.discount,
-                "without_vat": self.context["pricelist"].format_price(price.discounted_price),
+                "without_vat": self.context["pricelist"].format_price(
+                    price.discounted_price
+                ),
                 "incl_vat": self.context["pricelist"].format_price(
                     price.discounted_price_incl_vat(vat_group.rate)
                 ),
