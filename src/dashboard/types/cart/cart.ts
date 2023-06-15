@@ -6,10 +6,12 @@ export interface ICartItem {
   product_slug: string;
   product_variant_sku: string;
   product_variant_name: string;
-  unit_price_gross: number;
-  unit_price_net: number;
-  unit_price_net_formatted: string;
-  total_price_net_formatted: string;
+  unit_price_incl_vat: number;
+  unit_price_without_vat: number;
+  unit_price_without_vat_formatted: string;
+  total_price_without_vat_formatted: string;
+  unit_price_incl_vat_formatted: string;
+  total_price_incl_vat_formatted: string;
   quantity: number;
   discount: number | null;
   primary_image: ICartProductMedia | null;
@@ -19,8 +21,10 @@ export interface ICart {
   token: string;
   cart_items: ICartItem[];
   update_at: string;
-  total_items_price_net_formatted: string;
-  total_price_net_formatted: string;
+  total_items_price_without_vat_formatted: string;
+  total_items_price_incl_vat_formatted: string;
+  total_price_without_vat_formatted: string;
+  total_price_incl_vat_formatted: string;
   shipping_method_country: number | null;
   payment_method_country: number | null;
 }
