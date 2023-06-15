@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import SubCategoryList from "@/components/Category/SubCategoryList";
 import HeadMeta from "@/components/Common/SEO";
 import { useRouter } from "next/router";
-import ProductList from "@/components/Category/ProductList";
+import ProductGrid from "@/components/Category/ProductGrid";
 import { IProductRecord } from "@/types/product";
 import { categoryProductsAPI } from "@/pages/api/category/[id]/products";
 import { categoryDetailAPI } from "@/pages/api/category/[id]";
@@ -39,7 +39,7 @@ const CategoryPage = ({ category, products }: ICategoryPageProps) => {
           <SubCategoryList subCategories={category.children} />
         ) : null}
         <Divider sx={{ my: 3 }} />
-        <ProductList products={products} />
+        <ProductGrid products={products} />
       </div>
     </>
   );
