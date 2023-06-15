@@ -28,13 +28,13 @@ export interface IBaseAttribute {
 }
 
 export interface IProductPrice {
-  net: string;
-  gross: string;
+  without_vat: string;
+  incl_vat: string;
   vat: string;
   discount: {
     percentage: number;
-    net: string;
-    gross: string;
+    without_vat: string;
+    incl_vat: string;
   };
 }
 
