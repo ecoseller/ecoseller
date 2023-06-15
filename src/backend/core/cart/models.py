@@ -174,6 +174,38 @@ class Cart(models.Model):
         ShippingMethodCountry, null=True, on_delete=models.SET_NULL, related_name="+"
     )
 
+    def is_valid(self):
+        """
+        validate cart
+        * check if cart is not empty (has some cart_items)
+        * check if cart_items are instock
+        * check if has shipping_info
+        * check if has billing_info
+        * check if has payment_method_country
+        * check if has shipping_method_country
+        """
+
+        items = self.cart_items.all()
+        if not items or len(items) == 0:
+            raise "Cart is empty"
+        for item in items:
+            if item.product_variant.stock_quantity <= item.quantity:
+                raise f"Product {item.product_variant} is out of stock"
+
+        if not self.shipping_info:
+            raise "Shipping info is missing"
+
+        if not self.billing_info:
+            raise "Billing info is missing"
+
+        if not self.payment_method_country:
+            raise "Payment method country is missing"
+
+        if not self.shipping_method_country:
+            raise "Shipping method country is missing"
+
+        return True
+
     @property
     def total_items_price_net(self):
         """
@@ -262,6 +294,13 @@ class CartItem(models.Model):
 
     def _get_language(self):
         return self.cart.country.locale
+
+    def deduct_from_inventory(self):
+        """
+        Deduct quantity of this cart item from inventory
+        """
+        self.product_variant.stock_quantity -= self.quantity
+        self.product_variant.save()
 
     @property
     def product_variant_name(self):
