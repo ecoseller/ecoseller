@@ -696,7 +696,7 @@ class ProductStorefrontListSerializer(TranslatedSerializerMixin, ModelSerializer
         Get all product variants prices of the given product.
         Price list is taken from self.context.
         """
-        price_list = self.context.get("price_list")
+        price_list = self.context.get("pricelist")
         variants = product.product_variants.all()
 
         return ProductPrice.objects.filter(

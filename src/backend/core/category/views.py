@@ -140,7 +140,7 @@ class CategoryDetailProductsStorefrontView(APIView):
     Used for storefront.
     """
 
-    PRICE_LIST_URL_PARAM = "price_list"
+    PRICE_LIST_URL_PARAM = "pricelist"
 
     def get(self, request, pk):
         try:
@@ -152,7 +152,7 @@ class CategoryDetailProductsStorefrontView(APIView):
             serializer = ProductStorefrontListSerializer(
                 products,
                 many=True,
-                context={"request": request, "price_list": pricelist},
+                context={"request": request, "pricelist": pricelist},
             )
 
             return Response(serializer.data)

@@ -3,6 +3,7 @@ import { api, setRequestResponse } from "@/utils/interceptors/api";
 
 export const categoryProductsAPI = async (
   id: string,
+  pricelist: string,
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
@@ -10,7 +11,7 @@ export const categoryProductsAPI = async (
     setRequestResponse(req, res);
   }
 
-  const url = `/category/storefront/${id}/products`;
+  const url = `/category/storefront/${id}/products?pricelist=${pricelist}`;
 
   return await api.get(url).then((response) => response.data);
 };
@@ -20,10 +21,15 @@ export const categoryProductsAPI = async (
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;
-  const { id } = req.query;
+  const { id, pricelist } = req.query;
 
   if (method == "GET") {
-    return categoryProductsAPI(id?.toString() || "", req, res)
+    return categoryProductsAPI(
+      id?.toString() || "",
+      pricelist?.toString() || "",
+      req,
+      res
+    )
       .then((data) => res.json(data))
       .catch((error) => res.status(400).json(null));
   }

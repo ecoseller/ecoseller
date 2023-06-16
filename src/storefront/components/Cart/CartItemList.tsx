@@ -32,7 +32,7 @@ const CartItemList = ({ editable }: ICartItemListProps) => {
     updateQuantity(item.product_variant_sku, item.quantity + diff);
   };
 
-  return cart ? (
+  return cart && cart.cart_items.length > 0 ? (
     <>
       <Table sx={{ minWidth: 650 }}>
         {editable ? null : (

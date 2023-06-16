@@ -33,6 +33,7 @@ import {
 import { countryDetailAPI } from "@/pages/api/country/[code]";
 import { ICountry } from "@/types/country";
 import BreadcrumbCategoryNav from "@/components/Common/BreadcrumbCategoryNav";
+import { DEFAULT_COUNTRY } from "@/utils/defaults";
 
 interface IProductPageProps {
   data: IProductDetail;
@@ -168,7 +169,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const countryDetail: ICountry = await countryDetailAPI(
     "GET",
-    country || "cz",
+    country || DEFAULT_COUNTRY,
     req as NextApiRequest,
     res as NextApiResponse
   );

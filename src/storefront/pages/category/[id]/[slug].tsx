@@ -16,6 +16,10 @@ import { categoryDetailAPI } from "@/pages/api/category/[id]";
 import Divider from "@mui/material/Divider";
 import BreadcrumbCategoryNav from "@/components/Common/BreadcrumbCategoryNav";
 import ProductFilters from "@/components/Category/ProductFilters";
+import { ICountry } from "@/types/country";
+import { countryDetailAPI } from "@/pages/api/country/[code]";
+import { getCookie } from "cookies-next";
+import { DEFAULT_COUNTRY } from "@/utils/defaults";
 
 interface ICategoryPageProps {
   category: ICategoryDetail;
@@ -65,6 +69,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
+  const country = getCookie("country", { req, res });
+
+  const countryDetail: ICountry = await countryDetailAPI(
+    "GET",
+    country?.toString() || DEFAULT_COUNTRY,
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
+  const pricelist = countryDetail?.default_price_list;
+
   const category: ICategoryDetail = await categoryDetailAPI(
     idNumber.toString(),
     req as NextApiRequest,
@@ -73,6 +88,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const products: IProductRecord[] = await categoryProductsAPI(
     idNumber.toString(),
+    pricelist,
     req as NextApiRequest,
     res as NextApiResponse
   );

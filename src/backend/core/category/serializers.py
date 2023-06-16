@@ -2,10 +2,7 @@ from parler_rest.serializers import (
     TranslatableModelSerializer,
     TranslatedFieldsField,
 )
-from rest_framework.serializers import (
-    ModelSerializer,
-    SerializerMethodField
-)
+from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from rest_framework_recursive.fields import RecursiveField
 
 from category.models import (
@@ -70,7 +67,7 @@ class CategoryDetailStorefrontSerializer(CategoryRecursiveStorefrontSerializer):
         fields = CategoryRecursiveStorefrontSerializer.Meta.fields + (
             "description_editorjs",
             "meta_description",
-            "breadcrumbs"
+            "breadcrumbs",
         )
 
     def get_breadcrumbs(self, obj):
