@@ -48,7 +48,7 @@ export const shippingMethodCountryDetailAPI = async (
         });
     case "DELETE":
       return await api
-        .delete(url, body)
+        .delete(url)
         .then((response) => response.data)
         .then((data) => {
           return data;

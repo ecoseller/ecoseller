@@ -59,6 +59,7 @@ import {
 } from "@/utils/productSerializer";
 import { useSnackbarState } from "@/utils/snackbar";
 import { usePermission } from "@/utils/context/permission";
+import DeleteDialog from "@/components/Dashboard/Generic/DeleteDialog";
 
 interface IProductVariantTable extends IProductVariant {
   id: string;
@@ -126,6 +127,10 @@ const ProductVariantsEditor = ({
   const [updateMainState, setUpdateMainState] = useState<boolean>(false);
 
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
+
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<string | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     // when the component is mounted, we need to set the rows to the product_variants from the state
@@ -311,7 +316,7 @@ const ProductVariantsEditor = ({
             icon={<DeleteIcon />}
             disabled={!hasPermission}
             label="Delete"
-            onClick={handleDeleteClick(id)}
+            onClick={handleOpenDeleteClick(id)}
             color="inherit"
             key={"delete"}
           />,
@@ -382,8 +387,13 @@ const ProductVariantsEditor = ({
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
-  const handleDeleteClick = (id: GridRowId) => () => {
+  const handleDeleteClick = (id: GridRowId) => {
     setRows(rows.filter((row) => row.id !== id));
+    setUpdateMainState(true);
+  };
+
+  const handleOpenDeleteClick = (id: GridRowId) => () => {
+    setOpenDeleteDialog(id as string);
   };
 
   const handleCancelClick = (id: GridRowId) => () => {
@@ -502,6 +512,14 @@ const ProductVariantsEditor = ({
           </Alert>
         </Snackbar>
       ) : null}
+      <DeleteDialog
+        open={openDeleteDialog !== undefined}
+        setOpen={() => setOpenDeleteDialog(undefined)}
+        onDelete={async () => {
+          handleDeleteClick(openDeleteDialog as GridRowId);
+        }}
+        text="this product variant"
+      />
     </EditorCard>
   );
 };

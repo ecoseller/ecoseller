@@ -48,6 +48,7 @@ import {
 import Tooltip from "@mui/material/Tooltip";
 import { useSnackbarState } from "@/utils/snackbar";
 import { ILanguage } from "@/types/localization";
+import DeleteDialog from "../../Generic/DeleteDialog";
 
 interface IBaseAttributeTable extends IBaseAttribute {
   id: number;
@@ -179,6 +180,8 @@ const BaseAttributeGrid = ({
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [snackbar, setSnackbar] = useSnackbarState();
 
+  const [openDelete, setOpenDelete] = useState<string | undefined>(undefined);
+
   const processRowUpdate = (
     newRow: IBaseAttributeTable,
     oldRow: IBaseAttributeTable
@@ -301,7 +304,8 @@ const BaseAttributeGrid = ({
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
-  const handleDeleteClick = (id: GridRowId) => () => {
+  const handleDeleteClick = (id: GridRowId) => {
+    console.log("delete", id);
     deleteBaseAttribtue(id as number)
       .then((res) => {
         setRows(rows.filter((row) => row.id !== id));
@@ -320,6 +324,10 @@ const BaseAttributeGrid = ({
           severity: "error",
         });
       });
+  };
+
+  const handleOpenDeleteClick = (id: GridRowId) => () => {
+    setOpenDelete(id as string);
   };
 
   const handleCancelClick = (id: GridRowId) => () => {
@@ -401,7 +409,7 @@ const BaseAttributeGrid = ({
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={handleDeleteClick(id)}
+            onClick={handleOpenDeleteClick(id)}
             color="inherit"
             key={"delete"}
           />,
@@ -469,6 +477,14 @@ const BaseAttributeGrid = ({
           ) : null}
         </FormControl>
       </Box>
+      <DeleteDialog
+        open={openDelete !== undefined}
+        setOpen={() => setOpenDelete(undefined)}
+        onDelete={async () => {
+          handleDeleteClick(openDelete as GridRowId);
+        }}
+        text="this attribute type"
+      />
     </EditorCard>
   );
 };

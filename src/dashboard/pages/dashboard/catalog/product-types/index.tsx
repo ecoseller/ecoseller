@@ -27,6 +27,7 @@ import {
   GridRowModesModel,
   GridActionsCellItem,
   GridEventListener,
+  GridRowId,
 } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
@@ -37,6 +38,7 @@ import { deleteProductType, postProductType } from "@/api/product/types";
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
 import { productTypeListAPI } from "@/pages/api/product/type";
 import { useSnackbarState } from "@/utils/snackbar";
+import DeleteDialog from "@/components/Dashboard/Generic/DeleteDialog";
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -98,7 +100,9 @@ const DashboardProductTypesPage = ({
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   console.log("productTypesData", productTypesData);
   const [snackbar, setSnackbar] = useSnackbarState();
-
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<number | undefined>(
+    undefined
+  );
   const handleSnackbarClose = (
     event?: React.SyntheticEvent | Event,
     reason?: string
@@ -107,6 +111,24 @@ const DashboardProductTypesPage = ({
       return;
     }
     setSnackbar(null);
+  };
+
+  const handleDeleteClick = (id: number) => {
+    fetch(`/api/product/type/${id}`, {
+      method: "DELETE",
+    }).then((res) => {
+      if (res.ok) {
+        setSnackbar({
+          open: true,
+          message: "Product type deleted",
+          severity: "success",
+        });
+        setRows((oldRows) => {
+          const newRows = oldRows.filter((row) => row.id !== id);
+          return newRows;
+        });
+      }
+    });
   };
 
   const router = useRouter();
@@ -158,21 +180,7 @@ const DashboardProductTypesPage = ({
             icon={<DeleteIcon />}
             label="Delete"
             onClick={() => {
-              fetch(`/api/product/type/${id}`, {
-                method: "DELETE",
-              }).then((res) => {
-                if (res.ok) {
-                  setSnackbar({
-                    open: true,
-                    message: "Product type deleted",
-                    severity: "success",
-                  });
-                  setRows((oldRows) => {
-                    const newRows = oldRows.filter((row) => row.id !== id);
-                    return newRows;
-                  });
-                }
-              });
+              setOpenDeleteDialog(id as number);
             }}
             color="inherit"
             key={"delete"}
@@ -220,6 +228,14 @@ const DashboardProductTypesPage = ({
             }}
           />
         </Card>
+        <DeleteDialog
+          open={openDeleteDialog !== undefined}
+          setOpen={() => setOpenDeleteDialog(undefined)}
+          onDelete={async () => {
+            handleDeleteClick(openDeleteDialog as number);
+          }}
+          text="this product type"
+        />
       </Container>
     </DashboardLayout>
   );
