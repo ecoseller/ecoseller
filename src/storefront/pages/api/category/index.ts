@@ -2,7 +2,6 @@
 // call the cart api in the backend
 import type { NextApiRequest, NextApiResponse } from "next";
 import { api } from "@/utils/interceptors/api";
-import { getLanguageHeader } from "@/utils/httpUtils";
 
 export const categoryAPI = async (
   req: NextApiRequest,
@@ -11,7 +10,7 @@ export const categoryAPI = async (
 ) => {
   return await api
     .get(`/category/storefront/`, {
-      headers: getLanguageHeader(locale),
+      headers: { "Accept-Language": locale },
     })
     .then((response: any) => response.data)
     .then((data: any) => {
