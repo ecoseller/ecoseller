@@ -1,5 +1,6 @@
-from . import views
 from django.urls import path
+
+from . import views
 
 urlpatterns = [
     path("dashboard/", views.CategoryDashboardView.as_view()),
@@ -10,5 +11,4 @@ urlpatterns = [
         "storefront/<int:pk>/products/",
         views.CategoryDetailProductsStorefrontView.as_view(),
     ),
-    # path("dashboard/<int:id>/children/", views.CategoryChildrenViewDashboard.as_view()),
 ]
