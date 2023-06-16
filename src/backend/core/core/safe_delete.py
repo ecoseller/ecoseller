@@ -1,5 +1,4 @@
 from django.db import models
-from polymorphic.models import PolymorphicModel, PolymorphicManager
 
 
 class SafeDeleteManager(models.Manager):

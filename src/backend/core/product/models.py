@@ -14,7 +14,6 @@ from core.models import (
     SortableModel,
 )
 from country.models import Currency, VatGroup
-from core.safe_delete import SafeDeleteModel
 
 
 class ProductVariant(SafeDeleteModel):
