@@ -7,7 +7,6 @@ import parler.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("product", "0037_remove_baseattribute_ext_attributes_and_more"),
     ]

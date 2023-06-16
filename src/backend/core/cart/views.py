@@ -588,6 +588,14 @@ class PaymentMethodCountryDetailDashboardView(
     def get(self, request, id):
         return super().get(request, id)
 
+    @check_user_is_staff_decorator()
+    def put(self, request, id):
+        return super().update(request, id)
+
+    @check_user_is_staff_decorator()
+    def delete(self, request, id):
+        return super().destroy(request, id)
+
 
 class PaymentMethodCountryFullListView(ListCreateAPIView):
     permission_classes = (AllowAny,)
@@ -672,6 +680,7 @@ class ShippingMethodCountryDetailDashboardView(
     """
 
     permission_classes = (AllowAny,)
+
     allowed_methods = [
         "GET",
         "PUT",
@@ -691,3 +700,11 @@ class ShippingMethodCountryDetailDashboardView(
     @check_user_is_staff_decorator()
     def get(self, request, id):
         return super().get(request, id)
+
+    @check_user_is_staff_decorator()
+    def put(self, request, id):
+        return super().update(request, id)
+
+    @check_user_is_staff_decorator()
+    def delete(self, request, id):
+        return super().destroy(request, id)

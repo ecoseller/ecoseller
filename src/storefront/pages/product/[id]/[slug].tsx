@@ -164,8 +164,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       notFound: true,
     };
   }
-
-  const { country } = req.cookies;
+  let { country } = req.cookies;
 
   const countryDetail: ICountry = await countryDetailAPI(
     "GET",
@@ -174,12 +173,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     res as NextApiResponse
   );
 
-  const pricelist = "CZK_maloobchod";
+  country = countryDetail?.code;
+
+  console.log("country", country, countryDetail);
+  const pricelist = countryDetail?.default_price_list;
 
   const data: IProductDetail = await productAPI(
     idNumber,
     countryDetail?.code,
-    countryDetail?.default_price_list,
+    pricelist,
     req as NextApiRequest,
     res as NextApiResponse,
     language

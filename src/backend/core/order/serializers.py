@@ -4,6 +4,16 @@ from cart.serializers import CartSerializer
 from .models import Order
 
 
+class OrderSubmitSerializer(serializers.Serializer):
+    """
+    Serializer for submitting an order
+    """
+
+    cart_token = serializers.CharField(max_length=100)
+    marketing_flag = serializers.BooleanField(default=False)
+    agreed_to_terms = serializers.BooleanField(default=False)
+
+
 class OrderDetailSerializer(serializers.ModelSerializer):
     cart = CartSerializer()
 

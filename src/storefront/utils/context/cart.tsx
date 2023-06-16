@@ -50,6 +50,11 @@ interface ICartContext {
    * @param qty
    */
   updateQuantity: (sku: string, qty: number) => void;
+
+  /**
+   * Function for removing cart from user's session
+   */
+  clearCart: () => void;
 }
 
 interface ICartProviderProps {
@@ -159,12 +164,20 @@ export const CartProvider = ({ children }: ICartProviderProps): JSX.Element => {
     await refetchCart();
   };
 
+  const clearCart = () => {
+    setCart(null);
+    setCartSize(0);
+    setToken(null);
+    Cookies.remove(cartTokenCookie);
+  };
+
   const value = {
     cart,
     cartSize,
     addToCart,
     removeFromCart,
     updateQuantity,
+    clearCart,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

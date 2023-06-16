@@ -174,6 +174,38 @@ class Cart(models.Model):
         ShippingMethodCountry, null=True, on_delete=models.SET_NULL, related_name="+"
     )
 
+    def is_valid(self):
+        """
+        validate cart
+        * check if cart is not empty (has some cart_items)
+        * check if cart_items are instock
+        * check if has shipping_info
+        * check if has billing_info
+        * check if has payment_method_country
+        * check if has shipping_method_country
+        """
+
+        items = self.cart_items.all()
+        if not items or len(items) == 0:
+            raise "Cart is empty"
+        for item in items:
+            if item.product_variant.stock_quantity <= item.quantity:
+                raise f"Product {item.product_variant} is out of stock"
+
+        if not self.shipping_info:
+            raise "Shipping info is missing"
+
+        if not self.billing_info:
+            raise "Billing info is missing"
+
+        if not self.payment_method_country:
+            raise "Payment method country is missing"
+
+        if not self.shipping_method_country:
+            raise "Shipping method country is missing"
+
+        return True
+
     @property
     def total_items_price_net(self):
         """
@@ -209,6 +241,63 @@ class Cart(models.Model):
             if self.payment_method_country
             else 0
         )
+
+        return self.pricelist.format_price(
+            items_price + payment_method_price + shipping_method_price
+        )
+
+    @property
+    def total_items_price_gross(self):
+        """
+        Get total price (unit price * quantity) of the cart items
+        """
+        return sum(
+            [item.unit_price_gross * item.quantity for item in self.cart_items.all()]
+        )
+
+    @property
+    def total_items_price_gross_formatted(self):
+        """
+        Get total price (unit price * quantity) of the cart items with currency symbol
+
+        This price is intended to be shown to the user.
+        """
+        return self.pricelist.format_price(self.total_items_price_gross)
+
+    @property
+    def price_shipping_gross(self):
+        return (
+            self.shipping_method_country.price_incl_vat
+            if self.shipping_method_country
+            else 0
+        )
+
+    @property
+    def price_shipping_gross_formatted(self):
+        return self.pricelist.format_price(self.price_shipping_gross)
+
+    @property
+    def price_payment_gross(self):
+        return (
+            self.payment_method_country.price_incl_vat
+            if self.payment_method_country
+            else 0
+        )
+
+    @property
+    def price_payment_gross_formatted(self):
+        return self.pricelist.format_price(self.price_payment_gross)
+
+    @property
+    def total_price_gross_formatted(self):
+        """
+        Get total price of the cart (sum of prices of items, payment method and shipping method) with currency symbol
+
+        This price is intended to be shown to the user.
+        """
+        items_price = self.total_items_price_gross
+        payment_method_price = self.price_payment_gross
+        shipping_method_price = self.price_shipping_gross
 
         return self.pricelist.format_price(
             items_price + payment_method_price + shipping_method_price
@@ -263,6 +352,13 @@ class CartItem(models.Model):
     def _get_language(self):
         return self.cart.country.locale
 
+    def deduct_from_inventory(self):
+        """
+        Deduct quantity of this cart item from inventory
+        """
+        self.product_variant.stock_quantity -= self.quantity
+        self.product_variant.save()
+
     @property
     def product_variant_name(self):
         """
@@ -299,6 +395,32 @@ class CartItem(models.Model):
         total_price = self.unit_price_net * self.quantity
 
         return self.cart.pricelist.format_price(total_price)
+
+    @property
+    def total_price_gross_formatted(self):
+        """
+        Get total price (unit price * quantity) of this item with currency symbol
+
+        This price is intended to be shown to the user.
+        """
+        total_price = self.unit_price_gross * self.quantity
+
+        return self.cart.pricelist.format_price(total_price)
+
+    @property
+    def total_price_gross_before_discount_formatted(self):
+        """
+        Get total price before discount (unit price * quantity) of this item with currency symbol
+
+        This price is intended to be shown to the user.
+        """
+        if not self.discount or (self.discount == 0):
+            return self.total_price_gross_formatted
+
+        total_price = self.unit_price_gross * self.quantity
+        total_price_before_discount = total_price / (1 - self.discount / 100)
+
+        return self.cart.pricelist.format_price(total_price_before_discount)
 
     @property
     def unit_price_net_formatted(self):

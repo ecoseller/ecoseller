@@ -35,6 +35,7 @@ export const paymentMethodCountryDetailAPI = async (
         });
     case "PUT":
       const body = req?.body;
+      console.log("PUT PAYMNET COUNTRY", body, url);
       if (!body) throw new Error("Body is empty");
       return await api
         .put(url, body)
