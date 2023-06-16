@@ -14,9 +14,10 @@ from core.models import (
     SortableModel,
 )
 from country.models import Currency, VatGroup
+from core.safe_delete import SafeDeleteModel
 
 
-class ProductVariant(models.Model):
+class ProductVariant(SafeDeleteModel):
     sku = models.CharField(max_length=255, blank=True, primary_key=True, unique=True)
     ean = models.CharField(max_length=13, blank=True)
     weight = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -56,7 +57,7 @@ class ProductVariant(models.Model):
         RecommenderSystemApi.store_object(data=data)
 
 
-class ProductType(models.Model):
+class ProductType(SafeDeleteModel):
     name = models.CharField(max_length=200, blank=True, null=True)
     allowed_attribute_types = models.ManyToManyField("AttributeType", blank=True)
     vat_groups = models.ManyToManyField(
@@ -89,7 +90,7 @@ class ProductType(models.Model):
         RecommenderSystemApi.store_object(data=data)
 
 
-class Product(TranslatableModel):
+class Product(SafeDeleteModel, TranslatableModel):
     published = models.BooleanField(default=False)
     type = models.ForeignKey(
         "ProductType", on_delete=models.SET_NULL, null=True, blank=True
@@ -217,7 +218,7 @@ class AttributeTypeValueType:
     ]
 
 
-class AttributeType(TranslatableModel, models.Model):
+class AttributeType(SafeDeleteModel, TranslatableModel, models.Model):
     type_name = models.CharField(
         max_length=200,
         help_text="Type name of attribute (e.g. weight, size)",
@@ -277,7 +278,7 @@ class AttributeType(TranslatableModel, models.Model):
 #     )
 
 
-class BaseAttribute(TranslatableModel, models.Model):
+class BaseAttribute(SafeDeleteModel, TranslatableModel):
     type = models.ForeignKey(
         "AttributeType", on_delete=models.CASCADE, related_name="base_attributes"
     )
@@ -395,7 +396,7 @@ class ExtensionAttribute(models.Model):
 
 
 # Prices
-class PriceList(models.Model):
+class PriceList(SafeDeleteModel, models.Model):
     """
     This model represents an object directly linked from `Price` models
     This should contain basic information such as:
@@ -432,7 +433,7 @@ class PriceList(models.Model):
         return self.currency.format_price(price)
 
 
-class ProductPrice(models.Model):
+class ProductPrice(SafeDeleteModel):
     price_list = models.ForeignKey(
         PriceList, on_delete=models.CASCADE, blank=False, null=False
     )
@@ -530,7 +531,7 @@ def product_media_upload_path(instance, filename):
     )
 
 
-class ProductMedia(SortableModel):
+class ProductMedia(SafeDeleteModel, SortableModel):
     """
     Model used to store images for products (high level object - not variant)
     """
@@ -565,7 +566,7 @@ class ProductMedia(SortableModel):
         return self.product.product_media.all()
 
 
-class ProductVariantMedia(models.Model):
+class ProductVariantMedia(SafeDeleteModel):
     """
     Model used to store images for product variants (low level object)
     So that we can have different images for different variants of the same product

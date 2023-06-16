@@ -14,3 +14,6 @@ class PageQuerySet(TranslatableQuerySet, PolymorphicQuerySet):
 
 class PageManager(PolymorphicManager, TranslatableManager):
     queryset_class = PageQuerySet
+
+    def get_queryset(self):
+        return super().get_queryset().exclude(safe_deleted=True)

@@ -1,4 +1,5 @@
 from django.db import models
+from polymorphic.models import PolymorphicModel, PolymorphicManager
 
 
 class SafeDeleteManager(models.Manager):
@@ -8,6 +9,10 @@ class SafeDeleteManager(models.Manager):
 
     def get_queryset(self):
         return super().get_queryset().exclude(safe_deleted=True)
+
+
+class SafeDeletePolymorphicManager(PolymorphicManager, SafeDeleteManager):
+    pass
 
 
 class SafeDeleteModel(models.Model):

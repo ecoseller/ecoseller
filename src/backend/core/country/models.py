@@ -1,7 +1,8 @@
 from django.db import models
+from core.safe_delete import SafeDeleteModel
 
 
-class Country(models.Model):
+class Country(SafeDeleteModel):
     """
     Country model used for front-end translations, shipping costs and product price lists.
     """
@@ -20,7 +21,7 @@ class Country(models.Model):
         verbose_name_plural = "Countries"
 
 
-class Currency(models.Model):
+class Currency(SafeDeleteModel):
     """
     This model represents currency object which is used in `PriceList` model
     It helps to keep track of currency symbol and position
@@ -72,7 +73,7 @@ class Currency(models.Model):
         )
 
 
-class VatGroup(models.Model):
+class VatGroup(SafeDeleteModel):
     """
     This model represents VAT group object which is used in `PriceList` model
     It helps to keep track of VAT group name and rate
@@ -108,7 +109,7 @@ class VatGroup(models.Model):
         return "{} ({})".format(self.name, self.rate)
 
 
-class Address(models.Model):
+class Address(SafeDeleteModel):
     """
     Object representing address
     """

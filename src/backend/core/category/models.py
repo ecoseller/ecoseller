@@ -4,11 +4,11 @@ from parler.models import TranslatableModel, TranslatedFields
 from django_editorjs_fields import EditorJsJSONField
 from mptt.models import MPTTModel
 from mptt.fields import TreeForeignKey
-
+from core.safe_delete import SafeDeleteModel
 from api.recommender_system import RecommenderSystemApi
 
 
-class Category(MPTTModel, TranslatableModel):
+class Category(SafeDeleteModel, MPTTModel, TranslatableModel):
     parent = TreeForeignKey(
         "self", blank=True, null=True, related_name="children", on_delete=models.CASCADE
     )  # CASCADE when referenced category is deleted, delet all children

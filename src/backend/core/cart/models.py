@@ -15,13 +15,15 @@ from country.models import (
 from product.models import ProductVariant, Product, PriceList, ProductPrice
 from user.models import User
 
+from core.safe_delete import SafeDeleteModel
+
 
 def get_shipping_method_image_path(instance, filename):
     filename, file_extension = os.path.splitext(filename)
     return f"shipping_method/{instance.id}{file_extension}"
 
 
-class ShippingMethod(TranslatableModel):
+class ShippingMethod(SafeDeleteModel, TranslatableModel):
     """
     Shipping method object representing one shipping method.
     So for example: general "DHL", "UPS", "FedEx" etc.
@@ -41,7 +43,7 @@ class ShippingMethod(TranslatableModel):
         return self.safe_translation_getter("title", any_language=True) or f"{self.id}"
 
 
-class ShippingMethodCountry(models.Model):
+class ShippingMethodCountry(SafeDeleteModel):
     """
     Shipping method price object representing one shipping method price.
     So basically a binding between shipping method, country, vat group and price.
@@ -86,7 +88,7 @@ def get_payment_method_image_path(instance, filename):
     return f"payment_method/{instance.id}{file_extension}"
 
 
-class PaymentMethod(TranslatableModel):
+class PaymentMethod(SafeDeleteModel, TranslatableModel):
     """
     Payment method objects representing one payment method.
     so for example "cash on delivery", "bank transfer", "credit card" etc.
@@ -106,7 +108,7 @@ class PaymentMethod(TranslatableModel):
         return self.safe_translation_getter("title", any_language=True) or f"{self.id}"
 
 
-class PaymentMethodCountry(models.Model):
+class PaymentMethodCountry(SafeDeleteModel):
     """
     Payment method price object representing one payment method price.
     So basically a binding between payment method, country, vat group and price.
