@@ -50,7 +50,7 @@ class PageCategory(SafeDeleteModel, TranslatableModel, SortableModel):
     #     return self.safe_translation_getter("title", any_language=True)
 
 
-class Page(PolymorphicModel):
+class Page(PolymorphicModel, SafeDeleteModel):
     # The shared base model
     categories = models.ManyToManyField(PageCategory, blank=True, related_name="page")
     published = models.BooleanField(default=False)
@@ -61,7 +61,7 @@ class Page(PolymorphicModel):
         return str(self.get_real_instance())
 
 
-class PageCMS(SafeDeleteModel, Page, TranslatableModel):
+class PageCMS(Page, TranslatableModel):
     """
     CMS Page model
     Holds title, slug and content
@@ -83,7 +83,7 @@ class PageCMS(SafeDeleteModel, Page, TranslatableModel):
         return self.safe_translation_getter("title", any_language=True) or "--"
 
 
-class PageFrontend(SafeDeleteModel, Page, TranslatableModel):
+class PageFrontend(Page, TranslatableModel):
     """
     CMS Page model which has content on the frontend (storefront)
     so we store just title and frontend_path

@@ -11,10 +11,6 @@ class SafeDeleteManager(models.Manager):
         return super().get_queryset().exclude(safe_deleted=True)
 
 
-class SafeDeletePolymorphicManager(PolymorphicManager, SafeDeleteManager):
-    pass
-
-
 class SafeDeleteModel(models.Model):
     """
     Abstract model with a safe delete method and custom manager that
