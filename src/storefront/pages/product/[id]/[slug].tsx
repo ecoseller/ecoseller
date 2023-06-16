@@ -183,8 +183,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     countryDetail?.code,
     pricelist,
     req as NextApiRequest,
-    res as NextApiResponse,
-    language
+    res as NextApiResponse
   );
 
   console.log(data);

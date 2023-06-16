@@ -19,7 +19,15 @@ export const setAccessToken = (_accessToken: string) => {
   // accessToken = _accessToken;
 };
 
-export const getAccessToken = () => getCookie("accessToken", { req, res });
+const COOKIE_NAMES = {
+  LOCALE: "NEXT_LOCALE",
+  ACCESS_TOKEN: "accessToken",
+} as const;
+
+export const getAccessToken = () =>
+  getCookie(COOKIE_NAMES.ACCESS_TOKEN, { req, res });
+
+export const getLocale = () => getCookie(COOKIE_NAMES.LOCALE, { req, res });
 
 export const setRequestResponse = (
   _req: NextApiRequest,
@@ -42,9 +50,9 @@ api.interceptors.request.use((config) => {
 
   let access = "";
   if (isServer()) {
-    access = getCookie("accessToken", { req, res }) as string;
+    access = getCookie(COOKIE_NAMES.ACCESS_TOKEN, { req, res }) as string;
   } else {
-    access = Cookies.get("accessToken") || "";
+    access = Cookies.get(COOKIE_NAMES.ACCESS_TOKEN) || "";
   }
   if (!accessToken) {
     setAccessToken(access);
@@ -52,6 +60,13 @@ api.interceptors.request.use((config) => {
   if (accessToken) {
     config.headers.Authorization = `JWT ${accessToken}`;
   }
+
+  // set locale (if present)
+  const locale = getLocale();
+  if (locale) {
+    config.headers["Accept-Language"] = locale;
+  }
+
   return config;
 });
 
