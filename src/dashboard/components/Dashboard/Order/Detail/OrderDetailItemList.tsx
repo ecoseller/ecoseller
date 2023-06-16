@@ -183,8 +183,8 @@ const OrderDetailItemList = ({
       minWidth: 150,
     },
     {
-      field: "unit_price_net_formatted",
-      headerName: "Unit net price",
+      field: "unit_price_without_vat_formatted",
+      headerName: "Unit price (without VAT)",
       minWidth: 150,
     },
   ];
@@ -268,7 +268,8 @@ const OrderDetailItemList = ({
           <Grid container justifyContent="center" sx={{ my: 3 }}>
             <Grid item>
               <Typography variant="h6">
-                Total net price:&nbsp;{cart.total_items_price_net_formatted}
+                Total price (without VAT):&nbsp;
+                {cart.total_items_price_without_vat_formatted}
               </Typography>
             </Grid>
           </Grid>

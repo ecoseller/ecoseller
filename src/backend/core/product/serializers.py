@@ -1,39 +1,35 @@
 import re
-from core.mixins import (
-    TranslatedSerializerMixin,
+
+import filetype
+from django.db.models import (
+    Max,
 )
+from drf_extra_fields.fields import Base64FileField
+from parler_rest.serializers import (
+    TranslatableModelSerializer,
+    TranslatedFieldsField,
+)
+from rest_framework import serializers
 from rest_framework.serializers import (
     ModelSerializer,
     CharField,
     ValidationError,
     PrimaryKeyRelatedField,
 )
-from rest_framework import serializers
-
-from parler_rest.serializers import (
-    TranslatableModelSerializer,
-    TranslatedFieldsField,
-)
-
-from django.db.models import (
-    Max,
-)
-
-from country.models import (
-    VatGroup,
-)
-
-from drf_extra_fields.fields import Base64FileField
-import filetype
 
 from category.serializers import (
     CategorySerializer,
     CategoryMinimalSerializer,
 )
+from core.mixins import (
+    TranslatedSerializerMixin,
+)
+from country.models import (
+    VatGroup,
+)
 from country.serializers import (
     CurrencySerializer,
 )
-
 from product.models import (
     Product,
     ProductVariant,
@@ -614,18 +610,20 @@ class ProductVariantStorefrontDetailSerializer(ProductVariantSerializer):
             # if there is no vat group at all, we return None
             return None
 
-        price_net = price.price
-        price_gros = price.price_incl_vat(vat_group.rate)
-        print(price_net, price_gros, vat_group.rate)
+        price_without_vat = price.price
+        price_incl_vat = price.price_incl_vat(vat_group.rate)
+        print(price_without_vat, price_incl_vat, vat_group.rate)
 
         return {
-            "net": self.context["pricelist"].format_price(price_net),
-            "gross": self.context["pricelist"].format_price(price_gros),
+            "without_vat": self.context["pricelist"].format_price(price_without_vat),
+            "incl_vat": self.context["pricelist"].format_price(price_incl_vat),
             "vat": vat_group.rate,
             "discount": {
                 "percentage": price.discount,
-                "net": self.context["pricelist"].format_price(price.discounted_price),
-                "gross": self.context["pricelist"].format_price(
+                "without_vat": self.context["pricelist"].format_price(
+                    price.discounted_price
+                ),
+                "incl_vat": self.context["pricelist"].format_price(
                     price.discounted_price_incl_vat(vat_group.rate)
                 ),
             }

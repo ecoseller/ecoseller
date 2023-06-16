@@ -87,6 +87,20 @@ class CartDetailStorefrontView(APIView):
                 update_data = serializer.save()
 
                 cart = self._get_cart(token)
+
+                # Check if the product variant is already present in the cart
+                cart_item_filter = cart.cart_items.filter(
+                    product_variant__sku=update_data.sku
+                )
+
+                if (
+                    cart_item_filter.exists()
+                ):  # if already present, update its quantity instead of creating new `CartItem`
+                    cart_item = cart_item_filter.first()
+                    cart_item.quantity += update_data.quantity
+                    cart_item.save()
+                    return Response(status=HTTP_200_OK)
+
                 product_variant = ProductVariant.objects.get(sku=update_data.sku)
                 product = update_data.product
                 pricelist = update_data.pricelist
@@ -110,10 +124,10 @@ class CartDetailStorefrontView(APIView):
                     cart=cart,
                     product_variant=product_variant,
                     product=product,
-                    unit_price_gross=price.price
+                    unit_price_without_vat=price.price
                     if not price.discount
                     else price.discounted_price,
-                    unit_price_net=price.price_incl_vat(vat)
+                    unit_price_incl_vat=price.price_incl_vat(vat)
                     if not price.discount
                     else price.discounted_price_incl_vat(vat),
                     quantity=update_data.quantity,
@@ -173,10 +187,10 @@ class CartCreateStorefrontView(APIView):
                     cart=cart,
                     product_variant=product_variant,
                     product=product,
-                    unit_price_gross=price.price
+                    unit_price_without_vat=price.price
                     if not price.discount
                     else price.discounted_price,
-                    unit_price_net=price.price_incl_vat(vat)
+                    unit_price_incl_vat=price.price_incl_vat(vat)
                     if not price.discount
                     else price.discounted_price_incl_vat(vat),
                     quantity=update_data.quantity,

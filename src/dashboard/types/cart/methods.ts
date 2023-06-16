@@ -122,6 +122,7 @@ export interface ITranslatedMethodBase {
 export interface ITranslatedPaymentMethodCountryBase {
   id: number;
   payment_method: ITranslatedMethodBase;
+  price_without_vat: string;
   price_incl_vat: string;
 }
 
@@ -131,5 +132,6 @@ export interface ITranslatedPaymentMethodCountryBase {
 export interface ITranslatedShippingMethodCountryBase {
   id: number;
   shipping_method: ITranslatedMethodBase;
+  price_without_vat: string;
   price_incl_vat: string;
 }
