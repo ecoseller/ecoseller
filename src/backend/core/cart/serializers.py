@@ -62,10 +62,12 @@ class CartItemDetailSerializer(ModelSerializer):
             "product_variant_sku",
             "product_slug",
             "product_variant_name",
-            "unit_price_gross",
-            "unit_price_net",
-            "total_price_net_formatted",
-            "unit_price_net_formatted",
+            "unit_price_without_vat",
+            "unit_price_incl_vat",
+            "total_price_incl_vat_formatted",
+            "total_price_without_vat_formatted",
+            "unit_price_incl_vat_formatted",
+            "unit_price_without_vat_formatted",
             "quantity",
             "discount",
             "primary_image",
@@ -96,8 +98,10 @@ class CartSerializer(ModelSerializer):
             "token",
             "cart_items",
             "update_at",
-            "total_items_price_net_formatted",
-            "total_price_net_formatted",
+            "total_items_price_incl_vat_formatted",
+            "total_items_price_without_vat_formatted",
+            "total_price_incl_vat_formatted",
+            "total_price_without_vat_formatted",
             "shipping_method_country",
             "payment_method_country",
         )
@@ -332,14 +336,11 @@ class CartPaymentMethodCountrySerializer(ModelSerializer):
 
     payment_method = CartPaymentMethodSerializer(read_only=True)
     price_incl_vat = CharField(source="formatted_price_incl_vat")
+    price_without_vat = CharField(source="formatted_price_without_vat")
 
     class Meta:
         model = PaymentMethodCountry
-        fields = (
-            "id",
-            "payment_method",
-            "price_incl_vat",
-        )
+        fields = ("id", "payment_method", "price_incl_vat", "price_without_vat")
 
 
 class CartShippingMethodCountryBaseSerializer(ModelSerializer):
@@ -349,14 +350,11 @@ class CartShippingMethodCountryBaseSerializer(ModelSerializer):
 
     shipping_method = CartShippingMethodSerializer(read_only=True)
     price_incl_vat = CharField(source="formatted_price_incl_vat")
+    price_without_vat = CharField(source="formatted_price_without_vat")
 
     class Meta:
         model = ShippingMethodCountry
-        fields = (
-            "id",
-            "shipping_method",
-            "price_incl_vat",
-        )
+        fields = ("id", "shipping_method", "price_incl_vat", "price_without_vat")
 
 
 class CartShippingMethodCountrySerializer(CartShippingMethodCountryBaseSerializer):

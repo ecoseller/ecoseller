@@ -83,8 +83,8 @@ const OrderDetailWrapper = ({
       ...orderState,
       cart: {
         ...orderState.cart,
-        total_items_price_net_formatted:
-          order.cart.total_items_price_net_formatted,
+        total_items_price_without_vat_formatted:
+          order.cart.total_items_price_without_vat_formatted,
       },
     });
   };
@@ -133,13 +133,13 @@ const OrderDetailWrapper = ({
                 {shippingMethodCountry ? (
                   <OrderDetailMethod
                     method={shippingMethodCountry.shipping_method}
-                    formattedPrice={shippingMethodCountry.price_incl_vat}
+                    formattedPrice={shippingMethodCountry.price_without_vat}
                   />
                 ) : null}
                 {paymentMethodCountry ? (
                   <OrderDetailMethod
                     method={paymentMethodCountry.payment_method}
-                    formattedPrice={paymentMethodCountry.price_incl_vat}
+                    formattedPrice={paymentMethodCountry.price_without_vat}
                   />
                 ) : null}
               </CollapsableContentWithTitle>

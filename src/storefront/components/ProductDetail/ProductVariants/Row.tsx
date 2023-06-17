@@ -83,8 +83,8 @@ const ProductVariantRow = ({
       <Grid container item xs={5} sm={3} md={4} lg={2}>
         <Typography>
           {variant?.price?.discount
-            ? variant?.price?.discount.gross
-            : variant?.price?.gross}{" "}
+            ? variant?.price?.discount.incl_vat
+            : variant?.price?.incl_vat}{" "}
           {variant?.price?.discount ? (
             <span
               className="red-text"

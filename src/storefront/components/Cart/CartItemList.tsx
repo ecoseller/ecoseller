@@ -97,7 +97,7 @@ const CartItemList = ({ editable }: ICartItemListProps) => {
               </TableCell>
 
               <TableCell sx={{ fontWeight: 700 }} align="center">
-                {item.total_price_net_formatted}
+                {item.total_price_incl_vat_formatted}
               </TableCell>
 
               {editable ? (
@@ -119,7 +119,7 @@ const CartItemList = ({ editable }: ICartItemListProps) => {
         <Grid container justifyContent="center" sx={{ my: 3 }}>
           <Grid item>
             <Typography variant="h6">
-              Total price:&nbsp;{cart.total_items_price_net_formatted}
+              Total price:&nbsp;{cart.total_items_price_incl_vat_formatted}
             </Typography>
           </Grid>
         </Grid>
