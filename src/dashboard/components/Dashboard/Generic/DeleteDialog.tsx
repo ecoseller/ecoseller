@@ -34,8 +34,8 @@ const DeleteDialog = ({ open, setOpen, onDelete, text }: IDeleteDialog) => {
       </DialogContent>
       <DialogActions>
         <Button
-          color="primary"
-          variant="contained"
+          color="secondary"
+          // variant="contained"
           onClick={async () => {
             setOpen(false);
           }}
@@ -44,7 +44,7 @@ const DeleteDialog = ({ open, setOpen, onDelete, text }: IDeleteDialog) => {
           Cancel
         </Button>
         <Button
-          //   color="error"
+          color="error"
           onClick={() => {
             onDelete();
             setOpen(false);
