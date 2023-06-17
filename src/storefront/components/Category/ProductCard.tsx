@@ -25,8 +25,18 @@ const ProductCard = ({ product }: IProductCardProps) => {
   const imgHeight = isSmallScreen
     ? "100px"
     : isMediumScreen
-      ? "150px"
-      : "200px";
+    ? "150px"
+    : "200px";
+
+  // sort variant prices from cheapest to the most expensive
+  product.variant_prices.sort((p1, p2) => p1.incl_vat - p2.incl_vat);
+
+  const variantCount = product.variant_prices.length;
+  const cheapestVariantPrice = product.variant_prices[0];
+
+  const hasMultiplePrices =
+    cheapestVariantPrice.incl_vat ==
+    product.variant_prices[variantCount - 1].incl_vat;
 
   return (
     <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
@@ -54,8 +64,8 @@ const ProductCard = ({ product }: IProductCardProps) => {
       </NextLink>
       <CardActions sx={{ mt: "auto", ml: 1 }}>
         <Typography gutterBottom variant="h6" component="div">
-          {product.has_multiple_prices ? <span>From&nbsp;&nbsp;</span> : null}
-          {product.price}
+          {hasMultiplePrices ? <span>From&nbsp;&nbsp;</span> : null}
+          {cheapestVariantPrice.incl_vat_formatted}
         </Typography>
       </CardActions>
     </Card>

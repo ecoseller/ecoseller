@@ -66,10 +66,20 @@ export interface IProductDetail extends IProductBase, IBreadcrumbObject {
 }
 
 /**
+ * Interface representing price data of a product variant
+ */
+export interface IProductVariantPrice {
+  without_vat: number;
+  incl_vat: number;
+  without_vat_formatted: string;
+  incl_vat_formatted: string;
+  discount: number | null;
+}
+
+/**
  * Interface representing product record
  */
 export interface IProductRecord extends IProductBase {
   primary_image: IProductMedia;
-  price: string;
-  has_multiple_prices: boolean;
+  variant_prices: IProductVariantPrice[];
 }
