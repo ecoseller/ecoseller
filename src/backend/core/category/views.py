@@ -11,7 +11,6 @@ from rest_framework.status import (
     HTTP_404_NOT_FOUND,
 )
 from rest_framework.views import APIView
-from roles.decorator import check_user_access_decorator
 
 from category.models import Category
 from category.serializers import (
@@ -20,9 +19,10 @@ from category.serializers import (
     CategoryRecursiveStorefrontSerializer,
     CategoryDetailStorefrontSerializer,
 )
+from country.models import Country
 from product.models import Product, PriceList
 from product.serializers import ProductStorefrontListSerializer
-
+from roles.decorator import check_user_access_decorator
 from roles.decorator import check_user_is_staff_decorator
 
 
@@ -141,6 +141,7 @@ class CategoryDetailProductsStorefrontView(APIView):
     """
 
     PRICE_LIST_URL_PARAM = "pricelist"
+    COUNTRY_URL_PARAM = "country"
 
     def get(self, request, pk):
         try:
@@ -148,11 +149,12 @@ class CategoryDetailProductsStorefrontView(APIView):
             products = _get_all_published_products(category)
 
             pricelist = self._get_pricelist(request)
+            country = self._get_country(request)
 
             serializer = ProductStorefrontListSerializer(
                 products,
                 many=True,
-                context={"request": request, "pricelist": pricelist},
+                context={"request": request, "pricelist": pricelist, "country": country},
             )
 
             return Response(serializer.data)
@@ -160,7 +162,7 @@ class CategoryDetailProductsStorefrontView(APIView):
             return Response(status=HTTP_404_NOT_FOUND)
 
     def _get_pricelist(self, request):
-        # get price list from request params or default to the default one
+        """ get price list from request params or default to the default one """
         price_list_code = request.query_params.get(self.PRICE_LIST_URL_PARAM, None)
         if price_list_code:
             try:
@@ -169,6 +171,16 @@ class CategoryDetailProductsStorefrontView(APIView):
                 return PriceList.objects.get(is_default=True)
         else:
             return PriceList.objects.get(is_default=True)
+
+    def _get_country(self, request):
+        """ Get country URL param """
+        country_code = request.query_params.get(self.COUNTRY_URL_PARAM, None)
+        try:
+            return Country.objects.get(code=country_code)
+        except Country.DoesNotExist:
+            country = Country.objects.all().first()
+
+        return country
 
 
 def _get_all_subcategory_ids(category):
@@ -185,18 +197,3 @@ def _get_all_published_products(category):
     """
     subcategory_ids = _get_all_subcategory_ids(category)
     return Product.objects.filter(published=True, category__in=subcategory_ids)
-
-
-# @permission_classes([AllowAny])  # TODO: use authentication
-# class CategoryChildrenViewDashboard(APIView):
-#     """
-#     View for getting a category including its children categories
-#     """
-#
-#     def get(self, request, id):
-#         """
-#         Get a category including its children
-#         """
-#         category = Category.objects.get(id=id)
-#         serializer = CategoryWithChildrenSerializer(category)
-#         return Response(serializer.data)

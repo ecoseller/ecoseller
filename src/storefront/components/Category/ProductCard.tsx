@@ -25,8 +25,8 @@ const ProductCard = ({ product }: IProductCardProps) => {
   const imgHeight = isSmallScreen
     ? "100px"
     : isMediumScreen
-    ? "150px"
-    : "200px";
+      ? "150px"
+      : "200px";
 
   return (
     <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
@@ -52,7 +52,7 @@ const ProductCard = ({ product }: IProductCardProps) => {
           </Typography>
         </CardContent>
       </NextLink>
-      <CardActions sx={{ mt: "auto" }}>
+      <CardActions sx={{ mt: "auto", ml: 1 }}>
         <Typography gutterBottom variant="h6" component="div">
           {product.has_multiple_prices ? <span>From&nbsp;&nbsp;</span> : null}
           {product.price}

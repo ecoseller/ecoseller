@@ -94,7 +94,7 @@ class CartDetailStorefrontView(APIView):
                 )
 
                 if (
-                    cart_item_filter.exists()
+                        cart_item_filter.exists()
                 ):  # if already present, update its quantity instead of creating new `CartItem`
                     cart_item = cart_item_filter.first()
                     cart_item.quantity += update_data.quantity
@@ -124,12 +124,8 @@ class CartDetailStorefrontView(APIView):
                     cart=cart,
                     product_variant=product_variant,
                     product=product,
-                    unit_price_without_vat=price.price
-                    if not price.discount
-                    else price.discounted_price,
-                    unit_price_incl_vat=price.price_incl_vat(vat)
-                    if not price.discount
-                    else price.discounted_price_incl_vat(vat),
+                    unit_price_without_vat=price.discounted_price,
+                    unit_price_incl_vat=price.discounted_price_incl_vat(vat),
                     quantity=update_data.quantity,
                 )
                 cart_item.save()
@@ -187,12 +183,8 @@ class CartCreateStorefrontView(APIView):
                     cart=cart,
                     product_variant=product_variant,
                     product=product,
-                    unit_price_without_vat=price.price
-                    if not price.discount
-                    else price.discounted_price,
-                    unit_price_incl_vat=price.price_incl_vat(vat)
-                    if not price.discount
-                    else price.discounted_price_incl_vat(vat),
+                    unit_price_without_vat=price.discounted_price,
+                    unit_price_incl_vat=price.discounted_price_incl_vat(vat),
                     quantity=update_data.quantity,
                 )
                 cart_item.save()

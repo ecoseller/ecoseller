@@ -24,9 +24,6 @@ from category.serializers import (
 from core.mixins import (
     TranslatedSerializerMixin,
 )
-from country.models import (
-    VatGroup,
-)
 from country.serializers import (
     CurrencySerializer,
 )
@@ -578,9 +575,9 @@ class ProductVariantStorefrontDetailSerializer(ProductVariantSerializer):
     def get_price(self, obj):
         print("CONTEXT", self.context)
         if (
-            "pricelist" not in self.context
-            or "country" not in self.context
-            or "product_type" not in self.context
+                "pricelist" not in self.context
+                or "country" not in self.context
+                or "product_type" not in self.context
         ):
             return None
         try:
@@ -590,24 +587,11 @@ class ProductVariantStorefrontDetailSerializer(ProductVariantSerializer):
         except ProductPrice.DoesNotExist:
             return None
 
-        vat_group = (
-            self.context["product_type"]
-            .vat_groups.all()
-            .filter(country=self.context["country"])
-        ).first()
-
-        print(vat_group, self.context["product_type"], self.context["country"])
+        country = self.context["country"]
+        vat_group = country.get_vat_group(self.context["product_type"])
 
         if not vat_group:
-            # if there is no vat group for the country, we take the default one
-            vat_group = VatGroup.objects.filter(
-                country=self.context["country"], is_default=True
-            ).first()
-        if not vat_group:
-            # if there is no default vat group, we take the first one
-            vat_group = VatGroup.objects.filter(country=self.context["country"]).first()
-        if not vat_group:
-            # if there is no vat group at all, we return None
+            # if there is no vat group found, we return None
             return None
 
         price_without_vat = price.price
@@ -634,6 +618,49 @@ class ProductVariantStorefrontDetailSerializer(ProductVariantSerializer):
         # # price_serializer = ProductPriceSerializer(price)
         # formatted_price = self.context["pricelist"].format_price(price.price)
         # return formatted_price  # price_serializer.data
+
+
+class ProductVariantStorefrontPriceSerializer(ModelSerializer):
+    """
+    Serializes product variant's price
+    """
+    price = serializers.SerializerMethodField()
+
+    def get_price(self, obj):
+        if (
+                "pricelist" not in self.context
+                or "country" not in self.context
+                or "product_type" not in self.context
+        ):
+            return None
+
+        country, pricelist, product_type = self.context["country"], self.context["pricelist"], self.context[
+            "product_type"]
+
+        try:
+            price = ProductPrice.objects.get(product_variant=obj, price_list=pricelist)
+        except ProductPrice.DoesNotExist:
+            return None
+
+        vat_group = country.get_vat_group(product_type)
+
+        if not vat_group:
+            # if there is no vat group found, we return None
+            return None
+
+        price_without_vat = price.discounted_price
+        price_incl_vat = price.discounted_price_incl_vat(vat_group.rate)
+
+        return {
+            "without_vat": pricelist.format_price(price_without_vat),
+            "incl_vat": pricelist.format_price(price_incl_vat),
+            "vat": vat_group.rate,
+            "discount": price.discount
+        }
+
+    class Meta:
+        model = ProductVariant
+        fields = ("price",)
 
 
 class ProductStorefrontDetailSerializer(TranslatedSerializerMixin, ModelSerializer):
@@ -684,49 +711,10 @@ class ProductStorefrontListSerializer(TranslatedSerializerMixin, ModelSerializer
     Only one translation is returned (see TranslatedSerializerMixin)
     """
 
+    variant_prices = serializers.SerializerMethodField()
     primary_image = ProductMediaBaseSerializer(
         read_only=True, many=False, source="get_primary_photo"
     )
-
-    price = serializers.SerializerMethodField()
-    has_multiple_prices = serializers.SerializerMethodField()
-
-    def _get_variant_prices(self, product):
-        """
-        Get all product variants prices of the given product.
-        Price list is taken from self.context.
-        """
-        price_list = self.context.get("pricelist")
-        variants = product.product_variants.all()
-
-        return ProductPrice.objects.filter(
-            product_variant__in=variants, price_list=price_list
-        )
-
-    def _get_cheapest_variant(self, product):
-        """
-        Return the cheapest variant of the given product, or None if there are no variants.
-        Price list is taken from self.context.
-        """
-        variant_prices = self._get_variant_prices(product)
-        return variant_prices.order_by("price").first()
-
-    def get_price(self, product):
-        cheapest_variant = self._get_cheapest_variant(product)
-        return (
-            cheapest_variant.formatted_price if cheapest_variant is not None else None
-        )
-
-    def get_has_multiple_prices(self, product):
-        cheapest_variant = self._get_cheapest_variant(product)
-        if cheapest_variant is None:
-            return False
-        else:
-            return (
-                self._get_variant_prices(product)
-                .filter(price__gt=cheapest_variant.price)
-                .exists()
-            )
 
     class Meta:
         model = Product
@@ -737,9 +725,21 @@ class ProductStorefrontListSerializer(TranslatedSerializerMixin, ModelSerializer
             "meta_description",
             "slug",
             "primary_image",
-            "price",
-            "has_multiple_prices",
+            "variant_prices",
         )
+
+    def get_variant_prices(self, product):
+        variants = product.product_variants.all()
+
+        serialized_data = []
+        for v in variants:
+            variant_context = self.context.copy()
+            variant_context["product_type"] = product.type
+
+            serializer = ProductVariantStorefrontPriceSerializer(v, context=variant_context)
+            serialized_data.append(serializer.data["price"])
+
+        return serialized_data
 
 
 class ProductCartSerializer(TranslatedSerializerMixin, ModelSerializer):

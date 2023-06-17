@@ -13,6 +13,8 @@ export const categoryProductsAPI = async (
 
   const url = `/category/storefront/${id}/products?pricelist=${pricelist}`;
 
+  console.log(url);
+
   return await api.get(url).then((response) => response.data);
 };
 
