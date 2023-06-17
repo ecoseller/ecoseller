@@ -622,23 +622,25 @@ class ProductVariantStorefrontDetailSerializer(ProductVariantSerializer):
 
 class ProductVariantStorefrontPriceSerializer(ModelSerializer):
     """
-    Serializes product variant's price
-    """
-    price = serializers.SerializerMethodField()
+    Serializes product variant's price.
 
-    def get_price(self, obj):
-        if (
-                "pricelist" not in self.context
-                or "country" not in self.context
-                or "product_type" not in self.context
-        ):
+    This serializer is intended only for SERIALIZATION
+    """
+
+    def to_representation(self, instance):
+        country, pricelist, product_type = (
+            self.context.get("country", None),
+            self.context.get("pricelist", None),
+            self.context.get("product_type", None),
+        )
+
+        if country is None or pricelist is None or product_type is None:
             return None
 
-        country, pricelist, product_type = self.context["country"], self.context["pricelist"], self.context[
-            "product_type"]
-
         try:
-            price = ProductPrice.objects.get(product_variant=obj, price_list=pricelist)
+            price = ProductPrice.objects.get(
+                product_variant=instance, price_list=pricelist
+            )
         except ProductPrice.DoesNotExist:
             return None
 
@@ -652,15 +654,12 @@ class ProductVariantStorefrontPriceSerializer(ModelSerializer):
         price_incl_vat = price.discounted_price_incl_vat(vat_group.rate)
 
         return {
-            "without_vat": pricelist.format_price(price_without_vat),
-            "incl_vat": pricelist.format_price(price_incl_vat),
-            "vat": vat_group.rate,
-            "discount": price.discount
+            "without_vat": price_without_vat,
+            "incl_vat": price_incl_vat,
+            "without_vat_formatted": pricelist.format_price(price_without_vat),
+            "incl_vat_formatted": pricelist.format_price(price_incl_vat),
+            "discount": price.discount,
         }
-
-    class Meta:
-        model = ProductVariant
-        fields = ("price",)
 
 
 class ProductStorefrontDetailSerializer(TranslatedSerializerMixin, ModelSerializer):
@@ -736,8 +735,10 @@ class ProductStorefrontListSerializer(TranslatedSerializerMixin, ModelSerializer
             variant_context = self.context.copy()
             variant_context["product_type"] = product.type
 
-            serializer = ProductVariantStorefrontPriceSerializer(v, context=variant_context)
-            serialized_data.append(serializer.data["price"])
+            serializer = ProductVariantStorefrontPriceSerializer(
+                v, context=variant_context
+            )
+            serialized_data.append(serializer.data)
 
         return serialized_data
 

@@ -25,17 +25,11 @@ class Country(models.Model):
 
         Returns `VatGroup` object if there's any, or `None`
         """
-        vat_group = (
-            product_type
-            .vat_groups.all()
-            .filter(country=self)
-        ).first()
+        vat_group = (product_type.vat_groups.all().filter(country=self)).first()
 
         if not vat_group:
             # if there is no vat group for the country, we take the default one
-            vat_group = VatGroup.objects.filter(
-                country=self, is_default=True
-            ).first()
+            vat_group = VatGroup.objects.filter(country=self, is_default=True).first()
         if not vat_group:
             # if there is no default vat group, we take the first one
             vat_group = VatGroup.objects.filter(country=self).first()
@@ -85,7 +79,7 @@ class Currency(models.Model):
         Formats price according to currency symbol and position
         """
         if (
-                price % 1 == 0
+            price % 1 == 0
         ):  # If it's a whole number, convert it to int, to make sure there aren't any decimal places
             price = int(price)
 
