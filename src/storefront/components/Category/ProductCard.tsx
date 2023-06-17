@@ -7,6 +7,9 @@ import Typography from "@mui/material/Typography";
 import React from "react";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { is } from "immutable";
+import { number } from "prop-types";
+import DiscountText from "@/components/Generic/DiscountText";
 
 interface IProductCardProps {
   product: IProductRecord;
@@ -35,8 +38,28 @@ const ProductCard = ({ product }: IProductCardProps) => {
   const cheapestVariantPrice = product.variant_prices[0];
 
   const hasMultiplePrices =
-    cheapestVariantPrice.incl_vat ==
+    cheapestVariantPrice.incl_vat !=
     product.variant_prices[variantCount - 1].incl_vat;
+
+  const discounts = product.variant_prices.map((p) => p.discount || 0);
+
+  discounts.sort((d1, d2) => d2 - d1);
+
+  const renderDiscountIfAny = () => {
+    const maxDiscount = discounts[0];
+    const minDiscount = discounts[discounts.length - 1];
+
+    return (
+      <>
+        {maxDiscount > 0 ? (
+          <DiscountText
+            discount={maxDiscount}
+            includeUpTo={minDiscount != maxDiscount}
+          />
+        ) : null}
+      </>
+    );
+  };
 
   return (
     <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
@@ -66,6 +89,8 @@ const ProductCard = ({ product }: IProductCardProps) => {
         <Typography gutterBottom variant="h6" component="div">
           {hasMultiplePrices ? <span>From&nbsp;&nbsp;</span> : null}
           {cheapestVariantPrice.incl_vat_formatted}
+          &nbsp;
+          {renderDiscountIfAny()}
         </Typography>
       </CardActions>
     </Card>

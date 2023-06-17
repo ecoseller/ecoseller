@@ -14,6 +14,7 @@ import TableHead from "@mui/material/TableHead";
 import ImageThumbnail from "@/components/Generic/ImageThumbnail";
 import NextLink from "next/link";
 import MUILink from "@mui/material/Link";
+import DiscountText from "@/components/Generic/DiscountText";
 
 interface ICartItemListProps {
   editable: boolean;
@@ -92,7 +93,7 @@ const CartItemList = ({ editable }: ICartItemListProps) => {
 
               <TableCell align="center" sx={{ fontWeight: 700 }}>
                 {item.discount ? (
-                  <span className="red-text">-{item.discount} %</span>
+                  <DiscountText discount={item.discount} />
                 ) : null}
               </TableCell>
 

@@ -88,6 +88,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const products: IProductRecord[] = await categoryProductsAPI(
     idNumber.toString(),
+    countryDetail.code,
     pricelist,
     req as NextApiRequest,
     res as NextApiResponse

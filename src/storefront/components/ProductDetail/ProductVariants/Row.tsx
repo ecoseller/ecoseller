@@ -31,6 +31,7 @@ import Grid from "@mui/material/Grid";
 import { Typography, useMediaQuery, useTheme } from "@mui/material";
 import { serializeAttributes } from "@/utils/attributes";
 import QuantitySelect from "@/components/Common/QuantitySelect";
+import DiscountText from "@/components/Generic/DiscountText";
 
 const StockQuantity = ({ quantity }: { quantity: number }) => {
   if (quantity > 5) {
@@ -85,15 +86,8 @@ const ProductVariantRow = ({
           {variant?.price?.discount
             ? variant?.price?.discount.incl_vat
             : variant?.price?.incl_vat}{" "}
-          {variant?.price?.discount ? (
-            <span
-              className="red-text"
-              style={{
-                fontSize: "0.8rem",
-              }}
-            >
-              (-{variant?.price?.discount?.percentage} %)
-            </span>
+          {variant?.price?.discount?.percentage ? (
+            <DiscountText discount={variant?.price?.discount?.percentage} />
           ) : null}
         </Typography>
       </Grid>

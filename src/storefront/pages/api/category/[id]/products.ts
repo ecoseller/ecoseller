@@ -3,6 +3,7 @@ import { api, setRequestResponse } from "@/utils/interceptors/api";
 
 export const categoryProductsAPI = async (
   id: string,
+  country: string,
   pricelist: string,
   req: NextApiRequest,
   res: NextApiResponse
@@ -11,7 +12,7 @@ export const categoryProductsAPI = async (
     setRequestResponse(req, res);
   }
 
-  const url = `/category/storefront/${id}/products?pricelist=${pricelist}`;
+  const url = `/category/storefront/${id}/products?country=${country}&pricelist=${pricelist}`;
 
   console.log(url);
 
@@ -23,11 +24,12 @@ export const categoryProductsAPI = async (
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;
-  const { id, pricelist } = req.query;
+  const { id, country, pricelist } = req.query;
 
   if (method == "GET") {
     return categoryProductsAPI(
       id?.toString() || "",
+      pricelist?.toString() || "",
       pricelist?.toString() || "",
       req,
       res
