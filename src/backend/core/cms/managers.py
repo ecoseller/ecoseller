@@ -2,7 +2,6 @@ from parler.managers import TranslatableManager, TranslatableQuerySet
 from polymorphic.managers import PolymorphicManager
 from polymorphic.query import PolymorphicQuerySet
 
-
 """"
 This is for Polymorphic translatable models
 """

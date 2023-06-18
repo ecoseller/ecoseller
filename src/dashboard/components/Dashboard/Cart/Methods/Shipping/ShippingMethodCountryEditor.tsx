@@ -43,6 +43,7 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { Typography } from "@mui/material";
 import { useSnackbarState } from "@/utils/snackbar";
+import DeleteDialog from "@/components/Dashboard/Generic/DeleteDialog";
 
 interface IShippingMethodCountryTable extends IShippingMethodCountry {
   isNew: boolean;
@@ -111,7 +112,9 @@ const ShippingMethodCountryEditor = ({
   );
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [snackbar, setSnackbar] = useSnackbarState();
-
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<number | undefined>(
+    undefined
+  );
   const validateRow = (row: IShippingMethodCountryTable) => {
     if (row.price === undefined || row.price === null) {
       setSnackbar({
@@ -267,7 +270,7 @@ const ShippingMethodCountryEditor = ({
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
-  const handleDeleteClick = (id: GridRowId) => () => {
+  const handleDeleteClick = (id: GridRowId) => {
     // delete row with id
     fetch(`/api/cart/shipping-method/country/${id}`, {
       method: "DELETE",
@@ -549,7 +552,7 @@ const ShippingMethodCountryEditor = ({
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={handleDeleteClick(id)}
+            onClick={() => setOpenDeleteDialog(id as number)}
             color="inherit"
             key={"delete"}
           />,
@@ -609,6 +612,15 @@ const ShippingMethodCountryEditor = ({
           </Alert>
         </Snackbar>
       ) : null}
+      <DeleteDialog
+        open={openDeleteDialog !== undefined}
+        setOpen={() => setOpenDeleteDialog(undefined)}
+        onDelete={async () => {
+          if (openDeleteDialog === undefined) return;
+          handleDeleteClick(openDeleteDialog);
+        }}
+        text="this payment method"
+      />
     </EditorCard>
   );
 };

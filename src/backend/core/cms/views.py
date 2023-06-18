@@ -36,7 +36,10 @@ class PageDashboardView(APIView):
         """
         Gets all pages.
         """
-        pages = Page.objects.all()
+
+        pages = Page.objects.all().exclude(
+            safe_deleted=True
+        )  # even though we have a custom manager, we still need to exclude soft deleted objects here because of polymorphic
         serializer = PagePolymorphicDashboardSerializer(pages, many=True)
         print(serializer.data)
         return Response(serializer.data)
