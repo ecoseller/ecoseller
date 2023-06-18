@@ -22,25 +22,19 @@ class ReviewCreateStorefrontView(APIView):
         rating = request.data.get("rating")
         comment = request.data.get("comment")
 
-        print("IN CREATE BE")
         try:
             product = Product.objects.get(id=product_id)
             product_variant = ProductVariant.objects.get(sku=product_variant_sku)
             order = Order.objects.get(token=order_id)
         except ProductVariant.DoesNotExist:
-            print("PRODUCT NOT FOUND")
             return Response(status=404)
         except Order.DoesNotExist:
-            print("ORDER NOT FOUND")
             return Response(status=404)
 
-        print("ORDER STATUS: ", order.status)
         if order.status != OrderStatus.SHIPPED:
-            print("ORDER NOT SHIPPED")
             return Response(status=403)
 
         if Review.objects.filter(product_variant=product_variant, order=order).exists():
-            print("REVIEW EXISTS")
             return Response(status=403)
 
         review = Review.objects.create(
@@ -80,5 +74,15 @@ class ProductReviewListStorefrontView(APIView):
 
     def get(self, request, product_id):
         reviews = Review.objects.filter(product__sku=product_id)
+        serializer = ReviewSerializer(reviews, many=True)
+        return Response(serializer.data)
+
+
+class ReviewListDashboardView(APIView):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = ReviewSerializer
+
+    def get(self, request):
+        reviews = Review.objects.all()
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data)
