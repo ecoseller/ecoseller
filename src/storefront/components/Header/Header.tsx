@@ -23,7 +23,7 @@ import InfoBar from "./InfoBar";
 import Menu from "./MegaMenu/Menu";
 import User from "./Icons/User";
 import Cart from "./Icons/Cart";
-import Search from "./Icons/Search";
+import SearchButton from "./Icons/Search";
 // utils
 // styles
 import styles from "@/styles/Header.module.scss";
@@ -88,7 +88,7 @@ const DashboardHeader = ({}: IDashboardHeaderProps) => {
                 sm: 5,
               }}
             >
-              <Search />
+              <SearchButton />
               <User />
               <Cart />
             </Stack>
