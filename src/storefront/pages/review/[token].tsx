@@ -31,16 +31,39 @@ import {
     NextApiResponse,
 } from "next/types";
 import { orderItemsAPI } from "../api/order/items/[id]";
+import { Container } from "@mui/material";
+import { useState } from "react";
+import CollapsableContentWithTitle from "@/components/Generic/CollapsableContentWithTitle";
+import EditorCard from "@/components/Generic/EditorCard";
+import ReviewForm from "@/components/Review/ReviewForm";
+import { IItem } from "@/types/review";
 
 interface IReviewPageProps {
-    items: string[];
+    items: IItem[];
 }
 
 
-const ReviewPage = () => {
+const ReviewPage = ({ items }: IReviewPageProps) => {
     const { basePath } = useRouter();
+    const [itemsState, setItemsState] = useState(items);
 
     return (
+        <Container maxWidth="xl">
+            {
+                itemsState.map((item) => {
+                    return (
+                        <Box sx={{ mb: 2 }}>
+                            <EditorCard>
+                                <Grid item xs={12} md={4}>
+                                    <ReviewForm product_id={item.product_id} product_variant_name={item.product_variant_name} />
+                                </Grid>
+                            </EditorCard>
+                        </Box>
+                    )
+                }
+                )
+            }
+        </Container>
     );
 };
 
@@ -50,7 +73,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     console.log(token);
 
-    const data: IReviewPageProps = await orderItemsAPI(
+    const data = await orderItemsAPI(
         "GET",
         token as string,
         req as NextApiRequest,
@@ -58,6 +81,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     );
 
     console.log(data);
+    let items = [];
+    if (data) {
+        for (let i = 0; i < data.items.length; i++) {
+            items.push({
+                product_variant_name: data.items[i].product_variant_name as string,
+                product_id: data.items[i].product_id as number
+            });
+        }
+    }
+
+    console.log("ITEMS", items);
 
     // if (!data) {
     // } else if (data.slug && data.slug !== slug) {
@@ -65,6 +99,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     return {
         props: {
+            items: items,
         },
     };
 };

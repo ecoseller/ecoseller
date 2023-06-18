@@ -168,15 +168,10 @@ class OrderItemsListStorefrontView(ListAPIView):
     permission_classes = (permissions.AllowAny,)
 
     def get(self, request, token):
-        user = request.user
-        if user is None or not user.is_authenticated:
-            return Response({"error": "User is not authenticated"}, status=400)
         try:
             order = Order.objects.get(token=token)
         except Order.DoesNotExist:
             return Response({"error": "Order does not exist"}, status=400)
-        if order.cart.user != user:
-            return Response({"error": "Order does not belong to user"}, status=400)
         cartItems = CartItem.objects.filter(cart=order.cart)
         print("CART ITEMS", cartItems)
         items = []
