@@ -42,11 +42,12 @@ const ReviewForm = ({ item, order_id }: IReviewProps) => {
     const [hover, setHover] = useState(-1);
 
     const submitReview = async () => {
-        await fetch(`/api/review/storefront/create/`, {
+        await fetch(`/api/review/create/`, {
             method: "POST",
             body: JSON.stringify({
                 order: order_id,
-                product: item.product_id,
+                product_id: item.product_id,
+                product_variant_sku: item.product_variant_sku,
                 rating: value,
                 comment: reviewText,
             }),

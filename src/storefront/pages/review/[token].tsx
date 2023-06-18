@@ -72,8 +72,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const { token } = context.query;
     const { res, req } = context;
 
-    console.log(token);
-
     const data = await orderItemsAPI(
         "GET",
         token as string,
@@ -87,16 +85,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         for (let i = 0; i < data.items.length; i++) {
             items.push({
                 product_variant_name: data.items[i].product_variant_name as string,
-                product_id: data.items[i].product_id as number
+                product_id: data.items[i].product_id as number,
+                product_variant_sku: data.items[i].product_variant_sku as string,
             });
         }
     }
-
-    console.log("ITEMS", items);
-
-    // if (!data) {
-    // } else if (data.slug && data.slug !== slug) {
-    // }
 
     return {
         props: {
