@@ -20,27 +20,19 @@ import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import CloseIcon from "@mui/icons-material/Close";
 import { useRouter } from "next/router";
 
-const SearchButton = ({}) => {
-  // return !open ? (
-  //   <IconButton
-  //     size="small"
-  //     sx={{ ml: 2 }}
-  //     onClick={() => {
-  //       setOpen(true);
-  //     }}
-  //   >
-  //     <SearchIcon />
-  //   </IconButton>
-  // ) : (
-  //   <>
-
-  //   </>
-  // );
-
+const SearchButton = ({
+  mobile,
+  mobileOpen,
+  setMobileOpen,
+}: {
+  mobile: boolean;
+  mobileOpen: boolean;
+  setMobileOpen: (b: boolean) => void;
+}) => {
   const [query, setQuery] = useState("");
-
   const router = useRouter();
 
   const handleClickSearch = () => {
@@ -48,22 +40,50 @@ const SearchButton = ({}) => {
     router.push(`/search/${query}`);
   };
 
+  if (mobile && !mobileOpen)
+    return (
+      <IconButton
+        onClick={() => setMobileOpen(true)}
+        edge="end"
+        aria-label="search"
+      >
+        <SearchIcon />
+      </IconButton>
+    );
+
   return (
-    <FormControl sx={{ m: 1, width: "20ch" }} variant="outlined">
-      <InputLabel htmlFor="outlined-adornment-password">Search</InputLabel>
-      <OutlinedInput
-        type="text"
-        endAdornment={
-          <InputAdornment position="end">
-            <IconButton onClick={handleClickSearch} edge="end">
-              <SearchIcon />
-            </IconButton>
-          </InputAdornment>
-        }
-        label="Search"
-        onChange={(e) => setQuery(e.target.value)}
-      />
-    </FormControl>
+    <>
+      <FormControl
+        sx={{
+          m: 1,
+          width: "20ch",
+        }}
+        variant="outlined"
+      >
+        <InputLabel htmlFor="outlined-adornment-password">Search</InputLabel>
+        <OutlinedInput
+          type="text"
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton onClick={handleClickSearch} edge="end">
+                <SearchIcon />
+              </IconButton>
+            </InputAdornment>
+          }
+          label="Search"
+          onChange={(e) => setQuery(e.target.value)}
+        />
+      </FormControl>
+      {mobile && mobileOpen && (
+        <IconButton
+          onClick={() => setMobileOpen(false)}
+          edge="end"
+          aria-label="search"
+        >
+          <CloseIcon />
+        </IconButton>
+      )}
+    </>
   );
 };
 
