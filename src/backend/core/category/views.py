@@ -19,6 +19,7 @@ from category.serializers import (
     CategoryRecursiveStorefrontSerializer,
     CategoryDetailStorefrontSerializer,
 )
+from common.common import get_url_param_if_valid
 from country.models import Country
 from product.models import Product, PriceList
 from product.serializers import ProductStorefrontListSerializer
@@ -133,6 +134,15 @@ class CategoryDetailStorefrontView(APIView):
             return Response(status=HTTP_404_NOT_FOUND)
 
 
+def _get_min_variant_price(serialized_product):
+    """
+    Get minimal price of the serialized product variant prices
+    """
+    return min(
+        serialized_product["variant_prices"], key=lambda variant: variant["incl_vat"]
+    )["incl_vat"]
+
+
 @permission_classes([AllowAny])
 class CategoryDetailProductsStorefrontView(APIView):
     """
@@ -142,12 +152,39 @@ class CategoryDetailProductsStorefrontView(APIView):
 
     PRICE_LIST_URL_PARAM = "pricelist"
     COUNTRY_URL_PARAM = "country"
+    SORT_URL_PARAM = "sort"
+    ORDER_URL_PARAM = "order"
+
+    ALLOWED_ORDER_FIELDS = ["asc", "desc"]
+    SORT_FIELDS_CONFIG = {
+        "title": {},
+        "price": {"sort_function": _get_min_variant_price},
+    }
 
     def get(self, request, pk):
         try:
             category = Category.objects.get(id=pk, published=True)
-            products = _get_all_published_products(category)
 
+            # Get and process sort & order params
+            sort_by = get_url_param_if_valid(
+                request, self.SORT_URL_PARAM, self.SORT_FIELDS_CONFIG
+            )
+            order = get_url_param_if_valid(
+                request,
+                self.ORDER_URL_PARAM,
+                self.ALLOWED_ORDER_FIELDS,
+                default_param_value="asc",
+            )
+
+            is_reverse_order = order == "desc"
+            sort_key_function = (
+                self.SORT_FIELDS_CONFIG[sort_by]["sort_function"]
+                if "sort_function" in self.SORT_FIELDS_CONFIG[sort_by]
+                else lambda p: p[sort_by]
+            ) if sort_by is not None else None
+
+            # Get related objects
+            products = _get_all_published_products(category)
             pricelist = self._get_pricelist(request)
             country = self._get_country(request)
 
@@ -161,7 +198,11 @@ class CategoryDetailProductsStorefrontView(APIView):
                 },
             )
 
-            return Response(serializer.data)
+            sorted_data = sorted(
+                serializer.data, key=sort_key_function, reverse=is_reverse_order
+            ) if sort_by is not None else serializer.data
+
+            return Response(sorted_data)
         except Category.DoesNotExist:
             return Response(status=HTTP_404_NOT_FOUND)
 

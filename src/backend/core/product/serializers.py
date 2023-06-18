@@ -575,9 +575,9 @@ class ProductVariantStorefrontDetailSerializer(ProductVariantSerializer):
     def get_price(self, obj):
         print("CONTEXT", self.context)
         if (
-                "pricelist" not in self.context
-                or "country" not in self.context
-                or "product_type" not in self.context
+            "pricelist" not in self.context
+            or "country" not in self.context
+            or "product_type" not in self.context
         ):
             return None
         try:
