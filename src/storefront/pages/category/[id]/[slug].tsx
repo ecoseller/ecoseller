@@ -11,7 +11,9 @@ import HeadMeta from "@/components/Common/SEO";
 import { useRouter } from "next/router";
 import ProductGrid from "@/components/Category/ProductGrid";
 import { IProductRecord } from "@/types/product";
-import { categoryProductsAPI } from "@/pages/api/category/[id]/products";
+import products, {
+  categoryProductsAPI,
+} from "@/pages/api/category/[id]/products";
 import { categoryDetailAPI } from "@/pages/api/category/[id]";
 import Divider from "@mui/material/Divider";
 import BreadcrumbCategoryNav from "@/components/Common/BreadcrumbCategoryNav";
@@ -20,14 +22,42 @@ import { ICountry } from "@/types/country";
 import { countryDetailAPI } from "@/pages/api/country/[code]";
 import { getCookie } from "cookies-next";
 import { DEFAULT_COUNTRY } from "@/utils/defaults";
+import React, { useState } from "react";
+import { getCategoryProducts } from "@/api/category/products";
+import { ButtonGroup, FormControl, Grid, Select } from "@mui/material";
+import MenuItem from "@mui/material/MenuItem";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import ProductSortSelect from "@/components/Category/ProductSortSelect";
 
 interface ICategoryPageProps {
   category: ICategoryDetail;
   products: IProductRecord[];
+  countryCode: string;
+  pricelist: string;
 }
 
-const CategoryPage = ({ category, products }: ICategoryPageProps) => {
+const CategoryPage = ({
+  category,
+  products,
+  countryCode,
+  pricelist,
+}: ICategoryPageProps) => {
   const router = useRouter();
+
+  const [productsState, setProductsState] = useState(products);
+
+  const sortProducts = (sortBy: string, order: string) => {
+    getCategoryProducts(
+      category.id,
+      pricelist,
+      countryCode,
+      sortBy,
+      order
+    ).then((data) => {
+      setProductsState(data);
+    });
+  };
 
   return (
     <>
@@ -45,12 +75,13 @@ const CategoryPage = ({ category, products }: ICategoryPageProps) => {
         {category.children.length > 0 ? (
           <>
             <SubCategoryList subCategories={category.children} />
-            <Divider sx={{ my: 3 }} />
+            <Divider sx={{ my: 2 }} />
           </>
         ) : null}
         <ProductFilters />
-        <Divider sx={{ my: 3 }} />
-        <ProductGrid products={products} />
+        <Divider sx={{ my: 2 }} />
+        <ProductSortSelect sortProducts={sortProducts} />
+        <ProductGrid products={productsState} />
       </div>
     </>
   );
@@ -111,6 +142,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     props: {
       category,
       products,
+      countryCode: countryDetail.code,
+      pricelist,
     },
   };
 };

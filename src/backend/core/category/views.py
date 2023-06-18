@@ -152,7 +152,7 @@ class CategoryDetailProductsStorefrontView(APIView):
 
     PRICE_LIST_URL_PARAM = "pricelist"
     COUNTRY_URL_PARAM = "country"
-    SORT_URL_PARAM = "sort"
+    SORT_URL_PARAM = "sort_by"
     ORDER_URL_PARAM = "order"
 
     ALLOWED_ORDER_FIELDS = ["asc", "desc"]
@@ -178,10 +178,14 @@ class CategoryDetailProductsStorefrontView(APIView):
 
             is_reverse_order = order == "desc"
             sort_key_function = (
-                self.SORT_FIELDS_CONFIG[sort_by]["sort_function"]
-                if "sort_function" in self.SORT_FIELDS_CONFIG[sort_by]
-                else lambda p: p[sort_by]
-            ) if sort_by is not None else None
+                (
+                    self.SORT_FIELDS_CONFIG[sort_by]["sort_function"]
+                    if "sort_function" in self.SORT_FIELDS_CONFIG[sort_by]
+                    else lambda p: p[sort_by]
+                )
+                if sort_by is not None
+                else None
+            )
 
             # Get related objects
             products = _get_all_published_products(category)
@@ -198,9 +202,11 @@ class CategoryDetailProductsStorefrontView(APIView):
                 },
             )
 
-            sorted_data = sorted(
-                serializer.data, key=sort_key_function, reverse=is_reverse_order
-            ) if sort_by is not None else serializer.data
+            sorted_data = (
+                sorted(serializer.data, key=sort_key_function, reverse=is_reverse_order)
+                if sort_by is not None
+                else serializer.data
+            )
 
             return Response(sorted_data)
         except Category.DoesNotExist:

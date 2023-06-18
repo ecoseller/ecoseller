@@ -6,15 +6,22 @@ export const categoryProductsAPI = async (
   country: string,
   pricelist: string,
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
+  sortBy?: string,
+  order?: string
 ) => {
   if (req && res) {
     setRequestResponse(req, res);
   }
 
-  const url = `/category/storefront/${id}/products?country=${country}&pricelist=${pricelist}`;
+  let url = `/category/storefront/${id}/products?country=${country}&pricelist=${pricelist}`;
 
-  console.log(url);
+  if (sortBy) {
+    url += `&sort_by=${sortBy}`;
+  }
+  if (order) {
+    url += `&order=${order}`;
+  }
 
   return await api.get(url).then((response) => response.data);
 };
@@ -24,7 +31,7 @@ export const categoryProductsAPI = async (
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;
-  const { id, country, pricelist } = req.query;
+  const { id, country, pricelist, sort_by, order } = req.query;
 
   if (method == "GET") {
     return categoryProductsAPI(
@@ -32,7 +39,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       pricelist?.toString() || "",
       pricelist?.toString() || "",
       req,
-      res
+      res,
+      sort_by?.toString(),
+      order?.toString()
     )
       .then((data) => res.json(data))
       .catch((error) => res.status(400).json(null));

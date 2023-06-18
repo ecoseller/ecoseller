@@ -5,7 +5,6 @@ import { Grid } from "@mui/material";
 import PaperItem from "@/components/Generic/PaperItem";
 import CollapsableContentWithTitle from "@/components/Generic/CollapsableContentWithTitle";
 import NextLink from "next/link";
-import MUILink from "@mui/material/Link";
 
 interface ISubCategoryListProps {
   subCategories: ICategoryBase[];
