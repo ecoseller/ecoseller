@@ -5,8 +5,9 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
+import { useRouter } from "next/router";
 
 interface IProductSortSelectProps {
   sortProducts: (sortBy: string, order: string) => void;
@@ -37,7 +38,7 @@ const availableOrderings: { [key: string]: IOrderingType } = {
   titleDesc: {
     sortBy: "title",
     order: "desc",
-    description: "Title Z - A",
+    description: "Title: Z - A",
   },
 };
 
@@ -47,7 +48,14 @@ const availableOrderings: { [key: string]: IOrderingType } = {
  * @constructor
  */
 const ProductSortSelect = ({ sortProducts }: IProductSortSelectProps) => {
+  const router = useRouter();
+  const { id } = router.query;
+
   const [selectedOrderingName, setSelectedOrderingName] = useState("");
+
+  useEffect(() => {
+    setSelectedOrderingName("");
+  }, [id]);
 
   const handleChange = (event: SelectChangeEvent) => {
     const orderingName = event.target.value;

@@ -11,9 +11,7 @@ import HeadMeta from "@/components/Common/SEO";
 import { useRouter } from "next/router";
 import ProductGrid from "@/components/Category/ProductGrid";
 import { IProductRecord } from "@/types/product";
-import products, {
-  categoryProductsAPI,
-} from "@/pages/api/category/[id]/products";
+import { categoryProductsAPI } from "@/pages/api/category/[id]/products";
 import { categoryDetailAPI } from "@/pages/api/category/[id]";
 import Divider from "@mui/material/Divider";
 import BreadcrumbCategoryNav from "@/components/Common/BreadcrumbCategoryNav";
@@ -22,13 +20,9 @@ import { ICountry } from "@/types/country";
 import { countryDetailAPI } from "@/pages/api/country/[code]";
 import { getCookie } from "cookies-next";
 import { DEFAULT_COUNTRY } from "@/utils/defaults";
-import React, { useState } from "react";
-import { getCategoryProducts } from "@/api/category/products";
-import { ButtonGroup, FormControl, Grid, Select } from "@mui/material";
-import MenuItem from "@mui/material/MenuItem";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
+import React, { useEffect, useState } from "react";
 import ProductSortSelect from "@/components/Category/ProductSortSelect";
+import { getCategoryProducts } from "@/api/category/products";
 
 interface ICategoryPageProps {
   category: ICategoryDetail;
@@ -44,8 +38,13 @@ const CategoryPage = ({
   pricelist,
 }: ICategoryPageProps) => {
   const router = useRouter();
+  const { id } = router.query;
 
-  const [productsState, setProductsState] = useState(products);
+  const [productsState, setProductsState] = useState<IProductRecord[]>([]);
+
+  useEffect(() => {
+    setProductsState(products);
+  }, [id]);
 
   const sortProducts = (sortBy: string, order: string) => {
     getCategoryProducts(

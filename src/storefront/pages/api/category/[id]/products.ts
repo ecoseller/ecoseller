@@ -36,7 +36,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (method == "GET") {
     return categoryProductsAPI(
       id?.toString() || "",
-      pricelist?.toString() || "",
+      country?.toString() || "",
       pricelist?.toString() || "",
       req,
       res,
