@@ -33,6 +33,7 @@ import {
 } from "@/api/cms/category/type/type";
 import EditorCard from "@/components/Dashboard/Generic/EditorCard";
 import { useSnackbarState } from "@/utils/snackbar";
+import DeleteDialog from "@/components/Dashboard/Generic/DeleteDialog";
 
 interface IPageCategoryTypeTable extends IPageCategoryType {
   isNew: boolean;
@@ -77,6 +78,10 @@ const PageCategoryTypeList = ({ types }: IPageTypeListProps) => {
   const [rows, setRows] = useState<IPageCategoryTypeTable[]>(
     types as IPageCategoryTypeTable[]
   );
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<number | undefined>(
+    undefined
+  );
+
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [snackbar, setSnackbar] = useSnackbarState();
 
@@ -119,7 +124,7 @@ const PageCategoryTypeList = ({ types }: IPageTypeListProps) => {
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={handleDeleteClick(id)}
+            onClick={() => setOpenDeleteDialog(id as number)}
             color="inherit"
             key={"delete"}
           />,
@@ -146,7 +151,7 @@ const PageCategoryTypeList = ({ types }: IPageTypeListProps) => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
-  const handleDeleteClick = (id: GridRowId) => () => {
+  const handleDeleteClick = (id: GridRowId) => {
     deletePageCategoryType(id as number)
       .then((res) => {
         setSnackbar({
@@ -300,6 +305,15 @@ const PageCategoryTypeList = ({ types }: IPageTypeListProps) => {
           </Alert>
         </Snackbar>
       ) : null}
+      <DeleteDialog
+        open={openDeleteDialog !== undefined}
+        setOpen={() => setOpenDeleteDialog(undefined)}
+        onDelete={async () => {
+          if (openDeleteDialog === undefined) return;
+          handleDeleteClick(openDeleteDialog);
+        }}
+        text="this product type"
+      />
     </div>
   );
 };

@@ -1,16 +1,16 @@
 .slider {
-  width: 500px;
+  width: 100%;
   height: auto;
   position: relative;
 
   .slider_holder {
-    width: 550px;
+    width: 100%;
     height: 100%;
     position: relative;
     z-index: 1;
 
     .slider_items_wrapper {
-      width: 550px;
+      width: 100%;
       height: 100%;
 
       a {
@@ -25,12 +25,12 @@
         position: relative;
 
         .slide_wrapper {
-          width: 550px;
+          width: 100%;
           height: 100%;
           position: relative;
 
           .content_holder {
-            width: 550px;
+            width: 100%;
             height: 100%;
             display: flex;
             flex-direction: column;

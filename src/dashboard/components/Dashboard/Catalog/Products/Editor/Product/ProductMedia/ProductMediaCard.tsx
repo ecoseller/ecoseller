@@ -13,6 +13,7 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import imgPath from "@/utils/imgPath";
 import { usePermission } from "@/utils/context/permission";
+import DeleteDialog from "@/components/Dashboard/Generic/DeleteDialog";
 // types
 
 export interface CardProps {
@@ -61,6 +62,8 @@ const ProductMediaCard = ({
   updateCard,
   removeCard,
 }: CardProps) => {
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
+
   // this code is highly inspired by official react-dnd example
   const ref = useRef<HTMLDivElement>(null);
   const [previousIndex, setPreviousIndex] = useState<number | undefined>(index);
@@ -166,7 +169,7 @@ const ProductMediaCard = ({
         <div>
           <Button
             onClick={() => {
-              removeCard();
+              setOpenDeleteDialog(true);
             }}
             disabled={!hasPermission}
           >
@@ -174,6 +177,14 @@ const ProductMediaCard = ({
           </Button>
         </div>
       </Stack>
+      <DeleteDialog
+        open={openDeleteDialog}
+        setOpen={() => setOpenDeleteDialog(false)}
+        onDelete={() => {
+          removeCard();
+        }}
+        text="this payment method"
+      />
     </ProductMediaItem>
   );
 };

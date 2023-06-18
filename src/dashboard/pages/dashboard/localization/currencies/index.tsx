@@ -44,6 +44,7 @@ import {
 import { useSnackbarState } from "@/utils/snackbar";
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
 import { currencyListAPI } from "@/pages/api/country/currency";
+import DeleteDialog from "@/components/Dashboard/Generic/DeleteDialog";
 
 interface ICurrencyTable extends ICurrency {
   isNew?: boolean;
@@ -96,6 +97,9 @@ const DashboardCurrencyPage = ({ currencies }: { currencies: ICurrency[] }) => {
   }, [currencies]);
 
   const [rows, setRows] = useState<ICurrencyTable[]>([]);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<string | undefined>(
+    undefined
+  );
 
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 
@@ -173,7 +177,7 @@ const DashboardCurrencyPage = ({ currencies }: { currencies: ICurrency[] }) => {
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={handleDeleteClick(id)}
+            onClick={() => setOpenDeleteDialog(id as string)}
             color="inherit"
             key={"delete"}
           />,
@@ -206,7 +210,7 @@ const DashboardCurrencyPage = ({ currencies }: { currencies: ICurrency[] }) => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
-  const handleDeleteClick = (id: GridRowId) => () => {
+  const handleDeleteClick = (id: GridRowId) => {
     const deletedRow = rows.find((row) => row.id === id);
     if (deletedRow && !deletedRow!.isNew) {
       deleteCurrency(deletedRow.code)
@@ -381,6 +385,14 @@ const DashboardCurrencyPage = ({ currencies }: { currencies: ICurrency[] }) => {
           </Alert>
         </Snackbar>
       ) : null}
+      <DeleteDialog
+        open={openDeleteDialog !== undefined}
+        setOpen={() => setOpenDeleteDialog(undefined)}
+        onDelete={async () => {
+          handleDeleteClick(openDeleteDialog as string);
+        }}
+        text="this product type"
+      />
     </DashboardLayout>
   );
 };

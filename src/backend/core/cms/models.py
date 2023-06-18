@@ -6,6 +6,7 @@ from core.models import (
     SortableModel,
 )
 from .managers import PageManager
+from core.safe_delete import SafeDeleteModel
 
 
 def upload_page_category_image_location(instance, filename):
@@ -13,7 +14,7 @@ def upload_page_category_image_location(instance, filename):
     return "cms/category/%s.%s" % (filebase, extension)
 
 
-class PageCategoryType(models.Model):
+class PageCategoryType(SafeDeleteModel):
     identifier = models.CharField(max_length=100, unique=True)
 
     class Meta:
@@ -24,7 +25,7 @@ class PageCategoryType(models.Model):
         return self.identifier
 
 
-class PageCategory(TranslatableModel, SortableModel):
+class PageCategory(SafeDeleteModel, TranslatableModel, SortableModel):
     published = models.BooleanField(default=False)
     type = models.ManyToManyField(PageCategoryType, blank=True)
     code = models.CharField(
@@ -49,7 +50,7 @@ class PageCategory(TranslatableModel, SortableModel):
     #     return self.safe_translation_getter("title", any_language=True)
 
 
-class Page(PolymorphicModel):
+class Page(PolymorphicModel, SafeDeleteModel):
     # The shared base model
     categories = models.ManyToManyField(PageCategory, blank=True, related_name="page")
     published = models.BooleanField(default=False)

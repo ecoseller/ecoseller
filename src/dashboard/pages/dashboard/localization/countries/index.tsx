@@ -50,6 +50,7 @@ import { ICountry } from "@/types/country";
 import { countryListAPI } from "@/pages/api/country";
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
 import { pricelistListAPI } from "@/pages/api/product/price-list";
+import DeleteDialog from "@/components/Dashboard/Generic/DeleteDialog";
 
 interface ICountryTable extends ICountry {
   isNew?: boolean;
@@ -108,7 +109,9 @@ const DashboardCountryPage = ({ countries, pricelists }: IProps) => {
   );
 
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
-
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<string | undefined>(
+    undefined
+  );
   console.log("countries", rows);
 
   const columns: GridColDef[] = [
@@ -205,7 +208,7 @@ const DashboardCountryPage = ({ countries, pricelists }: IProps) => {
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={handleDeleteClick(id)}
+            onClick={() => setOpenDeleteDialog(id as string)}
             color="inherit"
             key={"delete"}
           />,
@@ -238,7 +241,7 @@ const DashboardCountryPage = ({ countries, pricelists }: IProps) => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
-  const handleDeleteClick = (id: GridRowId) => () => {
+  const handleDeleteClick = (id: GridRowId) => {
     const deletedRow = rows.find((row) => row.id === id);
     if (deletedRow && !deletedRow!.isNew) {
       deleteCountry(deletedRow!.code)
@@ -428,6 +431,14 @@ const DashboardCountryPage = ({ countries, pricelists }: IProps) => {
           </Alert>
         </Snackbar>
       ) : null}
+      <DeleteDialog
+        open={openDeleteDialog !== undefined}
+        setOpen={() => setOpenDeleteDialog(undefined)}
+        onDelete={async () => {
+          handleDeleteClick(openDeleteDialog as string);
+        }}
+        text="this attribute type"
+      />
     </DashboardLayout>
   );
 };

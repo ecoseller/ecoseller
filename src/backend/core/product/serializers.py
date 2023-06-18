@@ -24,6 +24,9 @@ from category.serializers import (
 from core.mixins import (
     TranslatedSerializerMixin,
 )
+from country.models import (
+    VatGroup,
+)
 from country.serializers import (
     CurrencySerializer,
 )
@@ -495,7 +498,7 @@ class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSeriali
         # overload update method to to save nested product_variants as well
         # uses update_or_create to update existing variants
         product_variants_validated_data = validated_data.pop("product_variants", [])
-
+        print("product_variants_validated_data", product_variants_validated_data)
         # update product
         instance = super().update(instance, validated_data)
         if len(product_variants_validated_data) > 0:
@@ -505,7 +508,6 @@ class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSeriali
             product_variants = product_variants_serializer.update(
                 instance.product_variants.all(), product_variants_validated_data
             )
-
             instance.product_variants.set(product_variants)
         else:
             instance.product_variants.clear()

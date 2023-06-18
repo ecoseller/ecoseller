@@ -27,6 +27,7 @@ import { generalSnackbarError, useSnackbarState } from "@/utils/snackbar";
 import SnackbarWithAlert from "@/components/Dashboard/Generic/SnackbarWithAlert";
 import DeleteEntityButton from "@/components/Dashboard/Generic/DeleteEntityButton";
 import { PermissionProvider } from "@/utils/context/permission";
+import DeleteDialog from "@/components/Dashboard/Generic/DeleteDialog";
 
 interface ICategoryEditorWrapperProps {
   initialCategory: ICategoryEditable;
@@ -92,7 +93,7 @@ const CategoryEditorWrapper = ({
     initialCategory
   );
   const [snackbar, setSnackbar] = useSnackbarState();
-
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -263,10 +264,20 @@ const CategoryEditorWrapper = ({
           />
         </Grid>
       </Grid>
-      {creatingNew ? null : <DeleteEntityButton onDelete={deleteCat} />}
+      {creatingNew ? null : (
+        <DeleteEntityButton onDelete={() => setOpenDeleteDialog(true)} />
+      )}
       {snackbar ? (
         <SnackbarWithAlert snackbarData={snackbar} setSnackbar={setSnackbar} />
       ) : null}
+      <DeleteDialog
+        open={openDeleteDialog}
+        setOpen={setOpenDeleteDialog}
+        onDelete={async () => {
+          await deleteCat();
+        }}
+        text="this category"
+      />
     </EditableContentWrapper>
   );
 };

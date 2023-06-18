@@ -43,6 +43,7 @@ import { vatGroupAPI } from "@/pages/api/country/vat-group";
 import RootLayout from "@/pages/layout";
 import { countryListAPI } from "@/pages/api/country";
 import { useSnackbarState } from "@/utils/snackbar";
+import DeleteDialog from "@/components/Dashboard/Generic/DeleteDialog";
 
 interface IVatGroupTable extends IVatGroup {
   id: number;
@@ -92,7 +93,9 @@ const DashboardVatGroupPage = ({
   countries,
 }: IDashboardVatGroupPageProps) => {
   console.log("vatGroups", vatGroups);
-
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<string | undefined>(
+    undefined
+  );
   const [rows, setRows] = useState<IVatGroupTable[]>(
     vatGroups.map((row: IVatGroup) => ({
       ...row,
@@ -271,7 +274,7 @@ const DashboardVatGroupPage = ({
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
-  const handleDeleteClick = (id: GridRowId) => () => {
+  const handleDeleteClick = (id: GridRowId) => {
     // delete row with id
     fetch(`/api/country/vat-group/${id}/`, {
       method: "DELETE",
@@ -397,7 +400,7 @@ const DashboardVatGroupPage = ({
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={handleDeleteClick(id)}
+            onClick={() => setOpenDeleteDialog(id as string)}
             color="inherit"
             key={"delete"}
           />,
@@ -458,6 +461,14 @@ const DashboardVatGroupPage = ({
               </Alert>
             </Snackbar>
           ) : null}
+          <DeleteDialog
+            open={openDeleteDialog !== undefined}
+            setOpen={() => setOpenDeleteDialog(undefined)}
+            onDelete={async () => {
+              handleDeleteClick(openDeleteDialog as string);
+            }}
+            text="this vat-group"
+          />
         </FormControl>
       </Box>
     </DashboardLayout>

@@ -43,7 +43,7 @@ export const currencyListAPI = async (
           return data;
         })
         .catch((error: any) => {
-          console.log("currencyApi", error?.data);
+          console.log("currencyApi", error?.response?.data);
           throw error;
         });
     default:

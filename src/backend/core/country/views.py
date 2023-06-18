@@ -156,9 +156,11 @@ class CurrencyListView(GenericAPIView):
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
+        print(request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)
+        print(serializer.errors)
         return Response(serializer.errors, status=400)
 
 
