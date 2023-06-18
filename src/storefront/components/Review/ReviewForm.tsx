@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import FormControl from "@mui/material/FormControl";
 import EditorCard from "@/components/Generic/EditorCard";
-import { Button, Rating, TextField } from "@mui/material";
+import { Alert, Button, Rating, Snackbar, TextField } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import { IUser } from "@/types/user";
 import CollapsableContentWithTitle from "../Generic/CollapsableContentWithTitle";
@@ -15,6 +15,11 @@ import { IItem } from "@/types/review";
 interface IReviewProps {
     item: IItem;
     order_id: string;
+    showSnackbar: (
+        res: Response,
+        messageSuccess: string,
+        messageError: string
+    ) => void;
 }
 
 const labels: { [index: string]: string } = {
@@ -35,14 +40,16 @@ function getLabelText(value: number) {
 }
 
 
-const ReviewForm = ({ item, order_id }: IReviewProps) => {
+const ReviewForm = ({ item, order_id, showSnackbar }: IReviewProps) => {
 
     const [reviewText, setReviewText] = useState<string>("")
     const [value, setValue] = useState<number | null>(5);
     const [hover, setHover] = useState(-1);
 
+
     const submitReview = async () => {
-        await fetch(`/api/review/create/`, {
+        console.log("SUBMIT REVIEW")
+        fetch(`/api/review/create/`, {
             method: "POST",
             body: JSON.stringify({
                 order: order_id,
@@ -52,10 +59,9 @@ const ReviewForm = ({ item, order_id }: IReviewProps) => {
                 comment: reviewText,
             }),
         })
-            .then((res) => res.json())
-            .then((data) => {
-                console.log(data);
-            })
+            .then((res) => {
+                showSnackbar(res, "Review submitted", "Error submitting review");
+            });
     }
 
     return (

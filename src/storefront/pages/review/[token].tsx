@@ -31,12 +31,13 @@ import {
     NextApiResponse,
 } from "next/types";
 import { orderItemsAPI } from "../api/order/items/[id]";
-import { Container } from "@mui/material";
+import { Alert, Container, Snackbar } from "@mui/material";
 import { useState } from "react";
 import CollapsableContentWithTitle from "@/components/Generic/CollapsableContentWithTitle";
 import EditorCard from "@/components/Generic/EditorCard";
 import ReviewForm from "@/components/Review/ReviewForm";
 import { IItem } from "@/types/review";
+import { useSnackbarState } from "@/utils/snackbar";
 
 interface IReviewPageProps {
     items: IItem[];
@@ -48,6 +49,41 @@ const ReviewPage = ({ items, order_id }: IReviewPageProps) => {
     const { basePath } = useRouter();
     const [itemsState, setItemsState] = useState(items);
 
+    const [snackbar, setSnackbar] = useSnackbarState();
+
+    const handleSnackbarClose = (
+        event?: React.SyntheticEvent | Event,
+        reason?: string
+    ) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setSnackbar(null);
+    };
+
+    const showSnackbar = (
+        res: Response,
+        messageSuccess: string,
+        messageError: string
+    ) => {
+        console.log("showSnackbar", res)
+        if (res?.ok) {
+            console.log("success snackbar", res);
+            setSnackbar({
+                open: true,
+                message: messageSuccess,
+                severity: "success",
+            });
+        } else {
+            console.log("error snackbar", res);
+            setSnackbar({
+                open: true,
+                message: messageError,
+                severity: "error",
+            });
+        }
+    };
+
     return (
         <Container maxWidth="xl">
             {
@@ -56,7 +92,7 @@ const ReviewPage = ({ items, order_id }: IReviewPageProps) => {
                         <Box sx={{ mb: 2 }}>
                             <EditorCard>
                                 <Grid item xs={12} md={4}>
-                                    <ReviewForm item={item} order_id={order_id} />
+                                    <ReviewForm item={item} order_id={order_id} showSnackbar={showSnackbar} />
                                 </Grid>
                             </EditorCard>
                         </Box>
@@ -64,6 +100,21 @@ const ReviewPage = ({ items, order_id }: IReviewPageProps) => {
                 }
                 )
             }
+            {snackbar ? (
+                <Snackbar
+                    open={snackbar.open}
+                    autoHideDuration={6000}
+                    onClose={handleSnackbarClose}
+                >
+                    <Alert
+                        onClose={handleSnackbarClose}
+                        severity={snackbar.severity}
+                        sx={{ width: "100%" }}
+                    >
+                        {snackbar.message}
+                    </Alert>
+                </Snackbar>
+            ) : null}
         </Container>
     );
 };

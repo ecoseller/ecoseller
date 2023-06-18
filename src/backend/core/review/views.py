@@ -2,6 +2,8 @@ from rest_framework.views import APIView
 from rest_framework import permissions
 from rest_framework.response import Response
 
+from order.models import OrderStatus
+
 from .serializers import ReviewSerializer
 from .models import Review
 
@@ -32,10 +34,13 @@ class ReviewCreateStorefrontView(APIView):
             print("ORDER NOT FOUND")
             return Response(status=404)
 
-        if order.status != "SHIPPED":
+        print("ORDER STATUS: ", order.status)
+        if order.status != OrderStatus.SHIPPED:
+            print("ORDER NOT SHIPPED")
             return Response(status=403)
 
-        if Review.objects.filter(product=product, order=order).exists():
+        if Review.objects.filter(product_variant=product_variant, order=order).exists():
+            print("REVIEW EXISTS")
             return Response(status=403)
 
         review = Review.objects.create(
@@ -45,7 +50,7 @@ class ReviewCreateStorefrontView(APIView):
             comment=comment,
             product_variant=product_variant,
         )
-        return Response({"token": review.token}, status=201)
+        return Response(status=201)
 
 
 class ReviewDetailDashboardView(APIView):
