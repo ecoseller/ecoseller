@@ -16,6 +16,8 @@ class ReviewCreateStorefrontView(APIView):
     def post(self, request):
         product_id = request.data.get("product")
         order_id = request.data.get("order")
+        rating = request.data.get("rating")
+        comment = request.data.get("comment")
         try:
             product = ProductVariant.objects.get(sku=product_id)
             order = Order.objects.get(token=order_id)
@@ -30,11 +32,13 @@ class ReviewCreateStorefrontView(APIView):
         if Review.objects.filter(product=product, order=order).exists():
             return Response(status=403)
 
-        review = Review.objects.create(product=product, order=order)
+        review = Review.objects.create(
+            product=product, order=order, rating=rating, comment=comment
+        )
         return Response({"token": review.token}, status=201)
 
 
-class ReviewDetailView(APIView):
+class ReviewDetailDashboardView(APIView):
     permission_classes = (permissions.AllowAny,)
     serializer_class = ReviewSerializer
 
@@ -43,18 +47,6 @@ class ReviewDetailView(APIView):
             review = Review.objects.get(token=token)
             serializer = ReviewSerializer(review)
             return Response(serializer.data)
-        except Review.DoesNotExist:
-            return Response(status=404)
-
-    def put(self, request, token):
-        try:
-            review = Review.objects.get(token=token)
-            serializer = ReviewSerializer(review, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(status=204)
-            else:
-                return Response(serializer.errors, status=400)
         except Review.DoesNotExist:
             return Response(status=404)
 
