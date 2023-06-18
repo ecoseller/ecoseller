@@ -40,10 +40,11 @@ import { IItem } from "@/types/review";
 
 interface IReviewPageProps {
     items: IItem[];
+    order_id: string;
 }
 
 
-const ReviewPage = ({ items }: IReviewPageProps) => {
+const ReviewPage = ({ items, order_id }: IReviewPageProps) => {
     const { basePath } = useRouter();
     const [itemsState, setItemsState] = useState(items);
 
@@ -55,7 +56,7 @@ const ReviewPage = ({ items }: IReviewPageProps) => {
                         <Box sx={{ mb: 2 }}>
                             <EditorCard>
                                 <Grid item xs={12} md={4}>
-                                    <ReviewForm product_id={item.product_id} product_variant_name={item.product_variant_name} />
+                                    <ReviewForm item={item} order_id={order_id} />
                                 </Grid>
                             </EditorCard>
                         </Box>
@@ -69,7 +70,7 @@ const ReviewPage = ({ items }: IReviewPageProps) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { token } = context.query;
-    const { res, req, locale } = context;
+    const { res, req } = context;
 
     console.log(token);
 
@@ -100,6 +101,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
         props: {
             items: items,
+            order_id: token,
         },
     };
 };

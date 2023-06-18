@@ -13,7 +13,8 @@ import StarIcon from '@mui/icons-material/Star';
 import { IItem } from "@/types/review";
 
 interface IReviewProps {
-    item: string;
+    item: IItem;
+    order_id: string;
 }
 
 const labels: { [index: string]: string } = {
@@ -34,19 +35,31 @@ function getLabelText(value: number) {
 }
 
 
-const ReviewForm = ({ product_id, product_variant_name }: IItem) => {
+const ReviewForm = ({ item, order_id }: IReviewProps) => {
 
     const [reviewText, setReviewText] = useState<string>("")
     const [value, setValue] = useState<number | null>(5);
     const [hover, setHover] = useState(-1);
 
-    const submitReview = () => {
-        // submit review
+    const submitReview = async () => {
+        await fetch(`/api/review/storefront/create/`, {
+            method: "POST",
+            body: JSON.stringify({
+                order: order_id,
+                product: item.product_id,
+                rating: value,
+                comment: reviewText,
+            }),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data);
+            })
     }
 
     return (
         <EditorCard>
-            <CollapsableContentWithTitle title={product_variant_name}>
+            <CollapsableContentWithTitle title={item.product_variant_name}>
                 <Box mt={2}>
                     <FormControl fullWidth>
                         <Stack spacing={2}>
