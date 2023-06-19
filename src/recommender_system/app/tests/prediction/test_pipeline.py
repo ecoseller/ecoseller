@@ -6,6 +6,7 @@ from recommender_system.managers.model_manager import ModelManager
 from recommender_system.managers.prediction_pipeline import PredictionPipeline
 from recommender_system.models.prediction.abstract import AbstractPredictionModel
 from recommender_system.models.prediction.dummy.model import DummyPredictionModel
+from recommender_system.models.prediction.ease.model import EASEPredictionModel
 from recommender_system.models.prediction.gru4rec.model import GRU4RecPredictionModel
 from recommender_system.models.prediction.popularity.model import (
     PopularityPredictionModel,
@@ -16,6 +17,7 @@ from recommender_system.models.prediction.selection.model import (
 from recommender_system.models.stored.feedback.product_detail_enter import (
     ProductDetailEnterModel,
 )
+from recommender_system.models.stored.feedback.review import ReviewModel
 from recommender_system.models.stored.product.order import OrderModel
 from recommender_system.models.stored.product.product import ProductModel
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
@@ -125,6 +127,36 @@ def create_product_detail_enters():
         delete_model(model_class=ProductDetailEnterModel, pk=enter.pk)
 
 
+@pytest.fixture
+def create_product_reviews():
+    user_id = 0
+
+    variants = [ProductVariantModel.get(pk=f"unittest{i}") for i in range(1, 5)]
+
+    reviews = [
+        ReviewModel(
+            id=i,
+            session_id=str(user_id),
+            user_id=user_id,
+            product_id=i,
+            product_variant_sku=variant.sku,
+            rating=1 + i,
+            update_at=datetime.now(),
+            create_at=datetime.now(),
+        )
+        for i, variant in enumerate(variants)
+    ]
+
+    for review in reviews:
+        delete_model(model_class=ReviewModel, pk=review.pk)
+        review.create()
+
+    yield user_id
+
+    for review in reviews:
+        delete_model(model_class=ReviewModel, pk=review.pk)
+
+
 def test_dummy(app, create_product_variants, prediction_pipeline):
     with app.container.model_manager.override(
         MockModelManager(
@@ -214,17 +246,52 @@ def test_gru4rec(
     model = GRU4RecPredictionModel()
     model.train()
 
-    with app.container.model_manager.override(
-        MockModelManager(retrieval_model=DummyPredictionModel(), scoring_model=model)
-    ):
-        predictions = prediction_pipeline.run(
-            recommendation_type=RecommendationType.HOMEPAGE,
-            session_id=session_id,
-            user_id=None,
-        )
+    try:
+        with app.container.model_manager.override(
+            MockModelManager(
+                retrieval_model=DummyPredictionModel(), scoring_model=model
+            )
+        ):
+            predictions = prediction_pipeline.run(
+                recommendation_type=RecommendationType.HOMEPAGE,
+                session_id=session_id,
+                user_id=None,
+            )
 
-        for sku in variant_skus:
-            if sku == "unittest4":
-                assert sku not in predictions
-            else:
-                assert sku in predictions
+            for sku in variant_skus:
+                if sku == "unittest4":
+                    assert sku not in predictions
+                else:
+                    assert sku in predictions
+    finally:
+        model.delete()
+
+
+def test_ease(
+    app, create_product_variants, create_product_reviews, prediction_pipeline
+):
+    variant_skus = create_product_variants
+    user_id = create_product_reviews
+
+    model = EASEPredictionModel()
+    model.train()
+
+    try:
+        with app.container.model_manager.override(
+            MockModelManager(
+                retrieval_model=DummyPredictionModel(), scoring_model=model
+            )
+        ):
+            predictions = prediction_pipeline.run(
+                recommendation_type=RecommendationType.HOMEPAGE,
+                session_id=str(user_id),
+                user_id=user_id,
+            )
+
+            for sku in variant_skus:
+                if sku == "unittest4":
+                    assert sku not in predictions
+                else:
+                    assert sku in predictions
+    finally:
+        model.delete()

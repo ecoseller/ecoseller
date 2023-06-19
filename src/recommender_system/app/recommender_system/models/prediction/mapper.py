@@ -2,6 +2,7 @@ from typing import ClassVar, Dict, Type
 
 from recommender_system.models.prediction.abstract import AbstractPredictionModel
 from recommender_system.models.prediction.dummy.model import DummyPredictionModel
+from recommender_system.models.prediction.ease.model import EASEPredictionModel
 from recommender_system.models.prediction.gru4rec.model import GRU4RecPredictionModel
 from recommender_system.models.prediction.popularity.model import (
     PopularityPredictionModel,
@@ -16,6 +17,7 @@ from recommender_system.models.prediction.similarity.model import (
 
 _prediction_models = [
     DummyPredictionModel,
+    EASEPredictionModel,
     GRU4RecPredictionModel,
     PopularityPredictionModel,
     SelectionPredictionModel,

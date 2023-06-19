@@ -24,8 +24,8 @@ class StoredBaseModel(BaseModel):
     class DoesNotExist(Exception):
         pass
 
-    def __init__(self, **kwargs):
-        self._storage = kwargs.pop("_storage")
+    def __init__(self, _storage: "AbstractStorage", **kwargs):
+        self._storage = _storage
         super().__init__(**kwargs)
 
     @classmethod
@@ -43,12 +43,12 @@ class StoredBaseModel(BaseModel):
         return getattr(self, self.Meta.primary_key)
 
     @classmethod
-    def get(cls, **kwargs) -> "StoredBaseModel":
-        return kwargs.pop("storage").get_object(model_class=cls, **kwargs)
+    def get(cls, storage: "AbstractStorage", **kwargs) -> "StoredBaseModel":
+        return storage.get_object(model_class=cls, **kwargs)
 
     @classmethod
-    def gets(cls, **kwargs) -> List["StoredBaseModel"]:
-        return kwargs.pop("storage").get_objects(model_class=cls, **kwargs)
+    def gets(cls, storage: "AbstractStorage", **kwargs) -> List["StoredBaseModel"]:
+        return storage.get_objects(model_class=cls, **kwargs)
 
     def create(self) -> None:
         pk = self._storage.store_object(model=self, create=True)
