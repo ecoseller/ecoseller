@@ -1,9 +1,11 @@
 from datetime import datetime
+import logging
 from typing import List, Optional
 
 from dependency_injector.wiring import inject, Provide
 
 from recommender_system.models.prediction.abstract import AbstractPredictionModel
+from recommender_system.models.prediction.gpmf.gpmf import GPMF
 from recommender_system.storage.product.abstract import AbstractProductStorage
 
 
@@ -13,7 +15,12 @@ class GPMFPredictionModel(AbstractPredictionModel):
 
     def __init__(self, identifier: Optional[str] = None):
         super().__init__(identifier=identifier)
-        raise NotImplementedError()
+        try:
+            self.gpmf = GPMF.load(identifier=identifier)
+        except Exception as e:
+            logging.warning(
+                f"Unable to load model {self.Meta.model_name}: {self.identifier} ({e})"
+            )
 
     @property
     def default_identifier(self) -> str:
@@ -23,7 +30,9 @@ class GPMFPredictionModel(AbstractPredictionModel):
     def train(
         self, product_storage: AbstractProductStorage = Provide["product_storage"]
     ) -> None:
-        raise NotImplementedError()
+        self.gpmf = GPMF()
+        self.gpmf.train()
+        self.gpmf.save(identifier=self.identifier)
 
     def retrieve_homepage(self, session_id: str, user_id: Optional[int]) -> List[str]:
         raise NotImplementedError()
