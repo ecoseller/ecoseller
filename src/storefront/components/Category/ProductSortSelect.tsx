@@ -81,7 +81,9 @@ const ProductSortSelect = ({ sortProducts }: IProductSortSelectProps) => {
         >
           {Object.entries(availableOrderings).map(
             ([orderingName, ordering]) => (
-              <MenuItem value={orderingName}>{ordering.description}</MenuItem>
+              <MenuItem key={orderingName} value={orderingName}>
+                {ordering.description}
+              </MenuItem>
             )
           )}
         </Select>

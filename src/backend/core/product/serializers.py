@@ -24,9 +24,6 @@ from category.serializers import (
 from core.mixins import (
     TranslatedSerializerMixin,
 )
-from country.models import (
-    VatGroup,
-)
 from country.serializers import (
     CurrencySerializer,
 )
