@@ -468,10 +468,15 @@ class ProductPrice(SafeDeleteModel):
 
     @property
     def discounted_price(self):
+        """
+        Returns discounted price without VAT
+
+        If there's no discount, return base price.
+        """
         if self.discount is not None:
             return self.price * (1 - self.discount / 100)
         else:
-            return None
+            return self.price
 
     def format_price(self, price):
         return self.price_list.format_price(price)
@@ -480,10 +485,15 @@ class ProductPrice(SafeDeleteModel):
         return self.price * (1 + vat / 100)
 
     def discounted_price_incl_vat(self, vat):
+        """
+        Returns discounted price including VAT
+
+        If there's no discount, return base price including VAT
+        """
         if self.discount is not None:
             return self.price_incl_vat(vat) * (1 - self.discount / 100)
         else:
-            return None
+            return self.price_incl_vat(vat)
 
     @property
     def is_discounted(self):

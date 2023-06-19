@@ -20,6 +20,26 @@ class Country(SafeDeleteModel):
         verbose_name = "Country"
         verbose_name_plural = "Countries"
 
+    def get_vat_group(self, product_type):
+        """
+        Get VAT group of the selected product type in this country
+
+        Returns `VatGroup` object if there's any, or `None`
+        """
+        vat_group = (product_type.vat_groups.all().filter(country=self)).first()
+
+        if not vat_group:
+            # if there is no vat group for the country, we take the default one
+            vat_group = VatGroup.objects.filter(country=self, is_default=True).first()
+        if not vat_group:
+            # if there is no default vat group, we take the first one
+            vat_group = VatGroup.objects.filter(country=self).first()
+        if not vat_group:
+            # if there is no vat group at all, we return None
+            return None
+
+        return vat_group
+
 
 class Currency(SafeDeleteModel):
     """

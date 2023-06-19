@@ -1,6 +1,6 @@
-interface IImageThumbanilProps {
+interface IImageThumbnailProps {
   imagePath: string;
-  alt: string;
+  alt: string | null;
 }
 
 /**
@@ -9,11 +9,11 @@ interface IImageThumbanilProps {
  * @param alt text description of the image
  * @constructor
  */
-const ImageThumbnail = ({ imagePath, alt }: IImageThumbanilProps) => {
+const ImageThumbnail = ({ imagePath, alt }: IImageThumbnailProps) => {
   return (
     <img
       src={imagePath}
-      alt={alt}
+      alt={alt || ""}
       style={{
         objectFit: "contain",
         position: "relative",

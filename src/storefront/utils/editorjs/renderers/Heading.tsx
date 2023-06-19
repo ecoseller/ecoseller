@@ -1,4 +1,4 @@
-import { contentGetter } from "../Output";
+import { contentGetter } from "../EditorJsOutput";
 
 const HeadingRenderer = ({ data }: { data: any }) => {
   const styles = {};

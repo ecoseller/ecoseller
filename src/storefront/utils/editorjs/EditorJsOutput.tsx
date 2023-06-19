@@ -24,13 +24,13 @@ export interface Block {
   data: Record<string, any>;
 }
 
-export interface DataProp {
+export interface IEditorJsField {
   time: number;
   version: string;
   blocks: Block[];
 }
 interface IOutput {
-  data: DataProp;
+  data: IEditorJsField;
   renderers?: IRenderers[];
 }
 
@@ -38,7 +38,7 @@ interface IRenderers {
   [key: string]: Object;
 }
 
-const Output = ({ data, renderers }: IOutput) => {
+const EditorJsOutput = ({ data, renderers }: IOutput) => {
   let availableRenderers: any = {
     quote: DelimeterRenderer,
     delimiter: DelimeterRenderer,
@@ -96,4 +96,4 @@ export function contentGetter(data: any) {
   return content;
 }
 
-export default Output;
+export default EditorJsOutput;

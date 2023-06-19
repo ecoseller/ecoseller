@@ -1,4 +1,4 @@
-import { ICategoryMenu } from "@/types/category";
+import { ICategoryBase } from "@/types/category";
 import MainNavItem from "../components/MainNavItem";
 import MainNavItemLink from "../components/MainNavItemLink";
 import MegaList from "../components/MegaList";
@@ -9,7 +9,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Typography } from "@mui/material";
 
 export const MenuGenerator = (
-  categories: ICategoryMenu[],
+  categories: ICategoryBase[],
   level: number,
   activeMenus: string[],
   toggleSubMenu: (

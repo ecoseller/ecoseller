@@ -6,7 +6,7 @@ import Link from "next/link";
 
 // libs
 import { productAPI } from "@/pages/api/product/[id]";
-import Output from "@/utils/editorjs/Output";
+import EditorJsOutput from "@/utils/editorjs/EditorJsOutput";
 
 // components
 import MediaGallery from "@/components/ProductDetail/MediaGallery";
@@ -24,7 +24,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import Box from "@mui/material/Box";
 
 // types
-import { IProduct, IProductSliderData } from "@/types/product";
+import { IProductDetail, IProductSliderData } from "@/types/product";
 import {
   GetServerSideProps,
   NextApiRequest,
@@ -32,9 +32,11 @@ import {
 } from "next/types";
 import { countryDetailAPI } from "@/pages/api/country/[code]";
 import { ICountry } from "@/types/country";
+import BreadcrumbCategoryNav from "@/components/Common/BreadcrumbCategoryNav";
+import { DEFAULT_COUNTRY } from "@/utils/defaults";
 
 interface IProductPageProps {
-  data: IProduct;
+  data: IProductDetail;
   country: string;
   pricelist: string;
 }
@@ -98,37 +100,7 @@ const ProductPage = ({ data, country, pricelist }: IProductPageProps) => {
         url={basePath}
       />
       <div className={`container`}>
-        <Breadcrumbs
-          aria-label="breadcrumb"
-          sx={{
-            pt: 2,
-          }}
-        >
-          {data?.breadcrumbs?.map((item, index) => (
-            <Link
-              key={index}
-              href={{
-                pathname: `/category/${item.id}/${item.slug}`,
-              }}
-            >
-              {item.title}
-            </Link>
-          ))}
-          <Link
-            href={{
-              pathname: `/product/${data.id}/${data.slug}`,
-            }}
-          >
-            {
-              /**
-               * Crop title to 20 characters
-               */
-              data.title.length > 20
-                ? `${data.title.substring(0, 20)}...`
-                : data.title
-            }
-          </Link>
-        </Breadcrumbs>
+        <BreadcrumbCategoryNav breadcrumbs={data.breadcrumbs} product={data} />
         <Grid
           container
           spacing={{ xs: 4, md: 4, lg: 4 }}
@@ -165,7 +137,7 @@ const ProductPage = ({ data, country, pricelist }: IProductPageProps) => {
             </>
           </Grid>
           <Box sx={{ pt: 5, pl: 3 }}>
-            <Output data={data.description_editorjs} />
+            <EditorJsOutput data={data.description_editorjs} />
           </Box>
         </Grid>
         <Box sx={{ pt: 5 }}>
@@ -197,7 +169,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const countryDetail: ICountry = await countryDetailAPI(
     "GET",
-    country || "cz",
+    country || DEFAULT_COUNTRY,
     req as NextApiRequest,
     res as NextApiResponse
   );
@@ -207,13 +179,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   console.log("country", country, countryDetail);
   const pricelist = countryDetail?.default_price_list;
 
-  const data: IProduct = await productAPI(
+  const data: IProductDetail = await productAPI(
     idNumber,
     countryDetail?.code,
     pricelist,
     req as NextApiRequest,
-    res as NextApiResponse,
-    language
+    res as NextApiResponse
   );
 
   console.log(data);

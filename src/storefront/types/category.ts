@@ -1,13 +1,21 @@
-export interface ICategory extends ICategoryMenu {
-  desciption: string;
+import { IEditorJsField } from "@/utils/editorjs/EditorJsOutput";
+import { IBreadcrumbObject } from "@/types/common";
+
+/**
+ * Interface containing basic info about a category
+ */
+export interface ICategoryBase {
+  id: number;
+  title: string;
+  meta_title: string;
+  slug: string;
+  children: ICategoryBase[];
 }
 
-export interface ICategoryMenu {
-  id: number;
-  published: boolean;
-  title: string;
-  slug: string;
-  create_at: string;
-  update_at: string;
-  children: ICategoryMenu[];
+/**
+ * Interface containing detailed info about a category
+ */
+export interface ICategoryDetail extends ICategoryBase, IBreadcrumbObject {
+  description_editorjs: IEditorJsField;
+  meta_description: string;
 }
