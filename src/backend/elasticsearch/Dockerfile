@@ -11,4 +11,5 @@ RUN  yum -y install wget
 COPY ./download_hunspell.sh /usr/share/elasticsearch/config/
 COPY ./tmp/hunspell.txt /usr/share/elasticsearch/tmp/
 RUN chmod +x ./config/download_hunspell.sh
-RUN ./config/download_hunspell.sh
+WORKDIR /usr/share/elasticsearch/config
+RUN ./download_hunspell.sh

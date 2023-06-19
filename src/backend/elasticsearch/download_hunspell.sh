@@ -13,9 +13,9 @@ mkdir -p ./hunspell \
        echo "en_ZA en/en_ZA"; \
        echo "cs_CZ cs_CZ/cs_CZ"; \
        echo "sk_SK sk_SK/sk_SK"; \
-     } > ./tmp/hunspell.txt \
+     } > /usr/share/elasticsearch/tmp/hunspell.txt \
   && cd ./hunspell \
-  && cat ../tmp/hunspell.txt | while read line; do \
+  && cat /usr/share/elasticsearch/tmp/hunspell.txt | while read line; do \
        name=$(echo $line | awk '{print $1}'); \
        file=$(echo $line | awk '{print $2}'); \
        echo "${HUNSPELL_BASE_URL}/${file}.aff"; \
