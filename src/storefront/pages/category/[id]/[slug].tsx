@@ -20,14 +20,43 @@ import { ICountry } from "@/types/country";
 import { countryDetailAPI } from "@/pages/api/country/[code]";
 import { getCookie } from "cookies-next";
 import { DEFAULT_COUNTRY } from "@/utils/defaults";
+import React, { useEffect, useState } from "react";
+import ProductSortSelect from "@/components/Category/ProductSortSelect";
+import { getCategoryProducts } from "@/api/category/products";
 
 interface ICategoryPageProps {
   category: ICategoryDetail;
   products: IProductRecord[];
+  countryCode: string;
+  pricelist: string;
 }
 
-const CategoryPage = ({ category, products }: ICategoryPageProps) => {
+const CategoryPage = ({
+  category,
+  products,
+  countryCode,
+  pricelist,
+}: ICategoryPageProps) => {
   const router = useRouter();
+  const { id } = router.query;
+
+  const [productsState, setProductsState] = useState<IProductRecord[]>([]);
+
+  useEffect(() => {
+    setProductsState(products);
+  }, [id]);
+
+  const sortProducts = (sortBy: string, order: string) => {
+    getCategoryProducts(
+      category.id,
+      pricelist,
+      countryCode,
+      sortBy,
+      order
+    ).then((data) => {
+      setProductsState(data);
+    });
+  };
 
   return (
     <>
@@ -45,12 +74,13 @@ const CategoryPage = ({ category, products }: ICategoryPageProps) => {
         {category.children.length > 0 ? (
           <>
             <SubCategoryList subCategories={category.children} />
-            <Divider sx={{ my: 3 }} />
+            <Divider sx={{ my: 2 }} />
           </>
         ) : null}
         <ProductFilters />
-        <Divider sx={{ my: 3 }} />
-        <ProductGrid products={products} />
+        <Divider sx={{ my: 2 }} />
+        <ProductSortSelect sortProducts={sortProducts} />
+        <ProductGrid products={productsState} />
       </div>
     </>
   );
@@ -111,6 +141,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     props: {
       category,
       products,
+      countryCode: countryDetail.code,
+      pricelist,
     },
   };
 };

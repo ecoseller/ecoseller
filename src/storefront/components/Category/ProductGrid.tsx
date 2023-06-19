@@ -16,7 +16,7 @@ const ProductGrid = ({ products }: IProductListProps) => {
   return (
     <Grid container spacing={{ xs: 1, sm: 2 }}>
       {products.map((p) => (
-        <Grid item xs={6} sm={4} md={3} lg={2}>
+        <Grid item xs={6} sm={4} md={3} lg={2} key={p.id}>
           <ProductCard product={p} />
         </Grid>
       ))}

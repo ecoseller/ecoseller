@@ -5,7 +5,6 @@ import { Grid } from "@mui/material";
 import PaperItem from "@/components/Generic/PaperItem";
 import CollapsableContentWithTitle from "@/components/Generic/CollapsableContentWithTitle";
 import NextLink from "next/link";
-import MUILink from "@mui/material/Link";
 
 interface ISubCategoryListProps {
   subCategories: ICategoryBase[];
@@ -22,7 +21,7 @@ const SubCategoryList = ({ subCategories }: ISubCategoryListProps) => {
     <CollapsableContentWithTitle title="Subcategories" defaultOpen={true}>
       <Grid container spacing={{ xs: 1, sm: 2 }}>
         {subCategories.map((c) => (
-          <Grid item xs={12} sm={6} md={4} lg={3}>
+          <Grid item xs={12} sm={6} md={4} lg={3} key={c.id}>
             <NextLink href={`/category/${c.id}/${c.slug}`}>
               <PaperItem>{c.title}</PaperItem>
             </NextLink>

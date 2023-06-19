@@ -80,6 +80,11 @@ const ProductCard = ({ product }: IProductCardProps) => {
           <Typography gutterBottom variant="h6" component="div">
             {product.title}
           </Typography>
+          {variantCount > 1 ? (
+            <Typography variant="body2" color="text.secondary">
+              ({variantCount} variants)
+            </Typography>
+          ) : null}
           <Typography variant="body2" color="text.secondary">
             {product.meta_description}
           </Typography>

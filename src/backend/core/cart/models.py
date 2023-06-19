@@ -472,12 +472,6 @@ class CartItem(models.Model):
         else:
             vat = 0
 
-        self.unit_price_without_vat = (
-            price.price if not price.discount else price.discounted_price
-        )
-        self.unit_price_incl_vat = (
-            price.price_incl_vat(vat)
-            if not price.discount
-            else price.discounted_price_incl_vat(vat)
-        )
+        self.unit_price_without_vat = price.discounted_price
+        self.unit_price_incl_vat = price.discounted_price_incl_vat(vat)
         self.save()
