@@ -51,23 +51,29 @@ class GPMFPredictionModel(AbstractPredictionModel):
             f"{self.__class__.__name__} can not perform retrieval for cart recommendations."
         )
 
-    def _score(self, session_id: str, variants: List[str]) -> List[str]:
-        raise NotImplementedError()
+    def _score(self, user_id: int, variants: List[str]) -> List[str]:
+        return self.gpmf.predict(user_id=user_id, variants=variants)
 
     def score_homepage(
         self, session_id: str, user_id: Optional[int], variants: List[str]
     ) -> List[str]:
-        return self._score(session_id=session_id, variants=variants)
+        if user_id is None:
+            raise ValueError(f"Unknown user ID for session {session_id}")
+        return self._score(user_id=user_id, variants=variants)
 
     def score_category_list(
         self, session_id: str, user_id: Optional[int], variants: List[str]
     ) -> List[str]:
-        return self._score(session_id=session_id, variants=variants)
+        if user_id is None:
+            raise ValueError(f"Unknown user ID for session {session_id}")
+        return self._score(user_id=user_id, variants=variants)
 
     def score_product_detail(
         self, session_id: str, user_id: Optional[int], variants: List[str], variant: str
     ) -> List[str]:
-        return self._score(session_id=session_id, variants=variants)
+        if user_id is None:
+            raise ValueError(f"Unknown user ID for session {session_id}")
+        return self._score(user_id=user_id, variants=variants)
 
     def score_cart(
         self,
@@ -76,7 +82,10 @@ class GPMFPredictionModel(AbstractPredictionModel):
         variants: List[str],
         variants_in_cart: List[str],
     ) -> List[str]:
-        return self._score(session_id=session_id, variants=variants)
+        if user_id is None:
+            raise ValueError(f"Unknown user ID for session {session_id}")
+        return self._score(user_id=user_id, variants=variants)
 
     def delete(self) -> None:
-        raise NotImplementedError()
+        if hasattr(self, "gpmf"):
+            self.gpmf.delete(identifier=self.identifier)

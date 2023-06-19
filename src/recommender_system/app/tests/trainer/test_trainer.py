@@ -45,6 +45,9 @@ def prepare_gpmf_data():
     for review in reviews:
         delete_model(model_class=ReviewModel, pk=review.pk)
 
+    identifier = GPMFPredictionModel.get_latest_identifier()
+    GPMFPredictionModel(identifier=identifier).delete()
+
 
 @inject
 def test_trainer_similarity(trainer: Trainer = Provide["trainer"]):

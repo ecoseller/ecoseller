@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Tuple
 
 from dependency_injector.wiring import inject, Provide
 import numpy as np
@@ -34,8 +34,23 @@ class GPMF:
         self.batch_size = 256
 
     @classmethod
-    def load(cls, identifier: str) -> "GPMF":
-        return cls()
+    @inject
+    def load(
+        cls,
+        identifier: str,
+        gpmf_storage: AbstractGPMFStorage = Provide["gpmf_storage"],
+    ) -> "GPMF":
+        gpmf = cls()
+
+        matrices = gpmf_storage.get_matrices(identifier=identifier)
+        for key, value in matrices.items():
+            setattr(gpmf, key, value)
+
+        mappings = gpmf_storage.get_mappings(identifier=identifier)
+        for key, value in mappings.items():
+            setattr(gpmf, key, value)
+
+        return gpmf
 
     @property
     def product_variants(self) -> int:
@@ -101,10 +116,10 @@ class GPMF:
 
         R, V, self.item_mapping, self.user_mapping = self._get_rating_matrices()
 
-        self.W = np.random.rand(
+        self.W = np.random.rand(self.users, self.explicit_latent_factors)
+        self.Z = np.random.rand(
             self.product_variants, self.explicit_latent_factors
         )  # There might be different number of product variants to be considered
-        self.Z = np.random.rand(self.users, self.explicit_latent_factors)
 
         # self.E = np.random.rand(
         #     self.product_variants, self.implicit_latent_factors, self.implicit_ratings
@@ -112,10 +127,10 @@ class GPMF:
         # self.F = np.random.rand(
         #     self.users, self.implicit_latent_factors, self.implicit_ratings
         # )
-        self.E = np.random.rand(
+        self.E = np.random.rand(self.users, self.implicit_latent_factors)
+        self.F = np.random.rand(
             self.product_variants, self.implicit_latent_factors
         )  # There might be different number of product variants to be considered
-        self.F = np.random.rand(self.users, self.implicit_latent_factors)
 
         batches = self._prepare_batches(R=R, V=V)
 
@@ -193,13 +208,16 @@ class GPMF:
 
         logging.info("Training finished")
 
-    def predict(
-        self,
-        session_id: str,
-        variants: Optional[List[str]] = None,
-        feedback_storage: AbstractFeedbackStorage = Provide["feedback_storage"],
-    ) -> List[str]:
-        raise NotImplementedError()
+    def predict(self, user_id: int, variants: List[str]) -> List[str]:
+        variant_indices = [self.item_mapping[variant] for variant in variants]
+
+        W = self.W[user_id]
+        Z = self.Z[variant_indices]
+
+        scores = sigmoid(W[np.newaxis, :] @ Z.T)
+
+        sorted_indices = np.argsort(-scores.ravel())  # descending
+        return [variants[index] for index in sorted_indices]
 
     @inject
     def save(

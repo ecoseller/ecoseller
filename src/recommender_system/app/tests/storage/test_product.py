@@ -42,12 +42,14 @@ def clear_product():
 @pytest.fixture
 def create_product():
     product = get_or_create_model(model_class=ProductModel)
+    sku = datetime.now().isoformat()
 
-    yield product.pk
+    yield product.pk, sku
 
     delete_product_variants(product_pk=product.pk)
     delete_translations(product_pk=product.pk)
     delete_model(model_class=ProductModel, pk=product.pk)
+    delete_model(model_class=ProductVariantModel, pk=sku)
 
 
 def test_product_create(clear_product):
@@ -66,7 +68,7 @@ def test_product_create(clear_product):
 
 
 def test_product_update(create_product):
-    product_pk = create_product
+    product_pk, _ = create_product
     product = ProductModel.get(pk=product_pk)
 
     new_published = not product.published
@@ -81,7 +83,7 @@ def test_product_update(create_product):
 
 
 def test_product_refresh(create_product):
-    product_pk = create_product
+    product_pk, _ = create_product
     product = ProductModel.get(pk=product_pk)
 
     modified_product = product.copy()
@@ -96,7 +98,7 @@ def test_product_refresh(create_product):
 
 
 def test_product_delete(create_product):
-    product_pk = create_product
+    product_pk, _ = create_product
     product = ProductModel.get(pk=product_pk)
 
     product.delete()
@@ -106,7 +108,7 @@ def test_product_delete(create_product):
 
 
 def test_product_product_translations(create_product):
-    product_pk = create_product
+    product_pk, _ = create_product
     product = ProductModel.get(pk=product_pk)
 
     translation_dict = default_dicts[ProductTranslationModel]
@@ -122,7 +124,7 @@ def test_product_product_translations(create_product):
 
 
 def test_product_product_variants(create_product):
-    product_pk = create_product
+    product_pk, sku = create_product
     product = ProductModel.get(pk=product_pk)
 
     variant_dict = default_dicts[ProductVariantModel]
@@ -130,7 +132,7 @@ def test_product_product_variants(create_product):
     old_variants = len(product.product_variants)
 
     product_variant = ProductVariantModel.parse_obj(variant_dict)
-    product_variant.sku = datetime.now().isoformat()
+    product_variant.sku = sku
     product_variant.create()
 
     product.add_product_variant(product_variant=product_variant)
