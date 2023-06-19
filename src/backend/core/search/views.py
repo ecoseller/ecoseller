@@ -11,7 +11,6 @@ from rest_framework.views import APIView
 from django.conf import settings
 from country.models import Country
 from product.models import PriceList
-from .serializers import ProductSuggestionsSerializer
 from product.serializers import ProductStorefrontListSerializer
 
 from product.documents import ProductDocument
