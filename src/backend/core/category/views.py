@@ -19,10 +19,7 @@ from category.serializers import (
     CategoryRecursiveStorefrontSerializer,
     CategoryDetailStorefrontSerializer,
 )
-<<<<<<< HEAD
-=======
 from common.common import get_url_param_if_valid
->>>>>>> master
 from country.models import Country
 from product.models import Product, PriceList
 from product.serializers import ProductStorefrontListSerializer
