@@ -11,6 +11,7 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteAttribtueType } from "@/api/product/attributes";
+import DeleteDialog from "../../Generic/DeleteDialog";
 
 interface IDeleteAttributeTypeProps {
   id: number;
@@ -18,6 +19,7 @@ interface IDeleteAttributeTypeProps {
 
 const DeleteAttributeType = ({ id }: IDeleteAttributeTypeProps) => {
   const router = useRouter();
+  const [open, setOpen] = useState<boolean>(false);
   return (
     <EditorCard>
       <Typography variant="h6">Delete</Typography>
@@ -32,15 +34,7 @@ const DeleteAttributeType = ({ id }: IDeleteAttributeTypeProps) => {
               }}
               startIcon={<DeleteIcon />}
               onClick={async () => {
-                console.log("delete");
-                await deleteAttribtueType(id)
-                  .then((res) => {
-                    console.log(res);
-                    router.push("/dashboard/catalog/attribute/type");
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                  });
+                setOpen(true);
               }}
             >
               Delete
@@ -48,6 +42,21 @@ const DeleteAttributeType = ({ id }: IDeleteAttributeTypeProps) => {
           </Stack>
         </FormControl>
       </Box>
+      <DeleteDialog
+        open={open}
+        setOpen={setOpen}
+        onDelete={async () => {
+          await deleteAttribtueType(id)
+            .then((res) => {
+              console.log(res);
+              router.push("/dashboard/catalog/attribute/type");
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }}
+        text="this attribute type"
+      />
     </EditorCard>
   );
 };

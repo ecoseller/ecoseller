@@ -35,6 +35,7 @@ import { paymentMethodListAPI } from "@/pages/api/cart/payment-method";
 import { IPaymentMethod } from "@/types/cart/methods";
 import imgPath from "@/utils/imgPath";
 import { useSnackbarState } from "@/utils/snackbar";
+import DeleteDialog from "@/components/Dashboard/Generic/DeleteDialog";
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -82,6 +83,9 @@ const DashboardPaymentMethodPage = ({
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   console.log("paymentMethodsData", paymentMethodsData);
   const [snackbar, setSnackbar] = useSnackbarState();
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<number | undefined>(
+    undefined
+  );
 
   const handleSnackbarClose = (
     event?: React.SyntheticEvent | Event,
@@ -175,21 +179,7 @@ const DashboardPaymentMethodPage = ({
             icon={<DeleteIcon />}
             label="Delete"
             onClick={() => {
-              fetch(`/api/cart/payment-method/${id}`, {
-                method: "DELETE",
-              }).then((res) => {
-                if (res.ok) {
-                  setSnackbar({
-                    open: true,
-                    message: "Payment method deleted",
-                    severity: "success",
-                  });
-                  setRows((oldRows) => {
-                    const newRows = oldRows.filter((row) => row.id !== id);
-                    return newRows;
-                  });
-                }
-              });
+              setOpenDeleteDialog(id as number);
             }}
             color="inherit"
             key={"delete"}
@@ -198,6 +188,26 @@ const DashboardPaymentMethodPage = ({
       },
     },
   ];
+
+  const handleDelete = (id: number) => {
+    fetch(`/api/cart/payment-method/${id}`, {
+      method: "DELETE",
+    }).then((res) => {
+      console.log("res", res);
+      if (res.ok) {
+        setSnackbar({
+          open: true,
+          message: "Payment method deleted",
+          severity: "success",
+        });
+        setRows((oldRows) => {
+          const newRows = oldRows.filter((row) => row.id !== id);
+          return newRows;
+        });
+      }
+    });
+  };
+
   const handleRowEditStop: GridEventListener<"rowEditStop"> = (
     params,
     event
@@ -236,6 +246,15 @@ const DashboardPaymentMethodPage = ({
             }}
           />
         </Card>
+        <DeleteDialog
+          open={openDeleteDialog !== undefined}
+          setOpen={() => setOpenDeleteDialog(undefined)}
+          onDelete={async () => {
+            if (openDeleteDialog === undefined) return;
+            handleDelete(openDeleteDialog);
+          }}
+          text="this payment method"
+        />
       </Container>
     </DashboardLayout>
   );

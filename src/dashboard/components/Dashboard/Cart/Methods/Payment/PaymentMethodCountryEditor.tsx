@@ -34,6 +34,7 @@ import { IPaymentMethod, IPaymentMethodCountry } from "@/types/cart/methods";
 import { ICountry, IVatGroup } from "@/types/country";
 import { ICurrency } from "@/types/localization";
 import { useSnackbarState } from "@/utils/snackbar";
+import DeleteDialog from "@/components/Dashboard/Generic/DeleteDialog";
 
 interface IPaymentMethodCountryTable extends IPaymentMethodCountry {
   isNew: boolean;
@@ -90,6 +91,9 @@ const PaymentMethodCountryEditor = ({
   currencies,
 }: IPaymentMethodCountryEditorProps) => {
   console.log("paymentMethodCountries", paymentMethodCountries);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<number | undefined>(
+    undefined
+  );
 
   const [rows, setRows] = useState<IPaymentMethodCountryTable[]>(
     paymentMethodCountries.map((smc) => ({
@@ -256,7 +260,7 @@ const PaymentMethodCountryEditor = ({
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
-  const handleDeleteClick = (id: GridRowId) => () => {
+  const handleDeleteClick = (id: GridRowId) => {
     // delete row with id
     fetch(`/api/cart/payment-method/country/${id}`, {
       method: "DELETE",
@@ -409,7 +413,7 @@ const PaymentMethodCountryEditor = ({
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={handleDeleteClick(id)}
+            onClick={() => setOpenDeleteDialog(id as number)}
             color="inherit"
             key={"delete"}
           />,
@@ -469,6 +473,15 @@ const PaymentMethodCountryEditor = ({
           </Alert>
         </Snackbar>
       ) : null}
+      <DeleteDialog
+        open={openDeleteDialog !== undefined}
+        setOpen={() => setOpenDeleteDialog(undefined)}
+        onDelete={async () => {
+          if (openDeleteDialog === undefined) return;
+          handleDeleteClick(openDeleteDialog);
+        }}
+        text="this payment method"
+      />
     </EditorCard>
   );
 };

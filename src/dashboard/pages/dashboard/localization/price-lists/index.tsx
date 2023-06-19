@@ -46,6 +46,7 @@ import { useSnackbarState } from "@/utils/snackbar";
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
 import { pricelistListAPI } from "@/pages/api/product/price-list";
 import { currencyListAPI } from "@/pages/api/country/currency";
+import DeleteDialog from "@/components/Dashboard/Generic/DeleteDialog";
 
 interface IPriceListTable extends IPriceList {
   isNew?: boolean;
@@ -91,7 +92,9 @@ const DashboardPriceListsPage = ({
   currencies: ICurrency[];
 }) => {
   const [snackbar, setSnackbar] = useSnackbarState();
-
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<string | undefined>(
+    undefined
+  );
   useEffect(() => {
     if (priceLists) {
       setRows(
@@ -188,7 +191,7 @@ const DashboardPriceListsPage = ({
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={handleDeleteClick(id)}
+            onClick={() => setOpenDeleteDialog(id as string)}
             color="inherit"
             key={"delete"}
           />,
@@ -221,7 +224,7 @@ const DashboardPriceListsPage = ({
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
-  const handleDeleteClick = (id: GridRowId) => () => {
+  const handleDeleteClick = (id: GridRowId) => {
     const deletedRow = rows.find((row) => row.id === id);
     if (deletedRow && !deletedRow!.isNew) {
       deletePriceList(deletedRow.code)
@@ -419,6 +422,14 @@ const DashboardPriceListsPage = ({
           </Alert>
         </Snackbar>
       ) : null}
+      <DeleteDialog
+        open={openDeleteDialog !== undefined}
+        setOpen={() => setOpenDeleteDialog(undefined)}
+        onDelete={async () => {
+          handleDeleteClick(openDeleteDialog as string);
+        }}
+        text="this product type"
+      />
     </DashboardLayout>
   );
 };

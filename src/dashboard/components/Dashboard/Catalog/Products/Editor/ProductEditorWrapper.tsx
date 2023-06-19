@@ -44,6 +44,7 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import DeleteEntityButton from "@/components/Dashboard/Generic/DeleteEntityButton";
 import { PermissionProvider } from "@/utils/context/permission";
+import DeleteDialog from "@/components/Dashboard/Generic/DeleteDialog";
 
 export interface ISetProductStateAction {
   type: ActionSetProduct;
@@ -131,6 +132,7 @@ const ProductEditorWrapper = ({
   };
 
   const [snackbar, setSnackbar] = useSnackbarState();
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
 
   const router = useRouter();
 
@@ -404,7 +406,17 @@ const ProductEditorWrapper = ({
       {snackbar ? (
         <SnackbarWithAlert snackbarData={snackbar} setSnackbar={setSnackbar} />
       ) : null}
-      {productData ? <DeleteEntityButton onDelete={deleteProduct} /> : null}
+      {productData ? (
+        <DeleteEntityButton onDelete={() => setOpenDeleteDialog(true)} />
+      ) : null}
+      <DeleteDialog
+        open={openDeleteDialog}
+        setOpen={setOpenDeleteDialog}
+        onDelete={async () => {
+          await deleteProduct();
+        }}
+        text="this product"
+      />
     </EditableContentWrapper>
   );
 };
