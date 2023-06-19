@@ -5,7 +5,6 @@ import django.db.models.manager
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("category", "0003_categorytranslation_description_editorjs"),
     ]

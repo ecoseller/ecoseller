@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("cms", "0007_alter_page_options_remove_pagecms_safe_deleted_and_more"),
     ]

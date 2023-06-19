@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("cms", "0009_pagecms_safe_deleted_pagefrontend_safe_deleted"),
     ]

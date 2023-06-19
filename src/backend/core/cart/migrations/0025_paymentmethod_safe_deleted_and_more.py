@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("cart", "0024_remove_shippingmethodcountry_api_request_and_more"),
     ]

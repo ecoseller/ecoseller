@@ -5,7 +5,6 @@ import django.db.models.manager
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("product", "0040_testmodel_safe_deleted"),
     ]

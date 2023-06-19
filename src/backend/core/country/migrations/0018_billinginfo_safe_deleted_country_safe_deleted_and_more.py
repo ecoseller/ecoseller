@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("country", "0017_rename_billingaddress_billinginfo_and_more"),
     ]

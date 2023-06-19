@@ -283,6 +283,7 @@ EMAIL_FROM = os.environ.get("EMAIL_FROM", None)
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 USE_ELASTIC = bool(int(os.environ.get("USE_ELASTIC", "0")))
+print("USE_ELASTIC", USE_ELASTIC, os.environ.get("USE_ELASTIC"))
 ELASTIC_AUTO_REBUILD_INDEX = bool(
     int(os.environ.get("ELASTIC_AUTO_REBUILD_INDEX", "0"))
 )

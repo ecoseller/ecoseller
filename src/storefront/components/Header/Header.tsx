@@ -23,7 +23,7 @@ import InfoBar from "./InfoBar";
 import Menu from "./MegaMenu/Menu";
 import User from "./Icons/User";
 import Cart from "./Icons/Cart";
-import Search from "./Icons/Search";
+import SearchButton from "./Icons/Search";
 // utils
 // styles
 import styles from "@/styles/Header.module.scss";
@@ -61,15 +61,8 @@ const InfoToolBarNarrow = styled(Toolbar)(({ theme }) => ({
 interface IDashboardHeaderProps {}
 const DashboardHeader = ({}: IDashboardHeaderProps) => {
   const theme = useTheme();
-  const largeScreen = useMediaQuery(theme.breakpoints.up("lg"));
-  const [openMobileMenu, setOpenMobileMenu] = useState(false);
-
-  const onOpenMobileMenu = () => {
-    setOpenMobileMenu(true);
-  };
-  const onCloseMobileMenu = () => {
-    setOpenMobileMenu(false);
-  };
+  const mobileScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <StyledRoot>
@@ -88,26 +81,21 @@ const DashboardHeader = ({}: IDashboardHeaderProps) => {
                 sm: 5,
               }}
             >
-              <Search />
-              <User />
-              <Cart />
+              <SearchButton
+                mobile={mobileScreen}
+                mobileOpen={mobileOpen}
+                setMobileOpen={setMobileOpen}
+              />
+              {!mobileOpen ? (
+                <>
+                  <User />
+                  <Cart />
+                </>
+              ) : null}
             </Stack>
           </StyledToolbar>
         </Box>
       </div>
-      {/* {largeScreen ? null : (
-        <Drawer
-          open={openMobileMenu}
-          onClose={onCloseMobileMenu}
-          PaperProps={{
-            sx: {
-              width: "80%",
-              bgcolor: "background.default",
-              borderRightColor: "#E6E8EA",
-            },
-          }}
-        ></Drawer>
-      )} */}
     </StyledRoot>
   );
 };
