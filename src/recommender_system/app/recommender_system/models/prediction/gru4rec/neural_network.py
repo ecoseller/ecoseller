@@ -31,6 +31,7 @@ class NeuralNetwork:
     mapping: Dict[str, int]
 
     num_epochs: int = 3
+    batch_size: int = 64
 
     @inject
     def __init__(
@@ -67,7 +68,10 @@ class NeuralNetwork:
             self.feedforward,
         ).to(self.device)
         self.optimizer = torch.optim.SGD(self.net.parameters(), lr=0.0001)
-        self.loss = torch.nn.CrossEntropyLoss()
+
+    def loss(self, outputs: torch.Tensor) -> torch.Tensor:
+        diag = torch.eye(outputs.size(dim=0)) * outputs
+        return torch.mean(torch.sigmoid(outputs - diag) + torch.pow(outputs, 2))
 
     @property
     def num_features(self) -> int:
@@ -76,7 +80,7 @@ class NeuralNetwork:
     def _get_data_loader(self) -> torch.utils.data.DataLoader:
         return torch.utils.data.DataLoader(
             dataset=SessionDataset(mapping=self.mapping, device=self.device),
-            batch_size=1,
+            batch_size=self.batch_size,
             shuffle=True,
         )
 
@@ -84,17 +88,6 @@ class NeuralNetwork:
         embedding_indices = torch.nonzero(torch.any(inputs != 0, dim=0)).flatten()
         self.embedding.indices = embedding_indices
         self.feedforward.indices = labels
-
-    def _reduce_labels(self, labels: torch.Tensor) -> torch.Tensor:
-        mapping = {}
-        reduced = []
-        for label in labels:
-            new_label = mapping.get(label)
-            if new_label is None:
-                new_label = len(mapping.keys())
-                mapping[label] = new_label
-            reduced.append(new_label)
-        return torch.tensor(reduced)
 
     def train(self) -> None:
         logging.info("Training started")
@@ -105,15 +98,15 @@ class NeuralNetwork:
             running_loss = 0.0
             for i, data in enumerate(data_loader, 0):
                 inputs, labels = data
-                inputs = inputs.to(self.device)
+                batched_inputs = torch.unsqueeze(inputs, 0)
+                batched_inputs = batched_inputs.to(self.device)
                 labels = labels.to(self.device)
 
                 self.optimizer.zero_grad()
 
                 self._set_indices(inputs=inputs, labels=labels)
-                reduced_labels = self._reduce_labels(labels=labels)
-                outputs = self.net(inputs)
-                loss = self.loss(outputs, reduced_labels)
+                outputs = self.net(batched_inputs)
+                loss = self.loss(outputs[0])
                 loss.backward()
                 self.optimizer.step()
 
@@ -133,8 +126,6 @@ class NeuralNetwork:
         variants: List[str],
         feedback_storage: AbstractFeedbackStorage = Provide["feedback_storage"],
     ) -> List[str]:
-        self.embedding.indices = None
-        self.feedforward.indices = None
         sequences = feedback_storage.get_session_sequences(session_ids=[session_id])
         if len(sequences) == 0:
             logging.warning(f"No session sequence found for session_id={session_id}")
@@ -145,13 +136,16 @@ class NeuralNetwork:
             self.device
         )
         inputs = inputs.resize(1, inputs.size(dim=0))
+        inverse_mapping = {}
+        possible_labels = []
+        for i, sku in enumerate(variants):
+            inverse_mapping[i] = sku
+            possible_labels.append(self.mapping[sku])
+        possible_labels = torch.tensor(possible_labels)
+        self._set_indices(inputs=inputs, labels=possible_labels)
         predictions = self.net(inputs)
-        scores = {
-            sku: predictions[0][self.mapping[sku]] if sku in self.mapping else 0
-            for sku in variants
-        }
-        ordered_scores = sorted(scores.items(), key=lambda item: item[1], reverse=True)
-        return [item[0] for item in ordered_scores]
+        sorted_indices = torch.argsort(predictions, descending=True).flatten().tolist()
+        return [inverse_mapping[i] for i in sorted_indices]
 
     @inject
     def save(

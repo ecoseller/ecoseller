@@ -10,7 +10,10 @@ class ReducedLinearEmbedding(torch.nn.Linear):
         reduced_input = input
         weight = self.weight
         if self.indices is not None:
-            reduced_input = input[:, self.indices]
+            if input.dim() == 3:
+                reduced_input = input[:, :, self.indices]
+            else:
+                reduced_input = input[:, self.indices]
             weight = self.weight[:, self.indices]
 
         result = torch.matmul(reduced_input, weight.T)
