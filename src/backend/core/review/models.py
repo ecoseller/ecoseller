@@ -1,6 +1,8 @@
 import uuid
 
 from django.db import models
+from product.models import Product, ProductVariant
+from order.models import Order
 
 
 class Review(models.Model):
@@ -13,14 +15,14 @@ class Review(models.Model):
     rating = models.IntegerField(default=-1)
     comment = models.TextField()
     product_variant = models.ForeignKey(
-        "product.ProductVariant",
+        ProductVariant,
         null=True,
         on_delete=models.SET_NULL,
         related_name="review",
     )
     product = models.ForeignKey(
-        "product.Product", null=True, on_delete=models.SET_NULL, related_name="review"
+        Product, null=True, on_delete=models.SET_NULL, related_name="review"
     )
     order = models.ForeignKey(
-        "order.Order", null=True, on_delete=models.SET_NULL, related_name="review"
+        Order, null=True, on_delete=models.SET_NULL, related_name="review"
     )

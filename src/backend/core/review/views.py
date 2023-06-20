@@ -78,6 +78,23 @@ class ProductReviewListStorefrontView(APIView):
         return Response(serializer.data)
 
 
+class ProductAverageRatingView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request, product_id):
+        reviews = Review.objects.all()
+        print("SENT ID", product_id)
+        print(reviews)
+        print("PRODUCT", reviews[0].product)
+        print("PRODUCT ID", reviews[0].product.id)
+        reviews = reviews.filter(product__id=product_id)
+        if len(reviews) == 0:
+            print("NO REVIEWS")
+            return Response({"average_rating": 0}, status=200)
+        average_rating = sum([r.rating for r in reviews]) / reviews.count()
+        return Response({"average_rating": average_rating}, status=200)
+
+
 class ReviewListDashboardView(APIView):
     permission_classes = (permissions.AllowAny,)
     serializer_class = ReviewSerializer
