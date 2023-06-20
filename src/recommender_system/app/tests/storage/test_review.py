@@ -11,14 +11,17 @@ from tests.storage.tools import get_or_create_model, delete_model, default_dicts
 
 
 @pytest.fixture
-def clear_session():
-    session_pk = "session"
+def clear_review():
+    review_dict = default_dicts[ReviewModel]
+    session_pk = review_dict["session_id"]
 
+    delete_model(model_class=ReviewModel, pk=review_dict["id"])
     delete_model(model_class=SessionModel, pk=session_pk)
 
-    yield session_pk
+    yield review_dict
 
     delete_model(model_class=SessionModel, pk=session_pk)
+    delete_model(model_class=ReviewModel, pk=review_dict["id"])
 
 
 @pytest.fixture
@@ -30,19 +33,18 @@ def create_review():
     delete_model(model_class=ReviewModel, pk=review.pk)
 
 
-def test_review_create(clear_session):
-    session_pk = clear_session
-    review_dict = default_dicts[ReviewModel]
+def test_review_create(clear_review):
+    review_dict = clear_review
 
     with pytest.raises(SessionModel.DoesNotExist):
-        _ = SessionModel.get(pk=session_pk)
+        _ = SessionModel.get(pk=review_dict["session_id"])
 
     review = ReviewModel.parse_obj(review_dict)
     review.create()
     assert review.pk is not None
 
     stored_review = ReviewModel.get(pk=review.pk)
-    session = SessionModel.get(pk=session_pk)
+    session = SessionModel.get(pk=review.session_id)
 
     TestCase().assertDictEqual(stored_review.dict(), review.dict())
 
