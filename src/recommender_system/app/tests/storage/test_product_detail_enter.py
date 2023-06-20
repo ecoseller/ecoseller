@@ -53,6 +53,26 @@ def test_product_detail_enter_create(clear_session):
     assert product_detail_enter.session.pk == session.pk
     assert product_detail_enter.session.user_id == session.user_id
 
+    assert product_detail_enter.session.visited_product_variants == [
+        product_detail_enter.product_variant_sku
+    ]
+
+    new_product_detail_enter = ProductDetailEnterModel.parse_obj(
+        product_detail_enter_dict
+    )
+    new_product_detail_enter.product_variant_sku = "some_other_sku"
+    new_product_detail_enter.create()
+
+    assert new_product_detail_enter.session.visited_product_variants == [
+        product_detail_enter.product_variant_sku,
+        "some_other_sku",
+    ]
+
+    assert SessionModel.get(pk=session.pk).visited_product_variants == [
+        product_detail_enter.product_variant_sku,
+        "some_other_sku",
+    ]
+
 
 def test_product_detail_enter_update(create_product_detail_enter):
     product_detail_enter_pk = create_product_detail_enter
