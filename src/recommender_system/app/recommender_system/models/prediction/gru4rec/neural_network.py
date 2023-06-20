@@ -10,7 +10,9 @@ from recommender_system.models.prediction.gru4rec.dataset import (
     SessionDataset,
     sequence_to_tensor,
 )
-from recommender_system.models.prediction.gru4rec.select_gru_output import (
+from recommender_system.models.prediction.gru4rec.layers import (
+    ReducedLinearEmbedding,
+    ReducedLinearFeedforward,
     SelectGRUOutput,
 )
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
@@ -20,9 +22,9 @@ from recommender_system.storage.gru4rec.abstract import AbstractGRU4RecStorage
 
 
 class NeuralNetwork:
-    embedding: torch.nn.Module
+    embedding: ReducedLinearEmbedding
     gru: torch.nn.Module
-    feedforward: torch.nn.Module
+    feedforward: ReducedLinearFeedforward
     net: torch.nn.Module
     device: torch.device
 
@@ -42,6 +44,7 @@ class NeuralNetwork:
             self.device = torch.device("mps:0")
         else:
             self.device = torch.device("cpu")
+        self.device = torch.device("cpu")
         logging.info(f"Using device {self.device}")
 
         skus = product_storage.get_objects_attribute(
@@ -50,11 +53,11 @@ class NeuralNetwork:
         self.mapping = {sku: i for i, sku in enumerate(skus)}
         embedding_size = 100
         hidden_size = 100
-        self.embedding = torch.nn.Linear(
+        self.embedding = ReducedLinearEmbedding(
             in_features=num_product_variants, out_features=embedding_size
         )
         self.gru = torch.nn.GRU(input_size=embedding_size, hidden_size=hidden_size)
-        self.feedforward = torch.nn.Linear(
+        self.feedforward = ReducedLinearFeedforward(
             in_features=hidden_size, out_features=num_product_variants
         )
         self.net = torch.nn.Sequential(
@@ -77,6 +80,22 @@ class NeuralNetwork:
             shuffle=True,
         )
 
+    def _set_indices(self, inputs: torch.Tensor, labels: torch.Tensor) -> None:
+        embedding_indices = torch.nonzero(torch.any(inputs != 0, dim=0)).flatten()
+        self.embedding.indices = embedding_indices
+        self.feedforward.indices = labels
+
+    def _reduce_labels(self, labels: torch.Tensor) -> torch.Tensor:
+        mapping = {}
+        reduced = []
+        for label in labels:
+            new_label = mapping.get(label)
+            if new_label is None:
+                new_label = len(mapping.keys())
+                mapping[label] = new_label
+            reduced.append(new_label)
+        return torch.tensor(reduced)
+
     def train(self) -> None:
         logging.info("Training started")
 
@@ -91,8 +110,10 @@ class NeuralNetwork:
 
                 self.optimizer.zero_grad()
 
+                self._set_indices(inputs=inputs, labels=labels)
+                reduced_labels = self._reduce_labels(labels=labels)
                 outputs = self.net(inputs)
-                loss = self.loss(outputs, labels)
+                loss = self.loss(outputs, reduced_labels)
                 loss.backward()
                 self.optimizer.step()
 
@@ -112,6 +133,8 @@ class NeuralNetwork:
         variants: List[str],
         feedback_storage: AbstractFeedbackStorage = Provide["feedback_storage"],
     ) -> List[str]:
+        self.embedding.indices = None
+        self.feedforward.indices = None
         sequences = feedback_storage.get_session_sequences(session_ids=[session_id])
         if len(sequences) == 0:
             logging.warning(f"No session sequence found for session_id={session_id}")

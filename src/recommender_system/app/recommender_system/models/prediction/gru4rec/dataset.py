@@ -14,7 +14,7 @@ def sequence_to_tensor(seq: List[int], num_features: int) -> torch.Tensor:
         return row
 
     for item in seq:
-        torch.mul(row, 0.9)
+        row = torch.mul(row, 0.9)
         row[item] = 1
 
     return torch.div(row, torch.sum(row))
