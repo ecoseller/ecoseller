@@ -44,6 +44,7 @@ const setCookieStateReducer = (
         ...state,
         statisticalCookies: action.payload.statisticalCookies,
       };
+
     case ActionsSetCookieState.SETADS:
       return { ...state, adsCookies: action.payload.adsCookies };
     case ActionsSetCookieState.SETOPENDISCLAIMER:
