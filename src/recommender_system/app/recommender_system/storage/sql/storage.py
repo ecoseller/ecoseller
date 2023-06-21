@@ -80,6 +80,8 @@ class SQLStorage(AbstractStorage):
                             query_filters.append(column < value)
                         elif operator == "lte":
                             query_filters.append(column <= value)
+                        elif operator == "in":
+                            query_filters.append(column.in_(value))
                         else:
                             raise ValueError(
                                 f"Unknown operator {operator} on field {field}."
