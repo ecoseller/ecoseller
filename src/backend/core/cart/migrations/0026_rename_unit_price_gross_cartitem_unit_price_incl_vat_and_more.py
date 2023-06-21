@@ -5,7 +5,7 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("cart", "0024_remove_shippingmethodcountry_api_request_and_more"),
+        ("cart", "0025_paymentmethod_safe_deleted_and_more"),
     ]
 
     operations = [
