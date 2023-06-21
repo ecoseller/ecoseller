@@ -1,3 +1,4 @@
+from sqlalchemy.dialects import postgresql
 from sqlalchemy.sql.schema import Column, Index
 from sqlalchemy.sql.sqltypes import (
     DECIMAL,
@@ -141,6 +142,9 @@ class SQLSession(FeedbackBase):
 
     id = Column(String(100), primary_key=True)
     user_id = Column(Integer(), nullable=True)
+    visited_product_variants = Column(
+        postgresql.ARRAY(String(255)), nullable=False, default=[]
+    )
 
     __tablename__ = "session"
 
