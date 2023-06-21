@@ -9,4 +9,8 @@ urlpatterns = [
     path("dashboard/<str:token>/", views.ReviewDetailDashboardView.as_view()),
     path("dashboard/", views.ReviewListDashboardView.as_view()),
     path("rating/<str:product_id>/", views.ProductAverageRatingView.as_view()),
+    path(
+        "rating-distribution/<str:product_id>/",
+        views.ProductRatingDistributionView.as_view(),
+    ),
 ]

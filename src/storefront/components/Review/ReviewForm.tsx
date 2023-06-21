@@ -49,13 +49,14 @@ const ReviewForm = ({ item, order_id, showSnackbar }: IReviewProps) => {
 
     const submitReview = async () => {
         console.log("SUBMIT REVIEW")
+        console.log("review rating", value)
         fetch(`/api/review/create/`, {
             method: "POST",
             body: JSON.stringify({
                 order: order_id,
                 product_id: item.product_id,
                 product_variant_sku: item.product_variant_sku,
-                rating: value,
+                rating: value ? value * 20 : 0,
                 comment: reviewText,
             }),
         })

@@ -21,23 +21,136 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { reviewDetailAPI } from "@/pages/api/review/detail/[id]";
 import { reviewRatingAPI } from "@/pages/api/review/rating/[id]";
 import { IReview } from "@/types/review";
-import { Typography } from "@mui/material";
+import { Box, Grid, Rating, Stack, TextField, Typography } from "@mui/material";
+import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
+import StarIcon from '@mui/icons-material/Star';
+import { styled } from '@mui/material/styles';
+import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
+import { reviewDistributionAPI } from "@/pages/api/review/distribution/[id]";
 
 interface IProps {
     review: IReview,
-    productAverageRating: number
+    productAverageRating: any
+    totalReviews: number,
+    reviewDistribution: any
 }
 
-const DashboardProductsEditPage = ({ review, productAverageRating }: IProps) => {
+const labels: { [index: string]: string } = {
+    10: 'Useless',
+    20: 'Useless+',
+    30: 'Poor',
+    40: 'Poor+',
+    50: 'Ok',
+    60: 'Ok+',
+    70: 'Good',
+    80: 'Good+',
+    90: 'Excellent',
+    100: 'Excellent+',
+};
+
+function getLabelText(value: number) {
+    return `${value} Star${value !== 1 ? 's' : ''}, ${labels[value]}`;
+}
+
+const DashboardProductsEditPage = ({ review, productAverageRating, totalReviews, reviewDistribution }: IProps) => {
     const router = useRouter();
     console.log("AVERAGE RATING", productAverageRating)
+    console.log("REVIEW DISTRIBUTION", reviewDistribution)
+    let distrMap: Map<string, number> = new Map<string, number>(Object.entries(reviewDistribution));
+    console.log("DISTR MAP", distrMap)
+    const scaling = 100 / totalReviews;
 
     return (
         <DashboardLayout>
             <Container maxWidth="xl">
-                <Typography variant="h4" gutterBottom>
-                    Review #{review.product_variant}
-                </Typography>
+                <TopLineWithReturn
+                    title={`Review #${review.product_variant}`}
+                    returnPath={"/dashboard/reviews"}
+                />
+                <Grid container spacing={2}>
+                    <Grid item md={8} xs={12}>
+                        <Stack spacing={2}>
+                            <Stack direction="row" spacing={2}>
+                                <Typography variant="h5" gutterBottom>
+                                    Rating:
+                                </Typography>
+                                <Rating
+                                    name="hover-feedback"
+                                    value={review.rating / 20}
+                                    readOnly={true}
+                                    precision={0.1}
+                                    getLabelText={getLabelText}
+                                    emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+                                    icon={<StarIcon fontSize="inherit" color="primary" />}
+                                />
+                                {review.rating !== null && (
+                                    <Typography variant="h6">{labels[review.rating] + " (" + review.rating + "%" + ")"}</Typography>
+                                )}
+                            </Stack>
+                            <Stack direction="row" spacing={2}>
+                                <Typography variant="h5" gutterBottom>
+                                    Product ID:
+                                </Typography>
+                                <Typography variant="h6" gutterBottom>
+                                    {review.product}
+                                </Typography>
+                            </Stack>
+                            <Stack direction="column" spacing={2}>
+                                <Typography variant="h5" gutterBottom>
+                                    Comment:
+                                </Typography>
+                                <TextField
+                                    label="Review comment"
+                                    multiline
+                                    rows={12}
+                                    variant="outlined"
+                                    fullWidth
+                                    value={review.comment}
+                                />
+                            </Stack>
+                        </Stack>
+                    </Grid>
+                    <Grid item md={4} xs={12}>
+                        <Stack spacing={2}>
+                            <Typography variant="h4" gutterBottom>
+                                Average product rating
+                            </Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                <Stack direction="column" spacing={2} sx={{ ml: 8 }}>
+                                    <Typography variant="h3" gutterBottom sx={{ ml: 6 }}>
+                                        {productAverageRating.average_rating / 20}
+                                    </Typography>
+                                    <Rating
+                                        name="hover-feedback"
+                                        size="large"
+                                        value={productAverageRating.average_rating / 20}
+                                        readOnly={true}
+                                        precision={0.1}
+                                        getLabelText={getLabelText}
+                                        emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+                                        icon={<StarIcon fontSize="inherit" color="primary" />}
+                                    />
+                                </Stack>
+                            </Box>
+                            {
+                                Array.from(distrMap).reverse().map((item, index) => (
+                                    <Stack direction="row" key={index}>
+                                        <Typography variant="h5" gutterBottom sx={{ mt: 0.5 }}>
+                                            {item[0]}
+                                        </Typography>
+                                        <StarIcon fontSize="large" color="primary" />
+                                        <Grid item xs sx={{ mt: 1.5 }}>
+                                            <LinearProgress sx={{ height: 10, borderRadius: 5 }} variant="determinate" value={item[1] * scaling} />
+                                        </Grid>
+                                        <Typography gutterBottom sx={{ mt: 0.5, ml: 1 }}>
+                                            {item[1]}x
+                                        </Typography>
+                                    </Stack>
+                                ))
+                            }
+                        </Stack>
+                    </Grid>
+                </Grid>
             </Container>
         </DashboardLayout>
     );
@@ -78,10 +191,23 @@ export const getServerSideProps = async (context: any) => {
         res as NextApiResponse
     );
 
+    const reviewDistribution = await reviewDistributionAPI(
+        review.product,
+        "GET",
+        req as NextApiRequest,
+        res as NextApiResponse
+    )
+
+    const totalReviews = reviewDistribution.total_reviews;
+    delete reviewDistribution.total_reviews;
+
+
     return {
         props: {
             review,
             productAverageRating,
+            totalReviews,
+            reviewDistribution,
         },
     };
 };

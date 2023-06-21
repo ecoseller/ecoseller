@@ -95,6 +95,54 @@ class ProductAverageRatingView(APIView):
         return Response({"average_rating": average_rating}, status=200)
 
 
+class ProductRatingDistributionView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request, product_id):
+        reviews = Review.objects.all()
+        reviews = reviews.filter(product__id=product_id)
+        if len(reviews) == 0:
+            return Response(
+                {
+                    "total_reviews": 0,
+                    "1": 0,
+                    "2": 0,
+                    "3": 0,
+                    "4": 0,
+                    "5": 0,
+                },
+                status=200,
+            )
+        ten = reviews.filter(rating=10).count()
+        twenty = reviews.filter(rating=20).count()
+        thirty = reviews.filter(rating=30).count()
+        forty = reviews.filter(rating=40).count()
+        fifty = reviews.filter(rating=50).count()
+        sixty = reviews.filter(rating=60).count()
+        seventy = reviews.filter(rating=70).count()
+        eighty = reviews.filter(rating=80).count()
+        ninety = reviews.filter(rating=90).count()
+        hundred = reviews.filter(rating=100).count()
+
+        one = ten + twenty
+        two = thirty + forty
+        three = fifty + sixty
+        four = seventy + eighty
+        five = ninety + hundred
+
+        return Response(
+            {
+                "total_reviews": len(reviews),
+                "1": one,
+                "2": two,
+                "3": three,
+                "4": four,
+                "5": five,
+            },
+            status=200,
+        )
+
+
 class ReviewListDashboardView(APIView):
     permission_classes = (permissions.AllowAny,)
     serializer_class = ReviewSerializer
