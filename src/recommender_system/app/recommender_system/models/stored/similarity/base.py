@@ -17,10 +17,9 @@ class SimilarityStoredBaseModel(StoredBaseModel):
     def __init__(
         self,
         _storage: "AbstractSimilarityStorage" = Provide["similarity_storage"],
-        *args,
         **kwargs
     ):
-        super().__init__(_storage=_storage, *args, **kwargs)
+        super().__init__(_storage=_storage, **kwargs)
 
     @classmethod
     @inject

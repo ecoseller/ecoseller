@@ -16,11 +16,10 @@ class FeedbackStoredBaseModel(StoredBaseModel):
     def __init__(
         self,
         _storage: "AbstractFeedbackStorage" = Provide["feedback_storage"],
-        *args,
         **kwargs
     ):
         self._storage = _storage
-        super().__init__(_storage=_storage, *args, **kwargs)
+        super().__init__(_storage=_storage, **kwargs)
 
     @classmethod
     @inject

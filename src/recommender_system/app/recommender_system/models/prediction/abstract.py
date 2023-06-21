@@ -84,5 +84,5 @@ class AbstractPredictionModel(ABC):
         LatestIdentifierModel(
             model_name=self.Meta.model_name, identifier=self.identifier
         ).save()
-        if latest_identifier is not None:
+        if latest_identifier is not None and latest_identifier != self.identifier:
             self.__class__(identifier=latest_identifier).delete()
