@@ -12,6 +12,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Unstable_Grid2";
 import { MaxWidthWrapper } from "../MaxWidthWrapper";
 import { useCountry } from "@/utils/context/country";
+import { useCookie } from "@/utils/context/cookies";
 
 const Item = styled(Box)(({ theme }) => ({
   ...theme.typography.body2,
@@ -28,6 +29,8 @@ const Footer = () => {
   const { country } = useCountry();
 
   console.log(country);
+
+  const { cookieState, setCookieState } = useCookie();
 
   return (
     <FooterContainer>
