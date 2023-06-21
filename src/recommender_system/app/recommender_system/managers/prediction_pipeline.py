@@ -8,6 +8,9 @@ from recommender_system.managers.model_manager import ModelManager
 from recommender_system.models.prediction.similarity.model import (
     SimilarityPredictionModel,
 )
+from recommender_system.models.stored.model.latest_identifier import (
+    LatestIdentifierModel,
+)
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.models.stored.similarity.distance import DistanceModel
 from recommender_system.storage.product.abstract import AbstractProductStorage
@@ -109,7 +112,10 @@ class PredictionPipeline:
         if self.order_top_k < len(variants):
             top_k = variants[: self.order_top_k]
             left_out = variants[self.order_top_k :]
-        model_identifier = SimilarityPredictionModel.get_latest_identifier()
+        try:
+            model_identifier = SimilarityPredictionModel.get_latest_identifier()
+        except LatestIdentifierModel.DoesNotExist:
+            return variants
         mapping = {sku: i for i, sku in enumerate(top_k)}
         distances = DistanceModel.gets(
             model_identifier=model_identifier, lhs__in=top_k, rhs__in=top_k
