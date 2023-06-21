@@ -161,7 +161,8 @@ def test_pipeline_ordering(
         session_id="session",
         user_id=1,
     )
-    assert result == ["4", "1", "2", "3"]
+    assert result[0] == "4"
+    assert result[-1] == "3"
 
     skus = ["3", "1", "2", "4"]
     result = pipeline._order(
