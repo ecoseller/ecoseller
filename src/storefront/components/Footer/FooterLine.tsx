@@ -12,6 +12,8 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Unstable_Grid2";
 import { MaxWidthWrapper } from "../MaxWidthWrapper";
 import { useCountry } from "@/utils/context/country";
+import { useCookie } from "@/utils/context/cookies";
+import CookieDisclaimer from "../Common/CookieDisclaimer";
 
 const Item = styled(Box)(({ theme }) => ({
   ...theme.typography.body2,
@@ -28,6 +30,8 @@ const Footer = () => {
   const { country } = useCountry();
 
   console.log(country);
+
+  const { cookieState, toggleDisclaimer } = useCookie();
 
   return (
     <FooterContainer>
@@ -54,9 +58,18 @@ const Footer = () => {
             <Grid>
               <Item>Terms of Service</Item>
             </Grid>
+            <Grid>
+              <Item onClick={() => toggleDisclaimer(true)}>Cookies</Item>
+            </Grid>
           </Grid>
         </Grid>
       </MaxWidthWrapper>
+      <CookieDisclaimer
+        open={cookieState?.openDisclaimer}
+        setOpen={(value: boolean) => {
+          toggleDisclaimer(value);
+        }}
+      />
     </FooterContainer>
   );
 };
