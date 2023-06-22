@@ -4,7 +4,8 @@ from . import views
 urlpatterns = [
     path("storefront/create/", views.ReviewCreateStorefrontView.as_view()),
     path(
-        "storefront/<str:product_id>/", views.ProductReviewListStorefrontView.as_view()
+        "storefront/<str:product_id>/<str:country>/",
+        views.ProductReviewListStorefrontView.as_view(),
     ),
     path("dashboard/<str:token>/", views.ReviewDetailDashboardView.as_view()),
     path("dashboard/", views.ReviewListDashboardView.as_view()),

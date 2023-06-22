@@ -108,7 +108,7 @@ export const ReviewList = ({ reviews }: IReviewListProps) => {
                         label="Delete"
                         className="textPrimary"
                         onClick={async () => {
-                            fetch(`/api/review/${id}`, {
+                            fetch(`/api/review/detail/${id}`, {
                                 method: "DELETE",
                             })
                                 .then((res) => {

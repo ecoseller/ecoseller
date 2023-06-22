@@ -211,6 +211,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const productReviews = await productReviewListAPI(
     id as string,
+    country as string,
     "GET",
     req as NextApiRequest,
     res as NextApiResponse

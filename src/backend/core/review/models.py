@@ -26,3 +26,4 @@ class Review(models.Model):
     order = models.ForeignKey(
         Order, null=True, on_delete=models.SET_NULL, related_name="review"
     )
+    country = models.CharField(max_length=255, null=True)

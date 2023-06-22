@@ -6,6 +6,7 @@ import { HTTPMETHOD } from "@/types/common";
 
 export const productReviewListAPI = async (
     id: string,
+    country: string,
     method: HTTPMETHOD,
     req: NextApiRequest,
     res: NextApiResponse
@@ -14,7 +15,7 @@ export const productReviewListAPI = async (
         setRequestResponse(req, res);
     }
 
-    let url = `/review/storefront/${id}`;
+    let url = `/review/storefront/${id}/${country}`;
 
 
     if (method === "GET") {
@@ -35,9 +36,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
      */
     const { method } = req;
     const { id } = req.query;
+    const { country } = req.query;
 
     if (method == "POST") {
-        return productReviewListAPI(id as string, "POST", req, res)
+        return productReviewListAPI(id as string, country as string, "POST", req, res)
             .then((data) => res.status(204).json(null))
             .catch((error) => res.status(400));
     }

@@ -11,6 +11,7 @@ import CollapsableContentWithTitle from "../Generic/CollapsableContentWithTitle"
 import { useState } from "react";
 import StarIcon from '@mui/icons-material/Star';
 import { IItem } from "@/types/review";
+import Cookies from "js-cookie";
 
 interface IReviewProps {
     item: IItem;
@@ -50,6 +51,8 @@ const ReviewForm = ({ item, order_id, showSnackbar }: IReviewProps) => {
     const submitReview = async () => {
         console.log("SUBMIT REVIEW")
         console.log("review rating", value)
+        const country = Cookies.get("country")
+        console.log("country", country)
         fetch(`/api/review/create/`, {
             method: "POST",
             body: JSON.stringify({
@@ -58,6 +61,7 @@ const ReviewForm = ({ item, order_id, showSnackbar }: IReviewProps) => {
                 product_variant_sku: item.product_variant_sku,
                 rating: value ? value * 20 : 0,
                 comment: reviewText,
+                country: country,
             }),
         })
             .then((res) => {

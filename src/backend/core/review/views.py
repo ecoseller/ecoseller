@@ -21,6 +21,7 @@ class ReviewCreateStorefrontView(APIView):
         order_id = request.data.get("order")
         rating = request.data.get("rating")
         comment = request.data.get("comment")
+        country = request.data.get("country")
 
         try:
             product = Product.objects.get(id=product_id)
@@ -37,12 +38,13 @@ class ReviewCreateStorefrontView(APIView):
         if Review.objects.filter(product_variant=product_variant, order=order).exists():
             return Response(status=403)
 
-        review = Review.objects.create(
+        Review.objects.create(
             product=product,
             order=order,
             rating=rating,
             comment=comment,
             product_variant=product_variant,
+            country=country,
         )
         return Response(status=201)
 
@@ -72,8 +74,8 @@ class ProductReviewListStorefrontView(APIView):
     permission_classes = (permissions.AllowAny,)
     serializer_class = ReviewSerializer
 
-    def get(self, request, product_id):
-        reviews = Review.objects.filter(product__id=product_id)
+    def get(self, request, product_id, country):
+        reviews = Review.objects.filter(product__id=product_id, country=country)
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data)
 
