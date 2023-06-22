@@ -4,7 +4,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { api, setRequestResponse } from "@/utils/interceptors/api";
 import { HTTPMETHOD } from "@/types/common";
 
-export const reviewAPI = async (
+export const productReviewListAPI = async (
+    id: string,
     method: HTTPMETHOD,
     req: NextApiRequest,
     res: NextApiResponse
@@ -13,13 +14,12 @@ export const reviewAPI = async (
         setRequestResponse(req, res);
     }
 
-    let url = `/review/storefront/create/`;
+    let url = `/review/storefront/${id}`;
 
-    const { body } = req;
 
-    if (method === "POST") {
+    if (method === "GET") {
         return await api
-            .post(url, body)
+            .get(url)
             .then((response) => response.data)
             .catch((error: any) => {
                 throw error;
@@ -34,9 +34,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
      * This is a wrapper for the cart product API in the backend
      */
     const { method } = req;
+    const { id } = req.query;
 
     if (method == "POST") {
-        return reviewAPI("POST", req, res)
+        return productReviewListAPI(id as string, "POST", req, res)
             .then((data) => res.status(204).json(null))
             .catch((error) => res.status(400));
     }

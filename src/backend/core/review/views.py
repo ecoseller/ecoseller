@@ -73,7 +73,7 @@ class ProductReviewListStorefrontView(APIView):
     serializer_class = ReviewSerializer
 
     def get(self, request, product_id):
-        reviews = Review.objects.filter(product__sku=product_id)
+        reviews = Review.objects.filter(product__id=product_id)
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data)
 
