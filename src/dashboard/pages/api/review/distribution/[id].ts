@@ -11,7 +11,7 @@ import { ICountry } from "@/types/country";
 import { HTTPMETHOD } from "@/types/common";
 
 
-export const reviewDistributionAPI = async (
+export const productRatingAPI = async (
     id: string,
     method: HTTPMETHOD,
     req?: NextApiRequest,
@@ -21,7 +21,7 @@ export const reviewDistributionAPI = async (
         setRequestResponse(req, res);
     }
 
-    const reviewUrl = `/review/rating-distribution/${id}/`;
+    const reviewUrl = `/review/product-rating/${id}/`;
 
     switch (method) {
         case "GET":
@@ -38,7 +38,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const { method } = req;
     const { id } = req.query;
     if (method == "GET") {
-        return reviewDistributionAPI(id as string, "GET", req, res).then((data) => res.status(200).json(data));
+        return productRatingAPI(id as string, "GET", req, res).then((data) => res.status(200).json(data));
     }
     return res.status(404).json({ message: "Method not supported" });
 };

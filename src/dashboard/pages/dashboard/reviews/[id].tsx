@@ -19,21 +19,18 @@ import { pricelistListAPI } from "@/pages/api/product/price-list";
 import { productDetailAPI } from "@/pages/api/product/[id]";
 import { NextApiRequest, NextApiResponse } from "next";
 import { reviewDetailAPI } from "@/pages/api/review/detail/[id]";
-import { reviewRatingAPI } from "@/pages/api/review/rating/[id]";
 import { IReview } from "@/types/review";
 import { Box, Grid, Rating, Stack, TextField, Typography } from "@mui/material";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 import StarIcon from '@mui/icons-material/Star';
 import { styled } from '@mui/material/styles';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
-import { reviewDistributionAPI } from "@/pages/api/review/distribution/[id]";
+import { productRatingAPI } from "@/pages/api/review/distribution/[id]";
 import { AverageRating } from "@/components/Dashboard/Review/AverageRating";
 
 interface IProps {
     review: IReview,
-    productAverageRating: any
-    totalReviews: number,
-    reviewDistribution: any
+    productRating: any,
 }
 
 const labels: { [index: string]: string } = {
@@ -53,14 +50,7 @@ function getLabelText(value: number) {
     return `${value} Star${value !== 1 ? 's' : ''}, ${labels[value]}`;
 }
 
-const DashboardProductsEditPage = ({ review, productAverageRating, totalReviews, reviewDistribution }: IProps) => {
-    const router = useRouter();
-    console.log("AVERAGE RATING", productAverageRating)
-    console.log("REVIEW DISTRIBUTION", reviewDistribution)
-    let distrMap: Map<string, number> = new Map<string, number>(Object.entries(reviewDistribution));
-    console.log("DISTR MAP", distrMap)
-    const scaling = 100 / totalReviews;
-
+const DashboardProductsEditPage = ({ review, productRating }: IProps) => {
     return (
         <DashboardLayout>
             <Container maxWidth="xl">
@@ -103,7 +93,7 @@ const DashboardProductsEditPage = ({ review, productAverageRating, totalReviews,
                                 <TextField
                                     label="Review comment"
                                     multiline
-                                    rows={12}
+                                    rows={15}
                                     variant="outlined"
                                     fullWidth
                                     value={review.comment}
@@ -112,7 +102,7 @@ const DashboardProductsEditPage = ({ review, productAverageRating, totalReviews,
                         </Stack>
                     </Grid>
                     <Grid item md={4} xs={12}>
-                        <AverageRating average_rating={productAverageRating.average_rating} distrMap={distrMap} scaling={scaling} />
+                        <AverageRating productRating={productRating} />
                     </Grid>
                 </Grid>
             </Container>
@@ -148,30 +138,17 @@ export const getServerSideProps = async (context: any) => {
         res as NextApiResponse
     );
 
-    const productAverageRating = await reviewRatingAPI(
-        review.product,
-        "GET",
-        req as NextApiRequest,
-        res as NextApiResponse
-    );
-
-    const reviewDistribution = await reviewDistributionAPI(
+    const productRating = await productRatingAPI(
         review.product,
         "GET",
         req as NextApiRequest,
         res as NextApiResponse
     )
 
-    const totalReviews = reviewDistribution.total_reviews;
-    delete reviewDistribution.total_reviews;
-
-
     return {
         props: {
             review,
-            productAverageRating,
-            totalReviews,
-            reviewDistribution,
+            productRating,
         },
     };
 };

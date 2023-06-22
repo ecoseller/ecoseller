@@ -78,32 +78,15 @@ class ProductReviewListStorefrontView(APIView):
         return Response(serializer.data)
 
 
-class ProductAverageRatingView(APIView):
+class ProductRatingDetailView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def get(self, request, product_id):
-        reviews = Review.objects.all()
-        print("SENT ID", product_id)
-        print(reviews)
-        print("PRODUCT", reviews[0].product)
-        print("PRODUCT ID", reviews[0].product.id)
-        reviews = reviews.filter(product__id=product_id)
-        if len(reviews) == 0:
-            print("NO REVIEWS")
-            return Response({"average_rating": 0}, status=200)
-        average_rating = sum([r.rating for r in reviews]) / reviews.count()
-        return Response({"average_rating": average_rating}, status=200)
-
-
-class ProductRatingDistributionView(APIView):
-    permission_classes = (permissions.AllowAny,)
-
-    def get(self, request, product_id):
-        reviews = Review.objects.all()
-        reviews = reviews.filter(product__id=product_id)
+        reviews = Review.objects.filter(product__id=product_id)
         if len(reviews) == 0:
             return Response(
                 {
+                    "average_rating": 0,
                     "total_reviews": 0,
                     "1": 0,
                     "2": 0,
@@ -113,6 +96,7 @@ class ProductRatingDistributionView(APIView):
                 },
                 status=200,
             )
+        average_rating = sum([r.rating for r in reviews]) / reviews.count()
         ten = reviews.filter(rating=10).count()
         twenty = reviews.filter(rating=20).count()
         thirty = reviews.filter(rating=30).count()
@@ -132,6 +116,7 @@ class ProductRatingDistributionView(APIView):
 
         return Response(
             {
+                "average_rating": average_rating,
                 "total_reviews": len(reviews),
                 "1": one,
                 "2": two,

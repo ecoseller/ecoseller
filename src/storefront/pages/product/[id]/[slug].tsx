@@ -34,11 +34,14 @@ import { countryDetailAPI } from "@/pages/api/country/[code]";
 import { ICountry } from "@/types/country";
 import BreadcrumbCategoryNav from "@/components/Common/BreadcrumbCategoryNav";
 import { DEFAULT_COUNTRY } from "@/utils/defaults";
+import { AverageRating } from "@/components/Review/AverageRating";
+import { productRatingAPI } from "@/pages/api/review/rating/[token]";
 
 interface IProductPageProps {
   data: IProductDetail;
   country: string;
   pricelist: string;
+  productRating: any;
 }
 
 const recommendedProducts: IProductSliderData[] = [
@@ -86,7 +89,7 @@ const recommendedProducts: IProductSliderData[] = [
   },
 ];
 
-const ProductPage = ({ data, country, pricelist }: IProductPageProps) => {
+const ProductPage = ({ data, country, pricelist, productRating }: IProductPageProps) => {
   const { basePath } = useRouter();
 
   const theme = useTheme();
@@ -149,6 +152,12 @@ const ProductPage = ({ data, country, pricelist }: IProductPageProps) => {
           </Typography>
           <ProductsSlider data={recommendedProducts} />
         </Box>
+        <Box sx={{ pt: 5 }}>
+          <Typography variant="h4" gutterBottom>
+            Reviews
+          </Typography>
+          <AverageRating productRating={productRating} />
+        </Box>
       </div>
     </>
   );
@@ -187,7 +196,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     res as NextApiResponse
   );
 
-  console.log(data);
+  const productRating = await productRatingAPI(
+    id as string,
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  )
+
 
   if (!data) {
     return {
@@ -207,6 +222,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       data,
       country,
       pricelist,
+      productRating,
     },
   };
 };
