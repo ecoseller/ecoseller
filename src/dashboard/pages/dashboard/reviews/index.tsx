@@ -11,52 +11,51 @@ import { IReview } from "@/types/review";
 import { ReviewList } from "@/components/Dashboard/Review/ReviewList";
 
 interface IDashboardReviewPageProps {
-    reviews: IReview[];
+  reviews: IReview[];
 }
 
 const OrderListPage = ({ reviews }: IDashboardReviewPageProps) => {
-
-    console.log(reviews);
-    return (
-        <DashboardLayout>
-            <Container maxWidth="xl">
-                <Stack
-                    direction="row"
-                    alignItems="center"
-                    justifyContent="space-between"
-                    mb={5}
-                >
-                    <Typography variant="h4" gutterBottom>
-                        Review list
-                    </Typography>
-                </Stack>
-                <Card elevation={0}>
-                    <ReviewList reviews={reviews} />
-                </Card>
-            </Container>
-        </DashboardLayout>
-    );
+  console.log(reviews);
+  return (
+    <DashboardLayout>
+      <Container maxWidth="xl">
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mb={5}
+        >
+          <Typography variant="h4" gutterBottom>
+            Review list
+          </Typography>
+        </Stack>
+        <Card elevation={0}>
+          <ReviewList reviews={reviews} />
+        </Card>
+      </Container>
+    </DashboardLayout>
+  );
 };
 
 OrderListPage.getLayout = (page: ReactElement) => {
-    return (
-        <RootLayout>
-            <DashboardLayout>{page}</DashboardLayout>
-        </RootLayout>
-    );
+  return (
+    <RootLayout>
+      <DashboardLayout>{page}</DashboardLayout>
+    </RootLayout>
+  );
 };
 
 export const getServerSideProps = async (context: any) => {
-    const { req, res } = context;
-    const reviews: IReview[] = await reviewListAPI(
-        "GET",
-        req as NextApiRequest,
-        res as NextApiResponse
-    );
+  const { req, res } = context;
+  const reviews: IReview[] = await reviewListAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
 
-    console.log("REVIEWS", reviews)
+  console.log("REVIEWS", reviews);
 
-    return { props: { reviews: reviews } };
+  return { props: { reviews: reviews } };
 };
 
 export default OrderListPage;

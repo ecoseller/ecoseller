@@ -35,7 +35,7 @@ export const ReviewsList = ({ reviews }: IReviewsProps) => {
   return (
     <Stack spacing={2}>
       {reviews.map((review, index) => (
-        <Stack direction="column">
+        <Stack direction="column" key={index}>
           <Grid item xs sx={{ mt: 1.5 }}>
             <Divider sx={{ borderStyle: "dashed" }} />
           </Grid>

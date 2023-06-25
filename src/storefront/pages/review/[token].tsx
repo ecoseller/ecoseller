@@ -6,7 +6,6 @@ import Link from "next/link";
 
 // libs
 import { productAPI } from "@/pages/api/product/[id]";
-import Output from "@/utils/editorjs/Output";
 
 // components
 import MediaGallery from "@/components/ProductDetail/MediaGallery";
@@ -24,7 +23,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import Box from "@mui/material/Box";
 
 // types
-import { IProduct, IProductSliderData } from "@/types/product";
 import {
   GetServerSideProps,
   NextApiRequest,
@@ -87,7 +85,7 @@ const ReviewPage = ({ items, order_id }: IReviewPageProps) => {
     <Container maxWidth="xl">
       {itemsState.map((item) => {
         return (
-          <Box sx={{ mb: 2 }}>
+          <Box sx={{ mb: 2 }} key={item.product_id}>
             <EditorCard>
               <Grid item xs={12} md={4}>
                 <ReviewForm
