@@ -59,7 +59,7 @@ const User = () => {
   }, [openLoginModal, refetch]);
 
   const handleProfile = () => {
-    router.replace(`/user/detail`);
+    router.push(`/user/detail`);
   };
 
   const handleOrders = () => {
