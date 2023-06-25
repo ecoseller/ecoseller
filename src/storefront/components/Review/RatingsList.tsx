@@ -6,27 +6,10 @@ import { useRouter } from "next/router";
 import { Opacity, Visibility } from "@mui/icons-material";
 import { Alert, Box, Card, Divider, Grid, LinearProgress, Rating, Snackbar, Stack, TextField, Typography, alpha } from "@mui/material";
 import StarIcon from '@mui/icons-material/Star';
-import { IReview } from "@/types/review";
+import { IReview, getLabelText } from "@/types/review";
 
 interface IReviewsProps {
     reviews: IReview[];
-}
-
-const labels: { [index: string]: string } = {
-    10: 'Useless',
-    20: 'Useless+',
-    30: 'Poor',
-    40: 'Poor+',
-    50: 'Ok',
-    60: 'Ok+',
-    70: 'Good',
-    80: 'Good+',
-    90: 'Excellent',
-    100: 'Excellent+',
-};
-
-function getLabelText(value: number) {
-    return `${value} Star${value !== 1 ? 's' : ''}, ${labels[value]}`;
 }
 
 export const ReviewsList = ({ reviews }: IReviewsProps) => {

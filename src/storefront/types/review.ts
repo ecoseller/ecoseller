@@ -13,3 +13,20 @@ export interface IReview {
     rating: number;
     token: string;
 }
+
+export const labels: { [index: string]: string } = {
+    10: 'Useless',
+    20: 'Useless+',
+    30: 'Poor',
+    40: 'Poor+',
+    50: 'Ok',
+    60: 'Ok+',
+    70: 'Good',
+    80: 'Good+',
+    90: 'Excellent',
+    100: 'Excellent+',
+};
+
+export function getLabelText(value: number) {
+    return `${value} Star${value !== 1 ? 's' : ''}, ${labels[value]}`;
+}
