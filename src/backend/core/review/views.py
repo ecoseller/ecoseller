@@ -1,7 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework import permissions
 from rest_framework.response import Response
-from roles.decorator import check_user_access_decorator
+
+# from roles.decorator import check_user_access_decorator
 from roles.decorator import check_user_is_staff_decorator
 
 from order.models import OrderStatus
