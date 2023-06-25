@@ -26,9 +26,9 @@ import Box from "@mui/material/Box";
 // types
 import { IProduct, IProductSliderData } from "@/types/product";
 import {
-    GetServerSideProps,
-    NextApiRequest,
-    NextApiResponse,
+  GetServerSideProps,
+  NextApiRequest,
+  NextApiResponse,
 } from "next/types";
 import { orderItemsAPI } from "../api/order/items/[id]";
 import { Alert, Container, Snackbar } from "@mui/material";
@@ -40,114 +40,114 @@ import { IItem } from "@/types/review";
 import { useSnackbarState } from "@/utils/snackbar";
 
 interface IReviewPageProps {
-    items: IItem[];
-    order_id: string;
+  items: IItem[];
+  order_id: string;
 }
 
-
 const ReviewPage = ({ items, order_id }: IReviewPageProps) => {
-    const { basePath } = useRouter();
-    const [itemsState, setItemsState] = useState(items);
+  const { basePath } = useRouter();
+  const [itemsState, setItemsState] = useState(items);
 
-    const [snackbar, setSnackbar] = useSnackbarState();
+  const [snackbar, setSnackbar] = useSnackbarState();
 
-    const handleSnackbarClose = (
-        event?: React.SyntheticEvent | Event,
-        reason?: string
-    ) => {
-        if (reason === "clickaway") {
-            return;
-        }
-        setSnackbar(null);
-    };
+  const handleSnackbarClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbar(null);
+  };
 
-    const showSnackbar = (
-        res: Response,
-        messageSuccess: string,
-        messageError: string
-    ) => {
-        console.log("showSnackbar", res)
-        if (res?.ok) {
-            console.log("success snackbar", res);
-            setSnackbar({
-                open: true,
-                message: messageSuccess,
-                severity: "success",
-            });
-        } else {
-            console.log("error snackbar", res);
-            setSnackbar({
-                open: true,
-                message: messageError,
-                severity: "error",
-            });
-        }
-    };
+  const showSnackbar = (
+    res: Response,
+    messageSuccess: string,
+    messageError: string
+  ) => {
+    console.log("showSnackbar", res);
+    if (res?.ok) {
+      console.log("success snackbar", res);
+      setSnackbar({
+        open: true,
+        message: messageSuccess,
+        severity: "success",
+      });
+    } else {
+      console.log("error snackbar", res);
+      setSnackbar({
+        open: true,
+        message: messageError,
+        severity: "error",
+      });
+    }
+  };
 
-    return (
-        <Container maxWidth="xl">
-            {
-                itemsState.map((item) => {
-                    return (
-                        <Box sx={{ mb: 2 }}>
-                            <EditorCard>
-                                <Grid item xs={12} md={4}>
-                                    <ReviewForm item={item} order_id={order_id} showSnackbar={showSnackbar} />
-                                </Grid>
-                            </EditorCard>
-                        </Box>
-                    )
-                }
-                )
-            }
-            {snackbar ? (
-                <Snackbar
-                    open={snackbar.open}
-                    autoHideDuration={6000}
-                    onClose={handleSnackbarClose}
-                >
-                    <Alert
-                        onClose={handleSnackbarClose}
-                        severity={snackbar.severity}
-                        sx={{ width: "100%" }}
-                    >
-                        {snackbar.message}
-                    </Alert>
-                </Snackbar>
-            ) : null}
-        </Container>
-    );
+  return (
+    <Container maxWidth="xl">
+      {itemsState.map((item) => {
+        return (
+          <Box sx={{ mb: 2 }}>
+            <EditorCard>
+              <Grid item xs={12} md={4}>
+                <ReviewForm
+                  item={item}
+                  order_id={order_id}
+                  showSnackbar={showSnackbar}
+                />
+              </Grid>
+            </EditorCard>
+          </Box>
+        );
+      })}
+      {snackbar ? (
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={6000}
+          onClose={handleSnackbarClose}
+        >
+          <Alert
+            onClose={handleSnackbarClose}
+            severity={snackbar.severity}
+            sx={{ width: "100%" }}
+          >
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
+      ) : null}
+    </Container>
+  );
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const { token } = context.query;
-    const { res, req } = context;
+  const { token } = context.query;
+  const { res, req } = context;
 
-    const data = await orderItemsAPI(
-        "GET",
-        token as string,
-        req as NextApiRequest,
-        res as NextApiResponse,
-    );
+  const data = await orderItemsAPI(
+    "GET",
+    token as string,
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
 
-    console.log(data);
-    let items = [];
-    if (data) {
-        for (let i = 0; i < data.items.length; i++) {
-            items.push({
-                product_variant_name: data.items[i].product_variant_name as string,
-                product_id: data.items[i].product_id as number,
-                product_variant_sku: data.items[i].product_variant_sku as string,
-            });
-        }
+  console.log(data);
+  let items = [];
+  if (data) {
+    for (let i = 0; i < data.items.length; i++) {
+      items.push({
+        product_variant_name: data.items[i].product_variant_name as string,
+        product_id: data.items[i].product_id as number,
+        product_variant_sku: data.items[i].product_variant_sku as string,
+      });
     }
+  }
 
-    return {
-        props: {
-            items: items,
-            order_id: token,
-        },
-    };
+  return {
+    props: {
+      items: items,
+      order_id: token,
+    },
+  };
 };
 
 export default ReviewPage;

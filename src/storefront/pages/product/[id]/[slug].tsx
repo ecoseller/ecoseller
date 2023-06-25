@@ -93,7 +93,13 @@ const recommendedProducts: IProductSliderData[] = [
   },
 ];
 
-const ProductPage = ({ data, country, pricelist, productRating, productReviews }: IProductPageProps) => {
+const ProductPage = ({
+  data,
+  country,
+  pricelist,
+  productRating,
+  productReviews,
+}: IProductPageProps) => {
   const { basePath } = useRouter();
   console.log("REVIEWS LIST", productReviews);
 
@@ -207,7 +213,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     "GET",
     req as NextApiRequest,
     res as NextApiResponse
-  )
+  );
 
   const productReviews = await productReviewListAPI(
     id as string,
@@ -215,8 +221,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     "GET",
     req as NextApiRequest,
     res as NextApiResponse
-  )
-
+  );
 
   if (!data) {
     return {
@@ -237,7 +242,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       country,
       pricelist,
       productRating,
-      productReviews
+      productReviews,
     },
   };
 };

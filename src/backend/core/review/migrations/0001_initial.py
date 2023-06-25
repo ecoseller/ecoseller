@@ -10,20 +10,41 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('order', '0003_remove_order_paid_order_status'),
-        ('product', '0038_attributetype_baseattribute_and_more'),
+        ("order", "0003_remove_order_paid_order_status"),
+        ("product", "0038_attributetype_baseattribute_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Review',
+            name="Review",
             fields=[
-                ('token', models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False)),
-                ('create_at', models.DateTimeField(auto_now_add=True)),
-                ('rating', models.IntegerField(default=-1)),
-                ('comment', models.TextField()),
-                ('order', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='review', to='order.order')),
-                ('product', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='review', to='product.product')),
+                (
+                    "token",
+                    models.UUIDField(
+                        default=uuid.uuid4, primary_key=True, serialize=False
+                    ),
+                ),
+                ("create_at", models.DateTimeField(auto_now_add=True)),
+                ("rating", models.IntegerField(default=-1)),
+                ("comment", models.TextField()),
+                (
+                    "order",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="review",
+                        to="order.order",
+                    ),
+                ),
+                (
+                    "product",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="review",
+                        to="product.product",
+                    ),
+                ),
             ],
         ),
     ]
