@@ -1,4 +1,5 @@
 import { IUser } from "@/types/user";
+import { useRouter } from "next/router";
 import { useState, createContext, useContext, useEffect } from "react";
 interface IUserContextProps {
   user: IUser | null;
@@ -12,16 +13,16 @@ const UserContext = createContext<Partial<IUserContextProps>>({});
 
 export const UserProvider = ({ children }: IUserProviderProps): JSX.Element => {
   const [user, setUser] = useState<IUser | null>(null);
+  const { pathname } = useRouter();
 
   useEffect(() => {
     getUser();
-  }, []);
+  }, [pathname]);
 
   const getUser = async () => {
     await fetch(`/api/user/detail`)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setUser({
           email: data["email"],
           first_name: data["first_name"],
