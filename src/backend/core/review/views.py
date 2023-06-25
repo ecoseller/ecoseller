@@ -1,6 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework import permissions
 from rest_framework.response import Response
+from roles.decorator import check_user_access_decorator
+from roles.decorator import check_user_is_staff_decorator
 
 from order.models import OrderStatus
 
@@ -53,6 +55,7 @@ class ReviewDetailDashboardView(APIView):
     permission_classes = (permissions.AllowAny,)
     serializer_class = ReviewSerializer
 
+    @check_user_is_staff_decorator()
     def get(self, request, token):
         try:
             review = Review.objects.get(token=token)
@@ -61,6 +64,8 @@ class ReviewDetailDashboardView(APIView):
         except Review.DoesNotExist:
             return Response(status=404)
 
+    # TODO: Uncomment once roles will be re-deployed with their final permission set
+    # @check_user_access_decorator({"review_change_permission"})
     def delete(self, request, token):
         try:
             review = Review.objects.get(token=token)
@@ -134,6 +139,7 @@ class ReviewListDashboardView(APIView):
     permission_classes = (permissions.AllowAny,)
     serializer_class = ReviewSerializer
 
+    @check_user_is_staff_decorator()
     def get(self, request):
         reviews = Review.objects.all()
         serializer = ReviewSerializer(reviews, many=True)

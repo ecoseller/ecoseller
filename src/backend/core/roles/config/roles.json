@@ -121,6 +121,12 @@
           "description": "Can add base attribute",
           "type": "ADD",
           "model": "baseattribute"
+        },
+        {
+          "name": "review_change_permission",
+          "description": "Can change review",
+          "type": "CHANGE",
+          "model": "review"
         }
       ],
       "description": "Editor role",
