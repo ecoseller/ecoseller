@@ -65,14 +65,7 @@ export const ReviewsList = ({ reviews }: IReviewsProps) => {
               }
               icon={<StarIcon fontSize="inherit" color="primary" />}
             />
-            <TextField
-              label="Review comment"
-              multiline
-              rows={5}
-              variant="outlined"
-              fullWidth
-              value={review.comment}
-            />
+            <p>{review.comment}</p>
           </Stack>
           <Grid item xs sx={{ mt: 1.5 }}>
             <Divider sx={{ borderStyle: "dashed" }} />

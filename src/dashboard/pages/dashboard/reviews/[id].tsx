@@ -20,7 +20,15 @@ import { productDetailAPI } from "@/pages/api/product/[id]";
 import { NextApiRequest, NextApiResponse } from "next";
 import { reviewDetailAPI } from "@/pages/api/review/detail/[id]";
 import { IReview } from "@/types/review";
-import { Box, Grid, Rating, Stack, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  Grid,
+  Rating,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 import StarIcon from "@mui/icons-material/Star";
 import { styled } from "@mui/material/styles";
@@ -96,14 +104,9 @@ const DashboardProductsEditPage = ({ review, productRating }: IProps) => {
                 <Typography variant="h5" gutterBottom>
                   Comment:
                 </Typography>
-                <TextField
-                  label="Review comment"
-                  multiline
-                  rows={15}
-                  variant="outlined"
-                  fullWidth
-                  value={review.comment}
-                />
+                <Card sx={{ minHeight: 400, p: 2 }}>
+                  <Typography variant="body1">{review.comment}</Typography>
+                </Card>
               </Stack>
             </Stack>
           </Grid>
