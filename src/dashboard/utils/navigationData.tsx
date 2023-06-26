@@ -8,6 +8,7 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import LanguageIcon from "@mui/icons-material/Language";
 import MoneyIcon from "@mui/icons-material/Money";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import ReviewsIcon from "@mui/icons-material/Reviews";
 
 import { ContextPermissions } from "./context/permission";
 export interface INavigationItem {
@@ -47,6 +48,11 @@ const navigationData: INavigationItem[] = [
     title: "Orders",
     path: "/dashboard/orders",
     icon: <ShoppingCartIcon />,
+  },
+  {
+    title: "Reviews",
+    path: "/dashboard/reviews",
+    icon: <ReviewsIcon />,
   },
   {
     title: "Catalog",

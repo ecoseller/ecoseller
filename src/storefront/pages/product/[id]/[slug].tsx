@@ -34,11 +34,18 @@ import { countryDetailAPI } from "@/pages/api/country/[code]";
 import { ICountry } from "@/types/country";
 import BreadcrumbCategoryNav from "@/components/Common/BreadcrumbCategoryNav";
 import { DEFAULT_COUNTRY } from "@/utils/defaults";
+import { AverageRating } from "@/components/Review/AverageRating";
+import { productRatingAPI } from "@/pages/api/review/rating/[token]";
+import { productReviewListAPI } from "@/pages/api/review/list/[token]";
+import { IReview } from "@/types/review";
+import { ReviewsList } from "@/components/Review/RatingsList";
 
 interface IProductPageProps {
   data: IProductDetail;
   country: string;
   pricelist: string;
+  productRating: any;
+  productReviews: IReview[];
 }
 
 const recommendedProducts: IProductSliderData[] = [
@@ -86,8 +93,15 @@ const recommendedProducts: IProductSliderData[] = [
   },
 ];
 
-const ProductPage = ({ data, country, pricelist }: IProductPageProps) => {
+const ProductPage = ({
+  data,
+  country,
+  pricelist,
+  productRating,
+  productReviews,
+}: IProductPageProps) => {
   const { basePath } = useRouter();
+  console.log("REVIEWS LIST", productReviews);
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -149,6 +163,13 @@ const ProductPage = ({ data, country, pricelist }: IProductPageProps) => {
           </Typography>
           <ProductsSlider data={recommendedProducts} />
         </Box>
+        <Box sx={{ pt: 5 }}>
+          <Typography variant="h4" gutterBottom>
+            Reviews
+          </Typography>
+          <AverageRating productRating={productRating} />
+          <ReviewsList reviews={productReviews} />
+        </Box>
       </div>
     </>
   );
@@ -187,7 +208,20 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     res as NextApiResponse
   );
 
-  console.log(data);
+  const productRating = await productRatingAPI(
+    id as string,
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
+  const productReviews = await productReviewListAPI(
+    id as string,
+    country as string,
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
 
   if (!data) {
     return {
@@ -207,6 +241,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       data,
       country,
       pricelist,
+      productRating,
+      productReviews,
     },
   };
 };
