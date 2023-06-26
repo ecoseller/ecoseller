@@ -177,19 +177,6 @@ def test_dummy(app, create_product_variants, prediction_pipeline):
             else:
                 assert sku in predictions
 
-        variants = [ProductVariantModel.get(pk=sku) for sku in variant_skus]
-        variants.sort(key=lambda variant: variant.create_at, reverse=True)
-
-        ordered_skus = [
-            variant.sku for variant in variants if variant.sku != "unittest4"
-        ]
-
-        indices = [predictions.index(sku) for sku in ordered_skus]
-        index = -1
-        for found_index in indices:
-            assert index < found_index
-            index = found_index
-
 
 def test_popularity(app, create_product_variants, prediction_pipeline):
     with app.container.model_manager.override(

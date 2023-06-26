@@ -2,14 +2,24 @@ from enum import Enum
 from typing import Any, List, Optional
 
 from dependency_injector.wiring import inject, Provide
+import numpy as np
 
 from recommender_system.managers.model_manager import ModelManager
+from recommender_system.models.prediction.similarity.model import (
+    SimilarityPredictionModel,
+)
+from recommender_system.models.stored.model.latest_identifier import (
+    LatestIdentifierModel,
+)
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
+from recommender_system.models.stored.similarity.distance import DistanceModel
 from recommender_system.storage.product.abstract import AbstractProductStorage
 from recommender_system.utils.recommendation_type import RecommendationType
 
 
 class PredictionPipeline:
+    order_top_k: int = 50
+
     class Step(Enum):
         RETRIEVAL = "RETRIEVAL"
         FILTERING = "FILTERING"
@@ -93,6 +103,66 @@ class PredictionPipeline:
             )
         raise ValueError("Unknown recommendation type.")
 
+    def _order_by_diversity(self, variants: List[str]) -> List[str]:
+        def intra_list_distance(indices: List[int], dists: np.ndarray) -> float:
+            return np.mean(dists[np.ix_(indices, indices)]).item()
+
+        top_k = variants
+        left_out = []
+        if self.order_top_k < len(variants):
+            top_k = variants[: self.order_top_k]
+            left_out = variants[self.order_top_k :]
+        try:
+            model_identifier = SimilarityPredictionModel.get_latest_identifier()
+        except LatestIdentifierModel.DoesNotExist:
+            return variants
+        mapping = {sku: i for i, sku in enumerate(top_k)}
+        distances = DistanceModel.gets(
+            model_identifier=model_identifier, lhs__in=top_k, rhs__in=top_k
+        )
+        distance_matrix = np.zeros((len(top_k), len(top_k)))
+
+        for distance in distances:
+            i = mapping[distance.lhs]
+            j = mapping[distance.rhs]
+            distance_matrix[i, j] = distance.distance
+
+        result = [top_k[0]]
+        rest = set(top_k[1:])
+        while len(rest) > 0:
+            mapped_result = [mapping[sku] for sku in result]
+            best_sku: Optional[str] = None
+            best: Optional[float] = None
+            for sku in rest:
+                ild = intra_list_distance(
+                    indices=mapped_result + [mapping[sku]], dists=distance_matrix
+                )
+                if best is None or ild > best:
+                    best_sku = sku
+                    best = ild
+            result.append(best_sku)
+            rest.remove(best_sku)
+
+        return result + left_out
+
+    @inject
+    def _order_by_stock(
+        self,
+        variants: List[str],
+        product_storage: AbstractProductStorage = Provide["product_storage"],
+    ) -> List[str]:
+        out_of_stock_set = set(
+            product_storage.get_objects_attribute(
+                model_class=ProductVariantModel,
+                attribute="sku",
+                stock_quantity=0,
+                sku__in=variants,
+            )
+        )
+        in_stock = [variant for variant in variants if variant not in out_of_stock_set]
+        out_of_stock = [variant for variant in variants if variant in out_of_stock_set]
+        return in_stock + out_of_stock
+
     def _order(
         self,
         variants: List[str],
@@ -100,9 +170,9 @@ class PredictionPipeline:
         session_id: str,
         user_id: Optional[int],
     ) -> List[str]:
-        variant_models = [ProductVariantModel.get(pk=variant) for variant in variants]
-        variant_models.sort(key=lambda variant: variant.create_at, reverse=True)
-        return [variant.pk for variant in variant_models]
+        result = self._order_by_diversity(variants=variants)
+        result = self._order_by_stock(variants=result)
+        return result
 
     def run(
         self,

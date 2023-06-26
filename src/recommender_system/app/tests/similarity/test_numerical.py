@@ -1,15 +1,21 @@
 import csv
 
+from dependency_injector.wiring import inject, Provide
 import numpy as np
 import pytest
 
 
+from recommender_system.managers.prediction_pipeline import PredictionPipeline
+from recommender_system.managers.trainer import Trainer
 from recommender_system.models.prediction.similarity.model import (
     SimilarityPredictionModel,
 )
 from recommender_system.models.prediction.similarity.tools import (
     prepare_variants,
     compute_numerical_distances,
+)
+from recommender_system.models.stored.model.trainer_queue_item import (
+    TrainerQueueItemModel,
 )
 from recommender_system.models.stored.product.attribute import AttributeModel
 from recommender_system.models.stored.product.attribute_type import AttributeTypeModel
@@ -22,6 +28,7 @@ from recommender_system.scripts.fill_data import (
     fill_products,
     fill_attributes,
 )
+from recommender_system.utils.recommendation_type import RecommendationType
 
 
 FILENAME = "tests/similarity/data_numerical.csv"
@@ -110,3 +117,58 @@ def test_predict_numerical_distances(
 
     assert "1" not in result
     assert result.index("2") < result.index("4")
+
+
+@inject
+def test_pipeline_ordering(
+    clear_database,
+    trainer: Trainer = Provide["trainer"],
+    pipeline: PredictionPipeline = Provide["prediction_pipeline"],
+):
+    _ = clear_database
+
+    fill_attribute_types(rows=ROWS)
+    fill_product_types(rows=ROWS)
+    fill_products(rows=ROWS)
+    fill_attributes(rows=ROWS)
+
+    for sku in ["1", "2", "3", "4"]:
+        variant = ProductVariantModel.get(pk=sku)
+        variant.stock_quantity = 0 if sku == "3" else 1
+        variant.save()
+
+    for item in TrainerQueueItemModel.gets():
+        item.delete()
+
+    trainer.schedule_train(model_name=SimilarityPredictionModel.Meta.model_name)
+    trainer.train()
+
+    pipeline.order_top_k = 4
+
+    skus = ["1", "2", "3", "4"]
+    result = pipeline._order(
+        variants=skus,
+        recommendation_type=RecommendationType.PRODUCT_DETAIL,
+        session_id="session",
+        user_id=1,
+    )
+    assert result == ["1", "4", "2", "3"]
+
+    skus = ["4", "2", "3", "1"]
+    result = pipeline._order(
+        variants=skus,
+        recommendation_type=RecommendationType.PRODUCT_DETAIL,
+        session_id="session",
+        user_id=1,
+    )
+    assert result[0] == "4"
+    assert result[-1] == "3"
+
+    skus = ["3", "1", "2", "4"]
+    result = pipeline._order(
+        variants=skus,
+        recommendation_type=RecommendationType.PRODUCT_DETAIL,
+        session_id="session",
+        user_id=1,
+    )
+    assert result[-1] == "3"  # Is not in stock
