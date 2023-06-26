@@ -36,7 +36,9 @@ class GRU4RecPredictionModel(AbstractPredictionModel):
         num_product_variants = product_storage.count_objects(
             model_class=ProductVariantModel
         )
-        self.network = NeuralNetwork(num_product_variants=num_product_variants)
+        self.network = NeuralNetwork(
+            identifier=self.identifier, num_product_variants=num_product_variants
+        )
         self.network.train()
         self.network.save(identifier=self.identifier)
 

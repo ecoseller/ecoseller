@@ -15,6 +15,7 @@ from recommender_system.storage.sql.models.model import (
     SQLConfig,
     SQLLatestIdentifier,
     SQLTrainerQueueItem,
+    SQLTrainingStatistics,
 )
 from recommender_system.storage.sql.models.products import (
     ProductBase,
@@ -50,6 +51,7 @@ _sql_models = [
     SQLConfig,
     SQLLatestIdentifier,
     SQLTrainerQueueItem,
+    SQLTrainingStatistics,
     SQLAttribute,
     SQLAttributeProductVariant,
     SQLAttributeType,

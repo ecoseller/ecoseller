@@ -32,7 +32,7 @@ class EASEPredictionModel(AbstractPredictionModel):
     def train(
         self, product_storage: AbstractProductStorage = Provide["product_storage"]
     ) -> None:
-        self.ease = EASE()
+        self.ease = EASE(identifier=self.identifier)
         self.ease.train()
         self.ease.save(identifier=self.identifier)
 

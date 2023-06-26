@@ -19,6 +19,7 @@ class RecommendationView(ApiBaseModel):
     product_id: int
     product_variant_sku: str
     recommendation_type: str
+    model_identifier: str
     position: Optional[int]
     create_at: datetime
 
