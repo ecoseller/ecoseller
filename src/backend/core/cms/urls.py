@@ -12,4 +12,8 @@ urlpatterns = [
     path("category/", views.PageCategoryDashboardView.as_view()),
     path("category/<int:pk>/", views.PageCategoryDashboardDetailView.as_view()),
     path("category/<int:pk>/pages/", views.PageCategoryPagesDashboardView.as_view()),
+    path(
+        "storefront/page/cms/<str:locale>/<str:slug>/",
+        views.PageCMSStorefrontDetailView.as_view(),
+    ),
 ]

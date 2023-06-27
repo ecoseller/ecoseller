@@ -4,7 +4,14 @@
  * if not, we can return 404 page.
  */
 
-const CMSPage = ({}) => {
+import { IPageCMS } from "@/types/cms";
+import { GetServerSideProps } from "next";
+
+interface CMSPageProps {
+  page: IPageCMS;
+}
+
+const CMSPage = ({ page }: CMSPageProps) => {
   return (
     <>
       <h1>Page not found</h1>
@@ -12,8 +19,12 @@ const CMSPage = ({}) => {
   );
 };
 
-export const getServerSideProps = async ({}) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { slug } = context.query;
+  const { res, req, locale } = context;
+  const language = Array.isArray(locale) ? locale[0] : locale || "en";
   // fetch page from backend
+
   // if page not found, return 404
 
   return {
