@@ -5,11 +5,10 @@ from typing import Any, Dict, List, TYPE_CHECKING
 import numpy as np
 from dependency_injector.wiring import inject, Provide
 
-from recommender_system.models.stored.feedback.product_add_to_cart import (
-    ProductAddToCartModel,
-)
-
-# from recommender_system.models.stored.feedback.review import ReviewModel
+# from recommender_system.models.stored.feedback.product_add_to_cart import (
+#     ProductAddToCartModel,
+# )
+from recommender_system.models.stored.feedback.review import ReviewModel
 from recommender_system.models.stored.model.training_statistics import (
     TrainingStatisticsModel,
 )
@@ -93,10 +92,10 @@ class EASE:
         logging.info("Preparing rating matrix")
 
         # TODO: Use better rating matrix estimate
-        # reviews = ReviewModel.gets()
-        # user_ids = [review.user_id for review in reviews]
-        reviews = ProductAddToCartModel.gets()
+        reviews = ReviewModel.gets()
         user_ids = [review.user_id for review in reviews]
+        # reviews = ProductAddToCartModel.gets()
+        # user_ids = [review.user_id for review in reviews]
         skus = product_storage.get_objects_attribute(
             model_class=ProductVariantModel, attribute="sku", stock_quantity__gt=0
         )
