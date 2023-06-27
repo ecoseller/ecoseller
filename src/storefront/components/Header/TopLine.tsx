@@ -64,7 +64,7 @@ const TopLine = () => {
             >
               {data?.map((category) =>
                 category?.page?.map((page) => (
-                  <Grid>
+                  <Grid key={page.id}>
                     <Item>
                       <Typography
                         variant="subtitle2"
