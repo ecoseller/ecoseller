@@ -19,7 +19,7 @@ class GRU4RecPredictionModel(AbstractPredictionModel):
     def __init__(self, identifier: Optional[str] = None):
         super().__init__(identifier=identifier)
         try:
-            self.network = NeuralNetwork.load(identifier=identifier)
+            self.network = NeuralNetwork.load(identifier=self.identifier)
         except Exception as e:
             logging.warning(
                 f"Unable to load model {self.Meta.model_name}: {self.identifier} ({e})"

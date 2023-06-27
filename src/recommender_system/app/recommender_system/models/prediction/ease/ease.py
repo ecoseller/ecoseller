@@ -57,8 +57,6 @@ class EASE:
     ) -> "EASE":
         ease = cls(identifier=identifier)
 
-        ease._identifier = identifier
-
         matrices = ease_storage.get_matrices(identifier=identifier)
         ease.X = matrices["X"]
         ease.B = matrices["B"]

@@ -179,29 +179,19 @@ class SQLProductStorage(SQLStorage, AbstractProductStorage):
 
         return [row[0] for row in query.all()]
 
-    def get_product_variant_prices(
-        self, product_variant_skus: List[str]
-    ) -> Dict[str, float]:
+    def get_product_variant_prices(self) -> Dict[str, float]:
         query = self.session.query(
             SQLProductPrice.product_variant_sku, SQLProductPrice.price
         )
         query = query.select_from(SQLProductPrice)
-        query = query.filter(
-            SQLProductPrice.product_variant_sku.in_(product_variant_skus)
-        )
         return {row[0]: row[1] for row in query.all()}
 
-    def get_price_stats(
-        self, product_variant_skus: List[str]
-    ) -> Optional[NumericalStatistics]:
+    def get_price_stats(self) -> Optional[NumericalStatistics]:
         query = self.session.query(
             func.min(SQLProductPrice.price),
             func.avg(SQLProductPrice.price),
             func.max(SQLProductPrice.price),
         ).select_from(SQLProductPrice)
-        query = query.filter(
-            SQLProductPrice.product_variant_sku.in_(product_variant_skus)
-        )
 
         result = query.first()
         if result is not None:

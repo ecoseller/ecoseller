@@ -36,7 +36,9 @@ class SimilarityPredictionModel(AbstractPredictionModel):
         self,
         similarity_storage: AbstractSimilarityStorage = Provide["similarity_storage"],
     ) -> None:
-        similarity_storage.delete(model_class=DistanceModel)
+        similarity_storage.delete(
+            model_class=DistanceModel, model_identifier=self.identifier
+        )
 
     @inject
     def save_distances(

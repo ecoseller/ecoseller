@@ -18,7 +18,7 @@ class EASEPredictionModel(AbstractPredictionModel):
     def __init__(self, identifier: Optional[str] = None):
         super().__init__(identifier=identifier)
         try:
-            self.ease = EASE.load(identifier=identifier)
+            self.ease = EASE.load(identifier=self.identifier)
         except Exception as e:
             logging.warning(
                 f"Unable to load model {self.Meta.model_name}: {self.identifier} ({e})"

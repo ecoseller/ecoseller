@@ -1,3 +1,5 @@
+from datetime import datetime
+import logging
 import itertools
 
 from dependency_injector.wiring import inject, Provide
@@ -33,6 +35,8 @@ def prepare_variants(
     for i, sku in enumerate(product_variant_skus):
         variant_mapper[sku] = i
 
+    logging.info(f"{datetime.now()}: Variants prepared")
+
     categorical_type_ids = product_storage.get_objects_attribute(
         model_class=AttributeTypeModel,
         attribute=AttributeTypeModel.Meta.primary_key,
@@ -40,6 +44,7 @@ def prepare_variants(
     )
     categorical = None
     categorical_mask = None
+    logging.info(f"{datetime.now()}: Categorical types prepared")
     if len(categorical_type_ids) > 0:
         categorical = np.full(
             (len(product_variant_skus), len(categorical_type_ids)),
@@ -65,14 +70,17 @@ def prepare_variants(
                     categorical[row, col] = value_mapper[value]
                     categorical_mask[row, col] = True
 
+            logging.info(
+                f"{datetime.now()}: Type {type_id} filled ({col}/{len(categorical_type_ids)})"
+            )
+
     prices = np.full(
         (len(product_variant_skus), 1), DEFAULT_NUMERIC_VALUE, dtype=np.double
     )
     prices_mask = np.full((len(product_variant_skus), 1), False, dtype=bool)
-    prices_data = product_storage.get_product_variant_prices(
-        product_variant_skus=product_variant_skus
-    )
-    stats = product_storage.get_price_stats(product_variant_skus=product_variant_skus)
+    prices_data = product_storage.get_product_variant_prices()
+    stats = product_storage.get_price_stats()
+    logging.info(f"{datetime.now()}: Prices prepared")
     for sku, price in prices_data.items():
         if stats is not None:
             if stats.min != stats.max:
@@ -84,6 +92,8 @@ def prepare_variants(
             prices[row, 0] = normalized_price
             prices_mask[row, 0] = True
 
+    logging.info(f"{datetime.now()}: Prices filled")
+
     numerical_type_ids = product_storage.get_objects_attribute(
         model_class=AttributeTypeModel,
         attribute=AttributeTypeModel.Meta.primary_key,
@@ -91,6 +101,7 @@ def prepare_variants(
     )
     numerical = prices
     numerical_mask = prices_mask
+    logging.info(f"{datetime.now()}: Numerical prepared")
     if len(numerical_type_ids) > 0:
         numerical = np.hstack(
             (
@@ -135,6 +146,9 @@ def prepare_variants(
                     else:
                         normalized_value = DEFAULT_NUMERIC_VALUE
                     numerical[row, col] = normalized_value
+            logging.info(
+                f"{datetime.now()}: Type {type_id} filled ({col}/{len(numerical_type_ids)})"
+            )
 
     return TrainData(
         product_variant_skus=product_variant_skus,
