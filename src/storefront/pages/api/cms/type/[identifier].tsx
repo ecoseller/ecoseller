@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { api, setRequestResponse } from "@/utils/interceptors/api";
 import { HTTPMETHOD } from "@/types/common";
 
-export const orderSubmitAPI = async (
+export const pageCategoryTypeAPI = async (
   method: HTTPMETHOD,
   identifier: string,
   req: NextApiRequest,
@@ -29,7 +29,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { identifier } = query;
 
   if (method == "GET") {
-    return orderSubmitAPI("GET", identifier as string, req, res)
+    return pageCategoryTypeAPI("GET", identifier as string, req, res)
       .then((data) => res.status(200).json(data))
       .catch((error) => res.status(400).json(error.response.data));
   }
