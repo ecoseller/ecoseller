@@ -14,6 +14,7 @@ from recommender_system.storage.sql.models.model import (
     ModelBase,
     SQLConfig,
     SQLLatestIdentifier,
+    SQLPredictionResult,
     SQLTrainerQueueItem,
     SQLTrainingStatistics,
 )
@@ -50,6 +51,7 @@ _sql_models = [
     SQLSession,
     SQLConfig,
     SQLLatestIdentifier,
+    SQLPredictionResult,
     SQLTrainerQueueItem,
     SQLTrainingStatistics,
     SQLAttribute,

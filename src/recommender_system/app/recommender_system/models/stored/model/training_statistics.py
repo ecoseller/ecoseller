@@ -1,9 +1,9 @@
 from typing import Any, Dict, Optional
 
-from recommender_system.models.stored.model.base import ModelStoredBaseModel
+from recommender_system.models.stored.model.immutable import ImmutableModelStoredModel
 
 
-class TrainingStatisticsModel(ModelStoredBaseModel):
+class TrainingStatisticsModel(ImmutableModelStoredModel):
     """
     This model represents training statistics as an object that is stored in the database.
     """

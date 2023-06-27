@@ -1,3 +1,4 @@
+from sqlalchemy.dialects import postgresql
 from sqlalchemy.sql.schema import Column, Index
 from sqlalchemy.sql.sqltypes import Boolean, DECIMAL, JSON, Integer, String, TIMESTAMP
 from sqlalchemy.orm import declarative_base, DeclarativeBase
@@ -5,6 +6,9 @@ from sqlalchemy.orm import declarative_base, DeclarativeBase
 from recommender_system.models.stored.model.config import ConfigModel
 from recommender_system.models.stored.model.latest_identifier import (
     LatestIdentifierModel,
+)
+from recommender_system.models.stored.model.prediction_result import (
+    PredictionResultModel,
 )
 from recommender_system.models.stored.model.trainer_queue_item import (
     TrainerQueueItemModel,
@@ -85,3 +89,26 @@ class SQLTrainingStatistics(ModelBase):
 
     class Meta:
         origin_model = TrainingStatisticsModel
+
+
+class SQLPredictionResult(ModelBase):
+    """
+    This model represents training statistics table in SQL database.
+    """
+
+    id = Column(Integer(), primary_key=True)
+    retrieval_model_name = Column(String(255), nullable=False)
+    retrieval_model_identifier = Column(String(255), nullable=False)
+    scoring_model_name = Column(String(255), nullable=False)
+    scoring_model_identifier = Column(String(255), nullable=False)
+    session_id = Column(String(255), nullable=False)
+    retrieval_duration = Column(DECIMAL(), nullable=False)
+    scoring_duration = Column(DECIMAL(), nullable=False)
+    ordering_duration = Column(DECIMAL(), nullable=False)
+    predicted_items = Column(postgresql.ARRAY(String(255)), nullable=False)
+    create_at = Column(TIMESTAMP(), nullable=False)
+
+    __tablename__ = "prediction_result"
+
+    class Meta:
+        origin_model = PredictionResultModel
