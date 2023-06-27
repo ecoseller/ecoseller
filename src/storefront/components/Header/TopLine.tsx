@@ -14,6 +14,8 @@ import Link from "next/link";
 import { MaxWidthWrapper } from "../MaxWidthWrapper";
 import Grid from "@mui/material/Unstable_Grid2";
 import CountrySelect from "../Common/CountrySelect";
+import useSWR from "swr";
+import { IPageCategory } from "@/types/cms";
 // components
 // utils
 
@@ -34,6 +36,15 @@ const TopLineContainer = styled("div")(({ theme }) => ({
 }));
 
 const TopLine = () => {
+  const { data } = useSWR<IPageCategory[]>(
+    `/api/cms/type/HEADER`,
+    (url: string) => fetch(url).then((res) => res.json())
+  );
+
+  console.log(
+    "HEADER",
+    data?.map((category) => category?.page?.map((page) => page?.title))
+  );
   return (
     <TopLineContainer>
       <MaxWidthWrapper>
@@ -51,44 +62,29 @@ const TopLine = () => {
               columnSpacing={1}
               sx={{ pr: 2, order: { xs: 2, sm: 1 } }}
             >
-              <Grid>
-                <Item>
-                  <Typography
-                    variant="subtitle2"
-                    sx={{ flexGrow: 1 }}
-                    component={Link}
-                    href="/contact"
-                    shallow={false}
-                    prefetch={false}
-                    style={{
-                      textDecoration: "none",
-                      color: "inherit",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Contact
-                  </Typography>
-                </Item>
-              </Grid>
-              <Grid>
-                <Item>
-                  <Typography
-                    variant="subtitle2"
-                    sx={{ flexGrow: 1 }}
-                    component={Link}
-                    href="/category"
-                    shallow={false}
-                    prefetch={false}
-                    style={{
-                      textDecoration: "none",
-                      color: "inherit",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Return & Exchange
-                  </Typography>
-                </Item>
-              </Grid>
+              {data?.map((category) =>
+                category?.page?.map((page) => (
+                  <Grid>
+                    <Item>
+                      <Typography
+                        variant="subtitle2"
+                        sx={{ flexGrow: 1 }}
+                        component={Link}
+                        href={`/${page?.slug}`}
+                        shallow={false}
+                        prefetch={false}
+                        style={{
+                          textDecoration: "none",
+                          color: "inherit",
+                          cursor: "pointer",
+                        }}
+                      >
+                        {page?.title}
+                      </Typography>
+                    </Item>
+                  </Grid>
+                ))
+              )}
               <Grid>
                 <Item>
                   <CountrySelect />

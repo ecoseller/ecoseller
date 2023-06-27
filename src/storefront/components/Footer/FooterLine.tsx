@@ -53,12 +53,6 @@ const Footer = () => {
               <Item>GreatCompany © 2023</Item>
             </Grid>
             <Grid>
-              <Item>Privacy Policy</Item>
-            </Grid>
-            <Grid>
-              <Item>Terms of Service</Item>
-            </Grid>
-            <Grid>
               <Item onClick={() => toggleDisclaimer(true)}>Cookies</Item>
             </Grid>
           </Grid>
