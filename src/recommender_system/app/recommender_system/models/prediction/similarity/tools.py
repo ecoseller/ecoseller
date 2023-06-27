@@ -83,6 +83,8 @@ def prepare_variants(
     logging.info(f"{datetime.now()}: Prices prepared")
     for sku, price in prices_data.items():
         if stats is not None:
+            if sku not in variant_mapper:
+                continue
             if stats.min != stats.max:
                 # Normalize into [0, 1]
                 normalized_price = (price - stats.min) / (stats.max - stats.min)
