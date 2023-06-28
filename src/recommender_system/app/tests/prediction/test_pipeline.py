@@ -18,7 +18,7 @@ from recommender_system.models.stored.feedback.product_detail_enter import (
     ProductDetailEnterModel,
 )
 from recommender_system.models.stored.feedback.review import ReviewModel
-from recommender_system.models.stored.model.prediction_result import (
+from recommender_system.models.stored.feedback.prediction_result import (
     PredictionResultModel,
 )
 from recommender_system.models.stored.product.order import OrderModel

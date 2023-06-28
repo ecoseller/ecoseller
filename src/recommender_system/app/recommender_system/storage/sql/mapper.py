@@ -3,6 +3,7 @@ from typing import ClassVar, Dict, Type, Union
 from recommender_system.models.stored.base import StoredBaseModel
 from recommender_system.storage.sql.models.feedback import (
     FeedbackBase,
+    SQLPredictionResult,
     SQLProductAddToCart,
     SQLProductDetailEnter,
     SQLProductDetailLeave,
@@ -14,7 +15,6 @@ from recommender_system.storage.sql.models.model import (
     ModelBase,
     SQLConfig,
     SQLLatestIdentifier,
-    SQLPredictionResult,
     SQLTrainerQueueItem,
     SQLTrainingStatistics,
 )
@@ -43,6 +43,7 @@ Base = Union[
 
 
 _sql_models = [
+    SQLPredictionResult,
     SQLProductAddToCart,
     SQLProductDetailEnter,
     SQLProductDetailLeave,
@@ -51,7 +52,6 @@ _sql_models = [
     SQLSession,
     SQLConfig,
     SQLLatestIdentifier,
-    SQLPredictionResult,
     SQLTrainerQueueItem,
     SQLTrainingStatistics,
     SQLAttribute,

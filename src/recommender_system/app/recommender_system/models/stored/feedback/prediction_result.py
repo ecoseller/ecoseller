@@ -1,10 +1,12 @@
 from datetime import datetime
 from typing import List, Optional
 
-from recommender_system.models.stored.model.immutable import ImmutableModelStoredModel
+from recommender_system.models.stored.feedback.immutable import (
+    ImmutableFeedbackStoredModel,
+)
 
 
-class PredictionResultModel(ImmutableModelStoredModel):
+class PredictionResultModel(ImmutableFeedbackStoredModel):
     """
     This model represents prediction result as an object that is stored in the database.
     """
@@ -14,6 +16,7 @@ class PredictionResultModel(ImmutableModelStoredModel):
     retrieval_model_identifier: str
     scoring_model_name: str
     scoring_model_identifier: str
+    recommendation_type: str
     session_id: str
 
     retrieval_duration: float

@@ -14,7 +14,7 @@ from recommender_system.models.prediction.similarity.model import (
 from recommender_system.models.stored.model.latest_identifier import (
     LatestIdentifierModel,
 )
-from recommender_system.models.stored.model.prediction_result import (
+from recommender_system.models.stored.feedback.prediction_result import (
     PredictionResultModel,
 )
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
@@ -217,11 +217,12 @@ class PredictionPipeline:
             retrieval_model_identifier=retrieval_model.identifier,
             scoring_model_name=scoring_model.Meta.model_name,
             scoring_model_identifier=scoring_model.identifier,
+            recommendation_type=recommendation_type,
             session_id=session_id,
             retrieval_duration=scoring_start - retrieval_start,
             scoring_duration=ordering_start - scoring_start,
             ordering_duration=ordering_end - ordering_start,
-            predicted_items=predictions,
+            predicted_items=predictions,  # TODO: only first k items
             create_at=datetime.now(),
         )
         result.create()

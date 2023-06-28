@@ -8,7 +8,8 @@ from dependency_injector.wiring import inject, Provide
 from recommender_system.models.stored.feedback.product_add_to_cart import (
     ProductAddToCartModel,
 )
-from recommender_system.models.stored.feedback.review import ReviewModel
+
+# from recommender_system.models.stored.feedback.review import ReviewModel
 from recommender_system.models.stored.model.training_statistics import (
     TrainingStatisticsModel,
 )
