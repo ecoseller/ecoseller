@@ -231,6 +231,9 @@ class PageCMSStorefrontDetailView(APIView):
             return Response({"message": "page not found"}, status=HTTP_404_NOT_FOUND)
         serializer = self.serializer_class(
             page, many=False, context={"request": request}
+        )
+        return Response(serializer.data)
+
 
 class PageTypePagesStorefrontView(ListAPIView):
     """
