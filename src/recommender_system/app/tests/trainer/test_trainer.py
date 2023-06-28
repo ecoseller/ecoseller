@@ -19,6 +19,9 @@ from recommender_system.models.stored.model.latest_identifier import (
 from recommender_system.models.stored.model.trainer_queue_item import (
     TrainerQueueItemModel,
 )
+from recommender_system.models.stored.model.training_statistics import (
+    TrainingStatisticsModel,
+)
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from tests.storage.tools import delete_model
 
@@ -149,7 +152,10 @@ def test_trainer_ease(prepare_ease_data, trainer: Trainer = Provide["trainer"]):
     trainer.schedule_train(model_name=EASEPredictionModel.Meta.model_name)
     trainer.train()
 
-    assert EASEPredictionModel.get_latest_identifier() != latest_identifier
+    identifier = EASEPredictionModel.get_latest_identifier()
+    assert identifier != latest_identifier
+
+    _ = TrainingStatisticsModel.get(model_identifier=identifier)  # Make sure it exists
 
 
 @inject
@@ -167,4 +173,7 @@ def test_trainer_gru4rec(prepare_gru4rec_data, trainer: Trainer = Provide["train
     trainer.schedule_train(model_name=GRU4RecPredictionModel.Meta.model_name)
     trainer.train()
 
-    assert GRU4RecPredictionModel.get_latest_identifier() != latest_identifier
+    identifier = GRU4RecPredictionModel.get_latest_identifier()
+    assert identifier != latest_identifier
+
+    _ = TrainingStatisticsModel.get(model_identifier=identifier)  # Make sure it exists

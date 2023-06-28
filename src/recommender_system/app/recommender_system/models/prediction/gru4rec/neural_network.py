@@ -1,5 +1,6 @@
 import logging
-from typing import Dict, List
+import time
+from typing import Any, Dict, List
 
 from dependency_injector.wiring import inject, Provide
 import torch
@@ -15,10 +16,14 @@ from recommender_system.models.prediction.gru4rec.layers import (
     ReducedLinearFeedforward,
     SelectGRUOutput,
 )
+from recommender_system.models.stored.model.training_statistics import (
+    TrainingStatisticsModel,
+)
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.storage.feedback.abstract import AbstractFeedbackStorage
 from recommender_system.storage.product.abstract import AbstractProductStorage
 from recommender_system.storage.gru4rec.abstract import AbstractGRU4RecStorage
+from recommender_system.utils.memory import get_current_memory_usage
 
 
 class NeuralNetwork:
@@ -26,28 +31,51 @@ class NeuralNetwork:
     gru: torch.nn.Module
     feedforward: ReducedLinearFeedforward
     net: torch.nn.Module
-    device: torch.device
 
     mapping: Dict[str, int]
 
-    num_epochs: int = 3
+    num_epochs: int = 1
     batch_size: int = 64
+
+    model_identifier: str
+
+    @property
+    def model_name(self) -> str:
+        from recommender_system.models.prediction.gru4rec.model import (
+            GRU4RecPredictionModel,
+        )
+
+        return GRU4RecPredictionModel.Meta.model_name
+
+    @property
+    def hyperparameters(self) -> Dict[str, Any]:
+        return {"num_epochs": self.num_epochs, "batch_size": self.batch_size}
+
+    @classmethod
+    @inject
+    def load(
+        cls,
+        identifier: str,
+        gru4rec_storage: AbstractGRU4RecStorage = Provide["gru4rec_storage"],
+    ) -> "NeuralNetwork":
+        gru4rec = cls(identifier=identifier)
+
+        gru4rec.net = gru4rec_storage.get_module(identifier=identifier)
+        gru4rec.embedding = gru4rec.net[0]
+        gru4rec.gru = gru4rec.net[1]
+        gru4rec.feedforward = gru4rec.net[-1]
+        gru4rec.mapping = gru4rec_storage.get_mapping(identifier=identifier)
+
+        return gru4rec
 
     @inject
     def __init__(
         self,
+        identifier: str,
         num_product_variants: int,
         product_storage: AbstractProductStorage = Provide["product_storage"],
     ):
-        if torch.cuda.is_available():
-            self.device = torch.device("cuda:0")
-        elif torch.backends.mps.is_available():
-            self.device = torch.device("mps:0")
-        else:
-            self.device = torch.device("cpu")
-        self.device = torch.device("cpu")
-        logging.info(f"Using device {self.device}")
-
+        self.model_identifier = identifier
         skus = product_storage.get_objects_attribute(
             model_class=ProductVariantModel, attribute="sku"
         )
@@ -66,7 +94,7 @@ class NeuralNetwork:
             self.gru,
             SelectGRUOutput(),
             self.feedforward,
-        ).to(self.device)
+        )
         self.optimizer = torch.optim.SGD(self.net.parameters(), lr=0.0001)
 
     def loss(self, outputs: torch.Tensor) -> torch.Tensor:
@@ -79,9 +107,8 @@ class NeuralNetwork:
 
     def _get_data_loader(self) -> torch.utils.data.DataLoader:
         return torch.utils.data.DataLoader(
-            dataset=SessionDataset(mapping=self.mapping, device=self.device),
-            batch_size=self.batch_size,
-            shuffle=True,
+            dataset=SessionDataset(mapping=self.mapping, batch_size=self.batch_size),
+            batch_size=1,
         )
 
     def _set_indices(self, inputs: torch.Tensor, labels: torch.Tensor) -> None:
@@ -92,31 +119,57 @@ class NeuralNetwork:
     def train(self) -> None:
         logging.info("Training started")
 
+        start = time.time()
+        peak_memory, peak_memory_percentage = get_current_memory_usage()
+
         data_loader = self._get_data_loader()
         for epoch in range(self.num_epochs):
 
             running_loss = 0.0
-            for i, data in enumerate(data_loader, 0):
-                inputs, labels = data
-                batched_inputs = torch.unsqueeze(inputs, 0)
-                batched_inputs = batched_inputs.to(self.device)
-                labels = labels.to(self.device)
+            for i, batch in enumerate(data_loader):
+                X, y = batch
+                index = 0
+                while index < X.size(dim=1):
+                    if index + self.batch_size <= X.size(dim=1):
+                        inputs = X[0, index : index + self.batch_size]
+                        labels = y[0, index : index + self.batch_size]
+                    else:
+                        inputs = X[0, index:]
+                        labels = y[0, index:]
 
-                self.optimizer.zero_grad()
+                    self.optimizer.zero_grad()
 
-                self._set_indices(inputs=inputs, labels=labels)
-                outputs = self.net(batched_inputs)
-                loss = self.loss(outputs[0])
-                loss.backward()
-                self.optimizer.step()
+                    self._set_indices(inputs=inputs, labels=labels)
+                    outputs = self.net(inputs)
+                    loss = self.loss(outputs[0])
+                    loss.backward()
+                    self.optimizer.step()
 
-                running_loss += loss.item()
-                if i % 100 == 99:
-                    logging.info(f"{i} batches processed")
+                    running_loss += loss.item()
 
-            logging.info(
-                f"epoch: {epoch + 1} done, loss: {running_loss / len(data_loader):.4f}"
-            )
+                    index += self.batch_size
+
+                    memory, memory_percentage = get_current_memory_usage()
+                    if memory > peak_memory:
+                        peak_memory, peak_memory_percentage = memory, memory_percentage
+
+                if i % 10 == 0:
+                    logging.info(f"{i + 1} / {len(data_loader)} batches processed")
+
+            logging.info(f"epoch: {epoch + 1} done, loss: {running_loss:.4f}")
+
+        end = time.time()
+
+        statistics = TrainingStatisticsModel(
+            model_name=self.model_name,
+            model_identifier=self.model_identifier,
+            duration=end - start,
+            peak_memory=peak_memory,
+            peak_memory_percentage=peak_memory_percentage,
+            metrics={},
+            hyperparameters=self.hyperparameters,
+        )
+        statistics.create()
 
         logging.info("Training finished")
 
@@ -132,9 +185,7 @@ class NeuralNetwork:
             seq = []
         else:
             seq = [self.mapping[item] for item in sequences[0] if item in self.mapping]
-        inputs = sequence_to_tensor(seq=seq, num_features=self.num_features).to(
-            self.device
-        )
+        inputs = sequence_to_tensor(seq=seq, num_features=self.num_features)
         inputs = inputs.resize(1, inputs.size(dim=0))
         inverse_mapping = {}
         possible_labels = []

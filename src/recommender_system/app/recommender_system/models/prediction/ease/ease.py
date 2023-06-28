@@ -1,13 +1,21 @@
 import logging
-from typing import Dict, List, TYPE_CHECKING
+import time
+from typing import Any, Dict, List, TYPE_CHECKING
 
 import numpy as np
 from dependency_injector.wiring import inject, Provide
 
+# from recommender_system.models.stored.feedback.product_add_to_cart import (
+#     ProductAddToCartModel,
+# )
 from recommender_system.models.stored.feedback.review import ReviewModel
+from recommender_system.models.stored.model.training_statistics import (
+    TrainingStatisticsModel,
+)
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.storage.ease.abstract import AbstractEASEStorage
 from recommender_system.storage.product.abstract import AbstractProductStorage
+from recommender_system.utils.memory import get_current_memory_usage
 
 if TYPE_CHECKING:
     from recommender_system.managers.model_manager import ModelManager
@@ -23,8 +31,21 @@ class EASE:
     product_variant_mapping: Dict[str, int]
     inverse_variant_mapping: Dict[int, str]
 
-    def __init__(self):
+    model_identifier: str
+
+    @property
+    def model_name(self) -> str:
+        from recommender_system.models.prediction.ease.model import EASEPredictionModel
+
+        return EASEPredictionModel.Meta.model_name
+
+    @property
+    def hyperparameters(self) -> Dict[str, Any]:
+        return {"l2": self.l2}
+
+    def __init__(self, identifier: str):
         self.l2 = 10
+        self.model_identifier = identifier
 
     @classmethod
     @inject
@@ -33,7 +54,7 @@ class EASE:
         identifier: str,
         ease_storage: AbstractEASEStorage = Provide["ease_storage"],
     ) -> "EASE":
-        ease = cls()
+        ease = cls(identifier=identifier)
 
         matrices = ease_storage.get_matrices(identifier=identifier)
         ease.X = matrices["X"]
@@ -66,10 +87,15 @@ class EASE:
     ) -> None:
         logging.info("Training started")
 
+        start = time.time()
+
         logging.info("Preparing rating matrix")
 
+        # TODO: Use better rating matrix estimate
         reviews = ReviewModel.gets()
         user_ids = [review.user_id for review in reviews]
+        # reviews = ProductAddToCartModel.gets()
+        # user_ids = [review.user_id for review in reviews]
         skus = product_storage.get_objects_attribute(
             model_class=ProductVariantModel, attribute="sku", stock_quantity__gt=0
         )
@@ -84,7 +110,8 @@ class EASE:
                 continue
             user = self.user_mapping[str(review.user_id)]
             product_variant = self.product_variant_mapping[review.product_variant_sku]
-            self.X[user, product_variant] = review.rating
+            # self.X[user, product_variant] = review.rating
+            self.X[user, product_variant] = 1
 
         logging.info("Computing matrix B")
 
@@ -94,6 +121,20 @@ class EASE:
         P = np.linalg.inv(G)
         self.B = P / (-np.diag(P))
         self.B[diag] = 0
+
+        peak_memory, peak_memory_percentage = get_current_memory_usage()
+        end = time.time()
+
+        statistics = TrainingStatisticsModel(
+            model_name=self.model_name,
+            model_identifier=self.model_identifier,
+            duration=end - start,
+            peak_memory=peak_memory,
+            peak_memory_percentage=peak_memory_percentage,
+            metrics={},
+            hyperparameters=self.hyperparameters,
+        )
+        statistics.create()
 
         logging.info("Training finished")
 
