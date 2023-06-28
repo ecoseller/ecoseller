@@ -1,6 +1,8 @@
+from parler.utils.context import switch_language
 from rest_framework.serializers import (
     ReadOnlyField,
 )
+
 from core.settings import PARLER_DEFAULT_LANGUAGE_CODE as DEFAULT_LANG
 
 
@@ -51,15 +53,7 @@ class TranslatedSerializerMixin(object):
 
         # use lang_code from Accept-Lanuage header if provided
         request = self.context.get("request")
-        lang_code = request.META.get("HTTP_ACCEPT_LANGUAGE", None)
-
-        # if no Accept-Lanuage header is provided, use Django app language
-        if lang_code is None:
-            lang_code = self.context.get("locale")
-
-        # Only use the first two chars for language code
-        if lang_code and "-" in lang_code:
-            lang_code = lang_code.split("-")[0]
+        lang_code = self._get_locale(request)
 
         result = {}
         translation_fields = self.get_translations_fields()
@@ -98,3 +92,32 @@ class TranslatedSerializerMixin(object):
     def get_translations_fields(self):
         """Return list of translate fields name"""
         return self.Meta.model._parler_meta.get_all_fields()
+
+    def _get_locale(self, request):
+        """
+        Get language code if present in the request, otherwise get the defualt one
+        """
+        lang_code = request.META.get("HTTP_ACCEPT_LANGUAGE", None)
+
+        # if no Accept-Lanuage header is provided, use Django app language
+        if lang_code is None:
+            lang_code = DEFAULT_LANG
+
+        # Only use the first two chars for language code
+        if lang_code and "-" in lang_code:
+            lang_code = lang_code.split("-")[0]
+
+        return lang_code
+
+    def get_translated_field_value(self, instance, field_name):
+        """
+        Get value of the translated field
+
+        Language code is taken from context.request
+        """
+        request = self.context.get("request")
+        lang_code = self._get_locale(request)
+
+        # Temporarily switch the language to the desired language
+        with switch_language(instance, lang_code):
+            return getattr(instance, field_name)

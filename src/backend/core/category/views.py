@@ -21,8 +21,11 @@ from category.serializers import (
 )
 from common.common import get_url_param_if_valid
 from country.models import Country
-from product.models import Product, PriceList
-from product.serializers import ProductStorefrontListSerializer
+from product.models import Product, PriceList, AttributeTypeValueType
+from product.serializers import (
+    ProductStorefrontListSerializer,
+    AttributeTypeFilterStorefrontSerializer,
+)
 from roles.decorator import check_user_access_decorator
 from roles.decorator import check_user_is_staff_decorator
 
@@ -232,6 +235,66 @@ class CategoryDetailProductsStorefrontView(APIView):
             country = Country.objects.all().first()
 
         return country
+
+
+@permission_classes([AllowAny])
+class CategoryDetailAttributesStorefrontView(APIView):
+    """
+    View for getting all product attributes in the given category.
+    Used for storefront.
+    """
+
+    def get(self, request, pk):
+        try:
+            category = Category.objects.get(id=pk, published=True)
+
+            # Get related objects
+            products = _get_all_published_products(category)
+            attributes = self._get_attributes(products)
+
+            print(attributes)
+
+            serializer_str = AttributeTypeFilterStorefrontSerializer(
+                attributes["string"], many=True, context={"request": request}
+            )
+
+            serializer_num = AttributeTypeFilterStorefrontSerializer(
+                attributes["numeric"], many=True, context={"request": request}
+            )
+
+            response_obj = {
+                "string": serializer_str.data,
+                "numeric": serializer_num.data
+            }
+
+            return Response(response_obj)
+        except Category.DoesNotExist:
+            return Response(status=HTTP_404_NOT_FOUND)
+
+    def _get_attributes(self, products: list[Product]):
+        numeric_attributes = {}
+        string_attributes = {}
+
+        for p in products:
+            for attr in p.type.allowed_attribute_types.all().prefetch_related(
+                    "base_attributes"
+            ):
+                if (
+                        attr.value_type == AttributeTypeValueType.TEXT
+                        and attr.id not in string_attributes
+                ):
+                    string_attributes[attr.id] = attr
+                elif (
+                        attr.value_type
+                        in [AttributeTypeValueType.DECIMAL, AttributeTypeValueType.INTEGER]
+                        and attr.id not in numeric_attributes
+                ):
+                    numeric_attributes[attr.id] = attr
+
+        return {
+            "string": list(string_attributes.values()),
+            "numeric": list(numeric_attributes.values()),
+        }
 
 
 def _get_all_subcategory_ids(category):

@@ -36,7 +36,7 @@ from product.models import (
     AttributeType,
     BaseAttribute,
     ProductMediaTypes,
-    ProductType,
+    ProductType, AttributeTypeValueType,
 )
 
 """
@@ -574,9 +574,9 @@ class ProductVariantStorefrontDetailSerializer(ProductVariantSerializer):
     def get_price(self, obj):
         print("CONTEXT", self.context)
         if (
-            "pricelist" not in self.context
-            or "country" not in self.context
-            or "product_type" not in self.context
+                "pricelist" not in self.context
+                or "country" not in self.context
+                or "product_type" not in self.context
         ):
             return None
         try:
@@ -765,3 +765,26 @@ class ProductVariantCartSerializer(ModelSerializer):
             "sku",
             "base_attributes",
         )
+
+
+class AttributeTypeFilterStorefrontSerializer(TranslatedSerializerMixin, ModelSerializer):
+    """
+    Serializer used for displaying attribute type filters on storefront
+    """
+    possible_values = serializers.SerializerMethodField()
+
+    class Meta:
+        model = AttributeType
+        fields = (
+            "name",
+            "unit",
+            "possible_values"
+        )
+
+    def get_possible_values(self, obj):
+        if obj.value_type == AttributeTypeValueType.TEXT:
+            return [self.get_translated_field_value(ba, "name") for ba in obj.base_attributes.all()]
+        elif obj.value_type == AttributeTypeValueType.DECIMAL:
+            return [float(ba.value) for ba in obj.base_attributes.all()]
+        elif obj.value_type == AttributeTypeValueType.INTEGER:
+            return [int(ba.value) for ba in obj.base_attributes.all()]
