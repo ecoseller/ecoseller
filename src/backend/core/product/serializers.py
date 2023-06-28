@@ -776,6 +776,7 @@ class AttributeTypeFilterStorefrontSerializer(TranslatedSerializerMixin, ModelSe
     class Meta:
         model = AttributeType
         fields = (
+            "id",
             "name",
             "unit",
             "possible_values"
@@ -784,7 +785,7 @@ class AttributeTypeFilterStorefrontSerializer(TranslatedSerializerMixin, ModelSe
     def get_possible_values(self, obj):
         if obj.value_type == AttributeTypeValueType.TEXT:
             return [self.get_translated_field_value(ba, "name") for ba in obj.base_attributes.all()]
-        elif obj.value_type == AttributeTypeValueType.DECIMAL:
-            return [float(ba.value) for ba in obj.base_attributes.all()]
-        elif obj.value_type == AttributeTypeValueType.INTEGER:
-            return [int(ba.value) for ba in obj.base_attributes.all()]
+        else:
+            values = [float(ba.value) for ba in obj.base_attributes.all()]
+            values.sort()
+            return values

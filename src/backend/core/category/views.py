@@ -241,6 +241,7 @@ class CategoryDetailProductsStorefrontView(APIView):
 class CategoryDetailAttributesStorefrontView(APIView):
     """
     View for getting all product attributes in the given category.
+
     Used for storefront.
     """
 
@@ -254,16 +255,16 @@ class CategoryDetailAttributesStorefrontView(APIView):
 
             print(attributes)
 
-            serializer_str = AttributeTypeFilterStorefrontSerializer(
-                attributes["string"], many=True, context={"request": request}
+            serializer_text = AttributeTypeFilterStorefrontSerializer(
+                attributes.textual, many=True, context={"request": request}
             )
 
             serializer_num = AttributeTypeFilterStorefrontSerializer(
-                attributes["numeric"], many=True, context={"request": request}
+                attributes.numeric, many=True, context={"request": request}
             )
 
             response_obj = {
-                "string": serializer_str.data,
+                "textual": serializer_text.data,
                 "numeric": serializer_num.data
             }
 
@@ -271,7 +272,7 @@ class CategoryDetailAttributesStorefrontView(APIView):
         except Category.DoesNotExist:
             return Response(status=HTTP_404_NOT_FOUND)
 
-    def _get_attributes(self, products: list[Product]):
+    def _get_attributes(self, products):
         numeric_attributes = {}
         string_attributes = {}
 
@@ -291,10 +292,12 @@ class CategoryDetailAttributesStorefrontView(APIView):
                 ):
                     numeric_attributes[attr.id] = attr
 
-        return {
-            "string": list(string_attributes.values()),
-            "numeric": list(numeric_attributes.values()),
-        }
+        return CategoryAttributeTypes(list(string_attributes.values()), list(numeric_attributes.values()))
+
+
+class CategoryAttributeTypes:
+    def __init__(self, textual, numeric):
+        self.textual, self.numeric = textual, numeric
 
 
 def _get_all_subcategory_ids(category):
