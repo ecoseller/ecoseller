@@ -1,5 +1,6 @@
 from datetime import datetime
 import random
+import time
 from typing import List, Optional, TYPE_CHECKING
 
 from dependency_injector.wiring import inject, Provide
@@ -11,8 +12,12 @@ from recommender_system.models.prediction.similarity.tools import (
     compute_numerical_distances,
     compute_categorical_distances,
 )
+from recommender_system.models.stored.model.training_statistics import (
+    TrainingStatisticsModel,
+)
 from recommender_system.models.stored.similarity.distance import DistanceModel
 from recommender_system.storage.similarity.abstract import AbstractSimilarityStorage
+from recommender_system.utils.memory import get_current_memory_usage
 
 if TYPE_CHECKING:
     from recommender_system.managers.model_manager import ModelManager
@@ -31,7 +36,9 @@ class SimilarityPredictionModel(AbstractPredictionModel):
         self,
         similarity_storage: AbstractSimilarityStorage = Provide["similarity_storage"],
     ) -> None:
-        similarity_storage.delete(model_class=DistanceModel)
+        similarity_storage.delete(
+            model_class=DistanceModel, model_identifier=self.identifier
+        )
 
     @inject
     def save_distances(
@@ -54,6 +61,8 @@ class SimilarityPredictionModel(AbstractPredictionModel):
         similarity_storage.bulk_create_objects(models=distance_models)
 
     def train(self) -> None:
+        start = time.time()
+
         train_data = prepare_variants()
         distances = compute_numerical_distances(
             variants=train_data.numerical, mask=train_data.numerical_mask
@@ -66,6 +75,20 @@ class SimilarityPredictionModel(AbstractPredictionModel):
         self.save_distances(
             distances=distances, product_variant_skus=train_data.product_variant_skus
         )
+
+        peak_memory, peak_memory_percentage = get_current_memory_usage()
+        end = time.time()
+
+        statistics = TrainingStatisticsModel(
+            model_name=self.Meta.model_name,
+            model_identifier=self.identifier,
+            duration=end - start,
+            peak_memory=peak_memory,
+            peak_memory_percentage=peak_memory_percentage,
+            metrics={},
+            hyperparameters={},
+        )
+        statistics.create()
 
     def retrieve_homepage(self, session_id: str, user_id: Optional[int]) -> List[str]:
         raise TypeError(

@@ -2,7 +2,7 @@ import csv
 from datetime import datetime
 import logging
 import random
-from typing import Any, Dict, List, Set, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 from dependency_injector.wiring import inject, Provide
 
@@ -54,6 +54,12 @@ def bulk_create(models: List[StoredBaseModel], storage: AbstractStorage) -> None
         storage.bulk_create_objects(models=models[index : index + CHUNK_SIZE])
         index += CHUNK_SIZE
     storage.bulk_create_objects(models=models[index:])
+
+
+def filter_rows(
+    rows: List[List[str]], item_ids: Set[str], index: int
+) -> List[List[str]]:
+    return [row for row in rows if row[index] in item_ids]
 
 
 def fill_node_ancestors(
@@ -347,7 +353,7 @@ def fill_attributes(
     )
 
 
-def fill_properties(product_storage: AbstractProductStorage) -> None:
+def fill_types(product_storage: AbstractProductStorage) -> None:
     rows = []
     for filename in [
         "../data/item_properties_part1.csv",
@@ -360,12 +366,32 @@ def fill_properties(product_storage: AbstractProductStorage) -> None:
 
     fill_attribute_types(rows=rows, product_storage=product_storage)
     fill_product_types(rows=rows, product_storage=product_storage)
+
+
+def fill_properties(
+    product_storage: AbstractProductStorage, item_ids: Optional[Set[str]] = None
+) -> None:
+    rows = []
+    for filename in [
+        "../data/item_properties_part1.csv",
+        "../data/item_properties_part2.csv",
+    ]:
+        with open(filename, "r") as file:
+            rows += list(csv.reader(file, delimiter=","))[1:]
+
+    rows.sort(key=lambda row: row[0])
+
+    if item_ids is not None:
+        rows = filter_rows(rows=rows, item_ids=item_ids, index=1)
+
     fill_products(rows=rows, product_storage=product_storage)
     fill_attributes(rows=rows, product_storage=product_storage)
 
 
 def fill_feedback(
-    feedback_storage: AbstractFeedbackStorage, product_storage: AbstractProductStorage
+    feedback_storage: AbstractFeedbackStorage,
+    product_storage: AbstractProductStorage,
+    item_ids: Optional[Set[str]] = None,
 ) -> None:
     logging.info("Filling feedback...")
 
@@ -374,8 +400,15 @@ def fill_feedback(
 
     rows.sort(key=lambda row: row[0])
 
+    if item_ids is not None:
+        rows = filter_rows(rows=rows, item_ids=item_ids, index=3)
+
+    existing_sessions = set(
+        feedback_storage.get_objects_attribute(model_class=SessionModel, attribute="id")
+    )
+
     session_histories: Dict[int, Any] = {}
-    sessions: List[SessionModel] = []
+    sessions: Dict[str, SessionModel] = {}
     order_ids: Set[int] = set()
     orders: List[OrderModel] = []
     order_product_variants: List[OrderProductVariantModel] = []
@@ -387,15 +420,13 @@ def fill_feedback(
         user_id = int(row[1])
         product_variant_sku = row[3]
         order_id = int(row[4]) if row[4] != "" else None
-        if user_id not in session_histories:
+        if user_id not in session_histories and user_id not in existing_sessions:
             session_histories[user_id] = {
                 "session_id": str(user_id),
             }
-            sessions.append(
-                SessionModel(
-                    id=str(user_id),
-                    user_id=user_id,
-                )
+            sessions[str(user_id)] = SessionModel(
+                id=str(user_id),
+                user_id=user_id,
             )
         if row[2] == "view":
             enters.append(
@@ -409,6 +440,7 @@ def fill_feedback(
                     create_at=create_at,
                 )
             )
+            sessions[str(user_id)].visited_product_variants.append(product_variant_sku)
         elif row[2] == "addtocart":
             add_to_carts.append(
                 ProductAddToCartModel(
@@ -438,7 +470,7 @@ def fill_feedback(
                 )
             )
 
-    bulk_create(models=sessions, storage=feedback_storage)
+    bulk_create(models=list(sessions.values()), storage=feedback_storage)
     bulk_create(models=orders, storage=product_storage)
     bulk_create(models=order_product_variants, storage=product_storage)
     bulk_create(models=add_to_carts, storage=feedback_storage)
@@ -448,6 +480,7 @@ def fill_feedback(
 if __name__ == "__main__":
     app = create_app()
     fill_categories(product_storage=app.container.product_storage())
+    fill_types(product_storage=app.container.product_storage())
     fill_properties(product_storage=app.container.product_storage())
     fill_feedback(
         feedback_storage=app.container.feedback_storage(),

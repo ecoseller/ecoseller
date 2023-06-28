@@ -57,6 +57,7 @@ class SQLProductDetailEnter(FeedbackBase):
     product_id = Column(Integer(), nullable=False)
     product_variant_sku = Column(String(255), nullable=False)
     recommendation_type = Column(String(100), nullable=True)
+    model_identifier = Column(String(255), nullable=True)
     position = Column(Integer(), nullable=True)
     create_at = Column(TIMESTAMP(), nullable=False)
 
@@ -103,6 +104,7 @@ class SQLRecommendationView(FeedbackBase):
     product_id = Column(Integer(), nullable=False)
     product_variant_sku = Column(String(255), nullable=False)
     recommendation_type = Column(String(100), nullable=False)
+    model_identifier = Column(String(255), nullable=False)
     position = Column(Integer(), nullable=True)
     create_at = Column(TIMESTAMP(), nullable=False)
 

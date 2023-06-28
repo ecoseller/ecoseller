@@ -9,6 +9,10 @@ urlpatterns = [
     path("category/type/", views.PageCategoryTypeDashboardView.as_view()),
     path("category/type/<int:pk>/", views.PageTypeDashboardDetailView.as_view()),
     path("category/type/<int:pk>/pages/", views.PageTypePagesDashboardView.as_view()),
+    path(
+        "storefront/category/type/<str:type>/pages/",
+        views.PageTypePagesStorefrontView.as_view(),
+    ),
     path("category/", views.PageCategoryDashboardView.as_view()),
     path("category/<int:pk>/", views.PageCategoryDashboardDetailView.as_view()),
     path("category/<int:pk>/pages/", views.PageCategoryPagesDashboardView.as_view()),

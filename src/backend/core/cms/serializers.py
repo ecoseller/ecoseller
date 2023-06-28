@@ -202,3 +202,22 @@ class PageCateogryTypeDashboardSerializer(
     class Meta:
         model = PageCategoryType
         fields = ("id", "identifier")
+
+
+class PageCategoryStorefrontPreviewSerializer(
+    TranslatedSerializerMixin, serializers.ModelSerializer
+):
+    page = PagePolymorphicPreviewSerializer(
+        source="filtered_page", many=True, read_only=True
+    )
+
+    class Meta:
+        model = PageCategory
+        fields = (
+            "id",
+            "title",
+            "image",
+            "code",
+            "published",
+            "page",
+        )
