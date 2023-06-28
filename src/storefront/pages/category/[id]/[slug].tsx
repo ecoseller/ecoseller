@@ -3,14 +3,14 @@ import {
   NextApiRequest,
   NextApiResponse,
 } from "next/types";
-import { ICategoryDetail } from "@/types/category";
+import { IAttributeSet, ICategoryDetail } from "@/types/category";
 import EditorJsOutput from "@/utils/editorjs/EditorJsOutput";
 import Typography from "@mui/material/Typography";
 import SubCategoryList from "@/components/Category/SubCategoryList";
 import HeadMeta from "@/components/Common/SEO";
 import { useRouter } from "next/router";
 import ProductGrid from "@/components/Category/ProductGrid";
-import { IProductRecord } from "@/types/product";
+import { IAttributeTypeWithOptions, IProductRecord } from "@/types/product";
 import { categoryProductsAPI } from "@/pages/api/category/[id]/products";
 import { categoryDetailAPI } from "@/pages/api/category/[id]";
 import Divider from "@mui/material/Divider";
@@ -23,12 +23,22 @@ import { DEFAULT_COUNTRY } from "@/utils/defaults";
 import React, { useEffect, useState } from "react";
 import ProductSortSelect from "@/components/Category/ProductSortSelect";
 import { getCategoryProducts } from "@/api/category/products";
+import { categoryAttributesAPI } from "@/pages/api/category/[id]/attributes";
 
 interface ICategoryPageProps {
   category: ICategoryDetail;
   products: IProductRecord[];
   countryCode: string;
   pricelist: string;
+  attributes: IAttributeSet;
+}
+
+interface ITextualFilter extends IAttributeTypeWithOptions<string> {
+  selectedValues: string[];
+}
+
+export interface IFilters {
+  textual: { [key: number]: ITextualFilter };
 }
 
 const CategoryPage = ({
@@ -36,14 +46,24 @@ const CategoryPage = ({
   products,
   countryCode,
   pricelist,
+  attributes,
 }: ICategoryPageProps) => {
   const router = useRouter();
   const { id } = router.query;
 
   const [productsState, setProductsState] = useState<IProductRecord[]>([]);
+  const [filters, setFilters] = useState<IFilters>({ textual: {} });
 
   useEffect(() => {
     setProductsState(products);
+
+    const emptyFilters: IFilters = { textual: {} };
+
+    for (const attr of attributes.textual) {
+      emptyFilters.textual[attr.id] = { ...attr, selectedValues: [] };
+    }
+
+    setFilters(emptyFilters);
   }, [id]);
 
   const sortProducts = (sortBy: string, order: string) => {
@@ -55,6 +75,19 @@ const CategoryPage = ({
       order
     ).then((data) => {
       setProductsState(data);
+    });
+  };
+
+  const updateFilter = (id: number, selectedValues: string[]) => {
+    setFilters({
+      ...filters,
+      textual: {
+        ...filters.textual,
+        [id]: {
+          ...filters.textual[id],
+          selectedValues: selectedValues,
+        },
+      },
     });
   };
 
@@ -77,7 +110,7 @@ const CategoryPage = ({
             <Divider sx={{ my: 2 }} />
           </>
         ) : null}
-        <ProductFilters />
+        <ProductFilters filters={filters} updateFilter={updateFilter} />
         <Divider sx={{ my: 2 }} />
         <ProductSortSelect sortProducts={sortProducts} />
         <ProductGrid products={productsState} />
@@ -124,6 +157,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     res as NextApiResponse
   );
 
+  const attributes: IAttributeSet = await categoryAttributesAPI(
+    idNumber.toString(),
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
   // if (!category) {
   //   return {
   //     notFound: true,
@@ -143,6 +182,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       products,
       countryCode: countryDetail.code,
       pricelist,
+      attributes,
     },
   };
 };

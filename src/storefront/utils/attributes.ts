@@ -3,9 +3,9 @@ import { IBaseAttribute } from "@/types/product";
 export const serializeAttributes = (attributes: IBaseAttribute[]) => {
   let serializedAttributes = "";
 
-  attributes?.forEach((attribute) => {
-    serializedAttributes += `${attribute.type.type_name}: ${attribute.value} ${attribute.type.unit} `;
-  });
+  const attributeValues = attributes.map(
+    (attr) => `${attr.type.type_name}: ${attr.value} ${attr.type.unit || ""} `
+  );
 
-  return serializedAttributes;
+  return attributeValues.join(", ");
 };

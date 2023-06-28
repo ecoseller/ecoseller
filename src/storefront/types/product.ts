@@ -83,3 +83,13 @@ export interface IProductRecord extends IProductBase {
   primary_image: IProductMedia;
   variant_prices: IProductVariantPrice[];
 }
+
+/**
+ * Interface representing attribute type together with its possible values
+ */
+export interface IAttributeTypeWithOptions<T> {
+  id: number;
+  name: string;
+  unit: string | null;
+  possible_values: T[];
+}
