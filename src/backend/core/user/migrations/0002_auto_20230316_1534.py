@@ -5,10 +5,7 @@ from ..initial_data import populate_groups
 
 
 class Migration(migrations.Migration):
-    dependencies = [
-        ("user", "0001_initial"),
-        ("roles", "0001_initial"),
-    ]
+    dependencies = [("user", "0001_initial"), ("roles", "0001_initial")]
 
     operations = [
         migrations.RunPython(populate_groups),

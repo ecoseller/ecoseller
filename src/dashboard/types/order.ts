@@ -20,3 +20,18 @@ export interface IOrder extends IOrderBase {
 export interface IOrderDetail extends IOrderBase {
   cart: ICart;
 }
+
+export interface ISummaryValue {
+  code: string;
+  symbol: string;
+  value: number;
+}
+
+export interface IOrderStats {
+  orders_count: ISummaryValue[];
+  revenue: ISummaryValue[];
+  average_order_value: ISummaryValue[];
+  average_items_per_order: ISummaryValue[];
+  top_selling_products: any[];
+  daily_orders_count: number[];
+}

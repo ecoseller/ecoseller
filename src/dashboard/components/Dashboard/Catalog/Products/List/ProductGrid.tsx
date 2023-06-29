@@ -56,6 +56,8 @@ const ProductGrid = () => {
     paginationModel?.pageSize
   );
 
+  console.log("products", products);
+
   const columns: GridColDef[] = [
     {
       field: "id",
