@@ -1,6 +1,6 @@
 from datetime import datetime
 import math
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Union
 
 from dependency_injector.wiring import inject, Provide
 from sqlalchemy.orm.query import Query
@@ -61,7 +61,7 @@ class SessionDataset(Dataset):
         query = feedback_storage.get_session_sequences_query(date_from=self.date_from)
         return math.ceil(query.count() / self.inner_set_size)
 
-    def __getitem__(self, item) -> Tuple[torch.Tensor, torch.Tensor]:
+    def __getitem__(self, item) -> Tuple[torch.Tensor, Union[torch.Tensor, list]]:
         self.update_query()
 
         session_sequences = []
@@ -92,9 +92,7 @@ class SessionDataset(Dataset):
                 X_rows.append(
                     sequence_to_tensor(seq=x_indices, num_features=self.num_features)
                 )
-                y_rows.append(
-                    sequence_to_tensor(seq=y_indices, num_features=self.num_features)
-                )
+                y_rows.append(y_indices)
             else:
                 for i in range(1, len(filtered_sequence)):
                     x_indices = [self.mapping[item] for item in filtered_sequence[:i]]
@@ -107,6 +105,6 @@ class SessionDataset(Dataset):
                     y_rows.append(y_index)
 
         if self.loader_type == DataLoaderType.TEST:
-            return torch.vstack(X_rows), torch.vstack(y_rows)
+            return torch.vstack(X_rows), y_rows
 
         return torch.vstack(X_rows), torch.tensor(y_rows)

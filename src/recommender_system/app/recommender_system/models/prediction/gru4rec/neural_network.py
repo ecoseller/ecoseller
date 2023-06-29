@@ -1,4 +1,3 @@
-from enum import Enum
 import logging
 import time
 from typing import Any, Dict, List, Optional, Tuple
@@ -153,7 +152,49 @@ class NeuralNetwork:
         peak_memory: float,
         peak_memory_percentage: float,
     ) -> Tuple[float, float, float]:
-        raise NotImplementedError()
+        hits = 0
+        all = 0
+        for i, batch in enumerate(data_loader):
+            X, y = batch
+            index = 0
+            while index < X.size(dim=1):
+                if index + self.batch_size <= X.size(dim=1):
+                    inputs = X[0, index : index + self.batch_size]
+                    labels = y[index : index + self.batch_size]
+                else:
+                    inputs = X[0, index:]
+                    labels = y[index:]
+
+                self.embedding.indices = None
+                self.feedforward.indices = None
+
+                batched_inputs = torch.unsqueeze(inputs, 0)
+                outputs = self.net(batched_inputs)[0]
+                best_list = [
+                    range(outputs.size(dim=-1)) for _ in range(outputs.size(dim=0))
+                ]
+                if len(outputs) > 10:
+                    _, best = torch.topk(outputs, 10)
+                    best_list = best.tolist()
+                predictions = [set(row) for row in best_list]
+
+                current_hits = [
+                    len(row.intersection(target)) > 0
+                    for row, target in zip(predictions, labels)
+                ]
+                hits += len([hit for hit in current_hits if hit])
+                all += len(predictions)
+
+                index += self.batch_size
+
+                memory, memory_percentage = get_current_memory_usage()
+                if memory > peak_memory:
+                    peak_memory, peak_memory_percentage = memory, memory_percentage
+
+        performance = 0
+        if all > 0:
+            performance = hits / all
+        return peak_memory, peak_memory_percentage, performance
 
     def _run_epochs(
         self,
@@ -176,10 +217,11 @@ class NeuralNetwork:
                         inputs = X[0, index:]
                         labels = y[0, index:]
 
+                    batched_inputs = torch.unsqueeze(inputs, 0)
                     self.optimizer.zero_grad()
 
                     self._set_indices(inputs=inputs, labels=labels)
-                    outputs = self.net(inputs)
+                    outputs = self.net(batched_inputs)
                     loss = self.loss(outputs[0])
                     loss.backward()
                     self.optimizer.step()
