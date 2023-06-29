@@ -35,7 +35,9 @@ class AbstractFeedbackStorage(AbstractStorage, ABC):
 
     @abstractmethod
     def get_session_sequences_query(
-        self, session_ids: Optional[List[str]] = None
+        self,
+        session_ids: Optional[List[str]] = None,
+        date_from: Optional[datetime] = None,
     ) -> Query:
         """
         Find sequence of visited product variant skus for every session and return SQL Query.
@@ -44,6 +46,8 @@ class AbstractFeedbackStorage(AbstractStorage, ABC):
         ----------
         session_ids: Optional[List[str]]
             What session_id values to consider if not None, else all are considered.
+        date_from: Optional[datetime]
+            Consider only sessions created no sooner than this parameter.
 
         Returns
         -------

@@ -175,6 +175,7 @@ class SQLSession(FeedbackBase):
     visited_product_variants = Column(
         postgresql.ARRAY(String(255)), nullable=False, default=[]
     )
+    create_at = Column(TIMESTAMP(), nullable=False)
 
     __tablename__ = "session"
 

@@ -25,13 +25,17 @@ class SQLFeedbackStorage(SQLStorage, AbstractFeedbackStorage):
         return result
 
     def get_session_sequences_query(
-        self, session_ids: Optional[List[str]] = None
+        self,
+        session_ids: Optional[List[str]] = None,
+        date_from: Optional[datetime] = None,
     ) -> Query:
         query = self.session.query(SQLSession.visited_product_variants).select_from(
             SQLSession
         )
         if session_ids is not None:
             query = query.filter(SQLSession.id.in_(session_ids))
+        if date_from is not None:
+            query = query.filter(SQLSession.create_at >= date_from)
 
         query = query.order_by(SQLSession.id)
 

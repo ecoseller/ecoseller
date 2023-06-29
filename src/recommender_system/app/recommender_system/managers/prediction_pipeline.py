@@ -217,7 +217,7 @@ class PredictionPipeline:
             retrieval_model_identifier=retrieval_model.identifier,
             scoring_model_name=scoring_model.Meta.model_name,
             scoring_model_identifier=scoring_model.identifier,
-            recommendation_type=recommendation_type,
+            recommendation_type=recommendation_type.value,
             session_id=session_id,
             retrieval_duration=scoring_start - retrieval_start,
             scoring_duration=ordering_start - scoring_start,

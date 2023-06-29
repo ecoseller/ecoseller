@@ -1,6 +1,7 @@
+from enum import Enum
 import logging
 import time
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional, Tuple
 
 from dependency_injector.wiring import inject, Provide
 import torch
@@ -21,8 +22,10 @@ from recommender_system.models.stored.model.training_statistics import (
 )
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.storage.feedback.abstract import AbstractFeedbackStorage
+from recommender_system.storage.model.abstract import AbstractModelStorage
 from recommender_system.storage.product.abstract import AbstractProductStorage
 from recommender_system.storage.gru4rec.abstract import AbstractGRU4RecStorage
+from recommender_system.utils.data_loader_type import DataLoaderType
 from recommender_system.utils.memory import get_current_memory_usage
 
 
@@ -35,6 +38,7 @@ class NeuralNetwork:
     mapping: Dict[str, int]
 
     num_epochs: int = 1
+    num_incremental_epochs: int = 1
     batch_size: int = 64
 
     model_identifier: str
@@ -105,9 +109,30 @@ class NeuralNetwork:
     def num_features(self) -> int:
         return len(self.mapping.keys())
 
-    def _get_data_loader(self) -> torch.utils.data.DataLoader:
+    @property
+    def needs_full_train(self) -> bool:
+        return True
+
+    @property
+    def possible_parameters(self) -> List[Dict[str, Any]]:
+        return [{"batch_size": 64}]
+
+    @inject
+    def _get_data_loader(
+        self,
+        loader_type: DataLoaderType,
+        model_storage: AbstractModelStorage = Provide["model_storage"],
+    ) -> torch.utils.data.DataLoader:
+        date_from = None
+        if loader_type == DataLoaderType.INCREMENTAL:
+            date_from = model_storage.get_last_training_date(model_name=self.model_name)
         return torch.utils.data.DataLoader(
-            dataset=SessionDataset(mapping=self.mapping, batch_size=self.batch_size),
+            dataset=SessionDataset(
+                mapping=self.mapping,
+                batch_size=self.batch_size,
+                loader_type=loader_type,
+                date_from=date_from,
+            ),
             batch_size=1,
         )
 
@@ -116,14 +141,28 @@ class NeuralNetwork:
         self.embedding.indices = embedding_indices
         self.feedforward.indices = labels
 
-    def train(self) -> None:
-        logging.info("Training started")
+    def _set_parameters(self, parameters: Optional[Dict[str, Any]]) -> None:
+        if parameters is None:
+            return
+        for key, value in parameters.items():
+            setattr(self, key, value)
 
-        start = time.time()
-        peak_memory, peak_memory_percentage = get_current_memory_usage()
+    def _evaluate(
+        self,
+        data_loader: torch.utils.data.DataLoader,
+        peak_memory: float,
+        peak_memory_percentage: float,
+    ) -> Tuple[float, float, float]:
+        raise NotImplementedError()
 
-        data_loader = self._get_data_loader()
-        for epoch in range(self.num_epochs):
+    def _run_epochs(
+        self,
+        data_loader: torch.utils.data.DataLoader,
+        num_epochs: int,
+        peak_memory: float,
+        peak_memory_percentage: float,
+    ) -> Tuple[float, float]:
+        for epoch in range(num_epochs):
 
             running_loss = 0.0
             for i, batch in enumerate(data_loader):
@@ -158,6 +197,66 @@ class NeuralNetwork:
 
             logging.info(f"epoch: {epoch + 1} done, loss: {running_loss:.4f}")
 
+        return peak_memory, peak_memory_percentage
+
+    def _full_train(
+        self, peak_memory: float, peak_memory_percentage: float
+    ) -> Tuple[float, float]:
+        best_parameters = None
+        best_performance = -1
+        for parameters in self.possible_parameters:
+            data_loader = self._get_data_loader(loader_type=DataLoaderType.TRAIN)
+            self._set_parameters(parameters=parameters)
+            peak_memory, peak_memory_percentage = self._run_epochs(
+                data_loader=data_loader,
+                num_epochs=self.num_epochs,
+                peak_memory=peak_memory,
+                peak_memory_percentage=peak_memory_percentage,
+            )
+            data_loader = self._get_data_loader(loader_type=DataLoaderType.TEST)
+            peak_memory, peak_memory_percentage, performance = self._evaluate(
+                data_loader=data_loader,
+                peak_memory=peak_memory,
+                peak_memory_percentage=peak_memory_percentage,
+            )
+            if performance > best_performance:
+                best_performance, best_parameters = performance, parameters
+
+        data_loader = self._get_data_loader(loader_type=DataLoaderType.FULL)
+        self._set_parameters(parameters=best_parameters)
+        return self._run_epochs(
+            data_loader=data_loader,
+            num_epochs=self.num_epochs,
+            peak_memory=peak_memory,
+            peak_memory_percentage=peak_memory_percentage,
+        )
+
+    def _incremental_train(
+        self, peak_memory: float, peak_memory_percentage: float
+    ) -> Tuple[float, float]:
+        data_loader = self._get_data_loader(loader_type=DataLoaderType.INCREMENTAL)
+
+        return self._run_epochs(
+            data_loader=data_loader,
+            num_epochs=self.num_incremental_epochs,
+            peak_memory=peak_memory,
+            peak_memory_percentage=peak_memory_percentage,
+        )
+
+    def train(self) -> None:
+        start = time.time()
+        peak_memory, peak_memory_percentage = get_current_memory_usage()
+        if self.needs_full_train:
+            peak_memory, peak_memory_percentage = self._full_train(
+                peak_memory=peak_memory, peak_memory_percentage=peak_memory_percentage
+            )
+            full_train = True
+        else:
+            peak_memory, peak_memory_percentage = self._incremental_train(
+                peak_memory=peak_memory, peak_memory_percentage=peak_memory_percentage
+            )
+            full_train = False
+
         end = time.time()
 
         statistics = TrainingStatisticsModel(
@@ -166,6 +265,7 @@ class NeuralNetwork:
             duration=end - start,
             peak_memory=peak_memory,
             peak_memory_percentage=peak_memory_percentage,
+            full_train=full_train,
             metrics={},
             hyperparameters=self.hyperparameters,
         )

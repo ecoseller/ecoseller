@@ -78,8 +78,10 @@ class SQLTrainingStatistics(ModelBase):
     duration = Column(DECIMAL(), nullable=False)
     peak_memory = Column(DECIMAL(), nullable=False)
     peak_memory_percentage = Column(DECIMAL(), nullable=False)
+    full_train = Column(Boolean(), nullable=False, default=True)
     metrics = Column(JSON(), nullable=False)
     hyperparameters = Column(JSON(), nullable=False)
+    create_at = Column(TIMESTAMP(), nullable=False)
 
     __tablename__ = "training_statistics"
 
