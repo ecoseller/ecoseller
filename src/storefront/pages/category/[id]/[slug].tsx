@@ -37,8 +37,19 @@ interface ITextualFilter extends IAttributeTypeWithOptions<string> {
   selectedValues: string[];
 }
 
+interface INumericFilter extends IAttributeTypeWithOptions<number> {
+  minValue: number | null;
+  maxValue: number | null;
+}
+
 export interface IFilters {
-  textual: { [key: number]: ITextualFilter };
+  textual: { [id: number]: ITextualFilter };
+  numeric: { [id: number]: INumericFilter };
+}
+
+export enum NumericFilterValueType {
+  Min,
+  Max,
 }
 
 const CategoryPage = ({
@@ -52,15 +63,26 @@ const CategoryPage = ({
   const { id } = router.query;
 
   const [productsState, setProductsState] = useState<IProductRecord[]>([]);
-  const [filters, setFilters] = useState<IFilters>({ textual: {} });
+  const [filters, setFilters] = useState<IFilters>({
+    textual: {},
+    numeric: {},
+  });
 
   useEffect(() => {
     setProductsState(products);
 
-    const emptyFilters: IFilters = { textual: {} };
+    const emptyFilters: IFilters = { textual: {}, numeric: {} };
 
     for (const attr of attributes.textual) {
       emptyFilters.textual[attr.id] = { ...attr, selectedValues: [] };
+    }
+
+    for (const attr of attributes.numeric) {
+      emptyFilters.numeric[attr.id] = {
+        ...attr,
+        minValue: null,
+        maxValue: null,
+      };
     }
 
     setFilters(emptyFilters);
@@ -78,7 +100,7 @@ const CategoryPage = ({
     });
   };
 
-  const updateFilter = (id: number, selectedValues: string[]) => {
+  const updateTextualFilter = (id: number, selectedValues: string[]) => {
     setFilters({
       ...filters,
       textual: {
@@ -89,6 +111,36 @@ const CategoryPage = ({
         },
       },
     });
+  };
+
+  const updateNumericFilter = (
+    id: number,
+    valueType: NumericFilterValueType,
+    value: number | null
+  ) => {
+    if (valueType == NumericFilterValueType.Min) {
+      setFilters({
+        ...filters,
+        numeric: {
+          ...filters.numeric,
+          [id]: {
+            ...filters.numeric[id],
+            minValue: value,
+          },
+        },
+      });
+    } else {
+      setFilters({
+        ...filters,
+        numeric: {
+          ...filters.numeric,
+          [id]: {
+            ...filters.numeric[id],
+            maxValue: value,
+          },
+        },
+      });
+    }
   };
 
   return (
@@ -110,7 +162,11 @@ const CategoryPage = ({
             <Divider sx={{ my: 2 }} />
           </>
         ) : null}
-        <ProductFilters filters={filters} updateFilter={updateFilter} />
+        <ProductFilters
+          filters={filters}
+          updateTextualFilter={updateTextualFilter}
+          updateNumericFilter={updateNumericFilter}
+        />
         <Divider sx={{ my: 2 }} />
         <ProductSortSelect sortProducts={sortProducts} />
         <ProductGrid products={productsState} />
