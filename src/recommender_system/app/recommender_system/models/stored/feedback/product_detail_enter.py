@@ -23,6 +23,7 @@ class ProductDetailEnterModel(ImmutableFeedbackStoredModel):
     product_variant_sku: str
     recommendation_type: Optional[str]
     model_identifier: Optional[str]
+    model_name: Optional[str]
     position: Optional[int]
     create_at: datetime
 

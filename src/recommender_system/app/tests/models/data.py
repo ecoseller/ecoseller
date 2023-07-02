@@ -186,6 +186,7 @@ def _product_detail_enter(
         "product_variant_sku": product_variant_sku,
         "recommendation_type": "cart",
         "model_identifier": None,
+        "model_name": None,
         "position": 1,
         "create_at": _now,
     }

@@ -1,15 +1,21 @@
+from datetime import datetime
 from enum import Enum
+import time
 from typing import Any, List, Optional
 
 from dependency_injector.wiring import inject, Provide
 import numpy as np
 
 from recommender_system.managers.model_manager import ModelManager
+from recommender_system.models.prediction.abstract import AbstractPredictionModel
 from recommender_system.models.prediction.similarity.model import (
     SimilarityPredictionModel,
 )
 from recommender_system.models.stored.model.latest_identifier import (
     LatestIdentifierModel,
+)
+from recommender_system.models.stored.feedback.prediction_result import (
+    PredictionResultModel,
 )
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.models.stored.similarity.distance import DistanceModel
@@ -36,19 +42,14 @@ class PredictionPipeline:
             category_id=category_id
         )
 
-    @inject
     def _retrieve(
         self,
+        model: AbstractPredictionModel,
         recommendation_type: RecommendationType,
         session_id: str,
         user_id: Optional[int],
-        model_manager: ModelManager = Provide["model_manager"],
         **kwargs: Any
     ) -> List[str]:
-        model = model_manager.get_model(
-            recommendation_type=recommendation_type,
-            step=PredictionPipeline.Step.RETRIEVAL,
-        )
         if recommendation_type == RecommendationType.HOMEPAGE:
             return model.retrieve_homepage(session_id=session_id, user_id=user_id)
         if recommendation_type == RecommendationType.CATEGORY_LIST:
@@ -65,20 +66,15 @@ class PredictionPipeline:
             )
         raise ValueError("Unknown recommendation type.")
 
-    @inject
     def _score(
         self,
+        model: AbstractPredictionModel,
         variants: List[str],
         recommendation_type: RecommendationType,
         session_id: str,
         user_id: Optional[int],
-        model_manager: ModelManager = Provide["model_manager"],
         **kwargs: Any
     ) -> List[str]:
-        model = model_manager.get_model(
-            recommendation_type=recommendation_type,
-            step=PredictionPipeline.Step.SCORING,
-        )
         if recommendation_type == RecommendationType.HOMEPAGE:
             return model.score_homepage(
                 session_id=session_id, user_id=user_id, variants=variants
@@ -171,30 +167,64 @@ class PredictionPipeline:
         user_id: Optional[int],
     ) -> List[str]:
         result = self._order_by_diversity(variants=variants)
-        result = self._order_by_stock(variants=result)
+        if recommendation_type == RecommendationType.CATEGORY_LIST:
+            result = self._order_by_stock(variants=result)
         return result
 
+    @inject
     def run(
         self,
         recommendation_type: RecommendationType,
         session_id: str,
         user_id: Optional[int],
+        model_manager: ModelManager = Provide["model_manager"],
     ) -> List[str]:
+        retrieval_model = model_manager.get_model(
+            recommendation_type=recommendation_type,
+            step=PredictionPipeline.Step.RETRIEVAL,
+        )
+        scoring_model = model_manager.get_model(
+            recommendation_type=recommendation_type,
+            step=PredictionPipeline.Step.SCORING,
+        )
+
+        retrieval_start = time.time()
         predictions = self._retrieve(
+            model=retrieval_model,
             recommendation_type=recommendation_type,
             session_id=session_id,
             user_id=user_id,
         )
+        scoring_start = time.time()
         predictions = self._score(
+            model=scoring_model,
             variants=predictions,
             recommendation_type=recommendation_type,
             session_id=session_id,
             user_id=user_id,
         )
+        ordering_start = time.time()
         predictions = self._order(
             variants=predictions,
             recommendation_type=recommendation_type,
             session_id=session_id,
             user_id=user_id,
         )
+        ordering_end = time.time()
+
+        result = PredictionResultModel(
+            retrieval_model_name=retrieval_model.Meta.model_name,
+            retrieval_model_identifier=retrieval_model.identifier,
+            scoring_model_name=scoring_model.Meta.model_name,
+            scoring_model_identifier=scoring_model.identifier,
+            recommendation_type=recommendation_type.value,
+            session_id=session_id,
+            retrieval_duration=scoring_start - retrieval_start,
+            scoring_duration=ordering_start - scoring_start,
+            ordering_duration=ordering_end - ordering_start,
+            predicted_items=predictions,  # TODO: only first k items
+            create_at=datetime.now(),
+        )
+        result.create()
+
         return predictions

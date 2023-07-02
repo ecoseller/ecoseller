@@ -1,9 +1,10 @@
+from datetime import datetime
 from typing import Any, Dict, Optional
 
-from recommender_system.models.stored.model.base import ModelStoredBaseModel
+from recommender_system.models.stored.model.immutable import ImmutableModelStoredModel
 
 
-class TrainingStatisticsModel(ModelStoredBaseModel):
+class TrainingStatisticsModel(ImmutableModelStoredModel):
     """
     This model represents training statistics as an object that is stored in the database.
     """
@@ -15,9 +16,11 @@ class TrainingStatisticsModel(ModelStoredBaseModel):
     duration: float
     peak_memory: float
     peak_memory_percentage: float
+    full_train: bool = True
 
     metrics: Dict[str, Any]
     hyperparameters: Dict[str, Any]
+    create_at: datetime = datetime.now()
 
     class Meta:
         primary_key = "id"
