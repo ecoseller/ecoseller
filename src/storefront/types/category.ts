@@ -1,6 +1,9 @@
 import { IEditorJsField } from "@/utils/editorjs/EditorJsOutput";
 import { IBreadcrumbObject } from "@/types/common";
-import { IAttributeTypeWithOptions } from "@/types/product";
+import {
+  IAttributeTypeBase,
+  IAttributeTypeWithOptions,
+} from "@/types/attributes";
 
 /**
  * Interface containing basic info about a category
@@ -24,4 +27,27 @@ export interface ICategoryDetail extends ICategoryBase, IBreadcrumbObject {
 export interface IAttributeSet {
   numeric: IAttributeTypeWithOptions<number>[];
   textual: IAttributeTypeWithOptions<string>[];
+}
+
+/**
+ * Represents selected category filters by an user
+ */
+export interface ISelectedFiters {
+  textual: { [id: number]: ITextualFilter };
+  numeric: { [id: number]: INumericFilter };
+}
+
+/**
+ * Represents a textual filter with choices
+ */
+export interface ITextualFilter extends IAttributeTypeBase {
+  selected_values: string[];
+}
+
+/**
+ * Represents a numeric filter with selected min and max value
+ */
+export interface INumericFilter extends IAttributeTypeBase {
+  min_value: number | null;
+  max_value: number | null;
 }

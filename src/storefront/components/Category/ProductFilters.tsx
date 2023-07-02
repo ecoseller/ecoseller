@@ -69,7 +69,7 @@ const ProductFilters = ({
                   labelId={`${selectId}-label`}
                   id={selectId}
                   multiple
-                  value={filter.selectedValues}
+                  value={filter.selected_values}
                   onChange={(event) =>
                     handleTextualFilterChange(filter.id, event)
                   }
@@ -79,7 +79,7 @@ const ProductFilters = ({
                   {filter.possible_values.map((val) => (
                     <MenuItem key={val} value={val}>
                       <Checkbox
-                        checked={filter.selectedValues.indexOf(val) > -1}
+                        checked={filter.selected_values.indexOf(val) > -1}
                       />
                       <ListItemText primary={`${val} ${filter.unit || ""}`} />
                     </MenuItem>
@@ -105,7 +105,7 @@ const ProductFilters = ({
                       id={`${selectId}-from`}
                       label="From"
                       labelId={`${selectId}-from-label`}
-                      value={filter.minValue?.toString() || null}
+                      value={filter.min_value?.toString() || null}
                       defaultValue=""
                       onChange={(event) =>
                         handleNumericFilterChange(
@@ -131,7 +131,7 @@ const ProductFilters = ({
                       id={`${selectId}-to`}
                       label="To"
                       labelId={`${selectId}-to-label`}
-                      value={filter.maxValue?.toString() || null}
+                      value={filter.max_value?.toString() || null}
                       defaultValue=""
                       onChange={(event) =>
                         handleNumericFilterChange(

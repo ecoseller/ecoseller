@@ -3,14 +3,20 @@ import {
   NextApiRequest,
   NextApiResponse,
 } from "next/types";
-import { IAttributeSet, ICategoryDetail } from "@/types/category";
+import {
+  IAttributeSet,
+  ICategoryDetail,
+  INumericFilter,
+  ITextualFilter,
+} from "@/types/category";
 import EditorJsOutput from "@/utils/editorjs/EditorJsOutput";
 import Typography from "@mui/material/Typography";
 import SubCategoryList from "@/components/Category/SubCategoryList";
 import HeadMeta from "@/components/Common/SEO";
 import { useRouter } from "next/router";
 import ProductGrid from "@/components/Category/ProductGrid";
-import { IAttributeTypeWithOptions, IProductRecord } from "@/types/product";
+import { IProductRecord } from "@/types/product";
+import { IAttributeTypeWithOptions } from "@/types/attributes";
 import { categoryProductsAPI } from "@/pages/api/category/[id]/products";
 import { categoryDetailAPI } from "@/pages/api/category/[id]";
 import Divider from "@mui/material/Divider";
@@ -24,6 +30,7 @@ import React, { useEffect, useState } from "react";
 import ProductSortSelect from "@/components/Category/ProductSortSelect";
 import { getCategoryProducts } from "@/api/category/products";
 import { categoryAttributesAPI } from "@/pages/api/category/[id]/attributes";
+import { filterProducts } from "@/api/category/filter";
 
 interface ICategoryPageProps {
   category: ICategoryDetail;
@@ -33,18 +40,17 @@ interface ICategoryPageProps {
   attributes: IAttributeSet;
 }
 
-interface ITextualFilter extends IAttributeTypeWithOptions<string> {
-  selectedValues: string[];
-}
+interface ITextualAttributeFilter
+  extends IAttributeTypeWithOptions<string>,
+    ITextualFilter {}
 
-interface INumericFilter extends IAttributeTypeWithOptions<number> {
-  minValue: number | null;
-  maxValue: number | null;
-}
+interface INumericAttributeFilter
+  extends IAttributeTypeWithOptions<number>,
+    INumericFilter {}
 
 export interface IFilters {
-  textual: { [id: number]: ITextualFilter };
-  numeric: { [id: number]: INumericFilter };
+  textual: { [id: number]: ITextualAttributeFilter };
+  numeric: { [id: number]: INumericAttributeFilter };
 }
 
 export enum NumericFilterValueType {
@@ -74,14 +80,14 @@ const CategoryPage = ({
     const emptyFilters: IFilters = { textual: {}, numeric: {} };
 
     for (const attr of attributes.textual) {
-      emptyFilters.textual[attr.id] = { ...attr, selectedValues: [] };
+      emptyFilters.textual[attr.id] = { ...attr, selected_values: [] };
     }
 
     for (const attr of attributes.numeric) {
       emptyFilters.numeric[attr.id] = {
         ...attr,
-        minValue: null,
-        maxValue: null,
+        min_value: null,
+        max_value: null,
       };
     }
 
@@ -100,20 +106,28 @@ const CategoryPage = ({
     });
   };
 
-  const updateTextualFilter = (id: number, selectedValues: string[]) => {
+  const updateTextualFilter = async (id: number, selectedValues: string[]) => {
     setFilters({
       ...filters,
       textual: {
         ...filters.textual,
         [id]: {
           ...filters.textual[id],
-          selectedValues: selectedValues,
+          selected_values: selectedValues,
         },
       },
     });
+
+    const filteredProducts = await filterProducts(
+      category.id,
+      pricelist,
+      countryCode,
+      filters
+    );
+    setProductsState(filteredProducts);
   };
 
-  const updateNumericFilter = (
+  const updateNumericFilter = async (
     id: number,
     valueType: NumericFilterValueType,
     value: number | null
@@ -125,7 +139,7 @@ const CategoryPage = ({
           ...filters.numeric,
           [id]: {
             ...filters.numeric[id],
-            minValue: value,
+            min_value: value,
           },
         },
       });
@@ -136,11 +150,19 @@ const CategoryPage = ({
           ...filters.numeric,
           [id]: {
             ...filters.numeric[id],
-            maxValue: value,
+            max_value: value,
           },
         },
       });
     }
+
+    const filteredProducts = await filterProducts(
+      category.id,
+      pricelist,
+      countryCode,
+      filters
+    );
+    setProductsState(filteredProducts);
   };
 
   return (

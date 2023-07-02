@@ -10,7 +10,7 @@ export const categoryDetailAPI = async (
     setRequestResponse(req, res);
   }
 
-  const url = `/category/storefront/${id}`;
+  const url = `/category/storefront/${id}/`;
 
   return await api.get(url).then((response) => response.data);
 };

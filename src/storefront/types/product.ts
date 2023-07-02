@@ -1,5 +1,6 @@
 import { IEditorJsField } from "@/utils/editorjs/EditorJsOutput";
 import { IBreadcrumbObject } from "@/types/common";
+import { IAttributeType } from "@/types/attributes";
 
 export interface IProductSliderData {
   id: number;
@@ -7,13 +8,6 @@ export interface IProductSliderData {
   price: string;
   image: string;
   url: string;
-}
-
-export interface IAttributeType {
-  id: number;
-  name: string;
-  unit: string;
-  is_numeric: boolean;
 }
 
 export interface IBaseAttribute {
@@ -84,20 +78,4 @@ export interface IProductVariantPrice {
 export interface IProductRecord extends IProductBase {
   primary_image: IProductMedia;
   variant_prices: IProductVariantPrice[];
-}
-
-/**
- * Base interface representing attribute type
- */
-export interface IAttributeTypeBase {
-  id: number;
-  name: string;
-  unit: string | null;
-}
-
-/**
- * Interface representing attribute type together with its possible values
- */
-export interface IAttributeTypeWithOptions<T> extends IAttributeTypeBase {
-  possible_values: T[];
 }

@@ -295,6 +295,18 @@ class CategoryDetailAttributesStorefrontView(APIView):
         return CategoryAttributeTypes(list(string_attributes.values()), list(numeric_attributes.values()))
 
 
+@permission_classes([AllowAny])
+class CategoryDetailFilterStorefrontView(APIView):
+    """
+    View for filtering products, according to their attributes, in the given category.
+
+    Used for storefront.
+    """
+
+    def post(self, request, pk):
+        return Response([])
+
+
 class CategoryAttributeTypes:
     def __init__(self, textual, numeric):
         self.textual, self.numeric = textual, numeric

@@ -11,7 +11,7 @@ export const categoryAttributesAPI = async (
     setRequestResponse(req, res);
   }
 
-  let url = `/category/storefront/${id}/attributes`;
+  let url = `/category/storefront/${id}/attributes/`;
 
   return await api.get(url).then((response) => response.data as IAttributeSet);
 };
