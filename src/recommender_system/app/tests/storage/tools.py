@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 from typing import Any, Dict, Type
 
@@ -43,7 +44,7 @@ default_dicts: Dict[Type[StoredBaseModel], Any] = {
     },
     ConfigModel: {"id": 0, "create_at": datetime.now(), "retrieval_size": 1000},
     OrderModel: {
-        "id": 0,
+        "token": uuid.uuid4(),
         "session_id": "session",
         "update_at": datetime.now(),
         "create_at": datetime.now(),

@@ -4,6 +4,7 @@ from recommender_system.models.api.attribute import Attribute
 from recommender_system.models.api.attribute_type import AttributeType
 from recommender_system.models.api.base import ApiBaseModel
 from recommender_system.models.api.category import Category
+from recommender_system.models.api.order import Order
 from recommender_system.models.api.product import Product
 from recommender_system.models.api.product_add_to_cart import ProductAddToCart
 from recommender_system.models.api.product_detail_enter import ProductDetailEnter
@@ -21,6 +22,7 @@ class DataManager:
         "Attribute": Attribute,
         "AttributeType": AttributeType,
         "Category": Category,
+        "Order": Order,
         "Product": Product,
         "ProductAddToCart": ProductAddToCart,
         "ProductDetailEnter": ProductDetailEnter,

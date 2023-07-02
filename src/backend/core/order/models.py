@@ -3,6 +3,7 @@ import uuid
 from django.db import models
 from enumchoicefield import ChoiceEnum, EnumChoiceField
 
+from api.recommender_system import RecommenderSystemApi
 from cart.models import Cart
 
 
@@ -37,3 +38,25 @@ class Order(models.Model):
     @property
     def customer_email(self):
         return self.cart.shipping_info.email
+
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )
+        # TODO: Save only if status is finished, get session_id?
+        data = {
+            "_model_class": self.__class__.__name__,
+            "token": self.token,
+            "create_at": self.create_at.isoformat(),
+            "session_id": "session",
+            "product_variants": [
+                (item.product_variant.sku, item.quantity)
+                for item in self.cart.cart_items.all()
+            ],
+        }
+        RecommenderSystemApi.store_object(data=data)

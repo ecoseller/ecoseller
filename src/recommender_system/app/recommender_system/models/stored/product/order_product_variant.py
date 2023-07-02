@@ -1,4 +1,5 @@
 from typing import Optional
+import uuid
 
 from recommender_system.models.stored.product.base import ProductStoredBaseModel
 from recommender_system.models.stored.many_to_many_relation import (
@@ -17,9 +18,9 @@ class OrderProductVariantModel(ProductStoredBaseModel, ManyToManyRelationMixin):
     """
 
     id: Optional[int]
-    amount: int
+    quantity: int
 
-    order_id: int
+    order_token: uuid.UUID
     product_variant_sku: str
 
     class Meta:
@@ -28,5 +29,5 @@ class OrderProductVariantModel(ProductStoredBaseModel, ManyToManyRelationMixin):
     class RelationMeta:
         source_model_class = OrderModel
         target_model_class = ProductVariantModel
-        source_pk_name = "order_id"
+        source_pk_name = "order_token"
         target_pk_name = "product_variant_sku"

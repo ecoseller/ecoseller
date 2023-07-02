@@ -2,9 +2,12 @@ from datetime import datetime
 from typing import Any, Dict
 from unittest import TestCase
 
+import pytest
+
 from recommender_system.models.api.attribute import Attribute
 from recommender_system.models.api.attribute_type import AttributeType
 from recommender_system.models.api.config import Config
+from recommender_system.models.api.order import Order
 from recommender_system.models.api.product import Product
 from recommender_system.models.api.product_add_to_cart import ProductAddToCart
 from recommender_system.models.api.product_detail_enter import ProductDetailEnter
@@ -18,6 +21,7 @@ from recommender_system.models.api.review import Review
 from recommender_system.models.stored.model.config import ConfigModel
 from recommender_system.models.stored.product.attribute import AttributeModel
 from recommender_system.models.stored.product.attribute_type import AttributeTypeModel
+from recommender_system.models.stored.product.order import OrderModel
 from recommender_system.models.stored.product.product import ProductModel
 from recommender_system.models.stored.feedback.product_add_to_cart import (
     ProductAddToCartModel,
@@ -39,6 +43,30 @@ from recommender_system.models.stored.feedback.recommendation_view import (
 )
 from recommender_system.models.stored.feedback.review import ReviewModel
 from tests.models.data import api_data, stored_data
+
+
+@pytest.fixture
+def prepare_product_variants():
+    variants = [
+        ProductVariantModel(
+            sku=str(i),
+            ean=str(i),
+            weight=1.0,
+            stock_quantity=1,
+            recommendation_weight=1.0,
+            update_at=datetime.now(),
+            create_at=datetime.now(),
+        )
+        for i in range(3)
+    ]
+
+    for variant in variants:
+        variant.save()
+
+    yield
+
+    for variant in variants:
+        variant.delete()
 
 
 def str_to_datetime(data: Dict[str, Any]) -> Dict[str, Any]:
@@ -71,6 +99,20 @@ def test_config():
 
     expected = str_to_datetime(stored_data[ConfigModel])
     TestCase().assertDictEqual(model.dict(), expected)
+
+
+def test_order(prepare_product_variants):
+    _ = prepare_product_variants
+
+    order = Order.parse_obj(api_data[Order])
+    order.save()
+    model = OrderModel.get(pk=order.token)
+
+    expected = str_to_datetime(stored_data[OrderModel])
+
+    TestCase().assertDictEqual(model.dict(), expected)
+
+    assert len(model.product_variants) == len(order.product_variants)
 
 
 def test_product():

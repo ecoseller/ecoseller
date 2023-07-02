@@ -1,10 +1,13 @@
 from datetime import datetime
+import random
 from typing import Any, Dict, Optional, Type
+import uuid
 
 from recommender_system.models.api.attribute import Attribute
 from recommender_system.models.api.attribute_type import AttributeType
 from recommender_system.models.api.base import ApiBaseModel
 from recommender_system.models.api.config import Config
+from recommender_system.models.api.order import Order
 from recommender_system.models.api.product import Product
 from recommender_system.models.api.product_add_to_cart import ProductAddToCart
 from recommender_system.models.api.product_detail_enter import ProductDetailEnter
@@ -19,6 +22,7 @@ from recommender_system.models.stored.model.config import ConfigModel
 from recommender_system.models.stored.product.attribute import AttributeModel
 from recommender_system.models.stored.product.attribute_type import AttributeTypeModel
 from recommender_system.models.stored.base import StoredBaseModel
+from recommender_system.models.stored.product.order import OrderModel
 from recommender_system.models.stored.product.product import ProductModel
 from recommender_system.models.stored.feedback.product_add_to_cart import (
     ProductAddToCartModel,
@@ -42,6 +46,12 @@ from recommender_system.models.stored.feedback.review import ReviewModel
 
 
 _now = datetime.now().isoformat()
+rd = random.Random()
+
+
+def _uuid(seed: int = 0) -> uuid.UUID:
+    rd.seed(seed)
+    return uuid.UUID(int=rd.getrandbits(128))
 
 
 def _attribute_type(id: int = 0) -> Dict[str, Any]:
@@ -131,6 +141,27 @@ def _product_raw(id: int = 0) -> Dict[str, Any]:
 
 def _product_type_empty(id: int = 0) -> Dict[str, Any]:
     return {"id": id, "name": "name", "update_at": _now, "create_at": _now}
+
+
+def _order(token: str = str(_uuid()), session_id: str = "session") -> Dict[str, Any]:
+    return {
+        "token": token,
+        "create_at": _now,
+        "update_at": _now,
+        "session_id": session_id,
+        "product_variants": [("0", 1), ("1", 2), ("2", 2)],
+    }
+
+
+def _order_model(
+    token: uuid.UUID = _uuid(), session_id: str = "session"
+) -> Dict[str, Any]:
+    return {
+        "token": token,
+        "create_at": _now,
+        "update_at": _now,
+        "session_id": session_id,
+    }
 
 
 def _product(id: int = 0, product_type_id: int = 0) -> Dict[str, Any]:
@@ -267,6 +298,7 @@ api_data: Dict[Type[ApiBaseModel], Any] = {
     Attribute: _root_attribute(),
     AttributeType: _attribute_type(),
     Config: _config(),
+    Order: _order(),
     Product: _product(),
     ProductAddToCart: _product_add_to_cart(),
     ProductDetailEnter: _product_detail_enter(),
@@ -284,6 +316,7 @@ stored_data: Dict[Type[StoredBaseModel], Any] = {
     AttributeModel: _attribute_model(),
     AttributeTypeModel: _attribute_type(),
     ConfigModel: _config_model(),
+    OrderModel: _order_model(),
     ProductModel: _product_model(),
     ProductAddToCartModel: _product_add_to_cart(),
     ProductDetailEnterModel: _product_detail_enter(),

@@ -24,18 +24,18 @@ class SQLProductStorage(SQLStorage, AbstractProductStorage):
     def get_popular_product_variant_skus(
         self, filter_in_stock: bool, limit: Optional[int] = None
     ) -> List[str]:
-        amount = case(
+        quantity = case(
             (
                 SQLOrderProductVariant.product_variant_sku.isnot(None),
-                SQLOrderProductVariant.amount,
+                SQLOrderProductVariant.quantity,
             ),
             else_=0,
-        ).label("amount")
+        ).label("quantity")
 
         number_of_orders = (
             self.session.query(
                 SQLProductVariant.sku,
-                amount,
+                quantity,
             )
             .select_from(SQLProductVariant)
             .outerjoin(
@@ -45,7 +45,7 @@ class SQLProductStorage(SQLStorage, AbstractProductStorage):
             .subquery()
         )
 
-        priority = func.sum(random() * number_of_orders.c.amount)
+        priority = func.sum(random() * number_of_orders.c.quantity)
 
         query = (
             self.session.query(SQLProductVariant.sku, priority)
@@ -65,18 +65,18 @@ class SQLProductStorage(SQLStorage, AbstractProductStorage):
         return [row[0] for row in query.all()]
 
     def get_product_variant_popularities(self, skus: List[str]) -> Dict[str, int]:
-        amount = case(
+        quantity = case(
             (
                 SQLOrderProductVariant.product_variant_sku.isnot(None),
-                SQLOrderProductVariant.amount,
+                SQLOrderProductVariant.quantity,
             ),
             else_=0,
-        ).label("amount")
+        ).label("quantity")
 
         number_of_orders = (
             self.session.query(
                 SQLProductVariant.sku,
-                amount,
+                quantity,
             )
             .select_from(SQLProductVariant)
             .outerjoin(
@@ -86,7 +86,7 @@ class SQLProductStorage(SQLStorage, AbstractProductStorage):
             .subquery()
         )
 
-        priority = func.sum(number_of_orders.c.amount)
+        priority = func.sum(number_of_orders.c.quantity)
 
         query = (
             self.session.query(SQLProductVariant.sku, priority)
