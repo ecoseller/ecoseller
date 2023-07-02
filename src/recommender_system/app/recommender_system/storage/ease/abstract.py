@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Dict
+from typing import Any, Dict
 
 import numpy as np
 
@@ -24,6 +24,24 @@ class AbstractEASEStorage(ABC):
         -------
         Dict[str, np.ndarray]
          Matrices from storage given by the identifier.
+
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
+    def get_parameters(self, identifier: str) -> Dict[str, Any]:
+        """
+        Gets requested parameters from the storage.
+
+        Parameters
+        ----------
+        identifier: str
+         Identifier of the requested mappings.
+
+        Returns
+        -------
+        Dict[str, Any]
+         Parameters from storage given by the identifier.
 
         """
         raise NotImplementedError()
@@ -64,6 +82,23 @@ class AbstractEASEStorage(ABC):
         raise NotImplementedError()
 
     @abstractmethod
+    def delete_parameters(self, identifier: str) -> None:
+        """
+        Deletes requested parameters from the storage.
+
+        Parameters
+        ----------
+        identifier: str
+         Identifier of the requested parameters.
+
+        Returns
+        -------
+        None
+
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
     def delete_mappings(self, identifier: str) -> None:
         """
         Deletes requested mappings from the storage.
@@ -91,6 +126,25 @@ class AbstractEASEStorage(ABC):
          Matrices to be stored to the storage.
         identifier: str
          Matrices' identifier.
+
+        Returns
+        -------
+        None
+
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
+    def store_parameters(self, parameters: Dict[str, Any], identifier: str) -> None:
+        """
+        Stores `parameters` to the storage.
+
+        Parameters
+        ----------
+        parameters: Dict[str, Any]
+         Parameters to be stored to the storage.
+        identifier: str
+         Mapping's identifier.
 
         Returns
         -------

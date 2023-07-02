@@ -15,6 +15,7 @@ from recommender_system.models.api.product_type import ProductType
 from recommender_system.models.api.product_variant import ProductVariant
 from recommender_system.models.api.recommendation_view import RecommendationView
 from recommender_system.models.api.review import Review
+from recommender_system.models.prediction.config import EASEConfig
 from recommender_system.models.stored.model.config import ConfigModel
 from recommender_system.models.stored.product.attribute import AttributeModel
 from recommender_system.models.stored.product.attribute_type import AttributeTypeModel
@@ -79,7 +80,12 @@ def _config() -> Dict[str, Any]:
 
 
 def _config_model(id: Optional[int] = None) -> Dict[str, Any]:
-    return {"id": id, "create_at": _now, "retrieval_size": 1000}
+    return {
+        "id": id,
+        "create_at": _now,
+        "retrieval_size": 1000,
+        "ease_config": EASEConfig().dict(),
+    }
 
 
 def _product_translation(id: int = 0) -> Dict[str, Any]:

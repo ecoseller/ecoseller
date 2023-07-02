@@ -27,6 +27,8 @@ class SQLConfig(ModelBase):
     create_at = Column(TIMESTAMP(), nullable=False)
     retrieval_size = Column(Integer(), nullable=False)
 
+    ease_config = Column(JSON(), nullable=False)
+
     __tablename__ = "config"
 
     __table_args__ = (Index("config_create_at_idx", create_at),)
