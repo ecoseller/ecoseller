@@ -62,7 +62,7 @@ class EASE:
         ease.B = matrices["B"]
 
         parameters = ease_storage.get_parameters(identifier=identifier)
-        ease.l2 = parameters["l2"]
+        ease._set_parameters(parameters=parameters)
 
         mappings = ease_storage.get_mappings(identifier=identifier)
         ease.user_mapping = mappings["user_mapping"]

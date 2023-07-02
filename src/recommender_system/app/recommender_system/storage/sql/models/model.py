@@ -28,6 +28,7 @@ class SQLConfig(ModelBase):
     retrieval_size = Column(Integer(), nullable=False)
 
     ease_config = Column(JSON(), nullable=False)
+    gru4rec_config = Column(JSON(), nullable=False)
 
     __tablename__ = "config"
 
