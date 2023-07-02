@@ -11,13 +11,15 @@ export interface IProductSliderData {
 
 export interface IAttributeType {
   id: number;
-  type_name: string;
+  name: string;
   unit: string;
+  is_numeric: boolean;
 }
 
 export interface IBaseAttribute {
   id: number;
   order: number;
+  name: string;
   value: string;
   type: IAttributeType;
 }
@@ -85,11 +87,17 @@ export interface IProductRecord extends IProductBase {
 }
 
 /**
- * Interface representing attribute type together with its possible values
+ * Base interface representing attribute type
  */
-export interface IAttributeTypeWithOptions<T> {
+export interface IAttributeTypeBase {
   id: number;
   name: string;
   unit: string | null;
+}
+
+/**
+ * Interface representing attribute type together with its possible values
+ */
+export interface IAttributeTypeWithOptions<T> extends IAttributeTypeBase {
   possible_values: T[];
 }

@@ -544,17 +544,24 @@ class ProductDashboardSerializer(TranslatedSerializerMixin, ModelSerializer):
         )
 
 
-class AttributeTypeStorefrontSerializer(serializers.ModelSerializer):
+class AttributeTypeStorefrontSerializer(TranslatedSerializerMixin, ModelSerializer):
+    is_numeric = serializers.SerializerMethodField()
+
     class Meta:
         model = AttributeType
         fields = (
             "id",
             "type_name",
+            "name",
             "unit",
+            "is_numeric"
         )
 
+    def get_is_numeric(self, instance):
+        return instance.value_type != AttributeTypeValueType.TEXT
 
-class BaseAttributeStorefrontSerializer(serializers.ModelSerializer):
+
+class BaseAttributeStorefrontSerializer(TranslatedSerializerMixin, ModelSerializer):
     type = AttributeTypeStorefrontSerializer(read_only=True)
 
     class Meta:
@@ -563,6 +570,7 @@ class BaseAttributeStorefrontSerializer(serializers.ModelSerializer):
             "id",
             "order",
             "value",
+            "name",
             "type",
         )
 
