@@ -2,8 +2,14 @@ from parler_rest.serializers import (
     TranslatableModelSerializer,
     TranslatedFieldsField,
 )
-from rest_framework.serializers import ModelSerializer, SerializerMethodField, Serializer, IntegerField, ListField, \
-    CharField
+from rest_framework.serializers import (
+    ModelSerializer,
+    SerializerMethodField,
+    Serializer,
+    IntegerField,
+    ListField,
+    CharField,
+)
 from rest_framework_recursive.fields import RecursiveField
 
 from category.models import (

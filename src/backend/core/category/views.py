@@ -265,7 +265,7 @@ class CategoryDetailAttributesStorefrontView(APIView):
 
             response_obj = {
                 "textual": serializer_text.data,
-                "numeric": serializer_num.data
+                "numeric": serializer_num.data,
             }
 
             return Response(response_obj)
@@ -278,21 +278,23 @@ class CategoryDetailAttributesStorefrontView(APIView):
 
         for p in products:
             for attr in p.type.allowed_attribute_types.all().prefetch_related(
-                    "base_attributes"
+                "base_attributes"
             ):
                 if (
-                        attr.value_type == AttributeTypeValueType.TEXT
-                        and attr.id not in string_attributes
+                    attr.value_type == AttributeTypeValueType.TEXT
+                    and attr.id not in string_attributes
                 ):
                     string_attributes[attr.id] = attr
                 elif (
-                        attr.value_type
-                        in [AttributeTypeValueType.DECIMAL, AttributeTypeValueType.INTEGER]
-                        and attr.id not in numeric_attributes
+                    attr.value_type
+                    in [AttributeTypeValueType.DECIMAL, AttributeTypeValueType.INTEGER]
+                    and attr.id not in numeric_attributes
                 ):
                     numeric_attributes[attr.id] = attr
 
-        return CategoryAttributeTypes(list(string_attributes.values()), list(numeric_attributes.values()))
+        return CategoryAttributeTypes(
+            list(string_attributes.values()), list(numeric_attributes.values())
+        )
 
 
 @permission_classes([AllowAny])
