@@ -13,7 +13,11 @@ export const categoryAttributesAPI = async (
 
   let url = `/category/storefront/${id}/attributes/`;
 
-  return await api.get(url).then((response) => response.data as IAttributeSet);
+  const data = await api
+    .get(url)
+    .then((response) => response.data as IAttributeSet);
+  console.log(JSON.stringify(data));
+  return data;
 };
 
 /**

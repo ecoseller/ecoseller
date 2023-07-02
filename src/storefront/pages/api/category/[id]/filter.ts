@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { api, setRequestResponse } from "@/utils/interceptors/api";
-import { IAttributeSet, ISelectedFiters } from "@/types/category";
+import { IAttributeSet, ISelectedFilters } from "@/types/category";
 
 export const categoryFilterProductsAPI = async (
   id: string,
@@ -17,7 +17,7 @@ export const categoryFilterProductsAPI = async (
 
   return await api
     .post(url, req.body)
-    .then((response) => response.data as ISelectedFiters);
+    .then((response) => response.data as ISelectedFilters);
 };
 
 /**

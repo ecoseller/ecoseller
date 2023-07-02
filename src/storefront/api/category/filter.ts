@@ -1,4 +1,4 @@
-import { ISelectedFiters } from "@/types/category";
+import { ISelectedFilters } from "@/types/category";
 import { IProductRecord } from "@/types/product";
 
 /**
@@ -12,7 +12,7 @@ export const filterProducts = async (
   categoryId: number,
   pricelist: string,
   country: string,
-  filters: ISelectedFiters
+  filters: ISelectedFilters
 ) => {
   let url = `/api/category/${categoryId}/filter?pricelist=${pricelist}&country=${country}`;
 

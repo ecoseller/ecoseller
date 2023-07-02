@@ -7,6 +7,7 @@ import {
   IAttributeSet,
   ICategoryDetail,
   INumericFilter,
+  ISelectedFilters,
   ITextualFilter,
 } from "@/types/category";
 import EditorJsOutput from "@/utils/editorjs/EditorJsOutput";
@@ -40,17 +41,17 @@ interface ICategoryPageProps {
   attributes: IAttributeSet;
 }
 
-interface ITextualAttributeFilter
+interface ITextualAttributeFilterWithOptions
   extends IAttributeTypeWithOptions<string>,
     ITextualFilter {}
 
-interface INumericAttributeFilter
+export interface INumericAttributeFilterWithOptions
   extends IAttributeTypeWithOptions<number>,
     INumericFilter {}
 
 export interface IFilters {
-  textual: { [id: number]: ITextualAttributeFilter };
-  numeric: { [id: number]: INumericAttributeFilter };
+  textual: { [id: number]: ITextualAttributeFilterWithOptions };
+  numeric: { [id: number]: INumericAttributeFilterWithOptions };
 }
 
 export enum NumericFilterValueType {
@@ -80,19 +81,34 @@ const CategoryPage = ({
     const emptyFilters: IFilters = { textual: {}, numeric: {} };
 
     for (const attr of attributes.textual) {
-      emptyFilters.textual[attr.id] = { ...attr, selected_values: [] };
+      emptyFilters.textual[attr.id] = { ...attr, selected_values_ids: [] };
     }
 
     for (const attr of attributes.numeric) {
       emptyFilters.numeric[attr.id] = {
         ...attr,
-        min_value: null,
-        max_value: null,
+        min_value_id: null,
+        max_value_id: null,
       };
     }
-
     setFilters(emptyFilters);
   }, [id]);
+
+  const applyFilters = async () => {
+    const filtersToApply: ISelectedFilters = {
+      numeric: Object.values(filters.numeric),
+      textual: Object.values(filters.textual),
+    };
+
+    const filteredProducts = await filterProducts(
+      category.id,
+      pricelist,
+      countryCode,
+      filtersToApply
+    );
+
+    setProductsState(filteredProducts);
+  };
 
   const sortProducts = (sortBy: string, order: string) => {
     getCategoryProducts(
@@ -106,31 +122,28 @@ const CategoryPage = ({
     });
   };
 
-  const updateTextualFilter = async (id: number, selectedValues: string[]) => {
+  const updateTextualFilter = async (
+    id: number,
+    selectedValuesIds: number[]
+  ) => {
     setFilters({
       ...filters,
       textual: {
         ...filters.textual,
         [id]: {
           ...filters.textual[id],
-          selected_values: selectedValues,
+          selected_values_ids: selectedValuesIds,
         },
       },
     });
 
-    const filteredProducts = await filterProducts(
-      category.id,
-      pricelist,
-      countryCode,
-      filters
-    );
-    setProductsState(filteredProducts);
+    await applyFilters();
   };
 
   const updateNumericFilter = async (
     id: number,
     valueType: NumericFilterValueType,
-    value: number | null
+    valueId: number | null
   ) => {
     if (valueType == NumericFilterValueType.Min) {
       setFilters({
@@ -139,7 +152,7 @@ const CategoryPage = ({
           ...filters.numeric,
           [id]: {
             ...filters.numeric[id],
-            min_value: value,
+            min_value_id: valueId,
           },
         },
       });
@@ -150,19 +163,13 @@ const CategoryPage = ({
           ...filters.numeric,
           [id]: {
             ...filters.numeric[id],
-            max_value: value,
+            max_value_id: valueId,
           },
         },
       });
     }
 
-    const filteredProducts = await filterProducts(
-      category.id,
-      pricelist,
-      countryCode,
-      filters
-    );
-    setProductsState(filteredProducts);
+    await applyFilters();
   };
 
   return (

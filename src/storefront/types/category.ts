@@ -32,22 +32,24 @@ export interface IAttributeSet {
 /**
  * Represents selected category filters by an user
  */
-export interface ISelectedFiters {
-  textual: { [id: number]: ITextualFilter };
-  numeric: { [id: number]: INumericFilter };
+export interface ISelectedFilters {
+  textual: ITextualFilter[];
+  numeric: INumericFilter[];
 }
 
 /**
  * Represents a textual filter with choices
  */
-export interface ITextualFilter extends IAttributeTypeBase {
-  selected_values: string[];
+export interface ITextualFilter {
+  id: number;
+  selected_values_ids: number[];
 }
 
 /**
  * Represents a numeric filter with selected min and max value
  */
 export interface INumericFilter extends IAttributeTypeBase {
-  min_value: number | null;
-  max_value: number | null;
+  id: number;
+  min_value_id: number | null;
+  max_value_id: number | null;
 }

@@ -303,8 +303,52 @@ class CategoryDetailFilterStorefrontView(APIView):
     Used for storefront.
     """
 
+    PRICE_LIST_URL_PARAM = "pricelist"
+    COUNTRY_URL_PARAM = "country"
+
     def post(self, request, pk):
-        return Response([])
+        try:
+            category = Category.objects.get(id=pk, published=True)
+
+            # Get related objects
+            products = _get_all_published_products(category)
+            pricelist = self._get_pricelist(request)
+            country = self._get_country(request)
+
+            serializer = ProductStorefrontListSerializer(
+                products,
+                many=True,
+                context={
+                    "request": request,
+                    "pricelist": pricelist,
+                    "country": country,
+                },
+            )
+
+            return Response(serializer.data)
+        except Category.DoesNotExist:
+            return Response(status=HTTP_404_NOT_FOUND)
+
+    def _get_pricelist(self, request):
+        """get price list from request params or default to the default one"""
+        price_list_code = request.query_params.get(self.PRICE_LIST_URL_PARAM, None)
+        if price_list_code:
+            try:
+                return PriceList.objects.get(code=price_list_code)
+            except PriceList.DoesNotExist:
+                return PriceList.objects.get(is_default=True)
+        else:
+            return PriceList.objects.get(is_default=True)
+
+    def _get_country(self, request):
+        """Get country URL param"""
+        country_code = request.query_params.get(self.COUNTRY_URL_PARAM, None)
+        try:
+            return Country.objects.get(code=country_code)
+        except Country.DoesNotExist:
+            country = Country.objects.all().first()
+
+        return country
 
 
 class CategoryAttributeTypes:

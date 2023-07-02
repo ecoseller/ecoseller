@@ -13,14 +13,15 @@ import { IFilters, NumericFilterValueType } from "@/pages/category/[id]/[slug]";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
+import NumericFilterSelect from "@/components/Category/Filters/NumericFilterSelect";
 
 interface IProductFiltersProps {
   filters: IFilters;
-  updateTextualFilter: (id: number, selectedValues: string[]) => void;
+  updateTextualFilter: (id: number, selectedValuesIds: number[]) => void;
   updateNumericFilter: (
     id: number,
     numericFilterValueType: NumericFilterValueType,
-    value: number | null
+    valueId: number | null
   ) => void;
 }
 
@@ -35,11 +36,14 @@ const ProductFilters = ({
 }: IProductFiltersProps) => {
   const handleTextualFilterChange = (
     id: number,
-    event: SelectChangeEvent<string[]>
+    event: SelectChangeEvent<number[]>
   ) => {
     const value = event.target.value;
-    const selectedValues = typeof value === "string" ? value.split(",") : value;
-    updateTextualFilter(id, selectedValues);
+    const selectedValuesIds =
+      typeof value === "string"
+        ? value.split(",").map((v) => Number(v))
+        : value;
+    updateTextualFilter(id, selectedValuesIds);
   };
 
   const handleNumericFilterChange = (
@@ -47,11 +51,11 @@ const ProductFilters = ({
     numericFilterValueType: NumericFilterValueType,
     event: SelectChangeEvent<string | null>
   ) => {
-    const value = event.target.value;
+    const valueId = event.target.value;
     updateNumericFilter(
       id,
       numericFilterValueType,
-      value ? Number(value) || null : null
+      valueId ? Number(valueId) || null : null
     );
   };
 
@@ -69,19 +73,30 @@ const ProductFilters = ({
                   labelId={`${selectId}-label`}
                   id={selectId}
                   multiple
-                  value={filter.selected_values}
+                  value={filter.selected_values_ids}
                   onChange={(event) =>
                     handleTextualFilterChange(filter.id, event)
                   }
                   input={<OutlinedInput label="Tag" />}
-                  renderValue={(selected) => selected.join(", ")}
+                  renderValue={(selected_values_ids) =>
+                    selected_values_ids
+                      .map(
+                        (id) =>
+                          filter.possible_values.find((v) => v.id == id)?.value
+                      )
+                      .join(", ")
+                  }
                 >
                   {filter.possible_values.map((val) => (
-                    <MenuItem key={val} value={val}>
+                    <MenuItem key={val.id} value={val.id}>
                       <Checkbox
-                        checked={filter.selected_values.indexOf(val) > -1}
+                        checked={
+                          filter.selected_values_ids.indexOf(val.id) > -1
+                        }
                       />
-                      <ListItemText primary={`${val} ${filter.unit || ""}`} />
+                      <ListItemText
+                        primary={`${val.value} ${filter.unit || ""}`}
+                      />
                     </MenuItem>
                   ))}
                 </Select>
@@ -92,65 +107,35 @@ const ProductFilters = ({
       </Grid>
       <Grid container spacing={{ xs: 1, sm: 2 }}>
         {Object.entries(filters.numeric).map(([id, filter]) => {
-          const selectId = `filter-select-${id}`;
-
           return (
             <Grid item xs={6} sm={4} md={3} lg={2} key={id}>
               <FormControl sx={{ m: 1 }}>
                 <Typography variant="body1">{filter.name}</Typography>
                 <div>
-                  <FormControl sx={{ m: 1, minWidth: 100 }}>
-                    <InputLabel id={`${selectId}-from-label`}>From</InputLabel>
-                    <Select
-                      id={`${selectId}-from`}
-                      label="From"
-                      labelId={`${selectId}-from-label`}
-                      value={filter.min_value?.toString() || null}
-                      defaultValue=""
-                      onChange={(event) =>
-                        handleNumericFilterChange(
-                          filter.id,
-                          NumericFilterValueType.Min,
-                          event
-                        )
-                      }
-                    >
-                      <MenuItem value="">
-                        <em>None</em>
-                      </MenuItem>
-                      {filter.possible_values.map((val) => (
-                        <MenuItem key={val} value={val}>
-                          {val} {filter.unit || ""}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                  <FormControl sx={{ m: 1, minWidth: 100 }}>
-                    <InputLabel id={`${selectId}-to-label`}>To</InputLabel>
-                    <Select
-                      id={`${selectId}-to`}
-                      label="To"
-                      labelId={`${selectId}-to-label`}
-                      value={filter.max_value?.toString() || null}
-                      defaultValue=""
-                      onChange={(event) =>
-                        handleNumericFilterChange(
-                          filter.id,
-                          NumericFilterValueType.Max,
-                          event
-                        )
-                      }
-                    >
-                      <MenuItem value="">
-                        <em>None</em>
-                      </MenuItem>
-                      {filter.possible_values.map((val) => (
-                        <MenuItem key={val} value={val}>
-                          {val} {filter.unit || ""}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
+                  <NumericFilterSelect
+                    filter={filter}
+                    label="From"
+                    selectedValueId={filter.min_value_id}
+                    handleChange={(event) =>
+                      handleNumericFilterChange(
+                        filter.id,
+                        NumericFilterValueType.Min,
+                        event
+                      )
+                    }
+                  />
+                  <NumericFilterSelect
+                    filter={filter}
+                    label="To"
+                    selectedValueId={filter.max_value_id}
+                    handleChange={(event) =>
+                      handleNumericFilterChange(
+                        filter.id,
+                        NumericFilterValueType.Max,
+                        event
+                      )
+                    }
+                  />
                 </div>
               </FormControl>
             </Grid>

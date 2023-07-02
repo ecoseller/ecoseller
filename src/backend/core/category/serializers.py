@@ -2,7 +2,8 @@ from parler_rest.serializers import (
     TranslatableModelSerializer,
     TranslatedFieldsField,
 )
-from rest_framework.serializers import ModelSerializer, SerializerMethodField
+from rest_framework.serializers import ModelSerializer, SerializerMethodField, Serializer, IntegerField, ListField, \
+    CharField
 from rest_framework_recursive.fields import RecursiveField
 
 from category.models import (
@@ -147,3 +148,18 @@ class CategoryMinimalSerializer(TranslatedSerializerMixin, ModelSerializer):
     class Meta:
         model = Category
         fields = ("id", "title", "slug")
+
+
+class TextualFilterSerializer(Serializer):
+    id = IntegerField()
+    selected_values = ListField(child=CharField())
+
+
+class NumericFilterSerializer(Serializer):
+    id = IntegerField()
+    selected_values = ListField(child=CharField())
+
+
+class SelectedFiltersSerializer(Serializer):
+    textual = TextualFilterSerializer(many=True)
+    numeric = TextualFilterSerializer(many=True)
