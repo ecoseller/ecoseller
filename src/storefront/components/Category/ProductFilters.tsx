@@ -14,6 +14,8 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import NumericFilterSelect from "@/components/Category/Filters/NumericFilterSelect";
+import CancelIcon from "@mui/icons-material/Cancel";
+import Button from "@mui/material/Button";
 
 interface IProductFiltersProps {
   filters: IFilters;
@@ -23,6 +25,7 @@ interface IProductFiltersProps {
     numericFilterValueType: NumericFilterValueType,
     valueId: number | null
   ) => void;
+  setEmptyFilters: () => void;
 }
 
 /**
@@ -33,6 +36,7 @@ const ProductFilters = ({
   filters,
   updateTextualFilter,
   updateNumericFilter,
+  setEmptyFilters,
 }: IProductFiltersProps) => {
   const handleTextualFilterChange = (
     id: number,
@@ -142,6 +146,13 @@ const ProductFilters = ({
           );
         })}
       </Grid>
+      <Button
+        size="small"
+        startIcon={<CancelIcon />}
+        onClick={() => setEmptyFilters()}
+      >
+        Cancel filters
+      </Button>
     </CollapsableContentWithTitle>
   );
 };

@@ -29,7 +29,7 @@ const NumericFilterSelect = ({
         id={selectId}
         label={label}
         labelId={`${selectId}-label`}
-        value={selectedValueId?.toString() || null}
+        value={selectedValueId?.toString() || ""}
         defaultValue=""
         onChange={(event) => handleChange(event)}
       >

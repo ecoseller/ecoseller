@@ -32,6 +32,8 @@ import ProductSortSelect from "@/components/Category/ProductSortSelect";
 import { getCategoryProducts } from "@/api/category/products";
 import { categoryAttributesAPI } from "@/pages/api/category/[id]/attributes";
 import { filterProducts } from "@/api/category/filter";
+import CancelIcon from "@mui/icons-material/Cancel";
+import Button from "@mui/material/Button";
 
 interface ICategoryPageProps {
   category: ICategoryDetail;
@@ -67,22 +69,52 @@ const CategoryPage = ({
   attributes,
 }: ICategoryPageProps) => {
   const router = useRouter();
+
   const { id } = router.query;
 
-  const [productsState, setProductsState] = useState<IProductRecord[]>([]);
-  const [filters, setFilters] = useState<IFilters>({
+  const initialFilters: IFilters = {
     textual: {},
     numeric: {},
-  });
+  };
+
+  const [productsState, setProductsState] = useState<IProductRecord[]>([]);
+  const [filters, setFilters] = useState<IFilters>(initialFilters);
 
   useEffect(() => {
-    applyFilters();
+    if (filters != initialFilters) {
+      applyFilters();
+    }
   }, [filters]);
 
   useEffect(() => {
     setProductsState(products);
 
-    const emptyFilters: IFilters = { textual: {}, numeric: {} };
+    const storedFilters = tryLoadFiltersFromSessionStorage();
+    if (storedFilters == null) {
+      setEmptyFilters();
+    } else {
+      setFilters(storedFilters);
+    }
+  }, [id]);
+
+  const getFiltersStorageKey = () => `category-${category.id}-filters`;
+
+  const saveFiltersToSessionStorage = () => {
+    sessionStorage.setItem(getFiltersStorageKey(), JSON.stringify(filters));
+  };
+
+  const tryLoadFiltersFromSessionStorage = () => {
+    const filtersString = sessionStorage.getItem(getFiltersStorageKey());
+
+    if (filtersString == null) {
+      return null;
+    } else {
+      return JSON.parse(filtersString) as IFilters;
+    }
+  };
+
+  const setEmptyFilters = () => {
+    const emptyFilters = initialFilters;
 
     for (const attr of attributes.textual) {
       emptyFilters.textual[attr.id] = { ...attr, selected_values_ids: [] };
@@ -96,13 +128,15 @@ const CategoryPage = ({
       };
     }
     setFilters(emptyFilters);
-  }, [id]);
+  };
 
   const applyFilters = () => {
     const filtersToApply: ISelectedFilters = {
       numeric: Object.values(filters.numeric),
       textual: Object.values(filters.textual),
     };
+
+    saveFiltersToSessionStorage();
 
     filterProducts(category.id, pricelist, countryCode, filtersToApply).then(
       (products) => setProductsState(products)
@@ -187,6 +221,7 @@ const CategoryPage = ({
           filters={filters}
           updateTextualFilter={updateTextualFilter}
           updateNumericFilter={updateNumericFilter}
+          setEmptyFilters={setEmptyFilters}
         />
         <Divider sx={{ my: 2 }} />
         <ProductSortSelect sortProducts={sortProducts} />
@@ -240,18 +275,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     res as NextApiResponse
   );
 
-  // if (!category) {
-  //   return {
-  //     notFound: true,
-  //   };
-  // } else if (data.slug && data.slug !== slug) {
-  //   return {
-  //     redirect: {
-  //       destination: `/product/${id}/${data.slug}`,
-  //       permanent: true,
-  //     },
-  //   };
-  // }
+  if (!category) {
+    return {
+      notFound: true,
+    };
+  } else if (category.slug && category.slug !== slug) {
+    return {
+      redirect: {
+        destination: `/category/${id}/${category.slug}`,
+        permanent: true,
+      },
+    };
+  }
 
   return {
     props: {
