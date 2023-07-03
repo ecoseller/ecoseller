@@ -104,7 +104,7 @@ const ProductPage = ({
                 component={"h3"}
                 sx={{ fontSize: "1.25rem", paddingTop: "20px" }}
               >
-                {t("varinats")}
+                {t("variants")}
               </Typography>
               <ProductVariants
                 variants={data.product_variants}
