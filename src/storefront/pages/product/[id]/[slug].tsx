@@ -40,7 +40,6 @@ import { productReviewListAPI } from "@/pages/api/review/list/[token]";
 import { IReview } from "@/types/review";
 import { ReviewsList } from "@/components/Review/RatingsList";
 import { useRecommender } from "@/utils/context/recommender";
-        
 
 interface IProductPageProps {
   data: IProductDetail;
@@ -49,7 +48,6 @@ interface IProductPageProps {
   productRating: any;
   productReviews: IReview[];
 }
-
 
 const ProductPage = ({
   data,
