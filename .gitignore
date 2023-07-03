@@ -11,7 +11,7 @@ __pycache__
 static 
 
 # cache folder
-src/cache/
+src/cache
 
 # commented out to test workflow
 # ./**/migrations/*.py

@@ -71,6 +71,21 @@ class PageCMSSerializer(PageCMSPreviewSerializer):
         )
 
 
+class PageCMSStorefrontSerializer(PageCMSSerializer):
+    """
+    Serializer used for PageCMS detail (with content)
+    """
+
+    class Meta:
+        model = PageCMS
+        fields = (
+            "id",
+            "slug",
+            "title",
+            "content",
+        )
+
+
 class PageFrontendSerializer(TranslatedSerializerMixin, serializers.ModelSerializer):
     """
     Serializer used for PageFrontend (there's no need to distinguish preview and detail)
@@ -187,3 +202,22 @@ class PageCateogryTypeDashboardSerializer(
     class Meta:
         model = PageCategoryType
         fields = ("id", "identifier")
+
+
+class PageCategoryStorefrontPreviewSerializer(
+    TranslatedSerializerMixin, serializers.ModelSerializer
+):
+    page = PagePolymorphicPreviewSerializer(
+        source="filtered_page", many=True, read_only=True
+    )
+
+    class Meta:
+        model = PageCategory
+        fields = (
+            "id",
+            "title",
+            "image",
+            "code",
+            "published",
+            "page",
+        )

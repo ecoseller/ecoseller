@@ -38,10 +38,10 @@ interface IUserProps {
 
 const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
   const router = useRouter();
-  const { id } = router.query;
 
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
   const { user } = useUser();
+
   const [state, setState] = useState<IUser>(user);
   useEffect(() => {
     setState(user);

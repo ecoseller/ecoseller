@@ -28,7 +28,7 @@ class Trainer:
         TrainerQueueItemModel(model_name=model_name).create()
 
     @inject
-    def train(self, model_manager: "ModelManager" = Provide["model_manager"]) -> bool:
+    def train(self, model_manager: "ModelManager" = Provide["model_manager"]) -> None:
         """
         Trains the first model in queue.
 
@@ -40,7 +40,7 @@ class Trainer:
 
         if queue_item is None:
             logging.info("No item found in queue. Skipping training.")
-            return False
+            return
 
         logging.info(f"Training of model {queue_item.model_name} started.")
         queue_item.set_processed()
@@ -50,5 +50,3 @@ class Trainer:
         logging.info(f"Training of model {queue_item.model_name} finished.")
 
         # TODO: Save training stats.
-
-        return True

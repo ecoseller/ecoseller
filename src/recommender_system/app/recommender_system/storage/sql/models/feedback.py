@@ -1,3 +1,4 @@
+from sqlalchemy.dialects import postgresql
 from sqlalchemy.sql.schema import Column, Index
 from sqlalchemy.sql.sqltypes import (
     DECIMAL,
@@ -7,6 +8,9 @@ from sqlalchemy.sql.sqltypes import (
 )
 from sqlalchemy.orm import declarative_base, DeclarativeBase
 
+from recommender_system.models.stored.feedback.prediction_result import (
+    PredictionResultModel,
+)
 from recommender_system.models.stored.feedback.product_add_to_cart import (
     ProductAddToCartModel,
 )
@@ -25,6 +29,30 @@ from recommender_system.storage.sql.base import SQLFeedbackBase
 
 
 FeedbackBase: DeclarativeBase = declarative_base(cls=SQLFeedbackBase)
+
+
+class SQLPredictionResult(FeedbackBase):
+    """
+    This model represents training statistics table in SQL database.
+    """
+
+    id = Column(Integer(), primary_key=True)
+    retrieval_model_name = Column(String(255), nullable=False)
+    retrieval_model_identifier = Column(String(255), nullable=False)
+    scoring_model_name = Column(String(255), nullable=False)
+    scoring_model_identifier = Column(String(255), nullable=False)
+    recommendation_type = Column(String(255), nullable=False)
+    session_id = Column(String(255), nullable=False)
+    retrieval_duration = Column(DECIMAL(), nullable=False)
+    scoring_duration = Column(DECIMAL(), nullable=False)
+    ordering_duration = Column(DECIMAL(), nullable=False)
+    predicted_items = Column(postgresql.ARRAY(String(255)), nullable=False)
+    create_at = Column(TIMESTAMP(), nullable=False)
+
+    __tablename__ = "prediction_result"
+
+    class Meta:
+        origin_model = PredictionResultModel
 
 
 class SQLProductAddToCart(FeedbackBase):
@@ -56,6 +84,8 @@ class SQLProductDetailEnter(FeedbackBase):
     product_id = Column(Integer(), nullable=False)
     product_variant_sku = Column(String(255), nullable=False)
     recommendation_type = Column(String(100), nullable=True)
+    model_identifier = Column(String(255), nullable=True)
+    model_name = Column(String(255), nullable=True)
     position = Column(Integer(), nullable=True)
     create_at = Column(TIMESTAMP(), nullable=False)
 
@@ -102,6 +132,7 @@ class SQLRecommendationView(FeedbackBase):
     product_id = Column(Integer(), nullable=False)
     product_variant_sku = Column(String(255), nullable=False)
     recommendation_type = Column(String(100), nullable=False)
+    model_identifier = Column(String(255), nullable=False)
     position = Column(Integer(), nullable=True)
     create_at = Column(TIMESTAMP(), nullable=False)
 
@@ -141,6 +172,10 @@ class SQLSession(FeedbackBase):
 
     id = Column(String(100), primary_key=True)
     user_id = Column(Integer(), nullable=True)
+    visited_product_variants = Column(
+        postgresql.ARRAY(String(255)), nullable=False, default=[]
+    )
+    create_at = Column(TIMESTAMP(), nullable=False)
 
     __tablename__ = "session"
 

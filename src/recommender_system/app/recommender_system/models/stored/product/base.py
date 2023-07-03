@@ -16,12 +16,9 @@ class ProductStoredBaseModel(StoredBaseModel):
 
     @inject
     def __init__(
-        self,
-        _storage: "AbstractProductStorage" = Provide["product_storage"],
-        *args,
-        **kwargs
+        self, _storage: "AbstractProductStorage" = Provide["product_storage"], **kwargs
     ):
-        super().__init__(_storage=_storage, *args, **kwargs)
+        super().__init__(_storage=_storage, **kwargs)
 
     @classmethod
     @inject

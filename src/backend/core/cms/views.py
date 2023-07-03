@@ -1,8 +1,13 @@
-from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
+from rest_framework.status import (
+    HTTP_201_CREATED,
+    HTTP_400_BAD_REQUEST,
+    HTTP_404_NOT_FOUND,
+)
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
-from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListAPIView
+from django.db.models import Prefetch
 
 # from django.contrib.auth.models import User
 from .models import (
@@ -19,6 +24,8 @@ from .serializers import (
     PageFrontendDashboardSerializer,
     PageCategoryDashboardSerializer,
     PageCateogryTypeDashboardSerializer,
+    PageCMSStorefrontSerializer,
+    PageCategoryStorefrontPreviewSerializer,
 )
 
 from roles.decorator import check_user_is_staff_decorator
@@ -205,3 +212,58 @@ class PageTypePagesDashboardView(APIView):
         Gets all pages in a type.
         """
         raise NotImplementedError
+
+
+class PageCMSStorefrontDetailView(APIView):
+    """
+    Obtain page for storefront based on slug and locale
+    """
+
+    serializer_class = PageCMSStorefrontSerializer
+    permission_classes = (AllowAny,)
+
+    def get(self, request, locale, slug, *args, **kwargs):
+        try:
+            page = PageCMS.objects.get(
+                translations__slug=slug, translations__language_code__iexact=locale
+            )
+        except PageCMS.DoesNotExist:
+            return Response({"message": "page not found"}, status=HTTP_404_NOT_FOUND)
+        serializer = self.serializer_class(
+            page, many=False, context={"request": request}
+        )
+        return Response(serializer.data)
+
+
+class PageTypePagesStorefrontView(ListAPIView):
+    """
+    View for listing all pages in a type (frontend)
+    """
+
+    permission_classes = (AllowAny,)
+    serializer_class = PageCategoryStorefrontPreviewSerializer
+
+    def get_queryset(self):
+        type = self.kwargs["type"]
+        type_obj = PageCategoryType.objects.filter(identifier=type)
+        return PageCategory.objects.filter(
+            published=True, type__in=type_obj
+        ).prefetch_related(
+            Prefetch(
+                "page",
+                queryset=Page.objects.filter(published=True),
+                to_attr="filtered_page",
+            )
+        )
+
+    def get(self, request, type):
+        """
+        Gets all pages in a type.
+        """
+        queryset = self.get_queryset()
+        print(queryset)
+        serializer = self.serializer_class(
+            queryset, many=True, context={"request": request}
+        )
+        data = serializer.data
+        return Response(data)

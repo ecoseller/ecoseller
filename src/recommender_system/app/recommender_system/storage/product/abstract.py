@@ -134,9 +134,7 @@ class AbstractProductStorage(AbstractStorage, ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def get_product_variant_prices(
-        self, product_variant_skus: List[str]
-    ) -> Dict[str, float]:
+    def get_product_variant_prices(self) -> Dict[str, float]:
         """
         Selects price of all given product variants.
 
@@ -154,9 +152,7 @@ class AbstractProductStorage(AbstractStorage, ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def get_price_stats(
-        self, product_variant_skus: List[str]
-    ) -> Optional[NumericalStatistics]:
+    def get_price_stats(self) -> Optional[NumericalStatistics]:
         """
         Computes statistics of prices of product variants given by their SKUs.
 

@@ -1,5 +1,5 @@
 from sqlalchemy.sql.schema import Column, Index
-from sqlalchemy.sql.sqltypes import Boolean, Integer, String, TIMESTAMP
+from sqlalchemy.sql.sqltypes import Boolean, DECIMAL, JSON, Integer, String, TIMESTAMP
 from sqlalchemy.orm import declarative_base, DeclarativeBase
 
 from recommender_system.models.stored.model.config import ConfigModel
@@ -8,6 +8,9 @@ from recommender_system.models.stored.model.latest_identifier import (
 )
 from recommender_system.models.stored.model.trainer_queue_item import (
     TrainerQueueItemModel,
+)
+from recommender_system.models.stored.model.training_statistics import (
+    TrainingStatisticsModel,
 )
 from recommender_system.storage.sql.base import SQLModelBase
 
@@ -48,7 +51,7 @@ class SQLLatestIdentifier(ModelBase):
 
 class SQLTrainerQueueItem(ModelBase):
     """
-    This model represents queue of models to be trained table in SQL database.
+    This model represents item in queue of models to be trained table in SQL database.
     """
 
     id = Column(Integer(), primary_key=True)
@@ -62,3 +65,48 @@ class SQLTrainerQueueItem(ModelBase):
 
     class Meta:
         origin_model = TrainerQueueItemModel
+
+
+class SQLTrainingStatistics(ModelBase):
+    """
+    This model represents training statistics table in SQL database.
+    """
+
+    id = Column(Integer(), primary_key=True)
+    model_name = Column(String(255), nullable=False)
+    model_identifier = Column(String(255), nullable=False)
+    duration = Column(DECIMAL(), nullable=False)
+    peak_memory = Column(DECIMAL(), nullable=False)
+    peak_memory_percentage = Column(DECIMAL(), nullable=False)
+    full_train = Column(Boolean(), nullable=False, default=True)
+    metrics = Column(JSON(), nullable=False)
+    hyperparameters = Column(JSON(), nullable=False)
+    create_at = Column(TIMESTAMP(), nullable=False)
+
+    __tablename__ = "training_statistics"
+
+    class Meta:
+        origin_model = TrainingStatisticsModel
+
+
+# class SQLPredictionResult(ModelBase):
+#     """
+#     This model represents training statistics table in SQL database.
+#     """
+#
+#     id = Column(Integer(), primary_key=True)
+#     retrieval_model_name = Column(String(255), nullable=False)
+#     retrieval_model_identifier = Column(String(255), nullable=False)
+#     scoring_model_name = Column(String(255), nullable=False)
+#     scoring_model_identifier = Column(String(255), nullable=False)
+#     session_id = Column(String(255), nullable=False)
+#     retrieval_duration = Column(DECIMAL(), nullable=False)
+#     scoring_duration = Column(DECIMAL(), nullable=False)
+#     ordering_duration = Column(DECIMAL(), nullable=False)
+#     predicted_items = Column(postgresql.ARRAY(String(255)), nullable=False)
+#     create_at = Column(TIMESTAMP(), nullable=False)
+#
+#     __tablename__ = "prediction_result"
+#
+#     class Meta:
+#         origin_model = PredictionResultModel

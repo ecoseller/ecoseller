@@ -22,6 +22,8 @@ class ProductDetailEnterModel(ImmutableFeedbackStoredModel):
     product_id: int
     product_variant_sku: str
     recommendation_type: Optional[str]
+    model_identifier: Optional[str]
+    model_name: Optional[str]
     position: Optional[int]
     create_at: datetime
 
@@ -39,6 +41,12 @@ class ProductDetailEnterModel(ImmutableFeedbackStoredModel):
 
         super().create()
         try:
-            SessionModel.get(pk=self.session_id)
+            session: SessionModel = SessionModel.get(pk=self.session_id)
+            session.visited_product_variants.append(self.product_variant_sku)
+            session.save()
         except SessionModel.DoesNotExist:
-            SessionModel(id=self.session_id, user_id=self.user_id).create()
+            SessionModel(
+                id=self.session_id,
+                user_id=self.user_id,
+                visited_product_variants=[self.product_variant_sku],
+            ).create()

@@ -185,6 +185,8 @@ def _product_detail_enter(
         "product_id": product_id,
         "product_variant_sku": product_variant_sku,
         "recommendation_type": "cart",
+        "model_identifier": None,
+        "model_name": None,
         "position": 1,
         "create_at": _now,
     }
@@ -236,6 +238,7 @@ def _recommendation_view(
         "product_id": product_id,
         "product_variant_sku": product_variant_sku,
         "recommendation_type": "cart",
+        "model_identifier": "unittest",
         "position": 1,
         "create_at": _now,
     }

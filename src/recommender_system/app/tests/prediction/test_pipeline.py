@@ -6,6 +6,7 @@ from recommender_system.managers.model_manager import ModelManager
 from recommender_system.managers.prediction_pipeline import PredictionPipeline
 from recommender_system.models.prediction.abstract import AbstractPredictionModel
 from recommender_system.models.prediction.dummy.model import DummyPredictionModel
+from recommender_system.models.prediction.ease.model import EASEPredictionModel
 from recommender_system.models.prediction.gru4rec.model import GRU4RecPredictionModel
 from recommender_system.models.prediction.popularity.model import (
     PopularityPredictionModel,
@@ -15,6 +16,10 @@ from recommender_system.models.prediction.selection.model import (
 )
 from recommender_system.models.stored.feedback.product_detail_enter import (
     ProductDetailEnterModel,
+)
+from recommender_system.models.stored.feedback.review import ReviewModel
+from recommender_system.models.stored.feedback.prediction_result import (
+    PredictionResultModel,
 )
 from recommender_system.models.stored.product.order import OrderModel
 from recommender_system.models.stored.product.product import ProductModel
@@ -125,13 +130,44 @@ def create_product_detail_enters():
         delete_model(model_class=ProductDetailEnterModel, pk=enter.pk)
 
 
-def test_dummy(app, create_product_variants, prediction_pipeline):
-    with app.container.model_manager.override(
-        MockModelManager(
-            retrieval_model=DummyPredictionModel(), scoring_model=DummyPredictionModel()
+@pytest.fixture
+def create_product_reviews():
+    user_id = 0
+
+    variants = [ProductVariantModel.get(pk=f"unittest{i}") for i in range(1, 5)]
+
+    reviews = [
+        ReviewModel(
+            id=i,
+            session_id=str(user_id),
+            user_id=user_id,
+            product_id=i,
+            product_variant_sku=variant.sku,
+            rating=1 + i,
+            update_at=datetime.now(),
+            create_at=datetime.now(),
         )
+        for i, variant in enumerate(variants)
+    ]
+
+    for review in reviews:
+        delete_model(model_class=ReviewModel, pk=review.pk)
+        review.create()
+
+    yield user_id
+
+    for review in reviews:
+        delete_model(model_class=ReviewModel, pk=review.pk)
+
+
+def test_dummy(app, create_product_variants, prediction_pipeline):
+    model = DummyPredictionModel()
+    with app.container.model_manager.override(
+        MockModelManager(retrieval_model=model, scoring_model=model)
     ):
         variant_skus = create_product_variants
+
+        date_from = datetime.now()
 
         predictions = prediction_pipeline.run(
             recommendation_type=RecommendationType.HOMEPAGE,
@@ -145,28 +181,20 @@ def test_dummy(app, create_product_variants, prediction_pipeline):
             else:
                 assert sku in predictions
 
-        variants = [ProductVariantModel.get(pk=sku) for sku in variant_skus]
-        variants.sort(key=lambda variant: variant.create_at, reverse=True)
-
-        ordered_skus = [
-            variant.sku for variant in variants if variant.sku != "unittest4"
-        ]
-
-        indices = [predictions.index(sku) for sku in ordered_skus]
-        index = -1
-        for found_index in indices:
-            assert index < found_index
-            index = found_index
+        result = PredictionResultModel.get(create_at__gte=date_from)
+        assert result.predicted_items == predictions
+        assert result.retrieval_model_identifier == model.identifier
+        assert result.scoring_model_identifier == model.identifier
 
 
 def test_popularity(app, create_product_variants, prediction_pipeline):
+    model = PopularityPredictionModel()
     with app.container.model_manager.override(
-        MockModelManager(
-            retrieval_model=PopularityPredictionModel(),
-            scoring_model=PopularityPredictionModel(),
-        )
+        MockModelManager(retrieval_model=model, scoring_model=model)
     ):
         variant_skus = create_product_variants
+
+        date_from = datetime.now()
 
         predictions = prediction_pipeline.run(
             recommendation_type=RecommendationType.HOMEPAGE,
@@ -182,15 +210,20 @@ def test_popularity(app, create_product_variants, prediction_pipeline):
 
         assert len(predictions) == len(ProductVariantModel.gets()) - 1
 
+        result = PredictionResultModel.get(create_at__gte=date_from)
+        assert result.predicted_items == predictions
+        assert result.retrieval_model_identifier == model.identifier
+        assert result.scoring_model_identifier == model.identifier
+
 
 def test_selection(app, create_product_variants, prediction_pipeline):
+    model = SelectionPredictionModel()
     with app.container.model_manager.override(
-        MockModelManager(
-            retrieval_model=SelectionPredictionModel(),
-            scoring_model=SelectionPredictionModel(),
-        )
+        MockModelManager(retrieval_model=model, scoring_model=model)
     ):
         variant_skus = create_product_variants
+
+        date_from = datetime.now()
 
         predictions = prediction_pipeline.run(
             recommendation_type=RecommendationType.HOMEPAGE,
@@ -204,6 +237,11 @@ def test_selection(app, create_product_variants, prediction_pipeline):
             else:
                 assert sku in predictions
 
+        result = PredictionResultModel.get(create_at__gte=date_from)
+        assert result.predicted_items == predictions
+        assert result.retrieval_model_identifier == model.identifier
+        assert result.scoring_model_identifier == model.identifier
+
 
 def test_gru4rec(
     app, create_product_variants, create_product_detail_enters, prediction_pipeline
@@ -211,20 +249,71 @@ def test_gru4rec(
     variant_skus = create_product_variants
     session_id = create_product_detail_enters
 
+    dummy = DummyPredictionModel()
     model = GRU4RecPredictionModel()
     model.train()
 
-    with app.container.model_manager.override(
-        MockModelManager(retrieval_model=DummyPredictionModel(), scoring_model=model)
-    ):
-        predictions = prediction_pipeline.run(
-            recommendation_type=RecommendationType.HOMEPAGE,
-            session_id=session_id,
-            user_id=None,
-        )
+    try:
+        with app.container.model_manager.override(
+            MockModelManager(retrieval_model=dummy, scoring_model=model)
+        ):
+            date_from = datetime.now()
 
-        for sku in variant_skus:
-            if sku == "unittest4":
-                assert sku not in predictions
-            else:
-                assert sku in predictions
+            predictions = prediction_pipeline.run(
+                recommendation_type=RecommendationType.HOMEPAGE,
+                session_id=session_id,
+                user_id=None,
+            )
+
+            for sku in variant_skus:
+                if sku == "unittest4":
+                    assert sku not in predictions
+                else:
+                    assert sku in predictions
+
+            result = PredictionResultModel.get(create_at__gte=date_from)
+            assert result.predicted_items == predictions
+            assert result.retrieval_model_identifier == dummy.identifier
+            assert result.scoring_model_identifier == model.identifier
+
+    finally:
+        model.delete()
+
+
+def test_ease(
+    app, create_product_variants, create_product_reviews, prediction_pipeline
+):
+    variant_skus = create_product_variants
+    user_id = create_product_reviews
+
+    dummy = DummyPredictionModel()
+    model = EASEPredictionModel()
+    model.train()
+
+    try:
+        with app.container.model_manager.override(
+            MockModelManager(
+                retrieval_model=DummyPredictionModel(), scoring_model=model
+            )
+        ):
+            date_from = datetime.now()
+
+            predictions = prediction_pipeline.run(
+                recommendation_type=RecommendationType.HOMEPAGE,
+                session_id=str(user_id),
+                user_id=user_id,
+            )
+
+            for sku in variant_skus:
+                if sku == "unittest4":
+                    assert sku not in predictions
+                else:
+                    assert sku in predictions
+
+            result = PredictionResultModel.get(create_at__gte=date_from)
+            assert result.predicted_items == predictions
+            assert result.retrieval_model_identifier == dummy.identifier
+            assert result.scoring_model_identifier == model.identifier
+
+    finally:
+        model.delete()

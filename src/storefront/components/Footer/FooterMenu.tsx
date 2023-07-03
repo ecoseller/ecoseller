@@ -15,6 +15,8 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
 import { MaxWidthWrapper } from "../MaxWidthWrapper";
+import useSWR from "swr";
+import { IPageCategory } from "@/types/cms";
 
 const StyledFooter = styled("footer")(({ theme }) => ({
   backgroundColor: "#F5F5F5",
@@ -49,6 +51,13 @@ const FancyListItem = styled("li")(({ theme }) => ({
 }));
 
 const FooterMenu = () => {
+  const { data } = useSWR<IPageCategory[]>(
+    `api/cms/type/FOOTER`,
+    (url: string) => fetch(url).then((res) => res.json())
+  );
+
+  console.log("FOOTER", data);
+
   return (
     <StyledFooter>
       <MaxWidthWrapper>
@@ -72,46 +81,24 @@ const FooterMenu = () => {
             </Grid>
           </Grid>
           <Grid container xs={12} md={7} lg={8} spacing={4}>
-            <Grid xs={6} lg={3}>
-              <Item>
-                <ItemHeading>Category A</ItemHeading>
-                <Box component="ul" aria-labelledby="category-a" sx={{ pl: 2 }}>
-                  <FancyListItem>Link 1.1</FancyListItem>
-                  <FancyListItem>Link 1.2</FancyListItem>
-                  <FancyListItem>Link 1.3</FancyListItem>
-                </Box>
-              </Item>
-            </Grid>
-            <Grid xs={6} lg={3}>
-              <Item>
-                <ItemHeading>Category B</ItemHeading>
-                <Box component="ul" aria-labelledby="category-b" sx={{ pl: 2 }}>
-                  <FancyListItem>Link 2.1</FancyListItem>
-                  <FancyListItem>Link 2.2</FancyListItem>
-                  <FancyListItem>Link 2.3</FancyListItem>
-                </Box>
-              </Item>
-            </Grid>
-            <Grid xs={6} lg={3}>
-              <Item>
-                <ItemHeading>Category C</ItemHeading>
-                <Box component="ul" aria-labelledby="category-c" sx={{ pl: 2 }}>
-                  <FancyListItem>Link 3.1</FancyListItem>
-                  <FancyListItem>Link 3.2</FancyListItem>
-                  <FancyListItem>Link 3.3</FancyListItem>
-                </Box>
-              </Item>
-            </Grid>
-            <Grid xs={6} lg={3}>
-              <Item>
-                <ItemHeading>Category D</ItemHeading>
-                <Box component="ul" aria-labelledby="category-d" sx={{ pl: 2 }}>
-                  <FancyListItem>Link 4.1</FancyListItem>
-                  <FancyListItem>Link 4.2</FancyListItem>
-                  <FancyListItem>Link 4.3</FancyListItem>
-                </Box>
-              </Item>
-            </Grid>
+            {data?.map((category) => (
+              <Grid xs={6} lg={3} key={category.id}>
+                <Item>
+                  <ItemHeading>{category.title}</ItemHeading>
+                  <Box
+                    component="ul"
+                    aria-labelledby="category-a"
+                    sx={{ pl: 2 }}
+                  >
+                    {category?.page?.map((page) => (
+                      <Link href={page.slug} key={page.id}>
+                        <FancyListItem>{page.title}</FancyListItem>
+                      </Link>
+                    ))}
+                  </Box>
+                </Item>
+              </Grid>
+            ))}
           </Grid>
         </Grid>
       </MaxWidthWrapper>

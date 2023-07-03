@@ -48,7 +48,7 @@ export const CountryProvider = ({
 
     if (countryCookieValue && countryList.length > 0) {
       setCountryCookieAndLocale(countryCookieValue);
-    } else if (countryList.length > 0) {
+    } else if (countryList?.length > 0) {
       setCountryCookieAndLocale(countryList[0].code);
     }
   }, [countryList]);

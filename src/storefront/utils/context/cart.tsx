@@ -120,6 +120,7 @@ export const CartProvider = ({ children }: ICartProviderProps): JSX.Element => {
     if (!token) {
       // if there is no token, create a new cart and set the token
       const cartToken = await createCart(sku, qty, product, pricelist, country);
+      console.log("CARTTOKEN", cartToken);
       setToken(cartToken.token);
 
       refetchCart();
