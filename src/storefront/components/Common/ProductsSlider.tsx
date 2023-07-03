@@ -61,11 +61,13 @@ const ProductsSlider = ({ data }: IProductSliderProps) => {
 
   return (
     <div ref={sliderRef} className="keen-slider">
-      {data.map((item) => (
-        <div key={item.id} className="keen-slider__slide">
-          <ProductItem {...item} />
-        </div>
-      ))}
+      {data?.length > 0
+        ? data.map((item) => (
+            <div key={item.id} className="keen-slider__slide">
+              <ProductItem {...item} />
+            </div>
+          ))
+        : null}
     </div>
   );
 };

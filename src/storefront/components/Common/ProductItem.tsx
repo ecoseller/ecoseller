@@ -17,7 +17,7 @@ const ProductItem = ({ title, price, image, url }: IProductItemProps) => {
     <Link href={url}>
       <div className={styles.productItem}>
         <div className={styles.productItem_image}>
-          <Image src={image} alt={title} fill />
+          <Image src={image} alt={`Product recommendation`} fill />
         </div>
         <div className={styles.productItem_content}>
           <h3 className={styles.productItem_title}>{title}</h3>

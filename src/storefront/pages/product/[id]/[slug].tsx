@@ -34,6 +34,8 @@ import { countryDetailAPI } from "@/pages/api/country/[code]";
 import { ICountry } from "@/types/country";
 import BreadcrumbCategoryNav from "@/components/Common/BreadcrumbCategoryNav";
 import { DEFAULT_COUNTRY } from "@/utils/defaults";
+import { useRecommender } from "@/utils/context/recommender";
+import { useState } from "react";
 
 interface IProductPageProps {
   data: IProductDetail;
@@ -41,53 +43,17 @@ interface IProductPageProps {
   pricelist: string;
 }
 
-const recommendedProducts: IProductSliderData[] = [
-  {
-    id: 1,
-    title: "Product 1",
-    price: "$25",
-    image: "/images/products/1.jpg",
-    url: "/",
-  },
-  {
-    id: 2,
-    title: "Product 2",
-    price: "$20",
-    image: "/images/products/2.jpg",
-    url: "/",
-  },
-  {
-    id: 3,
-    title: "Product 3",
-    price: "$25",
-    image: "/images/products/1.jpg",
-    url: "/",
-  },
-  {
-    id: 4,
-    title: "Product 4",
-    price: "$20",
-    image: "/images/products/1.jpg",
-    url: "/",
-  },
-  {
-    id: 5,
-    title: "Product 5",
-    price: "$25",
-    image: "/images/products/1.jpg",
-    url: "/",
-  },
-  {
-    id: 6,
-    title: "Product 6",
-    price: "$20",
-    image: "/images/products/1.jpg",
-    url: "/",
-  },
-];
-
 const ProductPage = ({ data, country, pricelist }: IProductPageProps) => {
   const { basePath } = useRouter();
+  const { getRecommendations } = useRecommender();
+
+  const [recommendedProducts, setRecommendedProducts] = useState<
+    IProductSliderData[]
+  >(
+    getRecommendations("view_product", {
+      product_id: data.id,
+    })
+  );
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
