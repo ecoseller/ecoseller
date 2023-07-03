@@ -47,14 +47,6 @@ const ProductPage = ({ data, country, pricelist }: IProductPageProps) => {
   const { basePath } = useRouter();
   const { getRecommendations } = useRecommender();
 
-  const [recommendedProducts, setRecommendedProducts] = useState<
-    IProductSliderData[]
-  >(
-    getRecommendations("view_product", {
-      product_id: data.id,
-    })
-  );
-
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -113,7 +105,11 @@ const ProductPage = ({ data, country, pricelist }: IProductPageProps) => {
           <Typography variant="body1" gutterBottom>
             Check out our best selling products
           </Typography>
-          <ProductsSlider data={recommendedProducts} />
+          <ProductsSlider
+            data={getRecommendations("view_product", {
+              product_id: data.id,
+            })}
+          />
         </Box>
       </div>
     </>
