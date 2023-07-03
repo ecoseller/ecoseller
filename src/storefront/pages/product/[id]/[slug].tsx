@@ -67,14 +67,6 @@ const ProductPage = ({
 
   const { getRecommendations } = useRecommender();
 
-  const [recommendedProducts, setRecommendedProducts] = useState<
-    IProductSliderData[]
-  >(
-    getRecommendations("view_product", {
-      product_id: data.id,
-    })
-  );
-
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -133,7 +125,11 @@ const ProductPage = ({
           <Typography variant="body1" gutterBottom>
             {t("recommended-products-description")}
           </Typography>
-          <ProductsSlider data={recommendedProducts} />
+          <ProductsSlider
+            data={getRecommendations("view_product", {
+              product_id: data.id,
+            })}
+          />
         </Box>
         <Box sx={{ pt: 5 }}>
           <Typography variant="h4" gutterBottom>
