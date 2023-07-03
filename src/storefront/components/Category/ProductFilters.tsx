@@ -77,7 +77,7 @@ const ProductFilters = ({
                   onChange={(event) =>
                     handleTextualFilterChange(filter.id, event)
                   }
-                  input={<OutlinedInput label="Tag" />}
+                  input={<OutlinedInput label={filter.name} />}
                   renderValue={(selected_values_ids) =>
                     selected_values_ids
                       .map(
