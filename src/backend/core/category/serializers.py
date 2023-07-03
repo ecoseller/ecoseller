@@ -8,7 +8,6 @@ from rest_framework.serializers import (
     Serializer,
     IntegerField,
     ListField,
-    CharField,
 )
 from rest_framework_recursive.fields import RecursiveField
 
@@ -158,14 +157,41 @@ class CategoryMinimalSerializer(TranslatedSerializerMixin, ModelSerializer):
 
 class TextualFilterSerializer(Serializer):
     id = IntegerField()
-    selected_values = ListField(child=CharField())
+    selected_values_ids = ListField(child=IntegerField())
 
 
 class NumericFilterSerializer(Serializer):
     id = IntegerField()
-    selected_values = ListField(child=CharField())
+    min_value_id = IntegerField(allow_null=True)
+    max_value_id = IntegerField(allow_null=True)
 
 
 class SelectedFiltersSerializer(Serializer):
     textual = TextualFilterSerializer(many=True)
-    numeric = TextualFilterSerializer(many=True)
+    numeric = NumericFilterSerializer(many=True)
+
+    def create(self, validated_data):
+        textual, numeric = [], []
+
+        for filter in validated_data["textual"]:
+            textual.append(TextualFilter(**filter))
+
+        for filter in validated_data["numeric"]:
+            numeric.append(NumericFilter(**filter))
+
+        return SelectedFilters(textual, numeric)
+
+
+class NumericFilter:
+    def __init__(self, id, min_value_id, max_value_id):
+        self.id, self.min_value_id, self.max_value_id = id, min_value_id, max_value_id
+
+
+class TextualFilter:
+    def __init__(self, id, selected_values_ids):
+        self.id, self.selected_values_ids = id, selected_values_ids
+
+
+class SelectedFilters:
+    def __init__(self, textual, numeric):
+        self.textual, self.numeric = textual, numeric

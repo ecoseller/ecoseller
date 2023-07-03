@@ -76,6 +76,10 @@ const CategoryPage = ({
   });
 
   useEffect(() => {
+    applyFilters();
+  }, [filters]);
+
+  useEffect(() => {
     setProductsState(products);
 
     const emptyFilters: IFilters = { textual: {}, numeric: {} };
@@ -94,20 +98,15 @@ const CategoryPage = ({
     setFilters(emptyFilters);
   }, [id]);
 
-  const applyFilters = async () => {
+  const applyFilters = () => {
     const filtersToApply: ISelectedFilters = {
       numeric: Object.values(filters.numeric),
       textual: Object.values(filters.textual),
     };
 
-    const filteredProducts = await filterProducts(
-      category.id,
-      pricelist,
-      countryCode,
-      filtersToApply
+    filterProducts(category.id, pricelist, countryCode, filtersToApply).then(
+      (products) => setProductsState(products)
     );
-
-    setProductsState(filteredProducts);
   };
 
   const sortProducts = (sortBy: string, order: string) => {
@@ -122,10 +121,7 @@ const CategoryPage = ({
     });
   };
 
-  const updateTextualFilter = async (
-    id: number,
-    selectedValuesIds: number[]
-  ) => {
+  const updateTextualFilter = (id: number, selectedValuesIds: number[]) => {
     setFilters({
       ...filters,
       textual: {
@@ -136,11 +132,9 @@ const CategoryPage = ({
         },
       },
     });
-
-    await applyFilters();
   };
 
-  const updateNumericFilter = async (
+  const updateNumericFilter = (
     id: number,
     valueType: NumericFilterValueType,
     valueId: number | null
@@ -168,8 +162,6 @@ const CategoryPage = ({
         },
       });
     }
-
-    await applyFilters();
   };
 
   return (

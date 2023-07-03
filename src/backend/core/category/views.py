@@ -18,6 +18,7 @@ from category.serializers import (
     CategoryRecursiveDashboardSerializer,
     CategoryRecursiveStorefrontSerializer,
     CategoryDetailStorefrontSerializer,
+    SelectedFiltersSerializer,
 )
 from common.common import get_url_param_if_valid
 from country.models import Country
@@ -309,6 +310,12 @@ class CategoryDetailFilterStorefrontView(APIView):
     COUNTRY_URL_PARAM = "country"
 
     def post(self, request, pk):
+        request_serializer = SelectedFiltersSerializer(data=request.data)
+
+        if request_serializer.is_valid():
+            filters = request_serializer.create(request_serializer.validated_data)
+            print(filters)
+
         try:
             category = Category.objects.get(id=pk, published=True)
 
