@@ -1,6 +1,7 @@
 import logging
+import math
 import time
-from typing import Any, Dict, List, TYPE_CHECKING
+from typing import Any, Dict, List, Optional, Tuple, TYPE_CHECKING
 
 import numpy as np
 from dependency_injector.wiring import inject, Provide
@@ -9,6 +10,7 @@ from dependency_injector.wiring import inject, Provide
 #     ProductAddToCartModel,
 # )
 from recommender_system.models.stored.feedback.review import ReviewModel
+from recommender_system.models.stored.model.config import ConfigModel
 from recommender_system.models.stored.model.training_statistics import (
     TrainingStatisticsModel,
 )
@@ -22,7 +24,7 @@ if TYPE_CHECKING:
 
 
 class EASE:
-    l2: float
+    l2: float = 10
 
     X: np.ndarray
     B: np.ndarray
@@ -40,11 +42,10 @@ class EASE:
         return EASEPredictionModel.Meta.model_name
 
     @property
-    def hyperparameters(self) -> Dict[str, Any]:
+    def parameters(self) -> Dict[str, Any]:
         return {"l2": self.l2}
 
     def __init__(self, identifier: str):
-        self.l2 = 10
         self.model_identifier = identifier
 
     @classmethod
@@ -59,6 +60,9 @@ class EASE:
         matrices = ease_storage.get_matrices(identifier=identifier)
         ease.X = matrices["X"]
         ease.B = matrices["B"]
+
+        parameters = ease_storage.get_parameters(identifier=identifier)
+        ease._set_parameters(parameters=parameters)
 
         mappings = ease_storage.get_mappings(identifier=identifier)
         ease.user_mapping = mappings["user_mapping"]
@@ -81,30 +85,28 @@ class EASE:
     def _get_matrices(self) -> Dict[str, np.ndarray]:
         return {"X": self.X, "B": self.B}
 
-    @inject
-    def train(
-        self, product_storage: AbstractProductStorage = Provide["product_storage"]
-    ) -> None:
-        logging.info("Training started")
+    @property
+    def possible_parameters(self) -> List[Dict[str, Any]]:
+        parameters = []
+        config = ConfigModel.get_current()
+        for l2 in config.ease_config.l2_options:
+            parameters.append({"l2": l2})
+        return parameters
 
-        start = time.time()
+    def _set_parameters(self, parameters: Optional[Dict[str, Any]]) -> None:
+        if parameters is None:
+            return
+        for key, value in parameters:
+            setattr(self, key, value)
 
-        logging.info("Preparing rating matrix")
-
-        # TODO: Use better rating matrix estimate
-        reviews = ReviewModel.gets()
-        user_ids = [review.user_id for review in reviews]
-        # reviews = ProductAddToCartModel.gets()
-        # user_ids = [review.user_id for review in reviews]
-        skus = product_storage.get_objects_attribute(
-            model_class=ProductVariantModel, attribute="sku", stock_quantity__gt=0
-        )
-
-        self.user_mapping = {str(user_ids[i]): i for i in range(len(user_ids))}
-        self.product_variant_mapping = {skus[i]: i for i in range(len(skus))}
-        self._update_inverse_mapping()
-
-        self.X = np.zeros((len(user_ids), len(skus)), dtype=np.double)
+    def _fit(
+        self,
+        X_size: Tuple[int, int],
+        reviews: List[ReviewModel],
+        peak_memory: float,
+        peak_memory_percentage: float,
+    ) -> Tuple[float, float]:
+        self.X = np.zeros(X_size, dtype=np.double)
         for review in reviews:
             if review.product_variant_sku not in self.product_variant_mapping:
                 continue
@@ -122,7 +124,114 @@ class EASE:
         self.B = P / (-np.diag(P))
         self.B[diag] = 0
 
+        memory, memory_percentage = get_current_memory_usage()
+        if memory > peak_memory:
+            peak_memory, peak_memory_percentage = memory, memory_percentage
+
+        return peak_memory, peak_memory_percentage
+
+    def _evaluate(
+        self,
+        user_indices: List[int],
+        variant_indices: List[int],
+        peak_memory: float,
+        peak_memory_percentage: float,
+    ) -> Tuple[float, float, float]:
+        X = self.X[np.ix_(user_indices, variant_indices)]
+        B = self.B[
+            np.ix_(variant_indices, variant_indices)
+        ]  # Submatrix induced by rows and cols `variant_indices`
+
+        scores = X @ B
+        scores_min = np.min(scores)
+        scores_max = np.max(scores)
+        if scores_min == scores_max:
+            normalized_scores = np.full(scores.shape, 0.5)
+        else:
+            normalized_scores = (scores - scores_min) / (scores_max - scores_min)
+        errors = (X - normalized_scores) * (X - normalized_scores)
+
+        memory, memory_percentage = get_current_memory_usage()
+        if memory > peak_memory:
+            peak_memory, peak_memory_percentage = memory, memory_percentage
+
+        return peak_memory, peak_memory_percentage, np.mean(errors).item()
+
+    @inject
+    def train(
+        self, product_storage: AbstractProductStorage = Provide["product_storage"]
+    ) -> None:
+        logging.info("Training started")
+
+        start = time.time()
         peak_memory, peak_memory_percentage = get_current_memory_usage()
+
+        logging.info("Preparing rating matrix")
+
+        # TODO: Use better rating matrix estimate
+        reviews = ReviewModel.gets()
+        user_ids = [review.user_id for review in reviews]
+        # reviews = ProductAddToCartModel.gets()
+        # user_ids = [review.user_id for review in reviews]
+        skus = product_storage.get_objects_attribute(
+            model_class=ProductVariantModel, attribute="sku", stock_quantity__gt=0
+        )
+
+        self.user_mapping = {str(user_ids[i]): i for i in range(len(user_ids))}
+        self.product_variant_mapping = {skus[i]: i for i in range(len(skus))}
+        self._update_inverse_mapping()
+        X_size = len(user_ids), len(skus)
+
+        split_idx = math.floor(len(reviews) * 0.8)
+        train_reviews = reviews[:split_idx]
+        test_reviews = reviews[split_idx:]
+        if split_idx == 0 or split_idx == len(reviews) - 1:
+            train_reviews = reviews
+            test_reviews = reviews
+
+        test_user_indices = [
+            self.user_mapping[str(review.user_id)] for review in test_reviews
+        ]
+        test_variant_indices = [
+            self.product_variant_mapping[review.product_variant_sku]
+            for review in test_reviews
+            if review.product_variant_sku in self.product_variant_mapping
+        ]
+
+        best_error = math.inf
+        best_parameters = None
+
+        if len(test_user_indices) == 0 or len(test_variant_indices) == 0:
+            logging.warning(
+                "Unable to select best parameters for EASE model - no users or "
+                "variants found to evaluate its performance"
+            )
+        else:
+            for parameters in self.possible_parameters:
+                self._set_parameters(parameters=parameters)
+                peak_memory, peak_memory_percentage = self._fit(
+                    X_size=X_size,
+                    reviews=train_reviews,
+                    peak_memory=peak_memory,
+                    peak_memory_percentage=peak_memory_percentage,
+                )
+                peak_memory, peak_memory_percentage, error = self._evaluate(
+                    user_indices=test_user_indices,
+                    variant_indices=test_variant_indices,
+                    peak_memory=peak_memory,
+                    peak_memory_percentage=peak_memory_percentage,
+                )
+                if error < best_error:
+                    best_error, best_parameters = error, parameters
+
+        self._set_parameters(parameters=best_parameters)
+        self._fit(
+            X_size=X_size,
+            reviews=reviews,
+            peak_memory=peak_memory,
+            peak_memory_percentage=peak_memory_percentage,
+        )
+
         end = time.time()
 
         statistics = TrainingStatisticsModel(
@@ -131,12 +240,10 @@ class EASE:
             duration=end - start,
             peak_memory=peak_memory,
             peak_memory_percentage=peak_memory_percentage,
-            metrics={},
-            hyperparameters=self.hyperparameters,
+            metrics={"error": best_error},
+            hyperparameters=self.parameters,
         )
         statistics.create()
-
-        logging.info("Training finished")
 
     @inject
     def retrieve(
@@ -178,6 +285,7 @@ class EASE:
         ease_storage.store_matrices(
             matrices=self._get_matrices(), identifier=identifier
         )
+        ease_storage.store_parameters(parameters=self.parameters, identifier=identifier)
         ease_storage.store_mappings(
             mappings=self._get_mappings(), identifier=identifier
         )
@@ -190,4 +298,5 @@ class EASE:
         ease_storage: AbstractEASEStorage = Provide["ease_storage"],
     ) -> None:
         ease_storage.delete_matrices(identifier=identifier)
+        ease_storage.delete_parameters(identifier=identifier)
         ease_storage.delete_mappings(identifier=identifier)
