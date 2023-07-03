@@ -85,7 +85,7 @@ const LoginModal = ({ open, setOpen }: ILoginModal) => {
           required
           fullWidth
           id="email"
-          label="E-mail Address"
+          label={t("email-label")}
           name="e-mail"
           autoComplete="email"
           autoFocus

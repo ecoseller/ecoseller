@@ -68,8 +68,8 @@ const CartStep1Page = ({
    * - shipping info
    * - billing info
    */
-
   const { t } = useTranslation("cart");
+
   const router = useRouter();
   const { user } = useUser();
   const [shippingInfoChecked, setShippingInfoChecked] =
@@ -83,7 +83,8 @@ const CartStep1Page = ({
     setShippingInfoState(
       shippingInfoInitialData(
         { ...shippingInfo, country: "cz" },
-        setShippingInfoState
+        setShippingInfoState,
+        t // useTranslation
       )
     );
   }
@@ -113,7 +114,8 @@ const CartStep1Page = ({
       setBillingInfoState(
         billingInfoInitialData(
           { country: "cz" } as IBillingInfo,
-          setBillingInfoState
+          setBillingInfoState,
+          t // useTranslation
         )
       );
     } else {
@@ -122,7 +124,8 @@ const CartStep1Page = ({
       setBillingInfoState(
         billingInfoInitialData(
           { ...billingInfo, country: "cz" },
-          setBillingInfoState
+          setBillingInfoState,
+          t // useTranslation
         )
       );
     }
@@ -142,7 +145,8 @@ const CartStep1Page = ({
             setBillingInfoState(
               billingInfoInitialData(
                 { ...data, country: "cz" },
-                setBillingInfoState
+                setBillingInfoState,
+                t // useTranslation
               )
             );
           }
@@ -161,7 +165,8 @@ const CartStep1Page = ({
             setShippingInfoState(
               shippingInfoInitialData(
                 { ...data, country: "cz" },
-                setShippingInfoState
+                setShippingInfoState,
+                t // useTranslation
               )
             );
           }
@@ -183,7 +188,8 @@ const CartStep1Page = ({
           company_id: "",
           vat_number: "",
         } as IBillingInfo,
-        setBillingInfoState
+        setBillingInfoState,
+        t // useTranslation
       )
     );
   };
@@ -199,7 +205,8 @@ const CartStep1Page = ({
           postal_code: "",
           country: "cz",
         } as IShippingInfo,
-        setShippingInfoState
+        setShippingInfoState,
+        t // useTranslation
       )
     );
   };
@@ -302,7 +309,7 @@ const CartStep1Page = ({
         </Grid>
         <Grid container item xs={10} sm={10} md={5} direction="column" pt={4}>
           <div className="billing-info-form">
-            <h2>{t("billing-information-title") /* Billing information */}</h2>{" "}
+            <h2>{t("billing-information-title") /* Billing information */}</h2>
             <FormControl>
               <RadioGroup
                 defaultValue="SAMEASSHIPPING"
@@ -365,7 +372,7 @@ const CartStep1Page = ({
       </Grid>
       <CartButtonRow
         prev={{
-          title: "Back to cart",
+          title: t("back-to-cart") /*"Back to cart"*/,
           onClick: () => {
             router.push("/cart");
           },

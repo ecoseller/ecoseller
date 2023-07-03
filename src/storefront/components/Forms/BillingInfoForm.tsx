@@ -50,14 +50,15 @@ const validateInitialState = (value: string) =>
 
 export const billingInfoInitialData = (
   billingInfo: IBillingInfo,
-  setter: Dispatch<SetStateAction<IBillingInfoFormProps>>
+  setter: Dispatch<SetStateAction<IBillingInfoFormProps>>,
+  t: (key: string) => string
 ): IBillingInfoFormProps => {
   /**
    * Purpose of this function is to take the billing info from the API and
    * convert it into the format that the BillingInfoForm component expects.
    * */
 
-  const { t } = useTranslation("common");
+  // const { t } = useTranslation("common");
 
   return {
     first_name: {
@@ -75,8 +76,8 @@ export const billingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: `${t("first-name-required-error-message")}`,
-      label: `${t("first-name-label")}`,
+      errorMessage: `${t("common:first-name-required-error-message")}`,
+      label: `${t("common:first-name-label")}`,
     },
     surname: {
       value: billingInfo.surname,
@@ -93,8 +94,8 @@ export const billingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: `${t("surname-required-error-message")}`,
-      label: `${t("surname-label")}`,
+      errorMessage: `${t("common:surname-required-error-message")}`,
+      label: `${t("common:surname-label")}`,
     },
     company_name: {
       value: billingInfo.company_name,
@@ -105,7 +106,7 @@ export const billingInfoInitialData = (
           company_name: { ...prevState.company_name, value },
         })),
       isRequired: false,
-      label: `${t("company-name-label")}`,
+      label: `${t("common:company-name-label")}`,
     },
     company_id: {
       value: billingInfo.company_id,
@@ -116,7 +117,7 @@ export const billingInfoInitialData = (
           company_id: { ...prevState.company_id, value },
         })),
       isRequired: false,
-      label: `${t("company-id-label")}`,
+      label: `${t("common:company-id-label")}`,
     },
     vat_number: {
       value: billingInfo.vat_number,
@@ -127,7 +128,7 @@ export const billingInfoInitialData = (
           vat_number: { ...prevState.vat_number, value },
         })),
       isRequired: false,
-      label: `${t("vat-number-label")}`,
+      label: `${t("common:vat-number-label")}`,
     },
     street: {
       value: billingInfo.street,
@@ -144,8 +145,8 @@ export const billingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: `${t("street-required-error-message")}`,
-      label: `${t("street-label")}`,
+      errorMessage: `${t("common:street-required-error-message")}`,
+      label: `${t("common:street-label")}`,
     },
     city: {
       value: billingInfo.city,
@@ -162,8 +163,8 @@ export const billingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: `${t("city-required-error-message")}`,
-      label: `${t("city-label")}`,
+      errorMessage: `${t("common:city-required-error-message")}`,
+      label: `${t("common:city-label")}`,
     },
     postal_code: {
       value: billingInfo.postal_code,
@@ -180,8 +181,8 @@ export const billingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: `${t("postal-code-required-error-message")}`,
-      label: `${t("postal-code-label")}`,
+      errorMessage: `${t("common:postal-code-required-error-message")}`,
+      label: `${t("common:postal-code-label")}`,
     },
     country: {
       value: `${billingInfo.country}`,
@@ -198,8 +199,8 @@ export const billingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: `${t("country-required-error-message")}`,
-      label: `${t("country-label")}`,
+      errorMessage: `${t("common:country-required-error-message")}`,
+      label: `${t("ccommon:ountry-label")}`,
     },
   };
 };

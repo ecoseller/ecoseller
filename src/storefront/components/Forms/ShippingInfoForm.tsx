@@ -28,14 +28,13 @@ export interface IShippingInfoFormProps {
 
 export const shippingInfoInitialData = (
   shippingInfo: IShippingInfo,
-  setter: Dispatch<SetStateAction<IShippingInfoFormProps>>
+  setter: Dispatch<SetStateAction<IShippingInfoFormProps>>,
+  t: (key: string) => string
 ): IShippingInfoFormProps => {
   /**
    * Purpose of this function is to take the shipping info from the API and
    * convert it into the format that the ShippingInfoForm component expects.
    * */
-
-  const { t } = useTranslation("common");
 
   return {
     first_name: {
@@ -53,8 +52,8 @@ export const shippingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: `${t("first-name-required-error-message")}`,
-      label: `${t("first-name-label")}`,
+      errorMessage: `${t("common:first-name-required-error-message")}`,
+      label: `${t("common:first-name-label")}`,
     },
     surname: {
       value: shippingInfo.surname,
@@ -71,8 +70,8 @@ export const shippingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: `${t("surname-required-error-message")}`,
-      label: `${t("surname-label")}`,
+      errorMessage: `${t("common:surname-required-error-message")}`,
+      label: `${t("common:surname-label")}`,
     },
     email: {
       value: shippingInfo.email,
@@ -92,8 +91,8 @@ export const shippingInfoInitialData = (
         return emailRegex.test(value);
       },
       isRequired: true,
-      errorMessage: `${t("email-required-error-message")}`,
-      label: `${t("email-label")}`,
+      errorMessage: `${t("common:email-required-error-message")}`,
+      label: `${t("common:email-label")}`,
     },
     phone: {
       value: shippingInfo.phone,
@@ -113,8 +112,8 @@ export const shippingInfoInitialData = (
         return phoneRegex.test(value);
       },
       isRequired: true,
-      errorMessage: `${t("phone-required-error-message")}`,
-      label: `${t("phone-label")}`,
+      errorMessage: `${t("common:phone-required-error-message")}`,
+      label: `${t("common:phone-label")}`,
     },
     additional_info: {
       value: shippingInfo.additional_info,
@@ -124,7 +123,7 @@ export const shippingInfoInitialData = (
           additional_info: { ...prevState.additional_info, value },
         })),
       isRequired: false,
-      label: `${t("additional-info-label")}`,
+      label: `${t("common:additional-info-label")}`,
     },
     street: {
       value: shippingInfo.street,
@@ -141,8 +140,8 @@ export const shippingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: `${t("street-required-error-message")}`,
-      label: `${t("street-label")}`,
+      errorMessage: `${t("common:street-required-error-message")}`,
+      label: `${t("common:street-label")}`,
     },
     city: {
       value: shippingInfo.city,
@@ -159,8 +158,8 @@ export const shippingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: `${t("city-required-error-message")}`,
-      label: `${t("city-label")}`,
+      errorMessage: `${t("common:city-required-error-message")}`,
+      label: `${t("common:city-label")}`,
     },
     postal_code: {
       value: shippingInfo.postal_code,
@@ -177,8 +176,8 @@ export const shippingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: `${t("postal-code-required-error-message")}`,
-      label: `${t("postal-code-label")}`,
+      errorMessage: `${t("common:postal-code-required-error-message")}`,
+      label: `${t("common:postal-code-label")}`,
     },
     country: {
       value: `${shippingInfo.country}`,
@@ -195,8 +194,8 @@ export const shippingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: `${t("country-required-error-message")}`,
-      label: `${t("country-label")}`,
+      errorMessage: `${t("common:country-required-error-message")}`,
+      label: `${t("common:country-label")}`,
     },
   };
 };

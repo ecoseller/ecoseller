@@ -83,7 +83,8 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
     setBillingInfoState(
       billingInfoInitialData(
         { ...billingInfo, country: "cz" } as IBillingInfo,
-        setBillingInfoState
+        setBillingInfoState,
+        t // useTranslation
       )
     );
   }
@@ -97,7 +98,8 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
       // TODO: setting the country to cz is a temporary solution
       shippingInfoInitialData(
         { ...shippingInfo, country: "cz" },
-        setShippingInfoState
+        setShippingInfoState,
+        t // useTranslation
       )
     );
   }
@@ -163,7 +165,11 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
 
   const handleBillingInfoClear = async () => {
     setBillingInfoState(
-      billingInfoInitialData({} as IBillingInfo, setBillingInfoState)
+      billingInfoInitialData(
+        {} as IBillingInfo,
+        setBillingInfoState,
+        t /* useTranslation */
+      )
     );
     const res = await fetch(`/api/user/billing-info`, {
       method: "DELETE",
@@ -191,7 +197,11 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
 
   const handleShippingInfoClear = async () => {
     setShippingInfoState(
-      shippingInfoInitialData({} as IShippingInfo, setShippingInfoState)
+      shippingInfoInitialData(
+        {} as IShippingInfo,
+        setShippingInfoState,
+        t /* useTranslation*/
+      )
     );
     const res = await fetch(`/api/user/shipping-info`, {
       method: "DELETE",

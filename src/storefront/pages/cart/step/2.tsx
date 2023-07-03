@@ -165,14 +165,14 @@ const CartStep2Page = ({ cart, methods, cartToken }: ICartStep2PageProps) => {
       </Grid>
       <CartButtonRow
         prev={{
-          title: "Previous",
+          title: t("back") /* Back */,
           onClick: () => {
             router.push("/cart/step/1");
           },
           disabled: false,
         }}
         next={{
-          title: "Next",
+          title: t("next") /* Next */,
           onClick: async () => submitForm(),
           disabled: !shippingMethodCountryId || !paymentMethodCountryId,
         }}

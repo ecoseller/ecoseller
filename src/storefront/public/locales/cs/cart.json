@@ -1,10 +1,10 @@
 {
+  "total-price-incl-price": "Cena včetně DPH: {{price}}",
   "product": "Produkt",
   "image": "Foto",
   "quantity": "Množství",
   "discount": "Sleva",
   "total-price": "Celková cena",
-  "total-price-incl-price": "Cena včetně DPH: {{price}}",
   "no-items": "Žádné položky",
   "step-1-cart": "Košík",
   "step-2-shipping-billing-info": "Dodací & fakturační údaje",
@@ -12,14 +12,17 @@
   "step-2-summary": "Shrnutí",
   "cart-title": "Košík",
   "shipping-information-title": "Dodací údaje",
-  "shipping-information-use-profile-billing-info-label": "",
-  "billing-information-title": "fakturační údaje",
+  "shipping-information-use-profile-billing-info-label": "Použít uložené dodací údaje",
+  "billing-information-title": "Fakturační údaje",
   "same-as-shipping-info-label": "Stejné jako dodací údaje",
   "new-billing-info-label": "Nové fakturační údaje",
   "billing-information-use-profile-info-label": "Použít uložené fakturační údaje",
+  "back-to-cart": "Zpět do košíku",
   "shipping-method-title": "Dodací metoda",
   "payment-method-title": "Platební metoda",
   "choose-shipping-method-first": "Nejdříve vyberte dodací metodu",
+  "back": "Zpět",
+  "next": "Další",
   "summary-title": "Shrnutí objednávky",
-  "shipping-and-payment-method-title": "Dodací a platební metoda"
+  "shipping-and-payment-method-title": "Dodací & platební metoda"
 }

@@ -33,6 +33,7 @@ const UserPasswordInformation = ({
   setSnackbar,
 }: PasswordProps) => {
   // simple select with categories
+  const { t } = useTranslation("user");
 
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -49,8 +50,6 @@ const UserPasswordInformation = ({
   ) => {
     event.preventDefault();
   };
-
-  const { t } = useTranslation("user");
 
   const { user, roles } = useUser();
 

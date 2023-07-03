@@ -44,7 +44,7 @@ const SearchPage = ({ search, products }: ISearchPageProps) => {
   return (
     <>
       <HeadMeta
-        title={`Search: ${search.query}`}
+        title={`${t("search-title")}: ${search.query}`}
         description={""}
         url={router.basePath}
       />

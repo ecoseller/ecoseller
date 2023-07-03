@@ -1,11 +1,11 @@
 {
-  "average-rating": "",
-  "reviews": "",
-  "review-title": "",
-  "reviewed-product-variant": "",
-  "create-at": "",
-  "review-submitted": "",
-  "error-submitting-review": "",
-  "rating-title": "",
-  "submit-review": ""
+  "average-rating": "Average rating",
+  "reviews": "reviews",
+  "review-title": "review",
+  "reviewed-product-variant": "reviewed variant",
+  "create-at": "Create at",
+  "review-submitted": "Review was submitted",
+  "error-submitting-review": "Review was not submitted",
+  "rating-title": "Review",
+  "submit-review": "Submit review"
 }

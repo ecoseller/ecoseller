@@ -69,7 +69,12 @@ const CartCompleteOrder = ({ cart }: ICartCompleteOrderProps) => {
       </FormControl>
       <Divider />
       <Typography variant="h5" sx={{ my: 3 }}>
-        Total price: {cart.total_price_incl_vat_formatted}
+        {
+          t("cart:total-price-incl-price", {
+            price: cart.total_price_incl_vat_formatted,
+          }) /**Total price:&nbsp; */
+        }
+        {/* Total price: {cart.total_price_incl_vat_formatted} */}
       </Typography>
       <>
         <Button

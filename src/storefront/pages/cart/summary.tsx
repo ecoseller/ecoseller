@@ -171,12 +171,14 @@ const CartSummaryPage = ({
           </Box>
         </Grid>
         <Grid item xs={12} md={4}>
-          <CollapsableContentWithTitle title="Shipping info">
+          <CollapsableContentWithTitle
+            title={t("cart:shipping-information-title")}
+          >
             <CartInfoSummary rows={shippingInfoRows} />
           </CollapsableContentWithTitle>
         </Grid>
         <Grid item xs={12} md={4}>
-          <CollapsableContentWithTitle title="Billing info">
+          <CollapsableContentWithTitle title={t("billing-information-title")}>
             <CartInfoSummary rows={billingInfoRows} />
           </CollapsableContentWithTitle>
         </Grid>
@@ -189,7 +191,7 @@ const CartSummaryPage = ({
       </Grid>
       <CartButtonRow
         prev={{
-          title: "Previous",
+          title: t("back") /* Back */,
           onClick: () => {
             router.push("/cart/step/2");
           },
@@ -259,6 +261,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       selectedShippingMethod,
       ...(await serverSideTranslations(locale as string, [
         "cart",
+        "order",
         ...serverRuntimeConfig.commoni18NameSpaces,
       ])),
     },

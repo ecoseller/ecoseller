@@ -38,7 +38,11 @@ const OrderCompletedPage = ({
       <>
         <OrderCompleted id={orderId} />
         <h2>
-          {t("completed-text") /* Payment has been received. Thank you. */}
+          {
+            t(
+              "payment-completed-text"
+            ) /* Payment has been received. Thank you. */
+          }
         </h2>
       </>
     );

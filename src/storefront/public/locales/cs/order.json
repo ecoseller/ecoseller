@@ -18,5 +18,5 @@
   "bic-label": "BIC",
   "bank-account-label": "Číslo účtu",
   "qr-label": "QR",
-  "completed-text": "Platbu jsme obdrželi, děkujeme."
+  "payment-completed-text": "Platbu jsme obdrželi, děkujeme"
 }
