@@ -1,3 +1,5 @@
+// utils
+import { useTranslation } from "next-i18next";
 // next.js
 // mui
 import Box from "@mui/material/Box";
@@ -15,15 +17,16 @@ interface IUserProps {
 
 const UserGeneralInformation = ({ state, setState }: IUserProps) => {
   // simple select with categories
+  const { t } = useTranslation();
 
   return (
     <EditorCard>
-      <Typography variant="h6">General information</Typography>
+      <Typography variant="h6">{t("user:general-information")}</Typography>
       <Box mt={2}>
         <FormControl fullWidth>
           <Stack spacing={2}>
             <TextField
-              label="Email"
+              label={t("common:email-label")}
               value={state?.email}
               InputLabelProps={{
                 shrink: Boolean(true),
@@ -31,7 +34,7 @@ const UserGeneralInformation = ({ state, setState }: IUserProps) => {
               disabled={true}
             />
             <TextField
-              label="First Name"
+              label={t("common:first-name-label")}
               value={state?.first_name}
               onChange={(e) => {
                 setState({
@@ -44,7 +47,7 @@ const UserGeneralInformation = ({ state, setState }: IUserProps) => {
               }}
             />
             <TextField
-              label="Last Name"
+              label={t("common:last-name-label")}
               value={state?.last_name}
               onChange={(e) => {
                 setState({

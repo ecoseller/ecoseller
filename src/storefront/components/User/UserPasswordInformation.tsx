@@ -1,6 +1,8 @@
 // next.js
 // react
 import { ChangeEvent, useState } from "react";
+// utils
+import { useTranslation } from "next-i18next";
 // mui
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -48,6 +50,8 @@ const UserPasswordInformation = ({
     event.preventDefault();
   };
 
+  const { t } = useTranslation("user");
+
   const { user, roles } = useUser();
 
   const [oldPassword, setOldPassword] = useState("");
@@ -59,7 +63,7 @@ const UserPasswordInformation = ({
   const handlePasswordChange = () => {
     if (newPassword !== newPasswordConfirmation) {
       setError(true);
-      setHelperText("Passwords do not match");
+      setHelperText(`${t("passwords-do-not-match")}`);
       return;
     } else {
       setError(false);
@@ -68,13 +72,13 @@ const UserPasswordInformation = ({
 
     if (oldPassword === newPassword) {
       setError(true);
-      setHelperText("New password cannot be the same as old password");
+      setHelperText(`${t("passwords-are-the-same")}`);
       return;
     }
 
     if (oldPassword === "") {
       setError(true);
-      setHelperText("Old password cannot be empty");
+      setHelperText(`${t("old-password-empty")}`);
       return;
     }
 
@@ -96,7 +100,7 @@ const UserPasswordInformation = ({
         if (res.ok) {
           setSnackbar({
             open: true,
-            message: "Password updated",
+            message: t("password-changed"),
             severity: "success",
           });
         }
@@ -104,7 +108,7 @@ const UserPasswordInformation = ({
       .catch((err: any) => {
         setSnackbar({
           open: true,
-          message: "Something went wrong",
+          message: t("password-not-changed"),
           severity: "error",
         });
       });
@@ -112,13 +116,13 @@ const UserPasswordInformation = ({
 
   return (
     <EditorCard>
-      <Typography variant="h6">Password</Typography>
+      <Typography variant="h6">{t("password-title")}</Typography>
       <Box mt={2}>
         <FormControl fullWidth>
           <Stack spacing={2}>
             <FormControl fullWidth variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">
-                Old Password
+                {t("old-password-label") /* Old Password */}
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
@@ -147,7 +151,7 @@ const UserPasswordInformation = ({
                 </FormHelperText>
               ) : (
                 <InputLabel htmlFor="outlined-adornment-password">
-                  New Password
+                  {t("new-password") /* New Password */}
                 </InputLabel>
               )}
               <OutlinedInput
@@ -167,7 +171,8 @@ const UserPasswordInformation = ({
                     </IconButton>
                   </InputAdornment>
                 }
-                label="New Password"
+                label={t("new-password-label") /* New Password */}
+                // label="New Password"
               />
             </FormControl>
             <FormControl fullWidth variant="outlined" error={error}>
@@ -177,7 +182,11 @@ const UserPasswordInformation = ({
                 </FormHelperText>
               ) : (
                 <InputLabel htmlFor="outlined-adornment-password">
-                  New Password Confirmation
+                  {
+                    t(
+                      "new-password-confirmation-label"
+                    ) /* New Password confirmation*/
+                  }
                 </InputLabel>
               )}
               <OutlinedInput
@@ -197,7 +206,11 @@ const UserPasswordInformation = ({
                     </IconButton>
                   </InputAdornment>
                 }
-                label="New Password Confirmation"
+                label={
+                  t(
+                    "new-password-confirmation-label"
+                  ) /* New Password confirmation*/
+                }
               />
             </FormControl>
             <Box m={3} marginRight={10}>
@@ -216,7 +229,7 @@ const UserPasswordInformation = ({
                   color="primary"
                   onClick={handlePasswordChange}
                 >
-                  Set new password
+                  {t("save") /* Save */}
                 </Button>
               </Stack>
             </Box>

@@ -1,6 +1,8 @@
 import { ICountryOption, IShippingInfo } from "@/types/cart";
 import { IValidatedInputField } from "@/types/common";
 import TextField from "@mui/material/TextField";
+// utils
+import { useTranslation } from "next-i18next";
 import {
   ChangeEvent,
   Dispatch,
@@ -33,6 +35,8 @@ export const shippingInfoInitialData = (
    * convert it into the format that the ShippingInfoForm component expects.
    * */
 
+  const { t } = useTranslation("common");
+
   return {
     first_name: {
       value: shippingInfo.first_name,
@@ -49,8 +53,8 @@ export const shippingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: "First name is required",
-      label: "First name",
+      errorMessage: `${t("first-name-required-error-message")}`,
+      label: `${t("first-name-label")}`,
     },
     surname: {
       value: shippingInfo.surname,
@@ -67,8 +71,8 @@ export const shippingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: "Surname is required",
-      label: "Surname",
+      errorMessage: `${t("surname-required-error-message")}`,
+      label: `${t("surname-label")}`,
     },
     email: {
       value: shippingInfo.email,
@@ -88,8 +92,8 @@ export const shippingInfoInitialData = (
         return emailRegex.test(value);
       },
       isRequired: true,
-      errorMessage: "Email is required",
-      label: "Email",
+      errorMessage: `${t("email-required-error-message")}`,
+      label: `${t("email-label")}`,
     },
     phone: {
       value: shippingInfo.phone,
@@ -109,8 +113,8 @@ export const shippingInfoInitialData = (
         return phoneRegex.test(value);
       },
       isRequired: true,
-      errorMessage: "Phone is required",
-      label: "Phone",
+      errorMessage: `${t("phone-required-error-message")}`,
+      label: `${t("phone-label")}`,
     },
     additional_info: {
       value: shippingInfo.additional_info,
@@ -120,7 +124,7 @@ export const shippingInfoInitialData = (
           additional_info: { ...prevState.additional_info, value },
         })),
       isRequired: false,
-      label: "Additional info",
+      label: `${t("additional-info-label")}`,
     },
     street: {
       value: shippingInfo.street,
@@ -137,8 +141,8 @@ export const shippingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: "Street is required",
-      label: "Street",
+      errorMessage: `${t("street-required-error-message")}`,
+      label: `${t("street-label")}`,
     },
     city: {
       value: shippingInfo.city,
@@ -155,8 +159,8 @@ export const shippingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: "City is required",
-      label: "City",
+      errorMessage: `${t("city-required-error-message")}`,
+      label: `${t("city-label")}`,
     },
     postal_code: {
       value: shippingInfo.postal_code,
@@ -173,8 +177,8 @@ export const shippingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: "Postal code is required",
-      label: "Postal code",
+      errorMessage: `${t("postal-code-required-error-message")}`,
+      label: `${t("postal-code-label")}`,
     },
     country: {
       value: `${shippingInfo.country}`,
@@ -191,8 +195,8 @@ export const shippingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: "Country is required",
-      label: "Country",
+      errorMessage: `${t("country-required-error-message")}`,
+      label: `${t("country-label")}`,
     },
   };
 };

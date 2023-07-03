@@ -1,5 +1,6 @@
 "use client";
-
+// utils
+import { useTranslation } from "next-i18next";
 import Router, { useRouter } from "next/router";
 import { Fragment, useEffect } from "react";
 import Script from "next/script";
@@ -32,20 +33,21 @@ const HeadMeta = ({
   jsonLds,
   queries,
 }: IHeadMeta) => {
+  const { t } = useTranslation("common");
+
   const DEFAULT_IMAGE = "";
   const DEFAULT_ROBOTS = "index,follow,snippet";
   const SITE_NAME = "Ecommerce" || `${site} | Ecommerce`;
   const WEBSITE_DOMAIN = "https://ecoseller.io" || domain;
-  const WEBSITE_DESCRIPTION =
-    "Your satisfaction is our top priority – shop with us and experience the difference.";
-
-  const ORGANIZATION_LD = {
-    "@context": "http://schema.org",
-    "@type": "Organization",
-    name: SITE_NAME,
-    url: WEBSITE_DOMAIN,
-    sameAs: [],
-  };
+  const WEBSITE_DESCRIPTION = t("meta-description");
+  /*"Your satisfaction is our top priority – shop with us and experience the difference."*/ const ORGANIZATION_LD =
+    {
+      "@context": "http://schema.org",
+      "@type": "Organization",
+      name: SITE_NAME,
+      url: WEBSITE_DOMAIN,
+      sameAs: [],
+    };
 
   const DEFAULT_WEBSITE_LD = {
     "@context": "https://schema.org",

@@ -1,3 +1,5 @@
+// utils
+import { useTranslation } from "next-i18next";
 import OrderCompleted from "@/components/Order/OrderCompleted";
 import OnlinePayment from "@/components/Order/Payment/Online";
 import PayBySquare from "@/components/Order/Payment/PayBySquare";
@@ -20,6 +22,7 @@ const OrderCompletedPage = ({
   orderId,
   orderData,
 }: IOrderCompletedPageProps) => {
+  const { t } = useTranslation("order");
   console.log("orderData", orderData);
   if (!orderData?.payment) {
     // doesn't have payment data
@@ -29,7 +32,9 @@ const OrderCompletedPage = ({
     return (
       <>
         <OrderCompleted id={orderId} />
-        <h2>Payment has been received. Thank you.</h2>
+        <h2>
+          {t("completed-text") /* Payment has been received. Thank you. */}
+        </h2>
       </>
     );
   }

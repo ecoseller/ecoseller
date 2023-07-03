@@ -5,7 +5,8 @@
 
 // react
 import { useState } from "react";
-
+// utils
+import { useTranslation } from "next-i18next";
 // mui
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
@@ -35,6 +36,8 @@ const SearchButton = ({
   const [query, setQuery] = useState("");
   const router = useRouter();
 
+  const { t } = useTranslation("common");
+
   const handleClickSearch = () => {
     if (query === "") return;
     router.push(`/search/${query}`);
@@ -60,7 +63,9 @@ const SearchButton = ({
         }}
         variant="outlined"
       >
-        <InputLabel htmlFor="outlined-adornment-password">Search</InputLabel>
+        <InputLabel htmlFor="outlined-adornment-password">
+          {t("search-label")}
+        </InputLabel>
         <OutlinedInput
           type="text"
           endAdornment={

@@ -1,3 +1,4 @@
+import { useTranslation } from "next-i18next";
 import Dialog from "@mui/material/Dialog";
 import { useState, useReducer, useEffect } from "react";
 import Image from "next/image";
@@ -14,6 +15,8 @@ interface ICookieDisclaimer {
 
 const CookieDisclaimer = ({ open, setOpen }: ICookieDisclaimer) => {
   // const [open,setOpen] = useState<boolean>(false);
+
+  const { t } = useTranslation("cookie");
 
   const [openDiscount, setOpenDiscount] = useState<boolean>(false);
 
@@ -91,22 +94,28 @@ const CookieDisclaimer = ({ open, setOpen }: ICookieDisclaimer) => {
           {!isAdvancedContent ? (
             <>
               <div className={styles.content_holder}>
-                <p className={styles.heading}>Cookies</p>
+                <p className={styles.heading}>
+                  {t("main-title") /* Cookies */}
+                </p>
                 <p className={styles.description}>
-                  We use cookies to improve your experience on our website.
+                  {
+                    t(
+                      "main-description"
+                    ) /* We use cookies to improve your experience on our website. */
+                  }
                 </p>
                 <div className={styles.controls_holder}>
                   <p
                     className={styles.change_settings_button}
                     onClick={() => setAdvancedContent(true)}
                   >
-                    Change settings
+                    {t("change-settings") /* Change settings */}
                   </p>
                   <Button
                     variant={"contained"}
                     onClick={() => aggreeAllSettings()}
                   >
-                    Accept all
+                    {t("agree-all") /* Agree all */}
                   </Button>
                 </div>
               </div>
@@ -116,19 +125,26 @@ const CookieDisclaimer = ({ open, setOpen }: ICookieDisclaimer) => {
               <div
                 className={`${styles.content_holder} ${styles.settings_content_holder}`}
               >
-                <p className={styles.heading}>Custom settings</p>
+                <p className={styles.heading}>
+                  {t("custom-settings-title") /* Custom settings */}
+                </p>
                 <p className={styles.description}>
-                  You can customize your cookie preferences by selecting the
-                  appropriate categories below.
+                  {
+                    t(
+                      "custom-settings-description"
+                    ) /* You can customize your cookie preferences by selecting the
+                  appropriate categories below. */
+                  }
                 </p>
                 <div className={styles.settings_items_holder}>
                   <SettingsItem
                     isMandatory={true}
                     state={cookieState.neccessaryCookies}
                     setState={() => {}}
-                    title={"Mandatory"}
+                    title={t("mandatory-title") /**Mandatory*/}
                     description={
-                      "Mandatory cookies are required for the website to function properly."
+                      t("mandatory-description")
+                      /*Mandatory cookies are required for the website to function properly.*/
                     }
                   />
                   <SettingsItem
@@ -140,9 +156,10 @@ const CookieDisclaimer = ({ open, setOpen }: ICookieDisclaimer) => {
                         resolveState(cookieState.preferenceCookies, true)
                       );
                     }}
-                    title={"Preference"}
+                    title={t("preference-title") /**Preference*/}
                     description={
-                      "Preference cookies enable a website to remember information that changes the way the website behaves or looks, like products that you visited, etc."
+                      t("preference-description")
+                      /*Preference cookies enable a website to remember information that changes the way the website behaves or looks, like products that you visited, etc.*/
                     }
                   />
                   <SettingsItem
@@ -154,9 +171,10 @@ const CookieDisclaimer = ({ open, setOpen }: ICookieDisclaimer) => {
                         resolveState(cookieState.statisticalCookies, true)
                       );
                     }}
-                    title={"Statistical"}
+                    title={t("statistical-title") /**Statistical*/}
                     description={
-                      "Statistical cookies help website owners to understand how visitors interact with websites by collecting and reporting information anonymously."
+                      t("statistical-description")
+                      /*Statistical cookies help website owners to understand how visitors interact with websites by collecting and reporting information anonymously.*/
                     }
                   />
                   <SettingsItem
@@ -168,9 +186,10 @@ const CookieDisclaimer = ({ open, setOpen }: ICookieDisclaimer) => {
                         resolveState(cookieState.adsCookies, true)
                       );
                     }}
-                    title={"Ads"}
+                    title={t("ads-title") /**Ads*/}
                     description={
-                      "Ads cookies are used to show you remarketing ads. It doesn't track you in any way and doesn't mean that you will not see any ads. They are just more relevant to you."
+                      t("ads-description")
+                      /*Ads cookies are used to show you remarketing ads. It doesn't track you in any way and doesn't mean that you will not see any ads. They are just more relevant to you.*/
                     }
                   />
                 </div>
@@ -180,14 +199,14 @@ const CookieDisclaimer = ({ open, setOpen }: ICookieDisclaimer) => {
                     variant={"outlined"}
                     onClick={() => saveSelectedSettings()}
                   >
-                    Save
+                    {t("save-settings") /* Save settings */}
                   </Button>
                   <div className={`${styles.button_fixed_holder}`}>
                     <Button
                       variant={"contained"}
                       onClick={() => aggreeAllSettings()}
                     >
-                      Accept all
+                      {t("agree-all") /* Agree all */}
                     </Button>
                   </div>
                 </div>

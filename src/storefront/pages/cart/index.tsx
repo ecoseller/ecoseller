@@ -1,3 +1,5 @@
+// utils
+import { useTranslation } from "next-i18next";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import CartItemList from "@/components/Cart/CartItemList";
@@ -7,24 +9,24 @@ import { useRouter } from "next/router";
 
 const CartPage = () => {
   const router = useRouter();
-
+  const { t } = useTranslation("cart");
   return (
     <div className="container">
       <CartStepper activeStep={0} />
       <Typography variant="h4" sx={{ my: 3 }}>
-        Cart
+        {t("cart-title")}
       </Typography>
       <CartItemList editable={true} />
       <CartButtonRow
         prev={{
-          title: "Back",
+          title: t("common:back"),
           onClick: () => {
             router.back();
           },
           disabled: true,
         }}
         next={{
-          title: "Next",
+          title: t("common:next"),
           onClick: () => {
             router.push("/cart/step/1");
           },

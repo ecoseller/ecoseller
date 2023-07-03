@@ -3,6 +3,8 @@ import {
   NextApiRequest,
   NextApiResponse,
 } from "next/types";
+// utils
+import { useTranslation } from "next-i18next";
 import { ICategoryDetail } from "@/types/category";
 import EditorJsOutput from "@/utils/editorjs/EditorJsOutput";
 import Typography from "@mui/material/Typography";
@@ -31,7 +33,7 @@ interface ISearchPageProps {
 
 const SearchPage = ({ search, products }: ISearchPageProps) => {
   const router = useRouter();
-
+  const { t } = useTranslation("search");
   console.log("products", products);
 
   return (
@@ -49,7 +51,7 @@ const SearchPage = ({ search, products }: ISearchPageProps) => {
           <ProductGrid products={products} />
         ) : (
           <Typography variant="body1" mt={3} gutterBottom>
-            No products found
+            {t("no-results")}
           </Typography>
         )}
       </div>

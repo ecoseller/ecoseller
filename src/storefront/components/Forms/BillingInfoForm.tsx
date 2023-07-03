@@ -1,5 +1,7 @@
 import { IBillingInfo, ICountryOption } from "@/types/cart";
 import { IValidatedInputField } from "@/types/common";
+// utils
+import { useTranslation } from "next-i18next";
 import TextField from "@mui/material/TextField";
 import {
   ChangeEvent,
@@ -55,6 +57,8 @@ export const billingInfoInitialData = (
    * convert it into the format that the BillingInfoForm component expects.
    * */
 
+  const { t } = useTranslation("common");
+
   return {
     first_name: {
       value: billingInfo.first_name,
@@ -71,8 +75,8 @@ export const billingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: "First name is required",
-      label: "First name",
+      errorMessage: `${t("first-name-required-error-message")}`,
+      label: `${t("first-name-label")}`,
     },
     surname: {
       value: billingInfo.surname,
@@ -89,8 +93,8 @@ export const billingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: "Surname is required",
-      label: "Surname",
+      errorMessage: `${t("surname-required-error-message")}`,
+      label: `${t("surname-label")}`,
     },
     company_name: {
       value: billingInfo.company_name,
@@ -101,7 +105,7 @@ export const billingInfoInitialData = (
           company_name: { ...prevState.company_name, value },
         })),
       isRequired: false,
-      label: "Company name",
+      label: `${t("company-name-label")}`,
     },
     company_id: {
       value: billingInfo.company_id,
@@ -112,7 +116,7 @@ export const billingInfoInitialData = (
           company_id: { ...prevState.company_id, value },
         })),
       isRequired: false,
-      label: "Company ID",
+      label: `${t("company-id-label")}`,
     },
     vat_number: {
       value: billingInfo.vat_number,
@@ -123,7 +127,7 @@ export const billingInfoInitialData = (
           vat_number: { ...prevState.vat_number, value },
         })),
       isRequired: false,
-      label: "VAT ID",
+      label: `${t("vat-number-label")}`,
     },
     street: {
       value: billingInfo.street,
@@ -140,8 +144,8 @@ export const billingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: "Street is required",
-      label: "Street",
+      errorMessage: `${t("street-required-error-message")}`,
+      label: `${t("street-label")}`,
     },
     city: {
       value: billingInfo.city,
@@ -158,8 +162,8 @@ export const billingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: "City is required",
-      label: "City",
+      errorMessage: `${t("city-required-error-message")}`,
+      label: `${t("city-label")}`,
     },
     postal_code: {
       value: billingInfo.postal_code,
@@ -176,8 +180,8 @@ export const billingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: "Postal code is required",
-      label: "Postal code",
+      errorMessage: `${t("postal-code-required-error-message")}`,
+      label: `${t("postal-code-label")}`,
     },
     country: {
       value: `${billingInfo.country}`,
@@ -194,8 +198,8 @@ export const billingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: "Country is required",
-      label: "Country",
+      errorMessage: `${t("country-required-error-message")}`,
+      label: `${t("country-label")}`,
     },
   };
 };

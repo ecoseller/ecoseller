@@ -1,3 +1,5 @@
+// utils
+import { useTranslation } from "next-i18next";
 import { IOrder } from "@/types/order";
 import {
   DataGrid,
@@ -31,6 +33,7 @@ interface IReviewsProps {
 }
 
 export const ReviewsList = ({ reviews }: IReviewsProps) => {
+  const { t } = useTranslation("review");
   console.log(reviews);
   return (
     <Stack spacing={2}>
@@ -40,10 +43,11 @@ export const ReviewsList = ({ reviews }: IReviewsProps) => {
             <Divider sx={{ borderStyle: "dashed" }} />
           </Grid>
           <Typography variant="h6" gutterBottom sx={{ mt: 0.5 }}>
-            Review #{index + 1}
+            {t("review-title")} #{index + 1}
           </Typography>
           <Typography variant="subtitle1" gutterBottom sx={{ mt: 0.5 }}>
-            Reviewed variant: {review.product_variant}
+            {t("reviewed-product-variant")} {review.product_variant}
+            {/* Reviewed variant: {review.product_variant} */}
           </Typography>
           <Typography
             variant="subtitle2"
@@ -51,7 +55,7 @@ export const ReviewsList = ({ reviews }: IReviewsProps) => {
             sx={{ mt: 0.5 }}
             style={{ opacity: 0.55 }}
           >
-            Posted at {review.create_at}
+            {t("create-at")} {review.create_at}
           </Typography>
           <Stack direction="column" spacing={2}>
             <Rating

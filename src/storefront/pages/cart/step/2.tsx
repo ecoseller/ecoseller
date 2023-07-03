@@ -4,7 +4,8 @@ import { useRouter } from "next/router";
 
 // react
 import { useCallback, useEffect, useMemo, useState } from "react";
-
+// utils
+import { useTranslation } from "next-i18next";
 // api
 import { putBillingInfo, putShippingInfo } from "@/api/cart/info";
 import { cartBillingInfoAPI } from "@/pages/api/cart/[token]/billing-info";
@@ -67,6 +68,7 @@ const CartStep2Page = ({ cart, methods, cartToken }: ICartStep2PageProps) => {
    */
 
   const router = useRouter();
+  const { t } = useTranslation("cart");
 
   const [shippingMethodCountryId, setShippingMethodCountryId] = useState<
     number | null
@@ -124,7 +126,7 @@ const CartStep2Page = ({ cart, methods, cartToken }: ICartStep2PageProps) => {
       >
         <Grid container item xs={10} sm={10} md={5} direction="column">
           <div className="shipping-info-form">
-            <h2>Shipping method</h2>
+            <h2>{t("shipping-method-title") /* Shipping method */}</h2>
             <ShippingMethodList
               methods={methods}
               selected={shippingMethodCountryId}
@@ -134,7 +136,7 @@ const CartStep2Page = ({ cart, methods, cartToken }: ICartStep2PageProps) => {
         </Grid>
         <Grid container item xs={10} sm={10} md={5} direction="column" pt={4}>
           <div className="billing-info-form">
-            <h2>Payment method</h2>
+            <h2>{t("payment-method-title") /* Payment method */}</h2>
             {shippingMethodCountryId === null ? (
               <p>Choose shipping method first</p>
             ) : (

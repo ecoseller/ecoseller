@@ -1,0 +1,17 @@
+{
+  "main-title": "Cookies",
+  "main-description": "We use cookies to improve your experience on our website.",
+  "change-settings": "Change settings",
+  "agree-all": "Agree all",
+  "custom-settings-title": "Custom preferences",
+  "custom-settings-description": "You can customize your cookie preferences by selecting the appropriate categories below.",
+  "mandatory-title": "Mandatory",
+  "mandatory-description": "Mandatory cookies are required for the website to function properly.",
+  "preference-title": "Preference",
+  "preference-description": "Preference cookies enable a website to remember information that changes the way the website behaves or looks, like products that you visited, etc.",
+  "statistical-title": "Statistical",
+  "statistical-description": "Statistical cookies help website owners to understand how visitors interact with websites by collecting and reporting information anonymously.",
+  "ads-title": "Ads",
+  "ads-description": "Ads cookies are used to show you remarketing ads. It doesn't track you in any way and doesn't mean that you will not see any ads. They are just more relevant to you.",
+  "save-settings": "Save settings"
+}
