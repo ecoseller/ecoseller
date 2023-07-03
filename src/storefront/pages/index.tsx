@@ -139,7 +139,6 @@ const HomePage = () => {
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
-  console.log("namespaces", serverRuntimeConfig.commoni18NameSpaces);
   return {
     props: {
       ...(await serverSideTranslations(locale as string, [

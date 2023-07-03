@@ -10,6 +10,10 @@ import { pageCMSAPI } from "./api/cms/[locale]/[slug]";
 import { Box, Typography } from "@mui/material";
 import { FontDownload } from "@mui/icons-material";
 import EditorJsOutput from "@/utils/editorjs/EditorJsOutput";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import getConfig from "next/config";
+
+const { serverRuntimeConfig } = getConfig();
 
 interface CMSPageProps {
   page: IPageCMS;
@@ -68,6 +72,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       page,
+      ...(await serverSideTranslations(locale as string, [
+        "home",
+        "cookie",
+        ...serverRuntimeConfig.commoni18NameSpaces,
+      ])),
     },
   };
 };

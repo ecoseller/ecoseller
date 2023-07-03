@@ -26,7 +26,7 @@ const nextConfig = {
   serverRuntimeConfig: {
     // Will only be available on the server side
     apiUrl: process.env.BACKEND_API || "http://127.0.0.1:8000",
-    commoni18NameSpaces: ["common", "header", "footer", "login", "cookie"],
+    commoni18NameSpaces: ["common", "header", "footer", "cookie"],
   },
   publicRuntimeConfig: {
     // Will only be available on the server side

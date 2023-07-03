@@ -3,7 +3,10 @@ import {
   NextApiRequest,
   NextApiResponse,
 } from "next/types";
+import getConfig from "next/config";
+
 // utils
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
 import { ICategoryDetail } from "@/types/category";
 import EditorJsOutput from "@/utils/editorjs/EditorJsOutput";
@@ -23,6 +26,8 @@ import { countryDetailAPI } from "@/pages/api/country/[code]";
 import { getCookie } from "cookies-next";
 import { DEFAULT_COUNTRY } from "@/utils/defaults";
 import { searchProductsAPI } from "../api/search/[query]";
+
+const { serverRuntimeConfig } = getConfig();
 
 interface ISearchPageProps {
   search: {
@@ -95,6 +100,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         query: query,
       },
       products,
+      ...(await serverSideTranslations(locale as string, [
+        "user",
+        ...serverRuntimeConfig.commoni18NameSpaces,
+      ])),
     },
   };
 };

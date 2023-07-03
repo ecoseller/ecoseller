@@ -1,7 +1,9 @@
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
 import { useRouter } from "next/router";
+import getConfig from "next/config";
 import React from "react";
 // utils
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
 import { cartBillingInfoAPI } from "@/pages/api/cart/[token]/billing-info";
 import { cartShippingInfoAPI } from "@/pages/api/cart/[token]/shipping-info";
@@ -29,6 +31,8 @@ import Divider from "@mui/material/Divider";
 import { useCart } from "@/utils/context/cart";
 import CollapsableContentWithTitle from "@/components/Generic/CollapsableContentWithTitle";
 import CartCompleteOrder from "@/components/Cart/CartCompleteOrder";
+
+const { serverRuntimeConfig } = getConfig();
 
 interface ICartSummaryPageProps {
   billingInfo: IBillingInfo;
@@ -200,7 +204,7 @@ const CartSummaryPage = ({
  * Fetch the cart from the API
  */
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { req, res } = context;
+  const { req, res, locale } = context;
   const { cartToken } = req.cookies;
 
   if (cartToken === undefined || cartToken === null) {
@@ -253,6 +257,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       countries,
       selectedPaymentMethod,
       selectedShippingMethod,
+      ...(await serverSideTranslations(locale as string, [
+        "cart",
+        ...serverRuntimeConfig.commoni18NameSpaces,
+      ])),
     },
   };
 };

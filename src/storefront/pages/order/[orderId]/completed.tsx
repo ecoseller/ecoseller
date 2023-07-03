@@ -1,10 +1,15 @@
-// utils
+// libs
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import getConfig from "next/config";
 import { useTranslation } from "next-i18next";
+// utils
 import OrderCompleted from "@/components/Order/OrderCompleted";
 import OnlinePayment from "@/components/Order/Payment/Online";
 import PayBySquare from "@/components/Order/Payment/PayBySquare";
 import { orderDetailAPI } from "@/pages/api/order/[id]";
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
+
+const { serverRuntimeConfig } = getConfig();
 
 interface IOrderCompletedPageProps {
   orderId: string;
@@ -53,7 +58,7 @@ const OrderCompletedPage = ({
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { req, res } = context;
+  const { req, res, locale } = context;
   const { orderId } = context.query;
 
   const orderData = await orderDetailAPI(
@@ -67,6 +72,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     props: {
       orderId,
       orderData,
+      ...(await serverSideTranslations(locale as string, [
+        "order",
+        "cart",
+        ...serverRuntimeConfig.commoni18NameSpaces,
+      ])),
     },
   };
 };

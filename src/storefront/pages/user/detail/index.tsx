@@ -1,4 +1,6 @@
 import { useRouter } from "next/router";
+import getConfig from "next/config";
+
 // utils
 import { useTranslation } from "next-i18next";
 import RootLayout from "@/pages/layout";
@@ -12,6 +14,8 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
 import { IUser } from "@/types/user";
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
 import UserGeneralInformation from "@/components/User/UserGeneralInformation";
@@ -32,6 +36,8 @@ import ShippingInfoForm, {
   shippingInfoInitialData,
 } from "@/components/Forms/ShippingInfoForm";
 import { error } from "console";
+
+const { serverRuntimeConfig } = getConfig();
 
 interface IUserProps {
   billingInfo: IBillingInfo;
@@ -417,7 +423,7 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { req, res } = context;
+  const { req, res, locale } = context;
 
   const shippingInfo = await userShippingInfoAPI(
     "GET",
@@ -435,6 +441,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     props: {
       billingInfo,
       shippingInfo,
+      ...(await serverSideTranslations(locale as string, [
+        "user",
+        ...serverRuntimeConfig.commoni18NameSpaces,
+      ])),
     },
   };
 };

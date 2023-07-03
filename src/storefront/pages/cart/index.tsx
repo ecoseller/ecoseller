@@ -1,3 +1,4 @@
+import getConfig from "next/config";
 // utils
 import { useTranslation } from "next-i18next";
 import Typography from "@mui/material/Typography";
@@ -6,6 +7,10 @@ import CartItemList from "@/components/Cart/CartItemList";
 import CartStepper from "@/components/Cart/Stepper";
 import CartButtonRow from "@/components/Cart/ButtonRow";
 import { useRouter } from "next/router";
+import { GetServerSideProps } from "next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
+const { serverRuntimeConfig } = getConfig();
 
 const CartPage = () => {
   const router = useRouter();
@@ -35,6 +40,19 @@ const CartPage = () => {
       />
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { req, res, locale } = context;
+
+  return {
+    props: {
+      ...(await serverSideTranslations(locale as string, [
+        "cart",
+        ...serverRuntimeConfig.commoni18NameSpaces,
+      ])),
+    },
+  };
 };
 
 export default CartPage;

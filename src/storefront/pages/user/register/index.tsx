@@ -1,4 +1,6 @@
 import { useRouter } from "next/router";
+import getConfig from "next/config";
+
 import { ReactElement, useEffect, useState } from "react";
 import {
   Alert,
@@ -18,6 +20,7 @@ import {
 // utils
 import { useTranslation } from "next-i18next";
 import { IUser } from "@/types/user";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
 import UserGeneralInformation from "@/components/User/UserGeneralInformation";
 import { useSnackbarState } from "@/utils/snackbar";
@@ -43,6 +46,8 @@ import { IOrder } from "@/types/order";
 import { orderItemsAPI } from "@/pages/api/order/items/[id]";
 import EditorCard from "@/components/Generic/EditorCard";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+
+const { serverRuntimeConfig } = getConfig();
 
 const StorefrontUserRegisterPage = () => {
   const { t } = useTranslation("user");
@@ -194,6 +199,17 @@ const StorefrontUserRegisterPage = () => {
       </EditorCard>
     </Container>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale as string, [
+        "user",
+        ...serverRuntimeConfig.commoni18NameSpaces,
+      ])),
+    },
+  };
 };
 
 export default StorefrontUserRegisterPage;

@@ -47,7 +47,7 @@ const UserGeneralInformation = ({ state, setState }: IUserProps) => {
               }}
             />
             <TextField
-              label={t("common:last-name-label")}
+              label={t("common:surname-label")}
               value={state?.last_name}
               onChange={(e) => {
                 setState({

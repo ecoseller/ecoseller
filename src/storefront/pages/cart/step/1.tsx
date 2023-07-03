@@ -1,11 +1,14 @@
 // next
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
 import { useRouter } from "next/router";
+import getConfig from "next/config";
 
 // react
 import { useCallback, useEffect, useMemo, useState } from "react";
 // utils
 import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
 // api
 import { putBillingInfo, putShippingInfo } from "@/api/cart/info";
 import { cartBillingInfoAPI } from "@/pages/api/cart/[token]/billing-info";
@@ -44,6 +47,8 @@ import CartButtonRow from "@/components/Cart/ButtonRow";
 import { userBillingInfoAPI } from "@/pages/api/user/billing-info";
 import { useUser } from "@/utils/context/user";
 import { Check, CheckBox } from "@mui/icons-material";
+
+const { serverRuntimeConfig } = getConfig();
 
 interface ICartStep1PageProps {
   shippingInfo: any;
@@ -274,7 +279,7 @@ const CartStep1Page = ({
                     inputProps={{ "aria-label": "controlled" }}
                   />
                 }
-                label={t("shipping-information-use-profile-info-label")}
+                label={t("shipping-information-use-profile-billing-info-label")}
               />
             )}
             <ShippingInfoForm
@@ -326,7 +331,11 @@ const CartStep1Page = ({
                   <FormControlLabel
                     value="PROFILE"
                     control={<Radio />}
-                    label={t("use-profile-info-label") /*"Use profile info"*/}
+                    label={
+                      t(
+                        "billing-information-use-profile-info-label"
+                      ) /*"Use profile info"*/
+                    }
                     onClick={setBillingInfoFromProfile}
                   />
                 )}
@@ -379,7 +388,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
    * Fetch the cart from the API
    */
 
-  const { req, res } = context;
+  const { req, res, locale } = context;
   const { cartToken } = req.cookies;
 
   if (cartToken === undefined || cartToken === null) {
@@ -433,6 +442,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       billingInfo,
       cartToken,
       countries,
+      ...(await serverSideTranslations(locale as string, [
+        "cart",
+        ...serverRuntimeConfig.commoni18NameSpaces,
+      ])),
     },
   };
 };

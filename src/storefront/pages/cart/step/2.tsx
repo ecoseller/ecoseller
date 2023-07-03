@@ -1,11 +1,13 @@
 // next
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
 import { useRouter } from "next/router";
+import getConfig from "next/config";
 
 // react
 import { useCallback, useEffect, useMemo, useState } from "react";
 // utils
 import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 // api
 import { putBillingInfo, putShippingInfo } from "@/api/cart/info";
 import { cartBillingInfoAPI } from "@/pages/api/cart/[token]/billing-info";
@@ -53,6 +55,8 @@ import { cartDetailAPI } from "@/pages/api/cart/[token]/detail";
 import { cartShippingPaymentMethodsAPI } from "@/pages/api/cart/methods/[country]";
 import PaymentMethodList from "@/components/Cart/Methods/PaymentMethodList";
 import { setPaymentMethod, setShippingMethod } from "@/api/cart/methods";
+
+const { serverRuntimeConfig } = getConfig();
 
 interface ICartStep2PageProps {
   cart: ICartDetail;
@@ -138,7 +142,13 @@ const CartStep2Page = ({ cart, methods, cartToken }: ICartStep2PageProps) => {
           <div className="billing-info-form">
             <h2>{t("payment-method-title") /* Payment method */}</h2>
             {shippingMethodCountryId === null ? (
-              <p>Choose shipping method first</p>
+              <p>
+                {
+                  t(
+                    "choose-shipping-method-first"
+                  ) /** Choose shipping method first*/
+                }
+              </p>
             ) : (
               <PaymentMethodList
                 methods={
@@ -177,7 +187,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
    * Fetch the cart from the API
    */
 
-  const { req, res } = context;
+  const { req, res, locale } = context;
   const { cartToken } = req.cookies;
 
   if (cartToken === undefined || cartToken === null) {
@@ -236,6 +246,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       cart,
       methods,
       cartToken,
+      ...(await serverSideTranslations(locale as string, [
+        "cart",
+        ...serverRuntimeConfig.commoni18NameSpaces,
+      ])),
     },
   };
 };

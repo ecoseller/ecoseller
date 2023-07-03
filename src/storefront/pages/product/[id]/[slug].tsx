@@ -1,6 +1,7 @@
 // next
 import { useRouter } from "next/router";
 import Link from "next/link";
+import getConfig from "next/config";
 // utils
 import { useTranslation } from "next-i18next";
 // react
@@ -8,6 +9,7 @@ import { useTranslation } from "next-i18next";
 // libs
 import { productAPI } from "@/pages/api/product/[id]";
 import EditorJsOutput from "@/utils/editorjs/EditorJsOutput";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 // components
 import MediaGallery from "@/components/ProductDetail/MediaGallery";
@@ -40,6 +42,8 @@ import { productRatingAPI } from "@/pages/api/review/rating/[token]";
 import { productReviewListAPI } from "@/pages/api/review/list/[token]";
 import { IReview } from "@/types/review";
 import { ReviewsList } from "@/components/Review/RatingsList";
+
+const { serverRuntimeConfig } = getConfig();
 
 interface IProductPageProps {
   data: IProductDetail;
@@ -245,6 +249,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       pricelist,
       productRating,
       productReviews,
+      ...(await serverSideTranslations(locale as string, [
+        "product",
+        "review",
+        ...serverRuntimeConfig.commoni18NameSpaces,
+      ])),
     },
   };
 };
