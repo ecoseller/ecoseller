@@ -8,10 +8,11 @@ from rest_framework.serializers import (
     Serializer,
     IntegerField,
     ListField,
+    CharField
 )
 from rest_framework_recursive.fields import RecursiveField
 
-from category.filters import SelectedFilters, NumericFilter, TextualFilter
+from category.filters import SelectedFilters, NumericFilter, TextualFilter, SelectedFiltersWithOrdering
 from category.models import (
     Category,
 )
@@ -155,3 +156,17 @@ class SelectedFiltersSerializer(Serializer):
             numeric.append(NumericFilter(**filter))
 
         return SelectedFilters(textual, numeric)
+
+
+class SelectedFiltersWithOrderingSerializer(Serializer):
+    filters = SelectedFiltersSerializer()
+    sort_by = CharField(allow_null=True)
+    order = CharField(allow_null=True)
+
+    def create(self, validated_data):
+        filters_data = validated_data["filters"]
+
+        filters = SelectedFiltersSerializer().create(filters_data)
+        sort_by, order = validated_data["sort_by"], validated_data["order"]
+
+        return SelectedFiltersWithOrdering(filters, sort_by, order)

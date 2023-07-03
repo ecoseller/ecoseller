@@ -1,3 +1,4 @@
+import { ISelectedFiltersWithOrdering } from "@/types/category";
 import { IProductRecord } from "@/types/product";
 
 /**
@@ -5,26 +6,20 @@ import { IProductRecord } from "@/types/product";
  * @param categoryId
  * @param pricelist
  * @param country
- * @param sortBy
- * @param order
+ * @param filters
  */
-export const getCategoryProducts = async (
+export const filterProducts = async (
   categoryId: number,
   pricelist: string,
   country: string,
-  sortBy?: string,
-  order?: string
+  filters: ISelectedFiltersWithOrdering
 ) => {
   let url = `/api/category/${categoryId}/products?pricelist=${pricelist}&country=${country}`;
 
-  if (sortBy) {
-    url += `&sort_by=${sortBy}`;
-  }
-  if (order) {
-    url += `&order=${order}`;
-  }
-
-  return fetch(url)
+  return fetch(url, {
+    method: "POST",
+    body: JSON.stringify(filters),
+  })
     .then((res) => res.json())
     .then((data) => data as IProductRecord[]);
 };

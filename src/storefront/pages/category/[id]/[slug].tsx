@@ -7,7 +7,7 @@ import {
   IAttributeSet,
   ICategoryDetail,
   INumericFilter,
-  ISelectedFilters,
+  ISelectedFiltersWithOrdering,
   ITextualFilter,
 } from "@/types/category";
 import EditorJsOutput from "@/utils/editorjs/EditorJsOutput";
@@ -29,11 +29,8 @@ import { getCookie } from "cookies-next";
 import { DEFAULT_COUNTRY } from "@/utils/defaults";
 import React, { useEffect, useState } from "react";
 import ProductSortSelect from "@/components/Category/ProductSortSelect";
-import { getCategoryProducts } from "@/api/category/products";
 import { categoryAttributesAPI } from "@/pages/api/category/[id]/attributes";
-import { filterProducts } from "@/api/category/filter";
-import CancelIcon from "@mui/icons-material/Cancel";
-import Button from "@mui/material/Button";
+import { filterProducts } from "@/api/category/products";
 
 interface ICategoryPageProps {
   category: ICategoryDetail;
@@ -56,6 +53,12 @@ export interface IFilters {
   numeric: { [id: number]: INumericAttributeFilterWithOptions };
 }
 
+interface IFiltersWithOrdering {
+  filters: IFilters;
+  sortBy: string | null;
+  order: string | null;
+}
+
 export enum NumericFilterValueType {
   Min,
   Max,
@@ -72,13 +75,17 @@ const CategoryPage = ({
 
   const { id } = router.query;
 
-  const initialFilters: IFilters = {
-    textual: {},
-    numeric: {},
+  const initialFilters: IFiltersWithOrdering = {
+    filters: {
+      textual: {},
+      numeric: {},
+    },
+    sortBy: null,
+    order: null,
   };
 
   const [productsState, setProductsState] = useState<IProductRecord[]>([]);
-  const [filters, setFilters] = useState<IFilters>(initialFilters);
+  const [filters, setFilters] = useState<IFiltersWithOrdering>(initialFilters);
 
   useEffect(() => {
     if (filters != initialFilters) {
@@ -109,31 +116,39 @@ const CategoryPage = ({
     if (filtersString == null) {
       return null;
     } else {
-      return JSON.parse(filtersString) as IFilters;
+      return JSON.parse(filtersString) as IFiltersWithOrdering;
     }
   };
 
   const setEmptyFilters = () => {
-    const emptyFilters = initialFilters;
+    const emptyFilters = { ...initialFilters };
 
     for (const attr of attributes.textual) {
-      emptyFilters.textual[attr.id] = { ...attr, selected_values_ids: [] };
+      emptyFilters.filters.textual[attr.id] = {
+        ...attr,
+        selected_values_ids: [],
+      };
     }
 
     for (const attr of attributes.numeric) {
-      emptyFilters.numeric[attr.id] = {
+      emptyFilters.filters.numeric[attr.id] = {
         ...attr,
         min_value_id: null,
         max_value_id: null,
       };
     }
+
     setFilters(emptyFilters);
   };
 
   const applyFilters = () => {
-    const filtersToApply: ISelectedFilters = {
-      numeric: Object.values(filters.numeric),
-      textual: Object.values(filters.textual),
+    const filtersToApply: ISelectedFiltersWithOrdering = {
+      filters: {
+        numeric: Object.values(filters.filters.numeric),
+        textual: Object.values(filters.filters.textual),
+      },
+      sort_by: filters.sortBy,
+      order: filters.order,
     };
 
     saveFiltersToSessionStorage();
@@ -144,25 +159,24 @@ const CategoryPage = ({
   };
 
   const sortProducts = (sortBy: string, order: string) => {
-    getCategoryProducts(
-      category.id,
-      pricelist,
-      countryCode,
-      sortBy,
-      order
-    ).then((data) => {
-      setProductsState(data);
+    setFilters({
+      ...filters,
+      sortBy: sortBy,
+      order: order,
     });
   };
 
   const updateTextualFilter = (id: number, selectedValuesIds: number[]) => {
     setFilters({
       ...filters,
-      textual: {
-        ...filters.textual,
-        [id]: {
-          ...filters.textual[id],
-          selected_values_ids: selectedValuesIds,
+      filters: {
+        ...filters.filters,
+        textual: {
+          ...filters.filters.textual,
+          [id]: {
+            ...filters.filters.textual[id],
+            selected_values_ids: selectedValuesIds,
+          },
         },
       },
     });
@@ -176,22 +190,28 @@ const CategoryPage = ({
     if (valueType == NumericFilterValueType.Min) {
       setFilters({
         ...filters,
-        numeric: {
-          ...filters.numeric,
-          [id]: {
-            ...filters.numeric[id],
-            min_value_id: valueId,
+        filters: {
+          ...filters.filters,
+          numeric: {
+            ...filters.filters.numeric,
+            [id]: {
+              ...filters.filters.numeric[id],
+              min_value_id: valueId,
+            },
           },
         },
       });
     } else {
       setFilters({
         ...filters,
-        numeric: {
-          ...filters.numeric,
-          [id]: {
-            ...filters.numeric[id],
-            max_value_id: valueId,
+        filters: {
+          ...filters.filters,
+          numeric: {
+            ...filters.filters.numeric,
+            [id]: {
+              ...filters.filters.numeric[id],
+              max_value_id: valueId,
+            },
           },
         },
       });
@@ -218,13 +238,16 @@ const CategoryPage = ({
           </>
         ) : null}
         <ProductFilters
-          filters={filters}
+          filters={filters.filters}
           updateTextualFilter={updateTextualFilter}
           updateNumericFilter={updateNumericFilter}
           setEmptyFilters={setEmptyFilters}
         />
         <Divider sx={{ my: 2 }} />
-        <ProductSortSelect sortProducts={sortProducts} />
+        <ProductSortSelect
+          defaultOrdering={filters}
+          sortProducts={sortProducts}
+        />
         <ProductGrid products={productsState} />
       </div>
     </>
@@ -262,6 +285,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   );
 
   const products: IProductRecord[] = await categoryProductsAPI(
+    "GET",
     idNumber.toString(),
     countryDetail.code,
     pricelist,

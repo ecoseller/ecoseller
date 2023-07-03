@@ -12,10 +12,6 @@ urlpatterns = [
         views.CategoryDetailProductsStorefrontView.as_view(),
     ),
     path(
-        "storefront/<int:pk>/filter/",
-        views.CategoryDetailFilterStorefrontView.as_view(),
-    ),
-    path(
         "storefront/<int:pk>/attributes/",
         views.CategoryDetailAttributesStorefrontView.as_view(),
     ),

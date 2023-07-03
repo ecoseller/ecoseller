@@ -53,3 +53,12 @@ export interface INumericFilter extends IAttributeTypeBase {
   min_value_id: number | null;
   max_value_id: number | null;
 }
+
+/**
+ * Represents selected category filters with an ordering included
+ */
+export interface ISelectedFiltersWithOrdering {
+  filters: ISelectedFilters;
+  sort_by: string | null;
+  order: string | null;
+}

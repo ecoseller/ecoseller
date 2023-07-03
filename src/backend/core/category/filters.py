@@ -69,11 +69,22 @@ class SelectedFilters:
     def __init__(self, textual, numeric):
         self.textual, self.numeric = textual, numeric
 
+
+class SelectedFiltersWithOrdering:
+    """
+    Class representing set of filters used for filtering products, together with product ordering
+
+    Filters are divided into 2 categories: `numeric` and `textual`
+    """
+
+    def __init__(self, filters, sort_by, order):
+        self.filters, self.sort_by, self.order = filters, sort_by, order
+
     def matches_variant(self, product_variant):
         """
         Check whether the given product variant matches all the selected filters
         """
-        all_filters = self.textual + self.numeric
+        all_filters = self.filters.textual + self.filters.numeric
         return all([f.matches(product_variant) for f in all_filters])
 
     def matches_any_variant(self, product):

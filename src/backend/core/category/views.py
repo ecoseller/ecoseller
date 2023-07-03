@@ -17,10 +17,8 @@ from category.serializers import (
     CategoryDetailDashboardSerializer,
     CategoryRecursiveDashboardSerializer,
     CategoryRecursiveStorefrontSerializer,
-    CategoryDetailStorefrontSerializer,
-    SelectedFiltersSerializer,
+    CategoryDetailStorefrontSerializer, SelectedFiltersWithOrderingSerializer,
 )
-from common.common import get_url_param_if_valid
 from country.models import Country
 from product.models import Product, PriceList, AttributeTypeValueType
 from product.serializers import (
@@ -156,10 +154,9 @@ class CategoryDetailProductsStorefrontView(APIView):
 
     PRICE_LIST_URL_PARAM = "pricelist"
     COUNTRY_URL_PARAM = "country"
-    SORT_URL_PARAM = "sort_by"
-    ORDER_URL_PARAM = "order"
 
     ALLOWED_ORDER_FIELDS = ["asc", "desc"]
+    DEFAULT_ORDER_FIELD = "asc"
     SORT_FIELDS_CONFIG = {
         "title": {},
         "price": {"sort_function": _get_min_variant_price},
@@ -169,52 +166,69 @@ class CategoryDetailProductsStorefrontView(APIView):
         try:
             category = Category.objects.get(id=pk, published=True)
 
-            # Get and process sort & order params
-            sort_by = get_url_param_if_valid(
-                request, self.SORT_URL_PARAM, self.SORT_FIELDS_CONFIG
-            )
-            order = get_url_param_if_valid(
-                request,
-                self.ORDER_URL_PARAM,
-                self.ALLOWED_ORDER_FIELDS,
-                default_param_value="asc",
-            )
-
-            is_reverse_order = order == "desc"
-            sort_key_function = (
-                (
-                    self.SORT_FIELDS_CONFIG[sort_by]["sort_function"]
-                    if "sort_function" in self.SORT_FIELDS_CONFIG[sort_by]
-                    else lambda p: p[sort_by]
-                )
-                if sort_by is not None
-                else None
-            )
-
-            # Get related objects
             products = _get_all_published_products(category)
-            pricelist = self._get_pricelist(request)
-            country = self._get_country(request)
+            serializer = self._serialize_products(products, request)
 
-            serializer = ProductStorefrontListSerializer(
-                products,
-                many=True,
-                context={
-                    "request": request,
-                    "pricelist": pricelist,
-                    "country": country,
-                },
-            )
-
-            sorted_data = (
-                sorted(serializer.data, key=sort_key_function, reverse=is_reverse_order)
-                if sort_by is not None
-                else serializer.data
-            )
-
-            return Response(sorted_data)
+            return Response(serializer.data)
         except Category.DoesNotExist:
             return Response(status=HTTP_404_NOT_FOUND)
+
+    def post(self, request, pk):
+        request_serializer = SelectedFiltersWithOrderingSerializer(data=request.data)
+
+        if request_serializer.is_valid():
+            filters_with_ordering = request_serializer.create(request_serializer.validated_data)
+
+            try:
+                category = Category.objects.get(id=pk, published=True)
+
+                sort_by, order = filters_with_ordering.sort_by, filters_with_ordering.order
+                order = order if order in self.ALLOWED_ORDER_FIELDS else self.DEFAULT_ORDER_FIELD
+
+                is_reverse_order = order == "desc"
+                sort_key_function = (
+                    (
+                        self.SORT_FIELDS_CONFIG[sort_by]["sort_function"]
+                        if "sort_function" in self.SORT_FIELDS_CONFIG[sort_by]
+                        else lambda p: p[sort_by]
+                    )
+                    if sort_by is not None
+                    else None
+                )
+
+                # Get related objects
+                products = _get_all_published_products(category)
+
+                filtered_products = [p for p in products if
+                                     filters_with_ordering.matches_any_variant(p)]  # filter the matching products
+
+                serializer = self._serialize_products(filtered_products, request)
+
+                sorted_data = (
+                    sorted(serializer.data, key=sort_key_function, reverse=is_reverse_order)
+                    if sort_by is not None
+                    else serializer.data
+                )
+
+                return Response(sorted_data)
+            except Category.DoesNotExist:
+                return Response(status=HTTP_404_NOT_FOUND)
+        else:
+            return Response(status=HTTP_400_BAD_REQUEST)
+
+    def _serialize_products(self, products, request):
+        pricelist = self._get_pricelist(request)
+        country = self._get_country(request)
+
+        return ProductStorefrontListSerializer(
+            products,
+            many=True,
+            context={
+                "request": request,
+                "pricelist": pricelist,
+                "country": country,
+            },
+        )
 
     def _get_pricelist(self, request):
         """get price list from request params or default to the default one"""
@@ -298,72 +312,6 @@ class CategoryDetailAttributesStorefrontView(APIView):
         )
 
 
-@permission_classes([AllowAny])
-class CategoryDetailFilterStorefrontView(APIView):
-    """
-    View for filtering products, according to their attributes, in the given category.
-
-    Used for storefront.
-    """
-
-    PRICE_LIST_URL_PARAM = "pricelist"
-    COUNTRY_URL_PARAM = "country"
-
-    def post(self, request, pk):
-        request_serializer = SelectedFiltersSerializer(data=request.data)
-
-        if request_serializer.is_valid():
-            filters = request_serializer.create(request_serializer.validated_data)
-
-            try:
-                category = Category.objects.get(id=pk, published=True)
-
-                # Get related objects
-                products = _get_all_published_products(category).prefetch_related("product_variants")
-                pricelist = self._get_pricelist(request)
-                country = self._get_country(request)
-
-                filtered_products = [p for p in products if
-                                     filters.matches_any_variant(p)]  # filter the matching products
-
-                serializer = ProductStorefrontListSerializer(
-                    filtered_products,
-                    many=True,
-                    context={
-                        "request": request,
-                        "pricelist": pricelist,
-                        "country": country,
-                    },
-                )
-
-                return Response(serializer.data)
-            except Category.DoesNotExist:
-                return Response(status=HTTP_404_NOT_FOUND)
-        else:
-            return Response(status=HTTP_400_BAD_REQUEST)
-
-    def _get_pricelist(self, request):
-        """get price list from request params or default to the default one"""
-        price_list_code = request.query_params.get(self.PRICE_LIST_URL_PARAM, None)
-        if price_list_code:
-            try:
-                return PriceList.objects.get(code=price_list_code)
-            except PriceList.DoesNotExist:
-                return PriceList.objects.get(is_default=True)
-        else:
-            return PriceList.objects.get(is_default=True)
-
-    def _get_country(self, request):
-        """Get country URL param"""
-        country_code = request.query_params.get(self.COUNTRY_URL_PARAM, None)
-        try:
-            return Country.objects.get(code=country_code)
-        except Country.DoesNotExist:
-            country = Country.objects.all().first()
-
-        return country
-
-
 class CategoryAttributeTypes:
     def __init__(self, textual, numeric):
         self.textual, self.numeric = textual, numeric
@@ -380,6 +328,8 @@ def _get_all_subcategory_ids(category):
 def _get_all_published_products(category):
     """
     Get all published products in the given category
+
+    Prefetch also Product variants.
     """
     subcategory_ids = _get_all_subcategory_ids(category)
-    return Product.objects.filter(published=True, category__in=subcategory_ids)
+    return Product.objects.filter(published=True, category__in=subcategory_ids).prefetch_related("product_variants")
