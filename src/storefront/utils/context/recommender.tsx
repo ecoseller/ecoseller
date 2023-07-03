@@ -5,6 +5,53 @@ import Cookies from "js-cookie";
 import { v4 as uuidv4 } from "uuid";
 
 import { useState, createContext, useContext, useEffect } from "react";
+import { IProductSliderData } from "@/types/product";
+
+const recommendedProducts: IProductSliderData[] = [
+  {
+    id: 1,
+    title: "Product 1",
+    price: "$25",
+    image: "/images/products/1.jpg",
+    url: "/",
+  },
+  {
+    id: 2,
+    title: "Product 2",
+    price: "$20",
+    image: "/images/products/2.jpg",
+    url: "/",
+  },
+  {
+    id: 3,
+    title: "Product 3",
+    price: "$25",
+    image: "/images/products/1.jpg",
+    url: "/",
+  },
+  {
+    id: 4,
+    title: "Product 4",
+    price: "$20",
+    image: "/images/products/1.jpg",
+    url: "/",
+  },
+  {
+    id: 5,
+    title: "Product 5",
+    price: "$25",
+    image: "/images/products/1.jpg",
+    url: "/",
+  },
+  {
+    id: 6,
+    title: "Product 6",
+    price: "$20",
+    image: "/images/products/1.jpg",
+    url: "/",
+  },
+];
+
 interface IRecommenderContextProps {
   session: string | undefined;
   sendEvent: (event: RS_EVENT, payload: any) => void;
@@ -58,7 +105,8 @@ export const RecommenderProvider = ({
      * @returns list of products
      */
 
-    return [];
+    // TODO: call Core API to get recommendations
+    return recommendedProducts; // <-- this is just a mock
   };
 
   const value = {

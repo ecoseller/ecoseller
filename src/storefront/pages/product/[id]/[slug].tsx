@@ -42,6 +42,8 @@ import { productRatingAPI } from "@/pages/api/review/rating/[token]";
 import { productReviewListAPI } from "@/pages/api/review/list/[token]";
 import { IReview } from "@/types/review";
 import { ReviewsList } from "@/components/Review/RatingsList";
+import { useRecommender } from "@/utils/context/recommender";
+import { useState } from "react";
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -53,51 +55,6 @@ interface IProductPageProps {
   productReviews: IReview[];
 }
 
-const recommendedProducts: IProductSliderData[] = [
-  {
-    id: 1,
-    title: "Product 1",
-    price: "$25",
-    image: "/images/products/1.jpg",
-    url: "/",
-  },
-  {
-    id: 2,
-    title: "Product 2",
-    price: "$20",
-    image: "/images/products/2.jpg",
-    url: "/",
-  },
-  {
-    id: 3,
-    title: "Product 3",
-    price: "$25",
-    image: "/images/products/1.jpg",
-    url: "/",
-  },
-  {
-    id: 4,
-    title: "Product 4",
-    price: "$20",
-    image: "/images/products/1.jpg",
-    url: "/",
-  },
-  {
-    id: 5,
-    title: "Product 5",
-    price: "$25",
-    image: "/images/products/1.jpg",
-    url: "/",
-  },
-  {
-    id: 6,
-    title: "Product 6",
-    price: "$20",
-    image: "/images/products/1.jpg",
-    url: "/",
-  },
-];
-
 const ProductPage = ({
   data,
   country,
@@ -107,6 +64,16 @@ const ProductPage = ({
 }: IProductPageProps) => {
   const { basePath } = useRouter();
   const { t } = useTranslation("product");
+
+  const { getRecommendations } = useRecommender();
+
+  const [recommendedProducts, setRecommendedProducts] = useState<
+    IProductSliderData[]
+  >(
+    getRecommendations("view_product", {
+      product_id: data.id,
+    })
+  );
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
