@@ -279,17 +279,17 @@ class CategoryDetailAttributesStorefrontView(APIView):
 
         for p in products:
             for attr in p.type.allowed_attribute_types.all().prefetch_related(
-                "base_attributes"
+                    "base_attributes"
             ):
                 if (
-                    attr.value_type == AttributeTypeValueType.TEXT
-                    and attr.id not in string_attributes
+                        attr.value_type == AttributeTypeValueType.TEXT
+                        and attr.id not in string_attributes
                 ):
                     string_attributes[attr.id] = attr
                 elif (
-                    attr.value_type
-                    in [AttributeTypeValueType.DECIMAL, AttributeTypeValueType.INTEGER]
-                    and attr.id not in numeric_attributes
+                        attr.value_type
+                        in [AttributeTypeValueType.DECIMAL, AttributeTypeValueType.INTEGER]
+                        and attr.id not in numeric_attributes
                 ):
                     numeric_attributes[attr.id] = attr
 
@@ -314,29 +314,33 @@ class CategoryDetailFilterStorefrontView(APIView):
 
         if request_serializer.is_valid():
             filters = request_serializer.create(request_serializer.validated_data)
-            print(filters)
 
-        try:
-            category = Category.objects.get(id=pk, published=True)
+            try:
+                category = Category.objects.get(id=pk, published=True)
 
-            # Get related objects
-            products = _get_all_published_products(category)
-            pricelist = self._get_pricelist(request)
-            country = self._get_country(request)
+                # Get related objects
+                products = _get_all_published_products(category).prefetch_related("product_variants")
+                pricelist = self._get_pricelist(request)
+                country = self._get_country(request)
 
-            serializer = ProductStorefrontListSerializer(
-                products,
-                many=True,
-                context={
-                    "request": request,
-                    "pricelist": pricelist,
-                    "country": country,
-                },
-            )
+                filtered_products = [p for p in products if
+                                     filters.matches_any_variant(p)]  # filter the matching products
 
-            return Response(serializer.data)
-        except Category.DoesNotExist:
-            return Response(status=HTTP_404_NOT_FOUND)
+                serializer = ProductStorefrontListSerializer(
+                    filtered_products,
+                    many=True,
+                    context={
+                        "request": request,
+                        "pricelist": pricelist,
+                        "country": country,
+                    },
+                )
+
+                return Response(serializer.data)
+            except Category.DoesNotExist:
+                return Response(status=HTTP_404_NOT_FOUND)
+        else:
+            return Response(status=HTTP_400_BAD_REQUEST)
 
     def _get_pricelist(self, request):
         """get price list from request params or default to the default one"""

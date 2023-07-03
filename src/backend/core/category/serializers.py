@@ -11,6 +11,7 @@ from rest_framework.serializers import (
 )
 from rest_framework_recursive.fields import RecursiveField
 
+from category.filters import SelectedFilters, NumericFilter, TextualFilter
 from category.models import (
     Category,
 )
@@ -119,32 +120,6 @@ class CategoryDetailDashboardSerializer(TranslatableModelSerializer, ModelSerial
         fields = ("id", "published", "translations", "update_at", "create_at", "parent")
 
 
-# class CategoryWithChildrenSerializer(TranslatedSerializerMixin, ModelSerializer):
-#     """
-#     Extension of CategoryDetailSerializer with children field.
-#     """
-#
-#     children = SerializerMethodField()
-#
-#     class Meta:
-#         model = Category
-#         fields = (
-#             "id",
-#             "title",
-#             "description",
-#             "meta_title",
-#             "meta_description",
-#             "slug",
-#             "parent",
-#             "children",
-#         )
-#
-#     def get_children(self, obj):
-#         return [
-#             CategoryDetailSerializer(child).data for child in obj.published_children
-#         ]
-
-
 class CategoryMinimalSerializer(TranslatedSerializerMixin, ModelSerializer):
     """
     Minimal serializer for Category model.
@@ -180,18 +155,3 @@ class SelectedFiltersSerializer(Serializer):
             numeric.append(NumericFilter(**filter))
 
         return SelectedFilters(textual, numeric)
-
-
-class NumericFilter:
-    def __init__(self, id, min_value_id, max_value_id):
-        self.id, self.min_value_id, self.max_value_id = id, min_value_id, max_value_id
-
-
-class TextualFilter:
-    def __init__(self, id, selected_values_ids):
-        self.id, self.selected_values_ids = id, selected_values_ids
-
-
-class SelectedFilters:
-    def __init__(self, textual, numeric):
-        self.textual, self.numeric = textual, numeric
