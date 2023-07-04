@@ -8,11 +8,16 @@ from rest_framework.serializers import (
     Serializer,
     IntegerField,
     ListField,
-    CharField
+    CharField,
 )
 from rest_framework_recursive.fields import RecursiveField
 
-from category.filters import SelectedFilters, NumericFilter, TextualFilter, SelectedFiltersWithOrdering
+from category.filters import (
+    SelectedFilters,
+    NumericFilter,
+    TextualFilter,
+    SelectedFiltersWithOrdering,
+)
 from category.models import (
     Category,
 )

@@ -17,7 +17,8 @@ from category.serializers import (
     CategoryDetailDashboardSerializer,
     CategoryRecursiveDashboardSerializer,
     CategoryRecursiveStorefrontSerializer,
-    CategoryDetailStorefrontSerializer, SelectedFiltersWithOrderingSerializer,
+    CategoryDetailStorefrontSerializer,
+    SelectedFiltersWithOrderingSerializer,
 )
 from country.models import Country
 from product.models import Product, PriceList, AttributeTypeValueType
@@ -177,13 +178,22 @@ class CategoryDetailProductsStorefrontView(APIView):
         request_serializer = SelectedFiltersWithOrderingSerializer(data=request.data)
 
         if request_serializer.is_valid():
-            filters_with_ordering = request_serializer.create(request_serializer.validated_data)
+            filters_with_ordering = request_serializer.create(
+                request_serializer.validated_data
+            )
 
             try:
                 category = Category.objects.get(id=pk, published=True)
 
-                sort_by, order = filters_with_ordering.sort_by, filters_with_ordering.order
-                order = order if order in self.ALLOWED_ORDER_FIELDS else self.DEFAULT_ORDER_FIELD
+                sort_by, order = (
+                    filters_with_ordering.sort_by,
+                    filters_with_ordering.order,
+                )
+                order = (
+                    order
+                    if order in self.ALLOWED_ORDER_FIELDS
+                    else self.DEFAULT_ORDER_FIELD
+                )
 
                 is_reverse_order = order == "desc"
                 sort_key_function = (
@@ -199,13 +209,16 @@ class CategoryDetailProductsStorefrontView(APIView):
                 # Get related objects
                 products = _get_all_published_products(category)
 
-                filtered_products = [p for p in products if
-                                     filters_with_ordering.matches_any_variant(p)]  # filter the matching products
+                filtered_products = [
+                    p for p in products if filters_with_ordering.matches_any_variant(p)
+                ]  # filter the matching products
 
                 serializer = self._serialize_products(filtered_products, request)
 
                 sorted_data = (
-                    sorted(serializer.data, key=sort_key_function, reverse=is_reverse_order)
+                    sorted(
+                        serializer.data, key=sort_key_function, reverse=is_reverse_order
+                    )
                     if sort_by is not None
                     else serializer.data
                 )
@@ -293,17 +306,17 @@ class CategoryDetailAttributesStorefrontView(APIView):
 
         for p in products:
             for attr in p.type.allowed_attribute_types.all().prefetch_related(
-                    "base_attributes"
+                "base_attributes"
             ):
                 if (
-                        attr.value_type == AttributeTypeValueType.TEXT
-                        and attr.id not in string_attributes
+                    attr.value_type == AttributeTypeValueType.TEXT
+                    and attr.id not in string_attributes
                 ):
                     string_attributes[attr.id] = attr
                 elif (
-                        attr.value_type
-                        in [AttributeTypeValueType.DECIMAL, AttributeTypeValueType.INTEGER]
-                        and attr.id not in numeric_attributes
+                    attr.value_type
+                    in [AttributeTypeValueType.DECIMAL, AttributeTypeValueType.INTEGER]
+                    and attr.id not in numeric_attributes
                 ):
                     numeric_attributes[attr.id] = attr
 
@@ -332,4 +345,6 @@ def _get_all_published_products(category):
     Prefetch also Product variants.
     """
     subcategory_ids = _get_all_subcategory_ids(category)
-    return Product.objects.filter(published=True, category__in=subcategory_ids).prefetch_related("product_variants")
+    return Product.objects.filter(
+        published=True, category__in=subcategory_ids
+    ).prefetch_related("product_variants")
