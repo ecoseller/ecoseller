@@ -12,8 +12,10 @@ export const recommenderProductsAPI = async (
     setRequestResponse(req, res);
   }
 
-  const url = `recommender/storefront/${situation}/products/`;
-
+  const url = `recommender/storefront/${situation}/products/?payload=${JSON.stringify(
+    payload
+  )}`;
+  console.log("payload", payload);
   console.log(url);
 
   return await api.get(url).then((response) => response.data);
@@ -24,12 +26,14 @@ export const recommenderProductsAPI = async (
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
-  const { event } = req.query;
+  const { event, payload } = req.query;
+
+  console.log("payload", payload);
 
   if (method == "GET") {
     return recommenderProductsAPI(
       event as RS_RECOMMENDATIONS_SITUATIONS,
-      body,
+      payload as { [key: string]: any },
       req,
       res
     )

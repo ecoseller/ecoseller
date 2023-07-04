@@ -58,7 +58,7 @@ interface IRecommenderContextProps {
   getRecommendations: (
     event: RS_RECOMMENDATIONS_SITUATIONS,
     payload: any
-  ) => any[]; // this should be list of products
+  ) => Promise<any[]>; // this should be list of products
 }
 
 interface IUserProviderProps {
@@ -86,18 +86,28 @@ export const RecommenderProvider = ({
     }
   }, []);
 
-  const sendEvent = (event: RS_EVENT, payload: any) => {
+  const sendEvent = async (event: RS_EVENT, payload: any) => {
     /**
      * Purpose of this function is to call Core API to send event to Recommender System
      * @param event - event type
      * @param payload - event payload (product_id, category_id, cart_id, etc.)
      */
+    // send POST event to Core API
+    const data = await fetch(`api/recommender/${event}`, {
+      method: "POST",
+      body: JSON.stringify({
+        session_id: session,
+        ...payload,
+      }),
+    }).then((res) => res.json());
+    console.log("data", data);
+    return data;
   };
 
-  const getRecommendations = (
+  const getRecommendations = async (
     situation: RS_RECOMMENDATIONS_SITUATIONS,
     payload: any
-  ): any[] => {
+  ): Promise<any[]> => {
     /**
      * Purpose of this function is to call Core API to get recommendations from Recommender System
      * @param situation - situation type (product, cart)
@@ -106,6 +116,14 @@ export const RecommenderProvider = ({
      */
 
     // TODO: call Core API to get recommendations
+    const data = await fetch(
+      `api/recommender/${situation}?payload=${JSON.stringify({
+        ...payload,
+        session_id: session,
+      })}`
+    ).then((res) => res.json());
+    console.log("data", data);
+
     return recommendedProducts; // <-- this is just a mock
   };
 
