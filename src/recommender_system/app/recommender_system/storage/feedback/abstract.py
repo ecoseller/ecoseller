@@ -1,5 +1,6 @@
-from abc import ABC
-from typing import List, Optional
+from abc import ABC, abstractmethod
+from datetime import datetime
+from typing import Any, Dict, List, Optional, Tuple
 
 from sqlalchemy.orm.query import Query
 
@@ -12,6 +13,7 @@ class AbstractFeedbackStorage(AbstractStorage, ABC):
 
     """
 
+    @abstractmethod
     def get_session_sequences(
         self, session_ids: Optional[List[str]] = None
     ) -> List[List[str]]:
@@ -31,8 +33,11 @@ class AbstractFeedbackStorage(AbstractStorage, ABC):
         """
         raise NotImplementedError()
 
+    @abstractmethod
     def get_session_sequences_query(
-        self, session_ids: Optional[List[str]] = None
+        self,
+        session_ids: Optional[List[str]] = None,
+        date_from: Optional[datetime] = None,
     ) -> Query:
         """
         Find sequence of visited product variant skus for every session and return SQL Query.
@@ -41,6 +46,8 @@ class AbstractFeedbackStorage(AbstractStorage, ABC):
         ----------
         session_ids: Optional[List[str]]
             What session_id values to consider if not None, else all are considered.
+        date_from: Optional[datetime]
+            Consider only sessions created no sooner than this parameter.
 
         Returns
         -------
@@ -48,4 +55,22 @@ class AbstractFeedbackStorage(AbstractStorage, ABC):
             Query of sequences of visited product variant skus for every session.
 
         """
+        raise NotImplementedError()
+
+    @abstractmethod
+    def count_future_hit(
+        self, date_from: datetime, date_to: datetime
+    ) -> Dict[str, Any]:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def count_direct_hit(
+        self, date_from: datetime, date_to: datetime, k: int
+    ) -> Dict[str, Any]:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def count_coverage(
+        self, date_from: datetime, date_to: datetime, per_model: bool, per_type: bool
+    ) -> List[Tuple[Any, ...]]:
         raise NotImplementedError()

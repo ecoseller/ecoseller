@@ -86,7 +86,7 @@ def prepare_gru4rec_data():
             update_at=datetime.now(),
             create_at=datetime.now(),
         )
-        for i in range(1, 4)
+        for i in range(1, 5)
     ]
     product_detail_enters = [
         ProductDetailEnterModel(
@@ -95,7 +95,7 @@ def prepare_gru4rec_data():
             product_variant_sku=str(i),
             create_at=datetime.now(),
         )
-        for i in range(3)
+        for i in range(5)
     ]
 
     for variant in variants:

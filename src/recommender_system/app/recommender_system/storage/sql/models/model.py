@@ -27,6 +27,9 @@ class SQLConfig(ModelBase):
     create_at = Column(TIMESTAMP(), nullable=False)
     retrieval_size = Column(Integer(), nullable=False)
 
+    ease_config = Column(JSON(), nullable=False)
+    gru4rec_config = Column(JSON(), nullable=False)
+
     __tablename__ = "config"
 
     __table_args__ = (Index("config_create_at_idx", create_at),)
@@ -78,10 +81,35 @@ class SQLTrainingStatistics(ModelBase):
     duration = Column(DECIMAL(), nullable=False)
     peak_memory = Column(DECIMAL(), nullable=False)
     peak_memory_percentage = Column(DECIMAL(), nullable=False)
+    full_train = Column(Boolean(), nullable=False, default=True)
     metrics = Column(JSON(), nullable=False)
     hyperparameters = Column(JSON(), nullable=False)
+    create_at = Column(TIMESTAMP(), nullable=False)
 
     __tablename__ = "training_statistics"
 
     class Meta:
         origin_model = TrainingStatisticsModel
+
+
+# class SQLPredictionResult(ModelBase):
+#     """
+#     This model represents training statistics table in SQL database.
+#     """
+#
+#     id = Column(Integer(), primary_key=True)
+#     retrieval_model_name = Column(String(255), nullable=False)
+#     retrieval_model_identifier = Column(String(255), nullable=False)
+#     scoring_model_name = Column(String(255), nullable=False)
+#     scoring_model_identifier = Column(String(255), nullable=False)
+#     session_id = Column(String(255), nullable=False)
+#     retrieval_duration = Column(DECIMAL(), nullable=False)
+#     scoring_duration = Column(DECIMAL(), nullable=False)
+#     ordering_duration = Column(DECIMAL(), nullable=False)
+#     predicted_items = Column(postgresql.ARRAY(String(255)), nullable=False)
+#     create_at = Column(TIMESTAMP(), nullable=False)
+#
+#     __tablename__ = "prediction_result"
+#
+#     class Meta:
+#         origin_model = PredictionResultModel

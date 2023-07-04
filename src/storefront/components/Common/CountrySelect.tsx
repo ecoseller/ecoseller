@@ -90,6 +90,7 @@ const CountrySelectModal = ({
                       locale: c.locale,
                       shallow: false,
                     });
+                    router.reload();
                   }}
                 />
               </ListItemButton>

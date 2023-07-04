@@ -1,6 +1,7 @@
 from rest_framework.status import (
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST,
+    HTTP_404_NOT_FOUND,
 )
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -23,6 +24,7 @@ from .serializers import (
     PageFrontendDashboardSerializer,
     PageCategoryDashboardSerializer,
     PageCateogryTypeDashboardSerializer,
+    PageCMSStorefrontSerializer,
     PageCategoryStorefrontPreviewSerializer,
 )
 
@@ -210,6 +212,27 @@ class PageTypePagesDashboardView(APIView):
         Gets all pages in a type.
         """
         raise NotImplementedError
+
+
+class PageCMSStorefrontDetailView(APIView):
+    """
+    Obtain page for storefront based on slug and locale
+    """
+
+    serializer_class = PageCMSStorefrontSerializer
+    permission_classes = (AllowAny,)
+
+    def get(self, request, locale, slug, *args, **kwargs):
+        try:
+            page = PageCMS.objects.get(
+                translations__slug=slug, translations__language_code__iexact=locale
+            )
+        except PageCMS.DoesNotExist:
+            return Response({"message": "page not found"}, status=HTTP_404_NOT_FOUND)
+        serializer = self.serializer_class(
+            page, many=False, context={"request": request}
+        )
+        return Response(serializer.data)
 
 
 class PageTypePagesStorefrontView(ListAPIView):

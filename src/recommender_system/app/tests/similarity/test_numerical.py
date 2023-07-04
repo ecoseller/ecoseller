@@ -167,7 +167,7 @@ def test_pipeline_ordering(
     skus = ["3", "1", "2", "4"]
     result = pipeline._order(
         variants=skus,
-        recommendation_type=RecommendationType.PRODUCT_DETAIL,
+        recommendation_type=RecommendationType.CATEGORY_LIST,
         session_id="session",
         user_id=1,
     )
