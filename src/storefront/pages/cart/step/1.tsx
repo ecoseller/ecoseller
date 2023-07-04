@@ -43,6 +43,8 @@ import CartButtonRow from "@/components/Cart/ButtonRow";
 import { userBillingInfoAPI } from "@/pages/api/user/billing-info";
 import { useUser } from "@/utils/context/user";
 import { Check, CheckBox } from "@mui/icons-material";
+import { useCountry } from "@/utils/context/country";
+import { DEFAULT_COUNTRY } from "@/utils/defaults";
 
 interface ICartStep1PageProps {
   shippingInfo: any;
@@ -65,6 +67,9 @@ const CartStep1Page = ({
 
   const router = useRouter();
   const { user } = useUser();
+  const { country } = useCountry();
+  const countryCode = country?.code || DEFAULT_COUNTRY;
+
   const [shippingInfoChecked, setShippingInfoChecked] =
     useState<boolean>(false);
   const [validShippingInfo, setValidShippingInfo] = useState<boolean>(false);
@@ -75,7 +80,7 @@ const CartStep1Page = ({
     // TODO: setting the country to cz is a temporary solution
     setShippingInfoState(
       shippingInfoInitialData(
-        { ...shippingInfo, country: "cz" },
+        { ...shippingInfo, country: countryCode },
         setShippingInfoState
       )
     );
@@ -105,7 +110,7 @@ const CartStep1Page = ({
       // TODO: setting the country to cz is a temporary solution
       setBillingInfoState(
         billingInfoInitialData(
-          { country: "cz" } as IBillingInfo,
+          { country: countryCode } as IBillingInfo,
           setBillingInfoState
         )
       );
@@ -114,7 +119,7 @@ const CartStep1Page = ({
       // TODO: setting the country to cz is a temporary solution
       setBillingInfoState(
         billingInfoInitialData(
-          { ...billingInfo, country: "cz" },
+          { ...billingInfo, country: countryCode },
           setBillingInfoState
         )
       );
@@ -134,7 +139,7 @@ const CartStep1Page = ({
             setBillingRadioSelect("PROFILE");
             setBillingInfoState(
               billingInfoInitialData(
-                { ...data, country: "cz" },
+                { ...data, country: countryCode },
                 setBillingInfoState
               )
             );
@@ -153,7 +158,7 @@ const CartStep1Page = ({
           if (data != null || data != undefined) {
             setShippingInfoState(
               shippingInfoInitialData(
-                { ...data, country: "cz" },
+                { ...data, country: countryCode },
                 setShippingInfoState
               )
             );
@@ -171,7 +176,7 @@ const CartStep1Page = ({
           street: "",
           city: "",
           postal_code: "",
-          country: "cz",
+          country: countryCode,
           company_name: "",
           company_id: "",
           vat_number: "",
@@ -190,7 +195,7 @@ const CartStep1Page = ({
           street: "",
           city: "",
           postal_code: "",
-          country: "cz",
+          country: countryCode,
         } as IShippingInfo,
         setShippingInfoState
       )
