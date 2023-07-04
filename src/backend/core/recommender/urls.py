@@ -3,8 +3,9 @@ from . import views
 
 
 urlpatterns = [
-    "storefront/<str:event>/",
-    views.RecommenderSystemEventView.as_view(),
-    "storefront/<str:event>/products/",
-    views.RecommenderSystemEventView.as_view(),
+    path("storefront/<str:event>/", views.RecommenderSystemEventView.as_view()),
+    path(
+        "storefront/<str:situation>/products/",
+        views.RecommenderSystemRecommendProductsView.as_view(),
+    ),
 ]

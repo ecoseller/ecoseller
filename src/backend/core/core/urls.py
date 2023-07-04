@@ -23,4 +23,5 @@ urlpatterns = [
     path("editorjs/", include("cms.editorjs.urls")),
     path("django-rq/", include("django_rq.urls")),
     path("search/", include("search.urls")),
+    path("recommender/", include("recommender.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
