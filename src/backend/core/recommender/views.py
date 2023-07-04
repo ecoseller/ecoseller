@@ -1,17 +1,24 @@
-from enum import Enum
+from enum import Enum, EnumMeta
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import permissions
 
 
-class RSEvent(Enum):
+class EnumMeta(EnumMeta):
+    def __contains__(cls, item):
+        return isinstance(item, cls) or item in [
+            v.value for v in cls.__members__.values()
+        ]
+
+
+class RSEvent(Enum, EnumMeta):
     VIEW = "view"
     ADD_TO_CART = "add_to_cart"
     PURCHASE = "purchase"
 
 
-class RSSituation(Enum):
+class RSSituation(Enum, EnumMeta):
     PRODUCT = "product"
     CART = "cart"
 
