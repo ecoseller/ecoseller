@@ -69,8 +69,16 @@ const RecommenderContext = createContext<Partial<IRecommenderContextProps>>({});
 
 const RS_SESSION_COOKIE = "rsSession";
 
-export type RS_EVENT = "view_product" | "add_to_cart" | "purchase";
-export type RS_RECOMMENDATIONS_SITUATIONS = "product" | "cart";
+export type RS_EVENT =
+  | "product_view"
+  | "product_add_to_cart"
+  | "purchase"
+  | "review";
+export type RS_RECOMMENDATIONS_SITUATIONS =
+  | "product"
+  | "cart"
+  | "homepage"
+  | "category";
 
 export const RecommenderProvider = ({
   children,
