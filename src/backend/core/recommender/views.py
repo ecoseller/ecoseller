@@ -13,14 +13,17 @@ class EnumMeta(EnumMeta):
 
 
 class RSEvent(Enum, EnumMeta):
-    VIEW = "view"
-    ADD_TO_CART = "add_to_cart"
+    PRODUCT_VIEW = "product_view"
+    PRODUCT_ADD_TO_CART = "product_add_to_cart"
     PURCHASE = "purchase"
+    REVIEW = "review"
 
 
 class RSSituation(Enum, EnumMeta):
     PRODUCT = "product"
     CART = "cart"
+    HOMEPAGE = "homepage"
+    CATEGORY = "category"
 
 
 class RecommenderSystemEventView(APIView):
