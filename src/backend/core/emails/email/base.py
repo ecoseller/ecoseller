@@ -65,3 +65,29 @@ class Email:
             )
         else:
             send_mail(*args, **kwargs)
+
+    def send_at(self, delay=0):
+        """This method returns html string with template and context"""
+        self.generate_subject()
+        self.generate_context()
+
+        queue = django_rq.get_queue(
+            "high", autocommit=True, is_async=True, default_timeout=360
+        )
+
+        args = (
+            self.subject,
+            "",
+            settings.EMAIL_FROM,
+            self.recipient_list,
+        )
+
+        kwargs = {"html_message": self.generate_msg_html()}
+
+        queue.enqueue_in(
+            delay,
+            send_mail,
+            args=args,
+            kwargs=kwargs,
+            meta=self.meta,
+        )

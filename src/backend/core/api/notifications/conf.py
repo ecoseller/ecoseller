@@ -17,6 +17,7 @@ class EventTypes(Enum):
     ORDER_SAVE = "ORDER_SAVE"
     ORDER_UPDATE = "ORDER_UPDATE"
     ORDER_DELETE = "ORDER_DELETE"
+    REVIEW_SEND = "REVIEW_SEND"
 
 
 class NotificationTypes(Enum):

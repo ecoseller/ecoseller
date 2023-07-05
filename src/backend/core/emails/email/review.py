@@ -1,5 +1,6 @@
 from django.utils.translation import gettext as _
 from django.utils import translation
+from django.conf import settings
 
 from .base import Email
 
@@ -25,10 +26,11 @@ class EmailOrderReview(Email):
 
     def generate_context(self):
         translation.activate(self.language)
+        storefront_url = settings.STOREFRONT_URL
         self.context = {
             "main_title": _("Please review your order"),
             "subtitle": _("Hello,"),
             "body": _("We would like to ask you to review your order. "),
             "button_title": _("Review your order"),
-            "button_link": f"https://www.example.com/order/{self.order.id}/review",
+            "button_link": f"{storefront_url}/review/{self.order.token}",
         }

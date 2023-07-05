@@ -1,3 +1,4 @@
+import datetime
 from django.http import HttpResponse
 from .email.order import (
     EmailOrderConfirmation,
@@ -44,5 +45,5 @@ class OrderReview(APIView):
         if request.GET.get("render", False):
             return HttpResponse(email.render_to_string())
 
-        email.send()
+        email.send_at(datetime.timedelta(days=7))
         return Response({"status": "OK"}, status=status.HTTP_200_OK)

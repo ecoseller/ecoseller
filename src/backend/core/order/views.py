@@ -19,6 +19,7 @@ from cart.serializers import CartItemDetailSerializer
 from product.models import Product
 from roles.decorator import check_user_is_staff_decorator, check_user_access_decorator
 from .models import Order
+
 from .serializers import (
     OrderDetailSerializer,
     OrderListSerializer,
@@ -42,10 +43,23 @@ class OrderDetailDashboardView(RetrieveAPIView):
     @check_user_access_decorator({"order_change_permission"})
     def put(self, request, token):
         try:
+            print("CHANGING ORDER STATUS")
+            print(request.data)
             order = Order.objects.get(token=token)
             serializer = OrderStatusSerializer(order, data=request.data)
             if serializer.is_valid():
                 serializer.save()
+                # check if status was changed to shipped
+                if serializer.data["status"] == "SHIPPED":
+                    print("SENDING NOTIFICATION")
+                    # send notification to customer
+                    NotificationsApi.notify(
+                        EventTypes.REVIEW_SEND,
+                        data={
+                            "order_token": str(order.token),
+                            "order": OrderDetailSerializer(order).data,
+                        },
+                    )
                 return Response(status=204)
             else:
                 return Response(serializer.errors, status=400)
@@ -396,6 +410,7 @@ class OrderCreateStorefrontView(APIView):
         try:
             cart.is_valid()
         except Exception as e:
+            print(e)
             return Response({"error": str(e)}, status=400)
 
         order = Order.objects.create(
