@@ -130,9 +130,9 @@ const DashboardOverviewPage = ({
                       ordersTodayStats.top_selling_products == null
                         ? ""
                         : imgPath(
-                          ordersTodayStats.top_selling_products[0]?.media,
-                          true
-                        )
+                            ordersTodayStats.top_selling_products[0]?.media,
+                            true
+                          )
                     }
                     alt={""}
                   />
@@ -201,7 +201,8 @@ const DashboardOverviewPage = ({
               </Typography>
               {ordersMonthStats.top_selling_products &&
                 ordersMonthStats.top_selling_products.map((product: any) => (
-                  <Stack key={product.id}
+                  <Stack
+                    key={product.id}
                     direction="row"
                     justifyContent="center"
                     alignItems="center"
