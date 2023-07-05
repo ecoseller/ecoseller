@@ -1,4 +1,8 @@
+// utils
+import { useTranslation } from "next-i18next";
+
 const OrderCompleted = ({ id }: { id: string }) => {
+  const { t } = useTranslation("order");
   return (
     <div
       style={{
@@ -9,8 +13,14 @@ const OrderCompleted = ({ id }: { id: string }) => {
         marginTop: "10vh",
       }}
     >
-      <h1>Thank you!</h1>
-      <h3>We sent you an e-mail with order confirmation.</h3>
+      <h1>{t("thank-you-title")}</h1>
+      <h3>
+        {
+          t(
+            "thank-you-descripiton"
+          ) /* We sent you an e-mail with order confirmation. */
+        }
+      </h3>
     </div>
   );
 };

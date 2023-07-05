@@ -1,11 +1,12 @@
 // next
 import { useRouter } from "next/router";
-import Link from "next/link";
+import getConfig from "next/config";
 
 // react
 
 // libs
 import { productAPI } from "@/pages/api/product/[id]";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 // components
 import MediaGallery from "@/components/ProductDetail/MediaGallery";
@@ -36,6 +37,8 @@ import EditorCard from "@/components/Generic/EditorCard";
 import ReviewForm from "@/components/Review/ReviewForm";
 import { IItem } from "@/types/review";
 import { useSnackbarState } from "@/utils/snackbar";
+
+const { serverRuntimeConfig } = getConfig();
 
 interface IReviewPageProps {
   items: IItem[];
@@ -119,7 +122,7 @@ const ReviewPage = ({ items, order_id }: IReviewPageProps) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { token } = context.query;
-  const { res, req } = context;
+  const { res, req, locale } = context;
 
   const data = await orderItemsAPI(
     "GET",
@@ -144,6 +147,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     props: {
       items: items,
       order_id: token,
+      ...(await serverSideTranslations(locale as string, [
+        "review",
+        ...serverRuntimeConfig.commoni18NameSpaces,
+      ])),
     },
   };
 };

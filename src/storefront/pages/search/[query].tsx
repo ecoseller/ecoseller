@@ -3,6 +3,13 @@ import {
   NextApiRequest,
   NextApiResponse,
 } from "next/types";
+import getConfig from "next/config";
+
+// utils
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "next-i18next";
+import { ICategoryDetail } from "@/types/category";
+import EditorJsOutput from "@/utils/editorjs/EditorJsOutput";
 import Typography from "@mui/material/Typography";
 import HeadMeta from "@/components/Common/SEO";
 import { useRouter } from "next/router";
@@ -14,6 +21,8 @@ import { getCookie } from "cookies-next";
 import { DEFAULT_COUNTRY } from "@/utils/defaults";
 import { searchProductsAPI } from "../api/search/[query]";
 
+const { serverRuntimeConfig } = getConfig();
+
 interface ISearchPageProps {
   search: {
     query: string;
@@ -23,13 +32,13 @@ interface ISearchPageProps {
 
 const SearchPage = ({ search, products }: ISearchPageProps) => {
   const router = useRouter();
-
+  const { t } = useTranslation("search");
   console.log("products", products);
 
   return (
     <>
       <HeadMeta
-        title={`Search: ${search.query}`}
+        title={`${t("search-title")}: ${search.query}`}
         description={""}
         url={router.basePath}
       />
@@ -41,7 +50,7 @@ const SearchPage = ({ search, products }: ISearchPageProps) => {
           <ProductGrid products={products} />
         ) : (
           <Typography variant="body1" mt={3} gutterBottom>
-            No products found
+            {t("no-results")}
           </Typography>
         )}
       </div>
@@ -85,6 +94,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         query: query,
       },
       products,
+      ...(await serverSideTranslations(locale as string, [
+        "user",
+        ...serverRuntimeConfig.commoni18NameSpaces,
+      ])),
     },
   };
 };

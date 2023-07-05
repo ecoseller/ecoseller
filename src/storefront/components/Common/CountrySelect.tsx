@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 // react
 import { useState } from "react";
 // utils
+import { useTranslation } from "next-i18next";
 import { useCountry } from "@/utils/context/country";
 import getUnicodeFlagIcon from "country-flag-icons/unicode";
 // mui
@@ -63,6 +64,7 @@ const CountrySelectModal = ({
   const { countryList, country, setCountryCookieAndLocale } = useCountry();
   const router = useRouter();
   const { asPath } = router;
+  const { t } = useTranslation("common");
   return (
     <Modal
       open={open}
@@ -72,7 +74,7 @@ const CountrySelectModal = ({
     >
       <Box sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Select your country
+          {t("select-country") /* Select your country */}
         </Typography>
         <List>
           {countryList?.map((c) => (

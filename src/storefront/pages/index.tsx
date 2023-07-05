@@ -5,6 +5,12 @@
 
 // react
 import React from "react";
+// next
+import getConfig from "next/config";
+import { GetServerSideProps } from "next";
+// libraries
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 // components
 import Slider from "@/components/Slider/Slider";
 // mui
@@ -16,6 +22,8 @@ import Grid from "@mui/material/Grid";
 import CompanyBenefit from "@/components/Homepage/CompanyBenefit";
 import { IProductSliderData } from "@/types/product";
 import ProductsSlider from "@/components/Common/ProductsSlider";
+
+const { serverRuntimeConfig } = getConfig();
 
 const bestSellersData: IProductSliderData[] = [
   {
@@ -63,16 +71,21 @@ const bestSellersData: IProductSliderData[] = [
 ];
 
 const HomePage = () => {
+  const { t } = useTranslation("home");
   return (
     <div className={`container`}>
       <div className={styles.homePage}>
         <Slider />
         <Box sx={{ pt: 5 }}>
           <Typography variant="h4" gutterBottom>
-            Welcome to our ecommerce store!
+            {t("welcome-message-title") /* Welcome to our ecommerce store! */}
           </Typography>
           <Typography variant="body1" gutterBottom>
-            We offer a wide selection of products for all your needs.
+            {
+              t(
+                "welcome-message-description"
+              ) /* We offer a wide selection of products for all your needs. */
+            }
           </Typography>
         </Box>
         <Box sx={{ pt: 5 }}>
@@ -82,34 +95,59 @@ const HomePage = () => {
             columnSpacing={{ sm: 3, md: 3, lg: 12 }}
           >
             <Grid item md={3}>
-              <CompanyBenefit title="Over 20 years" subtitle="of experience" />
-            </Grid>
-            <Grid item md={3}>
-              <CompanyBenefit title="100 000 products" subtitle="in stock" />
-            </Grid>
-            <Grid item md={3}>
               <CompanyBenefit
-                title="Free shipping"
-                subtitle="for orders over $100"
+                title={t("benefit-1-title")}
+                subtitle={t("benefit-1-description")}
               />
             </Grid>
             <Grid item md={3}>
-              <CompanyBenefit title="24/7" subtitle="customer service" />
+              <CompanyBenefit
+                title={t("benefit-2-title")}
+                subtitle={t("benefit-2-description")}
+              />
+            </Grid>
+            <Grid item md={3}>
+              <CompanyBenefit
+                title={t("benefit-3-title")}
+                subtitle={t("benefit-3-description")}
+              />
+            </Grid>
+            <Grid item md={3}>
+              <CompanyBenefit
+                title={t("benefit-4-title")}
+                subtitle={t("benefit-4-description")}
+              />
             </Grid>
           </Grid>
         </Box>
         <Box sx={{ pt: 5 }}>
           <Typography variant="h4" gutterBottom>
-            Best sellers
+            {t("bestsellers-title") /* Best sellers */}
           </Typography>
           <Typography variant="body1" gutterBottom>
-            Check out our best selling products
+            {
+              t(
+                "bestsellers-description"
+              ) /* Check out our best selling products */
+            }
           </Typography>
           <ProductsSlider data={bestSellersData} />
         </Box>
       </div>
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale as string, [
+        "home",
+        "cookie",
+        ...serverRuntimeConfig.commoni18NameSpaces,
+      ])),
+    },
+  };
 };
 
 export default HomePage;

@@ -1,6 +1,10 @@
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
 import { useRouter } from "next/router";
+import getConfig from "next/config";
 import React from "react";
+// utils
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "next-i18next";
 import { cartBillingInfoAPI } from "@/pages/api/cart/[token]/billing-info";
 import { cartShippingInfoAPI } from "@/pages/api/cart/[token]/shipping-info";
 import CartStepper from "@/components/Cart/Stepper";
@@ -28,6 +32,8 @@ import { useCart } from "@/utils/context/cart";
 import CollapsableContentWithTitle from "@/components/Generic/CollapsableContentWithTitle";
 import CartCompleteOrder from "@/components/Cart/CartCompleteOrder";
 
+const { serverRuntimeConfig } = getConfig();
+
 interface ICartSummaryPageProps {
   billingInfo: IBillingInfo;
   shippingInfo: IShippingInfo;
@@ -49,84 +55,85 @@ const CartSummaryPage = ({
   const router = useRouter();
   const theme = useTheme();
   const { cart } = useCart();
+  const { t } = useTranslation();
 
   const getCountryName = (countryId: string) =>
     countries.find((c) => c.code == countryId)?.name || "";
 
   const shippingInfoRows: ICartInfoTableRow[] = [
     {
-      label: "First name",
+      label: t("common:first-name-label"),
       value: shippingInfo.first_name,
     },
     {
-      label: "Surname",
+      label: t("common:surname-label"),
       value: shippingInfo.surname,
     },
     {
-      label: "Email",
+      label: t("common:email-label"),
       value: shippingInfo.email,
     },
     {
-      label: "Phone",
+      label: t("common:phone-label"),
       value: shippingInfo.phone,
     },
     {
-      label: "Street",
+      label: t("common:street-label"),
       value: shippingInfo.street,
     },
     {
-      label: "Additional info",
+      label: t("common:additional-info-label"),
       value: shippingInfo.additional_info,
     },
     {
-      label: "City",
+      label: t("common:city-label"),
       value: shippingInfo.city,
     },
     {
-      label: "Postal code",
+      label: t("common:postal-code-label"),
       value: shippingInfo.postal_code,
     },
     {
-      label: "Country",
+      label: t("common:country-label"),
       value: getCountryName(shippingInfo.country),
     },
   ];
 
   const billingInfoRows: ICartInfoTableRow[] = [
     {
-      label: "First name",
+      label: t("common:first-name-label"),
       value: billingInfo.first_name,
     },
     {
-      label: "Surname",
+      label: t("common:surname-label"),
       value: billingInfo.surname,
     },
     {
-      label: "Company name",
+      label: t("common:company-name-label"),
       value: billingInfo.company_name,
     },
     {
-      label: "Company ID",
+      label: t("common:company-id-label"),
       value: billingInfo.company_id,
     },
     {
-      label: "VAT ID",
+      label: t("common:vat-number-label"),
       value: billingInfo.vat_number,
     },
     {
-      label: "Street",
+      label: t("common:street-label"),
       value: billingInfo.street,
     },
     {
-      label: "City",
+      label: t("common:additional-info-label"),
       value: billingInfo.city,
     },
     {
-      label: "Postal code",
+      label: t("common:postal-code-label"),
       value: billingInfo.postal_code,
     },
     {
-      label: "Country",
+      label: t("common:country-label"),
       value: getCountryName(billingInfo.country),
     },
   ];
@@ -138,14 +145,18 @@ const CartSummaryPage = ({
       <Grid container spacing={2}>
         <Grid item xs={12} md={8}>
           <Typography variant="h4" sx={{ my: 3 }}>
-            Order summary
+            {t("cart:summary-title") /* Order summary */}
           </Typography>
           <CartItemList editable={false} />
         </Grid>
         <Grid item xs={12} md={4}>
           <Box sx={{ [theme.breakpoints.up("md")]: { ml: 5 } }}>
             <Typography variant="h6" sx={{ my: 3 }}>
-              Shipping &amp; payment method
+              {
+                t(
+                  "cart:shipping-and-payment-method-title"
+                ) /* Shipping and payment method */
+              }
             </Typography>
             <Table>
               <CartMethodSummaryInfoRow
@@ -160,12 +171,14 @@ const CartSummaryPage = ({
           </Box>
         </Grid>
         <Grid item xs={12} md={4}>
-          <CollapsableContentWithTitle title="Shipping info">
+          <CollapsableContentWithTitle
+            title={t("cart:shipping-information-title")}
+          >
             <CartInfoSummary rows={shippingInfoRows} />
           </CollapsableContentWithTitle>
         </Grid>
         <Grid item xs={12} md={4}>
-          <CollapsableContentWithTitle title="Billing info">
+          <CollapsableContentWithTitle title={t("billing-information-title")}>
             <CartInfoSummary rows={billingInfoRows} />
           </CollapsableContentWithTitle>
         </Grid>
@@ -178,7 +191,7 @@ const CartSummaryPage = ({
       </Grid>
       <CartButtonRow
         prev={{
-          title: "Previous",
+          title: t("back") /* Back */,
           onClick: () => {
             router.push("/cart/step/2");
           },
@@ -193,7 +206,7 @@ const CartSummaryPage = ({
  * Fetch the cart from the API
  */
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { req, res } = context;
+  const { req, res, locale } = context;
   const { cartToken } = req.cookies;
 
   if (cartToken === undefined || cartToken === null) {
@@ -246,6 +259,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       countries,
       selectedPaymentMethod,
       selectedShippingMethod,
+      ...(await serverSideTranslations(locale as string, [
+        "cart",
+        "order",
+        ...serverRuntimeConfig.commoni18NameSpaces,
+      ])),
     },
   };
 };

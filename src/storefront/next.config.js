@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+const { i18n } = require("./next-i18next.config");
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
@@ -25,6 +26,7 @@ const nextConfig = {
   serverRuntimeConfig: {
     // Will only be available on the server side
     apiUrl: process.env.BACKEND_API || "http://127.0.0.1:8000",
+    commoni18NameSpaces: ["common", "header", "footer", "cookie"],
   },
   publicRuntimeConfig: {
     // Will only be available on the server side
@@ -34,14 +36,7 @@ const nextConfig = {
   images: {
     domains: ["127.0.0.1", "localhost", "backend"],
   },
-  i18n: {
-    // These are all the locales you want to support in
-    // your application
-    locales: ["en", "cs"],
-    // This is the default locale you want to be used when visiting
-    // a non-locale prefixed path e.g. `/hello`
-    defaultLocale: "cs",
-  },
+  i18n,
 };
 
 module.exports = nextConfig;

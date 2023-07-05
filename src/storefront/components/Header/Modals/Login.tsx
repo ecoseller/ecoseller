@@ -18,7 +18,8 @@ import {
   TextField,
 } from "@mui/material";
 import { useRouter } from "next/router";
-
+// utils
+import { useTranslation } from "next-i18next";
 import styles from "./Login.module.scss";
 
 // Cookies
@@ -51,6 +52,8 @@ const LoginModal = ({ open, setOpen }: ILoginModal) => {
   const handleOpen = () => setOpen(true);
   const router = useRouter();
 
+  const { t } = useTranslation("common");
+
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -76,13 +79,13 @@ const LoginModal = ({ open, setOpen }: ILoginModal) => {
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <h1 className={styles.welcome}>Welcome back!</h1>
+        <h1 className={styles.welcome}>{t("welcome-back-login")}</h1>
         <TextField
           margin="normal"
           required
           fullWidth
           id="email"
-          label="E-mail Address"
+          label={t("email-label")}
           name="e-mail"
           autoComplete="email"
           autoFocus
@@ -93,7 +96,7 @@ const LoginModal = ({ open, setOpen }: ILoginModal) => {
         />
         <FormControl fullWidth variant="outlined">
           <InputLabel htmlFor="outlined-adornment-password">
-            Password
+            {t("password-label")}
           </InputLabel>
           <OutlinedInput
             id="outlined-adornment-password"
@@ -116,7 +119,7 @@ const LoginModal = ({ open, setOpen }: ILoginModal) => {
                 </IconButton>
               </InputAdornment>
             }
-            label="Password"
+            label={t("password-label")}
           />
         </FormControl>
         {/* <FormControlLabel
@@ -169,10 +172,10 @@ const LoginModal = ({ open, setOpen }: ILoginModal) => {
               });
           }}
         >
-          Login
+          {t("login-button-label")}
         </Button>
         <Typography variant="body2" align="center">
-          Don&apos;t have an account?{" "}
+          {t("dont-have-account")}{" "}
           <a
             href="#"
             onClick={() => {
@@ -180,7 +183,7 @@ const LoginModal = ({ open, setOpen }: ILoginModal) => {
               router.push("/user/register");
             }}
           >
-            Sign Up
+            {t("sign-up-button-label")}
           </a>
         </Typography>
       </Box>

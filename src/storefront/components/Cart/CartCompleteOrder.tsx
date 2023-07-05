@@ -1,4 +1,6 @@
 import { ICart } from "@/types/cart";
+// utils
+import { useTranslation } from "next-i18next";
 import {
   FormControl,
   FormControlLabel,
@@ -26,6 +28,8 @@ interface ICartCompleteOrderProps {
  * @constructor
  */
 const CartCompleteOrder = ({ cart }: ICartCompleteOrderProps) => {
+  const { t } = useTranslation("order");
+
   const [agreeWithTerms, setAgreeWithTerms] = useState(false);
   const [agreeWithDataProcessing, setAgreeWithDataProcessing] = useState(false);
   const [snackbar, setSnackbar] = useSnackbarState();
@@ -45,7 +49,8 @@ const CartCompleteOrder = ({ cart }: ICartCompleteOrderProps) => {
                 name="terms"
               />
             }
-            label="I agree with terms and conditions"
+            // label="I agree with terms and conditions"
+            label={t("agree-with-terms-and-conditions")}
           />
           <FormControlLabel
             control={
@@ -57,13 +62,19 @@ const CartCompleteOrder = ({ cart }: ICartCompleteOrderProps) => {
                 name="processing"
               />
             }
-            label="I agree with usage of contact information for marketing reasons"
+            // label="I agree with usage of contact information for marketing reasons"
+            label={t("agree-with-usage-of-contact-information-for-marketing")}
           />
         </FormGroup>
       </FormControl>
       <Divider />
       <Typography variant="h5" sx={{ my: 3 }}>
-        Total price: {cart.total_price_incl_vat_formatted}
+        {
+          t("cart:total-price-incl-price", {
+            price: cart.total_price_incl_vat_formatted,
+          }) /**Total price:&nbsp; */
+        }
+        {/* Total price: {cart.total_price_incl_vat_formatted} */}
       </Typography>
       <>
         <Button
@@ -89,16 +100,15 @@ const CartCompleteOrder = ({ cart }: ICartCompleteOrderProps) => {
             }
             setSnackbar({
               open: true,
-              message: "Order completed",
+              message: t("order-completed"),
               severity: "success",
             });
-            console.log("complete order", response, data?.token);
             clearCart();
             router.push(`/order/${data?.token}/completed`);
             // router.push("/order/completed");
           }}
         >
-          Complete order
+          {t("complete-order")}
         </Button>
       </>
     </>

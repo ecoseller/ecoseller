@@ -1,6 +1,8 @@
 import { ICountryOption, IShippingInfo } from "@/types/cart";
 import { IValidatedInputField } from "@/types/common";
 import TextField from "@mui/material/TextField";
+// utils
+import { useTranslation } from "next-i18next";
 import {
   ChangeEvent,
   Dispatch,
@@ -26,7 +28,8 @@ export interface IShippingInfoFormProps {
 
 export const shippingInfoInitialData = (
   shippingInfo: IShippingInfo,
-  setter: Dispatch<SetStateAction<IShippingInfoFormProps>>
+  setter: Dispatch<SetStateAction<IShippingInfoFormProps>>,
+  t: (key: string) => string
 ): IShippingInfoFormProps => {
   /**
    * Purpose of this function is to take the shipping info from the API and
@@ -49,8 +52,8 @@ export const shippingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: "First name is required",
-      label: "First name",
+      errorMessage: `${t("common:first-name-required-error-message")}`,
+      label: `${t("common:first-name-label")}`,
     },
     surname: {
       value: shippingInfo.surname,
@@ -67,8 +70,8 @@ export const shippingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: "Surname is required",
-      label: "Surname",
+      errorMessage: `${t("common:surname-required-error-message")}`,
+      label: `${t("common:surname-label")}`,
     },
     email: {
       value: shippingInfo.email,
@@ -88,8 +91,8 @@ export const shippingInfoInitialData = (
         return emailRegex.test(value);
       },
       isRequired: true,
-      errorMessage: "Email is required",
-      label: "Email",
+      errorMessage: `${t("common:email-required-error-message")}`,
+      label: `${t("common:email-label")}`,
     },
     phone: {
       value: shippingInfo.phone,
@@ -109,8 +112,8 @@ export const shippingInfoInitialData = (
         return phoneRegex.test(value);
       },
       isRequired: true,
-      errorMessage: "Phone is required",
-      label: "Phone",
+      errorMessage: `${t("common:phone-required-error-message")}`,
+      label: `${t("common:phone-label")}`,
     },
     additional_info: {
       value: shippingInfo.additional_info,
@@ -120,7 +123,7 @@ export const shippingInfoInitialData = (
           additional_info: { ...prevState.additional_info, value },
         })),
       isRequired: false,
-      label: "Additional info",
+      label: `${t("common:additional-info-label")}`,
     },
     street: {
       value: shippingInfo.street,
@@ -137,8 +140,8 @@ export const shippingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: "Street is required",
-      label: "Street",
+      errorMessage: `${t("common:street-required-error-message")}`,
+      label: `${t("common:street-label")}`,
     },
     city: {
       value: shippingInfo.city,
@@ -155,8 +158,8 @@ export const shippingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: "City is required",
-      label: "City",
+      errorMessage: `${t("common:city-required-error-message")}`,
+      label: `${t("common:city-label")}`,
     },
     postal_code: {
       value: shippingInfo.postal_code,
@@ -173,8 +176,8 @@ export const shippingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: "Postal code is required",
-      label: "Postal code",
+      errorMessage: `${t("common:postal-code-required-error-message")}`,
+      label: `${t("common:postal-code-label")}`,
     },
     country: {
       value: `${shippingInfo.country}`,
@@ -191,8 +194,8 @@ export const shippingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: "Country is required",
-      label: "Country",
+      errorMessage: `${t("common:country-required-error-message")}`,
+      label: `${t("common:country-label")}`,
     },
   };
 };

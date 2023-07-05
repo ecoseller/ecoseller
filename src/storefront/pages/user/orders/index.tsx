@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import RootLayout from "@/pages/layout";
+import getConfig from "next/config";
 import { ReactElement, useEffect, useState } from "react";
 import {
   Alert,
@@ -11,6 +12,8 @@ import {
   Typography,
 } from "@mui/material";
 import { IUser } from "@/types/user";
+
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
 import UserGeneralInformation from "@/components/User/UserGeneralInformation";
 import { useSnackbarState } from "@/utils/snackbar";
@@ -35,6 +38,7 @@ import { userOrdersAPI } from "@/pages/api/user/orders";
 import { IOrder } from "@/types/order";
 import { orderItemsAPI } from "@/pages/api/order/items/[id]";
 
+const { serverRuntimeConfig } = getConfig();
 interface IUserOrdersProps {
   orders: IOrder[];
 }
@@ -87,7 +91,7 @@ const StorefrontUserEditPage = ({ orders }: IUserOrdersProps) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { req, res } = context;
+  const { req, res, locale } = context;
 
   const orders = await userOrdersAPI(
     "GET",
@@ -115,6 +119,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       orders: orders,
+      ...(await serverSideTranslations(locale as string, [
+        "order",
+        "user",
+        ...serverRuntimeConfig.commoni18NameSpaces,
+      ])),
     },
   };
 };

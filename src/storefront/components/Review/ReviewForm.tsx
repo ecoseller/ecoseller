@@ -5,6 +5,8 @@ import Typography from "@mui/material/Typography";
 import FormControl from "@mui/material/FormControl";
 import EditorCard from "@/components/Generic/EditorCard";
 import { Alert, Button, Rating, Snackbar, TextField } from "@mui/material";
+// utils
+import { useTranslation } from "next-i18next";
 import Stack from "@mui/material/Stack";
 import { IUser } from "@/types/user";
 import CollapsableContentWithTitle from "../Generic/CollapsableContentWithTitle";
@@ -24,6 +26,7 @@ interface IReviewProps {
 }
 
 const ReviewForm = ({ item, order_id, showSnackbar }: IReviewProps) => {
+  const { t } = useTranslation("review");
   const [reviewText, setReviewText] = useState<string>("");
   const [value, setValue] = useState<number | null>(5);
   const [hover, setHover] = useState(-1);
@@ -44,7 +47,11 @@ const ReviewForm = ({ item, order_id, showSnackbar }: IReviewProps) => {
         country: country,
       }),
     }).then((res) => {
-      showSnackbar(res, "Review submitted", "Error submitting review");
+      showSnackbar(
+        res,
+        /*"Review submitted", "Error submitting review"*/ t("review-submitted"),
+        t("error-submitting-review")
+      );
     });
   };
 
@@ -54,7 +61,7 @@ const ReviewForm = ({ item, order_id, showSnackbar }: IReviewProps) => {
         <Box mt={2}>
           <FormControl fullWidth>
             <Stack spacing={2}>
-              <Typography component="legend">Rating</Typography>
+              <Typography component="legend">{t("rating-title")}</Typography>
               <Box
                 sx={{
                   width: 200,
@@ -101,7 +108,7 @@ const ReviewForm = ({ item, order_id, showSnackbar }: IReviewProps) => {
                 }}
               >
                 <Button variant="contained" onClick={submitReview}>
-                  Submit
+                  {t("submit-review")}
                 </Button>
               </Box>
             </Stack>
