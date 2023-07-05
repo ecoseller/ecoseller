@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { api, setRequestResponse } from "@/utils/interceptors/api";
+import { IAttributeSet } from "@/types/category";
 
-export const categoryDetailAPI = async (
+export const categoryAttributesAPI = async (
   id: string,
   req: NextApiRequest,
   res: NextApiResponse
@@ -10,20 +11,24 @@ export const categoryDetailAPI = async (
     setRequestResponse(req, res);
   }
 
-  const url = `/category/storefront/${id}/`;
+  let url = `/category/storefront/${id}/attributes/`;
 
-  return await api.get(url).then((response) => response.data);
+  const data = await api
+    .get(url)
+    .then((response) => response.data as IAttributeSet);
+  console.log(JSON.stringify(data));
+  return data;
 };
 
 /**
- * This is a wrapper for the category detail API
+ * This is a wrapper for the category attributes API
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;
   const { id } = req.query;
 
   if (method == "GET") {
-    return categoryDetailAPI(id?.toString() || "", req, res)
+    return categoryAttributesAPI(id?.toString() || "", req, res)
       .then((data) => res.json(data))
       .catch((error) => res.status(400).json(null));
   }

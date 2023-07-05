@@ -3,19 +3,11 @@ import {
   NextApiRequest,
   NextApiResponse,
 } from "next/types";
-import { ICategoryDetail } from "@/types/category";
-import EditorJsOutput from "@/utils/editorjs/EditorJsOutput";
 import Typography from "@mui/material/Typography";
-import SubCategoryList from "@/components/Category/SubCategoryList";
 import HeadMeta from "@/components/Common/SEO";
 import { useRouter } from "next/router";
 import ProductGrid from "@/components/Category/ProductGrid";
 import { IProductRecord } from "@/types/product";
-import { categoryProductsAPI } from "@/pages/api/category/[id]/products";
-import { categoryDetailAPI } from "@/pages/api/category/[id]";
-import Divider from "@mui/material/Divider";
-import BreadcrumbCategoryNav from "@/components/Common/BreadcrumbCategoryNav";
-import ProductFilters from "@/components/Category/ProductFilters";
 import { ICountry } from "@/types/country";
 import { countryDetailAPI } from "@/pages/api/country/[code]";
 import { getCookie } from "cookies-next";
