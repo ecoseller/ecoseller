@@ -1,3 +1,5 @@
+// utils
+import { useTranslation } from "next-i18next";
 interface IPayBySquareProps {
   qr_code: string;
   payment_id: string;
@@ -15,6 +17,8 @@ const PayBySquare = ({
   payment_id,
   payment_data,
 }: IPayBySquareProps) => {
+  const { t } = useTranslation("order");
+
   return (
     <div
       style={{
@@ -25,13 +29,13 @@ const PayBySquare = ({
         marginBottom: "30vh",
       }}
     >
-      <p>Payment details:</p>
+      <p>{t("payment-details-title")}:</p>
       <table>
         <tbody>
           {payment_data?.amount && payment_data.currency ? (
             <tr>
               <td>
-                <b>Amount</b>
+                <b>{t("amount-label")}</b>
               </td>
               <td>
                 {payment_data.amount} {payment_data.currency}
@@ -41,7 +45,7 @@ const PayBySquare = ({
           {payment_data?.reference ? (
             <tr>
               <td>
-                <b>Reference</b>
+                <b>{t("reference-label")}</b>
               </td>
               <td>{payment_data.reference}</td>
             </tr>
@@ -49,7 +53,7 @@ const PayBySquare = ({
           {payment_data?.iban ? (
             <tr>
               <td>
-                <b>IBAN</b>
+                <b>{t("iban-label")}</b>
               </td>
               <td>{payment_data.iban}</td>
             </tr>
@@ -57,7 +61,7 @@ const PayBySquare = ({
           {payment_data?.bic ? (
             <tr>
               <td>
-                <b>BIC</b>
+                <b>{t("bic-label")}</b>
               </td>
               <td>{payment_data.bic}</td>
             </tr>
@@ -65,7 +69,7 @@ const PayBySquare = ({
           {payment_data?.bank_account ? (
             <tr>
               <td>
-                <b>Bank account</b>
+                <b>{t("bank-account-label")}</b>
               </td>
               <td>{payment_data.bank_account}</td>
             </tr>
@@ -73,7 +77,7 @@ const PayBySquare = ({
           {qr_code ? (
             <tr>
               <td>
-                <b>QR</b>
+                <b>{t("qr-label")}</b>
               </td>
               <td>
                 <img

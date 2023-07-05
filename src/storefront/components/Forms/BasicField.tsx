@@ -22,9 +22,9 @@ export const BasicSelect = ({ field, options, disabled }: IBasicSelect) => {
       <TextField
         id="outlined-select-currency"
         select
-        label={field.label}
-        value={field.value}
-        defaultValue={field.value}
+        label={field?.label}
+        value={field?.value}
+        defaultValue={field?.value}
         onChange={(e: ChangeEvent<HTMLInputElement>) => {
           if (disabled) {
             return;
@@ -72,16 +72,16 @@ const BasicField = ({ field }: { field: IValidatedInputField }) => {
   return (
     <Box pt={2} pr={2}>
       <TextField
-        label={field.label || ""}
+        label={field?.label || ""}
         variant="outlined"
-        value={field.value || ""}
+        value={field?.value || ""}
         onChange={(e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
           field.setter(e.target.value);
           if (field.validator && field.setIsValid) {
             field.setIsValid(field.validator(e.target.value));
           }
         }}
-        error={field.isValid === false}
+        error={field?.isValid === false}
         helperText={!field.isValid ? field?.errorMessage : ""}
         fullWidth
         sx={{

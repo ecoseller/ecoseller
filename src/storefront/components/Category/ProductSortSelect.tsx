@@ -1,3 +1,5 @@
+// utils
+import { useTranslation } from "next-i18next";
 import {
   FormControl,
   InputLabel,
@@ -23,29 +25,6 @@ interface IOrderingType {
   description: string;
 }
 
-const availableOrderings: { [key: string]: IOrderingType } = {
-  priceAsc: {
-    sortBy: "price",
-    order: "asc",
-    description: "Price: Lowest to highest",
-  },
-  priceDesc: {
-    sortBy: "price",
-    order: "desc",
-    description: "Price: Highest to lowest",
-  },
-  titleAsc: {
-    sortBy: "title",
-    order: "asc",
-    description: "Title: A - Z",
-  },
-  titleDesc: {
-    sortBy: "title",
-    order: "desc",
-    description: "Title: Z - A",
-  },
-};
-
 /**
  * Component displaying `select` for ordering products
  * @param sortProducts function that sorts products by the selected criteria
@@ -58,6 +37,8 @@ const ProductSortSelect = ({
 }: IProductSortSelectProps) => {
   const router = useRouter();
   const { id } = router.query;
+
+  const { t } = useTranslation("category");
 
   const [selectedOrderingName, setSelectedOrderingName] = useState("");
 
@@ -75,6 +56,32 @@ const ProductSortSelect = ({
     setSelectedOrderingName("");
   }, [id]);
 
+  const availableOrderings: { [key: string]: IOrderingType } = {
+    priceAsc: {
+      sortBy: "price",
+      order: "asc",
+      description: t("order-by-price-asc"), //"Price: Lowest to highest",
+    },
+    priceDesc: {
+      sortBy: "price",
+      order: "desc",
+      description: t("order-by-price-desc"),
+      // description: "Price: Highest to lowest",
+    },
+    titleAsc: {
+      sortBy: "title",
+      order: "asc",
+      description: t("order-by-title-asc"),
+      // description: "Title: A - Z",
+    },
+    titleDesc: {
+      sortBy: "title",
+      order: "desc",
+      description: t("order-by-title-desc"),
+      // description: "Title: Z - A",
+    },
+  };
+
   const handleChange = (event: SelectChangeEvent) => {
     const orderingName = event.target.value;
 
@@ -89,7 +96,9 @@ const ProductSortSelect = ({
   return (
     <Box sx={{ maxWidth: 300, mb: 2 }}>
       <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Sort by</InputLabel>
+        <InputLabel id="demo-simple-select-label">
+          {t("sort-by") /**Sort by*/}
+        </InputLabel>
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"

@@ -1,9 +1,13 @@
 // next
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
 import { useRouter } from "next/router";
+import getConfig from "next/config";
 
 // react
 import { useCallback, useEffect, useMemo, useState } from "react";
+// utils
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 // api
 import { putBillingInfo, putShippingInfo } from "@/api/cart/info";
@@ -44,6 +48,8 @@ import { userBillingInfoAPI } from "@/pages/api/user/billing-info";
 import { useUser } from "@/utils/context/user";
 import { Check, CheckBox } from "@mui/icons-material";
 
+const { serverRuntimeConfig } = getConfig();
+
 interface ICartStep1PageProps {
   shippingInfo: any;
   billingInfo: any;
@@ -62,6 +68,7 @@ const CartStep1Page = ({
    * - shipping info
    * - billing info
    */
+  const { t } = useTranslation("cart");
 
   const router = useRouter();
   const { user } = useUser();
@@ -76,7 +83,8 @@ const CartStep1Page = ({
     setShippingInfoState(
       shippingInfoInitialData(
         { ...shippingInfo, country: "cz" },
-        setShippingInfoState
+        setShippingInfoState,
+        t // useTranslation
       )
     );
   }
@@ -106,7 +114,8 @@ const CartStep1Page = ({
       setBillingInfoState(
         billingInfoInitialData(
           { country: "cz" } as IBillingInfo,
-          setBillingInfoState
+          setBillingInfoState,
+          t // useTranslation
         )
       );
     } else {
@@ -115,7 +124,8 @@ const CartStep1Page = ({
       setBillingInfoState(
         billingInfoInitialData(
           { ...billingInfo, country: "cz" },
-          setBillingInfoState
+          setBillingInfoState,
+          t // useTranslation
         )
       );
     }
@@ -135,7 +145,8 @@ const CartStep1Page = ({
             setBillingInfoState(
               billingInfoInitialData(
                 { ...data, country: "cz" },
-                setBillingInfoState
+                setBillingInfoState,
+                t // useTranslation
               )
             );
           }
@@ -154,7 +165,8 @@ const CartStep1Page = ({
             setShippingInfoState(
               shippingInfoInitialData(
                 { ...data, country: "cz" },
-                setShippingInfoState
+                setShippingInfoState,
+                t // useTranslation
               )
             );
           }
@@ -176,7 +188,8 @@ const CartStep1Page = ({
           company_id: "",
           vat_number: "",
         } as IBillingInfo,
-        setBillingInfoState
+        setBillingInfoState,
+        t // useTranslation
       )
     );
   };
@@ -192,7 +205,8 @@ const CartStep1Page = ({
           postal_code: "",
           country: "cz",
         } as IShippingInfo,
-        setShippingInfoState
+        setShippingInfoState,
+        t // useTranslation
       )
     );
   };
@@ -260,7 +274,9 @@ const CartStep1Page = ({
       >
         <Grid container item xs={10} sm={10} md={5} direction="column">
           <div className="shipping-info-form">
-            <h2>Shipping information</h2>
+            <h2>
+              {t("shipping-information-title") /* Shipping information */}
+            </h2>
             {user && (
               <FormControlLabel
                 control={
@@ -270,7 +286,7 @@ const CartStep1Page = ({
                     inputProps={{ "aria-label": "controlled" }}
                   />
                 }
-                label="Use profile info"
+                label={t("shipping-information-use-profile-billing-info-label")}
               />
             )}
             <ShippingInfoForm
@@ -293,7 +309,7 @@ const CartStep1Page = ({
         </Grid>
         <Grid container item xs={10} sm={10} md={5} direction="column" pt={4}>
           <div className="billing-info-form">
-            <h2>Billing information</h2>
+            <h2>{t("billing-information-title") /* Billing information */}</h2>
             <FormControl>
               <RadioGroup
                 defaultValue="SAMEASSHIPPING"
@@ -308,25 +324,30 @@ const CartStep1Page = ({
                 <FormControlLabel
                   value="SAMEASSHIPPING"
                   control={<Radio />}
-                  label="Same as shipping info"
+                  label={
+                    t("same-as-shipping-info-label") /*"Same as shipping info"*/
+                  }
                 />
                 <FormControlLabel
                   value="NEW"
                   control={<Radio />}
-                  label="New billing info"
+                  label={t("new-billing-info-label") /*"New billing info"*/}
                   onClick={clearBillingInfo}
                 />
                 {user && (
                   <FormControlLabel
                     value="PROFILE"
                     control={<Radio />}
-                    label="Use profile info"
+                    label={
+                      t(
+                        "billing-information-use-profile-info-label"
+                      ) /*"Use profile info"*/
+                    }
                     onClick={setBillingInfoFromProfile}
                   />
                 )}
               </RadioGroup>
             </FormControl>
-
             {billingRadioSelect === "SAMEASSHIPPING" ? null : (
               <BillingInfoForm
                 first_name={billingInfoState.first_name}
@@ -351,7 +372,7 @@ const CartStep1Page = ({
       </Grid>
       <CartButtonRow
         prev={{
-          title: "Back to cart",
+          title: t("back-to-cart") /*"Back to cart"*/,
           onClick: () => {
             router.push("/cart");
           },
@@ -374,7 +395,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
    * Fetch the cart from the API
    */
 
-  const { req, res } = context;
+  const { req, res, locale } = context;
   const { cartToken } = req.cookies;
 
   if (cartToken === undefined || cartToken === null) {
@@ -428,6 +449,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       billingInfo,
       cartToken,
       countries,
+      ...(await serverSideTranslations(locale as string, [
+        "cart",
+        ...serverRuntimeConfig.commoni18NameSpaces,
+      ])),
     },
   };
 };

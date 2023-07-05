@@ -1,4 +1,6 @@
 import { useRouter } from "next/router";
+import getConfig from "next/config";
+
 import { ReactElement, useEffect, useState } from "react";
 import {
   Alert,
@@ -15,7 +17,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+// utils
+import { useTranslation } from "next-i18next";
 import { IUser } from "@/types/user";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
 import UserGeneralInformation from "@/components/User/UserGeneralInformation";
 import { useSnackbarState } from "@/utils/snackbar";
@@ -42,7 +47,10 @@ import { orderItemsAPI } from "@/pages/api/order/items/[id]";
 import EditorCard from "@/components/Generic/EditorCard";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
+const { serverRuntimeConfig } = getConfig();
+
 const StorefrontUserRegisterPage = () => {
+  const { t } = useTranslation("user");
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -100,12 +108,16 @@ const StorefrontUserRegisterPage = () => {
     });
     const data = await response.json();
     if (!response?.ok) {
-      showSnackbar(response, "Registration failed", response.statusText);
+      showSnackbar(
+        response,
+        t("registration-failed") /*"Registration failed"*/,
+        response.statusText
+      );
     } else {
       showSnackbar(
         response,
-        "Registration successful",
-        "Registration successful"
+        t("registration-successful"),
+        t("registration-successful")
       );
       router.push("/");
     }
@@ -114,7 +126,9 @@ const StorefrontUserRegisterPage = () => {
   return (
     <Container maxWidth="xl">
       <EditorCard>
-        <Typography variant="h6">Registration form</Typography>
+        <Typography variant="h6">
+          {t("registration-form-title") /* Registration form */}
+        </Typography>
         <Box mt={2}>
           <FormControl fullWidth>
             <Stack spacing={2}>
@@ -132,7 +146,7 @@ const StorefrontUserRegisterPage = () => {
                 <Stack spacing={2}>
                   <FormControl fullWidth variant="outlined">
                     <InputLabel htmlFor="outlined-adornment-password">
-                      Password
+                      {t("password-label") /* Password */}
                     </InputLabel>
                     <OutlinedInput
                       id="outlined-adornment-password"
@@ -151,7 +165,7 @@ const StorefrontUserRegisterPage = () => {
                           </IconButton>
                         </InputAdornment>
                       }
-                      label="Password"
+                      label={t("password-label") /* Password */}
                     />
                   </FormControl>
                   {/* <TextField label="Name" /> */}
@@ -162,7 +176,7 @@ const StorefrontUserRegisterPage = () => {
                 color="primary"
                 onClick={handleRegister}
               >
-                Register
+                {t("register") /* Register */}
               </Button>
             </Stack>
           </FormControl>
@@ -185,6 +199,17 @@ const StorefrontUserRegisterPage = () => {
       </EditorCard>
     </Container>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale as string, [
+        "user",
+        ...serverRuntimeConfig.commoni18NameSpaces,
+      ])),
+    },
+  };
 };
 
 export default StorefrontUserRegisterPage;

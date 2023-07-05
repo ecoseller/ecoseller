@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "npx prettier --write ."
+    "format": "npx prettier --write .",
+    "translate": "i18next -c i18next-parser.config.js"
   },
   "dependencies": {
     "@editorjs/editorjs": "^2.26.5",
@@ -27,9 +28,12 @@
     "js-cookie": "^3.0.5",
     "jwt-decode": "^3.1.2",
     "keen-slider": "^6.8.5",
+    "i18next": "^22.4.10",
     "next": "13.0.3",
+    "next-i18next": "^13.1.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-i18next": "^12.3.1",
     "sass": "^1.62.1",
     "swr": "^2.1.5",
     "typescript": "4.8.4",

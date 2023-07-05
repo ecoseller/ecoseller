@@ -1,3 +1,5 @@
+// utils
+import { useTranslation } from "next-i18next";
 import { IOrder } from "@/types/order";
 import {
   DataGrid,
@@ -27,6 +29,7 @@ interface IAverageRatingProps {
 }
 
 export const AverageRating = ({ productRating }: IAverageRatingProps) => {
+  const { t } = useTranslation("review");
   const total_reviews = productRating.total_reviews;
   const average_rating = productRating.average_rating;
   let distrMap: Map<string, number> = new Map<string, number>(
@@ -38,7 +41,7 @@ export const AverageRating = ({ productRating }: IAverageRatingProps) => {
   return (
     <Stack spacing={2}>
       <Typography variant="h5" gutterBottom>
-        Average product rating
+        {t("average-rating")}
       </Typography>
       <Stack direction="row" spacing={10}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -59,7 +62,7 @@ export const AverageRating = ({ productRating }: IAverageRatingProps) => {
             />
             <Grid item xs sx={{ mt: 1.5 }}>
               <Typography gutterBottom sx={{ ml: 5 }}>
-                {total_reviews} reviews
+                {total_reviews} {t("reviews")}
               </Typography>
             </Grid>
           </Stack>

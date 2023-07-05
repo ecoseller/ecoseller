@@ -6,6 +6,8 @@
 // react
 import { useState } from "react";
 //next.js
+// utils
+import { useTranslation } from "next-i18next";
 // mui
 import styled from "@mui/material/styles/styled";
 import AppBar from "@mui/material/AppBar";
@@ -64,9 +66,11 @@ const DashboardHeader = ({}: IDashboardHeaderProps) => {
   const mobileScreen = useMediaQuery(theme.breakpoints.down("md"));
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const { t } = useTranslation("header");
+
   return (
     <StyledRoot>
-      <InfoBar text="Free shipping on all orders over $100" />
+      <InfoBar text={t("menu-info-bar-text")} />
       <TopLine />
       <div className={"container"}>
         <Box>

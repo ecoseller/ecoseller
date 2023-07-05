@@ -1,0 +1,22 @@
+{
+  "agree-with-terms-and-conditions": "Souhlasím s obchodními podmínkami podmínkami",
+  "agree-with-usage-of-contact-information-for-marketing": "Souhlasím se zpracováním osobních údajů",
+  "order-completed": "Objednávka byla úspěšně dokončena",
+  "complete-order": "Dokončit objednávku",
+  "order-id": "Číslo objednávky",
+  "status": "Status",
+  "create-at": "Vytvořeno",
+  "items": "Položky",
+  "thank-you-title": "Děkujeme Vám!",
+  "thank-you-descripiton": "Odeslali jsme Vám e-mail s potvrzením objednávky.",
+  "online-payment-message": "Protože jste zvolili platbu online, stiskněte tlačítko níže pro dokončení platby.",
+  "pay-now-button": "Zaplatit",
+  "payment-details-title": "Platební údaje",
+  "amount-label": "Částka",
+  "reference-label": "Variabilní symbol",
+  "iban-label": "IBAN",
+  "bic-label": "BIC",
+  "bank-account-label": "Číslo účtu",
+  "qr-label": "QR",
+  "payment-completed-text": "Platbu jsme obdrželi, děkujeme"
+}

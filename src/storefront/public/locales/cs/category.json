@@ -1,0 +1,12 @@
+{
+  "product-card-variants_one": "",
+  "product-card-variants_few": "",
+  "product-card-variants_many": "",
+  "product-card-variants_other": "",
+  "order-by-price-asc": "Dle ceny od nejnižší",
+  "order-by-price-desc": "Dle ceny od nejvyšší",
+  "order-by-title-asc": "Dle názvu A-Z",
+  "order-by-title-desc": "Dle názvu Z-A",
+  "sort-by": "Řadit dle",
+  "subcategory-section-title": "Podkategorie"
+}

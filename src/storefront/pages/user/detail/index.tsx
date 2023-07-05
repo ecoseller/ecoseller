@@ -1,4 +1,8 @@
 import { useRouter } from "next/router";
+import getConfig from "next/config";
+
+// utils
+import { useTranslation } from "next-i18next";
 import RootLayout from "@/pages/layout";
 import { ReactElement, useEffect, useState } from "react";
 import {
@@ -10,6 +14,8 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
 import { IUser } from "@/types/user";
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
 import UserGeneralInformation from "@/components/User/UserGeneralInformation";
@@ -31,12 +37,15 @@ import ShippingInfoForm, {
 } from "@/components/Forms/ShippingInfoForm";
 import { error } from "console";
 
+const { serverRuntimeConfig } = getConfig();
+
 interface IUserProps {
   billingInfo: IBillingInfo;
   shippingInfo: IShippingInfo;
 }
 
 const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
+  const { t } = useTranslation("user");
   const router = useRouter();
 
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
@@ -74,7 +83,8 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
     setBillingInfoState(
       billingInfoInitialData(
         { ...billingInfo, country: "cz" } as IBillingInfo,
-        setBillingInfoState
+        setBillingInfoState,
+        t // useTranslation
       )
     );
   }
@@ -88,7 +98,8 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
       // TODO: setting the country to cz is a temporary solution
       shippingInfoInitialData(
         { ...shippingInfo, country: "cz" },
-        setShippingInfoState
+        setShippingInfoState,
+        t // useTranslation
       )
     );
   }
@@ -119,7 +130,11 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
       method: "PUT",
       body: JSON.stringify(state),
     });
-    showSnackbar(res, "User general information updated", res?.statusText);
+    showSnackbar(
+      res,
+      t("general-info-updated-snackbar") /*"User general information updated"*/,
+      res?.statusText
+    );
   };
 
   const handleGeneralInfoClear = async () => {
@@ -141,18 +156,30 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
       method: "PUT",
       body: JSON.stringify(billingInfo),
     });
-    showSnackbar(res, "User billing information updated", res?.statusText);
+    showSnackbar(
+      res,
+      t("billing-info-updated-snackbar") /*User billing information updated*/,
+      res?.statusText
+    );
   };
 
   const handleBillingInfoClear = async () => {
     setBillingInfoState(
-      billingInfoInitialData({} as IBillingInfo, setBillingInfoState)
+      billingInfoInitialData(
+        {} as IBillingInfo,
+        setBillingInfoState,
+        t /* useTranslation */
+      )
     );
     const res = await fetch(`/api/user/billing-info`, {
       method: "DELETE",
       body: JSON.stringify(billingInfo),
     });
-    showSnackbar(res, "User billing information updated", res?.statusText);
+    showSnackbar(
+      res,
+      t("billing-info-updated-snackbar") /*User billing information updated*/,
+      res?.statusText
+    );
   };
 
   const hanleShippingInfoSave = async () => {
@@ -161,18 +188,30 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
       method: "PUT",
       body: JSON.stringify(shippingInfo),
     });
-    showSnackbar(res, "User shipping information updated", res?.statusText);
+    showSnackbar(
+      res,
+      t("shipping-info-updated-snackbar") /*User shipping information updated*/,
+      res?.statusText
+    );
   };
 
   const handleShippingInfoClear = async () => {
     setShippingInfoState(
-      shippingInfoInitialData({} as IShippingInfo, setShippingInfoState)
+      shippingInfoInitialData(
+        {} as IShippingInfo,
+        setShippingInfoState,
+        t /* useTranslation*/
+      )
     );
     const res = await fetch(`/api/user/shipping-info`, {
       method: "DELETE",
       body: JSON.stringify(shippingInfo),
     });
-    showSnackbar(res, "User shipping information updated", res?.statusText);
+    showSnackbar(
+      res,
+      t("shipping-info-updated-snackbar") /*User shipping information updated*/,
+      res?.statusText
+    );
   };
 
   const handleSave = async () => {
@@ -222,7 +261,7 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
     if (!error) {
       setSnackbar({
         open: true,
-        message: "User updated",
+        message: t("user-updated-snackbar"),
         severity: "success",
       });
     }
@@ -249,14 +288,14 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
             color="primary"
             onClick={handleGeneralInfoClear}
           >
-            Clear general information
+            {t("clear-general-information") /* Clear general information */}
           </Button>
           <Button
             variant="contained"
             color="primary"
             onClick={hanldleGeneralInfoSave}
           >
-            Save general information
+            {t("save-general-information") /* Save general information */}
           </Button>
         </Stack>
       </Box>
@@ -267,7 +306,9 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
         setSnackbar={(v: any) => setSnackbar(v)}
       />
       <Box pl={3} mt={2}>
-        <Typography variant="h6">Billing info</Typography>
+        <Typography variant="h6">
+          {t("billing-info-title") /* Billing info */}
+        </Typography>
         <BillingInfoForm
           first_name={billingInfoState?.first_name}
           surname={billingInfoState?.surname}
@@ -295,18 +336,20 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
               color="primary"
               onClick={handleBillingInfoClear}
             >
-              Clear billing info
+              {t("clear-billing-info") /* Clear billing info */}
             </Button>
             <Button
               variant="contained"
               color="primary"
               onClick={hanleBillingInfoSave}
             >
-              Save billing info
+              {t("save-billing-info") /* Save billing info */}
             </Button>
           </Stack>
         </Box>
-        <Typography variant="h6">Shipping info</Typography>
+        <Typography variant="h6">
+          {t("shipping-info-title") /* Shipping info */}
+        </Typography>
         <ShippingInfoForm
           first_name={shippingInfoState?.first_name}
           surname={shippingInfoState?.surname}
@@ -334,14 +377,14 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
               color="primary"
               onClick={handleShippingInfoClear}
             >
-              Clear shipping info
+              {t("clear-shipping-info") /* Clear shipping info */}
             </Button>
             <Button
               variant="contained"
               color="primary"
               onClick={hanleShippingInfoSave}
             >
-              Save shipping info
+              {t("save-shipping-info") /* Save shipping info */}
             </Button>
           </Stack>
         </Box>
@@ -363,10 +406,10 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
               router.replace("/");
             }}
           >
-            Back
+            {t("common:back") /* Back */}
           </Button>
           <Button variant="contained" onClick={handleSave}>
-            Save All
+            {t("common:save") /* Save */}
           </Button>
         </Stack>
       </Box>
@@ -390,7 +433,7 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { req, res } = context;
+  const { req, res, locale } = context;
 
   const shippingInfo = await userShippingInfoAPI(
     "GET",
@@ -408,6 +451,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     props: {
       billingInfo,
       shippingInfo,
+      ...(await serverSideTranslations(locale as string, [
+        "user",
+        ...serverRuntimeConfig.commoni18NameSpaces,
+      ])),
     },
   };
 };

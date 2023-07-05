@@ -3,6 +3,9 @@ import {
   NextApiRequest,
   NextApiResponse,
 } from "next/types";
+import getConfig from "next/config";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
 import {
   IAttributeSet,
   ICategoryDetail,
@@ -31,6 +34,8 @@ import React, { useEffect, useState } from "react";
 import ProductSortSelect from "@/components/Category/ProductSortSelect";
 import { categoryAttributesAPI } from "@/pages/api/category/[id]/attributes";
 import { filterProducts } from "@/api/category/products";
+
+const { serverRuntimeConfig } = getConfig();
 
 interface ICategoryPageProps {
   category: ICategoryDetail;
@@ -319,6 +324,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       countryCode: countryDetail.code,
       pricelist,
       attributes,
+      ...(await serverSideTranslations(locale as string, [
+        "category",
+        ...serverRuntimeConfig.commoni18NameSpaces,
+      ])),
     },
   };
 };

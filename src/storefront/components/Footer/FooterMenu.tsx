@@ -7,6 +7,8 @@
 // react
 //next.js
 import Link from "next/link";
+// utils
+import { useTranslation } from "next-i18next";
 // components
 import Logo from "../Header/Logo";
 // mui
@@ -56,7 +58,7 @@ const FooterMenu = () => {
     (url: string) => fetch(url).then((res) => res.json())
   );
 
-  console.log("FOOTER", data);
+  const { t } = useTranslation("footer");
 
   return (
     <StyledFooter>
@@ -75,8 +77,12 @@ const FooterMenu = () => {
             <Logo />
             <Grid xs={12} md={6} lg={6}>
               <Typography variant="body2" sx={{ mt: 2 }}>
-                Your satisfaction is our top priority – shop with us and
-                experience the difference.
+                {
+                  t(
+                    "store-description"
+                  ) /* Your satisfaction is our top priority – shop with us and
+                experience the difference. */
+                }
               </Typography>
             </Grid>
           </Grid>
