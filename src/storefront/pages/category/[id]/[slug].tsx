@@ -6,7 +6,6 @@ import {
 import getConfig from "next/config";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-import { ICategoryDetail } from "@/types/category";
 import {
   IAttributeSet,
   ICategoryDetail,
