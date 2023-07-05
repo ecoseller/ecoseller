@@ -36,6 +36,7 @@ import ShippingInfoForm, {
   shippingInfoInitialData,
 } from "@/components/Forms/ShippingInfoForm";
 import { error } from "console";
+import { useCountry } from "@/utils/context/country";
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -50,6 +51,7 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
 
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
   const { user } = useUser();
+  const { country } = useCountry();
 
   const [state, setState] = useState<IUser>(user);
   useEffect(() => {
@@ -79,12 +81,11 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
     useState<IBillingInfoFormProps>({} as IBillingInfoFormProps);
 
   if (Object.keys(billingInfoState)?.length === 0) {
-    // TODO: setting the country to cz is a temporary solution
     setBillingInfoState(
       billingInfoInitialData(
-        { ...billingInfo, country: "cz" } as IBillingInfo,
+        { ...billingInfo } as IBillingInfo,
         setBillingInfoState,
-        t // useTranslation
+        t
       )
     );
   }
@@ -95,12 +96,7 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
 
   if (Object.keys(shippingInfoState)?.length === 0) {
     setShippingInfoState(
-      // TODO: setting the country to cz is a temporary solution
-      shippingInfoInitialData(
-        { ...shippingInfo, country: "cz" },
-        setShippingInfoState,
-        t // useTranslation
-      )
+      shippingInfoInitialData({ ...shippingInfo }, setShippingInfoState, t)
     );
   }
 

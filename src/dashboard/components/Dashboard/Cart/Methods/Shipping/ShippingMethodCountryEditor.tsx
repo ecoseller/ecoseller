@@ -173,7 +173,7 @@ const ShippingMethodCountryEditor = ({
     // if row is new, save it to the database
     if (newRow.isNew) {
       console.log("newRow", newRow);
-      fetch(`/api/cart/shipping-method/country`, {
+      fetch(`/api/cart/shipping-method/${shippingMethod.id}/country`, {
         method: "POST",
         body: JSON.stringify({
           shipping_method: shippingMethod.id,
