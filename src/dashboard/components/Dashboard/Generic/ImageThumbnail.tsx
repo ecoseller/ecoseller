@@ -1,6 +1,6 @@
 interface IImageThumbnailProps {
-    imagePath: string;
-    alt: string | null;
+  imagePath: string;
+  alt: string | null;
 }
 
 /**
@@ -10,18 +10,18 @@ interface IImageThumbnailProps {
  * @constructor
  */
 const ImageThumbnail = ({ imagePath, alt }: IImageThumbnailProps) => {
-    return (
-        <img
-            src={imagePath}
-            alt={alt || ""}
-            style={{
-                objectFit: "contain",
-                position: "relative",
-                height: "50px",
-                width: "auto",
-            }}
-        />
-    );
+  return (
+    <img
+      src={imagePath}
+      alt={alt || ""}
+      style={{
+        objectFit: "contain",
+        position: "relative",
+        height: "50px",
+        width: "auto",
+      }}
+    />
+  );
 };
 
 export default ImageThumbnail;

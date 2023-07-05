@@ -23,7 +23,6 @@ import StyledIcon from "@/components/Dashboard/Overview/SummaryWidget/SummaryWid
 import imgPath from "@/utils/imgPath";
 import ImageThumbnail from "@/components/Dashboard/Generic/ImageThumbnail";
 
-
 /*
 Layout:
   Todays overview:
@@ -41,12 +40,14 @@ Layout:
 */
 
 interface IOverviewProps {
-  ordersTodayStats: IOrderStats,
-  ordersMonthStats: IOrderStats,
+  ordersTodayStats: IOrderStats;
+  ordersMonthStats: IOrderStats;
 }
 
-const DashboardOverviewPage = ({ ordersTodayStats, ordersMonthStats }: IOverviewProps) => {
-
+const DashboardOverviewPage = ({
+  ordersTodayStats,
+  ordersMonthStats,
+}: IOverviewProps) => {
   console.log("STATS TODAY", ordersTodayStats);
   console.log("STATS MONTH", ordersMonthStats);
 
@@ -106,7 +107,12 @@ const DashboardOverviewPage = ({ ordersTodayStats, ordersMonthStats }: IOverview
               <Typography variant="h6" sx={{ mb: 5 }}>
                 {`Top selling product today`}
               </Typography>
-              <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
+              <Stack
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                spacing={2}
+              >
                 <div
                   style={{
                     paddingTop: "5px",
@@ -119,17 +125,28 @@ const DashboardOverviewPage = ({ ordersTodayStats, ordersMonthStats }: IOverview
                     alignItems: "center",
                   }}
                 >
-                  <ImageThumbnail imagePath={ordersTodayStats.top_selling_products == null ? "" : imgPath(ordersTodayStats.top_selling_products[0]?.media, true)} alt={""} />
+                  <ImageThumbnail
+                    imagePath={
+                      ordersTodayStats.top_selling_products == null
+                        ? ""
+                        : imgPath(
+                            ordersTodayStats.top_selling_products[0]?.media,
+                            true
+                          )
+                    }
+                    alt={""}
+                  />
                 </div>
                 <p style={{ fontSize: "15px", fontWeight: "bold" }}>
-                  {ordersTodayStats.top_selling_products == null ? "" : ordersTodayStats.top_selling_products[0]?.title}
+                  {ordersTodayStats.top_selling_products == null
+                    ? ""
+                    : ordersTodayStats.top_selling_products[0]?.title}
                 </p>
               </Stack>
             </Card>
           </Grid>
         </Grid>
-        <Stack spacing={3} sx={{ mt: 5 }}>
-        </Stack>
+        <Stack spacing={3} sx={{ mt: 5 }}></Stack>
         <Typography variant="h4" sx={{ mb: 5 }}>
           {`Order review past 30 days`}
         </Typography>
@@ -182,29 +199,39 @@ const DashboardOverviewPage = ({ ordersTodayStats, ordersMonthStats }: IOverview
               <Typography variant="h6" sx={{ mb: 5 }}>
                 {`Top selling products past 30 days`}
               </Typography>
-              {ordersMonthStats.top_selling_products && ordersMonthStats.top_selling_products.map((product: any) => (
-                <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
-                  <div
-                    style={{
-                      paddingTop: "5px",
-                      paddingBottom: "5px",
-                      width: "200px",
-                      height: "100%",
-                      flexShrink: 0,
-                      position: "relative",
-                      display: "flex",
-                      alignItems: "center",
-                    }}
+              {ordersMonthStats.top_selling_products &&
+                ordersMonthStats.top_selling_products.map((product: any) => (
+                  <Stack
+                    direction="row"
+                    justifyContent="center"
+                    alignItems="center"
+                    spacing={2}
                   >
-                    <ImageThumbnail imagePath={imgPath(product.media, true)} alt={""} />
-                  </div>
-                  <p style={{ fontSize: "15px", fontWeight: "bold" }}>{product.title}</p>
-                </Stack>
-              ))}
+                    <div
+                      style={{
+                        paddingTop: "5px",
+                        paddingBottom: "5px",
+                        width: "200px",
+                        height: "100%",
+                        flexShrink: 0,
+                        position: "relative",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <ImageThumbnail
+                        imagePath={imgPath(product.media, true)}
+                        alt={""}
+                      />
+                    </div>
+                    <p style={{ fontSize: "15px", fontWeight: "bold" }}>
+                      {product.title}
+                    </p>
+                  </Stack>
+                ))}
             </Card>
           </Grid>
-          <Grid item xs={12} sm={9} md={3}>
-          </Grid>
+          <Grid item xs={12} sm={9} md={3}></Grid>
         </Grid>
         <Grid item xs={12} md={6} lg={8} sx={{ paddingTop: 2 }}>
           <SummaryWidgetGraph
@@ -375,15 +402,15 @@ export const getServerSideProps = async (context: any) => {
     "GET",
     req as NextApiRequest,
     res as NextApiResponse
-  )
+  );
 
-  console.log("STATS TODAY SERVER", ordersTodayStats)
-  console.log("STATS MONTH SERVER", ordersMonthStats)
+  console.log("STATS TODAY SERVER", ordersTodayStats);
+  console.log("STATS MONTH SERVER", ordersMonthStats);
 
   return {
     props: {
       ordersTodayStats,
-      ordersMonthStats
+      ordersMonthStats,
     },
   };
 };
