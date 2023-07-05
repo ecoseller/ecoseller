@@ -64,7 +64,6 @@ const ProductPage = ({
   const { basePath } = useRouter();
   const { getRecommendations } = useRecommender();
   const { t } = useTranslation("product");
-  console.log("REVIEWS LIST", productReviews);
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
