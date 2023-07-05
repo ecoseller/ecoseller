@@ -1,3 +1,5 @@
+import { ISummaryValue } from "@/types/order";
+import { Dictionary } from "@editorjs/editorjs";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
@@ -16,8 +18,7 @@ const StyledIcon = styled("div")(({ theme }) => ({
 
 interface ISummaryWidget {
   title: string;
-  value: number;
-  unit: string;
+  value: ISummaryValue[];
   icon: React.ReactNode;
   color: string;
   sx?: any;
@@ -26,12 +27,13 @@ interface ISummaryWidget {
 const SummaryWidget = ({
   title,
   value,
-  unit,
   icon,
   color,
   sx,
   ...props
 }: ISummaryWidget) => {
+  console.log("VALUE", value);
+
   return (
     <Card
       sx={{
@@ -55,9 +57,12 @@ const SummaryWidget = ({
       >
         {icon}
       </StyledIcon>
-      <Typography variant="h3">
-        {value} {unit}
-      </Typography>
+      {value &&
+        value.map((item: ISummaryValue) => (
+          <Typography variant="h5" key={item.value}>
+            {item.code} {Math.round(item.value)} {item.symbol}
+          </Typography>
+        ))}
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
         {title}
       </Typography>

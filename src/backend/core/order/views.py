@@ -5,6 +5,8 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.conf import settings
+from django.db.models import Count
+from product.models import Product
 
 from cart.models import Cart, CartItem
 from cart.serializers import CartItemDetailSerializer
@@ -22,6 +24,8 @@ from .serializers import (
 from api.notifications.conf import (
     EventTypes,
 )
+
+from datetime import datetime, timedelta
 
 NotificationsApi = settings.NOTIFICATIONS_API
 
@@ -64,6 +68,308 @@ class OrderListDashboardView(ListAPIView):
     @check_user_is_staff_decorator()
     def get(self, request):
         return super().get(request)
+
+
+class OrderListTodayDashboardView(APIView):
+    """
+    View for listing orders on dashboard
+    """
+
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = OrderListSerializer
+
+    @check_user_is_staff_decorator()
+    def get(self, request):
+        try:
+            orders = self.get_queryset()
+            ordersTogether = len(orders)
+            # get distributed revenue for each country
+            # e.g. { 'DE': 100, 'AT': 200 }
+            revenue = {}
+            symbols = {}
+            orders_count = {}
+            for order in orders:
+                currency_code = order.cart.pricelist.currency.code
+                currency_symbol = order.cart.pricelist.currency.symbol
+                if currency_code in revenue:
+                    revenue[currency_code] += order.cart.total_items_price_incl_vat
+                    orders_count[currency_code] += 1
+                else:
+                    revenue[currency_code] = order.cart.total_items_price_incl_vat
+                    orders_count[currency_code] = 1
+                    symbols[currency_code] = currency_symbol
+
+            orders_count_obj = [
+                {
+                    "code": "",
+                    "symbol": "",
+                    "value": ordersTogether,
+                }
+            ]
+
+            revenue_obj = []
+            if len(revenue) > 0:
+                revenue_obj = [
+                    {
+                        "code": currency_code,
+                        "symbol": symbols[currency_code],
+                        "value": revenue[currency_code],
+                    }
+                    for currency_code in revenue
+                ]
+            else:
+                revenue_obj = [
+                    {
+                        "code": "",
+                        "symbol": "",
+                        "value": 0,
+                    }
+                ]
+
+            average_order_value_obj = []
+            if len(revenue) > 0:
+                average_order_value_obj = [
+                    {
+                        "code": currency_code,
+                        "symbol": symbols[currency_code],
+                        "value": revenue[currency_code] / orders_count[currency_code],
+                    }
+                    for currency_code in revenue
+                ]
+            else:
+                average_order_value_obj = [
+                    {
+                        "code": "",
+                        "symbol": "",
+                        "value": 0,
+                    }
+                ]
+
+            average_items_per_order_obj = [
+                {
+                    "code": "",
+                    "symbol": "",
+                    "value": (
+                        sum([order.cart.cart_items.count() for order in orders])
+                        / ordersTogether
+                        if ordersTogether
+                        else 0
+                    ),
+                }
+            ]
+
+            # get CartItems from orders
+            cart_items = CartItem.objects.filter(cart__order__in=orders)
+
+            top_selling_product = (
+                cart_items.values("product_id")
+                .annotate(total=Count("product_id"))
+                .order_by("-total")
+                .first()
+                if cart_items
+                else None
+            )
+
+            top_selling_product = (
+                Product.objects.get(id=top_selling_product["product_id"])
+                if top_selling_product
+                else None
+            )
+
+            top_selling_product = [
+                (
+                    {
+                        "title": top_selling_product.title,
+                        "media": top_selling_product.get_primary_photo().media.url
+                        if top_selling_product.get_primary_photo()
+                        else None,
+                    }
+                    if top_selling_product
+                    else None
+                )
+            ]
+
+            return Response(
+                {
+                    "orders_count": orders_count_obj,
+                    "revenue": revenue_obj,
+                    "average_order_value": average_order_value_obj,
+                    "average_items_per_order": average_items_per_order_obj,
+                    "top_selling_products": top_selling_product,
+                    "daily_orders_count": [],
+                },
+                status=200,
+            )
+        except CartItem.DoesNotExist or Product.DoesNotExist:
+            return Response(
+                {
+                    "orders_count": orders_count_obj,
+                    "revenue": revenue_obj,
+                    "average_order_value": average_order_value_obj,
+                    "average_items_per_order": average_items_per_order_obj,
+                    "top_selling_products": [],
+                    "daily_orders_count": [],
+                },
+                status=200,
+            )
+        except Exception as e:
+            print(e)
+            return Response(status=400)
+
+    def get_queryset(self):
+        return Order.objects.filter(create_at__date=datetime.now().date()).order_by(
+            "-create_at"
+        )
+
+
+class OrderListMonthDashboardView(ListAPIView):
+    """
+    View for listing orders on dashboard
+    """
+
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = OrderListSerializer
+
+    @check_user_is_staff_decorator()
+    def get(self, request):
+        try:
+            orders = self.get_queryset()
+            ordersTogether = len(orders)
+            # get distributed revenue for each country
+            # e.g. { 'DE': 100, 'AT': 200 }
+            revenue = {}
+            symbols = {}
+            orders_count = {}
+            for order in orders:
+                currency_code = order.cart.pricelist.currency.code
+                currency_symbol = order.cart.pricelist.currency.symbol
+                if currency_code in revenue:
+                    revenue[currency_code] += order.cart.total_items_price_incl_vat
+                    orders_count[currency_code] += 1
+                else:
+                    revenue[currency_code] = order.cart.total_items_price_incl_vat
+                    orders_count[currency_code] = 1
+                    symbols[currency_code] = currency_symbol
+
+            orders_count_obj = [
+                {
+                    "code": "",
+                    "symbol": "",
+                    "value": ordersTogether,
+                }
+            ]
+
+            revenue_obj = []
+            if len(revenue) > 0:
+                revenue_obj = [
+                    {
+                        "code": currency_code,
+                        "symbol": symbols[currency_code],
+                        "value": revenue[currency_code],
+                    }
+                    for currency_code in revenue
+                ]
+            else:
+                revenue_obj = [
+                    {
+                        "code": "",
+                        "symbol": "",
+                        "value": 0,
+                    }
+                ]
+
+            average_order_value_obj = []
+            if len(revenue) > 0:
+                average_order_value_obj = [
+                    {
+                        "code": currency_code,
+                        "symbol": symbols[currency_code],
+                        "value": revenue[currency_code] / orders_count[currency_code],
+                    }
+                    for currency_code in revenue
+                ]
+            else:
+                average_order_value_obj = [
+                    {
+                        "code": "",
+                        "symbol": "",
+                        "value": 0,
+                    }
+                ]
+
+            average_items_per_order_obj = [
+                {
+                    "code": "",
+                    "symbol": "",
+                    "value": (
+                        sum([order.cart.cart_items.count() for order in orders])
+                        / ordersTogether
+                        if ordersTogether
+                        else 0
+                    ),
+                }
+            ]
+
+            cart_items = CartItem.objects.filter(cart__order__in=orders)
+            top_5_sellings_products = (
+                cart_items.values("product_id")
+                .annotate(total=Count("product_id"))
+                .order_by("-total")[:5]
+            )
+            top_5_sellings_products = [
+                Product.objects.get(id=item["product_id"])
+                for item in top_5_sellings_products
+            ]
+            top_5_sellings_products = [
+                {
+                    "title": product.title,
+                    "media": product.get_primary_photo().media.url
+                    if product.get_primary_photo()
+                    else None,
+                }
+                for product in top_5_sellings_products
+            ]
+
+            # get daily orders count for past 30 days or 0 if no orders
+            daily_orders_count = []
+            for i in range(30):
+                daily_orders_count.append(
+                    orders.filter(
+                        create_at__date=datetime.now().date() - timedelta(days=i)
+                    ).count()
+                )
+
+            return Response(
+                {
+                    "orders_count": orders_count_obj,
+                    "revenue": revenue_obj,
+                    "average_order_value": average_order_value_obj,
+                    "average_items_per_order": average_items_per_order_obj,
+                    "top_selling_products": top_5_sellings_products,
+                    "daily_orders_count": daily_orders_count,
+                },
+                status=200,
+            )
+        except CartItem.DoesNotExist or Product.DoesNotExist:
+            return Response(
+                {
+                    "orders_count": orders_count_obj,
+                    "revenue": revenue_obj,
+                    "average_order_value": average_order_value_obj,
+                    "average_items_per_order": average_items_per_order_obj,
+                    "top_selling_products": [],
+                    "daily_orders_count": daily_orders_count,
+                },
+                status=200,
+            )
+        except Exception as e:
+            print(e)
+            return Response(status=400)
+
+    def get_queryset(self):
+        return Order.objects.filter(
+            create_at__date__gte=datetime.now().date() - timedelta(days=30)
+        ).order_by("-create_at")
 
 
 class OrderCreateStorefrontView(APIView):
