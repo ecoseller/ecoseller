@@ -59,7 +59,7 @@ const SummaryWidget = ({
       </StyledIcon>
       {value &&
         value.map((item: ISummaryValue) => (
-          <Typography variant="h5">
+          <Typography variant="h5" key={item.value}>
             {item.code} {Math.round(item.value)} {item.symbol}
           </Typography>
         ))}
