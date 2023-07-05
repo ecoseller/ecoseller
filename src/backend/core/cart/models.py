@@ -5,6 +5,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from parler.models import TranslatableModel, TranslatedFields
 
+from core.safe_delete import SafeDeleteModel
 from country.models import (
     Country,
     Currency,
@@ -14,8 +15,6 @@ from country.models import (
 )
 from product.models import ProductVariant, Product, PriceList, ProductPrice
 from user.models import User
-
-from core.safe_delete import SafeDeleteModel
 
 
 def get_shipping_method_image_path(instance, filename):
@@ -387,12 +386,10 @@ class CartItem(models.Model):
         """
         language = self._get_language()
         product_title = self.product.translations.get(language_code=language).title
-        attribute_values = (
-            self.product_variant.attribute_values
-        )  # TODO: update after attribute localization
+        attribute_values = self.product_variant.get_attribute_values(language)
 
         return (
-            f"{product_title}, {attribute_values}"
+            f"{product_title}: {attribute_values}"
             if attribute_values
             else product_title
         )

@@ -7,6 +7,13 @@ import getConfig from "next/config";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 import { ICategoryDetail } from "@/types/category";
+import {
+  IAttributeSet,
+  ICategoryDetail,
+  INumericFilter,
+  ISelectedFiltersWithOrdering,
+  ITextualFilter,
+} from "@/types/category";
 import EditorJsOutput from "@/utils/editorjs/EditorJsOutput";
 import Typography from "@mui/material/Typography";
 import SubCategoryList from "@/components/Category/SubCategoryList";
@@ -14,6 +21,7 @@ import HeadMeta from "@/components/Common/SEO";
 import { useRouter } from "next/router";
 import ProductGrid from "@/components/Category/ProductGrid";
 import { IProductRecord } from "@/types/product";
+import { IAttributeTypeWithOptions } from "@/types/attributes";
 import { categoryProductsAPI } from "@/pages/api/category/[id]/products";
 import { categoryDetailAPI } from "@/pages/api/category/[id]";
 import Divider from "@mui/material/Divider";
@@ -25,7 +33,8 @@ import { getCookie } from "cookies-next";
 import { DEFAULT_COUNTRY } from "@/utils/defaults";
 import React, { useEffect, useState } from "react";
 import ProductSortSelect from "@/components/Category/ProductSortSelect";
-import { getCategoryProducts } from "@/api/category/products";
+import { categoryAttributesAPI } from "@/pages/api/category/[id]/attributes";
+import { filterProducts } from "@/api/category/products";
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -34,6 +43,31 @@ interface ICategoryPageProps {
   products: IProductRecord[];
   countryCode: string;
   pricelist: string;
+  attributes: IAttributeSet;
+}
+
+interface ITextualAttributeFilterWithOptions
+  extends IAttributeTypeWithOptions<string>,
+    ITextualFilter {}
+
+export interface INumericAttributeFilterWithOptions
+  extends IAttributeTypeWithOptions<number>,
+    INumericFilter {}
+
+export interface IFilters {
+  textual: { [id: number]: ITextualAttributeFilterWithOptions };
+  numeric: { [id: number]: INumericAttributeFilterWithOptions };
+}
+
+interface IFiltersWithOrdering {
+  filters: IFilters;
+  sortBy: string | null;
+  order: string | null;
+}
+
+export enum NumericFilterValueType {
+  Min,
+  Max,
 }
 
 const CategoryPage = ({
@@ -41,26 +75,153 @@ const CategoryPage = ({
   products,
   countryCode,
   pricelist,
+  attributes,
 }: ICategoryPageProps) => {
   const router = useRouter();
+
   const { id } = router.query;
 
+  const initialFilters: IFiltersWithOrdering = {
+    filters: {
+      textual: {},
+      numeric: {},
+    },
+    sortBy: null,
+    order: null,
+  };
+
   const [productsState, setProductsState] = useState<IProductRecord[]>([]);
+  const [filters, setFilters] = useState<IFiltersWithOrdering>(initialFilters);
+
+  useEffect(() => {
+    if (filters != initialFilters) {
+      applyFilters();
+    }
+  }, [filters]);
 
   useEffect(() => {
     setProductsState(products);
+
+    const storedFilters = tryLoadFiltersFromSessionStorage();
+    if (storedFilters == null) {
+      setEmptyFilters();
+    } else {
+      setFilters(storedFilters);
+    }
   }, [id]);
 
+  const getFiltersStorageKey = () => `category-${category.id}-filters`;
+
+  const saveFiltersToSessionStorage = () => {
+    sessionStorage.setItem(getFiltersStorageKey(), JSON.stringify(filters));
+  };
+
+  const tryLoadFiltersFromSessionStorage = () => {
+    const filtersString = sessionStorage.getItem(getFiltersStorageKey());
+
+    if (filtersString == null) {
+      return null;
+    } else {
+      return JSON.parse(filtersString) as IFiltersWithOrdering;
+    }
+  };
+
+  const setEmptyFilters = () => {
+    const emptyFilters = { ...initialFilters };
+
+    for (const attr of attributes.textual) {
+      emptyFilters.filters.textual[attr.id] = {
+        ...attr,
+        selected_values_ids: [],
+      };
+    }
+
+    for (const attr of attributes.numeric) {
+      emptyFilters.filters.numeric[attr.id] = {
+        ...attr,
+        min_value_id: null,
+        max_value_id: null,
+      };
+    }
+
+    setFilters(emptyFilters);
+  };
+
+  const applyFilters = () => {
+    const filtersToApply: ISelectedFiltersWithOrdering = {
+      filters: {
+        numeric: Object.values(filters.filters.numeric),
+        textual: Object.values(filters.filters.textual),
+      },
+      sort_by: filters.sortBy,
+      order: filters.order,
+    };
+
+    saveFiltersToSessionStorage();
+
+    filterProducts(category.id, pricelist, countryCode, filtersToApply).then(
+      (products) => setProductsState(products)
+    );
+  };
+
   const sortProducts = (sortBy: string, order: string) => {
-    getCategoryProducts(
-      category.id,
-      pricelist,
-      countryCode,
-      sortBy,
-      order
-    ).then((data) => {
-      setProductsState(data);
+    setFilters({
+      ...filters,
+      sortBy: sortBy,
+      order: order,
     });
+  };
+
+  const updateTextualFilter = (id: number, selectedValuesIds: number[]) => {
+    setFilters({
+      ...filters,
+      filters: {
+        ...filters.filters,
+        textual: {
+          ...filters.filters.textual,
+          [id]: {
+            ...filters.filters.textual[id],
+            selected_values_ids: selectedValuesIds,
+          },
+        },
+      },
+    });
+  };
+
+  const updateNumericFilter = (
+    id: number,
+    valueType: NumericFilterValueType,
+    valueId: number | null
+  ) => {
+    if (valueType == NumericFilterValueType.Min) {
+      setFilters({
+        ...filters,
+        filters: {
+          ...filters.filters,
+          numeric: {
+            ...filters.filters.numeric,
+            [id]: {
+              ...filters.filters.numeric[id],
+              min_value_id: valueId,
+            },
+          },
+        },
+      });
+    } else {
+      setFilters({
+        ...filters,
+        filters: {
+          ...filters.filters,
+          numeric: {
+            ...filters.filters.numeric,
+            [id]: {
+              ...filters.filters.numeric[id],
+              max_value_id: valueId,
+            },
+          },
+        },
+      });
+    }
   };
 
   return (
@@ -82,9 +243,17 @@ const CategoryPage = ({
             <Divider sx={{ my: 2 }} />
           </>
         ) : null}
-        <ProductFilters />
+        <ProductFilters
+          filters={filters.filters}
+          updateTextualFilter={updateTextualFilter}
+          updateNumericFilter={updateNumericFilter}
+          setEmptyFilters={setEmptyFilters}
+        />
         <Divider sx={{ my: 2 }} />
-        <ProductSortSelect sortProducts={sortProducts} />
+        <ProductSortSelect
+          defaultOrdering={filters}
+          sortProducts={sortProducts}
+        />
         <ProductGrid products={productsState} />
       </div>
     </>
@@ -122,6 +291,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   );
 
   const products: IProductRecord[] = await categoryProductsAPI(
+    "GET",
     idNumber.toString(),
     countryDetail.code,
     pricelist,
@@ -129,18 +299,24 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     res as NextApiResponse
   );
 
-  // if (!category) {
-  //   return {
-  //     notFound: true,
-  //   };
-  // } else if (data.slug && data.slug !== slug) {
-  //   return {
-  //     redirect: {
-  //       destination: `/product/${id}/${data.slug}`,
-  //       permanent: true,
-  //     },
-  //   };
-  // }
+  const attributes: IAttributeSet = await categoryAttributesAPI(
+    idNumber.toString(),
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
+  if (!category) {
+    return {
+      notFound: true,
+    };
+  } else if (category.slug && category.slug !== slug) {
+    return {
+      redirect: {
+        destination: `/category/${id}/${category.slug}`,
+        permanent: true,
+      },
+    };
+  }
 
   return {
     props: {
@@ -148,6 +324,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       products,
       countryCode: countryDetail.code,
       pricelist,
+      attributes,
       ...(await serverSideTranslations(locale as string, [
         "category",
         ...serverRuntimeConfig.commoni18NameSpaces,

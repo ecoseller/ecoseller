@@ -37,6 +37,7 @@ from product.models import (
     BaseAttribute,
     ProductMediaTypes,
     ProductType,
+    AttributeTypeValueType,
 )
 
 """
@@ -544,17 +545,18 @@ class ProductDashboardSerializer(TranslatedSerializerMixin, ModelSerializer):
         )
 
 
-class AttributeTypeStorefrontSerializer(serializers.ModelSerializer):
+class AttributeTypeStorefrontSerializer(TranslatedSerializerMixin, ModelSerializer):
+    is_numeric = serializers.SerializerMethodField()
+
     class Meta:
         model = AttributeType
-        fields = (
-            "id",
-            "type_name",
-            "unit",
-        )
+        fields = ("id", "type_name", "name", "unit", "is_numeric")
+
+    def get_is_numeric(self, instance):
+        return instance.value_type != AttributeTypeValueType.TEXT
 
 
-class BaseAttributeStorefrontSerializer(serializers.ModelSerializer):
+class BaseAttributeStorefrontSerializer(TranslatedSerializerMixin, ModelSerializer):
     type = AttributeTypeStorefrontSerializer(read_only=True)
 
     class Meta:
@@ -563,6 +565,7 @@ class BaseAttributeStorefrontSerializer(serializers.ModelSerializer):
             "id",
             "order",
             "value",
+            "name",
             "type",
         )
 
@@ -765,3 +768,49 @@ class ProductVariantCartSerializer(ModelSerializer):
             "sku",
             "base_attributes",
         )
+
+
+class BaseAttributeFilterStorefrontSerializer(
+    TranslatedSerializerMixin, ModelSerializer
+):
+    value = serializers.SerializerMethodField(method_name="get_attribute_value")
+
+    class Meta:
+        model = BaseAttribute
+        fields = ("id", "value")
+
+    def get_attribute_value(self, obj):
+        if obj.type.value_type == AttributeTypeValueType.TEXT:
+            return self.get_translated_field_value(obj, "name")
+        else:
+            return float(obj.value)
+
+
+class AttributeTypeFilterStorefrontSerializer(
+    TranslatedSerializerMixin, ModelSerializer
+):
+    """
+    Serializer used for displaying attribute type filters on storefront
+    """
+
+    possible_values = serializers.SerializerMethodField()
+
+    class Meta:
+        model = AttributeType
+        fields = ("id", "name", "unit", "possible_values")
+
+    def get_possible_values(self, obj: AttributeType):
+        possible_values = obj.base_attributes.all()
+
+        # sort the values if the attribute has numeric value type
+        if obj.value_type in [
+            AttributeTypeValueType.INTEGER,
+            AttributeTypeValueType.DECIMAL,
+        ]:
+            possible_values = sorted(
+                possible_values, key=lambda attr: float(attr.value)
+            )
+
+        return BaseAttributeFilterStorefrontSerializer(
+            possible_values, many=True, context=self.context
+        ).data

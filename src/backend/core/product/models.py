@@ -1,4 +1,3 @@
-from core.safe_delete import SafeDeleteModel
 from ckeditor.fields import RichTextField
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
@@ -13,6 +12,7 @@ from category.models import (
 from core.models import (
     SortableModel,
 )
+from core.safe_delete import SafeDeleteModel
 from country.models import Currency, VatGroup
 
 
@@ -28,9 +28,10 @@ class ProductVariant(SafeDeleteModel):
     def __str__(self) -> str:
         return "sku: {} ean: {}".format(self.sku, self.ean)
 
-    @property
-    def attribute_values(self):
-        variant_attributes = [str(attr) for attr in self.attributes.all()]
+    def get_attribute_values(self, locale):
+        variant_attributes = [
+            attr.to_locale_string(locale) for attr in self.attributes.all()
+        ]
         return ", ".join(variant_attributes)
 
     def save(
@@ -294,6 +295,19 @@ class BaseAttribute(SafeDeleteModel, TranslatableModel):
 
     def __str__(self) -> str:
         attr_with_value = f"{self.type.type_name}: {self.value}"
+        if self.type.unit:
+            attr_with_value += self.type.unit
+        return attr_with_value
+
+    def to_locale_string(self, locale):
+        localized_attribute_name = self.type.get_translation(language_code=locale).name
+        localized_attribute_value = (
+            self.get_translation(language_code=locale).name
+            if self.type.value_type == AttributeTypeValueType.TEXT
+            else self.value
+        )
+
+        attr_with_value = f"{localized_attribute_name}: {localized_attribute_value}"
         if self.type.unit:
             attr_with_value += self.type.unit
         return attr_with_value

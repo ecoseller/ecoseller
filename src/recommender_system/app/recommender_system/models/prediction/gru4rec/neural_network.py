@@ -16,6 +16,7 @@ from recommender_system.models.prediction.gru4rec.layers import (
     ReducedLinearFeedforward,
     SelectGRUOutput,
 )
+from recommender_system.models.stored.model.config import ConfigModel
 from recommender_system.models.stored.model.training_statistics import (
     TrainingStatisticsModel,
 )
@@ -40,6 +41,10 @@ class NeuralNetwork:
     num_incremental_epochs: int = 1
     batch_size: int = 64
 
+    embedding_size: int = 100
+    hidden_size: int = 100
+    learning_rate: float = 0.0001
+
     model_identifier: str
 
     @property
@@ -51,8 +56,14 @@ class NeuralNetwork:
         return GRU4RecPredictionModel.Meta.model_name
 
     @property
-    def hyperparameters(self) -> Dict[str, Any]:
-        return {"num_epochs": self.num_epochs, "batch_size": self.batch_size}
+    def parameters(self) -> Dict[str, Any]:
+        return {
+            "num_epochs": self.num_epochs,
+            "batch_size": self.batch_size,
+            "embedding_size": self.embedding_size,
+            "hidden_size": self.hidden_size,
+            "learning_rate": self.learning_rate,
+        }
 
     @classmethod
     @inject
@@ -69,6 +80,9 @@ class NeuralNetwork:
         gru4rec.feedforward = gru4rec.net[-1]
         gru4rec.mapping = gru4rec_storage.get_mapping(identifier=identifier)
 
+        parameters = gru4rec_storage.get_parameters(identifier=identifier)
+        gru4rec._set_parameters(parameters=parameters)
+
         return gru4rec
 
     @inject
@@ -83,8 +97,8 @@ class NeuralNetwork:
             model_class=ProductVariantModel, attribute="sku"
         )
         self.mapping = {sku: i for i, sku in enumerate(skus)}
-        embedding_size = 100
-        hidden_size = 100
+        embedding_size = self.embedding_size
+        hidden_size = self.hidden_size
         self.embedding = ReducedLinearEmbedding(
             in_features=num_product_variants, out_features=embedding_size
         )
@@ -98,7 +112,7 @@ class NeuralNetwork:
             SelectGRUOutput(),
             self.feedforward,
         )
-        self.optimizer = torch.optim.SGD(self.net.parameters(), lr=0.0001)
+        self.optimizer = torch.optim.SGD(self.net.parameters(), lr=self.learning_rate)
 
     def loss(self, outputs: torch.Tensor) -> torch.Tensor:
         diag = torch.eye(outputs.size(dim=0)) * outputs
@@ -114,7 +128,25 @@ class NeuralNetwork:
 
     @property
     def possible_parameters(self) -> List[Dict[str, Any]]:
-        return [{"batch_size": 64}]
+        parameters = []
+        config = ConfigModel.get_current()
+        for num_epochs in config.gru4rec_config.num_epochs_options:
+            for batch_size in config.gru4rec_config.batch_size_options:
+                for embedding_size in config.gru4rec_config.embedding_size_options:
+                    for hidden_size in config.gru4rec_config.hidden_size_options:
+                        for (
+                            learning_rate
+                        ) in config.gru4rec_config.learning_rate_options:
+                            parameters.append(
+                                {
+                                    "num_epochs": num_epochs,
+                                    "batch_size": batch_size,
+                                    "embedding_size": embedding_size,
+                                    "hidden_size": hidden_size,
+                                    "learning_rate": learning_rate,
+                                }
+                            )
+        return parameters
 
     @inject
     def _get_data_loader(
@@ -309,7 +341,7 @@ class NeuralNetwork:
             peak_memory_percentage=peak_memory_percentage,
             full_train=full_train,
             metrics={},
-            hyperparameters=self.hyperparameters,
+            hyperparameters=self.parameters,
         )
         statistics.create()
 
@@ -347,6 +379,9 @@ class NeuralNetwork:
         gru4rec_storage: AbstractGRU4RecStorage = Provide["gru4rec_storage"],
     ) -> None:
         gru4rec_storage.store_module(module=self.net, identifier=identifier)
+        gru4rec_storage.store_parameters(
+            parameters=self.parameters, identifier=identifier
+        )
         gru4rec_storage.store_mapping(mapping=self.mapping, identifier=identifier)
 
     @classmethod
@@ -357,4 +392,5 @@ class NeuralNetwork:
         gru4rec_storage: AbstractGRU4RecStorage = Provide["gru4rec_storage"],
     ) -> None:
         gru4rec_storage.delete_module(identifier=identifier)
+        gru4rec_storage.delete_parameters(identifier=identifier)
         gru4rec_storage.delete_mapping(identifier=identifier)

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Dict
+from typing import Any, Dict
 
 import torch
 
@@ -24,6 +24,24 @@ class AbstractGRU4RecStorage(ABC):
         -------
         torch.nn.Module
             Module from storage given by the identifier.
+
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
+    def get_parameters(self, identifier: str) -> Dict[str, Any]:
+        """
+        Gets requested parameters from the storage.
+
+        Parameters
+        ----------
+        identifier: str
+            Identifier of the requested parameters.
+
+        Returns
+        -------
+        Dict[str, Any]
+            Parameters from storage given by the identifier.
 
         """
         raise NotImplementedError()
@@ -64,6 +82,23 @@ class AbstractGRU4RecStorage(ABC):
         raise NotImplementedError()
 
     @abstractmethod
+    def delete_parameters(self, identifier: str) -> None:
+        """
+        Deletes requested parameters from the storage.
+
+        Parameters
+        ----------
+        identifier: str
+            Identifier of the requested parameters.
+
+        Returns
+        -------
+        None
+
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
     def delete_mapping(self, identifier: str) -> None:
         """
         Deletes requested mapping from the storage.
@@ -91,6 +126,25 @@ class AbstractGRU4RecStorage(ABC):
             Module to be stored to the storage.
         identifier: str
             Module's identifier.
+
+        Returns
+        -------
+        None
+
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
+    def store_parameters(self, parameters: Dict[str, Any], identifier: str) -> None:
+        """
+        Stores `parameters` to the storage.
+
+        Parameters
+        ----------
+        parameters: Dict[str, Any]
+            Parameters to be stored to the storage.
+        identifier: str
+            Mapping's identifier.
 
         Returns
         -------

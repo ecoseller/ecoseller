@@ -12,6 +12,10 @@ import MenuItem from "@mui/material/MenuItem";
 import { useRouter } from "next/router";
 
 interface IProductSortSelectProps {
+  defaultOrdering: {
+    sortBy: string | null;
+    order: string | null;
+  };
   sortProducts: (sortBy: string, order: string) => void;
 }
 
@@ -24,9 +28,13 @@ interface IOrderingType {
 /**
  * Component displaying `select` for ordering products
  * @param sortProducts function that sorts products by the selected criteria
+ * @param defaultOrdering
  * @constructor
  */
-const ProductSortSelect = ({ sortProducts }: IProductSortSelectProps) => {
+const ProductSortSelect = ({
+  defaultOrdering,
+  sortProducts,
+}: IProductSortSelectProps) => {
   const router = useRouter();
   const { id } = router.query;
 
@@ -35,6 +43,16 @@ const ProductSortSelect = ({ sortProducts }: IProductSortSelectProps) => {
   const [selectedOrderingName, setSelectedOrderingName] = useState("");
 
   useEffect(() => {
+    for (const [orderingName, ordering] of Object.entries(availableOrderings)) {
+      if (
+        ordering.sortBy == defaultOrdering.sortBy &&
+        ordering.order == defaultOrdering.sortBy
+      ) {
+        setSelectedOrderingName(orderingName);
+        return;
+      }
+    }
+
     setSelectedOrderingName("");
   }, [id]);
 

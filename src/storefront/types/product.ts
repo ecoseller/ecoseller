@@ -1,5 +1,6 @@
 import { IEditorJsField } from "@/utils/editorjs/EditorJsOutput";
 import { IBreadcrumbObject } from "@/types/common";
+import { IAttributeType } from "@/types/attributes";
 
 export interface IProductSliderData {
   id: number;
@@ -9,15 +10,10 @@ export interface IProductSliderData {
   url: string;
 }
 
-export interface IAttributeType {
-  id: number;
-  type_name: string;
-  unit: string;
-}
-
 export interface IBaseAttribute {
   id: number;
   order: number;
+  name: string;
   value: string;
   type: IAttributeType;
 }
