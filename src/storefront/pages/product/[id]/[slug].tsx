@@ -1,12 +1,15 @@
 // next
 import { useRouter } from "next/router";
 import Link from "next/link";
-
+import getConfig from "next/config";
+// utils
+import { useTranslation } from "next-i18next";
 // react
 
 // libs
 import { productAPI } from "@/pages/api/product/[id]";
 import EditorJsOutput from "@/utils/editorjs/EditorJsOutput";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 // components
 import MediaGallery from "@/components/ProductDetail/MediaGallery";
@@ -39,6 +42,8 @@ import { productRatingAPI } from "@/pages/api/review/rating/[token]";
 import { productReviewListAPI } from "@/pages/api/review/list/[token]";
 import { IReview } from "@/types/review";
 import { ReviewsList } from "@/components/Review/RatingsList";
+
+const { serverRuntimeConfig } = getConfig();
 
 interface IProductPageProps {
   data: IProductDetail;
@@ -101,6 +106,7 @@ const ProductPage = ({
   productReviews,
 }: IProductPageProps) => {
   const { basePath } = useRouter();
+  const { t } = useTranslation("product");
   console.log("REVIEWS LIST", productReviews);
 
   const theme = useTheme();
@@ -140,7 +146,7 @@ const ProductPage = ({
                 component={"h3"}
                 sx={{ fontSize: "1.25rem", paddingTop: "20px" }}
               >
-                Variants
+                {t("varinats")}
               </Typography>
               <ProductVariants
                 variants={data.product_variants}
@@ -156,16 +162,16 @@ const ProductPage = ({
         </Grid>
         <Box sx={{ pt: 5 }}>
           <Typography variant="h4" gutterBottom>
-            Recommended products
+            {t("recommended-products-title")}
           </Typography>
           <Typography variant="body1" gutterBottom>
-            Check out our best selling products
+            {t("recommended-products-description")}
           </Typography>
           <ProductsSlider data={recommendedProducts} />
         </Box>
         <Box sx={{ pt: 5 }}>
           <Typography variant="h4" gutterBottom>
-            Reviews
+            {t("reviews")}
           </Typography>
           <AverageRating productRating={productRating} />
           <ReviewsList reviews={productReviews} />
@@ -243,6 +249,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       pricelist,
       productRating,
       productReviews,
+      ...(await serverSideTranslations(locale as string, [
+        "product",
+        "review",
+        ...serverRuntimeConfig.commoni18NameSpaces,
+      ])),
     },
   };
 };

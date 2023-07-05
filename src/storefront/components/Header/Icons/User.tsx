@@ -6,6 +6,8 @@
 
 // react
 import { useEffect, useState } from "react";
+// utils
+import { useTranslation } from "next-i18next";
 // mui
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -26,6 +28,8 @@ const User = () => {
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const [user, setUser] = useState<IUser | null>(null);
   const [refetch, setRefetch] = useState<boolean>(false);
+
+  const { t } = useTranslation("common");
 
   const router = useRouter();
 
@@ -155,14 +159,14 @@ const User = () => {
         </Box>
         <Divider sx={{ borderColor: "#E6E8EA" }} />
         <MenuItem onClick={handleProfile} sx={{ m: 1 }}>
-          Profile
+          {t("header-user-profile")}
         </MenuItem>
         <MenuItem onClick={handleOrders} sx={{ m: 1 }}>
-          Orders
+          {t("header-user-orders")}
         </MenuItem>
         <Divider sx={{ borderStyle: "dashed" }} />
         <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
-          Logout
+          {t("header-user-logout")}
         </MenuItem>
       </Menu>
     </>

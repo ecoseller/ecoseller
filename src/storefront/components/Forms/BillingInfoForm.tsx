@@ -1,5 +1,7 @@
 import { IBillingInfo, ICountryOption } from "@/types/cart";
 import { IValidatedInputField } from "@/types/common";
+// utils
+import { useTranslation } from "next-i18next";
 import TextField from "@mui/material/TextField";
 import {
   ChangeEvent,
@@ -48,12 +50,15 @@ const validateInitialState = (value: string) =>
 
 export const billingInfoInitialData = (
   billingInfo: IBillingInfo,
-  setter: Dispatch<SetStateAction<IBillingInfoFormProps>>
+  setter: Dispatch<SetStateAction<IBillingInfoFormProps>>,
+  t: (key: string) => string
 ): IBillingInfoFormProps => {
   /**
    * Purpose of this function is to take the billing info from the API and
    * convert it into the format that the BillingInfoForm component expects.
    * */
+
+  // const { t } = useTranslation("common");
 
   return {
     first_name: {
@@ -71,8 +76,8 @@ export const billingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: "First name is required",
-      label: "First name",
+      errorMessage: `${t("common:first-name-required-error-message")}`,
+      label: `${t("common:first-name-label")}`,
     },
     surname: {
       value: billingInfo.surname,
@@ -89,8 +94,8 @@ export const billingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: "Surname is required",
-      label: "Surname",
+      errorMessage: `${t("common:surname-required-error-message")}`,
+      label: `${t("common:surname-label")}`,
     },
     company_name: {
       value: billingInfo.company_name,
@@ -101,7 +106,7 @@ export const billingInfoInitialData = (
           company_name: { ...prevState.company_name, value },
         })),
       isRequired: false,
-      label: "Company name",
+      label: `${t("common:company-name-label")}`,
     },
     company_id: {
       value: billingInfo.company_id,
@@ -112,7 +117,7 @@ export const billingInfoInitialData = (
           company_id: { ...prevState.company_id, value },
         })),
       isRequired: false,
-      label: "Company ID",
+      label: `${t("common:company-id-label")}`,
     },
     vat_number: {
       value: billingInfo.vat_number,
@@ -123,7 +128,7 @@ export const billingInfoInitialData = (
           vat_number: { ...prevState.vat_number, value },
         })),
       isRequired: false,
-      label: "VAT ID",
+      label: `${t("common:vat-number-label")}`,
     },
     street: {
       value: billingInfo.street,
@@ -140,8 +145,8 @@ export const billingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: "Street is required",
-      label: "Street",
+      errorMessage: `${t("common:street-required-error-message")}`,
+      label: `${t("common:street-label")}`,
     },
     city: {
       value: billingInfo.city,
@@ -158,8 +163,8 @@ export const billingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: "City is required",
-      label: "City",
+      errorMessage: `${t("common:city-required-error-message")}`,
+      label: `${t("common:city-label")}`,
     },
     postal_code: {
       value: billingInfo.postal_code,
@@ -176,8 +181,8 @@ export const billingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: "Postal code is required",
-      label: "Postal code",
+      errorMessage: `${t("common:postal-code-required-error-message")}`,
+      label: `${t("common:postal-code-label")}`,
     },
     country: {
       value: `${billingInfo.country}`,
@@ -194,8 +199,8 @@ export const billingInfoInitialData = (
         })),
       validator: (value: string) => value.length > 0,
       isRequired: true,
-      errorMessage: "Country is required",
-      label: "Country",
+      errorMessage: `${t("common:country-required-error-message")}`,
+      label: `${t("ccommon:ountry-label")}`,
     },
   };
 };

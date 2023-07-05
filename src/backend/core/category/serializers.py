@@ -2,9 +2,22 @@ from parler_rest.serializers import (
     TranslatableModelSerializer,
     TranslatedFieldsField,
 )
-from rest_framework.serializers import ModelSerializer, SerializerMethodField
+from rest_framework.serializers import (
+    ModelSerializer,
+    SerializerMethodField,
+    Serializer,
+    IntegerField,
+    ListField,
+    CharField,
+)
 from rest_framework_recursive.fields import RecursiveField
 
+from category.filters import (
+    SelectedFilters,
+    NumericFilter,
+    TextualFilter,
+    SelectedFiltersWithOrdering,
+)
 from category.models import (
     Category,
 )
@@ -113,32 +126,6 @@ class CategoryDetailDashboardSerializer(TranslatableModelSerializer, ModelSerial
         fields = ("id", "published", "translations", "update_at", "create_at", "parent")
 
 
-# class CategoryWithChildrenSerializer(TranslatedSerializerMixin, ModelSerializer):
-#     """
-#     Extension of CategoryDetailSerializer with children field.
-#     """
-#
-#     children = SerializerMethodField()
-#
-#     class Meta:
-#         model = Category
-#         fields = (
-#             "id",
-#             "title",
-#             "description",
-#             "meta_title",
-#             "meta_description",
-#             "slug",
-#             "parent",
-#             "children",
-#         )
-#
-#     def get_children(self, obj):
-#         return [
-#             CategoryDetailSerializer(child).data for child in obj.published_children
-#         ]
-
-
 class CategoryMinimalSerializer(TranslatedSerializerMixin, ModelSerializer):
     """
     Minimal serializer for Category model.
@@ -147,3 +134,44 @@ class CategoryMinimalSerializer(TranslatedSerializerMixin, ModelSerializer):
     class Meta:
         model = Category
         fields = ("id", "title", "slug")
+
+
+class TextualFilterSerializer(Serializer):
+    id = IntegerField()
+    selected_values_ids = ListField(child=IntegerField())
+
+
+class NumericFilterSerializer(Serializer):
+    id = IntegerField()
+    min_value_id = IntegerField(allow_null=True)
+    max_value_id = IntegerField(allow_null=True)
+
+
+class SelectedFiltersSerializer(Serializer):
+    textual = TextualFilterSerializer(many=True)
+    numeric = NumericFilterSerializer(many=True)
+
+    def create(self, validated_data):
+        textual, numeric = [], []
+
+        for filter in validated_data["textual"]:
+            textual.append(TextualFilter(**filter))
+
+        for filter in validated_data["numeric"]:
+            numeric.append(NumericFilter(**filter))
+
+        return SelectedFilters(textual, numeric)
+
+
+class SelectedFiltersWithOrderingSerializer(Serializer):
+    filters = SelectedFiltersSerializer()
+    sort_by = CharField(allow_null=True)
+    order = CharField(allow_null=True)
+
+    def create(self, validated_data):
+        filters_data = validated_data["filters"]
+
+        filters = SelectedFiltersSerializer().create(filters_data)
+        sort_by, order = validated_data["sort_by"], validated_data["order"]
+
+        return SelectedFiltersWithOrdering(filters, sort_by, order)

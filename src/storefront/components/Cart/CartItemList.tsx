@@ -1,3 +1,6 @@
+// utils
+import { useTranslation } from "next-i18next";
+
 import { useCart } from "@/utils/context/cart";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
@@ -24,6 +27,8 @@ const CartItemList = ({ editable }: ICartItemListProps) => {
   const { cart, updateQuantity, removeFromCart } = useCart();
   const router = useRouter();
 
+  const { t } = useTranslation("cart");
+
   const updateItemQuantity = (item: ICartItem, addingOne: boolean = true) => {
     if (!addingOne && item.quantity == 1) {
       return;
@@ -38,11 +43,11 @@ const CartItemList = ({ editable }: ICartItemListProps) => {
       <Table sx={{ minWidth: 650 }}>
         {editable ? null : (
           <TableHead>
-            <TableCell align="center">Product</TableCell>
-            <TableCell align="center">Image</TableCell>
-            <TableCell align="center">Quantity</TableCell>
-            <TableCell align="center">Discount</TableCell>
-            <TableCell align="center">Total price</TableCell>
+            <TableCell align="center">{t("product")}</TableCell>
+            <TableCell align="center">{t("image")}</TableCell>
+            <TableCell align="center">{t("quantity")}</TableCell>
+            <TableCell align="center">{t("discount")}</TableCell>
+            <TableCell align="center">{t("total-price")}</TableCell>
           </TableHead>
         )}
         <TableBody>
@@ -120,7 +125,11 @@ const CartItemList = ({ editable }: ICartItemListProps) => {
         <Grid container justifyContent="center" sx={{ my: 3 }}>
           <Grid item>
             <Typography variant="h6">
-              Total price:&nbsp;{cart.total_items_price_incl_vat_formatted}
+              {
+                t("total-price-incl-price", {
+                  price: cart.total_price_incl_vat_formatted,
+                }) /**Total price:&nbsp; */
+              }
             </Typography>
           </Grid>
         </Grid>
@@ -128,7 +137,7 @@ const CartItemList = ({ editable }: ICartItemListProps) => {
     </>
   ) : (
     <Typography variant="h6" sx={{ my: 3 }}>
-      No items
+      {t("no-items")}
     </Typography>
   );
 };

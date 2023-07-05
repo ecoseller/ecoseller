@@ -1,10 +1,13 @@
 // next
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
 import { useRouter } from "next/router";
+import getConfig from "next/config";
 
 // react
 import { useCallback, useEffect, useMemo, useState } from "react";
-
+// utils
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 // api
 import { putBillingInfo, putShippingInfo } from "@/api/cart/info";
 import { cartBillingInfoAPI } from "@/pages/api/cart/[token]/billing-info";
@@ -53,6 +56,8 @@ import { cartShippingPaymentMethodsAPI } from "@/pages/api/cart/methods/[country
 import PaymentMethodList from "@/components/Cart/Methods/PaymentMethodList";
 import { setPaymentMethod, setShippingMethod } from "@/api/cart/methods";
 
+const { serverRuntimeConfig } = getConfig();
+
 interface ICartStep2PageProps {
   cart: ICartDetail;
   methods: IShippingMethodCountryWithPaymentMethod[];
@@ -67,6 +72,7 @@ const CartStep2Page = ({ cart, methods, cartToken }: ICartStep2PageProps) => {
    */
 
   const router = useRouter();
+  const { t } = useTranslation("cart");
 
   const [shippingMethodCountryId, setShippingMethodCountryId] = useState<
     number | null
@@ -124,7 +130,7 @@ const CartStep2Page = ({ cart, methods, cartToken }: ICartStep2PageProps) => {
       >
         <Grid container item xs={10} sm={10} md={5} direction="column">
           <div className="shipping-info-form">
-            <h2>Shipping method</h2>
+            <h2>{t("shipping-method-title") /* Shipping method */}</h2>
             <ShippingMethodList
               methods={methods}
               selected={shippingMethodCountryId}
@@ -134,9 +140,15 @@ const CartStep2Page = ({ cart, methods, cartToken }: ICartStep2PageProps) => {
         </Grid>
         <Grid container item xs={10} sm={10} md={5} direction="column" pt={4}>
           <div className="billing-info-form">
-            <h2>Payment method</h2>
+            <h2>{t("payment-method-title") /* Payment method */}</h2>
             {shippingMethodCountryId === null ? (
-              <p>Choose shipping method first</p>
+              <p>
+                {
+                  t(
+                    "choose-shipping-method-first"
+                  ) /** Choose shipping method first*/
+                }
+              </p>
             ) : (
               <PaymentMethodList
                 methods={
@@ -153,14 +165,14 @@ const CartStep2Page = ({ cart, methods, cartToken }: ICartStep2PageProps) => {
       </Grid>
       <CartButtonRow
         prev={{
-          title: "Previous",
+          title: t("back") /* Back */,
           onClick: () => {
             router.push("/cart/step/1");
           },
           disabled: false,
         }}
         next={{
-          title: "Next",
+          title: t("next") /* Next */,
           onClick: async () => submitForm(),
           disabled: !shippingMethodCountryId || !paymentMethodCountryId,
         }}
@@ -175,7 +187,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
    * Fetch the cart from the API
    */
 
-  const { req, res } = context;
+  const { req, res, locale } = context;
   const { cartToken } = req.cookies;
 
   if (cartToken === undefined || cartToken === null) {
@@ -234,6 +246,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       cart,
       methods,
       cartToken,
+      ...(await serverSideTranslations(locale as string, [
+        "cart",
+        ...serverRuntimeConfig.commoni18NameSpaces,
+      ])),
     },
   };
 };

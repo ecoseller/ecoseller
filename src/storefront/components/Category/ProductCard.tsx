@@ -10,7 +10,8 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { is } from "immutable";
 import { number } from "prop-types";
 import DiscountText from "@/components/Generic/DiscountText";
-
+// utils
+import { useTranslation } from "next-i18next";
 interface IProductCardProps {
   product: IProductRecord;
 }
@@ -21,6 +22,7 @@ interface IProductCardProps {
  * @constructor
  */
 const ProductCard = ({ product }: IProductCardProps) => {
+  const { t } = useTranslation("common");
   const theme = useTheme();
   const isMediumScreen = useMediaQuery(theme.breakpoints.between("sm", "xl"));
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -82,7 +84,8 @@ const ProductCard = ({ product }: IProductCardProps) => {
           </Typography>
           {variantCount > 1 ? (
             <Typography variant="body2" color="text.secondary">
-              ({variantCount} variants)
+              {/* ({variantCount} variants) */}
+              {t("category:product-card-variants", { count: variantCount })}
             </Typography>
           ) : null}
           <Typography variant="body2" color="text.secondary">
@@ -92,7 +95,7 @@ const ProductCard = ({ product }: IProductCardProps) => {
       </NextLink>
       <CardActions sx={{ mt: "auto", ml: 1 }}>
         <Typography gutterBottom variant="h6" component="div">
-          {hasMultiplePrices ? <span>From&nbsp;&nbsp;</span> : null}
+          {hasMultiplePrices ? <span>{t("common:from")}</span> : null}
           {cheapestVariantPrice.incl_vat_formatted}
           &nbsp;
           {renderDiscountIfAny()}

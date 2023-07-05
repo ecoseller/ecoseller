@@ -1,3 +1,5 @@
+// utils
+import { useTranslation } from "next-i18next";
 import { ICategoryBase } from "@/types/category";
 import { useRouter } from "next/router";
 import React from "react";
@@ -15,10 +17,14 @@ interface ISubCategoryListProps {
  * @constructor
  */
 const SubCategoryList = ({ subCategories }: ISubCategoryListProps) => {
+  const { t } = useTranslation("category");
   const router = useRouter();
 
   return (
-    <CollapsableContentWithTitle title="Subcategories" defaultOpen={true}>
+    <CollapsableContentWithTitle
+      title={t("subcategory-section-title") /**Subcategories */}
+      defaultOpen={true}
+    >
       <Grid container spacing={{ xs: 1, sm: 2 }}>
         {subCategories.map((c) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={c.id}>

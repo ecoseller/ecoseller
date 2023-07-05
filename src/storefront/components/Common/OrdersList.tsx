@@ -1,3 +1,5 @@
+// utils
+import { useTranslation } from "next-i18next";
 import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import React from "react";
@@ -11,10 +13,12 @@ interface IOrderListProps {
 export const OrderList = ({ orders }: IOrderListProps) => {
   const router = useRouter();
 
+  const { t } = useTranslation("order");
+
   const columns: GridColDef[] = [
     {
       field: "token",
-      headerName: "Order id",
+      headerName: `${t("order-id")}`,
       editable: false,
       flex: 1,
       renderCell: (params: any) => {
@@ -24,19 +28,19 @@ export const OrderList = ({ orders }: IOrderListProps) => {
     },
     {
       field: "status",
-      headerName: "Status",
+      headerName: `${t("status")}`,
       editable: false,
       flex: 1,
     },
     {
       field: "create_at",
-      headerName: "Created at",
+      headerName: `${t("create-at")}`,
       editable: false,
       flex: 1,
     },
     {
       field: "items",
-      headerName: "Items",
+      headerName: `${t("items")}`,
       editable: false,
       flex: 1,
       valueParser: (params) => {
