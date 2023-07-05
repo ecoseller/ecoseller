@@ -50,7 +50,6 @@ import { Check, CheckBox } from "@mui/icons-material";
 import { useCountry } from "@/utils/context/country";
 import { DEFAULT_COUNTRY } from "@/utils/defaults";
 
-
 const { serverRuntimeConfig } = getConfig();
 
 interface ICartStep1PageProps {

@@ -40,7 +40,6 @@ import { useCountry } from "@/utils/context/country";
 
 const { serverRuntimeConfig } = getConfig();
 
-
 interface IUserProps {
   billingInfo: IBillingInfo;
   shippingInfo: IShippingInfo;
