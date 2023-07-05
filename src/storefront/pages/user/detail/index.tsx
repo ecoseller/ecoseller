@@ -84,7 +84,8 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
     setBillingInfoState(
       billingInfoInitialData(
         { ...billingInfo } as IBillingInfo,
-        setBillingInfoState
+        setBillingInfoState,
+        t
       )
     );
   }
@@ -95,7 +96,7 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
 
   if (Object.keys(shippingInfoState)?.length === 0) {
     setShippingInfoState(
-      shippingInfoInitialData({ ...shippingInfo }, setShippingInfoState)
+      shippingInfoInitialData({ ...shippingInfo }, setShippingInfoState, t)
     );
   }
 

@@ -87,7 +87,8 @@ const CartStep1Page = ({
     setShippingInfoState(
       shippingInfoInitialData(
         { ...shippingInfo, country: countryCode },
-        setShippingInfoState
+        setShippingInfoState,
+        t
       )
     );
   }
@@ -116,7 +117,8 @@ const CartStep1Page = ({
       setBillingInfoState(
         billingInfoInitialData(
           { country: countryCode } as IBillingInfo,
-          setBillingInfoState
+          setBillingInfoState,
+          t
         )
       );
     } else {
@@ -124,7 +126,8 @@ const CartStep1Page = ({
       setBillingInfoState(
         billingInfoInitialData(
           { ...billingInfo, country: countryCode },
-          setBillingInfoState
+          setBillingInfoState,
+          t
         )
       );
     }
@@ -144,7 +147,8 @@ const CartStep1Page = ({
             setBillingInfoState(
               billingInfoInitialData(
                 { ...data, country: countryCode },
-                setBillingInfoState
+                setBillingInfoState,
+                t
               )
             );
           }
@@ -163,7 +167,8 @@ const CartStep1Page = ({
             setShippingInfoState(
               shippingInfoInitialData(
                 { ...data, country: countryCode },
-                setShippingInfoState
+                setShippingInfoState,
+                t
               )
             );
           }
