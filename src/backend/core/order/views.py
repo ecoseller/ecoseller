@@ -70,14 +70,6 @@ class OrderListDashboardView(ListAPIView):
         return super().get(request)
 
 
-class TestView(APIView):
-    permission_classes = (permissions.AllowAny,)
-    serializer_class = OrderListSerializer
-
-    def get(self, request):
-        return Response(status=200)
-
-
 class OrderListTodayDashboardView(APIView):
     """
     View for listing orders on dashboard
