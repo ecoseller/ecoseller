@@ -84,7 +84,6 @@ const CartStep1Page = ({
     useState<IShippingInfoFormProps>({} as IShippingInfoFormProps);
 
   if (Object.keys(shippingInfoState)?.length === 0) {
-    // TODO: setting the country to cz is a temporary solution
     setShippingInfoState(
       shippingInfoInitialData(
         { ...shippingInfo, country: countryCode },
@@ -114,7 +113,6 @@ const CartStep1Page = ({
       !billingInfo.vat_number
     ) {
       setBillingRadioSelect("SAMEASSHIPPING");
-      // TODO: setting the country to cz is a temporary solution
       setBillingInfoState(
         billingInfoInitialData(
           { country: countryCode } as IBillingInfo,
@@ -123,7 +121,6 @@ const CartStep1Page = ({
       );
     } else {
       setBillingRadioSelect("NEW");
-      // TODO: setting the country to cz is a temporary solution
       setBillingInfoState(
         billingInfoInitialData(
           { ...billingInfo, country: countryCode },
