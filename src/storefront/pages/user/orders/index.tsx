@@ -35,12 +35,12 @@ import ShippingInfoForm, {
 import { error } from "console";
 import { OrderList } from "@/components/Common/OrdersList";
 import { userOrdersAPI } from "@/pages/api/user/orders";
-import { IOrder } from "@/types/order";
+import { IOrderBasicInfo } from "@/types/order";
 import { orderItemsAPI } from "@/pages/api/order/items/[id]";
 
 const { serverRuntimeConfig } = getConfig();
 interface IUserOrdersProps {
-  orders: IOrder[];
+  orders: IOrderBasicInfo[];
 }
 
 const StorefrontUserEditPage = ({ orders }: IUserOrdersProps) => {

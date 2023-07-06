@@ -328,7 +328,7 @@ class Cart(models.Model):
         Recalculate cart prices.
         """
         if (self.pricelist and self.pricelist.code == pricelist.code) and (
-            self.country.code == country.code
+                self.country.code == country.code
         ):
             # if pricelist and country is the same as before, we don't need to recalculate
             return
@@ -389,7 +389,7 @@ class CartItem(models.Model):
         attribute_values = self.product_variant.get_attribute_values(language)
 
         return (
-            f"{product_title}: {attribute_values}"
+            f"{product_title}, {attribute_values}"
             if attribute_values
             else product_title
         )
