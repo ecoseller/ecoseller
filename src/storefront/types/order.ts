@@ -17,6 +17,8 @@ export interface IOrderBasicInfo {
 interface IOrderDetail {
   token: string;
   cart: ICart;
+  create_at: string;
+  status: OrderStatus;
 }
 
 enum PaymentStatus {

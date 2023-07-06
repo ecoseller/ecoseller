@@ -17,6 +17,9 @@ import { cartShippingMethodAPI } from "@/pages/api/cart/[token]/shipping-method"
 import CartOrderSummary from "@/components/Cart/CartOrderSummary";
 import { IOrderWithPayment } from "@/types/order";
 import { orderDetailAPI } from "@/pages/api/order/[id]";
+import { Typography } from "@mui/material";
+import { useTranslation } from "next-i18next";
+import OrderDetails from "@/components/Order/OrderDetails";
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -41,9 +44,15 @@ const OrderDetailPage = ({
   selectedShippingMethod,
 }: ICartSummaryPageProps) => {
   const order = orderWithPayment.order;
+  const { t } = useTranslation(["order", "cart"]);
 
   return (
     <div className="container">
+      <Typography variant="h5">
+        {t("order-id")}:&nbsp;{order.token}
+      </Typography>
+      <OrderDetails orderWithPayment={orderWithPayment} />
+      <Typography variant="h6">{t("summary-title", { ns: "cart" })}</Typography>
       <CartOrderSummary
         cart={order.cart}
         billingInfo={billingInfo}
@@ -52,6 +61,7 @@ const OrderDetailPage = ({
         selectedPaymentMethod={selectedPaymentMethod}
         selectedShippingMethod={selectedShippingMethod}
         creatingNewOrder={false}
+        addTitle={false}
       />
     </div>
   );

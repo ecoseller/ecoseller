@@ -28,6 +28,7 @@ interface ICartOrderSummaryProps {
   selectedPaymentMethod: IPaymentMethodCountry;
   selectedShippingMethod: IShippingMethodCountry;
   creatingNewOrder: boolean;
+  addTitle?: boolean;
 }
 
 /**
@@ -39,6 +40,7 @@ interface ICartOrderSummaryProps {
  * @param selectedPaymentMethod
  * @param selectedShippingMethod
  * @param creatingNewOrder
+ * @param addTitle
  * @constructor
  */
 const CartOrderSummary = ({
@@ -49,6 +51,7 @@ const CartOrderSummary = ({
   selectedPaymentMethod,
   selectedShippingMethod,
   creatingNewOrder,
+  addTitle = true,
 }: ICartOrderSummaryProps) => {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -137,10 +140,12 @@ const CartOrderSummary = ({
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={8}>
-        <Typography variant="h4" sx={{ my: 3 }}>
-          {t("cart:summary-title") /* Order summary */}
-        </Typography>
-        <CartItemList editable={false} />
+        {addTitle ? (
+          <Typography variant="h4" sx={{ my: 3 }}>
+            {t("cart:summary-title") /* Order summary */}
+          </Typography>
+        ) : null}
+        <CartItemList cart={cart} editable={false} />
       </Grid>
       <Grid item xs={12} md={4}>
         <Box sx={{ [theme.breakpoints.up("md")]: { ml: 5 } }}>
@@ -171,7 +176,9 @@ const CartOrderSummary = ({
         </CollapsableContentWithTitle>
       </Grid>
       <Grid item xs={12} md={4}>
-        <CollapsableContentWithTitle title={t("billing-information-title")}>
+        <CollapsableContentWithTitle
+          title={t("cart:billing-information-title")}
+        >
           <CartInfoSummary rows={billingInfoRows} />
         </CollapsableContentWithTitle>
       </Grid>
@@ -187,7 +194,6 @@ const CartOrderSummary = ({
                   price: cart.total_price_incl_vat_formatted,
                 }) /**Total price:&nbsp; */
               }
-              {/* Total price: {cart.total_price_incl_vat_formatted} */}
             </Typography>
           </>
         )}

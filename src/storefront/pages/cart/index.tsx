@@ -9,19 +9,22 @@ import CartButtonRow from "@/components/Cart/ButtonRow";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useCart } from "@/utils/context/cart";
 
 const { serverRuntimeConfig } = getConfig();
 
 const CartPage = () => {
   const router = useRouter();
+  const { cart } = useCart();
   const { t } = useTranslation("cart");
+
   return (
     <div className="container">
       <CartStepper activeStep={0} />
       <Typography variant="h4" sx={{ my: 3 }}>
         {t("cart-title")}
       </Typography>
-      <CartItemList editable={true} />
+      {cart ? <CartItemList editable={true} cart={cart} /> : null}
       <CartButtonRow
         prev={{
           title: t("common:back"),

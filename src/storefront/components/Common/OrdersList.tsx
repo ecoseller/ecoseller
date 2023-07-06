@@ -6,6 +6,7 @@ import React from "react";
 import { useRouter } from "next/router";
 import { IOrderBasicInfo } from "@/types/order";
 import NextLink from "next/link";
+import MUILink from "@mui/material/Link";
 
 interface IOrderListProps {
   orders: IOrderBasicInfo[];
@@ -25,7 +26,7 @@ export const OrderList = ({ orders }: IOrderListProps) => {
       renderCell: (params: any) => {
         return (
           <NextLink href={`/order/${params.value}`}>
-            <span>{params.value}</span>
+            <MUILink>{params.value}</MUILink>
           </NextLink>
         );
       },
@@ -36,6 +37,9 @@ export const OrderList = ({ orders }: IOrderListProps) => {
       headerName: `${t("status")}`,
       editable: false,
       flex: 1,
+      renderCell: (params: any) => {
+        return <>{t(`order-status-${params.value}`)}</>;
+      },
     },
     {
       field: "create_at",
