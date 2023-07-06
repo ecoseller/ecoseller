@@ -434,7 +434,7 @@ class OrderDetailStorefrontView(APIView):
         except Order.DoesNotExist:
             return Response({"error": "Order does not exist"}, status=400)
 
-        order_data = self.serializer_class(order, context={"request": request}).data
+        order_data = self.serializer_class(order).data
         payment_data = None
         if order.cart.payment_method_country.api_request:
             p = PaymentResolver(order=order)
