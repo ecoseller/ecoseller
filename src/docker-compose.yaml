@@ -14,6 +14,24 @@ services:
       - 8001:8001
     env_file:
       - ./backend/docker-compose.env
+  postgres_backend:
+    image: postgres:13.0-alpine
+    container_name: postgres_backend
+    volumes:
+      - ./backend/postgres/data:/var/lib/postgresql/data/
+      # - ./backend/postgres/data.sql:/docker-entrypoint-initdb.d/setup_database.sql
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=ecoseller
+      - POSTGRES_INITDB_ARGS=--auth=trust --auth-host=trust --auth-local=trust
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   redis:
     container_name: redis
     image: redis

@@ -42,8 +42,14 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "id",
-                    models.CharField(
-                        max_length=20, primary_key=True, serialize=False, unique=True
+                    # models.CharField(
+                    #     max_length=20, primary_key=True, serialize=False, unique=True
+                    # ),
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
                     ),
                 ),
                 ("published", models.BooleanField(default=False)),

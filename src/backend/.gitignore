@@ -39,6 +39,8 @@ mediafiles
 # File-based project format
 *.iws
 
+postgres/data
+
 # IntelliJ
 out/
 
