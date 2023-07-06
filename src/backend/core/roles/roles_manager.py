@@ -102,7 +102,9 @@ class RolesManager:
             name=RolesManager.django_permission_to_manager_permission_name(
                 djangoPermission
             ),
-            model=djangoPermission.content_type.model,
-            description=djangoPermission.name,
-            type=permType.__str__(),
+            defaults={
+                "model": djangoPermission.content_type.model,
+                "description": djangoPermission.name,
+                "type": permType.__str__(),
+            },
         )

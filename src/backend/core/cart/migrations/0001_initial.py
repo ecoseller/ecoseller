@@ -2,6 +2,7 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
+import uuid
 
 
 class Migration(migrations.Migration):
@@ -18,8 +19,11 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "token",
-                    models.CharField(
-                        max_length=20, primary_key=True, serialize=False, unique=True
+                    # models.CharField(
+                    #     max_length=20, primary_key=True, serialize=False, unique=True
+                    # ),
+                    models.UUIDField(
+                        default=uuid.uuid4, primary_key=True, serialize=False
                     ),
                 ),
                 ("update_at", models.DateTimeField(auto_now=True)),
