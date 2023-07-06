@@ -328,7 +328,7 @@ class Cart(models.Model):
         Recalculate cart prices.
         """
         if (self.pricelist and self.pricelist.code == pricelist.code) and (
-                self.country.code == country.code
+            self.country.code == country.code
         ):
             # if pricelist and country is the same as before, we don't need to recalculate
             return
