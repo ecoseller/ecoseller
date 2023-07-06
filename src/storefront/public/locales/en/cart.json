@@ -1,5 +1,5 @@
 {
-  "total-price-incl-price": "Total price incl. VAT",
+  "total-price-incl-price": "Total price incl. VAT: {{price}}",
   "product": "Product",
   "image": "Image",
   "quantity": "Quantity",

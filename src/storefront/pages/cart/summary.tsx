@@ -31,6 +31,7 @@ import Divider from "@mui/material/Divider";
 import { useCart } from "@/utils/context/cart";
 import CollapsableContentWithTitle from "@/components/Generic/CollapsableContentWithTitle";
 import CartCompleteOrder from "@/components/Cart/CartCompleteOrder";
+import CartOrderSummary from "@/components/Cart/CartOrderSummary";
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -53,142 +54,25 @@ const CartSummaryPage = ({
   selectedShippingMethod,
 }: ICartSummaryPageProps) => {
   const router = useRouter();
-  const theme = useTheme();
   const { cart } = useCart();
   const { t } = useTranslation();
-
-  const getCountryName = (countryId: string) =>
-    countries.find((c) => c.code == countryId)?.name || "";
-
-  const shippingInfoRows: ICartInfoTableRow[] = [
-    {
-      label: t("common:first-name-label"),
-      value: shippingInfo.first_name,
-    },
-    {
-      label: t("common:surname-label"),
-      value: shippingInfo.surname,
-    },
-    {
-      label: t("common:email-label"),
-      value: shippingInfo.email,
-    },
-    {
-      label: t("common:phone-label"),
-      value: shippingInfo.phone,
-    },
-    {
-      label: t("common:street-label"),
-      value: shippingInfo.street,
-    },
-    {
-      label: t("common:additional-info-label"),
-      value: shippingInfo.additional_info,
-    },
-    {
-      label: t("common:city-label"),
-      value: shippingInfo.city,
-    },
-    {
-      label: t("common:postal-code-label"),
-      value: shippingInfo.postal_code,
-    },
-    {
-      label: t("common:country-label"),
-      value: getCountryName(shippingInfo.country),
-    },
-  ];
-
-  const billingInfoRows: ICartInfoTableRow[] = [
-    {
-      label: t("common:first-name-label"),
-      value: billingInfo.first_name,
-    },
-    {
-      label: t("common:surname-label"),
-      value: billingInfo.surname,
-    },
-    {
-      label: t("common:company-name-label"),
-      value: billingInfo.company_name,
-    },
-    {
-      label: t("common:company-id-label"),
-      value: billingInfo.company_id,
-    },
-    {
-      label: t("common:vat-number-label"),
-      value: billingInfo.vat_number,
-    },
-    {
-      label: t("common:street-label"),
-      value: billingInfo.street,
-    },
-    {
-      label: t("common:additional-info-label"),
-      value: billingInfo.city,
-    },
-    {
-      label: t("common:postal-code-label"),
-      value: billingInfo.postal_code,
-    },
-    {
-      label: t("common:country-label"),
-      value: getCountryName(billingInfo.country),
-    },
-  ];
 
   return (
     <div className="container">
       <CartStepper activeStep={3} />
 
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={8}>
-          <Typography variant="h4" sx={{ my: 3 }}>
-            {t("cart:summary-title") /* Order summary */}
-          </Typography>
-          <CartItemList editable={false} />
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Box sx={{ [theme.breakpoints.up("md")]: { ml: 5 } }}>
-            <Typography variant="h6" sx={{ my: 3 }}>
-              {
-                t(
-                  "cart:shipping-and-payment-method-title"
-                ) /* Shipping and payment method */
-              }
-            </Typography>
-            <Table>
-              <CartMethodSummaryInfoRow
-                method={selectedShippingMethod.shipping_method}
-                formattedPrice={selectedShippingMethod.price_incl_vat}
-              />
-              <CartMethodSummaryInfoRow
-                method={selectedPaymentMethod.payment_method}
-                formattedPrice={selectedPaymentMethod.price_incl_vat}
-              />
-            </Table>
-          </Box>
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <CollapsableContentWithTitle
-            title={t("cart:shipping-information-title")}
-          >
-            <CartInfoSummary rows={shippingInfoRows} />
-          </CollapsableContentWithTitle>
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <CollapsableContentWithTitle title={t("billing-information-title")}>
-            <CartInfoSummary rows={billingInfoRows} />
-          </CollapsableContentWithTitle>
-        </Grid>
+      {cart ? (
+        <CartOrderSummary
+          cart={cart}
+          billingInfo={billingInfo}
+          shippingInfo={shippingInfo}
+          countries={countries}
+          selectedPaymentMethod={selectedPaymentMethod}
+          selectedShippingMethod={selectedShippingMethod}
+          creatingNewOrder={true}
+        />
+      ) : null}
 
-        {cart ? (
-          <Grid item xs={12} md={8} textAlign="center">
-            <CartCompleteOrder cart={cart} />
-          </Grid>
-        ) : null}
-      </Grid>
       <CartButtonRow
         prev={{
           title: t("back") /* Back */,

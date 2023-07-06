@@ -5,6 +5,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import React from "react";
 import { useRouter } from "next/router";
 import { IOrderBasicInfo } from "@/types/order";
+import NextLink from "next/link";
 
 interface IOrderListProps {
   orders: IOrderBasicInfo[];
@@ -22,7 +23,11 @@ export const OrderList = ({ orders }: IOrderListProps) => {
       editable: false,
       flex: 1,
       renderCell: (params: any) => {
-        return <span>{params.value}</span>;
+        return (
+          <NextLink href={`/order/${params.value}`}>
+            <span>{params.value}</span>
+          </NextLink>
+        );
       },
       minWidth: 300,
     },
@@ -55,7 +60,6 @@ export const OrderList = ({ orders }: IOrderListProps) => {
       columns={columns}
       hideFooter
       autoHeight={true}
-      disableRowSelectionOnClick
       getRowId={(row: any) => row.token}
     />
   );

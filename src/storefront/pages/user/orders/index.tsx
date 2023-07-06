@@ -1,38 +1,11 @@
 import { useRouter } from "next/router";
-import RootLayout from "@/pages/layout";
 import getConfig from "next/config";
-import { ReactElement, useEffect, useState } from "react";
-import {
-  Alert,
-  Box,
-  Button,
-  Container,
-  Snackbar,
-  Stack,
-  Typography,
-} from "@mui/material";
-import { IUser } from "@/types/user";
+import { useState } from "react";
+import { Container } from "@mui/material";
 
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
-import UserGeneralInformation from "@/components/User/UserGeneralInformation";
 import { useSnackbarState } from "@/utils/snackbar";
-import { useUser } from "@/utils/context/user";
-import UserPasswordInformation from "@/components/User/UserPasswordInformation";
-import { userShippingInfoAPI } from "@/pages/api/user/shipping-info";
-import { userBillingInfoAPI } from "@/pages/api/user/billing-info";
-import { IBillingInfo, IShippingInfo } from "@/types/cart";
-import BillingInfoForm, {
-  IBillingInfoFormProps,
-  billingInfoInitialData,
-  exportBillingInfo,
-} from "@/components/Forms/BillingInfoForm";
-import ShippingInfoForm, {
-  IShippingInfoFormProps,
-  exportShippingInfo,
-  shippingInfoInitialData,
-} from "@/components/Forms/ShippingInfoForm";
-import { error } from "console";
 import { OrderList } from "@/components/Common/OrdersList";
 import { userOrdersAPI } from "@/pages/api/user/orders";
 import { IOrderBasicInfo } from "@/types/order";
