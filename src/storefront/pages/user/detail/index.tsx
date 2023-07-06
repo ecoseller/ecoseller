@@ -37,6 +37,7 @@ import ShippingInfoForm, {
 } from "@/components/Forms/ShippingInfoForm";
 import { error } from "console";
 import { useCountry } from "@/utils/context/country";
+import { DEFAULT_COUNTRY } from "@/utils/defaults";
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -52,6 +53,7 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
   const { user } = useUser();
   const { country } = useCountry();
+  const countryCode = country?.code || DEFAULT_COUNTRY;
 
   const [state, setState] = useState<IUser>(user);
   useEffect(() => {
@@ -83,7 +85,7 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
   if (Object.keys(billingInfoState)?.length === 0) {
     setBillingInfoState(
       billingInfoInitialData(
-        { ...billingInfo } as IBillingInfo,
+        { ...billingInfo, country: countryCode } as IBillingInfo,
         setBillingInfoState,
         t
       )
@@ -96,7 +98,7 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
 
   if (Object.keys(shippingInfoState)?.length === 0) {
     setShippingInfoState(
-      shippingInfoInitialData({ ...shippingInfo }, setShippingInfoState, t)
+      shippingInfoInitialData({ ...shippingInfo, country: countryCode }, setShippingInfoState, t)
     );
   }
 
@@ -148,6 +150,7 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
 
   const hanleBillingInfoSave = async () => {
     const billingInfo = exportBillingInfo(billingInfoState);
+    billingInfo.country = countryCode;
     const res = await fetch(`/api/user/billing-info`, {
       method: "PUT",
       body: JSON.stringify(billingInfo),
@@ -180,6 +183,7 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
 
   const hanleShippingInfoSave = async () => {
     const shippingInfo = exportShippingInfo(shippingInfoState);
+    shippingInfo.country = countryCode;
     const res = await fetch(`/api/user/shipping-info`, {
       method: "PUT",
       body: JSON.stringify(shippingInfo),
