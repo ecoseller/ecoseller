@@ -8,5 +8,6 @@
   "sort-by": "Order by",
   "subcategory-section-title": "Subcategories",
   "filters": "Filters",
-  "cancel-filters": "Cancel filters"
+  "cancel-filters": "Cancel filters",
+  "filter-empty": "(Empty)"
 }

@@ -10,5 +10,6 @@
   "sort-by": "Řadit dle",
   "subcategory-section-title": "Podkategorie",
   "filters": "Filtry",
-  "cancel-filters": "Zrušit filtry"
+  "cancel-filters": "Zrušit filtry",
+  "filter-empty": "(Prázdné)"
 }
