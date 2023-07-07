@@ -35,5 +35,6 @@
   "next": "Další",
   "save": "Uložit",
   "created-at": "Vytvořeno: {{date}}",
-  "up-to": "Až"
+  "up-to": "Až",
+  "to": "Do"
 }

@@ -8,5 +8,7 @@
   "order-by-title-asc": "Dle názvu A-Z",
   "order-by-title-desc": "Dle názvu Z-A",
   "sort-by": "Řadit dle",
-  "subcategory-section-title": "Podkategorie"
+  "subcategory-section-title": "Podkategorie",
+  "filters": "Filtry",
+  "cancel-filters": "Zrušit filtry"
 }
