@@ -36,7 +36,7 @@ class Command(BaseCommand):
             conn = psycopg2.connect(conn_str)
             conn.autocommit = True
 
-            select_all_table_statement = f"""SELECT *
+            select_all_table_statement = """SELECT *
                                     FROM information_schema.tables
                                     WHERE table_schema = 'public'
                                     ORDER BY table_name;
@@ -84,7 +84,9 @@ class Command(BaseCommand):
                         except Exception as ex:
                             # will only fail if PK is not an integer...
                             # currently in my system this is from django.contrib.sessions
-                            not_reset_tables.append(f"{row['table_name']} not reset")
+                            not_reset_tables.append(
+                                f"{row['table_name']} not reset, {str(ex)}"
+                            )
 
             except psycopg2.Error as ex:
                 raise SystemExit(f"Error: {ex}")
