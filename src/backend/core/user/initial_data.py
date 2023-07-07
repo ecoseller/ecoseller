@@ -20,7 +20,8 @@ def populate_groups(apps, schema_editor):
     for groupName in ManagerGroup.objects.all().values_list("name", flat=True):
         try:
             Group.objects.create(name=groupName)
-        except:
+        except Exception as e:
+            print("populate_groups", e)
             pass
 
     # Permissions have to be created before applying them
