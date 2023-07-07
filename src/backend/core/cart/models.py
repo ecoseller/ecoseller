@@ -389,7 +389,7 @@ class CartItem(models.Model):
         attribute_values = self.product_variant.get_attribute_values(language)
 
         return (
-            f"{product_title}: {attribute_values}"
+            f"{product_title}, {attribute_values}"
             if attribute_values
             else product_title
         )

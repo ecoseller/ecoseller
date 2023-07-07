@@ -21,10 +21,11 @@ import DiscountText from "@/components/Generic/DiscountText";
 
 interface ICartItemListProps {
   editable: boolean;
+  cart: ICart;
 }
 
-const CartItemList = ({ editable }: ICartItemListProps) => {
-  const { cart, updateQuantity, removeFromCart } = useCart();
+const CartItemList = ({ cart, editable }: ICartItemListProps) => {
+  const { updateQuantity, removeFromCart } = useCart();
   const router = useRouter();
 
   const { t } = useTranslation("cart");

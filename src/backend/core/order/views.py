@@ -1,19 +1,23 @@
 # from django.shortcuts import render
 
+from datetime import datetime, timedelta
+
+from django.conf import settings
+from django.db.models import Count
 from rest_framework import permissions
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.conf import settings
-from django.db.models import Count
-from product.models import Product
 
-from cart.models import Cart, CartItem
-from cart.serializers import CartItemDetailSerializer
+from api.notifications.conf import (
+    EventTypes,
+)
 from api.payments.api import PaymentResolver
 from api.payments.conf import PaymentStatus
-
-from roles.decorator import check_user_is_staff_decorator
+from cart.models import Cart, CartItem
+from cart.serializers import CartItemDetailSerializer
+from product.models import Product
+from roles.decorator import check_user_is_staff_decorator, check_user_access_decorator
 from .models import Order
 from .serializers import (
     OrderDetailSerializer,
@@ -21,11 +25,6 @@ from .serializers import (
     OrderStatusSerializer,
     OrderSubmitSerializer,
 )
-from api.notifications.conf import (
-    EventTypes,
-)
-
-from datetime import datetime, timedelta
 
 NotificationsApi = settings.NOTIFICATIONS_API
 
@@ -40,6 +39,7 @@ class OrderDetailDashboardView(RetrieveAPIView):
     def get(self, request, token):
         return super().get(request, token)
 
+    @check_user_access_decorator({"order_change_permission"})
     def put(self, request, token):
         try:
             order = Order.objects.get(token=token)
@@ -434,7 +434,7 @@ class OrderDetailStorefrontView(APIView):
         except Order.DoesNotExist:
             return Response({"error": "Order does not exist"}, status=400)
 
-        order_data = self.serializer_class(order, context={"request": request}).data
+        order_data = self.serializer_class(order).data
         payment_data = None
         if order.cart.payment_method_country.api_request:
             p = PaymentResolver(order=order)

@@ -4,10 +4,12 @@ import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import React from "react";
 import { useRouter } from "next/router";
-import { IOrder } from "@/types/order";
+import { IOrderBasicInfo } from "@/types/order";
+import NextLink from "next/link";
+import MUILink from "@mui/material/Link";
 
 interface IOrderListProps {
-  orders: IOrder[];
+  orders: IOrderBasicInfo[];
 }
 
 export const OrderList = ({ orders }: IOrderListProps) => {
@@ -22,7 +24,11 @@ export const OrderList = ({ orders }: IOrderListProps) => {
       editable: false,
       flex: 1,
       renderCell: (params: any) => {
-        return <span>{params.value}</span>;
+        return (
+          <NextLink href={`/order/${params.value}`}>
+            <MUILink>{params.value}</MUILink>
+          </NextLink>
+        );
       },
       minWidth: 300,
     },
@@ -31,6 +37,9 @@ export const OrderList = ({ orders }: IOrderListProps) => {
       headerName: `${t("status")}`,
       editable: false,
       flex: 1,
+      renderCell: (params: any) => {
+        return <>{t(`order-status-${params.value}`)}</>;
+      },
     },
     {
       field: "create_at",
@@ -55,7 +64,6 @@ export const OrderList = ({ orders }: IOrderListProps) => {
       columns={columns}
       hideFooter
       autoHeight={true}
-      disableRowSelectionOnClick
       getRowId={(row: any) => row.token}
     />
   );

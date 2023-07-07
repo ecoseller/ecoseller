@@ -33,5 +33,7 @@
   "sign-up-button-label": "Sign up",
   "back": "Back",
   "next": "Next",
-  "save": "Save"
+  "save": "Save",
+  "created-at": "Created at: {{date}}",
+  "up-to": "Up to"
 }

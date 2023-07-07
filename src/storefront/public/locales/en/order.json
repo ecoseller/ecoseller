@@ -18,5 +18,11 @@
   "bic-label": "BIC",
   "bank-account-label": "Bank account",
   "qr-label": "QR",
-  "payment-completed-text": "Payment was successfully completed"
+  "payment-completed-text": "Payment was successfully completed",
+  "order-status-PENDING": "Pending",
+  "order-status-PROCESSING": "Processing",
+  "order-status-SHIPPED": "Shipped",
+  "order-status-CANCELLED": "Cancelled",
+  "paid": "Paid",
+  "waiting-for-payment": "Waiting for payment"
 }
