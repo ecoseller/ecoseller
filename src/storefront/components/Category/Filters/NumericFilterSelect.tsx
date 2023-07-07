@@ -7,6 +7,7 @@ import {
 import { INumericAttributeFilterWithOptions } from "@/pages/category/[id]/[slug]";
 import MenuItem from "@mui/material/MenuItem";
 import React from "react";
+import { useTranslation } from "next-i18next";
 
 interface INumericFilterSelectProps {
   filter: INumericAttributeFilterWithOptions;
@@ -21,7 +22,9 @@ const NumericFilterSelect = ({
   label,
   handleChange,
 }: INumericFilterSelectProps) => {
+  const { t } = useTranslation("category");
   const selectId = `filter-select-${filter.id}`;
+
   return (
     <FormControl sx={{ m: 1, minWidth: 100 }}>
       <InputLabel id={`${selectId}-label`}>{label}</InputLabel>
@@ -34,7 +37,7 @@ const NumericFilterSelect = ({
         onChange={(event) => handleChange(event)}
       >
         <MenuItem value="">
-          <em>None</em>
+          <em>{t("filter-empty")}</em>
         </MenuItem>
         {filter.possible_values.map((val) => (
           <MenuItem key={val.id} value={val.id}>

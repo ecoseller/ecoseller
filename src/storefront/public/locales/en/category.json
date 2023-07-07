@@ -6,5 +6,8 @@
   "order-by-title-asc": "By name: A-Z",
   "order-by-title-desc": "By name: Z-A",
   "sort-by": "Order by",
-  "subcategory-section-title": "Subcategories"
+  "subcategory-section-title": "Subcategories",
+  "filters": "Filters",
+  "cancel-filters": "Cancel filters",
+  "filter-empty": "(Empty)"
 }

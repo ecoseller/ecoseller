@@ -2,5 +2,8 @@
   "varinats": "Variants",
   "recommended-products-title": "Recommended products",
   "recommended-products-description": "See other products that you might like",
-  "reviews": "Cusotmer reviews"
+  "reviews": "Customer reviews",
+  "in-stock": "In Stock",
+  "low-stock": "Low Stock",
+  "out-of-stock": "Out of Stock"
 }
