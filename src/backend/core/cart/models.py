@@ -204,21 +204,27 @@ class Cart(models.Model):
 
         items = self.cart_items.all()
         if not items or len(items) == 0:
+            print("Cart is empty")
             raise "Cart is empty"
         for item in items:
             if item.product_variant.stock_quantity <= item.quantity:
+                print(f"Product {item.product_variant} is out of stock")
                 raise f"Product {item.product_variant} is out of stock"
 
         if not self.shipping_info:
+            print("Shipping info is missing")
             raise "Shipping info is missing"
 
         if not self.billing_info:
+            print("Billing info is missing")
             raise "Billing info is missing"
 
         if not self.payment_method_country:
+            print("Payment method country is missing")
             raise "Payment method country is missing"
 
         if not self.shipping_method_country:
+            print("Shipping method country is missing")
             raise "Shipping method country is missing"
 
         return True
