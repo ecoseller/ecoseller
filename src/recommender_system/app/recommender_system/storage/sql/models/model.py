@@ -1,3 +1,4 @@
+from sqlalchemy.dialects import postgresql
 from sqlalchemy.sql.schema import Column, Index
 from sqlalchemy.sql.sqltypes import Boolean, DECIMAL, JSON, Integer, String, TIMESTAMP
 from sqlalchemy.orm import declarative_base, DeclarativeBase
@@ -26,6 +27,29 @@ class SQLConfig(ModelBase):
     id = Column(Integer(), primary_key=True)
     create_at = Column(TIMESTAMP(), nullable=False)
     retrieval_size = Column(Integer(), nullable=False)
+    ordering_size = Column(Integer(), nullable=False)
+
+    homepage_retrieval_cascade = Column(
+        postgresql.ARRAY(String(255)), nullable=False, default=[]
+    )
+    homepage_scoring_cascade = Column(
+        postgresql.ARRAY(String(255)), nullable=False, default=[]
+    )
+    category_list_scoring_cascade = Column(
+        postgresql.ARRAY(String(255)), nullable=False, default=[]
+    )
+    product_detail_retrieval_cascade = Column(
+        postgresql.ARRAY(String(255)), nullable=False, default=[]
+    )
+    product_detail_scoring_cascade = Column(
+        postgresql.ARRAY(String(255)), nullable=False, default=[]
+    )
+    cart_retrieval_cascade = Column(
+        postgresql.ARRAY(String(255)), nullable=False, default=[]
+    )
+    cart_scoring_cascade = Column(
+        postgresql.ARRAY(String(255)), nullable=False, default=[]
+    )
 
     ease_config = Column(JSON(), nullable=False)
     gru4rec_config = Column(JSON(), nullable=False)

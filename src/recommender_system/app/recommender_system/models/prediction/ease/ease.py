@@ -10,7 +10,6 @@ from dependency_injector.wiring import inject, Provide
 #     ProductAddToCartModel,
 # )
 from recommender_system.models.stored.feedback.review import ReviewModel
-from recommender_system.models.stored.model.config import ConfigModel
 from recommender_system.models.stored.model.training_statistics import (
     TrainingStatisticsModel,
 )
@@ -87,6 +86,8 @@ class EASE:
 
     @property
     def possible_parameters(self) -> List[Dict[str, Any]]:
+        from recommender_system.models.stored.model.config import ConfigModel
+
         parameters = []
         config = ConfigModel.get_current()
         for l2 in config.ease_config.l2_options:

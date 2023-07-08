@@ -36,6 +36,13 @@ class ProductStoredBaseModel(StoredBaseModel):
 
     @classmethod
     @inject
+    def get_latest(
+        cls, storage: "AbstractProductStorage" = Provide["product_storage"], **kwargs
+    ) -> "StoredBaseModel":
+        return super().get_latest(storage=storage, **kwargs)
+
+    @classmethod
+    @inject
     def gets(
         cls, storage: "AbstractProductStorage" = Provide["product_storage"], **kwargs
     ) -> List["StoredBaseModel"]:

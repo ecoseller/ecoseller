@@ -24,8 +24,6 @@ from recommender_system.utils.recommendation_type import RecommendationType
 
 
 class PredictionPipeline:
-    order_top_k: int = 50
-
     class Step(Enum):
         RETRIEVAL = "RETRIEVAL"
         FILTERING = "FILTERING"
@@ -100,14 +98,18 @@ class PredictionPipeline:
         raise ValueError("Unknown recommendation type.")
 
     def _order_by_diversity(self, variants: List[str]) -> List[str]:
+        from recommender_system.models.stored.model.config import ConfigModel
+
         def intra_list_distance(indices: List[int], dists: np.ndarray) -> float:
             return np.mean(dists[np.ix_(indices, indices)]).item()
 
+        order_top_k = ConfigModel.get_current().ordering_size
+
         top_k = variants
         left_out = []
-        if self.order_top_k < len(variants):
-            top_k = variants[: self.order_top_k]
-            left_out = variants[self.order_top_k :]
+        if order_top_k < len(variants):
+            top_k = variants[:order_top_k]
+            left_out = variants[order_top_k:]
         try:
             model_identifier = SimilarityPredictionModel.get_latest_identifier()
         except LatestIdentifierModel.DoesNotExist:

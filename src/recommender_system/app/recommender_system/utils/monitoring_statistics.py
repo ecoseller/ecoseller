@@ -2,25 +2,39 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
+from recommender_system.models.stored.model.training_statistics import (
+    TrainingStatisticsModel,
+)
 
-class MonitoringStatisticsItem(BaseModel):
+
+class StatisticsItem(BaseModel):
     direct_hit: Optional[float]
     future_hit: Optional[float]
     coverage: Optional[float]
 
 
-class MonitoringTypeStatistics(BaseModel):
+class TypeStatistics(BaseModel):
     recommendation_type: str
-    item: MonitoringStatisticsItem
+    item: StatisticsItem
 
 
-class MonitoringModelStatistics(BaseModel):
+class ModelStatistics(BaseModel):
     model_name: str
-    item: MonitoringStatisticsItem
-    types: List[MonitoringTypeStatistics]
+    item: StatisticsItem
+    types: List[TypeStatistics]
 
 
-class MonitoringStatistics(BaseModel):
+class Statistics(BaseModel):
     k: int
-    item: MonitoringStatisticsItem
-    models: List[MonitoringModelStatistics]
+    item: StatisticsItem
+    models: List[ModelStatistics]
+    # TODO: Add usage
+
+
+class ModelTrainingDetails(BaseModel):
+    model_name: str
+    statistics: Optional[TrainingStatisticsModel]
+
+
+class TrainingDetails(BaseModel):
+    models: List[ModelTrainingDetails]

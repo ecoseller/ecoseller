@@ -51,6 +51,22 @@ class AbstractStorage(ABC):
         raise NotImplementedError()
 
     @abstractmethod
+    def get_latest_object(
+        self, model_class: Type[StoredBaseModel], **kwargs
+    ) -> StoredBaseModel:
+        """
+        Searches for the latest model of type `model_class` and returns it
+        if found.
+
+        Raises model_class.DoesNotExist if model is not found in storage.
+        Raises MultipleObjectsReturned if multiple models are found in
+        storage.
+        Raises TypeError if model_class can not be ordered by `create_at`
+        field.
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
     def get_objects(
         self, model_class: Type[StoredBaseModel], **kwargs
     ) -> List[StoredBaseModel]:

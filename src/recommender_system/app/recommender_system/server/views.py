@@ -1,9 +1,11 @@
+from datetime import datetime
 from typing import Any, Tuple
 
 from dependency_injector.wiring import inject, Provide
 from flask import request
 
 from recommender_system.managers.data_manager import DataManager
+from recommender_system.managers.monitoring_manager import MonitoringManager
 from recommender_system.managers.prediction_pipeline import PredictionPipeline
 from recommender_system.utils.recommendation_type import RecommendationType
 
@@ -70,3 +72,19 @@ def view_predict_cart(
         user_id=data["user_id"],
     )
     return predictions, 200
+
+
+@inject
+def view_get_dashboard_data(
+    monitoring_manager: MonitoringManager = Provide["monitoring_manager"],
+) -> Tuple[Any, ...]:
+    date_from = datetime.fromisoformat(request.args["date_from"])
+    date_to = datetime.fromisoformat(request.args["date_to"])
+    result = {
+        "performance": monitoring_manager.get_statistics(
+            date_from=date_from, date_to=date_to
+        ),
+        "training": monitoring_manager.get_training_details(),
+        "config": monitoring_manager.get_config(),
+    }
+    return result, 200

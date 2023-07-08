@@ -16,7 +16,6 @@ from recommender_system.models.prediction.gru4rec.layers import (
     ReducedLinearFeedforward,
     SelectGRUOutput,
 )
-from recommender_system.models.stored.model.config import ConfigModel
 from recommender_system.models.stored.model.training_statistics import (
     TrainingStatisticsModel,
 )
@@ -128,6 +127,8 @@ class NeuralNetwork:
 
     @property
     def possible_parameters(self) -> List[Dict[str, Any]]:
+        from recommender_system.models.stored.model.config import ConfigModel
+
         parameters = []
         config = ConfigModel.get_current()
         for num_epochs in config.gru4rec_config.num_epochs_options:

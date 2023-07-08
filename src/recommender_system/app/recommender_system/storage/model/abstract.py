@@ -1,9 +1,11 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
-from recommender_system.models.stored.model.config import ConfigModel
 from recommender_system.storage.abstract import AbstractStorage
+
+if TYPE_CHECKING:
+    from recommender_system.models.stored.model.config import ConfigModel
 
 
 class AbstractModelStorage(AbstractStorage, ABC):
@@ -13,7 +15,7 @@ class AbstractModelStorage(AbstractStorage, ABC):
     """
 
     @abstractmethod
-    def get_current_config(self) -> ConfigModel:
+    def get_current_config(self) -> "ConfigModel":
         """
         Selects current configuration object from the database.
 
