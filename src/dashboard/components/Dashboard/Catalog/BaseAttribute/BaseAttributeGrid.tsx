@@ -234,7 +234,7 @@ const BaseAttributeGrid = ({
             severity: "success",
           });
           // get id from response and update row
-          const { id } = data;
+          // const { id } = data;
           // remove row with newRow.id from rows and add row with id from response
           setRows((rows) => [
             ...rows.filter((row) => row.id !== newRow.id),

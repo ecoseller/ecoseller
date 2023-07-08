@@ -4,7 +4,7 @@
 -- https://tableplus.com/
 --
 -- Database: ecoseller
--- Generation Time: 2023-07-08 16:06:33.9200
+-- Generation Time: 2023-07-08 17:39:51.1230
 -- -------------------------------------------------------------
 
 
@@ -1640,13 +1640,97 @@ INSERT INTO "public"."django_migrations" ("id", "app", "name", "applied") VALUES
 (155, 'user', '0007_remove_user_cart', '2023-07-06 22:00:40.538755+00'),
 (156, 'user', '0008_user_is_superuser', '2023-07-06 22:00:40.548968+00');
 
+INSERT INTO "public"."product_attributetype" ("id", "type_name", "unit", "value_type", "safe_deleted") VALUES
+(1, 'GENRE', NULL, 'TEXT', 'f'),
+(2, 'LENGTH', 'm', 'TEXT', 'f'),
+(3, 'RESOLUTION', 'p', 'INTEGER', 'f'),
+(4, 'LANGUAGE', NULL, 'TEXT', 'f');
+
+INSERT INTO "public"."product_attributetype_translation" ("id", "language_code", "name", "master_id") VALUES
+(1, 'en', 'Genre', 1),
+(2, 'cs', 'Žánr', 1),
+(3, 'en', 'Length', 2),
+(4, 'cs', 'Délka', 2),
+(5, 'en', 'Resolution', 3),
+(6, 'cs', 'Rozlišení', 3),
+(7, 'en', 'Language', 4),
+(8, 'cs', 'Jazyk', 4);
+
+INSERT INTO "public"."product_baseattribute" ("id", "value", "order", "type_id", "safe_deleted") VALUES
+(1, 'SUB60', NULL, 2, 'f'),
+(2, '6090', NULL, 2, 'f'),
+(3, '90120', NULL, 2, 'f'),
+(4, '120PLUS', NULL, 2, 'f'),
+(5, '720', NULL, 3, 'f'),
+(6, '1080', NULL, 3, 'f'),
+(7, 'CS', NULL, 4, 'f'),
+(8, 'EN', NULL, 4, 'f');
+
+INSERT INTO "public"."product_baseattribute_translation" ("id", "language_code", "name", "master_id") VALUES
+(1, 'en', '< 60', 1),
+(2, 'cs', '< 60', 1),
+(3, 'en', '60 - 90', 2),
+(4, 'cs', '60 - 90', 2),
+(5, 'en', '90 - 120', 3),
+(6, 'cs', '90 - 120', 3),
+(7, 'en', '120+', 4),
+(8, 'cs', '120+', 4),
+(9, 'en', '', 5),
+(10, 'cs', '', 5),
+(11, 'en', '', 6),
+(12, 'cs', '', 6),
+(13, 'en', 'Czech', 7),
+(14, 'cs', 'Čeština', 7),
+(15, 'en', 'English', 8),
+(16, 'cs', 'Angličtina', 8);
+
 INSERT INTO "public"."product_pricelist" ("code", "rounding", "currency_id", "create_at", "update_at", "is_default", "safe_deleted") VALUES
 ('CZK_retail', 't', 'CZK', '2023-07-07 06:58:38.137769+00', '2023-07-07 06:58:38.137736+00', 't', 'f'),
 ('EUR_retail', 'f', 'EUR', '2023-07-07 06:58:53.21463+00', '2023-07-07 06:58:53.214601+00', 'f', 'f'),
 ('PLN_retail', 'f', 'PLN', '2023-07-07 06:59:00.070375+00', '2023-07-07 06:59:00.070352+00', 'f', 'f');
 
 INSERT INTO "public"."product_producttype" ("id", "name", "update_at", "create_at", "safe_deleted") VALUES
-(1, 'Test', '2023-07-07 06:47:39.880219+00', '2023-07-07 06:47:25.108776+00', 'f');
+(1, 'Test', '2023-07-07 06:47:39.880219+00', '2023-07-07 06:47:25.108776+00', 'f'),
+(2, 'Book', '2023-07-08 15:38:26.815234+00', '2023-07-08 15:38:04.945991+00', 'f'),
+(3, 'Movie', '2023-07-08 15:38:52.345224+00', '2023-07-08 15:38:32.98268+00', 'f');
+
+INSERT INTO "public"."product_producttype_allowed_attribute_types" ("id", "producttype_id", "attributetype_id") VALUES
+(1, 2, 1),
+(2, 2, 4),
+(3, 3, 1),
+(4, 3, 2),
+(5, 3, 3),
+(6, 3, 4);
+
+INSERT INTO "public"."product_producttype_vat_groups" ("id", "producttype_id", "vatgroup_id") VALUES
+(1, 2, 1),
+(2, 2, 3),
+(3, 2, 5),
+(4, 2, 7),
+(5, 2, 9),
+(6, 2, 11),
+(7, 2, 13),
+(8, 2, 15),
+(9, 2, 16),
+(10, 2, 18),
+(11, 2, 20),
+(12, 2, 21),
+(13, 2, 23),
+(14, 2, 26),
+(15, 3, 1),
+(16, 3, 3),
+(17, 3, 5),
+(18, 3, 7),
+(19, 3, 9),
+(20, 3, 11),
+(21, 3, 13),
+(22, 3, 15),
+(23, 3, 16),
+(24, 3, 18),
+(25, 3, 20),
+(26, 3, 21),
+(27, 3, 23),
+(28, 3, 26);
 
 INSERT INTO "public"."roles_managergroup" ("name", "description") VALUES
 ('Copywriter', 'Copywriter role'),
@@ -1858,30 +1942,30 @@ INSERT INTO "public"."user_user" ("password", "last_login", "email", "first_name
 INSERT INTO "public"."user_user_groups" ("id", "user_id", "group_id") VALUES
 (2, 'test@example.com', 2);
 
-ALTER TABLE "public"."auth_group_permissions" ADD FOREIGN KEY ("group_id") REFERENCES "public"."auth_group"("id");
 ALTER TABLE "public"."auth_group_permissions" ADD FOREIGN KEY ("permission_id") REFERENCES "public"."auth_permission"("id");
+ALTER TABLE "public"."auth_group_permissions" ADD FOREIGN KEY ("group_id") REFERENCES "public"."auth_group"("id");
 ALTER TABLE "public"."auth_permission" ADD FOREIGN KEY ("content_type_id") REFERENCES "public"."django_content_type"("id");
 ALTER TABLE "public"."authtoken_token" ADD FOREIGN KEY ("user_id") REFERENCES "public"."user_user"("email");
-ALTER TABLE "public"."cart_cart" ADD FOREIGN KEY ("user_id") REFERENCES "public"."user_user"("email");
+ALTER TABLE "public"."cart_cart" ADD FOREIGN KEY ("payment_method_country_id") REFERENCES "public"."cart_paymentmethodcountry"("id");
 ALTER TABLE "public"."cart_cart" ADD FOREIGN KEY ("shipping_method_country_id") REFERENCES "public"."cart_shippingmethodcountry"("id");
 ALTER TABLE "public"."cart_cart" ADD FOREIGN KEY ("shipping_info_id") REFERENCES "public"."country_shippinginfo"("id");
-ALTER TABLE "public"."cart_cart" ADD FOREIGN KEY ("payment_method_country_id") REFERENCES "public"."cart_paymentmethodcountry"("id");
+ALTER TABLE "public"."cart_cart" ADD FOREIGN KEY ("user_id") REFERENCES "public"."user_user"("email");
 ALTER TABLE "public"."cart_cart" ADD FOREIGN KEY ("country_id") REFERENCES "public"."country_country"("code");
 ALTER TABLE "public"."cart_cart" ADD FOREIGN KEY ("pricelist_id") REFERENCES "public"."product_pricelist"("code");
 ALTER TABLE "public"."cart_cart" ADD FOREIGN KEY ("billing_info_id") REFERENCES "public"."country_billinginfo"("id");
+ALTER TABLE "public"."cart_cartitem" ADD FOREIGN KEY ("product_variant_id") REFERENCES "public"."product_productvariant"("sku");
 ALTER TABLE "public"."cart_cartitem" ADD FOREIGN KEY ("product_id") REFERENCES "public"."product_product"("id");
 ALTER TABLE "public"."cart_cartitem" ADD FOREIGN KEY ("cart_id") REFERENCES "public"."cart_cart"("token");
-ALTER TABLE "public"."cart_cartitem" ADD FOREIGN KEY ("product_variant_id") REFERENCES "public"."product_productvariant"("sku");
 ALTER TABLE "public"."cart_paymentmethod_translation" ADD FOREIGN KEY ("master_id") REFERENCES "public"."cart_paymentmethod"("id");
+ALTER TABLE "public"."cart_paymentmethodcountry" ADD FOREIGN KEY ("currency_id") REFERENCES "public"."country_currency"("code");
 ALTER TABLE "public"."cart_paymentmethodcountry" ADD FOREIGN KEY ("country_id") REFERENCES "public"."country_country"("code");
 ALTER TABLE "public"."cart_paymentmethodcountry" ADD FOREIGN KEY ("vat_group_id") REFERENCES "public"."country_vatgroup"("id");
 ALTER TABLE "public"."cart_paymentmethodcountry" ADD FOREIGN KEY ("payment_method_id") REFERENCES "public"."cart_paymentmethod"("id");
-ALTER TABLE "public"."cart_paymentmethodcountry" ADD FOREIGN KEY ("currency_id") REFERENCES "public"."country_currency"("code");
 ALTER TABLE "public"."cart_shippingmethod_translation" ADD FOREIGN KEY ("master_id") REFERENCES "public"."cart_shippingmethod"("id");
 ALTER TABLE "public"."cart_shippingmethodcountry" ADD FOREIGN KEY ("vat_group_id") REFERENCES "public"."country_vatgroup"("id");
-ALTER TABLE "public"."cart_shippingmethodcountry" ADD FOREIGN KEY ("currency_id") REFERENCES "public"."country_currency"("code");
 ALTER TABLE "public"."cart_shippingmethodcountry" ADD FOREIGN KEY ("country_id") REFERENCES "public"."country_country"("code");
 ALTER TABLE "public"."cart_shippingmethodcountry" ADD FOREIGN KEY ("shipping_method_id") REFERENCES "public"."cart_shippingmethod"("id");
+ALTER TABLE "public"."cart_shippingmethodcountry" ADD FOREIGN KEY ("currency_id") REFERENCES "public"."country_currency"("code");
 ALTER TABLE "public"."cart_shippingmethodcountry_payment_methods" ADD FOREIGN KEY ("paymentmethodcountry_id") REFERENCES "public"."cart_paymentmethodcountry"("id");
 ALTER TABLE "public"."cart_shippingmethodcountry_payment_methods" ADD FOREIGN KEY ("shippingmethodcountry_id") REFERENCES "public"."cart_shippingmethodcountry"("id");
 ALTER TABLE "public"."category_category" ADD FOREIGN KEY ("parent_id") REFERENCES "public"."category_category"("id");
@@ -1911,11 +1995,11 @@ ALTER TABLE "public"."product_baseattribute_ext_attributes" ADD FOREIGN KEY ("ba
 ALTER TABLE "public"."product_baseattribute_ext_attributes" ADD FOREIGN KEY ("extensionattribute_id") REFERENCES "public"."product_extensionattribute"("id");
 ALTER TABLE "public"."product_baseattribute_translation" ADD FOREIGN KEY ("master_id") REFERENCES "public"."product_baseattribute"("id");
 ALTER TABLE "public"."product_extensionattribute" ADD FOREIGN KEY ("type_id") REFERENCES "public"."product_extattributetype"("id");
-ALTER TABLE "public"."product_extensionattribute_ext_attributes" ADD FOREIGN KEY ("from_extensionattribute_id") REFERENCES "public"."product_extensionattribute"("id");
 ALTER TABLE "public"."product_extensionattribute_ext_attributes" ADD FOREIGN KEY ("to_extensionattribute_id") REFERENCES "public"."product_extensionattribute"("id");
+ALTER TABLE "public"."product_extensionattribute_ext_attributes" ADD FOREIGN KEY ("from_extensionattribute_id") REFERENCES "public"."product_extensionattribute"("id");
 ALTER TABLE "public"."product_pricelist" ADD FOREIGN KEY ("currency_id") REFERENCES "public"."country_currency"("code");
-ALTER TABLE "public"."product_product" ADD FOREIGN KEY ("type_id") REFERENCES "public"."product_producttype"("id");
 ALTER TABLE "public"."product_product" ADD FOREIGN KEY ("category_id") REFERENCES "public"."category_category"("id");
+ALTER TABLE "public"."product_product" ADD FOREIGN KEY ("type_id") REFERENCES "public"."product_producttype"("id");
 ALTER TABLE "public"."product_product_product_variants" ADD FOREIGN KEY ("productvariant_id") REFERENCES "public"."product_productvariant"("sku");
 ALTER TABLE "public"."product_product_product_variants" ADD FOREIGN KEY ("product_id") REFERENCES "public"."product_product"("id");
 ALTER TABLE "public"."product_product_translation" ADD FOREIGN KEY ("master_id") REFERENCES "public"."product_product"("id");
@@ -1924,20 +2008,20 @@ ALTER TABLE "public"."product_productprice" ADD FOREIGN KEY ("product_variant_id
 ALTER TABLE "public"."product_productprice" ADD FOREIGN KEY ("price_list_id") REFERENCES "public"."product_pricelist"("code");
 ALTER TABLE "public"."product_producttype_allowed_attribute_types" ADD FOREIGN KEY ("producttype_id") REFERENCES "public"."product_producttype"("id");
 ALTER TABLE "public"."product_producttype_allowed_attribute_types" ADD FOREIGN KEY ("attributetype_id") REFERENCES "public"."product_attributetype"("id");
-ALTER TABLE "public"."product_producttype_vat_groups" ADD FOREIGN KEY ("producttype_id") REFERENCES "public"."product_producttype"("id");
 ALTER TABLE "public"."product_producttype_vat_groups" ADD FOREIGN KEY ("vatgroup_id") REFERENCES "public"."country_vatgroup"("id");
+ALTER TABLE "public"."product_producttype_vat_groups" ADD FOREIGN KEY ("producttype_id") REFERENCES "public"."product_producttype"("id");
 ALTER TABLE "public"."product_productvariant_attributes" ADD FOREIGN KEY ("productvariant_id") REFERENCES "public"."product_productvariant"("sku");
 ALTER TABLE "public"."product_productvariant_attributes" ADD FOREIGN KEY ("baseattribute_id") REFERENCES "public"."product_baseattribute"("id");
-ALTER TABLE "public"."product_productvariantmedia" ADD FOREIGN KEY ("product_variant_id") REFERENCES "public"."product_productvariant"("sku");
 ALTER TABLE "public"."product_productvariantmedia" ADD FOREIGN KEY ("media_id") REFERENCES "public"."product_productmedia"("id");
-ALTER TABLE "public"."review_review" ADD FOREIGN KEY ("order_id") REFERENCES "public"."order_order"("token");
-ALTER TABLE "public"."review_review" ADD FOREIGN KEY ("product_variant_id") REFERENCES "public"."product_productvariant"("sku");
+ALTER TABLE "public"."product_productvariantmedia" ADD FOREIGN KEY ("product_variant_id") REFERENCES "public"."product_productvariant"("sku");
 ALTER TABLE "public"."review_review" ADD FOREIGN KEY ("product_id") REFERENCES "public"."product_product"("id");
+ALTER TABLE "public"."review_review" ADD FOREIGN KEY ("product_variant_id") REFERENCES "public"."product_productvariant"("sku");
+ALTER TABLE "public"."review_review" ADD FOREIGN KEY ("order_id") REFERENCES "public"."order_order"("token");
 ALTER TABLE "public"."roles_managergroup_permissions" ADD FOREIGN KEY ("managerpermission_id") REFERENCES "public"."roles_managerpermission"("name");
 ALTER TABLE "public"."roles_managergroup_permissions" ADD FOREIGN KEY ("managergroup_id") REFERENCES "public"."roles_managergroup"("name");
 ALTER TABLE "public"."token_blacklist_blacklistedtoken" ADD FOREIGN KEY ("token_id") REFERENCES "public"."token_blacklist_outstandingtoken"("id");
 ALTER TABLE "public"."token_blacklist_outstandingtoken" ADD FOREIGN KEY ("user_id") REFERENCES "public"."user_user"("email");
 ALTER TABLE "public"."user_user_groups" ADD FOREIGN KEY ("user_id") REFERENCES "public"."user_user"("email");
 ALTER TABLE "public"."user_user_groups" ADD FOREIGN KEY ("group_id") REFERENCES "public"."auth_group"("id");
-ALTER TABLE "public"."user_user_user_permissions" ADD FOREIGN KEY ("user_id") REFERENCES "public"."user_user"("email");
 ALTER TABLE "public"."user_user_user_permissions" ADD FOREIGN KEY ("permission_id") REFERENCES "public"."auth_permission"("id");
+ALTER TABLE "public"."user_user_user_permissions" ADD FOREIGN KEY ("user_id") REFERENCES "public"."user_user"("email");
