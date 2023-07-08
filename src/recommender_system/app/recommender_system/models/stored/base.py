@@ -47,6 +47,10 @@ class StoredBaseModel(BaseModel):
         return storage.get_object(model_class=cls, **kwargs)
 
     @classmethod
+    def get_latest(cls, storage: "AbstractStorage", **kwargs) -> "StoredBaseModel":
+        return storage.get_latest_object(model_class=cls, **kwargs)
+
+    @classmethod
     def gets(cls, storage: "AbstractStorage", **kwargs) -> List["StoredBaseModel"]:
         return storage.get_objects(model_class=cls, **kwargs)
 

@@ -109,6 +109,29 @@ class SQLStorage(AbstractStorage):
 
         return model_class(**result.__dict__)
 
+    def get_latest_object(
+        self, model_class: Type[StoredBaseModel], **kwargs
+    ) -> StoredBaseModel:
+        sql_class = SQLModelMapper.map(model_class=model_class)
+
+        if not hasattr(sql_class, "create_at"):
+            raise TypeError(
+                f"Latest model of type {sql_class} can not be found - 'create_at' field is missing"
+            )
+
+        create_at = getattr(sql_class, "create_at")
+
+        query = self.session.query(sql_class)
+        query = self._filter(model_class=model_class, query=query, filters=kwargs)
+        query = query.order_by(create_at.desc()).limit(1)
+
+        try:
+            result = query.one()
+        except NoResultFound:
+            raise model_class.DoesNotExist()
+
+        return model_class(**result.__dict__)
+
     def get_objects(
         self, model_class: Type[StoredBaseModel], **kwargs
     ) -> List[StoredBaseModel]:

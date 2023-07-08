@@ -37,6 +37,13 @@ class FeedbackStoredBaseModel(StoredBaseModel):
 
     @classmethod
     @inject
+    def get_latest(
+        cls, storage: "AbstractFeedbackStorage" = Provide["feedback_storage"], **kwargs
+    ) -> "StoredBaseModel":
+        return super().get_latest(storage=storage, **kwargs)
+
+    @classmethod
+    @inject
     def gets(
         cls, storage: "AbstractFeedbackStorage" = Provide["feedback_storage"], **kwargs
     ) -> List["StoredBaseModel"]:

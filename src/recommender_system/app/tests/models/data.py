@@ -76,7 +76,20 @@ def _attribute_model(id: int = 0, parent_id: Optional[int] = None) -> Dict[str, 
 
 
 def _config() -> Dict[str, Any]:
-    return {"create_at": _now, "retrieval_size": 1000}
+    return {
+        "create_at": _now,
+        "retrieval_size": 1000,
+        "ordering_size": 50,
+        "homepage_retrieval_cascade": ["selection"],
+        "homepage_scoring_cascade": ["selection"],
+        "category_list_scoring_cascade": ["selection"],
+        "product_detail_retrieval_cascade": ["selection"],
+        "product_detail_scoring_cascade": ["selection"],
+        "cart_retrieval_cascade": ["selection"],
+        "cart_scoring_cascade": ["selection"],
+        "ease_config": EASEConfig().dict(),
+        "gru4rec_config": GRU4RecConfig().dict(),
+    }
 
 
 def _config_model(id: Optional[int] = None) -> Dict[str, Any]:
@@ -84,6 +97,14 @@ def _config_model(id: Optional[int] = None) -> Dict[str, Any]:
         "id": id,
         "create_at": _now,
         "retrieval_size": 1000,
+        "ordering_size": 50,
+        "homepage_retrieval_cascade": ["selection"],
+        "homepage_scoring_cascade": ["selection"],
+        "category_list_scoring_cascade": ["selection"],
+        "product_detail_retrieval_cascade": ["selection"],
+        "product_detail_scoring_cascade": ["selection"],
+        "cart_retrieval_cascade": ["selection"],
+        "cart_scoring_cascade": ["selection"],
         "ease_config": EASEConfig().dict(),
         "gru4rec_config": GRU4RecConfig().dict(),
     }
