@@ -41,7 +41,13 @@ const CountrySelect = () => {
 export default CountrySelect;
 
 const style = {
-  position: "absolute" as "absolute",
+  position: "absolute",
+  // left: "10%",
+  overflow: "scroll",
+  height: "80%",
+  display: "block",
+  // position: "absolute" as "absolute",
+  // overflow: "scroll",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
