@@ -28,11 +28,12 @@ import Button from "@mui/material/Button";
 // types
 import { IProductVariant } from "@/types/product";
 import Grid from "@mui/material/Grid";
-import { Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Alert, Snackbar, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { serializeAttributes } from "@/utils/attributes";
 import QuantitySelect from "@/components/Common/QuantitySelect";
 import DiscountText from "@/components/Generic/DiscountText";
 import { useTranslation } from "next-i18next";
+import { useSnackbarState } from "@/utils/snackbar";
 
 const ProductVariantRow = ({
   variant,
@@ -46,10 +47,36 @@ const ProductVariantRow = ({
   pricelist: string;
 }) => {
   const { addToCart } = useCart();
+  const { cartProductQuantity } = useCart();
   const { query } = useRouter();
   const { t } = useTranslation("product");
 
   const [qty, setQty] = useState(1);
+  const [snackbar, setSnackbar] = useSnackbarState();
+  const handleSnackbarClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbar(null);
+  };
+
+  const handleAddToCart = () => {
+    if (qty + cartProductQuantity(variant.sku) > variant.stock_quantity) {
+      setSnackbar({
+        open: true,
+        message: "Product is out of stock for selected quantity",
+        severity: "error",
+      });
+      return;
+    }
+
+    addToCart(variant.sku, qty, productId, pricelist, country);
+    setQty(1);
+  }
+
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -113,17 +140,29 @@ const ProductVariantRow = ({
         spacing={2}
         mt={1}
       >
-        <Typography>
-          <Button
-            variant="text"
-            startIcon={<ShoppingCartIcon />}
-            onClick={() => {
-              addToCart(variant.sku, qty, productId, pricelist, country);
-              setQty(1);
-            }}
-          />
-        </Typography>
+        <Button
+          variant="text"
+          startIcon={<ShoppingCartIcon />}
+          onClick={handleAddToCart}
+        />
       </Grid>
+      {
+        snackbar ? (
+          <Snackbar
+            open={snackbar.open}
+            autoHideDuration={6000}
+            onClose={handleSnackbarClose}
+          >
+            <Alert
+              onClose={handleSnackbarClose}
+              severity={snackbar.severity}
+              sx={{ width: "100%" }}
+            >
+              {snackbar.message}
+            </Alert>
+          </Snackbar>
+        ) : null
+      }
     </Grid>
   );
 };

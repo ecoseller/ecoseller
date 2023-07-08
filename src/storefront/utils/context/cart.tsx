@@ -55,6 +55,14 @@ interface ICartContext {
    * Function for removing cart from user's session
    */
   clearCart: () => void;
+
+  /**
+   * Function for getting quantity of product variant in the cart
+   * @param sku
+   * @returns quantity of product variant in the cart
+   * @returns 0 if product variant is not in the cart
+   */
+  cartProductQuantity: (sku: string) => number;
 }
 
 interface ICartProviderProps {
@@ -172,6 +180,26 @@ export const CartProvider = ({ children }: ICartProviderProps): JSX.Element => {
     Cookies.remove(cartTokenCookie);
   };
 
+  const cartProductQuantity = (sku: string) => {
+    if (!token) {
+      return 0;
+    }
+
+    if (!cart?.cart_items) {
+      return 0;
+    }
+
+    const cartItem = cart.cart_items.find(
+      (item: ICartItem) => item.product_variant_sku === sku
+    );
+
+    if (!cartItem) {
+      return 0;
+    }
+
+    return cartItem.quantity;
+  };
+
   const value = {
     cart,
     cartSize,
@@ -179,6 +207,7 @@ export const CartProvider = ({ children }: ICartProviderProps): JSX.Element => {
     removeFromCart,
     updateQuantity,
     clearCart,
+    cartProductQuantity,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
