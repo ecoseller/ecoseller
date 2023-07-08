@@ -1,0 +1,168 @@
+version: "3.9"
+
+services:
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+      target: production
+    volumes:
+      - ./backend/core:/usr/src/app/
+      - ./backend/mediafiles:/usr/src/mediafiles
+    ports:
+      - 8000:8000
+      - 8001:8001
+    env_file:
+      - ./backend/docker-compose.env
+  postgres_backend:
+    image: postgres:13.0-alpine
+    container_name: postgres_backend
+    volumes:
+      - ./backend/postgres/mock_data.sql:/docker-entrypoint-initdb.d/setup_database.sql
+      - ./backend/postgres/data:/var/lib/postgresql/data/
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=ecoseller
+      - POSTGRES_INITDB_ARGS=--auth=trust --auth-host=trust --auth-local=trust
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  redis:
+    container_name: redis
+    image: redis
+    restart: always
+    ports:
+      - 6379:6379
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - ./cache:/data
+    depends_on:
+      - backend
+  rq-worker:
+    build:
+        context: ./backend
+        dockerfile: ./Dockerfile
+        target: production
+    volumes:
+      - ./backend/core:/usr/src/app/core
+    depends_on:
+    - backend
+    - redis
+    env_file:
+      - ./backend/docker-compose.env
+    command: python -u /usr/src/app/core/manage.py rqworker high low default
+  elasticsearch:
+    container_name: elasticsearch
+    build:
+      context: ./backend/elasticsearch
+    environment:
+      - discovery.type=single-node
+      - cluster.routing.allocation.disk.threshold_enabled=false
+    volumes:
+      - ./backend/elasticsearch/data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    depends_on:
+      - backend
+  frontend_dashboard:
+    container_name: dashboard
+    build:
+      context: ./dashboard
+      target: production # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
+    environment:
+      CHOKIDAR_USEPOLLING: "true" # https://stackoverflow.com/questions/61576659/how-to-hot-reload-in-reactjs-docker
+      API_URL: "http://backend:8000"
+      NEXT_PUBLIC_API_URL: "http://localhost:8000"
+      NEXT_PUBLIC_BACKEND_API_URL: "http://backend:8000"
+    volumes:
+      - ./dashboard/pages:/usr/src/app/pages
+      - ./dashboard/utils:/usr/src/app/utils
+      - ./dashboard/components:/usr/src/app/components
+      - ./dashboard/types:/usr/src/app/types
+      - ./dashboard/app:/usr/src/app/app
+      - ./dashboard/styles:/usr/src/app/styles
+      - ./dashboard/src:/usr/src/app/src
+      - ./dashboard/public:/usr/src/app/public
+      - ./dashboard/api:/usr/src/app/api
+    ports:
+      - 3030:3000
+    depends_on:
+      - backend
+  frontend_storefront:
+    container_name: storefront
+    build:
+      context: ./storefront
+      target: production # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
+    environment:
+      CHOKIDAR_USEPOLLING: "true" # https://stackoverflow.com/questions/61576659/how-to-hot-reload-in-reactjs-docker
+      API_URL: "http://backend:8000"
+      NEXT_PUBLIC_API_URL: "http://localhost:8000"
+      NEXT_PUBLIC_BACKEND_API_URL: "http://backend:8000"
+    volumes:
+      - ./storefront/pages:/usr/src/app/pages
+      - ./storefront/app:/usr/src/app/app
+      - ./storefront/styles:/usr/src/app/styles
+      - ./storefront/src:/usr/src/app/src
+      - ./storefront/public:/usr/src/app/public
+      - ./storefront/utils:/usr/src/app/utils
+      - ./storefront/api:/usr/src/app/api
+      - ./storefront/components:/usr/src/app/components
+      - ./storefront/types:/usr/src/app/types
+      - ./storefront/next.config.js:/usr/src/app/next.config.js
+    ports:
+      - 3031:3000
+    depends_on:
+      - backend
+  postgres_rs:
+    image: postgres:13.0-alpine
+    container_name: postgres_rs
+    volumes:
+      - ./recommender_system/setup_database.sql:/docker-entrypoint-initdb.d/setup_database.sql
+    ports:
+      - 5432:5432
+    env_file:
+      - ./recommender_system/docker-compose.env
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  recommender_system:
+    container_name: recommender_system
+    build:
+      context: ./recommender_system
+      target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
+    command: "sh /usr/src/app/run_server.sh"
+    volumes:
+      - ./recommender_system/app:/usr/src/app/
+    ports:
+      - 8086:8086
+    env_file:
+      - ./recommender_system/docker-compose.env
+    healthcheck:
+      test: curl --fail http://localhost:8086 || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      postgres_rs:
+        condition: service_healthy
+  recommender_system_trainer:
+    container_name: recommender_system_trainer
+    build:
+      context: ./recommender_system
+      target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
+    command: "sh /usr/src/app/run_trainer.sh"
+    volumes:
+      - ./recommender_system/app:/usr/src/app/
+    env_file:
+      - ./recommender_system/docker-compose.env
+    depends_on:
+      recommender_system:
+        condition: service_healthy
