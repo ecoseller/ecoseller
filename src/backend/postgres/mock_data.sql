@@ -4,7 +4,7 @@
 -- https://tableplus.com/
 --
 -- Database: ecoseller
--- Generation Time: 2023-07-08 17:39:51.1230
+-- Generation Time: 2023-07-08 23:11:03.7700
 -- -------------------------------------------------------------
 
 
@@ -1689,6 +1689,28 @@ INSERT INTO "public"."product_pricelist" ("code", "rounding", "currency_id", "cr
 ('EUR_retail', 'f', 'EUR', '2023-07-07 06:58:53.21463+00', '2023-07-07 06:58:53.214601+00', 'f', 'f'),
 ('PLN_retail', 'f', 'PLN', '2023-07-07 06:59:00.070375+00', '2023-07-07 06:59:00.070352+00', 'f', 'f');
 
+INSERT INTO "public"."product_product" ("id", "published", "update_at", "create_at", "category_id", "type_id", "safe_deleted") VALUES
+(1, 't', '2023-07-08 21:09:40.028531+00', '2023-07-08 21:07:24.760882+00', 4, 2, 'f');
+
+INSERT INTO "public"."product_product_product_variants" ("id", "product_id", "productvariant_id") VALUES
+(1, 1, '978-80-7390-220-9-en'),
+(2, 1, '978-80-7390-220-9-cs');
+
+INSERT INTO "public"."product_product_translation" ("id", "language_code", "title", "meta_title", "meta_description", "short_description", "description", "slug", "master_id", "description_editorjs") VALUES
+(1, 'en', 'The Little Prince - Antoine de Saint-Exupéry', 'The Little Prince - Antoine de Saint-Exupéry', 'A pilot stranded in the desert awakes one morning to see, standing before him, the most extraordinary little fellow.', NULL, NULL, 'the-little-prince-antoine-de-saint-exupery', 1, '{"time": 1688850414591, "blocks": [{"id": "DBgKz5qVHq", "data": {"text": "A pilot stranded in the desert awakes one morning to see, standing before him, the most extraordinary little fellow. \"Please,\" asks the stranger, \"draw me a sheep.\" And the pilot realizes that when life''s events are too difficult to understand, there is no choice but to succumb to their mysteries. He pulls out pencil and paper... And thus begins this wise and enchanting fable that, in teaching the secret of what is really important in life, has changed forever the world for its readers."}, "type": "paragraph"}], "version": "2.26.5"}'),
+(2, 'cs', 'Malý Princ - Antoine de Saint-Exupéry', 'Malý Princ - Antoine de Saint-Exupéry', 'Havárie letadla donutí vypravěče příběhu, který je zároveň autorovým alter egem, k přistání uprostřed pouště.', NULL, NULL, 'maly-princ-antoine-de-saint-exupery', 1, '{"time": 1688850406876, "blocks": [{"id": "GXo0mbBxE6", "data": {"text": "Havárie letadla donutí vypravěče příběhu, který je zároveň autorovým alter egem, k přistání uprostřed pouště. Má zásobu pitné vody sotva na týden, a proto musí opravit motor pokud možno co nejrychleji. Prvního dne ulehne unaven po celodenní práci a za úsvitu, stále tisíc kilometrů od nejbližšího lidského obydlí, ho probudí zvláštní hlásek, který ho žádá, aby nakreslil beránka... Alegorická pohádka pro děti i pro dospělé, kteří přemýšlí o ztraceném mládí a hledají životní moudrost, patří mezi nejvýznamnější díla svého druhu."}, "type": "paragraph"}], "version": "2.26.5"}');
+
+INSERT INTO "public"."product_productmedia" ("id", "sort_order", "media", "type", "alt", "product_id", "safe_deleted") VALUES
+(1, 0, 'product_media/1/image/4845cce1-d75f-48ce-8178-98044562d904.jpg', 'IMAGE', NULL, 1, 'f');
+
+INSERT INTO "public"."product_productprice" ("id", "price", "price_list_id", "product_variant_id", "create_at", "update_at", "discount", "safe_deleted") VALUES
+(1, 169.00, 'CZK_retail', '978-80-7390-220-9-en', '2023-07-08 21:09:26.079069+00', '2023-07-08 21:09:39.77352+00', NULL, 'f'),
+(2, 6.75, 'EUR_retail', '978-80-7390-220-9-en', '2023-07-08 21:09:26.102378+00', '2023-07-08 21:09:39.78651+00', NULL, 'f'),
+(3, 33.80, 'PLN_retail', '978-80-7390-220-9-en', '2023-07-08 21:09:26.123802+00', '2023-07-08 21:09:39.798025+00', NULL, 'f'),
+(4, 129.00, 'CZK_retail', '978-80-7390-220-9-cs', '2023-07-08 21:09:26.154529+00', '2023-07-08 21:09:39.820998+00', NULL, 'f'),
+(5, 5.70, 'EUR_retail', '978-80-7390-220-9-cs', '2023-07-08 21:09:26.173638+00', '2023-07-08 21:09:39.832397+00', NULL, 'f'),
+(6, 25.80, 'PLN_retail', '978-80-7390-220-9-cs', '2023-07-08 21:09:26.192784+00', '2023-07-08 21:09:39.843638+00', NULL, 'f');
+
 INSERT INTO "public"."product_producttype" ("id", "name", "update_at", "create_at", "safe_deleted") VALUES
 (1, 'Test', '2023-07-07 06:47:39.880219+00', '2023-07-07 06:47:25.108776+00', 'f'),
 (2, 'Book', '2023-07-08 15:38:26.815234+00', '2023-07-08 15:38:04.945991+00', 'f'),
@@ -1731,6 +1753,14 @@ INSERT INTO "public"."product_producttype_vat_groups" ("id", "producttype_id", "
 (26, 3, 21),
 (27, 3, 23),
 (28, 3, 26);
+
+INSERT INTO "public"."product_productvariant" ("sku", "ean", "weight", "update_at", "create_at", "stock_quantity", "safe_deleted") VALUES
+('978-80-7390-220-9-cs', '', 115.00, '2023-07-08 21:09:39.809647+00', '2023-07-08 21:08:11.892106+00', 140, 'f'),
+('978-80-7390-220-9-en', '', 115.00, '2023-07-08 21:09:39.755139+00', '2023-07-08 21:07:50.982518+00', 40, 'f');
+
+INSERT INTO "public"."product_productvariant_attributes" ("id", "productvariant_id", "baseattribute_id") VALUES
+(1, '978-80-7390-220-9-en', 8),
+(2, '978-80-7390-220-9-cs', 7);
 
 INSERT INTO "public"."roles_managergroup" ("name", "description") VALUES
 ('Copywriter', 'Copywriter role'),
@@ -1942,30 +1972,30 @@ INSERT INTO "public"."user_user" ("password", "last_login", "email", "first_name
 INSERT INTO "public"."user_user_groups" ("id", "user_id", "group_id") VALUES
 (2, 'test@example.com', 2);
 
-ALTER TABLE "public"."auth_group_permissions" ADD FOREIGN KEY ("permission_id") REFERENCES "public"."auth_permission"("id");
 ALTER TABLE "public"."auth_group_permissions" ADD FOREIGN KEY ("group_id") REFERENCES "public"."auth_group"("id");
+ALTER TABLE "public"."auth_group_permissions" ADD FOREIGN KEY ("permission_id") REFERENCES "public"."auth_permission"("id");
 ALTER TABLE "public"."auth_permission" ADD FOREIGN KEY ("content_type_id") REFERENCES "public"."django_content_type"("id");
 ALTER TABLE "public"."authtoken_token" ADD FOREIGN KEY ("user_id") REFERENCES "public"."user_user"("email");
-ALTER TABLE "public"."cart_cart" ADD FOREIGN KEY ("payment_method_country_id") REFERENCES "public"."cart_paymentmethodcountry"("id");
 ALTER TABLE "public"."cart_cart" ADD FOREIGN KEY ("shipping_method_country_id") REFERENCES "public"."cart_shippingmethodcountry"("id");
-ALTER TABLE "public"."cart_cart" ADD FOREIGN KEY ("shipping_info_id") REFERENCES "public"."country_shippinginfo"("id");
-ALTER TABLE "public"."cart_cart" ADD FOREIGN KEY ("user_id") REFERENCES "public"."user_user"("email");
-ALTER TABLE "public"."cart_cart" ADD FOREIGN KEY ("country_id") REFERENCES "public"."country_country"("code");
-ALTER TABLE "public"."cart_cart" ADD FOREIGN KEY ("pricelist_id") REFERENCES "public"."product_pricelist"("code");
 ALTER TABLE "public"."cart_cart" ADD FOREIGN KEY ("billing_info_id") REFERENCES "public"."country_billinginfo"("id");
+ALTER TABLE "public"."cart_cart" ADD FOREIGN KEY ("pricelist_id") REFERENCES "public"."product_pricelist"("code");
+ALTER TABLE "public"."cart_cart" ADD FOREIGN KEY ("user_id") REFERENCES "public"."user_user"("email");
+ALTER TABLE "public"."cart_cart" ADD FOREIGN KEY ("payment_method_country_id") REFERENCES "public"."cart_paymentmethodcountry"("id");
+ALTER TABLE "public"."cart_cart" ADD FOREIGN KEY ("shipping_info_id") REFERENCES "public"."country_shippinginfo"("id");
+ALTER TABLE "public"."cart_cart" ADD FOREIGN KEY ("country_id") REFERENCES "public"."country_country"("code");
+ALTER TABLE "public"."cart_cartitem" ADD FOREIGN KEY ("cart_id") REFERENCES "public"."cart_cart"("token");
 ALTER TABLE "public"."cart_cartitem" ADD FOREIGN KEY ("product_variant_id") REFERENCES "public"."product_productvariant"("sku");
 ALTER TABLE "public"."cart_cartitem" ADD FOREIGN KEY ("product_id") REFERENCES "public"."product_product"("id");
-ALTER TABLE "public"."cart_cartitem" ADD FOREIGN KEY ("cart_id") REFERENCES "public"."cart_cart"("token");
 ALTER TABLE "public"."cart_paymentmethod_translation" ADD FOREIGN KEY ("master_id") REFERENCES "public"."cart_paymentmethod"("id");
 ALTER TABLE "public"."cart_paymentmethodcountry" ADD FOREIGN KEY ("currency_id") REFERENCES "public"."country_currency"("code");
+ALTER TABLE "public"."cart_paymentmethodcountry" ADD FOREIGN KEY ("payment_method_id") REFERENCES "public"."cart_paymentmethod"("id");
 ALTER TABLE "public"."cart_paymentmethodcountry" ADD FOREIGN KEY ("country_id") REFERENCES "public"."country_country"("code");
 ALTER TABLE "public"."cart_paymentmethodcountry" ADD FOREIGN KEY ("vat_group_id") REFERENCES "public"."country_vatgroup"("id");
-ALTER TABLE "public"."cart_paymentmethodcountry" ADD FOREIGN KEY ("payment_method_id") REFERENCES "public"."cart_paymentmethod"("id");
 ALTER TABLE "public"."cart_shippingmethod_translation" ADD FOREIGN KEY ("master_id") REFERENCES "public"."cart_shippingmethod"("id");
 ALTER TABLE "public"."cart_shippingmethodcountry" ADD FOREIGN KEY ("vat_group_id") REFERENCES "public"."country_vatgroup"("id");
 ALTER TABLE "public"."cart_shippingmethodcountry" ADD FOREIGN KEY ("country_id") REFERENCES "public"."country_country"("code");
-ALTER TABLE "public"."cart_shippingmethodcountry" ADD FOREIGN KEY ("shipping_method_id") REFERENCES "public"."cart_shippingmethod"("id");
 ALTER TABLE "public"."cart_shippingmethodcountry" ADD FOREIGN KEY ("currency_id") REFERENCES "public"."country_currency"("code");
+ALTER TABLE "public"."cart_shippingmethodcountry" ADD FOREIGN KEY ("shipping_method_id") REFERENCES "public"."cart_shippingmethod"("id");
 ALTER TABLE "public"."cart_shippingmethodcountry_payment_methods" ADD FOREIGN KEY ("paymentmethodcountry_id") REFERENCES "public"."cart_paymentmethodcountry"("id");
 ALTER TABLE "public"."cart_shippingmethodcountry_payment_methods" ADD FOREIGN KEY ("shippingmethodcountry_id") REFERENCES "public"."cart_shippingmethodcountry"("id");
 ALTER TABLE "public"."category_category" ADD FOREIGN KEY ("parent_id") REFERENCES "public"."category_category"("id");
@@ -1998,8 +2028,8 @@ ALTER TABLE "public"."product_extensionattribute" ADD FOREIGN KEY ("type_id") RE
 ALTER TABLE "public"."product_extensionattribute_ext_attributes" ADD FOREIGN KEY ("to_extensionattribute_id") REFERENCES "public"."product_extensionattribute"("id");
 ALTER TABLE "public"."product_extensionattribute_ext_attributes" ADD FOREIGN KEY ("from_extensionattribute_id") REFERENCES "public"."product_extensionattribute"("id");
 ALTER TABLE "public"."product_pricelist" ADD FOREIGN KEY ("currency_id") REFERENCES "public"."country_currency"("code");
-ALTER TABLE "public"."product_product" ADD FOREIGN KEY ("category_id") REFERENCES "public"."category_category"("id");
 ALTER TABLE "public"."product_product" ADD FOREIGN KEY ("type_id") REFERENCES "public"."product_producttype"("id");
+ALTER TABLE "public"."product_product" ADD FOREIGN KEY ("category_id") REFERENCES "public"."category_category"("id");
 ALTER TABLE "public"."product_product_product_variants" ADD FOREIGN KEY ("productvariant_id") REFERENCES "public"."product_productvariant"("sku");
 ALTER TABLE "public"."product_product_product_variants" ADD FOREIGN KEY ("product_id") REFERENCES "public"."product_product"("id");
 ALTER TABLE "public"."product_product_translation" ADD FOREIGN KEY ("master_id") REFERENCES "public"."product_product"("id");
@@ -2008,8 +2038,8 @@ ALTER TABLE "public"."product_productprice" ADD FOREIGN KEY ("product_variant_id
 ALTER TABLE "public"."product_productprice" ADD FOREIGN KEY ("price_list_id") REFERENCES "public"."product_pricelist"("code");
 ALTER TABLE "public"."product_producttype_allowed_attribute_types" ADD FOREIGN KEY ("producttype_id") REFERENCES "public"."product_producttype"("id");
 ALTER TABLE "public"."product_producttype_allowed_attribute_types" ADD FOREIGN KEY ("attributetype_id") REFERENCES "public"."product_attributetype"("id");
-ALTER TABLE "public"."product_producttype_vat_groups" ADD FOREIGN KEY ("vatgroup_id") REFERENCES "public"."country_vatgroup"("id");
 ALTER TABLE "public"."product_producttype_vat_groups" ADD FOREIGN KEY ("producttype_id") REFERENCES "public"."product_producttype"("id");
+ALTER TABLE "public"."product_producttype_vat_groups" ADD FOREIGN KEY ("vatgroup_id") REFERENCES "public"."country_vatgroup"("id");
 ALTER TABLE "public"."product_productvariant_attributes" ADD FOREIGN KEY ("productvariant_id") REFERENCES "public"."product_productvariant"("sku");
 ALTER TABLE "public"."product_productvariant_attributes" ADD FOREIGN KEY ("baseattribute_id") REFERENCES "public"."product_baseattribute"("id");
 ALTER TABLE "public"."product_productvariantmedia" ADD FOREIGN KEY ("media_id") REFERENCES "public"."product_productmedia"("id");
