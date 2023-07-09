@@ -43,7 +43,9 @@ const ShippingPaymentMethodItem = ({
           <Radio checked={selected} />
         </Grid>
         <Grid item xs={1} sm={2} md={2}>
-          <ImageThumbnail imagePath={imgPath(image)} alt={title} />
+          {image ? (
+            <ImageThumbnail imagePath={imgPath(image)} alt={title} />
+          ) : null}
         </Grid>
         <Grid item xs={1} sm={6} md={7}>
           <Typography variant="h6" sx={{ mt: 1, pl: 2 }}>
