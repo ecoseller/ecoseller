@@ -70,7 +70,10 @@ wheels/
 *.manifest 
 *.spec 
 
-core/load_products.py
+# scripts
+*load_products.py
+*test_payment.py
+*test_notifications.py
 
 # Installer logs 
 pip-log.txt 
