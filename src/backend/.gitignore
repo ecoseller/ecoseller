@@ -70,6 +70,8 @@ wheels/
 *.manifest 
 *.spec 
 
+core/load_products.py
+
 # Installer logs 
 pip-log.txt 
 pip-delete-this-directory.txt 
