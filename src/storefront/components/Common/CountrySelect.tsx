@@ -69,7 +69,7 @@ const CountrySelectModal = ({
 }) => {
   const { countryList, country, setCountryCookieAndLocale } = useCountry();
   const router = useRouter();
-  const { asPath } = router;
+  const { pathname, asPath, query } = router
   const { t } = useTranslation("common");
   return (
     <Modal
@@ -94,11 +94,7 @@ const CountrySelectModal = ({
                   onClick={() => {
                     setCountryCookieAndLocale(c.code);
                     setOpen(false);
-                    router.replace(asPath, asPath, {
-                      locale: c.locale,
-                      shallow: false,
-                    });
-                    router.reload();
+                    router.push({ pathname, query }, asPath, { locale: c.locale }).then(() => router.reload());
                   }}
                 />
               </ListItemButton>
