@@ -53,7 +53,7 @@ services:
     build:
         context: ./backend
         dockerfile: ./Dockerfile
-        target: development
+        target: demo
     volumes:
       - ./backend/core:/usr/src/app/core
     depends_on:
@@ -80,7 +80,7 @@ services:
     container_name: dashboard
     build:
       context: ./dashboard
-      target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
+      target: demo # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
     environment:
       CHOKIDAR_USEPOLLING: "true" # https://stackoverflow.com/questions/61576659/how-to-hot-reload-in-reactjs-docker
       API_URL: "http://backend:8000"
@@ -104,7 +104,7 @@ services:
     container_name: storefront
     build:
       context: ./storefront
-      target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
+      target: demo # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
     environment:
       CHOKIDAR_USEPOLLING: "true" # https://stackoverflow.com/questions/61576659/how-to-hot-reload-in-reactjs-docker
       API_URL: "http://backend:8000"

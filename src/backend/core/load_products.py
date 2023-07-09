@@ -7,12 +7,14 @@ from product.models import (
     ProductPrice,
     PriceList,
     BaseAttribute,
+    ProductMediaTypes,
     AttributeType,
 )
 import json
 import random
 from django.utils.text import slugify
-
+from datetime import datetime
+from django.core.files.uploadedfile import UploadedFile
 
 MOVIE_CATEGORY = Category.objects.get(id=3)
 MOVIE_TYPE = ProductType.objects.get(name="Movie")
@@ -225,84 +227,172 @@ def create_prices_for_variant(variant_obj):
     price_obj.save()
 
 
+def translate_text_to_cs(text):
+    import requests
+
+    resp = requests.post(
+        "https://api-free.deepl.com/v2/translate",
+        headers={
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": "DeepL-Auth-Key b7a75477-8731-4177-9aa3-d971cc57d92b:fx",
+        },
+        data={"target_lang": "cs", "text": text},
+    )
+    if resp.status_code == 200:
+        print(resp, resp.json())
+        return resp.json()["translations"][0]["text"]
+    else:
+        print(resp)
+        return text
+
+
 def parse_product(id, data):
     # create product
+    print("Creating product", id, data["title"])
+
     product_obj, created = Product.objects.get_or_create(
         pk=int(id),
         type=MOVIE_TYPE,
         category=MOVIE_CATEGORY,
     )
+
+    try:
+        czech_description = translate_text_to_cs(data["plot"])
+    except Exception as e:
+        print("Error translating", e)
+        czech_description = data["plot"]
+
+    editor_js_description_en = {
+        "time": datetime.timestamp(datetime.now()),
+        "blocks": [
+            {
+                "id": "D48CBYJh-n",
+                "data": {
+                    "text": data["plot"],
+                },
+                "type": "paragraph",
+            }
+        ],
+        "version": "2.26.5",
+    }
+    editor_js_description_cs = {
+        "time": datetime.timestamp(datetime.now()),
+        "blocks": [
+            {
+                "id": "D48CBYJh-n",
+                "data": {
+                    "text": czech_description,
+                },
+                "type": "paragraph",
+            }
+        ],
+        "version": "2.26.5",
+    }
     # create product translations
     product_obj.set_current_language("en")
-    product_obj.title = data["title"]
-    product_obj.meta_title = data["title"]
-    product_obj.slug = slugify(data["title"])
+    # product_obj.title = data["title"]
+    product_obj.description_editorjs = editor_js_description_en
+    # product_obj.meta_title = data["title"]
+    product_obj.meta_description = data["plot"][0:150]
+    # product_obj.slug = slugify(data["title"])
     product_obj.set_current_language("cs")
-    product_obj.title = data["title"]
-    product_obj.meta_title = data["title"]
-    product_obj.slug = slugify(data["title"])
+    # product_obj.title = data["title"]
+    product_obj.description_editorjs = editor_js_description_cs
+    # product_obj.meta_title = data["title"]
+    product_obj.meta_description = czech_description[0:150]
+    # product_obj.slug = slugify(data["title"])
     product_obj.save()
 
-    # VARIANTS and PRICES are loaded in the database, so uncommenting this for now
+    #  VARIANTS and PRICES are loaded in the database, so uncommenting this for now
 
-    # # create general attribtues (genre, length, year)
-    # genre_type = AttributeType.objects.get(
-    #     type_name="GENRE",
-    # )
-    # genre, created = BaseAttribute.objects.get_or_create(
-    #     type=genre_type,
-    #     value=data["genre"],
-    # )
-    # year_type = AttributeType.objects.get(
-    #     type_name="YEAR",
-    # )
-    # year, created = BaseAttribute.objects.get_or_create(
-    #     type=year_type,
-    #     value=data["year"],
-    # )
-    # length_type = AttributeType.objects.get(
-    #     type_name="LENGTH",
-    # )
+    # create general attribtues (genre, length, year)
+    genre_type = AttributeType.objects.get(
+        type_name="GENRE",
+    )
+    genre, created = BaseAttribute.objects.get_or_create(
+        type=genre_type,
+        value=data["genre"],
+    )
+    year_type = AttributeType.objects.get(
+        type_name="YEAR",
+    )
+    year, created = BaseAttribute.objects.get_or_create(
+        type=year_type,
+        value=data["year"],
+    )
+    length_type = AttributeType.objects.get(
+        type_name="LENGTH",
+    )
 
-    # length = BaseAttribute.objects.get(
-    #     type=length_type,
-    #     value="SUB60",
-    # )
+    length = BaseAttribute.objects.get(
+        type=length_type,
+        value="SUB60",
+    )
 
-    # if int(data["runtime"]) > 120:
-    #     length = BaseAttribute.objects.get(
-    #         type=length_type,
-    #         value="120PLUS",
-    #     )
-    # elif int(data["runtime"]) > 90:
-    #     length = BaseAttribute.objects.get(
-    #         type=length_type,
-    #         value="90120",
-    #     )
-    # elif int(data["runtime"]) > 60:
-    #     length = BaseAttribute.objects.get(
-    #         type=length_type,
-    #         value="6090",
-    #     )
+    if int(data["runtime"]) > 120:
+        length = BaseAttribute.objects.get(
+            type=length_type,
+            value="120PLUS",
+        )
+    elif int(data["runtime"]) > 90:
+        length = BaseAttribute.objects.get(
+            type=length_type,
+            value="90120",
+        )
+    elif int(data["runtime"]) > 60:
+        length = BaseAttribute.objects.get(
+            type=length_type,
+            value="6090",
+        )
 
-    # common_attributes = [genre, year, length]
+    common_attributes = [genre, year, length]
 
-    # # create product variant
-    # variants = create_variants(product_obj, common_attributes, id)
-    # product_obj.product_variants.set(variants)
-    # # for each variant create price
-    # for variant in variants:
-    #     create_prices_for_variant(
-    #         variant_obj=variant,
-    #     )
-    #     print(f"Created variant {variant}")
-    # print(f"Created product {product_obj}")
+    # create product variant
+    variants = create_variants(product_obj, common_attributes, id)
+    product_obj.product_variants.set(variants)
+    # for each variant create price
+    for variant in variants:
+        create_prices_for_variant(
+            variant_obj=variant,
+        )
+        print(f"Created variant {variant}")
+    print(f"Created product {product_obj}")
+
+
+def create_product_image():
+    # iterate over folder ../demo_data/dataset_images where are images stored in format id.jpg (id is product id)
+    # create product image for each product
+    import os
+
+    directory = "../demo_data/dataset_images"
+    for filename in os.listdir(directory):
+        f = os.path.join(directory, filename)
+        # checking if it is a file
+        if os.path.isfile(f):
+            print(f, filename)
+            # get product id from filename
+            product_id = filename.split(".")[0]
+            # get product object
+            try:
+                product_obj = Product.objects.get(pk=product_id)
+            except Product.DoesNotExist:
+                print("Product does not exist", product_id)
+                continue
+            # create product image
+            product_image, created = ProductMedia.objects.get_or_create(
+                product=product_obj,
+                alt=product_obj.title,
+            )
+            # set image
+            product_image.media = UploadedFile(file=open(f, "rb"))
+            product_image.save()
+            print(f"Created image {product_image}")
 
 
 # load json
 data = load_json()
 # loop over products in json (they're as objects)
-
-for key, value in data.items():
-    print(f"Parsing product {key}")
-    parse_product(key, value)
+create_product_image()
+# for key, value in data.items():
+#     print(f"Parsing product {key}")
+#     # parse_product(key, value)
