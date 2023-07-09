@@ -18,6 +18,11 @@ FROM base as development
 RUN chmod +x /usr/src/app/entrypoint.sh
 ENTRYPOINT [ "sh", "/usr/src/app/entrypoint.sh" ]
 
+FROM base as demo
+COPY ./demo_data/images /usr/src/mediafiles
+RUN chmod +x /usr/src/app/entrypoint.sh
+ENTRYPOINT [ "sh", "/usr/src/app/entrypoint.sh" ]
+
 # Production branch of a Dockerfile
 # It's currently the same as development branch above but it's here for future use
 FROM base as production

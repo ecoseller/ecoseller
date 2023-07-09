@@ -1,3 +1,10 @@
+# Ecoseller docker compose v2 file used for demo purposes 
+# database should be initialized with mock data before running the project 
+# and media data (product images, ...) should be copied to the media folder
+
+# to run the project, run the following command in the /src folder of the project 
+# docker compose -f docker-compose.demo.yml cp backend:./backend/demo_data/images /usr/src/mediafiles up --build 
+
 version: "3.9"
 
 services:
@@ -5,23 +12,20 @@ services:
     container_name: backend
     build:
       context: ./backend
-      target: production
+      target: demo
     volumes:
       - ./backend/core:/usr/src/app/
-      - ./backend/mediafiles:/usr/src/mediafiles
+      # - ./backend/demo_data/images:/usr/src/mediafiles
     ports:
       - 8000:8000
       - 8001:8001
     env_file:
       - ./backend/docker-compose.env
-    environment:
-      - LOAD_DEMO_DATA=1
   postgres_backend:
     image: postgres:13.0-alpine
     container_name: postgres_backend
     volumes:
-      - ./backend/postgres/mock_data.sql:/docker-entrypoint-initdb.d/setup_database.sql
-      - ./backend/postgres/data:/var/lib/postgresql/data/
+      - ./backend/demo_data/mock_data.sql:/docker-entrypoint-initdb.d/setup_database.sql
     ports:
       - 5433:5432
     environment:
@@ -49,7 +53,7 @@ services:
     build:
         context: ./backend
         dockerfile: ./Dockerfile
-        target: production
+        target: development
     volumes:
       - ./backend/core:/usr/src/app/core
     depends_on:
@@ -76,7 +80,7 @@ services:
     container_name: dashboard
     build:
       context: ./dashboard
-      target: production # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
+      target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
     environment:
       CHOKIDAR_USEPOLLING: "true" # https://stackoverflow.com/questions/61576659/how-to-hot-reload-in-reactjs-docker
       API_URL: "http://backend:8000"
@@ -100,7 +104,7 @@ services:
     container_name: storefront
     build:
       context: ./storefront
-      target: production # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
+      target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
     environment:
       CHOKIDAR_USEPOLLING: "true" # https://stackoverflow.com/questions/61576659/how-to-hot-reload-in-reactjs-docker
       API_URL: "http://backend:8000"
