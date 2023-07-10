@@ -8,4 +8,8 @@ urlpatterns = [
         "storefront/<str:situation>/products/",
         views.RecommenderSystemRecommendProductsView.as_view(),
     ),
+    path(
+        "dashboard/recommender-system",
+        views.RecommenderSystemDashboardView.as_view(),
+    ),
 ]
