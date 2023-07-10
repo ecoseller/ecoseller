@@ -1,6 +1,6 @@
 // utils
 import { useTranslation } from "next-i18next";
-import { IOrder } from "@/types/order";
+import { IOrderBasicInfo } from "@/types/order";
 import {
   DataGrid,
   GridActionsCellItem,

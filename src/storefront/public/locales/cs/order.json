@@ -4,7 +4,7 @@
   "order-completed": "Objednávka byla úspěšně dokončena",
   "complete-order": "Dokončit objednávku",
   "order-id": "Číslo objednávky",
-  "status": "Status",
+  "status": "Stav",
   "create-at": "Vytvořeno",
   "items": "Položky",
   "thank-you-title": "Děkujeme Vám!",
@@ -18,5 +18,11 @@
   "bic-label": "BIC",
   "bank-account-label": "Číslo účtu",
   "qr-label": "QR",
-  "payment-completed-text": "Platbu jsme obdrželi, děkujeme"
+  "payment-completed-text": "Platbu jsme obdrželi, děkujeme",
+  "order-status-PENDING": "Čeká na vyřízení",
+  "order-status-PROCESSING": "Zpracovává se",
+  "order-status-SHIPPED": "Odeslána",
+  "order-status-CANCELLED": "Zrušena",
+  "paid": "Zaplaceno",
+  "waiting-for-payment": "Čeká na zaplacení"
 }

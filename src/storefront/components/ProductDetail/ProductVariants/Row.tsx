@@ -34,17 +34,6 @@ import QuantitySelect from "@/components/Common/QuantitySelect";
 import DiscountText from "@/components/Generic/DiscountText";
 import { useTranslation } from "next-i18next";
 
-const StockQuantity = ({ quantity }: { quantity: number }) => {
-  const { t } = useTranslation("product");
-  if (quantity > 5) {
-    return <span style={{ color: "green" }}>{t("in-stock")}</span>;
-  } else if (quantity > 0) {
-    return <span style={{ color: "orange" }}>{t("low-stock")}</span>;
-  } else {
-    return <span style={{ color: "red" }}>{t("out-of-stock")}</span>;
-  }
-};
-
 const ProductVariantRow = ({
   variant,
   productId,
@@ -58,12 +47,24 @@ const ProductVariantRow = ({
 }) => {
   const { addToCart } = useCart();
   const { query } = useRouter();
+  const { t } = useTranslation("product");
 
   const [qty, setQty] = useState(1);
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
   console.log("qty", qty, productId);
+
+  const StockQuantity = ({ quantity }: { quantity: number }) => {
+    if (quantity > 5) {
+      return <span style={{ color: "green" }}>{t("in-stock")}</span>;
+    } else if (quantity > 0) {
+      return <span style={{ color: "orange" }}>{t("low-stock")}</span>;
+    } else {
+      return <span style={{ color: "red" }}>{t("out-of-stock")}</span>;
+    }
+  };
+
   return (
     <Grid
       container

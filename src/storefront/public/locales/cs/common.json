@@ -33,5 +33,8 @@
   "sign-up-button-label": "Registrovat se",
   "back": "Zpět",
   "next": "Další",
-  "save": "Uložit"
+  "save": "Uložit",
+  "created-at": "Vytvořeno: {{date}}",
+  "up-to": "Až",
+  "to": "Do"
 }

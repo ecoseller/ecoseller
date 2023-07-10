@@ -1,3 +1,5 @@
+import { useTranslation } from "next-i18next";
+
 interface IDiscountTextProps {
   discount: number;
   includeUpTo?: boolean;
@@ -13,6 +15,7 @@ const DiscountText = ({
   discount,
   includeUpTo = false,
 }: IDiscountTextProps) => {
+  const { t } = useTranslation();
   return (
     <span
       className="red-text"
@@ -20,7 +23,7 @@ const DiscountText = ({
         fontSize: "0.8rem",
       }}
     >
-      ({includeUpTo ? "up to " : null}-{discount} %)
+      ({includeUpTo ? t("up-to") : null}-{discount} %)
     </span>
   );
 };

@@ -218,6 +218,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = "static/"
+STOREFRONT_URL = os.environ.get("STOREFRONT_URL", "http://localhost:3031")
 
 # Directory where uploaded files will be stored
 # this is only for development purposes, in production S3 or similar should be used

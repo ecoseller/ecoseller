@@ -95,7 +95,7 @@ const ProductCard = ({ product }: IProductCardProps) => {
       </NextLink>
       <CardActions sx={{ mt: "auto", ml: 1 }}>
         <Typography gutterBottom variant="h6" component="div">
-          {hasMultiplePrices ? <span>{t("common:from")}</span> : null}
+          {hasMultiplePrices ? <span>{t("common:from")}&nbsp;</span> : null}
           {cheapestVariantPrice.incl_vat_formatted}
           &nbsp;
           {renderDiscountIfAny()}

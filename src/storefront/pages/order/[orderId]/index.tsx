@@ -1,15 +1,9 @@
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
-import { useRouter } from "next/router";
 import getConfig from "next/config";
 import React from "react";
-// utils
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { useTranslation } from "next-i18next";
 import { cartBillingInfoAPI } from "@/pages/api/cart/[token]/billing-info";
 import { cartShippingInfoAPI } from "@/pages/api/cart/[token]/shipping-info";
-import CartStepper from "@/components/Cart/Stepper";
-import { Box, Table, Typography } from "@mui/material";
-import Grid from "@mui/material/Grid";
 import {
   IBillingInfo,
   IPaymentMethodCountry,
@@ -18,24 +12,19 @@ import {
 } from "@/types/cart";
 import { countryListAPI } from "@/pages/api/country";
 import { ICountry } from "@/types/country";
-import CartButtonRow from "@/components/Cart/ButtonRow";
-import CartItemList from "@/components/Cart/CartItemList";
-import CartInfoSummary, {
-  ICartInfoTableRow,
-} from "@/components/Cart/CartInfoSummary";
-import CartMethodSummaryInfoRow from "@/components/Cart/Methods/CartMethodSummaryInfoRow";
 import { cartPaymentMethodAPI } from "@/pages/api/cart/[token]/payment-method";
 import { cartShippingMethodAPI } from "@/pages/api/cart/[token]/shipping-method";
-import { useTheme } from "@mui/material/styles";
-import Divider from "@mui/material/Divider";
-import { useCart } from "@/utils/context/cart";
-import CollapsableContentWithTitle from "@/components/Generic/CollapsableContentWithTitle";
-import CartCompleteOrder from "@/components/Cart/CartCompleteOrder";
 import CartOrderSummary from "@/components/Cart/CartOrderSummary";
+import { IOrderWithPayment } from "@/types/order";
+import { orderDetailAPI } from "@/pages/api/order/[id]";
+import { Typography } from "@mui/material";
+import { useTranslation } from "next-i18next";
+import OrderDetails from "@/components/Order/OrderDetails";
 
 const { serverRuntimeConfig } = getConfig();
 
 interface ICartSummaryPageProps {
+  orderWithPayment: IOrderWithPayment;
   billingInfo: IBillingInfo;
   shippingInfo: IShippingInfo;
   countries: ICountry[];
@@ -46,41 +35,33 @@ interface ICartSummaryPageProps {
 /**
  * Cart summary page displaying all the items, addresses and shipping & payment method
  */
-const CartSummaryPage = ({
+const OrderDetailPage = ({
+  orderWithPayment,
   billingInfo,
   shippingInfo,
   countries,
   selectedPaymentMethod,
   selectedShippingMethod,
 }: ICartSummaryPageProps) => {
-  const router = useRouter();
-  const { cart } = useCart();
-  const { t } = useTranslation();
+  const order = orderWithPayment.order;
+  const { t } = useTranslation(["order", "cart"]);
 
   return (
     <div className="container">
-      <CartStepper activeStep={3} />
-
-      {cart ? (
-        <CartOrderSummary
-          cart={cart}
-          billingInfo={billingInfo}
-          shippingInfo={shippingInfo}
-          countries={countries}
-          selectedPaymentMethod={selectedPaymentMethod}
-          selectedShippingMethod={selectedShippingMethod}
-          creatingNewOrder={true}
-        />
-      ) : null}
-
-      <CartButtonRow
-        prev={{
-          title: t("back") /* Back */,
-          onClick: () => {
-            router.push("/cart/step/2");
-          },
-          disabled: false,
-        }}
+      <Typography variant="h5">
+        {t("order-id")}:&nbsp;{order.token}
+      </Typography>
+      <OrderDetails orderWithPayment={orderWithPayment} />
+      <Typography variant="h6">{t("summary-title", { ns: "cart" })}</Typography>
+      <CartOrderSummary
+        cart={order.cart}
+        billingInfo={billingInfo}
+        shippingInfo={shippingInfo}
+        countries={countries}
+        selectedPaymentMethod={selectedPaymentMethod}
+        selectedShippingMethod={selectedShippingMethod}
+        creatingNewOrder={false}
+        addTitle={false}
       />
     </div>
   );
@@ -91,16 +72,16 @@ const CartSummaryPage = ({
  */
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { req, res, locale } = context;
-  const { cartToken } = req.cookies;
+  const { orderId } = context.query;
 
-  if (cartToken === undefined || cartToken === null) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
+  const order: IOrderWithPayment = await orderDetailAPI(
+    "GET",
+    orderId?.toString() || "",
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
+  const cartToken = order.order.cart.token;
 
   const shippingInfo = await cartShippingInfoAPI(
     "GET",
@@ -138,6 +119,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   return {
     props: {
+      orderWithPayment: order,
       billingInfo,
       shippingInfo,
       countries,
@@ -152,4 +134,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   };
 };
 
-export default CartSummaryPage;
+export default OrderDetailPage;

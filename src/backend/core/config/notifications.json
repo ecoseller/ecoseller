@@ -20,5 +20,11 @@
             "type": "EMAIL",
             "method": "send_order_confirmation"
         }
+    ],
+    "REVIEW_SEND": [
+        {
+            "type": "EMAIL",
+            "method": "send_review_request"
+        }
     ]
 }
