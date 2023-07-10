@@ -20,9 +20,9 @@ FROM base as development
 ENTRYPOINT [ "sh", "/usr/src/app/run_server.sh" ]
 
 FROM base as demo
-ENTRYPOINT [ "sh", "/usr/src/app/run_server.sh", "IMPORT" ]
+ENTRYPOINT [ "sh", "/usr/src/app/run_server.sh", "DEMO" ]
 
 # Production branch of a Dockerfile
 # It's currently the same as development branch above but it's here for future use
 FROM base as production
-ENTRYPOINT [ "sh", "/usr/src/app/run_server.sh" ]
+ENTRYPOINT [ "sh", "/usr/src/app/run_server.sh", "PRODUCTION" ]

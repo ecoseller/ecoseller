@@ -139,8 +139,7 @@ services:
     container_name: recommender_system
     build:
       context: ./recommender_system
-      target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
-    command: "sh /usr/src/app/run_server.sh"
+      target: production # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
     volumes:
       - ./recommender_system/app:/usr/src/app/
     ports:
@@ -159,8 +158,8 @@ services:
     container_name: recommender_system_trainer
     build:
       context: ./recommender_system
-      target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
-    entrypoint: /usr/src/app/run_trainer.sh
+      target: production # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
+    entrypoint: sh /usr/src/app/run_trainer.sh
     volumes:
       - ./recommender_system/app:/usr/src/app/
     env_file:
