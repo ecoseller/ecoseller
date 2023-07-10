@@ -19,9 +19,7 @@ const StyledRoot = styled("div")({
 
 const Main = styled("div")(({ theme }) => ({
   flexGrow: 1,
-  overflow: "auto",
   minHeight: "100%",
-  height: "100vh",
   paddingTop: 40,
   paddingLeft: theme.spacing(0.5),
   paddingBottom: theme.spacing(10),
