@@ -78,13 +78,13 @@ def view_predict_cart(
 def view_get_dashboard_data(
     monitoring_manager: MonitoringManager = Provide["monitoring_manager"],
 ) -> Tuple[Any, ...]:
-    date_from = datetime.fromisoformat(request.args["date_from"])
-    date_to = datetime.fromisoformat(request.args["date_to"])
+    date_from = datetime.strptime(request.args["date_from"], "%Y-%m-%dT%H:%M:%S.%fZ")
+    date_to = datetime.strptime(request.args["date_to"], "%Y-%m-%dT%H:%M:%S.%fZ")
     result = {
         "performance": monitoring_manager.get_statistics(
             date_from=date_from, date_to=date_to
-        ),
-        "training": monitoring_manager.get_training_details(),
-        "config": monitoring_manager.get_config(),
+        ).dict(),
+        "training": monitoring_manager.get_training_details().dict(),
+        "config": monitoring_manager.get_config().dict(),
     }
     return result, 200
