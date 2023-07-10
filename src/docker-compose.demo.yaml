@@ -3,7 +3,7 @@
 # and media data (product images, ...) should be copied to the media folder
 
 # to run the project, run the following command in the /src folder of the project 
-# docker compose -f docker-compose.demo.yml cp backend:./backend/demo_data/images /usr/src/mediafiles up --build 
+# docker compose -f docker-compose.demo.yml up --build 
 
 version: "3.9"
 

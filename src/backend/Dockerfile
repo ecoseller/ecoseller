@@ -19,7 +19,10 @@ RUN chmod +x /usr/src/app/entrypoint.sh
 ENTRYPOINT [ "sh", "/usr/src/app/entrypoint.sh" ]
 
 FROM base as demo
-COPY ./demo_data/images /usr/src/mediafiles
+# COPY ./demo_data/images /usr/src/mediafiles
+RUN apt-get install -y git
+RUN git clone https://github.com/ecoseller/demo-data.git
+RUN mv ./demo-data/media /usr/src/mediafiles
 RUN chmod +x /usr/src/app/entrypoint.sh
 ENTRYPOINT [ "sh", "/usr/src/app/entrypoint.sh" ]
 

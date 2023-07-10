@@ -16,6 +16,7 @@ import Typography from "@mui/material/Typography";
 import NumericFilterSelect from "@/components/Category/Filters/NumericFilterSelect";
 import CancelIcon from "@mui/icons-material/Cancel";
 import Button from "@mui/material/Button";
+import { useTranslation } from "next-i18next";
 
 interface IProductFiltersProps {
   filters: IFilters;
@@ -38,6 +39,8 @@ const ProductFilters = ({
   updateNumericFilter,
   setEmptyFilters,
 }: IProductFiltersProps) => {
+  const { t } = useTranslation("category");
+
   const handleTextualFilterChange = (
     id: number,
     event: SelectChangeEvent<number[]>
@@ -118,7 +121,7 @@ const ProductFilters = ({
                 <div>
                   <NumericFilterSelect
                     filter={filter}
-                    label="From"
+                    label={t("from")}
                     selectedValueId={filter.min_value_id}
                     handleChange={(event) =>
                       handleNumericFilterChange(
@@ -130,7 +133,7 @@ const ProductFilters = ({
                   />
                   <NumericFilterSelect
                     filter={filter}
-                    label="To"
+                    label={t("to")}
                     selectedValueId={filter.max_value_id}
                     handleChange={(event) =>
                       handleNumericFilterChange(
@@ -151,7 +154,7 @@ const ProductFilters = ({
         startIcon={<CancelIcon />}
         onClick={() => setEmptyFilters()}
       >
-        Cancel filters
+        {t("clear-filters")}
       </Button>
     </CollapsableContentWithTitle>
   );

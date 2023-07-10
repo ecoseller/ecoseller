@@ -1,6 +1,9 @@
 {
   "product-card-variants_one": "",
   "product-card-variants_other": "",
+  "from": "From",
+  "to": "To",
+  "clear-filters": "Clear filters",
   "order-by-price-asc": "By price: low to high",
   "order-by-price-desc": "By price: high to low",
   "order-by-title-asc": "By name: A-Z",
