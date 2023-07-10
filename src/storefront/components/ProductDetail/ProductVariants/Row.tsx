@@ -71,17 +71,17 @@ const ProductVariantRow = ({
       mb={4}
     >
       <Grid container item xs={5} sm={3} md={4} lg={3} direction="column">
-        <Typography variant="body1">
+        <Typography variant="body1" fontSize={"0.8rem"}>
           {serializeAttributes(variant.attributes)}
         </Typography>
         <Typography variant="body2">{variant.sku}</Typography>
       </Grid>
-      <Grid container item xs={2} sm={2} md={3} lg={2}>
+      <Grid container item xs={2} sm={2} md={3} lg={2} alignItems="center">
         <Typography>
           <StockQuantity quantity={variant.stock_quantity} />
         </Typography>
       </Grid>
-      <Grid container item xs={5} sm={3} md={4} lg={2}>
+      <Grid container item xs={5} sm={3} md={4} lg={2} alignItems="center">
         <Typography>
           {variant?.price?.discount
             ? variant?.price?.discount.incl_vat
@@ -91,7 +91,7 @@ const ProductVariantRow = ({
           ) : null}
         </Typography>
       </Grid>
-      <Grid container item xs={6} sm={3} md={4} lg={2}>
+      <Grid container item xs={6} sm={3} md={4} lg={2} alignItems="center">
         <QuantitySelect
           quantity={qty}
           setQuantity={setQty}
@@ -108,15 +108,18 @@ const ProductVariantRow = ({
         lg={2}
         alignItems="center"
         spacing={2}
+        mt={1}
       >
-        <Button
-          variant="text"
-          startIcon={<ShoppingCartIcon />}
-          onClick={() => {
-            addToCart(variant.sku, qty, productId, pricelist, country);
-            setQty(1);
-          }}
-        />
+        <Typography>
+          <Button
+            variant="text"
+            startIcon={<ShoppingCartIcon />}
+            onClick={() => {
+              addToCart(variant.sku, qty, productId, pricelist, country);
+              setQty(1);
+            }}
+          />
+        </Typography>
       </Grid>
     </Grid>
   );

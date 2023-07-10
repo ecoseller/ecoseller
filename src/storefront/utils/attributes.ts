@@ -7,7 +7,7 @@ export const serializeAttributes = (attributes: IBaseAttribute[]) => {
     (attr) =>
       `${attr.type.name}: ${attr.type.is_numeric ? attr.value : attr.name} ${
         attr.type.unit || ""
-      } `
+      }`
   );
 
   return attributeValues.join(", ");
