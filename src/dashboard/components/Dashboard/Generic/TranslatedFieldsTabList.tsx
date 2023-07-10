@@ -23,28 +23,13 @@ import { OutputData as IEditorJSData } from "@editorjs/editorjs";
 import { IEntityTranslation, IEntityTranslations } from "@/types/common";
 import { IDispatchWrapper } from "@/components/Dashboard/Common/IDispatchWrapper";
 import { usePermission } from "@/utils/context/permission";
-// import { IEditorJSFieldProps } from "@/components/Dashboard/Common/Fields/EditorJSField";
 
-// let EditorJSField = dynamic(
-//   () => import("@/components/Dashboard/Common/Fields/EditorJSField"),
-//   {
-//     ssr: false,
-//   }
-// );
-// const EditorJSField: React.ComponentType<IEditorJSFieldProps> = dynamic(
-//   async () => {
-//     const EditorJSField: any = await import(
-//       "@/components/Dashboard/Common/Fields/EditorJSField"
-//     );
-//     return EditorJSField.EditorJSField;
-//   },
-//   {
-//     loading: () => <p>Loading...</p>,
-//     ssr: false,
-//   }
-// );
-
-import EditorJSField from "@/components/Dashboard/Common/Fields/EditorJSFieldDynamic";
+let EditorJSField = dynamic(
+  () => import("@/components/Dashboard/Common/Fields/EditorJSField"),
+  {
+    ssr: false,
+  }
+);
 
 interface ITranslatedFieldsTabProps {
   language: string;
