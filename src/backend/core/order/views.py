@@ -17,13 +17,13 @@ from cart.models import Cart, CartItem
 from cart.serializers import CartItemDetailSerializer
 from product.models import Product
 from roles.decorator import check_user_is_staff_decorator, check_user_access_decorator
-from .models import Order, OrderItemClaim
+from .models import Order, OrderItemComplaint
 from .serializers import (
     OrderDetailSerializer,
     OrderListSerializer,
     OrderStatusSerializer,
     OrderSubmitSerializer,
-    OrderItemClaimSerializer,
+    OrderItemComplaintSerializer,
 )
 
 NotificationsApi = settings.NOTIFICATIONS_API
@@ -503,12 +503,12 @@ class OrderItemsListStorefrontView(ListAPIView):
         return Response({"items": items}, status=200)
 
 
-class OrderItemClaimStorefrontView(CreateAPIView):
-    serializer_class = OrderItemClaimSerializer
-    queryset = OrderItemClaim.objects.all()
+class OrderItemComplaintStorefrontView(CreateAPIView):
+    serializer_class = OrderItemComplaintSerializer
+    queryset = OrderItemComplaint.objects.all()
     permission_classes = (permissions.AllowAny,)
 
 
-class OrderItemClaimDashboardView(RetrieveAPIView):
-    serializer_class = OrderItemClaimSerializer
-    queryset = OrderItemClaim.objects.all()
+class OrderItemComplaintDashboardView(RetrieveAPIView):
+    serializer_class = OrderItemComplaintSerializer
+    queryset = OrderItemComplaint.objects.all()

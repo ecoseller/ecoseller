@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from cart.serializers import CartSerializer
-from .models import Order, OrderItemClaim
+from cart.serializers import CartSerializer, CartItemDetailSerializer
+from .models import Order, OrderItemComplaint
 
 
 class OrderSubmitSerializer(serializers.Serializer):
@@ -14,8 +14,31 @@ class OrderSubmitSerializer(serializers.Serializer):
     agreed_to_terms = serializers.BooleanField(default=False)
 
 
+class OrderComplaintBaseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItemComplaint
+        fields = ("id", "type", "status", "description", "create_at")
+
+
+class OrderItemSerializer(CartItemDetailSerializer):
+    complaints = OrderComplaintBaseSerializer(many=True)
+
+    class Meta(CartItemDetailSerializer.Meta):
+        # model = CartItem
+        fields = CartItemDetailSerializer.Meta.fields + ("complaints",)
+
+
+class OrderCartSerializer(CartSerializer):
+    cart_items = OrderItemSerializer(many=True, read_only=True)
+
+    class Meta(CartSerializer.Meta):
+        pass
+        # model = Cart
+        # fields = CartSerializer.Meta.fields
+
+
 class OrderDetailSerializer(serializers.ModelSerializer):
-    cart = CartSerializer()
+    cart = OrderCartSerializer()
 
     class Meta:
         model = Order
@@ -43,14 +66,13 @@ class OrderStatusSerializer(serializers.ModelSerializer):
         fields = ("status",)
 
 
-class OrderItemClaimSerializer(serializers.ModelSerializer):
+class OrderItemComplaintSerializer(serializers.ModelSerializer):
     class Meta:
-        model = OrderItemClaim
-        fields = ("id", "cart_item", "order", "description", "type", "status")
-        read_only_fields = ("status",)
+        model = OrderItemComplaint
+        fields = ("cart_item", "order", "description", "type")
 
 
-class OrderItemClaimUpdateStatusSerializer(serializers.ModelSerializer):
+class OrderItemComplaintUpdateStatusSerializer(serializers.ModelSerializer):
     class Meta:
-        model = OrderItemClaim
+        model = OrderItemComplaint
         fields = ("id", "status")

@@ -1,10 +1,13 @@
 import React, { useState } from "react";
-import { IOrderItemClaimCreate, OrderItemClaimType } from "@/types/order";
+import {
+  IOrderItemComplaintCreate,
+  OrderItemComplaintType,
+} from "@/types/order";
 import { Box, Typography } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import { claimOrderItem } from "@/api/order/claim";
+import { createOrderItemComplaint } from "@/api/order/complaint";
 
 const modalStyle = {
   position: "absolute" as "absolute",
@@ -22,7 +25,7 @@ interface IOrderItemClaimModalProps {
   cartItemName: string;
   orderId: string;
   cartItemId: number;
-  claimType: OrderItemClaimType;
+  claimType: OrderItemComplaintType;
   openModalLinkText: string;
 }
 
@@ -34,12 +37,13 @@ const OrderItemClaimModal = ({
   openModalLinkText,
 }: IOrderItemClaimModalProps) => {
   const [open, setOpen] = useState(false);
-  const [orderItemClaim, setOrderItemClaim] = useState<IOrderItemClaimCreate>({
-    cart_item: cartItemId,
-    order: orderId,
-    type: claimType,
-    description: "",
-  });
+  const [orderItemClaim, setOrderItemClaim] =
+    useState<IOrderItemComplaintCreate>({
+      cart_item: cartItemId,
+      order: orderId,
+      type: claimType,
+      description: "",
+    });
 
   const handleOpen = () => {
     setOpen(true);
@@ -56,7 +60,7 @@ const OrderItemClaimModal = ({
   };
 
   const handleSubmit = () => {
-    claimOrderItem(orderItemClaim).then((_) => handleClose());
+    createOrderItemComplaint(orderItemClaim).then((_) => handleClose());
   };
 
   return (

@@ -18,7 +18,7 @@ import NextLink from "next/link";
 import MUILink from "@mui/material/Link";
 import DiscountText from "@/components/Generic/DiscountText";
 import OrderItemClaimModal from "@/components/Order/OrderItemClaimModal";
-import { OrderItemClaimType } from "@/types/order";
+import { OrderItemComplaintType } from "@/types/order";
 
 interface ICartItemListProps {
   editable: boolean;
@@ -148,7 +148,7 @@ const CartItemList = ({
                     <OrderItemClaimModal
                       orderId={orderId}
                       cartItemId={item.id}
-                      claimType={OrderItemClaimType.WARRANTY_CLAIM}
+                      claimType={OrderItemComplaintType.WARRANTY_CLAIM}
                       openModalLinkText="Warranty claim"
                       cartItemName={item.product_variant_name}
                     />
@@ -157,7 +157,7 @@ const CartItemList = ({
                     <OrderItemClaimModal
                       orderId={orderId}
                       cartItemId={item.id}
-                      claimType={OrderItemClaimType.RETURN}
+                      claimType={OrderItemComplaintType.RETURN}
                       openModalLinkText="Return"
                       cartItemName={item.product_variant_name}
                     />

@@ -1,4 +1,4 @@
-import { ICart } from "@/types/cart";
+import { ICartData, ICartItem } from "@/types/cart";
 
 export enum OrderStatus {
   Pending = "PENDING",
@@ -14,9 +14,17 @@ export interface IOrderBasicInfo {
   items: string[];
 }
 
+interface IOrderItem extends ICartItem {
+  complaints: IOrderItemComplaint[];
+}
+
+interface IOrderCart extends ICartData {
+  cart_items: IOrderItem[];
+}
+
 interface IOrderDetail {
   token: string;
-  cart: ICart;
+  cart: IOrderCart;
   create_at: string;
   status: OrderStatus;
 }
@@ -37,25 +45,28 @@ export interface IOrderWithPayment {
   payment: IOrderPayment | null;
 }
 
-enum OrderItemClaimStatus {
+enum OrderItemComplaintStatus {
   CREATED = "CREATED",
   APPROVED = "APPROVED",
   DECLINED = "DECLINED",
 }
 
-export enum OrderItemClaimType {
+export enum OrderItemComplaintType {
   RETURN = "RETURN",
   WARRANTY_CLAIM = "WARRANTY_CLAIM",
 }
 
-export interface IOrderItemClaimCreate {
+export interface IOrderItemComplaintCreate {
   cart_item: number;
   order: string;
   description: string;
-  type: OrderItemClaimType;
+  type: OrderItemComplaintType;
 }
 
-export interface IOrderClaim extends IOrderItemClaimCreate {
+export interface IOrderItemComplaint {
   id: number;
-  status: OrderItemClaimStatus;
+  status: OrderItemComplaintStatus;
+  type: OrderItemComplaintType;
+  description: string;
+  create_at: string;
 }

@@ -17,18 +17,18 @@ class OrderStatus(ChoiceEnum):
     CANCELLED = "CANCELLED"
 
 
-class OrderItemClaimStatus(ChoiceEnum):
+class OrderItemComplaintStatus(ChoiceEnum):
     """
-    Enum class for claim of an order item
+    Enum class for complaint of an order item
     """
     CREATED = "CREATED"
     APPROVED = "APPROVED"
     DECLINED = "DECLINED"
 
 
-class OrderItemClaimType(ChoiceEnum):
+class OrderItemComplaintType(ChoiceEnum):
     """
-    Enum representing type of an order claim
+    Enum representing type of an order complaint
     """
     RETURN = "RETURN"
     WARRANTY_CLAIM = "WARRANTY_CLAIM"
@@ -56,9 +56,13 @@ class Order(models.Model):
         return self.cart.shipping_info.email
 
 
-class OrderItemClaim(models.Model):
-    cart_item = models.ForeignKey(CartItem, on_delete=models.CASCADE, related_name="+")
+class OrderItemComplaint(models.Model):
+    """
+    Class representing order item complaint (either a warranty claim or return)
+    """
+    cart_item = models.ForeignKey(CartItem, on_delete=models.CASCADE, related_name="complaints")
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="complaints")
     description = models.TextField()
-    status = EnumChoiceField(enum_class=OrderItemClaimStatus, default=OrderItemClaimStatus.CREATED)
-    type = EnumChoiceField(enum_class=OrderItemClaimType)
+    status = EnumChoiceField(enum_class=OrderItemComplaintStatus, default=OrderItemComplaintStatus.CREATED)
+    type = EnumChoiceField(enum_class=OrderItemComplaintType)
+    create_at = models.DateTimeField(auto_now_add=True)

@@ -1,4 +1,5 @@
 import { IProductMedia } from "@/types/product";
+import { internal_resolveProps } from "@mui/utils";
 
 /**
  * Interface representing an item in the cart
@@ -18,9 +19,8 @@ export interface ICartItem {
   primary_image: IProductMedia | null;
 }
 
-export interface ICart {
+export interface ICartData {
   token: string;
-  cart_items: ICartItem[];
   update_at: string;
   total_items_price_incl_vat_formatted: string;
   total_price_incl_vat_formatted: string;
@@ -28,6 +28,10 @@ export interface ICart {
   total_price_incl_without_vat_formatted: string;
   shipping_method_country: number | null;
   payment_method_country: number | null;
+}
+
+export interface ICart extends ICartData {
+  cart_items: ICartItem[];
 }
 
 export interface ICartToken {
