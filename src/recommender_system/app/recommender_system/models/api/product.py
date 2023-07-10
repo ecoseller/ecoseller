@@ -25,3 +25,8 @@ class Product(ApiBaseModel):
 
     class Meta:
         stored_model_class = ProductModel
+
+    def save(self) -> None:
+        super().save()
+        product_model = ProductModel.get(pk=self.id)
+        product_model.update_product_variants(product_variants=self.product_variants)

@@ -13,7 +13,15 @@ RUN pip3 install -r ./requirements.txt
 
 COPY ./app/ .
 
+ARG IMPORT_DATA="FALSE"
+
 FROM base as development
+RUN chmod +x /usr/src/app/run_server.sh
+RUN chmod +x /usr/src/app/run_trainer.sh
+CMD [ "sh", "/usr/src/app/run_server.sh" ]
+
+FROM base as demo
+ARG IMPORT_DATA="TRUE"
 RUN chmod +x /usr/src/app/run_server.sh
 RUN chmod +x /usr/src/app/run_trainer.sh
 CMD [ "sh", "/usr/src/app/run_server.sh" ]

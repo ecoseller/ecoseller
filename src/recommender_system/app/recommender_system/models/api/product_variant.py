@@ -22,3 +22,8 @@ class ProductVariant(ApiBaseModel):
 
     class Meta:
         stored_model_class = ProductVariantModel
+
+    def save(self) -> None:
+        super().save()
+        variant_model = ProductVariantModel.get(pk=self.sku)
+        variant_model.update_attributes(attributes=self.attributes)

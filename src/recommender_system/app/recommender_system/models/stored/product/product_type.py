@@ -1,7 +1,10 @@
 from datetime import datetime
 from typing import List, TYPE_CHECKING
 
+from dependency_injector.wiring import inject, Provide
+
 from recommender_system.models.stored.product.base import ProductStoredBaseModel
+from recommender_system.storage.product.abstract import AbstractProductStorage
 
 if TYPE_CHECKING:
     from recommender_system.models.stored.product.attribute_type import (
@@ -50,3 +53,25 @@ class ProductTypeModel(ProductStoredBaseModel):
         AttributeTypeProductTypeModel(
             attribute_type_id=attribute_type.id, product_type_id=self.id
         ).create()
+
+    @inject
+    def update_attribute_types(
+        self,
+        attribute_types: List[int],
+        product_storage: AbstractProductStorage = Provide["product_storage"],
+    ) -> None:
+        from recommender_system.models.stored.product.attribute_type_product_type import (
+            AttributeTypeProductTypeModel,
+        )
+
+        for atpt in AttributeTypeProductTypeModel.gets(product_type_id=self.id):
+            atpt.delete()
+
+        atpts = [
+            AttributeTypeProductTypeModel(
+                attribute_type_id=attribute_type, product_type_id=self.id
+            )
+            for attribute_type in attribute_types
+        ]
+
+        product_storage.bulk_create_objects(models=atpts)
