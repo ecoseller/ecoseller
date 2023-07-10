@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from cart.serializers import CartSerializer
-from .models import Order
+from .models import Order, OrderItemClaim
 
 
 class OrderSubmitSerializer(serializers.Serializer):
@@ -41,3 +41,16 @@ class OrderStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ("status",)
+
+
+class OrderItemClaimSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItemClaim
+        fields = ("id", "cart_item", "order", "description", "type", "status")
+        read_only_fields = ("status",)
+
+
+class OrderItemClaimUpdateStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItemClaim
+        fields = ("id", "status")

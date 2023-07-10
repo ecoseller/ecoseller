@@ -1,11 +1,10 @@
 # from django.shortcuts import render
-
 from datetime import datetime, timedelta
 
 from django.conf import settings
 from django.db.models import Count
 from rest_framework import permissions
-from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -18,13 +17,12 @@ from cart.models import Cart, CartItem
 from cart.serializers import CartItemDetailSerializer
 from product.models import Product
 from roles.decorator import check_user_is_staff_decorator, check_user_access_decorator
-from .models import Order
-
+from .models import Order, OrderItemClaim
 from .serializers import (
     OrderDetailSerializer,
     OrderListSerializer,
     OrderStatusSerializer,
-    OrderSubmitSerializer,
+    OrderSubmitSerializer, OrderItemClaimSerializer,
 )
 
 NotificationsApi = settings.NOTIFICATIONS_API
@@ -502,3 +500,13 @@ class OrderItemsListStorefrontView(ListAPIView):
                 print("ITEMS", serializedItem.data)
                 items.append(serializedItem.data)
         return Response({"items": items}, status=200)
+
+
+class OrderItemClaimStorefrontView(CreateAPIView):
+    serializer_class = OrderItemClaimSerializer
+    queryset = OrderItemClaim.objects.all()
+
+
+class OrderItemClaimDashboardView(RetrieveAPIView):
+    serializer_class = OrderItemClaimSerializer
+    queryset = OrderItemClaim.objects.all()
