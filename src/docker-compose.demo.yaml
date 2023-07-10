@@ -21,11 +21,14 @@ services:
       - 8001:8001
     env_file:
       - ./backend/docker-compose.env
+    depends_on:
+      postgres_backend:
+        condition: service_healthy
   postgres_backend:
     image: postgres:13.0-alpine
     container_name: postgres_backend
-    volumes:
-      - ./backend/demo_data/mock_data.sql:/docker-entrypoint-initdb.d/setup_database.sql
+    # volumes:
+      # - ./backend/demo_data/mock_data.sql:/docker-entrypoint-initdb.d/setup_database.sql
     ports:
       - 5433:5432
     environment:

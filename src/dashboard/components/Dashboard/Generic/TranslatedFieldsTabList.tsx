@@ -178,8 +178,11 @@ const TranslatedFieldsTabList = ({
   dispatchWrapper,
 }: ITranslatedFieldsTabListProps) => {
   const { data: languages } = useSWRImmutable<ILanguage[]>(
-    "/country/languages/"
+    "/api/country/language/",
+    (url) => fetch(url).then((r) => r.json())
   );
+
+  console.log("Tab list rendered", languages);
 
   const [language, setLanguage] = useState<string>("");
 
