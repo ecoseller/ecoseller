@@ -6,6 +6,7 @@ from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt import views as jwt_views
+from core.pagination import DashboardPagination
 
 from roles.decorator import (
     check_user_access_decorator,
@@ -23,7 +24,7 @@ from .serializers import (
 )
 
 
-class UserView(GenericAPIView):
+class UserView(APIView, DashboardPagination):
     permission_classes = (permissions.AllowAny,)
     allowed_methods = [
         "GET",
@@ -31,12 +32,16 @@ class UserView(GenericAPIView):
     ]
 
     serializer_class = RegistrationSerializer
+    pagination_class = DashboardPagination()
 
     @check_user_is_staff_decorator()
     def get(self, request):
         users = self.get_queryset()
         serializer = UserSerializer(users, many=True)
-        return Response(serializer.data, status=200)
+        # paginate
+        paginated_users = self.paginate_queryset(serializer.data, request)
+        print("paginated_users", paginated_users)
+        return self.get_paginated_response(paginated_users)
 
     @check_user_access_decorator({"user_add_permission"})
     def post(self, request):

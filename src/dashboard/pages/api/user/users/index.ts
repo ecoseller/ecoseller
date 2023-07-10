@@ -12,6 +12,8 @@ import { HTTPMETHOD } from "@/types/common";
 
 export const usersAPI = async (
   method: HTTPMETHOD,
+  page: number,
+  pageSize: number,
   req?: NextApiRequest,
   res?: NextApiResponse,
   body?: any
@@ -20,10 +22,12 @@ export const usersAPI = async (
     setRequestResponse(req, res);
   }
 
+  let url = `/user/users/?page=${page + 1}&limit=${pageSize}`;
+
   switch (method) {
     case "GET":
       return await api
-        .get("/user/users")
+        .get(url)
         .then((response) => response.data)
         .then((data: IUser) => {
           return data;
@@ -54,8 +58,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { method } = req;
   const { body } = req;
+  const { page, pageSize } = req.query;
 
-  return usersAPI(method as HTTPMETHOD, req, res, body)
+  return usersAPI(method as HTTPMETHOD, Number(page), Number(pageSize), req, res, body)
     .then((data) => res.status(200).json(data))
     .catch((error) => res.status(400).json(null));
 };

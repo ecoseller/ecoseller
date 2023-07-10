@@ -38,11 +38,13 @@ const EditToolbar = (props: any) => {
   );
 };
 
-const getUsers = async () => {
-  const users = await fetch(`/api/user/users`, {
-    method: "GET"
+const getUsers = async (page: number, pageSize: number) => {
+  console.log("getUsers", page, pageSize);
+  const usersResult = await fetch(`/api/user/users/?page=${page}&limit=${pageSize}`, {
+    method: "GET",
   }).then((res) => res.json());
 
+  const users = usersResult["results"];
   for (let user of users) {
     user.roles = [];
     if (user.is_admin) {
@@ -95,7 +97,7 @@ const UsersGrid = ({ users }: IUsersGridProps) => {
   };
 
   const fetchUsers = async () => {
-    getUsers().then((data) => {
+    getUsers(paginationModel?.page, paginationModel?.pageSize).then((data) => {
       setUsersState(data.users);
     });
   };
@@ -215,9 +217,13 @@ const UsersGrid = ({ users }: IUsersGridProps) => {
       <DataGrid
         rows={usersState}
         columns={columns}
+        pageSizeOptions={[PAGE_SIZE, 60, 90]}
         autoHeight={true}
         onPaginationModelChange={setPaginationModel}
         paginationModel={paginationModel}
+        // rowCount={count}
+        // loading={isLoading}
+        paginationMode="server"
         disableRowSelectionOnClick
         getRowHeight={() => "auto"}
         getRowId={(row) => row.email}

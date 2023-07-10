@@ -51,11 +51,15 @@ DashboardRolesAndUsersPage.getLayout = (page: ReactElement) => {
 export const getServerSideProps = async (context: any) => {
   const { req, res } = context;
 
-  const users: IUser[] = await usersAPI(
+  const usersResult = await usersAPI(
     "GET",
+    0,
+    30,
     req as NextApiRequest,
     res as NextApiResponse
   )
+
+  const users = usersResult["results"];
 
   for (let user of users) {
     user.roles = []
