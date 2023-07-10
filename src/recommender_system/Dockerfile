@@ -13,22 +13,16 @@ RUN pip3 install -r ./requirements.txt
 
 COPY ./app/ .
 
-ARG IMPORT_DATA="FALSE"
+RUN chmod +x /usr/src/app/run_server.sh
+RUN chmod +x /usr/src/app/run_trainer.sh
 
 FROM base as development
-RUN chmod +x /usr/src/app/run_server.sh
-RUN chmod +x /usr/src/app/run_trainer.sh
-CMD [ "sh", "/usr/src/app/run_server.sh" ]
+ENTRYPOINT [ "sh", "/usr/src/app/run_server.sh" ]
 
 FROM base as demo
-ARG IMPORT_DATA="TRUE"
-RUN chmod +x /usr/src/app/run_server.sh
-RUN chmod +x /usr/src/app/run_trainer.sh
-CMD [ "sh", "/usr/src/app/run_server.sh" ]
+ENTRYPOINT [ "sh", "/usr/src/app/run_server.sh", "IMPORT" ]
 
 # Production branch of a Dockerfile
 # It's currently the same as development branch above but it's here for future use
 FROM base as production
-RUN chmod +x /usr/src/app/run_server.sh
-RUN chmod +x /usr/src/app/run_trainer.sh
-CMD [ "sh", "/usr/src/app/run_server.sh" ]
+ENTRYPOINT [ "sh", "/usr/src/app/run_server.sh" ]
