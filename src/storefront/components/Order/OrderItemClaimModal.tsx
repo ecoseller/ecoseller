@@ -8,6 +8,7 @@ import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { createOrderItemComplaint } from "@/api/order/complaint";
+import { useTranslation } from "next-i18next";
 
 const modalStyle = {
   position: "absolute" as "absolute",
@@ -36,6 +37,8 @@ const OrderItemClaimModal = ({
   claimType,
   openModalLinkText,
 }: IOrderItemClaimModalProps) => {
+  const { t } = useTranslation(["order", "common"]);
+
   const [open, setOpen] = useState(false);
   const [orderItemClaim, setOrderItemClaim] =
     useState<IOrderItemComplaintCreate>({
@@ -68,12 +71,15 @@ const OrderItemClaimModal = ({
       <Button onClick={handleOpen}>{openModalLinkText}</Button>
       <Modal open={open} onClose={handleClose}>
         <Box sx={modalStyle}>
-          <Typography variant="h6">Claim item</Typography>
+          <Typography variant="h6">
+            {claimType == OrderItemComplaintType.WARRANTY_CLAIM
+              ? t("claim-items-warranty")
+              : t("return-item")}
+          </Typography>
           <div>{cartItemName}</div>
           <form>
             <TextField
-              label="Claim Description"
-              name="description"
+              label={t("common:description")}
               multiline={true}
               value={orderItemClaim.description}
               onChange={(event) => setDescription(event)}
@@ -82,7 +88,7 @@ const OrderItemClaimModal = ({
               rows={4}
             />
             <Button variant="contained" color="primary" onClick={handleSubmit}>
-              Create claim
+              {t("common:send")}
             </Button>
           </form>
         </Box>

@@ -19,9 +19,10 @@ import React from "react";
 import { useTheme } from "@mui/material/styles";
 import CartCompleteOrder from "@/components/Cart/CartCompleteOrder";
 import Divider from "@mui/material/Divider";
+import { IOrderCart } from "@/types/order";
 
 interface ICartOrderSummaryProps {
-  cart: ICart;
+  cart: ICart | IOrderCart;
   billingInfo: IBillingInfo;
   shippingInfo: IShippingInfo;
   countries: ICountry[];
@@ -148,12 +149,7 @@ const CartOrderSummary = ({
             {t("cart:summary-title") /* Order summary */}
           </Typography>
         ) : null}
-        <CartItemList
-          cart={cart}
-          editable={false}
-          showClaimsColumn={true}
-          orderId={orderId}
-        />
+        <CartItemList cart={cart} editable={false} orderId={orderId} />
       </Grid>
       <Grid item xs={12} md={4}>
         <Box sx={{ [theme.breakpoints.up("md")]: { ml: 5 } }}>

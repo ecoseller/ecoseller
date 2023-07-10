@@ -7,10 +7,16 @@ import React from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import { ICart, ICartItem } from "@/types/cart";
-import { Grid, Table, TableBody, TableCell, TableRow } from "@mui/material";
+import {
+  Grid,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+} from "@mui/material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
-import { useRouter } from "next/router";
 import imgPath from "@/utils/imgPath";
 import TableHead from "@mui/material/TableHead";
 import ImageThumbnail from "@/components/Generic/ImageThumbnail";
@@ -18,12 +24,15 @@ import NextLink from "next/link";
 import MUILink from "@mui/material/Link";
 import DiscountText from "@/components/Generic/DiscountText";
 import OrderItemClaimModal from "@/components/Order/OrderItemClaimModal";
-import { OrderItemComplaintType } from "@/types/order";
+import { IOrderCart, IOrderItem, OrderItemComplaintType } from "@/types/order";
+
+function isOrderCart(cart: ICart | IOrderCart): boolean {
+  return "complaints" in cart.cart_items[0];
+}
 
 interface ICartItemListProps {
   editable: boolean;
-  cart: ICart;
-  showClaimsColumn: boolean;
+  cart: ICart | IOrderCart;
   orderId?: string;
 }
 
@@ -33,20 +42,18 @@ interface ICartItemListProps {
  * Each row represents an item in a cart
  * @param cart
  * @param editable
- * @param showClaimsColumn
  * @param orderId
  * @constructor
  */
 const CartItemList = ({
   cart,
   editable,
-  showClaimsColumn,
   orderId = undefined,
 }: ICartItemListProps) => {
   const { updateQuantity, removeFromCart } = useCart();
-  const router = useRouter();
+  const showComplaintsColumn = isOrderCart(cart) && orderId != undefined;
 
-  const { t } = useTranslation("cart");
+  const { t } = useTranslation(["cart", "order"]);
 
   const updateItemQuantity = (item: ICartItem, addingOne: boolean = true) => {
     if (!addingOne && item.quantity == 1) {
@@ -55,6 +62,44 @@ const CartItemList = ({
 
     const diff = addingOne ? 1 : -1;
     updateQuantity(item.product_variant_sku, item.quantity + diff);
+  };
+
+  const renderComplaintsColumn = (item: IOrderItem, orderId: string) => {
+    if (item.complaints.length > 0) {
+      const lastComplaint = item.complaints[item.complaints.length - 1];
+      return (
+        <TableCell align="center">
+          {lastComplaint.type == OrderItemComplaintType.WARRANTY_CLAIM
+            ? t("claimed-warranty", { ns: "order" })
+            : t("returned", { ns: "order" })}
+          , {t("status", { ns: "order" })}:&nbsp;
+          {t(`status-${lastComplaint.status}`, { ns: "order" })}
+        </TableCell>
+      );
+    } else {
+      return (
+        <>
+          <TableCell align="center">
+            <Stack direction="row" spacing={2}>
+              <OrderItemClaimModal
+                orderId={orderId}
+                cartItemId={item.id}
+                claimType={OrderItemComplaintType.WARRANTY_CLAIM}
+                openModalLinkText={t("claim-warranty", { ns: "order" })}
+                cartItemName={item.product_variant_name}
+              />
+              <OrderItemClaimModal
+                orderId={orderId}
+                cartItemId={item.id}
+                claimType={OrderItemComplaintType.RETURN}
+                openModalLinkText={t("return", { ns: "order" })}
+                cartItemName={item.product_variant_name}
+              />
+            </Stack>
+          </TableCell>
+        </>
+      );
+    }
   };
 
   return cart && cart.cart_items.length > 0 ? (
@@ -67,12 +112,7 @@ const CartItemList = ({
             <TableCell align="center">{t("quantity")}</TableCell>
             <TableCell align="center">{t("discount")}</TableCell>
             <TableCell align="center">{t("total-price")}</TableCell>
-            {showClaimsColumn && orderId ? (
-              <>
-                <TableCell align="center" />
-                <TableCell align="center" />
-              </>
-            ) : null}
+            {showComplaintsColumn ? <TableCell align="center" /> : null}
           </TableHead>
         )}
         <TableBody>
@@ -142,28 +182,9 @@ const CartItemList = ({
                   </IconButton>
                 </TableCell>
               ) : null}
-              {showClaimsColumn && orderId ? (
-                <>
-                  <TableCell align="center">
-                    <OrderItemClaimModal
-                      orderId={orderId}
-                      cartItemId={item.id}
-                      claimType={OrderItemComplaintType.WARRANTY_CLAIM}
-                      openModalLinkText="Warranty claim"
-                      cartItemName={item.product_variant_name}
-                    />
-                  </TableCell>
-                  <TableCell align="center">
-                    <OrderItemClaimModal
-                      orderId={orderId}
-                      cartItemId={item.id}
-                      claimType={OrderItemComplaintType.RETURN}
-                      openModalLinkText="Return"
-                      cartItemName={item.product_variant_name}
-                    />
-                  </TableCell>
-                </>
-              ) : null}
+              {showComplaintsColumn
+                ? renderComplaintsColumn(item as IOrderItem, orderId)
+                : null}
             </TableRow>
           ))}
         </TableBody>

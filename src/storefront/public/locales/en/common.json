@@ -36,5 +36,7 @@
   "save": "Save",
   "created-at": "Created at: {{date}}",
   "up-to": "Up to",
-  "to": "To"
+  "to": "To",
+  "description": "Description",
+  "send": "Send"
 }

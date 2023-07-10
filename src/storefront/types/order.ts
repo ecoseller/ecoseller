@@ -14,11 +14,11 @@ export interface IOrderBasicInfo {
   items: string[];
 }
 
-interface IOrderItem extends ICartItem {
+export interface IOrderItem extends ICartItem {
   complaints: IOrderItemComplaint[];
 }
 
-interface IOrderCart extends ICartData {
+export interface IOrderCart extends ICartData {
   cart_items: IOrderItem[];
 }
 
