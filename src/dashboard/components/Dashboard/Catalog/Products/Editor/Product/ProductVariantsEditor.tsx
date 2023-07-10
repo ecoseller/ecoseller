@@ -492,7 +492,6 @@ const ProductVariantsEditor = ({
             }}
             experimentalFeatures={{ columnGrouping: true }} // <-- this enables column grouping (experimental)
             // columnGroupingModel={columnGroupingModel} // <-- this creates groupping for attributes, but it is not working properly :(
-            sx={{ overflowX: "scroll" }}
           />
           // </div>
         )}

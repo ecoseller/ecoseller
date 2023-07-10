@@ -67,7 +67,7 @@ export const EDITOR_TOOLS = {
   raw: Raw,
 };
 
-interface IEditorJSFieldProps {
+export interface IEditorJSFieldProps {
   data: IEditorJSData;
   onChange: (data: IEditorJSData) => void;
   disabled?: boolean;
