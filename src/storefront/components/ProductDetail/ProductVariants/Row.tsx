@@ -32,14 +32,16 @@ import { Typography, useMediaQuery, useTheme } from "@mui/material";
 import { serializeAttributes } from "@/utils/attributes";
 import QuantitySelect from "@/components/Common/QuantitySelect";
 import DiscountText from "@/components/Generic/DiscountText";
+import { useTranslation } from "next-i18next";
 
 const StockQuantity = ({ quantity }: { quantity: number }) => {
+  const { t } = useTranslation("product");
   if (quantity > 5) {
-    return <span style={{ color: "green" }}>In Stock</span>;
+    return <span style={{ color: "green" }}>{t("in-stock")}</span>;
   } else if (quantity > 0) {
-    return <span style={{ color: "orange" }}>Low Stock</span>;
+    return <span style={{ color: "orange" }}>{t("low-stock")}</span>;
   } else {
-    return <span style={{ color: "red" }}>Out of Stock</span>;
+    return <span style={{ color: "red" }}>{t("out-of-stock")}</span>;
   }
 };
 
