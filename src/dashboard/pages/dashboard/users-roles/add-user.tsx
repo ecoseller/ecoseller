@@ -10,6 +10,9 @@ import EditableContentWrapper, {
 import TopLineWithReturn from "@/components/Dashboard/Generic/TopLineWithReturn";
 import { PermissionProvider } from "@/utils/context/permission";
 import { useSnackbarState } from "@/utils/snackbar";
+import { useUser } from "@/utils/context/user";
+import { NextApiRequest, NextApiResponse } from "next";
+import { userDetailAPI } from "@/pages/api/user/detail";
 
 const DashboardUserAddPage = () => {
   const router = useRouter();
@@ -112,5 +115,23 @@ DashboardUserAddPage.getLayout = (page: ReactElement) => {
     </RootLayout>
   );
 };
+
+export const getServerSideProps = async (context: any) => {
+  const { req, res } = context;
+  const user = await userDetailAPI(
+    "GET",
+    req as NextApiRequest,
+    res as NextApiResponse,
+  )
+
+  if (user.is_staff === false) {
+    return {
+      notFound: true,
+    }
+  }
+
+  return { props: {} };
+};
+
 
 export default DashboardUserAddPage;

@@ -120,7 +120,7 @@ class UserViewObs(APIView):
     def get(self, request):
         user = request.user
         if user is None or not user.is_authenticated:
-            return Response({"error": "User does not exist"}, status=401)
+            return Response({"error": "User does not exist"}, status=403)
 
         serializer = UserSerializer(user)
         return Response(serializer.data)
@@ -128,7 +128,7 @@ class UserViewObs(APIView):
     def put(self, request):
         user = request.user
         if user is None or not user.is_authenticated:
-            return Response({"error": "User does not exist"}, status=401)
+            return Response({"error": "User does not exist"}, status=403)
 
         serializer = UserSerializer(user, data=request.data)
         if not serializer.is_valid():
