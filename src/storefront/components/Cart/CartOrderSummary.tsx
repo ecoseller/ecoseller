@@ -29,6 +29,7 @@ interface ICartOrderSummaryProps {
   selectedShippingMethod: IShippingMethodCountry;
   creatingNewOrder: boolean;
   addTitle?: boolean;
+  orderId?: string;
 }
 
 /**
@@ -41,6 +42,7 @@ interface ICartOrderSummaryProps {
  * @param selectedShippingMethod
  * @param creatingNewOrder
  * @param addTitle
+ * @param orderId
  * @constructor
  */
 const CartOrderSummary = ({
@@ -52,6 +54,7 @@ const CartOrderSummary = ({
   selectedShippingMethod,
   creatingNewOrder,
   addTitle = true,
+  orderId = undefined,
 }: ICartOrderSummaryProps) => {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -145,7 +148,12 @@ const CartOrderSummary = ({
             {t("cart:summary-title") /* Order summary */}
           </Typography>
         ) : null}
-        <CartItemList cart={cart} editable={false} />
+        <CartItemList
+          cart={cart}
+          editable={false}
+          showClaimsColumn={true}
+          orderId={orderId}
+        />
       </Grid>
       <Grid item xs={12} md={4}>
         <Box sx={{ [theme.breakpoints.up("md")]: { ml: 5 } }}>

@@ -3,14 +3,13 @@ import { useTranslation } from "next-i18next";
 
 import { useCart } from "@/utils/context/cart";
 import Typography from "@mui/material/Typography";
-import React, { useState } from "react";
+import React from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import { ICart, ICartItem } from "@/types/cart";
 import { Grid, Table, TableBody, TableCell, TableRow } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
-import Button from "@mui/material/Button";
 import { useRouter } from "next/router";
 import imgPath from "@/utils/imgPath";
 import TableHead from "@mui/material/TableHead";
@@ -18,13 +17,32 @@ import ImageThumbnail from "@/components/Generic/ImageThumbnail";
 import NextLink from "next/link";
 import MUILink from "@mui/material/Link";
 import DiscountText from "@/components/Generic/DiscountText";
+import OrderItemClaimModal from "@/components/Order/OrderItemClaimModal";
+import { OrderItemClaimType } from "@/types/order";
 
 interface ICartItemListProps {
   editable: boolean;
   cart: ICart;
+  showClaimsColumn: boolean;
+  orderId?: string;
 }
 
-const CartItemList = ({ cart, editable }: ICartItemListProps) => {
+/**
+ * Component displaying list of items in the cart.
+ *
+ * Each row represents an item in a cart
+ * @param cart
+ * @param editable
+ * @param showClaimsColumn
+ * @param orderId
+ * @constructor
+ */
+const CartItemList = ({
+  cart,
+  editable,
+  showClaimsColumn,
+  orderId = undefined,
+}: ICartItemListProps) => {
   const { updateQuantity, removeFromCart } = useCart();
   const router = useRouter();
 
@@ -49,6 +67,12 @@ const CartItemList = ({ cart, editable }: ICartItemListProps) => {
             <TableCell align="center">{t("quantity")}</TableCell>
             <TableCell align="center">{t("discount")}</TableCell>
             <TableCell align="center">{t("total-price")}</TableCell>
+            {showClaimsColumn && orderId ? (
+              <>
+                <TableCell align="center" />
+                <TableCell align="center" />
+              </>
+            ) : null}
           </TableHead>
         )}
         <TableBody>
@@ -117,6 +141,28 @@ const CartItemList = ({ cart, editable }: ICartItemListProps) => {
                     <DeleteIcon />
                   </IconButton>
                 </TableCell>
+              ) : null}
+              {showClaimsColumn && orderId ? (
+                <>
+                  <TableCell align="center">
+                    <OrderItemClaimModal
+                      orderId={orderId}
+                      cartItemId={item.id}
+                      claimType={OrderItemClaimType.WARRANTY_CLAIM}
+                      openModalLinkText="Warranty claim"
+                      cartItemName={item.product_variant_name}
+                    />
+                  </TableCell>
+                  <TableCell align="center">
+                    <OrderItemClaimModal
+                      orderId={orderId}
+                      cartItemId={item.id}
+                      claimType={OrderItemClaimType.RETURN}
+                      openModalLinkText="Return"
+                      cartItemName={item.product_variant_name}
+                    />
+                  </TableCell>
+                </>
               ) : null}
             </TableRow>
           ))}

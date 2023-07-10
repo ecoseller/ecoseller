@@ -48,7 +48,7 @@ const OrderDetailPage = ({
 
   return (
     <div className="container">
-      <Typography variant="h5">
+      <Typography variant="h5" sx={{ my: 3 }}>
         {t("order-id")}:&nbsp;{order.token}
       </Typography>
       <OrderDetails orderWithPayment={orderWithPayment} />
@@ -62,6 +62,7 @@ const OrderDetailPage = ({
         selectedShippingMethod={selectedShippingMethod}
         creatingNewOrder={false}
         addTitle={false}
+        orderId={order.token}
       />
     </div>
   );

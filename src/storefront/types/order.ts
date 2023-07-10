@@ -36,3 +36,26 @@ export interface IOrderWithPayment {
   order: IOrderDetail;
   payment: IOrderPayment | null;
 }
+
+enum OrderItemClaimStatus {
+  CREATED = "CREATED",
+  APPROVED = "APPROVED",
+  DECLINED = "DECLINED",
+}
+
+export enum OrderItemClaimType {
+  RETURN = "RETURN",
+  WARRANTY_CLAIM = "WARRANTY_CLAIM",
+}
+
+export interface IOrderItemClaimCreate {
+  cart_item: number;
+  order: string;
+  description: string;
+  type: OrderItemClaimType;
+}
+
+export interface IOrderClaim extends IOrderItemClaimCreate {
+  id: number;
+  status: OrderItemClaimStatus;
+}

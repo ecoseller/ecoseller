@@ -10,7 +10,7 @@ urlpatterns = [
     path("dashboard/claim/<int:id>", views.OrderItemClaimDashboardView.as_view()),
     path("storefront/", views.OrderCreateStorefrontView.as_view()),
     path("storefront/orders/", views.OrderListStorefrontView.as_view()),
+    path("storefront/claim/", views.OrderItemClaimStorefrontView.as_view()),
     path("storefront/<str:token>/", views.OrderDetailStorefrontView.as_view()),
     path("storefront/<str:token>/items/", views.OrderItemsListStorefrontView.as_view()),
-    path("storefront/claim/<int:id>/", views.OrderItemClaimStorefrontView.as_view()),
 ]

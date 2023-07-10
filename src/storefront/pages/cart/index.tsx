@@ -24,7 +24,9 @@ const CartPage = () => {
       <Typography variant="h4" sx={{ my: 3 }}>
         {t("cart-title")}
       </Typography>
-      {cart ? <CartItemList editable={true} cart={cart} /> : null}
+      {cart ? (
+        <CartItemList editable={true} cart={cart} showClaimsColumn={false} />
+      ) : null}
       <CartButtonRow
         prev={{
           title: t("common:back"),

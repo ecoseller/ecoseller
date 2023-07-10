@@ -22,7 +22,8 @@ from .serializers import (
     OrderDetailSerializer,
     OrderListSerializer,
     OrderStatusSerializer,
-    OrderSubmitSerializer, OrderItemClaimSerializer,
+    OrderSubmitSerializer,
+    OrderItemClaimSerializer,
 )
 
 NotificationsApi = settings.NOTIFICATIONS_API
@@ -505,6 +506,7 @@ class OrderItemsListStorefrontView(ListAPIView):
 class OrderItemClaimStorefrontView(CreateAPIView):
     serializer_class = OrderItemClaimSerializer
     queryset = OrderItemClaim.objects.all()
+    permission_classes = (permissions.AllowAny,)
 
 
 class OrderItemClaimDashboardView(RetrieveAPIView):
