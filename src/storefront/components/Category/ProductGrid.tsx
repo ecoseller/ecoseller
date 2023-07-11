@@ -3,9 +3,11 @@ import React from "react";
 import { Grid } from "@mui/material";
 import ProductCard from "./ProductCard";
 import Typography from "@mui/material/Typography";
+import CircularProgress from "@mui/material/CircularProgress";
 
 interface IProductListProps {
   products: IProductRecord[];
+  loading?: boolean;
 }
 
 /**
@@ -13,7 +15,14 @@ interface IProductListProps {
  * @param products
  * @constructor
  */
-const ProductGrid = ({ products }: IProductListProps) => {
+const ProductGrid = ({ products, loading }: IProductListProps) => {
+  if (loading) {
+    return (
+      <Grid item xs={12} style={{ textAlign: "center" }}>
+        <CircularProgress />
+      </Grid>
+    );
+  }
   return (
     <Grid container spacing={{ xs: 1, sm: 2 }}>
       {products?.length > 0 ? (

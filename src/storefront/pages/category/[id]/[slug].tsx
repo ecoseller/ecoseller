@@ -91,6 +91,7 @@ const CategoryPage = ({
     order: null,
   };
 
+  const [loading, setLoading] = useState<boolean>(false);
   const [productsState, setProductsState] = useState<IProductRecord[]>([]);
   const [categoryPage, setCategoryPage] = useState<number>(1);
   const [categoryTotalPages, setCategoryTotalPages] = useState<number>(1);
@@ -161,6 +162,7 @@ const CategoryPage = ({
   };
 
   const applyFilters = () => {
+    setLoading(true);
     const filtersToApply: ISelectedFiltersWithOrdering = {
       filters: {
         numeric: Object.values(filters.filters.numeric),
@@ -181,6 +183,7 @@ const CategoryPage = ({
     ).then((products) => {
       setProductsState(products?.results);
       setCategoryTotalPages(products?.total_pages);
+      setLoading(false);
     });
   };
 
@@ -274,7 +277,7 @@ const CategoryPage = ({
           defaultOrdering={filters}
           sortProducts={sortProducts}
         />
-        <ProductGrid products={productsState} />
+        <ProductGrid products={productsState} loading={loading} />
         <PaginationWrapper
           currentPage={categoryPage}
           totalPageCount={categoryTotalPages}
