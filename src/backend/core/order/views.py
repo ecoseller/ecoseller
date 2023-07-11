@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from django.conf import settings
 from django.db.models import Count
 from rest_framework import permissions
-from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -23,7 +23,7 @@ from .serializers import (
     OrderListSerializer,
     OrderStatusSerializer,
     OrderSubmitSerializer,
-    OrderItemComplaintSerializer,
+    OrderItemComplaintCreateSerializer, OrderItemComplaintSerializer,
 )
 
 NotificationsApi = settings.NOTIFICATIONS_API
@@ -504,11 +504,15 @@ class OrderItemsListStorefrontView(ListAPIView):
 
 
 class OrderItemComplaintStorefrontView(CreateAPIView):
-    serializer_class = OrderItemComplaintSerializer
+    serializer_class = OrderItemComplaintCreateSerializer
     queryset = OrderItemComplaint.objects.all()
     permission_classes = (permissions.AllowAny,)
 
 
-class OrderItemComplaintDashboardView(RetrieveAPIView):
+class OrderItemComplaintDashboardView(UpdateAPIView):
     serializer_class = OrderItemComplaintSerializer
     queryset = OrderItemComplaint.objects.all()
+
+    @check_user_access_decorator({"order_change_permission"})
+    def put(self, request, *args, **kwargs):
+        return super().put(request, args, kwargs)

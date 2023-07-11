@@ -14,14 +14,15 @@ class OrderSubmitSerializer(serializers.Serializer):
     agreed_to_terms = serializers.BooleanField(default=False)
 
 
-class OrderComplaintBaseSerializer(serializers.ModelSerializer):
+class OrderItemComplaintSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItemComplaint
         fields = ("id", "type", "status", "description", "create_at")
+        read_only_fields = ("id", "type", "description", "create_at")
 
 
 class OrderItemSerializer(CartItemDetailSerializer):
-    complaints = OrderComplaintBaseSerializer(many=True)
+    complaints = OrderItemComplaintSerializer(many=True)
 
     class Meta(CartItemDetailSerializer.Meta):
         # model = CartItem
@@ -66,13 +67,7 @@ class OrderStatusSerializer(serializers.ModelSerializer):
         fields = ("status",)
 
 
-class OrderItemComplaintSerializer(serializers.ModelSerializer):
+class OrderItemComplaintCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItemComplaint
         fields = ("cart_item", "order", "description", "type")
-
-
-class OrderItemComplaintUpdateStatusSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OrderItemComplaint
-        fields = ("id", "status")
