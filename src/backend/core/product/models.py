@@ -156,6 +156,7 @@ class Product(SafeDeleteModel, TranslatableModel):
                     attribute.safe_translation_getter(
                         "name", language_code=language_code
                     )
+                    or attribute.value
                 )
         return attributes
 
