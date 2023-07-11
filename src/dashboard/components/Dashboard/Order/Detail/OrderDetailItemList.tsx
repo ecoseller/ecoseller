@@ -1,7 +1,8 @@
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { ICart, ICartItem } from "@/types/cart/cart";
+import { ICart } from "@/types/cart/cart";
+import { IOrderItem, IOrderItemComplaint } from "@/types/order";
 import { Grid } from "@mui/material";
 import CollapsableContentWithTitle from "../../Generic/CollapsableContentWithTitle";
 import EditorCard from "../../Generic/EditorCard";
@@ -26,6 +27,7 @@ import SnackbarWithAlert from "@/components/Dashboard/Generic/SnackbarWithAlert"
 import Box from "@mui/material/Box";
 import { OrderStatus } from "@/types/order";
 import { usePermission } from "@/utils/context/permission";
+import OrderItemComplaintModal from "@/components/Dashboard/Order/Detail/OrderItemComplaintModal";
 
 interface IOrderDetailItemListProps {
   cart: ICart;
@@ -33,7 +35,7 @@ interface IOrderDetailItemListProps {
   recalculateOrderPrice: () => Promise<void>;
 }
 
-interface ICartItemRow extends ICartItem {
+interface ICartItemRow extends IOrderItem {
   isNew: boolean;
   valid: boolean;
   id: number;
@@ -240,8 +242,27 @@ const OrderDetailItemList = ({
     },
   };
 
-  if (isEditable && hasPermission) {
-    columns.push(actionsColumn);
+  const complaintsColumn = {
+    field: "complaints",
+    headerName: "Complaints",
+    minWidth: 150,
+    renderCell: (params: any) => {
+      const complaints: IOrderItemComplaint[] = params.value;
+      const lastComplaint = complaints[complaints.length - 1];
+
+      return (
+        <OrderItemComplaintModal
+          orderItemSku={params.row.product_variant_sku}
+          orderItemComplaint={lastComplaint}
+          openModalLinkText="Detail"
+        />
+      );
+    },
+  };
+
+  if (hasPermission) {
+    const lastColumn = isEditable ? actionsColumn : complaintsColumn;
+    columns.push(lastColumn);
   }
 
   return (
