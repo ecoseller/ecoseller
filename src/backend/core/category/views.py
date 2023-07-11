@@ -174,7 +174,9 @@ def _order_by_price(products, is_reverse_order, pricelist: PriceList):
             ProductPrice.objects.filter(
                 product_variant__in=OuterRef("product_variants"),
                 price_list__code=pricelist.code,
-            ).values("price")[:1]
+            )
+            .order_by("price")
+            .values("price")[:1]
         )
     ).order_by("price" if not is_reverse_order else "-price")
     return products
