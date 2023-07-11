@@ -291,17 +291,6 @@ class CategoryDetailProductsStorefrontView(APIView):
                 else:
                     sorted_data = filtered_products
 
-                # sorted_data = (
-                #     sorted(
-                #         filtered_products,
-                #         key=lambda product: sort_key_function(
-                #             product, *sort_key_function_params
-                #         ),
-                #         reverse=is_reverse_order,
-                #     )
-                #     if sort_by is not None
-                #     else filtered_products
-                # )
                 paginated_sorted_products = self.pagination_class.paginate_queryset(
                     queryset=sorted_data, request=request
                 )
