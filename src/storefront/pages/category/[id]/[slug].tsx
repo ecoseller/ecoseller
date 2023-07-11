@@ -19,7 +19,7 @@ import SubCategoryList from "@/components/Category/SubCategoryList";
 import HeadMeta from "@/components/Common/SEO";
 import { useRouter } from "next/router";
 import ProductGrid from "@/components/Category/ProductGrid";
-import { IProductRecord } from "@/types/product";
+import { IPaginatedProductRecord, IProductRecord } from "@/types/product";
 import { IAttributeTypeWithOptions } from "@/types/attributes";
 import { categoryProductsAPI } from "@/pages/api/category/[id]/products";
 import { categoryDetailAPI } from "@/pages/api/category/[id]";
@@ -34,12 +34,14 @@ import React, { useEffect, useState } from "react";
 import ProductSortSelect from "@/components/Category/ProductSortSelect";
 import { categoryAttributesAPI } from "@/pages/api/category/[id]/attributes";
 import { filterProducts } from "@/api/category/products";
+import PaginationWrapper from "@/components/Category/Pagination";
 
 const { serverRuntimeConfig } = getConfig();
+const isBrowser = () => typeof window !== "undefined"; //The approach recommended by Next.js
 
 interface ICategoryPageProps {
   category: ICategoryDetail;
-  products: IProductRecord[];
+  products: IPaginatedProductRecord;
   countryCode: string;
   pricelist: string;
   attributes: IAttributeSet;
@@ -90,6 +92,8 @@ const CategoryPage = ({
   };
 
   const [productsState, setProductsState] = useState<IProductRecord[]>([]);
+  const [categoryPage, setCategoryPage] = useState<number>(1);
+  const [categoryTotalPages, setCategoryTotalPages] = useState<number>(1);
   const [filters, setFilters] = useState<IFiltersWithOrdering>(initialFilters);
 
   useEffect(() => {
@@ -99,7 +103,17 @@ const CategoryPage = ({
   }, [filters]);
 
   useEffect(() => {
-    setProductsState(products);
+    if (categoryPage > 1) {
+      if (isBrowser()) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      applyFilters();
+    }
+  }, [categoryPage]);
+
+  useEffect(() => {
+    setProductsState(products?.results);
+    setCategoryTotalPages(products?.total_pages);
 
     const storedFilters = tryLoadFiltersFromSessionStorage();
     if (storedFilters == null) {
@@ -158,9 +172,13 @@ const CategoryPage = ({
 
     saveFiltersToSessionStorage();
 
-    filterProducts(category.id, pricelist, countryCode, filtersToApply).then(
-      (products) => setProductsState(products)
-    );
+    filterProducts(
+      category.id,
+      pricelist,
+      countryCode,
+      filtersToApply,
+      categoryPage
+    ).then((products) => setProductsState(products?.results));
   };
 
   const sortProducts = (sortBy: string, order: string) => {
@@ -254,6 +272,13 @@ const CategoryPage = ({
           sortProducts={sortProducts}
         />
         <ProductGrid products={productsState} />
+        <PaginationWrapper
+          currentPage={categoryPage}
+          totalPageCount={categoryTotalPages}
+          setPage={(page: number) => {
+            setCategoryPage(page);
+          }}
+        />
       </div>
     </>
   );
@@ -294,6 +319,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     idNumber.toString(),
     countryDetail.code,
     pricelist,
+    "1",
     req as NextApiRequest,
     res as NextApiResponse
   );
