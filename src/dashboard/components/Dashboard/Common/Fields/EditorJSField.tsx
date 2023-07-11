@@ -67,7 +67,7 @@ export const EDITOR_TOOLS = {
   raw: Raw,
 };
 
-interface IEditorJSFieldProps {
+export interface IEditorJSFieldProps {
   data: IEditorJSData;
   onChange: (data: IEditorJSData) => void;
   disabled?: boolean;
@@ -80,9 +80,9 @@ const EditorJSField = ({
   disabled = false,
   label = "Content",
 }: IEditorJSFieldProps) => {
-  const ejInstance = useRef<any>();
+  const ejInstance = useRef<any>(null);
 
-  const [active, setActive] = useState<boolean>(false);
+  const [active, setActive] = useState<boolean>(true);
 
   const initEditor = () => {
     const editor = new EditorJS({
@@ -118,7 +118,8 @@ const EditorJSField = ({
 
   // This will run only once
   useEffect(() => {
-    if (ejInstance.current === null) {
+    // initEditor();
+    if (ejInstance?.current === null) {
       initEditor();
     }
 

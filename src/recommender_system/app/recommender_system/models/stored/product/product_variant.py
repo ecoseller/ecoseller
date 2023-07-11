@@ -1,7 +1,10 @@
 from datetime import datetime
 from typing import List, Optional, TYPE_CHECKING
 
+from dependency_injector.wiring import inject, Provide
+
 from recommender_system.models.stored.product.base import ProductStoredBaseModel
+from recommender_system.storage.product.abstract import AbstractProductStorage
 
 if TYPE_CHECKING:
     from recommender_system.models.stored.product.attribute import AttributeModel
@@ -87,6 +90,28 @@ class ProductVariantModel(ProductStoredBaseModel):
         AttributeProductVariantModel(
             attribute_id=attribute.id, product_variant_sku=self.sku
         ).create()
+
+    @inject
+    def update_attributes(
+        self,
+        attributes: List[int],
+        product_storage: AbstractProductStorage = Provide["product_storage"],
+    ) -> None:
+        from recommender_system.models.stored.product.attribute_product_variant import (
+            AttributeProductVariantModel,
+        )
+
+        for apv in AttributeProductVariantModel.gets(product_variant_sku=self.sku):
+            apv.delete()
+
+        apvs = [
+            AttributeProductVariantModel(
+                attribute_id=attribute, product_variant_sku=self.sku
+            )
+            for attribute in attributes
+        ]
+
+        product_storage.bulk_create_objects(models=apvs)
 
     def add_order(self, order: "OrderModel", amount: int) -> None:
         from recommender_system.models.stored.product.order_product_variant import (

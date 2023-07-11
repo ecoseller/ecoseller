@@ -40,7 +40,6 @@ let EditorJSField = dynamic(
     ssr: false,
   }
 );
-
 interface IPageCMSTranslatedFieldsProps {
   language: string;
   state: IPageCMSTranslationFields;

@@ -1,7 +1,9 @@
 import Cookies from "js-cookie";
+import { DEFAULT_COUNTRY } from "@/utils/defaults";
 import { useState, createContext, useContext, useEffect } from "react";
 import { ICountry } from "@/types/country";
 import { getCountries } from "@/api/country";
+import { useRouter } from "next/router";
 
 /**
  * Country context
@@ -28,6 +30,8 @@ export const CountryProvider = ({
    * If the user has not set a country, we will default
    */
 
+  const router = useRouter();
+
   const [country, setCountry] = useState<ICountry | null>(null);
   const [countryList, setCountryList] = useState<ICountry[]>([]);
 
@@ -49,11 +53,14 @@ export const CountryProvider = ({
     if (countryCookieValue && countryList.length > 0) {
       setCountryCookieAndLocale(countryCookieValue);
     } else if (countryList?.length > 0) {
-      setCountryCookieAndLocale(countryList[0].code);
+      setCountryCookieAndLocale(DEFAULT_COUNTRY || countryList[0].code, true);
     }
   }, [countryList]);
 
-  const setCountryCookieAndLocale = (countryCode: string) => {
+  const setCountryCookieAndLocale = (
+    countryCode: string,
+    reload: boolean = false
+  ) => {
     const country = countryList.find((country) => country.code === countryCode);
     if (country) {
       // set country state
@@ -63,6 +70,8 @@ export const CountryProvider = ({
       // change locale
       Cookies.set("NEXT_LOCALE", country.locale);
     }
+
+    router.push(router.asPath, undefined, { locale: country?.locale });
   };
 
   const value = {

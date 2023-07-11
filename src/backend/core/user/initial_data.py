@@ -18,7 +18,11 @@ def populate_groups(apps, schema_editor):
 
     # Create user groups
     for groupName in ManagerGroup.objects.all().values_list("name", flat=True):
-        Group.objects.create(name=groupName)
+        try:
+            Group.objects.create(name=groupName)
+        except Exception as e:
+            print("populate_groups", e)
+            pass
 
     # Permissions have to be created before applying them
     for app_config in apps.get_app_configs():

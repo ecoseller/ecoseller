@@ -347,4 +347,4 @@ def _get_all_published_products(category):
     subcategory_ids = _get_all_subcategory_ids(category)
     return Product.objects.filter(
         published=True, category__in=subcategory_ids
-    ).prefetch_related("product_variants")
+    ).prefetch_related("product_variants")[0:12]
