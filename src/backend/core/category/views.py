@@ -32,6 +32,8 @@ from product.models import (
     AttributeTypeValueType,
     BaseAttribute,
 )
+from django.apps import apps
+
 from product.serializers import (
     ProductStorefrontListSerializer,
     AttributeTypeFilterStorefrontSerializer,
@@ -172,13 +174,25 @@ def _order_by_price(products, is_reverse_order, pricelist: PriceList):
             ProductPrice.objects.filter(
                 product_variant__in=OuterRef("product_variants"),
                 price_list__code=pricelist.code,
-            )
-            .values("price")
-            .order_by("price" if not is_reverse_order else "-price")[:1]
+            ).values("price")[:1]
         )
     ).order_by("price" if not is_reverse_order else "-price")
-    print(products.query)
+    return products
 
+
+def _order_by_title(products, is_reverse_order, locale: str):
+    """
+    Extend product query by extra field with lowest price of the product's variant prices
+    """
+    ProductTranslation = apps.get_model("product", "ProductTranslation")
+
+    products = products.annotate(
+        title=Subquery(
+            ProductTranslation.objects.filter(
+                master=OuterRef("id"), language_code=locale
+            ).values("title")[:1]
+        )
+    ).order_by("title" if not is_reverse_order else "-title")
     return products
 
 
@@ -191,13 +205,17 @@ class CategoryDetailProductsStorefrontView(APIView):
 
     pagination_class = StorefrontPagination()
     pricelist = None
+    locale = None
     PRICE_LIST_URL_PARAM = "pricelist"
     COUNTRY_URL_PARAM = "country"
 
     ALLOWED_ORDER_FIELDS = ["asc", "desc"]
     DEFAULT_ORDER_FIELD = "asc"
     SORT_FIELDS_CONFIG = {
-        "title": {},
+        "title": {
+            "sort_function": _order_by_title,
+            "additional_params": [locale],
+        },
         "price": {
             "sort_function": _order_by_price,
             "additional_params": [pricelist],
@@ -218,6 +236,7 @@ class CategoryDetailProductsStorefrontView(APIView):
 
     def post(self, request, pk):
         self.pricelist = self._get_pricelist(request)
+        self.locale = self._get_locale(request)
         request_serializer = SelectedFiltersWithOrderingSerializer(data=request.data)
 
         if request_serializer.is_valid():
@@ -308,6 +327,15 @@ class CategoryDetailProductsStorefrontView(APIView):
                 "country": country,
             },
         )
+
+    def _get_locale(self, request):
+        """get locale from request params or default to the default one"""
+        """ set locale to the sort function as a parameter """
+        if self.locale is not None:
+            return self.locale
+        self.locale = request.META.get("HTTP_ACCEPT_LANGUAGE", "en")
+        self.SORT_FIELDS_CONFIG["title"]["additional_params"] = [self.locale]
+        return self.locale
 
     def _get_pricelist(self, request):
         """get price list from request params or default to the default one"""
