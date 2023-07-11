@@ -1,5 +1,6 @@
 # from django.contrib.auth.models import User
-import json
+from django.db.models import Min
+from django.db.models import OuterRef, Subquery
 from core.pagination import StorefrontPagination
 from rest_framework.decorators import permission_classes
 from rest_framework.generics import (
@@ -150,11 +151,35 @@ def _get_min_variant_price(product: Product, pricelist: PriceList):
     """
     Get minimal price of the product's variant prices
     """
-    skus = product.product_variants.all().values_list("sku", flat=True)
-    prices = ProductPrice.objects.filter(
-        product_variant__in=skus, price_list=pricelist
-    ).values_list("price", flat=True)
-    return min(prices) if prices else None
+    lowest_price = (
+        ProductPrice.objects.values("price")
+        .filter(
+            product_variant__in=product.product_variants.all(),
+            price_list__code=pricelist.code,
+        )
+        .aggregate(Min("price"))["price__min"]
+    )
+    return lowest_price
+
+
+def _order_by_price(products, is_reverse_order, pricelist: PriceList):
+    """
+    Extend product query by extra field with lowest price of the product's variant prices
+    """
+
+    products = products.annotate(
+        price=Subquery(
+            ProductPrice.objects.filter(
+                product_variant__in=OuterRef("product_variants"),
+                price_list__code=pricelist.code,
+            )
+            .values("price")
+            .order_by("price" if not is_reverse_order else "-price")[:1]
+        )
+    ).order_by("price" if not is_reverse_order else "-price")
+    print(products.query)
+
+    return products
 
 
 @permission_classes([AllowAny])
@@ -174,7 +199,7 @@ class CategoryDetailProductsStorefrontView(APIView):
     SORT_FIELDS_CONFIG = {
         "title": {},
         "price": {
-            "sort_function": _get_min_variant_price,
+            "sort_function": _order_by_price,
             "additional_params": [pricelist],
         },
     }
@@ -236,32 +261,28 @@ class CategoryDetailProductsStorefrontView(APIView):
                 # Get related objects
                 products = _get_all_published_products(category)
 
-                # construct Q object for filtering products of BaseAttribute
-                # filters = ....
-
-                # base_attributes = BaseAttribute.objects.filter(id__in=[6])
                 filtered_products = self._filter_products(
                     products, filters_with_ordering.filters
                 )
 
-                # print(filtered_products.query)
-
-                # TODO: REMOVE
-                # filtered_products = [
-                #     p for p in products if filters_with_ordering.matches_any_variant(p)
-                # ]  # filter the matching products
-
-                sorted_data = (
-                    sorted(
-                        filtered_products,
-                        key=lambda product: sort_key_function(
-                            product, *sort_key_function_params
-                        ),
-                        reverse=is_reverse_order,
+                if sort_key_function is not None:
+                    sorted_data = sort_key_function(
+                        filtered_products, is_reverse_order, *sort_key_function_params
                     )
-                    if sort_by is not None
-                    else filtered_products
-                )
+                else:
+                    sorted_data = filtered_products
+
+                # sorted_data = (
+                #     sorted(
+                #         filtered_products,
+                #         key=lambda product: sort_key_function(
+                #             product, *sort_key_function_params
+                #         ),
+                #         reverse=is_reverse_order,
+                #     )
+                #     if sort_by is not None
+                #     else filtered_products
+                # )
                 paginated_sorted_products = self.pagination_class.paginate_queryset(
                     queryset=sorted_data, request=request
                 )
