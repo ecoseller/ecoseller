@@ -1,4 +1,5 @@
 # from django.contrib.auth.models import User
+import json
 from core.pagination import StorefrontPagination
 from rest_framework.decorators import permission_classes
 from rest_framework.generics import (
@@ -22,7 +23,7 @@ from category.serializers import (
     SelectedFiltersWithOrderingSerializer,
 )
 from country.models import Country
-from product.models import Product, PriceList, AttributeTypeValueType
+from product.models import Product, ProductPrice, PriceList, AttributeTypeValueType
 from product.serializers import (
     ProductStorefrontListSerializer,
     AttributeTypeFilterStorefrontSerializer,
@@ -138,13 +139,15 @@ class CategoryDetailStorefrontView(APIView):
             return Response(status=HTTP_404_NOT_FOUND)
 
 
-def _get_min_variant_price(serialized_product):
+def _get_min_variant_price(product: Product, pricelist: PriceList):
     """
-    Get minimal price of the serialized product variant prices
+    Get minimal price of the product's variant prices
     """
-    return min(
-        serialized_product["variant_prices"], key=lambda variant: variant["incl_vat"]
-    )["incl_vat"]
+    skus = product.product_variants.all().values_list("sku", flat=True)
+    prices = ProductPrice.objects.filter(
+        product_variant__in=skus, price_list=pricelist
+    ).values_list("price", flat=True)
+    return min(prices) if prices else None
 
 
 @permission_classes([AllowAny])
@@ -155,6 +158,7 @@ class CategoryDetailProductsStorefrontView(APIView):
     """
 
     pagination_class = StorefrontPagination()
+    pricelist = None
     PRICE_LIST_URL_PARAM = "pricelist"
     COUNTRY_URL_PARAM = "country"
 
@@ -162,7 +166,10 @@ class CategoryDetailProductsStorefrontView(APIView):
     DEFAULT_ORDER_FIELD = "asc"
     SORT_FIELDS_CONFIG = {
         "title": {},
-        "price": {"sort_function": _get_min_variant_price},
+        "price": {
+            "sort_function": _get_min_variant_price,
+            "additional_params": [pricelist],
+        },
     }
 
     def get(self, request, pk):
@@ -178,6 +185,7 @@ class CategoryDetailProductsStorefrontView(APIView):
             return Response(status=HTTP_404_NOT_FOUND)
 
     def post(self, request, pk):
+        self.pricelist = self._get_pricelist(request)
         request_serializer = SelectedFiltersWithOrderingSerializer(data=request.data)
 
         if request_serializer.is_valid():
@@ -208,6 +216,15 @@ class CategoryDetailProductsStorefrontView(APIView):
                     if sort_by is not None
                     else None
                 )
+                sort_key_function_params = (
+                    (
+                        self.SORT_FIELDS_CONFIG[sort_by]["additional_params"]
+                        if "additional_params" in self.SORT_FIELDS_CONFIG[sort_by]
+                        else []
+                    )
+                    if sort_by is not None
+                    else []
+                )
 
                 # Get related objects
                 products = _get_all_published_products(category)
@@ -216,17 +233,24 @@ class CategoryDetailProductsStorefrontView(APIView):
                     p for p in products if filters_with_ordering.matches_any_variant(p)
                 ]  # filter the matching products
 
-                serializer = self._serialize_products(filtered_products, request)
-
                 sorted_data = (
                     sorted(
-                        serializer.data, key=sort_key_function, reverse=is_reverse_order
+                        filtered_products,
+                        key=lambda product: sort_key_function(
+                            product, *sort_key_function_params
+                        ),
+                        reverse=is_reverse_order,
                     )
                     if sort_by is not None
-                    else serializer.data
+                    else filtered_products
                 )
-
-                return Response(sorted_data)
+                paginated_sorted_products = self.pagination_class.paginate_queryset(
+                    queryset=sorted_data, request=request
+                )
+                serializer = self._serialize_products(
+                    paginated_sorted_products, request
+                )
+                return self.pagination_class.get_paginated_response(serializer.data)
             except Category.DoesNotExist:
                 return Response(status=HTTP_404_NOT_FOUND)
         else:
@@ -248,14 +272,20 @@ class CategoryDetailProductsStorefrontView(APIView):
 
     def _get_pricelist(self, request):
         """get price list from request params or default to the default one"""
+        """ set pricelist to the sort function as a parameter """
+        if self.pricelist is not None:
+            return self.pricelist
         price_list_code = request.query_params.get(self.PRICE_LIST_URL_PARAM, None)
+        price_list_obj = None
         if price_list_code:
             try:
-                return PriceList.objects.get(code=price_list_code)
+                price_list_obj = PriceList.objects.get(code=price_list_code)
             except PriceList.DoesNotExist:
-                return PriceList.objects.get(is_default=True)
+                price_list_obj = PriceList.objects.get(is_default=True)
         else:
-            return PriceList.objects.get(is_default=True)
+            price_list_obj = PriceList.objects.get(is_default=True)
+        self.SORT_FIELDS_CONFIG["price"]["additional_params"] = [price_list_obj]
+        return price_list_obj
 
     def _get_country(self, request):
         """Get country URL param"""

@@ -23,7 +23,7 @@ class DashboardPagination(PageNumberPagination):
 
 
 class StorefrontPagination(PageNumberPagination):
-    page_size = 32
+    page_size = 36
     page_size_query_param = "limit"
     max_page_size = 36
     page_query_param = "page"
