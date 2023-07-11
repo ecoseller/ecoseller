@@ -99,6 +99,7 @@ const CategoryPage = ({
 
   useEffect(() => {
     if (filters != initialFilters) {
+      setCategoryPage(1);
       applyFilters();
     }
   }, [filters]);
