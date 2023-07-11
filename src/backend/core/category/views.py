@@ -1,4 +1,5 @@
 # from django.contrib.auth.models import User
+from core.pagination import StorefrontPagination
 from rest_framework.decorators import permission_classes
 from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
@@ -153,6 +154,7 @@ class CategoryDetailProductsStorefrontView(APIView):
     Used for storefront.
     """
 
+    pagination_class = StorefrontPagination()
     PRICE_LIST_URL_PARAM = "pricelist"
     COUNTRY_URL_PARAM = "country"
 
@@ -166,11 +168,12 @@ class CategoryDetailProductsStorefrontView(APIView):
     def get(self, request, pk):
         try:
             category = Category.objects.get(id=pk, published=True)
-
             products = _get_all_published_products(category)
-            serializer = self._serialize_products(products, request)
-
-            return Response(serializer.data)
+            paginated_products = self.pagination_class.paginate_queryset(
+                queryset=products, request=request
+            )
+            serializer = self._serialize_products(paginated_products, request)
+            return self.pagination_class.get_paginated_response(serializer.data)
         except Category.DoesNotExist:
             return Response(status=HTTP_404_NOT_FOUND)
 
@@ -347,4 +350,4 @@ def _get_all_published_products(category):
     subcategory_ids = _get_all_subcategory_ids(category)
     return Product.objects.filter(
         published=True, category__in=subcategory_ids
-    ).prefetch_related("product_variants")[0:12]
+    ).prefetch_related("product_variants")
