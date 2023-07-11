@@ -13,6 +13,7 @@ from rest_framework.status import (
     HTTP_404_NOT_FOUND,
 )
 from rest_framework.views import APIView
+from django.db.models import Q
 
 from category.models import Category
 from category.serializers import (
@@ -23,7 +24,13 @@ from category.serializers import (
     SelectedFiltersWithOrderingSerializer,
 )
 from country.models import Country
-from product.models import Product, ProductPrice, PriceList, AttributeTypeValueType
+from product.models import (
+    Product,
+    ProductPrice,
+    PriceList,
+    AttributeTypeValueType,
+    BaseAttribute,
+)
 from product.serializers import (
     ProductStorefrontListSerializer,
     AttributeTypeFilterStorefrontSerializer,
@@ -229,9 +236,20 @@ class CategoryDetailProductsStorefrontView(APIView):
                 # Get related objects
                 products = _get_all_published_products(category)
 
-                filtered_products = [
-                    p for p in products if filters_with_ordering.matches_any_variant(p)
-                ]  # filter the matching products
+                # construct Q object for filtering products of BaseAttribute
+                # filters = ....
+
+                # base_attributes = BaseAttribute.objects.filter(id__in=[6])
+                filtered_products = self._filter_products(
+                    products, filters_with_ordering.filters
+                )
+
+                # print(filtered_products.query)
+
+                # TODO: REMOVE
+                # filtered_products = [
+                #     p for p in products if filters_with_ordering.matches_any_variant(p)
+                # ]  # filter the matching products
 
                 sorted_data = (
                     sorted(
@@ -296,6 +314,24 @@ class CategoryDetailProductsStorefrontView(APIView):
             country = Country.objects.all().first()
 
         return country
+
+    def _filter_products(self, products, filters):
+        # deal with textual attributes
+        print(filters.textual)
+        for filter in filters.textual:
+            if filter.selected_values_ids:
+                # this will behave as AND
+                products = products.filter(
+                    # this will behave as OR
+                    product_variants__attributes__in=filter.selected_values_ids
+                )
+
+        # deal with numeric attributes - they need to be filtered by range
+        # for filter in filters.numeric:
+        #     if filter.min_value_id is not None:
+        #         # filter by min value
+        #         min_attribute = BaseAttribute.objects.get(id=filter.min_value_id)
+        return products
 
 
 @permission_classes([AllowAny])
@@ -380,4 +416,4 @@ def _get_all_published_products(category):
     subcategory_ids = _get_all_subcategory_ids(category)
     return Product.objects.filter(
         published=True, category__in=subcategory_ids
-    ).prefetch_related("product_variants")
+    )  # .prefetch_related("product_variants__attributes")
