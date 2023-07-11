@@ -40,9 +40,12 @@ const EditToolbar = (props: any) => {
 
 const getUsers = async (page: number, pageSize: number) => {
   console.log("getUsers", page, pageSize);
-  const usersResult = await fetch(`/api/user/users/?page=${page}&limit=${pageSize}`, {
-    method: "GET",
-  }).then((res) => res.json());
+  const usersResult = await fetch(
+    `/api/user/users/?page=${page}&limit=${pageSize}`,
+    {
+      method: "GET",
+    }
+  ).then((res) => res.json());
 
   const users = usersResult["results"];
   for (let user of users) {
@@ -52,9 +55,8 @@ const getUsers = async (page: number, pageSize: number) => {
     }
 
     const userRoles = await fetch(`/api/roles/user/${user.email}`, {
-      method: "GET"
-    }).then((res) => res.json()
-    );
+      method: "GET",
+    }).then((res) => res.json());
 
     for (const role of userRoles) {
       user.roles.push(role.name);

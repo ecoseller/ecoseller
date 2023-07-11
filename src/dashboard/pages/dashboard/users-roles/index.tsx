@@ -57,14 +57,14 @@ export const getServerSideProps = async (context: any) => {
     30,
     req as NextApiRequest,
     res as NextApiResponse
-  )
+  );
 
   const users = usersResult["results"];
 
   for (let user of users) {
-    user.roles = []
+    user.roles = [];
     if (user.is_admin) {
-      user.roles.push("Admin")
+      user.roles.push("Admin");
     }
 
     const userRoles = await userRoleAPI(
@@ -72,10 +72,10 @@ export const getServerSideProps = async (context: any) => {
       user.email,
       req as NextApiRequest,
       res as NextApiResponse
-    )
+    );
 
     for (let userRole of userRoles) {
-      user.roles.push(userRole.name)
+      user.roles.push(userRole.name);
     }
   }
 

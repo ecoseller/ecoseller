@@ -60,7 +60,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { body } = req;
   const { page, pageSize } = req.query;
 
-  return usersAPI(method as HTTPMETHOD, Number(page), Number(pageSize), req, res, body)
+  return usersAPI(
+    method as HTTPMETHOD,
+    Number(page),
+    Number(pageSize),
+    req,
+    res,
+    body
+  )
     .then((data) => res.status(200).json(data))
     .catch((error) => res.status(400).json(null));
 };

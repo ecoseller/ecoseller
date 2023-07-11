@@ -28,7 +28,13 @@ import Button from "@mui/material/Button";
 // types
 import { IProductVariant } from "@/types/product";
 import Grid from "@mui/material/Grid";
-import { Alert, Snackbar, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Alert,
+  Snackbar,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { serializeAttributes } from "@/utils/attributes";
 import QuantitySelect from "@/components/Common/QuantitySelect";
 import DiscountText from "@/components/Generic/DiscountText";
@@ -75,8 +81,7 @@ const ProductVariantRow = ({
 
     addToCart(variant.sku, qty, productId, pricelist, country);
     setQty(1);
-  }
-
+  };
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -146,23 +151,21 @@ const ProductVariantRow = ({
           onClick={handleAddToCart}
         />
       </Grid>
-      {
-        snackbar ? (
-          <Snackbar
-            open={snackbar.open}
-            autoHideDuration={6000}
+      {snackbar ? (
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={6000}
+          onClose={handleSnackbarClose}
+        >
+          <Alert
             onClose={handleSnackbarClose}
+            severity={snackbar.severity}
+            sx={{ width: "100%" }}
           >
-            <Alert
-              onClose={handleSnackbarClose}
-              severity={snackbar.severity}
-              sx={{ width: "100%" }}
-            >
-              {snackbar.message}
-            </Alert>
-          </Snackbar>
-        ) : null
-      }
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
+      ) : null}
     </Grid>
   );
 };

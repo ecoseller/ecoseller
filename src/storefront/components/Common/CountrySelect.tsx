@@ -72,10 +72,13 @@ const CountrySelectModal = ({
   const { countryList, country, setCountryCookieAndLocale } = useCountry();
   const { clearCart } = useCart();
   const router = useRouter();
-  const { pathname, asPath, query } = router
+  const { pathname, asPath, query } = router;
   const { t } = useTranslation("common");
 
-  const handleListItemClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, c: ICountry) => {
+  const handleListItemClick = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    c: ICountry
+  ) => {
     if (country?.code == c.code) {
       setOpen(false);
       return;
@@ -84,7 +87,9 @@ const CountrySelectModal = ({
     clearCart();
     setCountryCookieAndLocale(c.code);
     setOpen(false);
-    router.push({ pathname, query }, asPath, { locale: c.locale }).then(() => router.reload());
+    router
+      .push({ pathname, query }, asPath, { locale: c.locale })
+      .then(() => router.reload());
   };
 
   return (

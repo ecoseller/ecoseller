@@ -98,7 +98,11 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
 
   if (Object.keys(shippingInfoState)?.length === 0) {
     setShippingInfoState(
-      shippingInfoInitialData({ ...shippingInfo, country: countryCode }, setShippingInfoState, t)
+      shippingInfoInitialData(
+        { ...shippingInfo, country: countryCode },
+        setShippingInfoState,
+        t
+      )
     );
   }
 

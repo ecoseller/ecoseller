@@ -121,17 +121,16 @@ export const getServerSideProps = async (context: any) => {
   const user = await userDetailAPI(
     "GET",
     req as NextApiRequest,
-    res as NextApiResponse,
-  )
+    res as NextApiResponse
+  );
 
   if (user.is_staff === false) {
     return {
       notFound: true,
-    }
+    };
   }
 
   return { props: {} };
 };
-
 
 export default DashboardUserAddPage;
