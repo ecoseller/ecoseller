@@ -178,7 +178,10 @@ const CategoryPage = ({
       countryCode,
       filtersToApply,
       categoryPage
-    ).then((products) => setProductsState(products?.results));
+    ).then((products) => {
+      setProductsState(products?.results);
+      setCategoryTotalPages(products?.total_pages);
+    });
   };
 
   const sortProducts = (sortBy: string, order: string) => {
