@@ -60,14 +60,14 @@ class Filter:
         Check if the given product variant matches this filter
         """
         if (
-                not self.selected_values_ids
+            not self.selected_values_ids
         ):  # If there are no selected values, always match
             return True
 
         try:
             base_attribute = product_variant.attributes.get(type__pk=self.id)
             return (
-                    base_attribute.id in self.selected_values_ids
+                base_attribute.id in self.selected_values_ids
             )  # Check if `id` is contained in `selected_values_ids`
         except BaseAttribute.DoesNotExist:
             return False
