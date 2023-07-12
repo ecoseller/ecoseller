@@ -14,7 +14,6 @@ from rest_framework.status import (
     HTTP_404_NOT_FOUND,
 )
 from rest_framework.views import APIView
-from django.db.models import Q
 
 from category.models import Category
 from category.serializers import (
@@ -30,7 +29,6 @@ from product.models import (
     ProductPrice,
     PriceList,
     AttributeTypeValueType,
-    BaseAttribute,
     AttributeType,
     ProductType,
 )
@@ -388,7 +386,6 @@ class CategoryDetailAttributesStorefrontView(APIView):
         import time
 
         try:
-            start = time.time()
             category = Category.objects.get(id=pk, published=True)
 
             # Get related objects
