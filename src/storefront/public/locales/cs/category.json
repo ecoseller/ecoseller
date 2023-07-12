@@ -14,5 +14,6 @@
   "subcategory-section-title": "Podkategorie",
   "filters": "Filtry",
   "cancel-filters": "Zrušit filtry",
-  "filter-empty": "(Prázdné)"
+  "filter-empty": "(Prázdné)",
+  "no-products": "Žádné produkty"
 }

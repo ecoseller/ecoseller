@@ -1,5 +1,5 @@
-import { ISelectedFiltersWithOrdering } from "@/types/category";
-import { IProductRecord } from "@/types/product";
+import { ISelectedFiltersWithOrderingToSend } from "@/types/category";
+import { IPaginatedProductRecord } from "@/types/product";
 
 /**
  * Get all products contained in the given category
@@ -12,14 +12,15 @@ export const filterProducts = async (
   categoryId: number,
   pricelist: string,
   country: string,
-  filters: ISelectedFiltersWithOrdering
+  filters: ISelectedFiltersWithOrderingToSend,
+  page: number
 ) => {
-  let url = `/api/category/${categoryId}/products?pricelist=${pricelist}&country=${country}`;
+  let url = `/api/category/${categoryId}/products?pricelist=${pricelist}&country=${country}&page=${page}`;
 
   return fetch(url, {
     method: "POST",
     body: JSON.stringify(filters),
   })
     .then((res) => res.json())
-    .then((data) => data as IProductRecord[]);
+    .then((data) => data as IPaginatedProductRecord);
 };

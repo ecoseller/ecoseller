@@ -8,6 +8,7 @@ export const categoryProductsAPI = async (
   id: string,
   country: string,
   pricelist: string,
+  page: string,
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
@@ -15,7 +16,7 @@ export const categoryProductsAPI = async (
     setRequestResponse(req, res);
   }
 
-  let url = `/category/storefront/${id}/products/?country=${country}&pricelist=${pricelist}`;
+  let url = `/category/storefront/${id}/products/?country=${country}&pricelist=${pricelist}&page=${page}`;
   switch (method) {
     case "GET":
       return await api.get(url).then((response) => response.data);
@@ -33,7 +34,7 @@ export const categoryProductsAPI = async (
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;
-  const { id, country, pricelist } = req.query;
+  const { id, country, pricelist, page } = req.query;
 
   if (method == "GET" || method == "POST") {
     return categoryProductsAPI(
@@ -41,6 +42,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       id?.toString() || "",
       country?.toString() || "",
       pricelist?.toString() || "",
+      page?.toString() || "",
       req,
       res
     )
