@@ -1,8 +1,8 @@
 # ----
 # Site
 
-title: Edition Template
-url: "https://long-pig.cloudvent.net"
+title: Ecoseller
+url: "https://ecoseller.io"
 baseurl:
 google_analytics_key:
 show_full_navigation: true
@@ -15,9 +15,8 @@ author:
   email:
   twitter: # twitter username without the @ symbol
 social:
-  name: Edition Template
+  name: 
   links:
-    - https://github.com/CloudCannon/edition-jekyll-template
 
 # -----
 # Build
