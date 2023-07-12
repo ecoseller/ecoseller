@@ -14,8 +14,7 @@ from rest_framework_recursive.fields import RecursiveField
 
 from category.filters import (
     SelectedFilters,
-    NumericFilter,
-    TextualFilter,
+    Filter,
     SelectedFiltersWithOrdering,
 )
 from category.models import (
@@ -141,24 +140,24 @@ class TextualFilterSerializer(Serializer):
     selected_values_ids = ListField(child=IntegerField())
 
 
-class NumericFilterSerializer(Serializer):
-    id = IntegerField()
-    min_value_id = IntegerField(allow_null=True)
-    max_value_id = IntegerField(allow_null=True)
+# class NumericFilterSerializer(Serializer):
+#     id = IntegerField()
+#     min_value_id = IntegerField(allow_null=True)
+#     max_value_id = IntegerField(allow_null=True)
 
 
 class SelectedFiltersSerializer(Serializer):
     textual = TextualFilterSerializer(many=True)
-    numeric = NumericFilterSerializer(many=True)
+    numeric = TextualFilterSerializer(many=True)
 
     def create(self, validated_data):
         textual, numeric = [], []
 
         for filter in validated_data["textual"]:
-            textual.append(TextualFilter(**filter))
+            textual.append(Filter(**filter))
 
         for filter in validated_data["numeric"]:
-            numeric.append(NumericFilter(**filter))
+            numeric.append(Filter(**filter))
 
         return SelectedFilters(textual, numeric)
 
