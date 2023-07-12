@@ -195,7 +195,7 @@ const CartItemList = ({
             <Typography variant="h6">
               {
                 t("total-price-incl-price", {
-                  price: cart.total_price_incl_vat_formatted,
+                  price: cart.total_items_price_incl_vat_formatted,
                 }) /**Total price:&nbsp; */
               }
             </Typography>
