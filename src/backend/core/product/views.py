@@ -301,6 +301,8 @@ class BaseAttributeDashboardView(GenericAPIView):
     @check_user_access_decorator({"baseattribute_add_permission"})
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
+
+        print(request.data)
         if serializer.is_valid():
             instance = serializer.save()
             return Response({**serializer.data, "id": instance.id}, status=201)

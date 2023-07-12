@@ -91,7 +91,7 @@ const EditToolbar = (props: EditToolbarProps) => {
 interface IBaseAttributeGridProps {
   attributeTypeId: number | undefined;
   baseAttributes: IBaseAttribute[];
-  attribtueTypeValueType: TAttributeTypeValueType;
+  attributeTypeValueType: TAttributeTypeValueType;
   setState: (data: IBaseAttribute[]) => void;
 }
 
@@ -115,16 +115,16 @@ const validateValueAgainstValueType = (
 };
 const BaseAttributeGrid = ({
   attributeTypeId,
-  attribtueTypeValueType,
+  attributeTypeValueType,
   baseAttributes,
   setState,
 }: IBaseAttributeGridProps) => {
   const { data: languages } = useSWRImmutable<ILanguage[]>(
-    "/country/languages/"
+    "/api/country/language/"
   );
 
   const deserializeTranslations = (object: any) => {
-    if (attribtueTypeValueType !== "TEXT") return {};
+    if (attributeTypeValueType !== "TEXT") return {};
     const deserializedTranslations: any = {};
     Object.keys(object?.translations)?.forEach((key: string) => {
       deserializedTranslations[`$NAME_${key}`] =
@@ -134,13 +134,20 @@ const BaseAttributeGrid = ({
   };
 
   const serializeTranslations = (object: any) => {
-    // if (attribtueTypeValueType !== "TEXT") return {};
     const serializedTranslations: any = {};
-    languages?.forEach((language) => {
-      serializedTranslations[language.code] = {
-        name: object[`$NAME_${language.code}`] || "",
-      };
-    });
+    if (attributeTypeValueType == "TEXT") {
+      // for text attributes, set names (for each language)
+      languages?.forEach((language) => {
+        serializedTranslations[language.code] = {
+          name: object[`$NAME_${language.code}`] || "",
+        };
+      });
+    } else {
+      // for non-text attributes, set empty names
+      languages?.forEach((language) => {
+        serializedTranslations[language.code] = { name: null };
+      });
+    }
     return serializedTranslations;
   };
 
@@ -153,7 +160,7 @@ const BaseAttributeGrid = ({
         id: row.id as number,
         isNew: false,
         valid: true,
-        ...(attribtueTypeValueType === "TEXT"
+        ...(attributeTypeValueType === "TEXT"
           ? // check translations field and set it in the format $NAME_${LANGUAGE_CODE} for each language
             deserializeTranslations(row)
           : {}),
@@ -198,16 +205,16 @@ const BaseAttributeGrid = ({
     // check attribute type value type
     const valid = validateValueAgainstValueType(
       newRow.value,
-      attribtueTypeValueType
+      attributeTypeValueType
     );
     if (!valid) {
       setSnackbar({
         open: true,
-        message: `Value is not valid for this value type ${attribtueTypeValueType.toLowerCase()}`,
+        message: `Value is not valid for this value type ${attributeTypeValueType.toLowerCase()}`,
         severity: "error",
       });
       throw new Error(
-        `Value is not valid for this value type ${attribtueTypeValueType}`
+        `Value is not valid for this value type ${attributeTypeValueType}`
       );
     }
 
@@ -353,7 +360,7 @@ const BaseAttributeGrid = ({
       sortable: false,
       disableColumnMenu: true,
     },
-    ...(languages && attribtueTypeValueType === "TEXT"
+    ...(languages && attributeTypeValueType === "TEXT"
       ? languages.map((language) => ({
           field: `$NAME_${language.code}`,
           headerName: `${language.code}`,
