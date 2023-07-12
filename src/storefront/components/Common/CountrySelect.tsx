@@ -16,6 +16,8 @@ import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
+import { useCart } from "@/utils/context/cart";
+import { ICountry } from "@/types/country";
 
 const CountrySelect = () => {
   const { country } = useCountry();
@@ -41,7 +43,13 @@ const CountrySelect = () => {
 export default CountrySelect;
 
 const style = {
-  position: "absolute" as "absolute",
+  position: "absolute",
+  // left: "10%",
+  overflow: "scroll",
+  height: "80%",
+  display: "block",
+  // position: "absolute" as "absolute",
+  // overflow: "scroll",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
@@ -62,9 +70,28 @@ const CountrySelectModal = ({
   setOpen: (open: boolean) => void;
 }) => {
   const { countryList, country, setCountryCookieAndLocale } = useCountry();
+  const { clearCart } = useCart();
   const router = useRouter();
-  const { asPath } = router;
+  const { pathname, asPath, query } = router;
   const { t } = useTranslation("common");
+
+  const handleListItemClick = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    c: ICountry
+  ) => {
+    if (country?.code == c.code) {
+      setOpen(false);
+      return;
+    }
+
+    clearCart();
+    setCountryCookieAndLocale(c.code);
+    setOpen(false);
+    router
+      .push({ pathname, query }, asPath, { locale: c.locale })
+      .then(() => router.reload());
+  };
+
   return (
     <Modal
       open={open}
@@ -85,15 +112,7 @@ const CountrySelectModal = ({
                 <ListItemText
                   primary={`${getUnicodeFlagIcon(c.code)} ${c.name}`}
                   secondary={c.locale}
-                  onClick={() => {
-                    setCountryCookieAndLocale(c.code);
-                    setOpen(false);
-                    router.replace(asPath, asPath, {
-                      locale: c.locale,
-                      shallow: false,
-                    });
-                    router.reload();
-                  }}
+                  onClick={(event) => handleListItemClick(event, c)}
                 />
               </ListItemButton>
             </ListItem>

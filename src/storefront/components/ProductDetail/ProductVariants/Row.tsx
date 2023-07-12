@@ -28,11 +28,18 @@ import Button from "@mui/material/Button";
 // types
 import { IProductVariant } from "@/types/product";
 import Grid from "@mui/material/Grid";
-import { Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Alert,
+  Snackbar,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { serializeAttributes } from "@/utils/attributes";
 import QuantitySelect from "@/components/Common/QuantitySelect";
 import DiscountText from "@/components/Generic/DiscountText";
 import { useTranslation } from "next-i18next";
+import { useSnackbarState } from "@/utils/snackbar";
 
 const ProductVariantRow = ({
   variant,
@@ -46,10 +53,35 @@ const ProductVariantRow = ({
   pricelist: string;
 }) => {
   const { addToCart } = useCart();
+  const { cartProductQuantity } = useCart();
   const { query } = useRouter();
   const { t } = useTranslation("product");
 
   const [qty, setQty] = useState(1);
+  const [snackbar, setSnackbar] = useSnackbarState();
+  const handleSnackbarClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbar(null);
+  };
+
+  const handleAddToCart = () => {
+    if (qty + cartProductQuantity(variant.sku) > variant.stock_quantity) {
+      setSnackbar({
+        open: true,
+        message: "Product is out of stock for selected quantity",
+        severity: "error",
+      });
+      return;
+    }
+
+    addToCart(variant.sku, qty, productId, pricelist, country);
+    setQty(1);
+  };
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -74,17 +106,17 @@ const ProductVariantRow = ({
       mb={4}
     >
       <Grid container item xs={5} sm={3} md={4} lg={3} direction="column">
-        <Typography variant="body1">
+        <Typography variant="body1" fontSize={"0.8rem"}>
           {serializeAttributes(variant.attributes)}
         </Typography>
         <Typography variant="body2">{variant.sku}</Typography>
       </Grid>
-      <Grid container item xs={2} sm={2} md={3} lg={2}>
+      <Grid container item xs={2} sm={2} md={3} lg={2} alignItems="center">
         <Typography>
           <StockQuantity quantity={variant.stock_quantity} />
         </Typography>
       </Grid>
-      <Grid container item xs={5} sm={3} md={4} lg={2}>
+      <Grid container item xs={5} sm={3} md={4} lg={2} alignItems="center">
         <Typography>
           {variant?.price?.discount
             ? variant?.price?.discount.incl_vat
@@ -94,7 +126,7 @@ const ProductVariantRow = ({
           ) : null}
         </Typography>
       </Grid>
-      <Grid container item xs={6} sm={3} md={4} lg={2}>
+      <Grid container item xs={6} sm={3} md={4} lg={2} alignItems="center">
         <QuantitySelect
           quantity={qty}
           setQuantity={setQty}
@@ -111,16 +143,29 @@ const ProductVariantRow = ({
         lg={2}
         alignItems="center"
         spacing={2}
+        mt={1}
       >
         <Button
           variant="text"
           startIcon={<ShoppingCartIcon />}
-          onClick={() => {
-            addToCart(variant.sku, qty, productId, pricelist, country);
-            setQty(1);
-          }}
+          onClick={handleAddToCart}
         />
       </Grid>
+      {snackbar ? (
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={6000}
+          onClose={handleSnackbarClose}
+        >
+          <Alert
+            onClose={handleSnackbarClose}
+            severity={snackbar.severity}
+            sx={{ width: "100%" }}
+          >
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
+      ) : null}
     </Grid>
   );
 };

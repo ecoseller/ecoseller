@@ -1,9 +1,9 @@
 {
+  "in-stock": "Skladem",
+  "low-stock": "Zbývají poslední kusy",
+  "out-of-stock": "Není skladem",
   "varinats": "Varianty",
   "recommended-products-title": "Doporučené produkty",
   "recommended-products-description": "Prohlédněte si další produkty, které by se vám mohly líbit",
-  "reviews": "Hodnocení zákazníků",
-  "in-stock": "Na skladě",
-  "low-stock": "Posledních pár kusů",
-  "out-of-stock": "Vyprodáno"
+  "reviews": "Hodnocení zákazníků"
 }

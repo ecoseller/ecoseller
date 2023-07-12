@@ -5,7 +5,7 @@ services:
     container_name: backend
     build:
       context: ./backend
-      target: development
+      target: production
     volumes:
       - ./backend/core:/usr/src/app/
       - ./backend/mediafiles:/usr/src/mediafiles
@@ -14,10 +14,13 @@ services:
       - 8001:8001
     env_file:
       - ./backend/docker-compose.env
+    environment:
+      - LOAD_DEMO_DATA=1
   postgres_backend:
     image: postgres:13.0-alpine
     container_name: postgres_backend
     volumes:
+      - ./backend/postgres/mock_data.sql:/docker-entrypoint-initdb.d/setup_database.sql
       - ./backend/postgres/data:/var/lib/postgresql/data/
     ports:
       - 5433:5432
@@ -44,17 +47,17 @@ services:
       - backend
   rq-worker:
     build:
-      context: ./backend
-      dockerfile: ./Dockerfile
-      target: development
+        context: ./backend
+        dockerfile: ./Dockerfile
+        target: production
     volumes:
       - ./backend/core:/usr/src/app/core
     depends_on:
-      - backend
-      - redis
+    - backend
+    - redis
     env_file:
       - ./backend/docker-compose.env
-    command: python -u /usr/src/app/core/manage.py rqworker high low default --with-scheduler
+    command: python -u /usr/src/app/core/manage.py rqworker high low default
   elasticsearch:
     container_name: elasticsearch
     build:
@@ -73,7 +76,7 @@ services:
     container_name: dashboard
     build:
       context: ./dashboard
-      target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
+      target: production # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
     environment:
       CHOKIDAR_USEPOLLING: "true" # https://stackoverflow.com/questions/61576659/how-to-hot-reload-in-reactjs-docker
       API_URL: "http://backend:8000"
@@ -97,7 +100,7 @@ services:
     container_name: storefront
     build:
       context: ./storefront
-      target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
+      target: production # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
     environment:
       CHOKIDAR_USEPOLLING: "true" # https://stackoverflow.com/questions/61576659/how-to-hot-reload-in-reactjs-docker
       API_URL: "http://backend:8000"
@@ -136,7 +139,7 @@ services:
     container_name: recommender_system
     build:
       context: ./recommender_system
-      target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
+      target: production # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
     volumes:
       - ./recommender_system/app:/usr/src/app/
     ports:
@@ -155,7 +158,7 @@ services:
     container_name: recommender_system_trainer
     build:
       context: ./recommender_system
-      target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
+      target: production # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
     entrypoint: sh /usr/src/app/run_trainer.sh
     volumes:
       - ./recommender_system/app:/usr/src/app/

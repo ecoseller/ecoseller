@@ -3,9 +3,17 @@
  * @param path Image path returned from API
  * @param relative Is the given path relative?
  */
+
+import getConfig from "next/config";
+
+const { publicRuntimeConfig } = getConfig();
+
 const imgPath = (path: string, relative: boolean = false) => {
-  const backendApiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
-  const clientApiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const backendApiUrl =
+    process.env.NEXT_PUBLIC_BACKEND_API_URL ||
+    publicRuntimeConfig.nextPublicBackendApiUrl;
+  const clientApiUrl =
+    process.env.NEXT_PUBLIC_API_URL || publicRuntimeConfig.nextPublicApiUrl;
 
   if (relative) {
     return `${clientApiUrl}${path}`;

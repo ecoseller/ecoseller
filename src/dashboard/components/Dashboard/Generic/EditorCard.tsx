@@ -6,7 +6,7 @@ interface IEditorCardProps {
 }
 const EditorCard = ({ children }: IEditorCardProps) => {
   return (
-    <Card elevation={0}>
+    <Card elevation={0} sx={{}}>
       <Box m={3}>{children}</Box>
     </Card>
   );

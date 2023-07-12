@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 // libraries
 import useSWR from "swr";
+import { laggy } from "@/utils/swrLaggy";
 // layout
 // components
 // mui
@@ -26,9 +27,10 @@ const PAGE_SIZE = 30;
 
 const useProducts = (page: number, pageSize: number) => {
   const { data, error, mutate } = useSWR<IProductList | undefined>(
-    `/api//product/?page=${page + 1}&limit=${pageSize}`,
+    `/api/product/?page=${page + 1}&limit=${pageSize}`,
     {
       fetcher: (url) => fetch(url).then((res) => res.json()),
+      use: [laggy],
     }
   );
 
@@ -56,7 +58,7 @@ const ProductGrid = () => {
     paginationModel?.pageSize
   );
 
-  console.log("products", products);
+  console.log("products", products, paginationModel);
 
   const columns: GridColDef[] = [
     {

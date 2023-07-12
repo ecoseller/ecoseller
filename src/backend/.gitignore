@@ -39,6 +39,8 @@ mediafiles
 # File-based project format
 *.iws
 
+postgres/data*
+
 # IntelliJ
 out/
 
@@ -67,6 +69,11 @@ wheels/
 *.egg 
 *.manifest 
 *.spec 
+
+# scripts
+*load_products.py
+*test_payment.py
+*test_notifications.py
 
 # Installer logs 
 pip-log.txt 

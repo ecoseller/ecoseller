@@ -20,3 +20,8 @@ class ProductType(ApiBaseModel):
 
     class Meta:
         stored_model_class = ProductTypeModel
+
+    def save(self) -> None:
+        super().save()
+        type_model = ProductTypeModel.get(pk=self.id)
+        type_model.update_attribute_types(attribute_types=self.attribute_types)

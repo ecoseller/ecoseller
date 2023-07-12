@@ -9,6 +9,16 @@
             "note": "Payment for order"
         }
     },
+    "BANKTRANSFER_PLN": {
+        "implementation": "api.payments.modules.BankTransfer.BankTransferEUR",
+        "kwargs": {
+            "currency": "PLN",
+            "bankName": "Deutsche Bank",
+            "iban": "DE12500105170648489890",
+            "bic": "DEUTDEDBBER",
+            "note": "Payment for order"
+        }
+    },
     "BANKTRANSFER_CZK": {
         "implementation": "api.payments.modules.BankTransfer.BankTransferCZK",
         "kwargs": {

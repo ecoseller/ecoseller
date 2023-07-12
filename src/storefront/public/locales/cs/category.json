@@ -3,6 +3,9 @@
   "product-card-variants_few": "",
   "product-card-variants_many": "",
   "product-card-variants_other": "",
+  "from": "Od",
+  "to": "Do",
+  "clear-filters": "Smazat filtry",
   "order-by-price-asc": "Dle ceny od nejnižší",
   "order-by-price-desc": "Dle ceny od nejvyšší",
   "order-by-title-asc": "Dle názvu A-Z",
@@ -11,5 +14,6 @@
   "subcategory-section-title": "Podkategorie",
   "filters": "Filtry",
   "cancel-filters": "Zrušit filtry",
-  "filter-empty": "(Prázdné)"
+  "filter-empty": "(Prázdné)",
+  "no-products": "Žádné produkty"
 }

@@ -13,14 +13,16 @@ RUN pip3 install -r ./requirements.txt
 
 COPY ./app/ .
 
-FROM base as development
 RUN chmod +x /usr/src/app/run_server.sh
 RUN chmod +x /usr/src/app/run_trainer.sh
-CMD [ "sh", "/usr/src/app/run_server.sh" ]
+
+FROM base as development
+ENTRYPOINT [ "sh", "/usr/src/app/run_server.sh" ]
+
+FROM base as demo
+ENTRYPOINT [ "sh", "/usr/src/app/run_server.sh", "DEMO" ]
 
 # Production branch of a Dockerfile
 # It's currently the same as development branch above but it's here for future use
 FROM base as production
-RUN chmod +x /usr/src/app/run_server.sh
-RUN chmod +x /usr/src/app/run_trainer.sh
-CMD [ "sh", "/usr/src/app/run_server.sh" ]
+ENTRYPOINT [ "sh", "/usr/src/app/run_server.sh", "PRODUCTION" ]

@@ -1,3 +1,10 @@
+# Ecoseller docker compose v2 file used for demo purposes 
+# database should be initialized with mock data before running the project 
+# and media data (product images, ...) should be copied to the media folder
+
+# to run the project, run the following command in the /src folder of the project 
+# docker compose -f docker-compose.demo.yml up --build 
+
 version: "3.9"
 
 services:
@@ -5,20 +12,23 @@ services:
     container_name: backend
     build:
       context: ./backend
-      target: development
+      target: demo
     volumes:
       - ./backend/core:/usr/src/app/
-      - ./backend/mediafiles:/usr/src/mediafiles
+      # - ./backend/demo_data/images:/usr/src/mediafiles
     ports:
       - 8000:8000
       - 8001:8001
     env_file:
       - ./backend/docker-compose.env
+    depends_on:
+      postgres_backend:
+        condition: service_healthy
   postgres_backend:
     image: postgres:13.0-alpine
     container_name: postgres_backend
-    volumes:
-      - ./backend/postgres/data:/var/lib/postgresql/data/
+    # volumes:
+      # - ./backend/demo_data/mock_data.sql:/docker-entrypoint-initdb.d/setup_database.sql
     ports:
       - 5433:5432
     environment:
@@ -28,7 +38,7 @@ services:
       - POSTGRES_INITDB_ARGS=--auth=trust --auth-host=trust --auth-local=trust
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-      interval: 5s
+      interval: 20s
       timeout: 5s
       retries: 5
   redis:
@@ -44,17 +54,17 @@ services:
       - backend
   rq-worker:
     build:
-      context: ./backend
-      dockerfile: ./Dockerfile
-      target: development
+        context: ./backend
+        dockerfile: ./Dockerfile
+        target: production
     volumes:
       - ./backend/core:/usr/src/app/core
     depends_on:
-      - backend
-      - redis
+    - backend
+    - redis
     env_file:
       - ./backend/docker-compose.env
-    command: python -u /usr/src/app/core/manage.py rqworker high low default --with-scheduler
+    command: python -u /usr/src/app/core/manage.py rqworker high low default
   elasticsearch:
     container_name: elasticsearch
     build:
@@ -73,7 +83,7 @@ services:
     container_name: dashboard
     build:
       context: ./dashboard
-      target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
+      target: demo # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
     environment:
       CHOKIDAR_USEPOLLING: "true" # https://stackoverflow.com/questions/61576659/how-to-hot-reload-in-reactjs-docker
       API_URL: "http://backend:8000"
@@ -97,10 +107,11 @@ services:
     container_name: storefront
     build:
       context: ./storefront
-      target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
+      target: demo # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
     environment:
       CHOKIDAR_USEPOLLING: "true" # https://stackoverflow.com/questions/61576659/how-to-hot-reload-in-reactjs-docker
       API_URL: "http://backend:8000"
+      CLIENT_API_URL: "http://localhost:8000"
       NEXT_PUBLIC_API_URL: "http://localhost:8000"
       NEXT_PUBLIC_BACKEND_API_URL: "http://backend:8000"
     volumes:
@@ -136,7 +147,7 @@ services:
     container_name: recommender_system
     build:
       context: ./recommender_system
-      target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
+      target: demo # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
     volumes:
       - ./recommender_system/app:/usr/src/app/
     ports:
@@ -155,7 +166,7 @@ services:
     container_name: recommender_system_trainer
     build:
       context: ./recommender_system
-      target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
+      target: demo # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
     entrypoint: sh /usr/src/app/run_trainer.sh
     volumes:
       - ./recommender_system/app:/usr/src/app/
