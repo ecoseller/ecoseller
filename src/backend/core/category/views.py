@@ -1,4 +1,7 @@
 # from django.contrib.auth.models import User
+from django.apps import apps
+from django.db.models import Min
+from django.db.models import OuterRef, Subquery
 from rest_framework.decorators import permission_classes
 from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
@@ -20,8 +23,16 @@ from category.serializers import (
     CategoryDetailStorefrontSerializer,
     SelectedFiltersWithOrderingSerializer,
 )
+from core.pagination import StorefrontPagination
 from country.models import Country
-from product.models import Product, PriceList, AttributeTypeValueType
+from product.models import (
+    Product,
+    ProductPrice,
+    PriceList,
+    AttributeTypeValueType,
+    AttributeType,
+    ProductType,
+)
 from product.serializers import (
     ProductStorefrontListSerializer,
     AttributeTypeFilterStorefrontSerializer,
@@ -137,13 +148,53 @@ class CategoryDetailStorefrontView(APIView):
             return Response(status=HTTP_404_NOT_FOUND)
 
 
-def _get_min_variant_price(serialized_product):
+def _get_min_variant_price(product: Product, pricelist: PriceList):
     """
-    Get minimal price of the serialized product variant prices
+    Get minimal price of the product's variant prices
     """
-    return min(
-        serialized_product["variant_prices"], key=lambda variant: variant["incl_vat"]
-    )["incl_vat"]
+    lowest_price = (
+        ProductPrice.objects.values("price")
+        .filter(
+            product_variant__in=product.product_variants.all(),
+            price_list__code=pricelist.code,
+        )
+        .aggregate(Min("price"))["price__min"]
+    )
+    return lowest_price
+
+
+def _order_by_price(products, is_reverse_order, pricelist: PriceList):
+    """
+    Extend product query by extra field with lowest price of the product's variant prices
+    """
+
+    products = products.annotate(
+        price=Subquery(
+            ProductPrice.objects.filter(
+                product_variant__in=OuterRef("product_variants"),
+                price_list__code=pricelist.code,
+            )
+            .order_by("price")
+            .values("price")[:1]
+        )
+    ).order_by("price" if not is_reverse_order else "-price")
+    return products
+
+
+def _order_by_title(products, is_reverse_order, locale: str):
+    """
+    Extend product query by extra field with lowest price of the product's variant prices
+    """
+    ProductTranslation = apps.get_model("product", "ProductTranslation")
+
+    products = products.annotate(
+        title=Subquery(
+            ProductTranslation.objects.filter(
+                master=OuterRef("id"), language_code=locale
+            ).values("title")[:1]
+        )
+    ).order_by("title" if not is_reverse_order else "-title")
+    return products
 
 
 @permission_classes([AllowAny])
@@ -153,28 +204,40 @@ class CategoryDetailProductsStorefrontView(APIView):
     Used for storefront.
     """
 
+    pagination_class = StorefrontPagination()
+    pricelist = None
+    locale = None
     PRICE_LIST_URL_PARAM = "pricelist"
     COUNTRY_URL_PARAM = "country"
 
     ALLOWED_ORDER_FIELDS = ["asc", "desc"]
     DEFAULT_ORDER_FIELD = "asc"
     SORT_FIELDS_CONFIG = {
-        "title": {},
-        "price": {"sort_function": _get_min_variant_price},
+        "title": {
+            "sort_function": _order_by_title,
+            "additional_params": [locale],
+        },
+        "price": {
+            "sort_function": _order_by_price,
+            "additional_params": [pricelist],
+        },
     }
 
     def get(self, request, pk):
         try:
             category = Category.objects.get(id=pk, published=True)
-
             products = _get_all_published_products(category)
-            serializer = self._serialize_products(products, request)
-
-            return Response(serializer.data)
+            paginated_products = self.pagination_class.paginate_queryset(
+                queryset=products, request=request
+            )
+            serializer = self._serialize_products(paginated_products, request)
+            return self.pagination_class.get_paginated_response(serializer.data)
         except Category.DoesNotExist:
             return Response(status=HTTP_404_NOT_FOUND)
 
     def post(self, request, pk):
+        self.pricelist = self._get_pricelist(request)
+        self.locale = self._get_locale(request)
         request_serializer = SelectedFiltersWithOrderingSerializer(data=request.data)
 
         if request_serializer.is_valid():
@@ -205,25 +268,37 @@ class CategoryDetailProductsStorefrontView(APIView):
                     if sort_by is not None
                     else None
                 )
+                sort_key_function_params = (
+                    (
+                        self.SORT_FIELDS_CONFIG[sort_by]["additional_params"]
+                        if "additional_params" in self.SORT_FIELDS_CONFIG[sort_by]
+                        else []
+                    )
+                    if sort_by is not None
+                    else []
+                )
 
                 # Get related objects
                 products = _get_all_published_products(category)
 
-                filtered_products = [
-                    p for p in products if filters_with_ordering.matches_any_variant(p)
-                ]  # filter the matching products
-
-                serializer = self._serialize_products(filtered_products, request)
-
-                sorted_data = (
-                    sorted(
-                        serializer.data, key=sort_key_function, reverse=is_reverse_order
-                    )
-                    if sort_by is not None
-                    else serializer.data
+                filtered_products = self._filter_products(
+                    products, filters_with_ordering.filters
                 )
 
-                return Response(sorted_data)
+                if sort_key_function is not None:
+                    sorted_data = sort_key_function(
+                        filtered_products, is_reverse_order, *sort_key_function_params
+                    )
+                else:
+                    sorted_data = filtered_products
+
+                paginated_sorted_products = self.pagination_class.paginate_queryset(
+                    queryset=sorted_data, request=request
+                )
+                serializer = self._serialize_products(
+                    paginated_sorted_products, request
+                )
+                return self.pagination_class.get_paginated_response(serializer.data)
             except Category.DoesNotExist:
                 return Response(status=HTTP_404_NOT_FOUND)
         else:
@@ -243,16 +318,31 @@ class CategoryDetailProductsStorefrontView(APIView):
             },
         )
 
+    def _get_locale(self, request):
+        """get locale from request params or default to the default one"""
+        """ set locale to the sort function as a parameter """
+        if self.locale is not None:
+            return self.locale
+        self.locale = request.META.get("HTTP_ACCEPT_LANGUAGE", "en")
+        self.SORT_FIELDS_CONFIG["title"]["additional_params"] = [self.locale]
+        return self.locale
+
     def _get_pricelist(self, request):
         """get price list from request params or default to the default one"""
+        """ set pricelist to the sort function as a parameter """
+        if self.pricelist is not None:
+            return self.pricelist
         price_list_code = request.query_params.get(self.PRICE_LIST_URL_PARAM, None)
+        price_list_obj = None
         if price_list_code:
             try:
-                return PriceList.objects.get(code=price_list_code)
+                price_list_obj = PriceList.objects.get(code=price_list_code)
             except PriceList.DoesNotExist:
-                return PriceList.objects.get(is_default=True)
+                price_list_obj = PriceList.objects.get(is_default=True)
         else:
-            return PriceList.objects.get(is_default=True)
+            price_list_obj = PriceList.objects.get(is_default=True)
+        self.SORT_FIELDS_CONFIG["price"]["additional_params"] = [price_list_obj]
+        return price_list_obj
 
     def _get_country(self, request):
         """Get country URL param"""
@@ -263,6 +353,18 @@ class CategoryDetailProductsStorefrontView(APIView):
             country = Country.objects.all().first()
 
         return country
+
+    def _filter_products(self, products, filters):
+        # deal with both types of attributes
+        print(filters.textual)
+        for filter in filters.textual + filters.numeric:
+            if filter.selected_values_ids:
+                # this will behave as AND
+                products = products.filter(
+                    # this will behave as OR
+                    product_variants__attributes__in=filter.selected_values_ids
+                )
+        return products.distinct()
 
 
 @permission_classes([AllowAny])
@@ -281,8 +383,6 @@ class CategoryDetailAttributesStorefrontView(APIView):
             products = _get_all_published_products(category)
             attributes = self._get_attributes(products)
 
-            print(attributes)
-
             serializer_text = AttributeTypeFilterStorefrontSerializer(
                 attributes.textual, many=True, context={"request": request}
             )
@@ -290,7 +390,6 @@ class CategoryDetailAttributesStorefrontView(APIView):
             serializer_num = AttributeTypeFilterStorefrontSerializer(
                 attributes.numeric, many=True, context={"request": request}
             )
-
             response_obj = {
                 "textual": serializer_text.data,
                 "numeric": serializer_num.data,
@@ -304,21 +403,22 @@ class CategoryDetailAttributesStorefrontView(APIView):
         numeric_attributes = {}
         string_attributes = {}
 
-        for p in products:
-            for attr in p.type.allowed_attribute_types.all().prefetch_related(
-                "base_attributes"
+        attribute_types = AttributeType.objects.filter(
+            producttype__in=ProductType.objects.filter(product__in=products).distinct()
+        ).distinct()
+
+        for attr in attribute_types:
+            if (
+                attr.value_type == AttributeTypeValueType.TEXT
+                and attr.id not in string_attributes
             ):
-                if (
-                    attr.value_type == AttributeTypeValueType.TEXT
-                    and attr.id not in string_attributes
-                ):
-                    string_attributes[attr.id] = attr
-                elif (
-                    attr.value_type
-                    in [AttributeTypeValueType.DECIMAL, AttributeTypeValueType.INTEGER]
-                    and attr.id not in numeric_attributes
-                ):
-                    numeric_attributes[attr.id] = attr
+                string_attributes[attr.id] = attr
+            elif (
+                attr.value_type
+                in [AttributeTypeValueType.DECIMAL, AttributeTypeValueType.INTEGER]
+                and attr.id not in numeric_attributes
+            ):
+                numeric_attributes[attr.id] = attr
 
         return CategoryAttributeTypes(
             list(string_attributes.values()), list(numeric_attributes.values())
@@ -347,4 +447,4 @@ def _get_all_published_products(category):
     subcategory_ids = _get_all_subcategory_ids(category)
     return Product.objects.filter(
         published=True, category__in=subcategory_ids
-    ).prefetch_related("product_variants")[0:12]
+    ).prefetch_related("product_variants")

@@ -38,7 +38,7 @@ services:
       - POSTGRES_INITDB_ARGS=--auth=trust --auth-host=trust --auth-local=trust
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-      interval: 5s
+      interval: 20s
       timeout: 5s
       retries: 5
   redis:
@@ -56,7 +56,7 @@ services:
     build:
         context: ./backend
         dockerfile: ./Dockerfile
-        target: demo
+        target: production
     volumes:
       - ./backend/core:/usr/src/app/core
     depends_on:

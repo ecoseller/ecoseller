@@ -12,5 +12,6 @@
   "subcategory-section-title": "Subcategories",
   "filters": "Filters",
   "cancel-filters": "Cancel filters",
-  "filter-empty": "(Empty)"
+  "filter-empty": "(Empty)",
+  "no-products": "No products"
 }
