@@ -30,7 +30,7 @@ const StatisticsItem = ({
     <Box component="div" pl={3} py={2}>
       <Stack spacing={2}>
         <Typography variant="body1">
-          {t("Coverage")} : {coverage !== null ? coverage.toFixed(2)+" s" : t("unknown")} 
+          {t("Coverage")} : {coverage !== null ? (coverage * 100).toFixed(2)+" %" : t("unknown")} 
         </Typography>
         <Typography variant="body1">
           {t("Direct hit")} @ {k} : {directHit !== null ? (directHit * 100).toFixed(2)+" %" : t("unknown")}

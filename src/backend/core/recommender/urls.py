@@ -12,4 +12,8 @@ urlpatterns = [
         "dashboard/recommender-system",
         views.RecommenderSystemDashboardView.as_view(),
     ),
+    path(
+        "dashboard/recommender-system/config/",
+        views.RecommenderSystemConfigView.as_view(),
+    ),
 ]

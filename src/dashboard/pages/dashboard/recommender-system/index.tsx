@@ -3,7 +3,7 @@
 // layout
 import DashboardLayout from "@/pages/dashboard/layout";
 //react
-import React, {ReactElement, useEffect, useState} from "react";
+import React, {ReactElement, useEffect, useReducer, useState} from "react";
 import RootLayout from "@/pages/layout";
 // mui
 import Container from "@mui/material/Container";
@@ -11,7 +11,10 @@ import Typography from "@mui/material/Typography";
 // components
 import { NextApiRequest, NextApiResponse } from "next";
 import { dashboardStatsAPI } from "@/pages/api/recommender-system/dashboard";
-import RecommenderConfigForm, { IRecommenderConfigFormProps } from "@/components/Dashboard/Recommender/RecommenderConfigForm";
+import RecommenderConfigForm, {
+  IRecommenderConfigEditableProps,
+  IRecommenderConfigProps
+} from "@/components/Dashboard/Recommender/RecommenderConfigForm";
 import TabContext from "@mui/lab/TabContext";
 import Box from "@mui/material/Box";
 import TabList from "@mui/lab/TabList";
@@ -24,7 +27,10 @@ import ModelStatistics, {
 import StatisticsItem, { IStatisticsItemProps } from "@/components/Dashboard/Recommender/StatisticsItem";
 import CascadeConfig from "@/components/Dashboard/Recommender/CascadeConfig";
 import { ITrainingProps } from "@/components/Dashboard/Recommender/Training";
-import {useTranslation} from "next-i18next";
+import { useTranslation } from "next-i18next";
+import EditableContentWrapper from "@/components/Dashboard/Generic/EditableContentWrapper";
+import {generalSnackbarError, useSnackbarState} from "@/utils/snackbar";
+import SnackbarWithAlert from "@/components/Dashboard/Generic/SnackbarWithAlert";
 
 /*
 Layout:
@@ -45,7 +51,7 @@ interface IRecommenderSystemProps {
   models: IModelProps[];
   performance: IRecommenderPerformanceProps;
   training: IRecommenderTrainingProps;
-  config: IRecommenderConfigFormProps;
+  config: IRecommenderConfigProps;
 }
 
 const DashboardRecommenderSystemPage = ({
@@ -66,7 +72,7 @@ const DashboardRecommenderSystemPage = ({
     setModelDisplayed(newValue);
   };
   
-  const extractCascadeData = (data: IRecommenderConfigFormProps) => {
+  const extractCascadeData = (data: IRecommenderConfigProps) => {
     return [
       {
         name: "homepageRetrieval",
@@ -121,89 +127,136 @@ const DashboardRecommenderSystemPage = ({
     setCascadeDisplayed(newValue);
   };
   
+  const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
+  const [snackbar, setSnackbar] = useSnackbarState();
+
+  const [configState, setConfigState] = useState<IRecommenderConfigProps>(config);
+  
+  const saveConfig = async () => {
+    return await fetch(`/api/recommender-system/config/save`, {
+      method: "PUT",
+      body: JSON.stringify(configState),
+    })
+      .then((res) => res.json())
+      .then((data: any) => {
+        console.log("saveConfig", data);
+        setPreventNavigation(false);
+        setSnackbar({
+          open: true,
+          message: "Recommender system config updated",
+          severity: "success",
+        });
+      })
+      .catch((err: any) => {
+        console.log("saveConfig", err);
+        setSnackbar(generalSnackbarError);
+      });
+  };
+  
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
-        <Typography variant="h4">
-          {t("Global")}
-        </Typography>
-          <Box pl={3} py={2}>
-            <Typography variant="h6">
-              {t("Performance")}
-            </Typography>
-            <StatisticsItem {...performance.item}/>
-
-            <Typography variant="h6">
-              {t("Configuration")}
-            </Typography>
-            <RecommenderConfigForm retrievalSize={config.retrievalSize} orderingSize={config.orderingSize} />
-          </Box>
-        
-        {/* model statistics */}
-        <Typography variant="h4" sx={{ mt: 2 }}>
-          {t("Models")}
-        </Typography>
-        <TabContext value={modelDisplayed}>
-          <Box>
-            <TabList
-              onChange={handleModelDisplayedChange}
-            >
-              {models.map((model) => (
-                <Tab
-                  key={model.name}
-                  label={model.title}
-                  value={model.name}
-                />
-              ))}
-            </TabList>
-          </Box>
-          {models.map((model) => (
-            <TabPanel
-              sx={{ padding: 0 }}
-              key={model.name}
-              value={model.name}
-            >
-              <ModelStatistics
-                model={model}
-                performance={performance.models.find(m => m.name === model.name)}
-                training={training.models.find(m => m.name === model.name)}
-                globalConfig={config}
+      <EditableContentWrapper
+        preventNavigation={preventNavigation}
+        setPreventNavigation={setPreventNavigation}
+        onButtonClick={async () => {
+          await saveConfig();
+        }}
+        returnPath={"/dashboard/catalog/products"}
+      >
+        <Container maxWidth="xl">
+          <Typography variant="h4">
+            {t("Global")}
+          </Typography>
+            <Box pl={3} py={2}>
+              <Typography variant="h6">
+                {t("Performance")}
+              </Typography>
+              <StatisticsItem {...performance.item}/>
+  
+              <Typography variant="h6">
+                {t("Configuration")}
+              </Typography>
+              <RecommenderConfigForm
+                retrievalSize={config.retrievalSize}
+                orderingSize={config.orderingSize}
+                onChange={(data: IRecommenderConfigEditableProps) => {
+                  console.log("data", data);
+                  console.log("configState", {...configState, ...data});
+                  setConfigState({...configState, ...data});
+                  console.log("changed", configState);
+                }}
               />
-            </TabPanel>
-          ))}
-        </TabContext>
-        
-        {/* cascade */}
-        <Typography variant="h4" sx={{ mt: 2 }}>
-          {t("Cascades")}
-        </Typography>
-        <TabContext value={cascadeDisplayed}>
-          <Box>
-            <TabList
-              onChange={handleCascadeDisplayedChange}
-            >
-              {cascades.map((cascade) => (
-                <Tab
-                  key={cascade.name}
-                  label={cascade.title}
-                  value={cascade.name}
+            </Box>
+          
+          {/* model statistics */}
+          <Typography variant="h4" sx={{ mt: 2 }}>
+            {t("Models")}
+          </Typography>
+          <TabContext value={modelDisplayed}>
+            <Box>
+              <TabList
+                onChange={handleModelDisplayedChange}
+              >
+                {models.map((model) => (
+                  <Tab
+                    key={model.name}
+                    label={model.title}
+                    value={model.name}
+                  />
+                ))}
+              </TabList>
+            </Box>
+            {models.map((model) => (
+              <TabPanel
+                sx={{ padding: 0 }}
+                key={model.name}
+                value={model.name}
+              >
+                <ModelStatistics
+                  model={model}
+                  performance={performance.models.find(m => m.name === model.name)}
+                  training={training.models.find(m => m.name === model.name)}
+                  globalConfig={config}
                 />
-              ))}
-            </TabList>
-          </Box>
-          {cascades.map((cascade) => (
-            <TabPanel
-              sx={{ padding: 0 }}
-              key={cascade.name}
-              value={cascade.name}
-            >
-              <CascadeConfig
-                cascade={cascade.cascade}
-              />
-            </TabPanel>
-          ))}
-        </TabContext>
-      </Container>
+              </TabPanel>
+            ))}
+          </TabContext>
+          
+          {/* cascade */}
+          <Typography variant="h4" sx={{ mt: 2 }}>
+            {t("Cascades")}
+          </Typography>
+          <TabContext value={cascadeDisplayed}>
+            <Box>
+              <TabList
+                onChange={handleCascadeDisplayedChange}
+              >
+                {cascades.map((cascade) => (
+                  <Tab
+                    key={cascade.name}
+                    label={cascade.title}
+                    value={cascade.name}
+                  />
+                ))}
+              </TabList>
+            </Box>
+            {cascades.map((cascade) => (
+              <TabPanel
+                sx={{ padding: 0 }}
+                key={cascade.name}
+                value={cascade.name}
+              >
+                <CascadeConfig
+                  cascade={cascade.cascade}
+                />
+              </TabPanel>
+            ))}
+          </TabContext>
+        </Container>
+        {snackbar ? (
+          <SnackbarWithAlert snackbarData={snackbar} setSnackbar={setSnackbar} />
+        ) : null}
+      </EditableContentWrapper>
     </DashboardLayout>
   );
 };

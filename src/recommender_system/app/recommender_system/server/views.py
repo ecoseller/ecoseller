@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 from typing import Any, Tuple
 
@@ -11,6 +12,9 @@ from recommender_system.managers.prediction_pipeline import PredictionPipeline
 from recommender_system.utils.recommendation_type import RecommendationType
 
 
+logger = logging.getLogger(__name__)
+
+
 def view_healthcheck() -> Tuple[Any, ...]:
     return "", 200
 
@@ -19,6 +23,7 @@ def view_healthcheck() -> Tuple[Any, ...]:
 def view_store_object(
     data_manager: DataManager = Provide["data_manager"],
 ) -> Tuple[Any, ...]:
+    logger.info(f"Storing object {request.json}")
     data_manager.store_object(data=request.json)
     return "", 200
 
@@ -91,6 +96,8 @@ def view_get_dashboard_data(
             date_from=date_from, date_to=date_to
         ).dict(by_alias=True),
         "training": monitoring_manager.get_training_details().dict(by_alias=True),
-        "config": monitoring_manager.get_config().dict(by_alias=True),
+        "config": monitoring_manager.get_config().dict(
+            by_alias=True, exclude={"create_at", "id"}
+        ),
     }
     return result, 200

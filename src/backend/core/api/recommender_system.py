@@ -16,6 +16,11 @@ class RecommenderSystemApi:
             )
 
     @classmethod
+    def update_config(cls, data: Dict[str, Any]) -> None:
+        data["_model_class"] = "Config"
+        cls.store_object(data=data)
+
+    @classmethod
     def get_dashboard(cls, date_from: str, date_to: str) -> Optional[Dict[str, Any]]:
         if cls.enabled:
             response = requests.request(

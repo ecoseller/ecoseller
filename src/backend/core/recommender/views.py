@@ -1,5 +1,4 @@
 from enum import Enum, EnumMeta
-from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import permissions
@@ -59,3 +58,15 @@ class RecommenderSystemDashboardView(APIView):
             date_to=request.query_params["date_to"],
         )
         return Response(data, status=200)
+
+
+class RecommenderSystemConfigView(APIView):
+    allowed_methods = ["PUT"]
+    permission_classes = (permissions.AllowAny,)
+
+    def put(self, request):
+        user_id = request.user
+        if user_id is None or not user_id.is_authenticated:
+            return Response({"error": "Not logged in user"}, status=400)
+        RecommenderSystemApi.update_config(data=request.data)
+        return Response({}, status=200)

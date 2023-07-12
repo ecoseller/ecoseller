@@ -7,7 +7,7 @@ import DashboardLayout from "@/pages/dashboard/layout"; //react
 import RootLayout from "@/pages/layout";
 // components
 import Typography from "@mui/material/Typography";
-import { IRecommenderConfigFormProps } from "@/components/Dashboard/Recommender/RecommenderConfigForm";
+import { IRecommenderConfigProps } from "@/components/Dashboard/Recommender/RecommenderConfigForm";
 import { IStatisticsItemProps } from "@/components/Dashboard/Recommender/StatisticsItem";
 import Training, { ITrainingProps } from "@/components/Dashboard/Recommender/Training";
 import EASEConfigForm from "@/components/Dashboard/Recommender/EASEConfigForm";
@@ -41,7 +41,7 @@ export interface IModelPerformanceProps {
 
 export interface IModelStatisticsProps {
   model: IModelProps;
-  globalConfig: IRecommenderConfigFormProps;
+  globalConfig: IRecommenderConfigProps;
   performance?: IModelPerformanceProps;
   training?: ITrainingProps;
 }

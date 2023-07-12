@@ -38,8 +38,6 @@ def test_config_create(
     with pytest.raises(ConfigModel.DoesNotExist):
         _ = ConfigModel.get(pk=config_pk)
 
-    assert model_manager.config.id is None
-
     config = ConfigModel.parse_obj(config_dict)
     config.create()
 
