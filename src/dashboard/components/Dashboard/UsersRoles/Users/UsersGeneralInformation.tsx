@@ -38,24 +38,28 @@ const EditToolbar = (props: any) => {
   );
 };
 
-const getUsers = async () => {
-  const users: IUser[] = [];
-  const usrs = await axiosPrivate.get(`/user/users`);
+const getUsers = async (page: number, pageSize: number) => {
+  console.log("getUsers", page, pageSize);
+  const usersResult = await fetch(
+    `/api/user/users/?page=${page}&limit=${pageSize}`,
+    {
+      method: "GET",
+    }
+  ).then((res) => res.json());
 
-  for (const user of usrs.data) {
-    users.push({
-      email: user["email"],
-      first_name: user["first_name"],
-      last_name: user["last_name"],
-      is_admin: user["is_admin"],
-      is_staff: user["is_staff"],
-      roles: [],
-    });
-    const userRoles = await axiosPrivate.get(
-      `roles/user-groups/${user["email"]}`
-    );
-    for (const role of userRoles.data) {
-      users[users.length - 1].roles.push(role.name);
+  const users = usersResult["results"];
+  for (let user of users) {
+    user.roles = [];
+    if (user.is_admin) {
+      user.roles.push("Admin");
+    }
+
+    const userRoles = await fetch(`/api/roles/user/${user.email}`, {
+      method: "GET",
+    }).then((res) => res.json());
+
+    for (const role of userRoles) {
+      user.roles.push(role.name);
     }
   }
   return {
@@ -63,9 +67,13 @@ const getUsers = async () => {
   };
 };
 
-const UsersGrid = () => {
+interface IUsersGridProps {
+  users: IUser[];
+}
+
+const UsersGrid = ({ users }: IUsersGridProps) => {
   const router = useRouter();
-  const [users, setUsers] = useState<IUser[]>([]);
+  const [usersState, setUsersState] = useState<IUser[]>(users);
   const [paginationModel, setPaginationModel] = useState<{
     page: number;
     pageSize: number;
@@ -91,8 +99,8 @@ const UsersGrid = () => {
   };
 
   const fetchUsers = async () => {
-    getUsers().then((data) => {
-      setUsers(data.users);
+    getUsers(paginationModel?.page, paginationModel?.pageSize).then((data) => {
+      setUsersState(data.users);
     });
   };
 
@@ -209,11 +217,15 @@ const UsersGrid = () => {
   return (
     <Card elevation={0}>
       <DataGrid
-        rows={users}
+        rows={usersState}
         columns={columns}
+        pageSizeOptions={[PAGE_SIZE, 60, 90]}
         autoHeight={true}
         onPaginationModelChange={setPaginationModel}
         paginationModel={paginationModel}
+        // rowCount={count}
+        // loading={isLoading}
+        paginationMode="server"
         disableRowSelectionOnClick
         getRowHeight={() => "auto"}
         getRowId={(row) => row.email}
