@@ -36,7 +36,9 @@ const PageCategoryTypeSetter = ({
   state,
   set,
 }: IPageCategoryTypeSetterProps) => {
-  const { data, error } = useSWR<IPageCategoryType[]>(`/cms/category/type/`);
+  const { data, error } = useSWR<IPageCategoryType[]>(
+    `/api/cms/category/type/`
+  );
 
   const handleChange = (event: SelectChangeEvent<typeof state>) => {
     const {
