@@ -5,6 +5,7 @@ from dependency_injector.wiring import inject, Provide
 from flask import request
 
 from recommender_system.managers.data_manager import DataManager
+from recommender_system.managers.model_manager import ModelManager
 from recommender_system.managers.monitoring_manager import MonitoringManager
 from recommender_system.managers.prediction_pipeline import PredictionPipeline
 from recommender_system.utils.recommendation_type import RecommendationType
@@ -76,15 +77,20 @@ def view_predict_cart(
 
 @inject
 def view_get_dashboard_data(
+    model_manager: ModelManager = Provide["model_manager"],
     monitoring_manager: MonitoringManager = Provide["monitoring_manager"],
 ) -> Tuple[Any, ...]:
     date_from = datetime.strptime(request.args["date_from"], "%Y-%m-%dT%H:%M:%S.%fZ")
     date_to = datetime.strptime(request.args["date_to"], "%Y-%m-%dT%H:%M:%S.%fZ")
     result = {
+        "models": [
+            {"name": model.Meta.model_name, "title": model.Meta.title}
+            for model in model_manager.get_all_models()
+        ],
         "performance": monitoring_manager.get_statistics(
             date_from=date_from, date_to=date_to
-        ).dict(),
-        "training": monitoring_manager.get_training_details().dict(),
-        "config": monitoring_manager.get_config().dict(),
+        ).dict(by_alias=True),
+        "training": monitoring_manager.get_training_details().dict(by_alias=True),
+        "config": monitoring_manager.get_config().dict(by_alias=True),
     }
     return result, 200

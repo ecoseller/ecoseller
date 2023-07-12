@@ -11,6 +11,7 @@ class AbstractPredictionModel(ABC):
 
     class Meta:
         model_name: str
+        title: str
 
     def __init__(self, identifier: Optional[str] = None):
         self.identifier = identifier or self.default_identifier

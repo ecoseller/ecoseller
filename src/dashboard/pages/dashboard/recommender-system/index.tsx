@@ -3,7 +3,7 @@
 // layout
 import DashboardLayout from "@/pages/dashboard/layout";
 //react
-import { ReactElement } from "react";
+import React, {ReactElement, useEffect, useState} from "react";
 import RootLayout from "@/pages/layout";
 // mui
 import Container from "@mui/material/Container";
@@ -11,37 +11,198 @@ import Typography from "@mui/material/Typography";
 // components
 import { NextApiRequest, NextApiResponse } from "next";
 import { dashboardStatsAPI } from "@/pages/api/recommender-system/dashboard";
-import RecommenderConfigForm from "@/components/Dashboard/Recommender/RecommenderConfigForm";
-import { IRecommenderConfigFormProps } from "@/components/Dashboard/Recommender/RecommenderConfigForm";
+import RecommenderConfigForm, { IRecommenderConfigFormProps } from "@/components/Dashboard/Recommender/RecommenderConfigForm";
+import TabContext from "@mui/lab/TabContext";
+import Box from "@mui/material/Box";
+import TabList from "@mui/lab/TabList";
+import Tab from "@mui/material/Tab";
+import TabPanel from "@mui/lab/TabPanel";
+import ModelStatistics, {
+  IModelProps,
+  IModelPerformanceProps
+} from "@/components/Dashboard/Recommender/ModelStatistics";
+import StatisticsItem, { IStatisticsItemProps } from "@/components/Dashboard/Recommender/StatisticsItem";
+import CascadeConfig from "@/components/Dashboard/Recommender/CascadeConfig";
+import { ITrainingProps } from "@/components/Dashboard/Recommender/Training";
+import {useTranslation} from "next-i18next";
 
 /*
 Layout:
   TODO
 */
 
+interface IRecommenderPerformanceProps {
+  k: number;
+  item: IStatisticsItemProps;
+  models: IModelPerformanceProps[];
+}
+
+interface IRecommenderTrainingProps {
+  models: ITrainingProps[];
+}
+
 interface IRecommenderSystemProps {
-  performance: any;
-  training: any;
+  models: IModelProps[];
+  performance: IRecommenderPerformanceProps;
+  training: IRecommenderTrainingProps;
   config: IRecommenderConfigFormProps;
 }
 
 const DashboardRecommenderSystemPage = ({
-  performance, training, config
+  models, performance, training, config
 }: IRecommenderSystemProps) => {
+  const { t } = useTranslation("recommender");
+  
+  const [modelDisplayed, setModelDisplayed] = useState<string>("");
+
+  useEffect(() => {
+    setModelDisplayed(models[0].name);
+  }, [models]);
+
+  const handleModelDisplayedChange = (
+    event: React.SyntheticEvent,
+    newValue: string
+  ) => {
+    setModelDisplayed(newValue);
+  };
+  
+  const extractCascadeData = (data: IRecommenderConfigFormProps) => {
+    return [
+      {
+        name: "homepageRetrieval",
+        title: "Homepage retrieval",
+        cascade: data.homepageRetrievalCascade,
+      },
+      {
+        name: "homepageScoring",
+        title: "Homepage scoring",
+        cascade: data.homepageScoringCascade,
+      },
+      {
+        name: "categoryListScoring",
+        title: "Category list scoring",
+        cascade: data.categoryListScoringCascade,
+      },
+      {
+        name: "productDetailRetrieval",
+        title: "Product detail retrieval",
+        cascade: data.productDetailRetrievalCascade,
+      },
+      {
+        name: "productDetailScoring",
+        title: "Product detail scoring",
+        cascade: data.productDetailScoringCascade,
+      },
+      {
+        name: "cartRetrieval",
+        title: "Cart retrieval",
+        cascade: data.cartRetrievalCascade,
+      },
+      {
+        name: "cartScoring",
+        title: "Cart scoring",
+        cascade: data.cartScoringCascade,
+      },
+    ];
+  };
+  
+  const cascades = extractCascadeData(config);
+
+  const [cascadeDisplayed, setCascadeDisplayed] = useState<string>("");
+
+  useEffect(() => {
+    setCascadeDisplayed(extractCascadeData(config)[0].name);
+  }, [config]);
+
+  const handleCascadeDisplayedChange = (
+    event: React.SyntheticEvent,
+    newValue: string
+  ) => {
+    setCascadeDisplayed(newValue);
+  };
   
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
-        <Typography variant="h4" sx={{ mb: 5 }}>
-          {`Recommender System`}
+        <Typography variant="h4">
+          {t("Global")}
         </Typography>
-        <Typography variant="body1" sx={{ mb: 5 }}>
-          {JSON.stringify(performance)}
+          <Box pl={3} py={2}>
+            <Typography variant="h6">
+              {t("Performance")}
+            </Typography>
+            <StatisticsItem {...performance.item}/>
+
+            <Typography variant="h6">
+              {t("Configuration")}
+            </Typography>
+            <RecommenderConfigForm retrievalSize={config.retrievalSize} orderingSize={config.orderingSize} />
+          </Box>
+        
+        {/* model statistics */}
+        <Typography variant="h4" sx={{ mt: 2 }}>
+          {t("Models")}
         </Typography>
-        <Typography variant="body1" sx={{ mb: 5 }}>
-          {JSON.stringify(training)}
+        <TabContext value={modelDisplayed}>
+          <Box>
+            <TabList
+              onChange={handleModelDisplayedChange}
+            >
+              {models.map((model) => (
+                <Tab
+                  key={model.name}
+                  label={model.title}
+                  value={model.name}
+                />
+              ))}
+            </TabList>
+          </Box>
+          {models.map((model) => (
+            <TabPanel
+              sx={{ padding: 0 }}
+              key={model.name}
+              value={model.name}
+            >
+              <ModelStatistics
+                model={model}
+                performance={performance.models.find(m => m.name === model.name)}
+                training={training.models.find(m => m.name === model.name)}
+                globalConfig={config}
+              />
+            </TabPanel>
+          ))}
+        </TabContext>
+        
+        {/* cascade */}
+        <Typography variant="h4" sx={{ mt: 2 }}>
+          {t("Cascades")}
         </Typography>
-        <RecommenderConfigForm {...config} />
+        <TabContext value={cascadeDisplayed}>
+          <Box>
+            <TabList
+              onChange={handleCascadeDisplayedChange}
+            >
+              {cascades.map((cascade) => (
+                <Tab
+                  key={cascade.name}
+                  label={cascade.title}
+                  value={cascade.name}
+                />
+              ))}
+            </TabList>
+          </Box>
+          {cascades.map((cascade) => (
+            <TabPanel
+              sx={{ padding: 0 }}
+              key={cascade.name}
+              value={cascade.name}
+            >
+              <CascadeConfig
+                cascade={cascade.cascade}
+              />
+            </TabPanel>
+          ))}
+        </TabContext>
       </Container>
     </DashboardLayout>
   );

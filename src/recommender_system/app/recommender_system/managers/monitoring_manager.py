@@ -121,6 +121,7 @@ class MonitoringManager:
         )
 
         global_item = StatisticsItem(
+            k=k,
             direct_hit=direct_hit["global"],
             future_hit=future_hit["global"],
             coverage=coverage["global"],
@@ -133,7 +134,11 @@ class MonitoringManager:
                 types.append(
                     TypeStatistics(
                         recommendation_type=recommendation_type,
+                        recommendation_type_title=RecommendationType.get_title(
+                            value=recommendation_type
+                        ),
                         item=StatisticsItem(
+                            k=k,
                             direct_hit=direct_hit["detailed"]
                             .get(model_name, {})
                             .get(recommendation_type),
@@ -150,6 +155,7 @@ class MonitoringManager:
                 ModelStatistics(
                     model_name=model_name,
                     item=StatisticsItem(
+                        k=k,
                         direct_hit=direct_hit["model"].get(model_name),
                         future_hit=future_hit["model"].get(model_name),
                         coverage=coverage["model"].get(model_name),
@@ -159,7 +165,6 @@ class MonitoringManager:
             )
 
         return Statistics(
-            k=k,
             item=global_item,
             models=model_statistics,
         )
