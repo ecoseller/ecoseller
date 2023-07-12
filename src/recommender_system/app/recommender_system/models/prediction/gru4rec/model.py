@@ -15,6 +15,7 @@ class GRU4RecPredictionModel(AbstractPredictionModel):
 
     class Meta:
         model_name = "gru4rec"
+        title = "GRU4Rec"
 
     def __init__(self, identifier: Optional[str] = None):
         super().__init__(identifier=identifier)

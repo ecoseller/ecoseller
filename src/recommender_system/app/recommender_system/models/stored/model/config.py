@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import List, Optional, TYPE_CHECKING
 
 from dependency_injector.wiring import inject, Provide
+from pydantic import Field
 
 from recommender_system.models.stored.model.immutable import ImmutableModelStoredModel
 from recommender_system.models.prediction.config import EASEConfig, GRU4RecConfig
@@ -30,22 +31,34 @@ class ConfigModel(ImmutableModelStoredModel):
 
     id: Optional[int]
     create_at: datetime = datetime.now()
-    retrieval_size: int = 1000
-    ordering_size: int = 50
+    retrieval_size: int = Field(default=1000, alias="retrievalSize")
+    ordering_size: int = Field(default=50, alias="orderingSize")
 
-    homepage_retrieval_cascade: Optional[List[str]] = None
-    homepage_scoring_cascade: Optional[List[str]] = None
+    homepage_retrieval_cascade: Optional[List[str]] = Field(
+        alias="homepageRetrievalCascade"
+    )
+    homepage_scoring_cascade: Optional[List[str]] = Field(
+        alias="homepageScoringCascade"
+    )
 
-    category_list_scoring_cascade: Optional[List[str]] = None
+    category_list_scoring_cascade: Optional[List[str]] = Field(
+        alias="categoryListScoringCascade"
+    )
 
-    product_detail_retrieval_cascade: Optional[List[str]] = None
-    product_detail_scoring_cascade: Optional[List[str]] = None
+    product_detail_retrieval_cascade: Optional[List[str]] = Field(
+        alias="productDetailRetrievalCascade"
+    )
+    product_detail_scoring_cascade: Optional[List[str]] = Field(
+        alias="productDetailScoringCascade"
+    )
 
-    cart_retrieval_cascade: Optional[List[str]] = None
-    cart_scoring_cascade: Optional[List[str]] = None
+    cart_retrieval_cascade: Optional[List[str]] = Field(alias="cartRetrievalCascade")
+    cart_scoring_cascade: Optional[List[str]] = Field(alias="cartScoringCascade")
 
-    ease_config: EASEConfig = EASEConfig()
-    gru4rec_config: GRU4RecConfig = GRU4RecConfig()
+    ease_config: EASEConfig = Field(default=EASEConfig(), alias="easeConfig")
+    gru4rec_config: GRU4RecConfig = Field(
+        default=GRU4RecConfig(), alias="gru4recConfig"
+    )
 
     def __init__(self, *args, **kwargs):
         super(ConfigModel, self).__init__(*args, **kwargs)

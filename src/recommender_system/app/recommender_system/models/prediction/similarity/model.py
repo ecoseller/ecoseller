@@ -26,6 +26,7 @@ if TYPE_CHECKING:
 class SimilarityPredictionModel(AbstractPredictionModel):
     class Meta:
         model_name = "similarity"
+        title = "Similarity"
 
     @property
     def default_identifier(self) -> str:

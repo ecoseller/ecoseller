@@ -1,8 +1,7 @@
 from typing import Any, List, TYPE_CHECKING
 
-from pydantic import BaseModel
-
 from recommender_system.models.api.base import ApiBaseModel
+from recommender_system.utils.base_model import BaseModel
 
 if TYPE_CHECKING:
     from recommender_system.storage.abstract import AbstractStorage

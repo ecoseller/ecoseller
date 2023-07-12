@@ -12,6 +12,7 @@ if TYPE_CHECKING:
 class PopularityPredictionModel(AbstractPredictionModel):
     class Meta:
         model_name = "popularity"
+        title = "Popularity"
 
     @property
     def default_identifier(self) -> str:
