@@ -35,7 +35,7 @@ class ProductVariant(SafeDeleteModel):
         return ", ".join(variant_attributes)
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super().save(
             force_insert=force_insert,
@@ -70,7 +70,7 @@ class ProductType(SafeDeleteModel):
         return self.name
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super().save(
             force_insert=force_insert,
@@ -161,7 +161,7 @@ class Product(SafeDeleteModel, TranslatableModel):
         return attributes
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super().save(
             force_insert=force_insert,
@@ -249,7 +249,7 @@ class AttributeType(SafeDeleteModel, TranslatableModel, models.Model):
         return "{} ({})".format(self.type_name, self.unit)
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super().save(
             force_insert=force_insert,
@@ -288,7 +288,7 @@ class BaseAttribute(SafeDeleteModel, TranslatableModel):
     )  # it must be set to blank=True, null=True to allow empty string because of initial POST
     translations = TranslatedFields(
         name=models.CharField(
-            max_length=200, blank=True, help_text="Base Attribute in given language"
+            max_length=200, blank=True, help_text="Base Attribute in given language", null=True
         ),
     )
     order = models.IntegerField(blank=True, null=True)
@@ -314,7 +314,7 @@ class BaseAttribute(SafeDeleteModel, TranslatableModel):
         return attr_with_value
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super().save(
             force_insert=force_insert,
@@ -363,7 +363,7 @@ class ExtAttributeType(models.Model):
         return "{} ({})".format(self.type_name, self.unit)
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super().save(
             force_insert=force_insert,
@@ -390,7 +390,7 @@ class ExtensionAttribute(models.Model):
         return "{}: {}".format(self.type.type_name, self.value)
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super().save(
             force_insert=force_insert,
@@ -515,7 +515,7 @@ class ProductPrice(SafeDeleteModel):
         return self.discount is not None
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super().save(
             force_insert=force_insert,
