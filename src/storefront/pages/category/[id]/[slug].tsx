@@ -11,6 +11,7 @@ import {
   ICategoryDetail,
   INumericFilter,
   ISelectedFiltersWithOrdering,
+  ISelectedFiltersWithOrderingToSend,
   ITextualFilter,
 } from "@/types/category";
 import EditorJsOutput from "@/utils/editorjs/EditorJsOutput";
@@ -97,6 +98,9 @@ const CategoryPage = ({
   const [categoryTotalPages, setCategoryTotalPages] = useState<number>(1);
   const [filters, setFilters] = useState<IFiltersWithOrdering>(initialFilters);
 
+  const hasAnyAttributes =
+    attributes.numeric.length > 0 || attributes.textual.length > 0;
+
   useEffect(() => {
     if (filters != initialFilters) {
       setCategoryPage(1);
@@ -162,6 +166,25 @@ const CategoryPage = ({
     setFilters(emptyFilters);
   };
 
+  const getNumericFilterSelectedValues = (
+    filter: INumericAttributeFilterWithOptions,
+    min_value_id: number | null,
+    max_value_id: number | null
+  ) => {
+    const min_value = min_value_id
+      ? filter.possible_values.find((v) => v.id == min_value_id)?.value ||
+        Number.NEGATIVE_INFINITY
+      : Number.NEGATIVE_INFINITY;
+    const max_value = max_value_id
+      ? filter.possible_values.find((v) => v.id == max_value_id)?.value ||
+        Number.POSITIVE_INFINITY
+      : Number.POSITIVE_INFINITY;
+
+    return filter.possible_values
+      .filter((v) => v.value >= min_value && v.value <= max_value)
+      .map((v) => v.id);
+  };
+
   const applyFilters = () => {
     setLoading(true);
     const filtersToApply: ISelectedFiltersWithOrdering = {
@@ -175,11 +198,37 @@ const CategoryPage = ({
 
     saveFiltersToSessionStorage();
 
+    // transform the numeric filters
+    const filtersToSend: ISelectedFiltersWithOrderingToSend = {
+      filters: {
+        textual: filtersToApply.filters.textual,
+        numeric: [],
+      },
+      sort_by: filtersToApply.sort_by,
+      order: filtersToApply.order,
+    };
+
+    for (const f of filtersToApply.filters.numeric) {
+      const filter = filters.filters.numeric[f.id];
+      const transformedFilter: ITextualFilter = {
+        id: f.id,
+        selected_values_ids: [],
+      };
+
+      transformedFilter.selected_values_ids = getNumericFilterSelectedValues(
+        filter,
+        f.min_value_id,
+        f.max_value_id
+      );
+
+      filtersToSend.filters.numeric.push(transformedFilter);
+    }
+
     filterProducts(
       category.id,
       pricelist,
       countryCode,
-      filtersToApply,
+      filtersToSend,
       categoryPage
     ).then((products) => {
       setProductsState(products?.results);
@@ -267,12 +316,14 @@ const CategoryPage = ({
             <Divider sx={{ my: 2 }} />
           </>
         ) : null}
-        <ProductFilters
-          filters={filters.filters}
-          updateTextualFilter={updateTextualFilter}
-          updateNumericFilter={updateNumericFilter}
-          setEmptyFilters={setEmptyFilters}
-        />
+        {hasAnyAttributes ? (
+          <ProductFilters
+            filters={filters.filters}
+            updateTextualFilter={updateTextualFilter}
+            updateNumericFilter={updateNumericFilter}
+            setEmptyFilters={setEmptyFilters}
+          />
+        ) : null}
         <Divider sx={{ my: 2 }} />
         <ProductSortSelect
           defaultOrdering={filters}
