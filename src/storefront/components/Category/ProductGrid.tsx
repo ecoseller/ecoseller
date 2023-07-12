@@ -4,6 +4,7 @@ import { Grid } from "@mui/material";
 import ProductCard from "./ProductCard";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useTranslation } from "react-i18next";
 
 interface IProductListProps {
   products: IProductRecord[];
@@ -13,9 +14,12 @@ interface IProductListProps {
 /**
  * Component displaying grid of products and its image, title, price, ...
  * @param products
+ * @param loading
  * @constructor
  */
 const ProductGrid = ({ products, loading }: IProductListProps) => {
+  const { t } = useTranslation("category");
+
   if (loading) {
     return (
       <Grid item xs={12} style={{ textAlign: "center" }}>
@@ -33,7 +37,7 @@ const ProductGrid = ({ products, loading }: IProductListProps) => {
         ))
       ) : (
         <Grid item xs={12} style={{ textAlign: "center" }}>
-          <Typography variant="h6">No products</Typography>
+          <Typography variant="h6">{t("no-products")}</Typography>
         </Grid>
       )}
     </Grid>

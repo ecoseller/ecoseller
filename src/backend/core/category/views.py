@@ -1,7 +1,7 @@
 # from django.contrib.auth.models import User
+from django.apps import apps
 from django.db.models import Min
 from django.db.models import OuterRef, Subquery
-from core.pagination import StorefrontPagination
 from rest_framework.decorators import permission_classes
 from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
@@ -23,6 +23,7 @@ from category.serializers import (
     CategoryDetailStorefrontSerializer,
     SelectedFiltersWithOrderingSerializer,
 )
+from core.pagination import StorefrontPagination
 from country.models import Country
 from product.models import (
     Product,
@@ -32,8 +33,6 @@ from product.models import (
     AttributeType,
     ProductType,
 )
-from django.apps import apps
-
 from product.serializers import (
     ProductStorefrontListSerializer,
     AttributeTypeFilterStorefrontSerializer,
@@ -356,22 +355,16 @@ class CategoryDetailProductsStorefrontView(APIView):
         return country
 
     def _filter_products(self, products, filters):
-        # deal with textual attributes
+        # deal with both types of attributes
         print(filters.textual)
-        for filter in filters.textual:
+        for filter in filters.textual + filters.numeric:
             if filter.selected_values_ids:
                 # this will behave as AND
                 products = products.filter(
                     # this will behave as OR
                     product_variants__attributes__in=filter.selected_values_ids
                 )
-
-        # deal with numeric attributes - they need to be filtered by range
-        # for filter in filters.numeric:
-        #     if filter.min_value_id is not None:
-        #         # filter by min value
-        #         min_attribute = BaseAttribute.objects.get(id=filter.min_value_id)
-        return products
+        return products.distinct()
 
 
 @permission_classes([AllowAny])
