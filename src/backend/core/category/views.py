@@ -383,8 +383,6 @@ class CategoryDetailAttributesStorefrontView(APIView):
     """
 
     def get(self, request, pk):
-        import time
-
         try:
             category = Category.objects.get(id=pk, published=True)
 
