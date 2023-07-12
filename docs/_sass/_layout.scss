@@ -97,7 +97,7 @@ header {
 		padding: $emblem-vertical-padding $emblem-horizontal-padding;
 		height: $nav-header-height;
 		box-sizing: border-box;
-		background-color: $brand-colour;
+		background-color: $nav-header-background-color;
 		color: #fff;
 		margin: 0;
 		font-size: 1.7rem;
@@ -114,6 +114,11 @@ header {
 			height: $emblem-size;
 			width: $emblem-size;
 			margin-right: $space - 5;
+		}
+
+		a {
+			color: #fff;
+
 		}
 	}
 
