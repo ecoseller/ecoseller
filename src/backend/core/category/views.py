@@ -31,6 +31,8 @@ from product.models import (
     PriceList,
     AttributeTypeValueType,
     BaseAttribute,
+    AttributeType,
+    ProductType,
 )
 from django.apps import apps
 
@@ -383,14 +385,15 @@ class CategoryDetailAttributesStorefrontView(APIView):
     """
 
     def get(self, request, pk):
+        import time
+
         try:
+            start = time.time()
             category = Category.objects.get(id=pk, published=True)
 
             # Get related objects
             products = _get_all_published_products(category)
             attributes = self._get_attributes(products)
-
-            print(attributes)
 
             serializer_text = AttributeTypeFilterStorefrontSerializer(
                 attributes.textual, many=True, context={"request": request}
@@ -399,7 +402,6 @@ class CategoryDetailAttributesStorefrontView(APIView):
             serializer_num = AttributeTypeFilterStorefrontSerializer(
                 attributes.numeric, many=True, context={"request": request}
             )
-
             response_obj = {
                 "textual": serializer_text.data,
                 "numeric": serializer_num.data,
@@ -413,21 +415,22 @@ class CategoryDetailAttributesStorefrontView(APIView):
         numeric_attributes = {}
         string_attributes = {}
 
-        for p in products:
-            for attr in p.type.allowed_attribute_types.all().prefetch_related(
-                "base_attributes"
+        attribute_types = AttributeType.objects.filter(
+            producttype__in=ProductType.objects.filter(product__in=products).distinct()
+        ).distinct()
+
+        for attr in attribute_types:
+            if (
+                attr.value_type == AttributeTypeValueType.TEXT
+                and attr.id not in string_attributes
             ):
-                if (
-                    attr.value_type == AttributeTypeValueType.TEXT
-                    and attr.id not in string_attributes
-                ):
-                    string_attributes[attr.id] = attr
-                elif (
-                    attr.value_type
-                    in [AttributeTypeValueType.DECIMAL, AttributeTypeValueType.INTEGER]
-                    and attr.id not in numeric_attributes
-                ):
-                    numeric_attributes[attr.id] = attr
+                string_attributes[attr.id] = attr
+            elif (
+                attr.value_type
+                in [AttributeTypeValueType.DECIMAL, AttributeTypeValueType.INTEGER]
+                and attr.id not in numeric_attributes
+            ):
+                numeric_attributes[attr.id] = attr
 
         return CategoryAttributeTypes(
             list(string_attributes.values()), list(numeric_attributes.values())
@@ -456,4 +459,4 @@ def _get_all_published_products(category):
     subcategory_ids = _get_all_subcategory_ids(category)
     return Product.objects.filter(
         published=True, category__in=subcategory_ids
-    )  # .prefetch_related("product_variants__attributes")
+    ).prefetch_related("product_variants")
