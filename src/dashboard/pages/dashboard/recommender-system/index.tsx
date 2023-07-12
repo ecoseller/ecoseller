@@ -3,7 +3,7 @@
 // layout
 import DashboardLayout from "@/pages/dashboard/layout";
 //react
-import React, {ReactElement, useEffect, useReducer, useState} from "react";
+import React, { ReactElement, useEffect, useReducer, useState } from "react";
 import RootLayout from "@/pages/layout";
 // mui
 import Container from "@mui/material/Container";
@@ -13,7 +13,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { dashboardStatsAPI } from "@/pages/api/recommender-system/dashboard";
 import RecommenderConfigForm, {
   IRecommenderConfigEditableProps,
-  IRecommenderConfigProps
+  IRecommenderConfigProps,
 } from "@/components/Dashboard/Recommender/RecommenderConfigForm";
 import TabContext from "@mui/lab/TabContext";
 import Box from "@mui/material/Box";
@@ -22,14 +22,16 @@ import Tab from "@mui/material/Tab";
 import TabPanel from "@mui/lab/TabPanel";
 import ModelStatistics, {
   IModelProps,
-  IModelPerformanceProps
+  IModelPerformanceProps,
 } from "@/components/Dashboard/Recommender/ModelStatistics";
-import StatisticsItem, { IStatisticsItemProps } from "@/components/Dashboard/Recommender/StatisticsItem";
+import StatisticsItem, {
+  IStatisticsItemProps,
+} from "@/components/Dashboard/Recommender/StatisticsItem";
 import CascadeConfig from "@/components/Dashboard/Recommender/CascadeConfig";
 import { ITrainingProps } from "@/components/Dashboard/Recommender/Training";
 import { useTranslation } from "next-i18next";
 import EditableContentWrapper from "@/components/Dashboard/Generic/EditableContentWrapper";
-import {generalSnackbarError, useSnackbarState} from "@/utils/snackbar";
+import { generalSnackbarError, useSnackbarState } from "@/utils/snackbar";
 import SnackbarWithAlert from "@/components/Dashboard/Generic/SnackbarWithAlert";
 
 /*
@@ -55,10 +57,13 @@ interface IRecommenderSystemProps {
 }
 
 const DashboardRecommenderSystemPage = ({
-  models, performance, training, config
+  models,
+  performance,
+  training,
+  config,
 }: IRecommenderSystemProps) => {
   const { t } = useTranslation("recommender");
-  
+
   const [modelDisplayed, setModelDisplayed] = useState<string>("");
 
   useEffect(() => {
@@ -71,7 +76,7 @@ const DashboardRecommenderSystemPage = ({
   ) => {
     setModelDisplayed(newValue);
   };
-  
+
   const extractCascadeData = (data: IRecommenderConfigProps) => {
     return [
       {
@@ -111,7 +116,7 @@ const DashboardRecommenderSystemPage = ({
       },
     ];
   };
-  
+
   const cascades = extractCascadeData(config);
 
   const [cascadeDisplayed, setCascadeDisplayed] = useState<string>("");
@@ -126,12 +131,13 @@ const DashboardRecommenderSystemPage = ({
   ) => {
     setCascadeDisplayed(newValue);
   };
-  
+
   const [preventNavigation, setPreventNavigation] = useState<boolean>(false);
   const [snackbar, setSnackbar] = useSnackbarState();
 
-  const [configState, setConfigState] = useState<IRecommenderConfigProps>(config);
-  
+  const [configState, setConfigState] =
+    useState<IRecommenderConfigProps>(config);
+
   const saveConfig = async () => {
     return await fetch(`/api/recommender-system/config/save`, {
       method: "PUT",
@@ -152,7 +158,7 @@ const DashboardRecommenderSystemPage = ({
         setSnackbar(generalSnackbarError);
       });
   };
-  
+
   return (
     <DashboardLayout>
       <EditableContentWrapper
@@ -164,39 +170,31 @@ const DashboardRecommenderSystemPage = ({
         returnPath={"/dashboard/catalog/products"}
       >
         <Container maxWidth="xl">
-          <Typography variant="h4">
-            {t("Global")}
-          </Typography>
-            <Box pl={3} py={2}>
-              <Typography variant="h6">
-                {t("Performance")}
-              </Typography>
-              <StatisticsItem {...performance.item}/>
-  
-              <Typography variant="h6">
-                {t("Configuration")}
-              </Typography>
-              <RecommenderConfigForm
-                retrievalSize={config.retrievalSize}
-                orderingSize={config.orderingSize}
-                onChange={(data: IRecommenderConfigEditableProps) => {
-                  console.log("data", data);
-                  console.log("configState", {...configState, ...data});
-                  setConfigState({...configState, ...data});
-                  console.log("changed", configState);
-                }}
-              />
-            </Box>
-          
+          <Typography variant="h4">{t("Global")}</Typography>
+          <Box pl={3} py={2}>
+            <Typography variant="h6">{t("Performance")}</Typography>
+            <StatisticsItem {...performance.item} />
+
+            <Typography variant="h6">{t("Configuration")}</Typography>
+            <RecommenderConfigForm
+              retrievalSize={config.retrievalSize}
+              orderingSize={config.orderingSize}
+              onChange={(data: IRecommenderConfigEditableProps) => {
+                console.log("data", data);
+                console.log("configState", { ...configState, ...data });
+                setConfigState({ ...configState, ...data });
+                console.log("changed", configState);
+              }}
+            />
+          </Box>
+
           {/* model statistics */}
           <Typography variant="h4" sx={{ mt: 2 }}>
             {t("Models")}
           </Typography>
           <TabContext value={modelDisplayed}>
             <Box>
-              <TabList
-                onChange={handleModelDisplayedChange}
-              >
+              <TabList onChange={handleModelDisplayedChange}>
                 {models.map((model) => (
                   <Tab
                     key={model.name}
@@ -207,30 +205,26 @@ const DashboardRecommenderSystemPage = ({
               </TabList>
             </Box>
             {models.map((model) => (
-              <TabPanel
-                sx={{ padding: 0 }}
-                key={model.name}
-                value={model.name}
-              >
+              <TabPanel sx={{ padding: 0 }} key={model.name} value={model.name}>
                 <ModelStatistics
                   model={model}
-                  performance={performance.models.find(m => m.name === model.name)}
-                  training={training.models.find(m => m.name === model.name)}
+                  performance={performance.models.find(
+                    (m) => m.name === model.name
+                  )}
+                  training={training.models.find((m) => m.name === model.name)}
                   globalConfig={config}
                 />
               </TabPanel>
             ))}
           </TabContext>
-          
+
           {/* cascade */}
           <Typography variant="h4" sx={{ mt: 2 }}>
             {t("Cascades")}
           </Typography>
           <TabContext value={cascadeDisplayed}>
             <Box>
-              <TabList
-                onChange={handleCascadeDisplayedChange}
-              >
+              <TabList onChange={handleCascadeDisplayedChange}>
                 {cascades.map((cascade) => (
                   <Tab
                     key={cascade.name}
@@ -246,15 +240,16 @@ const DashboardRecommenderSystemPage = ({
                 key={cascade.name}
                 value={cascade.name}
               >
-                <CascadeConfig
-                  cascade={cascade.cascade}
-                />
+                <CascadeConfig cascade={cascade.cascade} />
               </TabPanel>
             ))}
           </TabContext>
         </Container>
         {snackbar ? (
-          <SnackbarWithAlert snackbarData={snackbar} setSnackbar={setSnackbar} />
+          <SnackbarWithAlert
+            snackbarData={snackbar}
+            setSnackbar={setSnackbar}
+          />
         ) : null}
       </EditableContentWrapper>
     </DashboardLayout>

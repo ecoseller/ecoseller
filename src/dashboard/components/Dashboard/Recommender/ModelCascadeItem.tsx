@@ -10,13 +10,11 @@ const StyledSpan = styled("span")({
   backgroundColor: "#eeeeee",
   padding: "5px",
   margin: "5px",
-  borderRadius: "5px"
+  borderRadius: "5px",
 });
 
 const ModelCascadeItem = ({ title }: IModelCascadeItemProps) => (
-  <StyledSpan>
-    {title}
-  </StyledSpan>
+  <StyledSpan>{title}</StyledSpan>
 );
 
 export default ModelCascadeItem;

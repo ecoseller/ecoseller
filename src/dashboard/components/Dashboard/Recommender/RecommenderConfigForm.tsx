@@ -39,51 +39,55 @@ export interface IRecommenderConfigProps {
 }
 
 const RecommenderConfigForm = ({
-   retrievalSize,
-   orderingSize, 
-   onChange
+  retrievalSize,
+  orderingSize,
+  onChange,
 }: IRecommenderConfigFormProps) => {
   const { t } = useTranslation("recommender");
-  
-  const [retrievalSizeState, setRetrievalSizeState] = useState<number>(retrievalSize);
-  const [orderingSizeState, setOrderingSizeState] = useState<number>(orderingSize);
-  
+
+  const [retrievalSizeState, setRetrievalSizeState] =
+    useState<number>(retrievalSize);
+  const [orderingSizeState, setOrderingSizeState] =
+    useState<number>(orderingSize);
+
   const handleStateChange = (data: object) => {
-    const newData = {retrievalSize: retrievalSizeState, orderingSize: orderingSizeState, ...data};
+    const newData = {
+      retrievalSize: retrievalSizeState,
+      orderingSize: orderingSizeState,
+      ...data,
+    };
     setRetrievalSizeState(newData.retrievalSize);
     setOrderingSizeState(newData.orderingSize);
     onChange(newData);
   };
-  
+
   return (
-      <Box pl={3} py={2}>
-
-        <Labeled label={t("Retrieval size")}>
-          <Input
-            // disabled={!hasPermission}
-            type="number"
-            value={retrievalSizeState}
-            onChange={(
-              e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-            ) => {
-              handleStateChange({retrievalSize: parseInt(e.target.value)});
-            }}
-          />
-        </Labeled>
-        <Labeled label={t("Ordering size")}>
-          <Input
-            // disabled={!hasPermission}
-            type="number"
-            value={orderingSizeState}
-            onChange={(
-              e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-            ) => {
-              handleStateChange({orderingSize: parseInt(e.target.value)});
-            }}
-          />
-        </Labeled>
-
-      </Box>
+    <Box pl={3} py={2}>
+      <Labeled label={t("Retrieval size")}>
+        <Input
+          // disabled={!hasPermission}
+          type="number"
+          value={retrievalSizeState}
+          onChange={(
+            e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+          ) => {
+            handleStateChange({ retrievalSize: parseInt(e.target.value) });
+          }}
+        />
+      </Labeled>
+      <Labeled label={t("Ordering size")}>
+        <Input
+          // disabled={!hasPermission}
+          type="number"
+          value={orderingSizeState}
+          onChange={(
+            e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+          ) => {
+            handleStateChange({ orderingSize: parseInt(e.target.value) });
+          }}
+        />
+      </Labeled>
+    </Box>
   );
 };
 

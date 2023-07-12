@@ -9,9 +9,7 @@ interface ILabeledProps {
 
 const Labeled = ({ label, children }: ILabeledProps) => (
   <Stack>
-    <Typography variant="body1">
-      {label}
-    </Typography>
+    <Typography variant="body1">{label}</Typography>
     {children}
   </Stack>
 );

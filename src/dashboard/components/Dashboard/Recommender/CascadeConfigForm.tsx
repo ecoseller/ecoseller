@@ -18,13 +18,11 @@ export interface ICascadeConfigFormProps {
 const CascadeConfigForm = ({ title, models }: ICascadeConfigFormProps) => {
   return (
     <Stack spacing={2}>
+      <Typography variant="body1">{title}</Typography>
       <Typography variant="body1">
-        {title}
-      </Typography>
-      <Typography variant="body1">
-        {models.map((model) =>
+        {models.map((model) => (
           <ModelCascadeItem key={model} title={model} />
-        )}
+        ))}
       </Typography>
     </Stack>
   );

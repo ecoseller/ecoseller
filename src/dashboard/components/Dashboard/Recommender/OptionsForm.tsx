@@ -11,16 +11,14 @@ interface IOptionsFormProps {
 
 const OptionsForm = ({ title, options }: IOptionsFormProps) => {
   const { t } = useTranslation("recommender");
-  
+
   return (
     <Stack spacing={2}>
+      <Typography variant="body1">{title}</Typography>
       <Typography variant="body1">
-        {title}
-      </Typography>
-      <Typography variant="body1">
-        {options.map((option) =>
+        {options.map((option) => (
           <OptionItem key={option} value={option} />
-        )}
+        ))}
       </Typography>
     </Stack>
   );

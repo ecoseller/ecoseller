@@ -10,13 +10,11 @@ const StyledSpan = styled("span")({
   backgroundColor: "#eeeeee",
   padding: "5px",
   margin: "5px",
-  borderRadius: "5px"
+  borderRadius: "5px",
 });
 
 const OptionItem = ({ value }: IOptionItemProps) => (
-  <StyledSpan>
-    {value}
-  </StyledSpan>
+  <StyledSpan>{value}</StyledSpan>
 );
 
 export default OptionItem;

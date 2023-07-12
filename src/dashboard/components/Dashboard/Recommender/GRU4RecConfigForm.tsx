@@ -20,18 +20,25 @@ export interface IGRU4RecConfigProps {
   learningRateOptions: number[];
 }
 
-const GRU4RecConfigForm = ({ numEpochsOptions, batchSizeOptions, embeddingSizeOptions, hiddenSizeOptions, learningRateOptions }: IGRU4RecConfigProps) => {
+const GRU4RecConfigForm = ({
+  numEpochsOptions,
+  batchSizeOptions,
+  embeddingSizeOptions,
+  hiddenSizeOptions,
+  learningRateOptions,
+}: IGRU4RecConfigProps) => {
   const { t } = useTranslation("recommender");
-  
+
   return (
     <Stack spacing={2}>
-
-      <OptionsForm title={t("Number of epochs")} options={numEpochsOptions}/>
-      <OptionsForm title={t("Batch size")} options={batchSizeOptions}/>
-      <OptionsForm title={t("Embedding layer size")} options={embeddingSizeOptions}/>
-      <OptionsForm title={t("Hidden layer size")} options={hiddenSizeOptions}/>
-      <OptionsForm title={t("Learning rate")} options={learningRateOptions}/>
-
+      <OptionsForm title={t("Number of epochs")} options={numEpochsOptions} />
+      <OptionsForm title={t("Batch size")} options={batchSizeOptions} />
+      <OptionsForm
+        title={t("Embedding layer size")}
+        options={embeddingSizeOptions}
+      />
+      <OptionsForm title={t("Hidden layer size")} options={hiddenSizeOptions} />
+      <OptionsForm title={t("Learning rate")} options={learningRateOptions} />
     </Stack>
   );
 };

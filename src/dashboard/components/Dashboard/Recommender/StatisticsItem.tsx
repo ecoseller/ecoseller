@@ -19,24 +19,33 @@ export interface IStatisticsItemProps {
 }
 
 const StatisticsItem = ({
-   k,
-   coverage,
-   directHit,
-   futureHit
+  k,
+  coverage,
+  directHit,
+  futureHit,
 }: IStatisticsItemProps) => {
   const { t } = useTranslation("recommender");
-  
+
   return (
     <Box component="div" pl={3} py={2}>
       <Stack spacing={2}>
         <Typography variant="body1">
-          {t("Coverage")} : {coverage !== null ? (coverage * 100).toFixed(2)+" %" : t("unknown")} 
+          {t("Coverage")} :{" "}
+          {coverage !== null
+            ? (coverage * 100).toFixed(2) + " %"
+            : t("unknown")}
         </Typography>
         <Typography variant="body1">
-          {t("Direct hit")} @ {k} : {directHit !== null ? (directHit * 100).toFixed(2)+" %" : t("unknown")}
+          {t("Direct hit")} @ {k} :{" "}
+          {directHit !== null
+            ? (directHit * 100).toFixed(2) + " %"
+            : t("unknown")}
         </Typography>
         <Typography variant="body1">
-          {t("Future hit")} @ {k} : {futureHit !== null ? (futureHit * 100).toFixed(2)+" %" : t("unknown")}
+          {t("Future hit")} @ {k} :{" "}
+          {futureHit !== null
+            ? (futureHit * 100).toFixed(2) + " %"
+            : t("unknown")}
         </Typography>
       </Stack>
     </Box>

@@ -1,6 +1,6 @@
 // next.js
 // react
-import {useTranslation} from "next-i18next";
+import { useTranslation } from "next-i18next";
 import React, { ReactElement, useState } from "react";
 // layout
 import DashboardLayout from "@/pages/dashboard/layout"; //react
@@ -17,10 +17,10 @@ export interface IEASEConfigProps {
 
 const EASEConfigForm = ({ l2Options }: IEASEConfigProps) => {
   const { t } = useTranslation("recommender");
-  
+
   return (
     <Stack spacing={2}>
-      <OptionsForm title={t("L2 regularization")} options={l2Options}/>
+      <OptionsForm title={t("L2 regularization")} options={l2Options} />
     </Stack>
   );
 };

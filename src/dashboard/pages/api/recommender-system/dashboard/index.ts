@@ -1,6 +1,6 @@
-import {HTTPMETHOD} from "@/types/common";
-import {NextApiRequest, NextApiResponse} from "next";
-import {api, setRequestResponse} from "@/utils/interceptors/api";
+import { HTTPMETHOD } from "@/types/common";
+import { NextApiRequest, NextApiResponse } from "next";
+import { api, setRequestResponse } from "@/utils/interceptors/api";
 
 const dashboardUrl = "recommender/dashboard/recommender-system";
 
@@ -11,8 +11,8 @@ function convertItem(data: any, k: number) {
       coverage: data.coverage,
       directHit: data.direct_hit,
       futureHit: data.future_hit,
-    }
-  }
+    },
+  };
 }
 
 export const dashboardStatsAPI = async (
@@ -29,7 +29,7 @@ export const dashboardStatsAPI = async (
   switch (method) {
     case "GET":
       return await api
-        .get(dashboardUrl, {params: {date_from: dateFrom, date_to: dateTo}})
+        .get(dashboardUrl, { params: { date_from: dateFrom, date_to: dateTo } })
         .then((response) => response.data)
         .catch((error: any) => {
           throw error;

@@ -1,10 +1,7 @@
 // /api/cart/index.ts
 // call the cart api in the backend
 import type { NextApiRequest, NextApiResponse } from "next";
-import {
-  api,
-  setRequestResponse,
-} from "@/utils/interceptors/api";
+import { api, setRequestResponse } from "@/utils/interceptors/api";
 import { HTTPMETHOD } from "@/types/common";
 import { IProduct } from "@/types/product";
 

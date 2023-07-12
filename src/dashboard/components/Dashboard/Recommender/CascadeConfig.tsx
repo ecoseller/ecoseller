@@ -18,9 +18,9 @@ const CascadeConfig = ({ cascade }: ICascadeConfigProps) => {
   return (
     <Box pl={3} pt={2}>
       <Typography variant="body1">
-        {cascade.map((model) =>
+        {cascade.map((model) => (
           <ModelCascadeItem key={model} title={model} />
-        )}
+        ))}
       </Typography>
     </Box>
   );
