@@ -149,7 +149,7 @@ To create a new user, click on the *Add New* button in the users list. This open
 ![Create user](../../images/user_add_user.png)
 
 ## Roles
-Roles are used to group various permissions into one unit. This plays a crucial role in the authorization process as it restricts access to certain parts of the system. Only the admin or users with the `user_change_permission` permission can edit the user (for more detailed info about permissions see TODO: add link). The system comes with three predefined roles:
+Roles are used to group various permissions into one unit. This plays a crucial role in the authorization process as it restricts access to certain parts of the system. Only the admin or users with the `user_change_permission` permission can edit the user (for more detailed info about permissions see [Authorization page](../../administration/authorization)). The system comes with three predefined roles:
 * Editor
 * Copywriter
 * UserManager

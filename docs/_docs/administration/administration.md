@@ -1,7 +1,7 @@
 ---
 title: Administration
 category: Administration documentation
-order: 3
+order: 2
 ---
 
 # Working with **ecoseller** REST API
