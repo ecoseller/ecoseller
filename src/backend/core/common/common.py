@@ -1,5 +1,5 @@
 def get_url_param_if_valid(
-    request, param_name, allowed_values, default_param_value=None
+        request, param_name, allowed_values, default_param_value=None
 ):
     """
     Get url parameter if it exists and its value is valid (contained in `allowed_values`).

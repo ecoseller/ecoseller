@@ -3,8 +3,8 @@ from datetime import datetime, timedelta
 
 from django.conf import settings
 from django.db.models import Count
-from rest_framework import permissions
-from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView
+from rest_framework import permissions, status
+from rest_framework.generics import ListAPIView, RetrieveAPIView, UpdateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -503,10 +503,29 @@ class OrderItemsListStorefrontView(ListAPIView):
         return Response({"items": items}, status=200)
 
 
-class OrderItemComplaintStorefrontView(CreateAPIView):
-    serializer_class = OrderItemComplaintCreateSerializer
-    queryset = OrderItemComplaint.objects.all()
+class OrderItemComplaintStorefrontView(APIView):
     permission_classes = (permissions.AllowAny,)
+
+    def post(self, request):
+        serializer = OrderItemComplaintCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            instance = serializer.save()
+
+            customer_email = instance.order.customer_email
+
+            try:
+                NotificationsApi.notify(
+                    event=EventTypes.ORDER_ITEM_COMPLAINT_CREATED,
+                    data={
+                        "complaint_id": instance.id,
+                        "customer_email": customer_email,
+                    },
+                )
+            except Exception as e:
+                print("NotificationApi Error", e)
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class OrderItemComplaintDashboardView(UpdateAPIView):
