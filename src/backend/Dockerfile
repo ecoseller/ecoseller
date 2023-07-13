@@ -12,7 +12,6 @@ RUN pip3 install -U setuptools
 RUN pip3 install -r ./requirements.txt
 
 COPY ./core/ .
-# COPY ./entrypoint.sh .
 
 FROM base as development
 RUN chmod +x /usr/src/app/data_preparation.sh
@@ -28,7 +27,6 @@ RUN chmod +x /usr/src/app/entrypoint_prod.sh
 ENTRYPOINT [ "sh", "-c", "/usr/src/app/demo_data_loader.sh && /usr/src/app/data_preparation.sh && /usr/src/app/entrypoint_prod.sh" ]
 
 # Production branch of a Dockerfile
-# It's currently the same as development branch above but it's here for future use
 FROM base as production
 RUN pip3 install gunicorn==20.1.0
 RUN chmod +x /usr/src/app/data_preparation.sh
