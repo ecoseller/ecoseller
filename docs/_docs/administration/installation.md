@@ -70,18 +70,19 @@ The demo environment in Ecoseller is designed to showcase the platform's feature
 ## Backend <span id="env-backend"><span>
 This is an example of `src/backend/docker-compose.env` file. You can use it as a template for your own configuration.
 Please note that in this file you can configure Django backend and all the connections to other services that are used by the backend.
+You can find more information about Django environment variables in the [official documentation](https://docs.djangoproject.com/en/4.2/ref/settings/).
 
 ### Example
 
 ```env
-DEBUG=1
-DJANGO_ALLOWED_HOSTS="*"
+DEBUG=1 # 1 for development, 0 for production
+DJANGO_ALLOWED_HOSTS="*" # for development only 
 
 DATABASE=postgres
 DB_ENGINE=django.db.backends.postgresql_psycopg2
-POSTGRES_DB=db
-POSTGRES_USER=user
-POSTGRES_PASSWORD=password
+POSTGRES_DB=ecoseller
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
 POSTGRES_HOST=postgres_backend
 POSTGRES_PORT=5432
 
@@ -109,5 +110,18 @@ ELASTIC_AUTO_REBUILD_INDEX=0
 
 ## Recommendation system <span id="env-rs"><span>
 
+### Example
+```env
+RS_SERVER_HOST=0.0.0.0
+RS_SERVER_PORT=8086
+RS_SERVER_DEBUG=TRUE
+
+POSTGRES_PASSWORD=zZvyAvzG2O5gfr5
+
+RS_PRODUCT_DB_URL=postgresql://postgres:zZvyAvzG2O5gfr5@postgres_rs:5432/products
+RS_FEEDBACK_DB_URL=postgresql://postgres:zZvyAvzG2O5gfr5@postgres_rs:5432/feedback
+RS_SIMILARITY_DB_URL=postgresql://postgres:zZvyAvzG2O5gfr5@postgres_rs:5432/similarity
+RS_MODEL_DB_URL=postgresql://postgres:zZvyAvzG2O5gfr5@postgres_rs:5432/model
+```
 # Reserved ports
 

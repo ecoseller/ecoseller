@@ -4,12 +4,36 @@ category: Administration documentation
 order: 3
 ---
 
-# Working with **ecoseller** API
+# Working with **ecoseller** REST API
 ## Authentication
 ## API documentation
 
+# User management
+
+## Creating a superuser
+
+
+## Roles and permissions
+
+# Managing database
+
+## Binding database to a local folder
+
+## Running migrations
+
+## Backing up database
+
+## Restoring database
+
+
+# Static files and media
+
+# Implementing payment methods (`PaymentAPI`)
+
+# Connecting external services (`NotificationAPI`)
+
 # Search engine
-**ecoseller** incorporates Elasticsearch as a component of its technology stack. Elasticsearch is a powerful search engine that enables Ecoseller to deliver fast and accurate search results.
+**ecoseller** incorporates Elasticsearch as a component of its technology stack. Elasticsearch is a powerful search engine that enables **ecoseller** to deliver fast and accurate search results.
 ## Indexing products to Elasticsearch
 
 To ensure efficient product searches and recommendations within Ecoseller, it is crucial to index your products in Elasticsearch. Ecoseller provides a convenient CLI command within the backend container to perform this indexing process.
@@ -37,6 +61,3 @@ If you no longer wish to use Elasticsearch in your Ecoseller setup, you can easi
 
 With these steps completed, Elasticsearch will be disabled in your Ecoseller setup. However, please note that this will also disable the fast search functionality within Ecoseller. Therefore, it is recommended to keep Elasticsearch enabled for user experience.
 
-# Implementing payment methods (`PaymentAPI`)
-
-# Connecting external services (`NotificationAPI`)
