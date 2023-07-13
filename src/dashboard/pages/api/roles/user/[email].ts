@@ -21,9 +21,6 @@ export const userRoleAPI = async (
     setRequestResponse(req, res);
   }
 
-  const access = getCookie("accessToken", { req, res }) as string;
-  console.log("userRoleAPI", access);
-
   switch (method) {
     case "GET":
       return await api
