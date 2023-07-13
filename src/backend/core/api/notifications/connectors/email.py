@@ -74,9 +74,6 @@ class EmailConnector(NotificationConnector):
 
         return True
 
-    # def send_order_complaint_email(self, *args, **kwargs):
-    #     pass
-
     @classmethod
     def send_order_complaint_confirmation(self, *args, **kwargs):
         """

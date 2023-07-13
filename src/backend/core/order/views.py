@@ -538,7 +538,7 @@ class OrderItemComplaintDashboardView(APIView):
     @check_user_access_decorator({"order_change_permission"})
     def put(self, request, id):
         try:
-            instance = OrderItemComplaint.objects.get(id)
+            instance = OrderItemComplaint.objects.get(id=id)
             serializer = OrderItemComplaintSerializer(instance, request.data)
             if serializer.is_valid():
                 serializer.save()
