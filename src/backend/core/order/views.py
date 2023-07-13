@@ -3,7 +3,6 @@
 from datetime import datetime, timedelta
 
 from django.conf import settings
-from django.db.models import Count
 from rest_framework import permissions
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
