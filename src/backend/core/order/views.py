@@ -339,15 +339,18 @@ class OrderListMonthDashboardView(ListAPIView):
                     Product.objects.get(id=item) for item in top_5_sellings_products
                 ]
 
-            top_5_sellings_products = [
-                {
-                    "title": product.title,
-                    "media": product.get_primary_photo().media.url
-                    if product.get_primary_photo()
-                    else None,
-                }
-                for product in top_5_sellings_products
-            ]
+            if top_5_sellings_products:
+                top_5_sellings_products = [
+                    {
+                        "title": product.title,
+                        "media": product.get_primary_photo().media.url
+                        if product.get_primary_photo()
+                        else None,
+                    }
+                    for product in top_5_sellings_products
+                ]
+            else:
+                top_5_sellings_products = []
 
             # get daily orders count for past 30 days or 0 if no orders
             daily_orders_count = []

@@ -130,9 +130,9 @@ const DashboardOverviewPage = ({
                       ordersTodayStats.top_selling_products == null
                         ? ""
                         : imgPath(
-                            ordersTodayStats.top_selling_products[0]?.media,
-                            true
-                          )
+                          ordersTodayStats.top_selling_products[0]?.media,
+                          true
+                        )
                     }
                     alt={""}
                   />
@@ -204,20 +204,21 @@ const DashboardOverviewPage = ({
                   <Stack
                     key={product.id}
                     direction="row"
-                    justifyContent="center"
-                    alignItems="center"
+                    justifyContent="left"
+                    alignItems="left"
                     spacing={2}
                   >
                     <div
                       style={{
                         paddingTop: "5px",
                         paddingBottom: "5px",
+                        paddingLeft: "50px",
                         width: "200px",
                         height: "100%",
                         flexShrink: 0,
                         position: "relative",
                         display: "flex",
-                        alignItems: "center",
+                        alignItems: "left",
                       }}
                     >
                       <ImageThumbnail
@@ -319,63 +320,6 @@ const DashboardOverviewPage = ({
               icon={<ShoppingBagIcon sx={{ fontSize: 40 }} />}
             />
           </Grid>
-        </Grid>
-        <Grid item xs={12} md={6} lg={8} sx={{ paddingTop: 2 }}>
-          <SummaryWidgetGraph
-            title={"Recommendations"}
-            subheader={"Past 12 months"}
-            chartData={[
-              {
-                name: "Recommendations",
-                data: [10, 41, 35, 51, 49, 62, 69, 91, 148, 120, 100, 80],
-              },
-            ]}
-            chartOptions={{
-              chart: {
-                toolbar: {
-                  show: false,
-                },
-                height: 350,
-                width: 200,
-                type: "line",
-                zoom: {
-                  enabled: false,
-                },
-              },
-              dataLabels: {
-                enabled: false,
-              },
-              stroke: {
-                curve: "straight",
-              },
-              // title: {
-              //   text: "Orders by past 12 months",
-              //   align: "left",
-              // },
-              grid: {
-                row: {
-                  colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
-                  opacity: 0.5,
-                },
-              },
-              xaxis: {
-                categories: [
-                  "Mar",
-                  "Apr",
-                  "May",
-                  "Jun",
-                  "Jul",
-                  "Aug",
-                  "Sep",
-                  "Oct",
-                  "Nov",
-                  "Dec",
-                  "Jan",
-                  "Feb",
-                ],
-              },
-            }}
-          />
         </Grid>
       </Container>
     </DashboardLayout>
