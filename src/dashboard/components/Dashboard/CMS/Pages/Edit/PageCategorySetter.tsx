@@ -33,7 +33,7 @@ const MenuProps = {
 };
 
 const PageCategorySetter = ({ state, set }: IPageCategorySetterProps) => {
-  const { data, error } = useSWR<IPageCategory[]>(`/cms/category`);
+  const { data, error } = useSWR<IPageCategory[]>(`/api/cms/category`);
 
   const handleChange = (event: SelectChangeEvent<typeof state>) => {
     const {
