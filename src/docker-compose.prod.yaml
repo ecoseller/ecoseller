@@ -167,3 +167,16 @@ services:
     depends_on:
       recommender_system:
         condition: service_healthy
+  reverse-proxy:
+    image: nginx:latest
+    ports:
+      - 80:80
+      - 8080:8080
+      - 3032:3032
+      - 3033:3033
+    volumes:
+      - ./reverse_proxy/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+      - frontend_storefront
+      - frontend_dashboard
