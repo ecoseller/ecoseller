@@ -126,5 +126,21 @@ This section shows a list of all users. The list has the following columns:
   * Edit - click on the edit button opens the user details page (see [below](#user-details))
   * Delete - click on the delete button deletes the user
 
+### User details
+The user details page shows full information about the user. The page is divided into three main parts:
+* General information:
+  * Email (cannot be changed)
+  * First Name
+  * Last Name
+  * Is Admin - only admin can change this value
+  * Is Staff
+* Password
+  * Old password - displayed only if a user is editing his profile
+  * New password
+  * New password confirmation
+* Groups - a checklist of all groups (roles) available in the system. If a user is a member of a group, the checkbox is checked.
+  
+Only the admin or users with the `user_change_permission` permission can edit the user (for more detailed info about permissions see TODO: add link).
+
 
 # Recommender system
