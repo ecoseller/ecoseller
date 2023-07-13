@@ -31,16 +31,18 @@ const OrderDetailMethod = ({
         justifyContent="center"
       >
         <Grid item xs={1} sm={2} md={2}>
-          <img
-            src={imgPath(method.image)}
-            alt={method.title}
-            style={{
-              width: "auto",
-              height: "auto",
-              maxHeight: "30px",
-              maxWidth: "70px",
-            }}
-          />
+          {method.image ? (
+            <img
+              src={imgPath(method.image)}
+              alt={method.title}
+              style={{
+                width: "auto",
+                height: "auto",
+                maxHeight: "30px",
+                maxWidth: "70px",
+              }}
+            />
+          ) : null}
         </Grid>
         <Grid item xs={1} sm={4}>
           <Typography variant="body1" sx={{ mt: 1, pl: 2 }}>

@@ -7,7 +7,7 @@ import ImageThumbnail from "@/components/Generic/ImageThumbnail";
 export interface IShippingPaymentMethodItemProps {
   id: number;
   title: string;
-  image: string;
+  image: string | null;
   price_incl_vat: string;
   selected: boolean;
   setSelected: (id: number) => void;

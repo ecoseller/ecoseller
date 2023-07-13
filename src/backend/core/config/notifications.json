@@ -1,30 +1,47 @@
 {
-    "PRODUCT_SAVE": [
-        {
-            "type": "RECOMMENDERAPI",
-            "method": "store_object"
-        },
-        {
-            "type": "HTTP",
-            "method": "POST",
-            "url": "http://example.com/api/product"
-        }
-    ],
-    "ORDER_SAVE": [
-        {
-            "type": "HTTP",
-            "method": "POST",
-            "url": "http://example.com/api/order"
-        },
-        {
-            "type": "EMAIL",
-            "method": "send_order_confirmation"
-        }
-    ],
-    "REVIEW_SEND": [
-        {
-            "type": "EMAIL",
-            "method": "send_review_request"
-        }
-    ]
+  "PRODUCT_SAVE": [
+    {
+      "type": "RECOMMENDERAPI",
+      "method": "store_object"
+    },
+    {
+      "type": "HTTP",
+      "method": "POST",
+      "url": "http://example.com/api/product"
+    }
+  ],
+  "ORDER_SAVE": [
+    {
+      "type": "HTTP",
+      "method": "POST",
+      "url": "http://example.com/api/order"
+    },
+    {
+      "type": "EMAIL",
+      "method": "send_order_confirmation"
+    }
+  ],
+  "REVIEW_SEND": [
+    {
+      "type": "EMAIL",
+      "method": "send_review_request"
+    }
+  ],
+  "ORDER_ITEM_COMPLAINT_CREATED": [
+    {
+      "type": "HTTP",
+      "method": "POST",
+      "url": "http://example.com/api/order"
+    },
+    {
+      "type": "EMAIL",
+      "method": "send_order_complaint_confirmation"
+    }
+  ],
+  "ORDER_ITEM_COMPLAINT_UPDATED": [
+    {
+      "type": "EMAIL",
+      "method": "send_order_complaint_status_update"
+    }
+  ]
 }

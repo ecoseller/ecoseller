@@ -113,7 +113,7 @@ export interface IPaymentMethodCountryFullList {
 export interface ITranslatedMethodBase {
   title: string;
   description: string;
-  image: string;
+  image: string | null;
 }
 
 /**

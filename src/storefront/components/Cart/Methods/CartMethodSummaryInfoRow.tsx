@@ -17,7 +17,12 @@ const CartMethodSummaryInfoRow = ({
   return (
     <TableRow>
       <TableCell align="center">
-        <ImageThumbnail imagePath={imgPath(method.image)} alt={method.title} />
+        {method.image ? (
+          <ImageThumbnail
+            imagePath={imgPath(method.image)}
+            alt={method.title}
+          />
+        ) : null}
       </TableCell>
       <TableCell>{method.title}</TableCell>
       <TableCell align="center" sx={{ fontWeight: "bold" }}>

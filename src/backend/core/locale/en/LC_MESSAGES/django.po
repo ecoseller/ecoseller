@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-13 09:59+0000\n"
+"POT-Creation-Date: 2023-07-13 19:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,13 +22,62 @@ msgstr ""
 msgid "Order confirmation"
 msgstr ""
 
-#: emails/email/return_exchange.py:24 emails/email/return_exchange.py:29
-msgid "Return request has been received"
+#: emails/email/order_item.py:26 emails/email/order_item.py:37
+msgid "Order item complaint confirmation"
 msgstr ""
 
+#: emails/email/order_item.py:33
+msgid "you created the following item warranty claim"
+msgstr ""
+
+#: emails/email/order_item.py:34
+msgid "you created the following item return request"
+msgstr ""
+
+#: emails/email/order_item.py:38 emails/email/order_item.py:78
 #: emails/email/return_exchange.py:30 emails/email/review.py:32
 #: templates/email/order/confirmation.html:405
 msgid "Hello,"
+msgstr ""
+
+#: emails/email/order_item.py:40 emails/email/order_item.py:80
+msgid "Order detail"
+msgstr ""
+
+#: emails/email/order_item.py:63
+msgid "Warranty claim status update"
+msgstr ""
+
+#: emails/email/order_item.py:64
+msgid "Return request status update"
+msgstr ""
+
+#: emails/email/order_item.py:71
+msgid "The status of item's warranty claim has been updated"
+msgstr ""
+
+#: emails/email/order_item.py:72
+msgid "The status of item's return request has been updated"
+msgstr ""
+
+#: emails/email/order_item.py:73
+msgid "Status: APPROVED"
+msgstr ""
+
+#: emails/email/order_item.py:74
+msgid "Status: DECLINED"
+msgstr ""
+
+#: emails/email/order_item.py:74
+msgid "Status: CREATED"
+msgstr ""
+
+#: emails/email/order_item.py:77
+msgid "Order item complaint status update"
+msgstr ""
+
+#: emails/email/return_exchange.py:24 emails/email/return_exchange.py:29
+msgid "Return request has been received"
 msgstr ""
 
 #: emails/email/return_exchange.py:32

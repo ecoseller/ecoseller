@@ -19,9 +19,10 @@ import React from "react";
 import { useTheme } from "@mui/material/styles";
 import CartCompleteOrder from "@/components/Cart/CartCompleteOrder";
 import Divider from "@mui/material/Divider";
+import { IOrderCart } from "@/types/order";
 
 interface ICartOrderSummaryProps {
-  cart: ICart;
+  cart: ICart | IOrderCart;
   billingInfo: IBillingInfo;
   shippingInfo: IShippingInfo;
   countries: ICountry[];
@@ -29,6 +30,8 @@ interface ICartOrderSummaryProps {
   selectedShippingMethod: IShippingMethodCountry;
   creatingNewOrder: boolean;
   addTitle?: boolean;
+  orderId?: string;
+  allowComplaints?: boolean;
 }
 
 /**
@@ -41,6 +44,8 @@ interface ICartOrderSummaryProps {
  * @param selectedShippingMethod
  * @param creatingNewOrder
  * @param addTitle
+ * @param orderId
+ * @param allowComplaints
  * @constructor
  */
 const CartOrderSummary = ({
@@ -52,6 +57,8 @@ const CartOrderSummary = ({
   selectedShippingMethod,
   creatingNewOrder,
   addTitle = true,
+  orderId = undefined,
+  allowComplaints = false,
 }: ICartOrderSummaryProps) => {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -145,7 +152,12 @@ const CartOrderSummary = ({
             {t("cart:summary-title") /* Order summary */}
           </Typography>
         ) : null}
-        <CartItemList cart={cart} editable={false} />
+        <CartItemList
+          cart={cart}
+          editable={false}
+          orderId={orderId}
+          allowComplaints={allowComplaints}
+        />
       </Grid>
       <Grid item xs={12} md={4}>
         <Box sx={{ [theme.breakpoints.up("md")]: { ml: 5 } }}>

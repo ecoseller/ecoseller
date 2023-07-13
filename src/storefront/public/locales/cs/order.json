@@ -24,5 +24,16 @@
   "order-status-SHIPPED": "Odeslána",
   "order-status-CANCELLED": "Zrušena",
   "paid": "Zaplaceno",
-  "waiting-for-payment": "Čeká na zaplacení"
+  "waiting-for-payment": "Čeká na zaplacení",
+  "claim-warranty": "Reklamovat",
+  "claimed-warranty": "Reklamováno",
+  "return": "Vrátit",
+  "returned": "Vráceno",
+  "status-CREATED": "Vytvořeno",
+  "status-APPROVED": "Schváleno",
+  "status-DECLINED": "Zamítnuto",
+  "claim-items-warranty": "Reklamace položky",
+  "return-item": "Vrácení položky",
+  "complaint-request-created": "Požadavek byl vytvořen",
+  "complaint-created-summary": "Povrzující mail byl odeslán. O dalším postupu Vás budeme informovat."
 }

@@ -150,6 +150,8 @@ const OrderDetailWrapper = ({
           <PermissionProvider allowedPermissions={["order_change_permission"]}>
             <OrderDetailStatus
               orderStatus={orderState.status}
+              createdAt={orderState.create_at}
+              paymentId={orderState.payment_id}
               setOrderStatus={setOrderStatus}
             />
           </PermissionProvider>
