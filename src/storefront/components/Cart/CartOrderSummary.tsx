@@ -31,6 +31,7 @@ interface ICartOrderSummaryProps {
   creatingNewOrder: boolean;
   addTitle?: boolean;
   orderId?: string;
+  allowComplaints?: boolean;
 }
 
 /**
@@ -44,6 +45,7 @@ interface ICartOrderSummaryProps {
  * @param creatingNewOrder
  * @param addTitle
  * @param orderId
+ * @param allowComplaints
  * @constructor
  */
 const CartOrderSummary = ({
@@ -56,6 +58,7 @@ const CartOrderSummary = ({
   creatingNewOrder,
   addTitle = true,
   orderId = undefined,
+  allowComplaints = false,
 }: ICartOrderSummaryProps) => {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -149,7 +152,12 @@ const CartOrderSummary = ({
             {t("cart:summary-title") /* Order summary */}
           </Typography>
         ) : null}
-        <CartItemList cart={cart} editable={false} orderId={orderId} />
+        <CartItemList
+          cart={cart}
+          editable={false}
+          orderId={orderId}
+          allowComplaints={allowComplaints}
+        />
       </Grid>
       <Grid item xs={12} md={4}>
         <Box sx={{ [theme.breakpoints.up("md")]: { ml: 5 } }}>

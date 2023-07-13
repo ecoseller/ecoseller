@@ -15,7 +15,7 @@ import { ICountry } from "@/types/country";
 import { cartPaymentMethodAPI } from "@/pages/api/cart/[token]/payment-method";
 import { cartShippingMethodAPI } from "@/pages/api/cart/[token]/shipping-method";
 import CartOrderSummary from "@/components/Cart/CartOrderSummary";
-import { IOrderWithPayment } from "@/types/order";
+import { IOrderWithPayment, OrderStatus } from "@/types/order";
 import { orderDetailAPI } from "@/pages/api/order/[id]";
 import { Typography } from "@mui/material";
 import { useTranslation } from "next-i18next";
@@ -63,6 +63,7 @@ const OrderDetailPage = ({
         creatingNewOrder={false}
         addTitle={false}
         orderId={order.token}
+        allowComplaints={order.status == OrderStatus.Shipped}
       />
     </div>
   );

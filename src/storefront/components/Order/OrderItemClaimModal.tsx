@@ -9,6 +9,8 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { createOrderItemComplaint } from "@/api/order/complaint";
 import { useTranslation } from "next-i18next";
+import { router } from "next/client";
+import { useRouter } from "next/router";
 
 const modalStyle = {
   position: "absolute" as "absolute",
@@ -38,6 +40,7 @@ const OrderItemClaimModal = ({
   openModalLinkText,
 }: IOrderItemClaimModalProps) => {
   const { t } = useTranslation(["order", "common"]);
+  const router = useRouter();
 
   const [open, setOpen] = useState(false);
   const [orderItemClaim, setOrderItemClaim] =
@@ -64,6 +67,7 @@ const OrderItemClaimModal = ({
 
   const handleSubmit = () => {
     createOrderItemComplaint(orderItemClaim).then((_) => handleClose());
+    router.push("/order/complaint/completed");
   };
 
   return (

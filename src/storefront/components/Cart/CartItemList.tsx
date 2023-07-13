@@ -34,6 +34,7 @@ interface ICartItemListProps {
   editable: boolean;
   cart: ICart | IOrderCart;
   orderId?: string;
+  allowComplaints?: boolean;
 }
 
 /**
@@ -43,15 +44,18 @@ interface ICartItemListProps {
  * @param cart
  * @param editable
  * @param orderId
+ * @param allowComplaints
  * @constructor
  */
 const CartItemList = ({
   cart,
   editable,
   orderId = undefined,
+  allowComplaints = false,
 }: ICartItemListProps) => {
   const { updateQuantity, removeFromCart } = useCart();
-  const showComplaintsColumn = isOrderCart(cart) && orderId != undefined;
+  const showComplaintsColumn =
+    isOrderCart(cart) && orderId != undefined && allowComplaints;
 
   const { t } = useTranslation(["cart", "order"]);
 
