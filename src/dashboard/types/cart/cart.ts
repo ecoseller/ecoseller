@@ -1,25 +1,8 @@
-/**
- * Interface representing an item in the cart
- */
-export interface ICartItem {
-  product_id: number;
-  product_slug: string;
-  product_variant_sku: string;
-  product_variant_name: string;
-  unit_price_incl_vat: number;
-  unit_price_without_vat: number;
-  unit_price_without_vat_formatted: string;
-  total_price_without_vat_formatted: string;
-  unit_price_incl_vat_formatted: string;
-  total_price_incl_vat_formatted: string;
-  quantity: number;
-  discount: number | null;
-  primary_image: ICartProductMedia | null;
-}
+import { IOrderItem } from "@/types/order";
 
 export interface ICart {
   token: string;
-  cart_items: ICartItem[];
+  cart_items: IOrderItem[];
   update_at: string;
   total_items_price_without_vat_formatted: string;
   total_items_price_incl_vat_formatted: string;

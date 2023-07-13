@@ -24,5 +24,16 @@
   "order-status-SHIPPED": "Shipped",
   "order-status-CANCELLED": "Cancelled",
   "paid": "Paid",
-  "waiting-for-payment": "Waiting for payment"
+  "waiting-for-payment": "Waiting for payment",
+  "claim-warranty": "Claim warranty",
+  "claimed-warranty": "Claimed warranty",
+  "return": "Return",
+  "returned": "Returned",
+  "status-CREATED": "Created",
+  "status-APPROVED": "Approved",
+  "status-DECLINED": "Declined",
+  "claim-items-warranty": "Claim item's warranty",
+  "return-item": "Return item",
+  "complaint-request-created": "The request was created",
+  "complaint-created-summary": "Confirmation mail has been sent. We'll inform you in case of any updates."
 }
