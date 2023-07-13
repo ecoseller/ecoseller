@@ -1,0 +1,1 @@
+python3 manage.py makemessages -l cs -l en -i 'env/*' -i '*.cfg'
