@@ -41,7 +41,7 @@ The actions column contains the following buttons:
 * Edit
 
 ## Edit
-Clicking on the edit button opens the order details page.
+Click on the edit button opens the order details page.
 
 ## Order details
 This page shows full information about the order. The page is divided into the following sections:
@@ -53,13 +53,13 @@ This page shows full information about the order. The page is divided into the f
 
 ### Order items
 This section shows a list of all items in the order. The list has the following columns:
-* Product variant name - clicking on the name opens the product variant details page (described in TODO: add link)
+* Product variant name - click on the name opens the product variant details page (described in TODO: add link)
 * SKU
 * Quantity
 * Unit price (without VAT)
 * Actions
-  * Edit - admin is able to change the quantity of the product variant
-  * Delete - admin is able to delete the product variant from the order
+  * Edit - admin can change the quantity of the product variant
+  * Delete - admin can delete the product variant from the order
   
 This section also shows the total price (without VAT) of a given order.
 
@@ -91,8 +91,8 @@ The reviews page consists of a list showing all reviews. The list has the follow
 * Comment
 * Created at
 * Actions
-  * Detail - clicking on the detail button opens the review details page (see [below](#review-details))
-  * Delete - clicking on the delete button deletes the review
+  * Detail - click on the detail button opens the review details page (see [below](#review-details))
+  * Delete - click on the delete button deletes the review
 
 ![Reviews list](../../images/reviews_list.png)
 
@@ -105,10 +105,26 @@ This page shows full information about the review and overall rating of the prod
 
 ![Review detail](../../images/review_detail.png)
 ### Average product rating
-This section shows the average rating of the product. The rating is shown via start and average score (value from 0 to 5). It also shows the number of reviews for the product and the distribution of ratings. Distribution values are rounded up - this means that if user submitted a rating of 4.5, it will be shown as 5 in the distribution.
+This section shows the average rating of the product. The rating is shown via start and average score (value from 0 to 5). It also shows the number of reviews for the product and the distribution of ratings. Distribution values are rounded up - this means that if the user submitted a rating of 4.5, it will be shown as 5 in the distribution.
 
 # Catalog
 # Localization
 # CMS
 # Users & Roles
+This page provides an overview of all users and roles. It is into two main parts:
+* Users
+* Roles
+
+## Users
+This section shows a list of all users. The list has the following columns:
+* Email
+* First name
+* Last name
+* Is Admin
+* Roles
+* Actions
+  * Edit - click on the edit button opens the user details page (see [below](#user-details))
+  * Delete - click on the delete button deletes the user
+
+
 # Recommender system
