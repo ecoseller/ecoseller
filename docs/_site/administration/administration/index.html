@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Administration | ecoseller</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Administration" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Working with ecoseller REST API Authentication API documentation" />
+<meta property="og:description" content="Working with ecoseller REST API Authentication API documentation" />
+<link rel="canonical" href="http://localhost:4000/administration/administration/" />
+<meta property="og:url" content="http://localhost:4000/administration/administration/" />
+<meta property="og:site_name" content="ecoseller" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Administration" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","description":"Working with ecoseller REST API Authentication API documentation","headline":"Administration","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/siteicon.png"}},"url":"http://localhost:4000/administration/administration/"}</script>
+<!-- End Jekyll SEO tag -->
+
+	<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="ecoseller" />
+
+	<link rel="stylesheet"
+		href="//fonts.googleapis.com/css?family=Merriweather:400,400italic,700,700italic|Open+Sans:400,400italic,600,600italic,700,700italic|Inconsolata:400,700">
+	<link rel="stylesheet" href="/css/main.css">
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" href="/touch-icon.png" sizes="192x192">
+	<link rel="icon" type="image/png" href="/images/favicon.ico">
+
+	
+</head>
+
+<body>
+	<header>
+		<h1>
+			<a style="color: black;" href="/"><img src="/images/emblem.svg"
+					width="100" height="100" alt="ecoseller logo"></a>
+			<a >ecoseller</a>
+			<button type="button" class="open-nav" id="open-nav"></button>
+		</h1>
+
+		<form action="/search/" method="get">
+			<input type="text" name="q" id="search-input" placeholder="Search" autofocus>
+			<input type="submit" value="Search" style="display: none;">
+		</form>
+
+		<nav class="full-navigation" >
+			<ul>
+				<li class="nav-item top-level ">
+					
+					<a href="/">Introduction</a>
+				</li>
+			</ul>
+
+			<ul>
+				
+				
+				<li class="nav-item top-level current">
+					
+					<a href="/administration/installation/">Administration documentation</a>
+					<ul>
+						
+						<li class="nav-item "><a
+								href="/administration/installation/">Installation</a></li>
+						
+						<li class="nav-item current"><a
+								href="/administration/administration/">Administration</a></li>
+						
+					</ul>
+				</li>
+				
+				<li class="nav-item top-level ">
+					
+					<a href="/programming/programming/">Programming category</a>
+					<ul>
+						
+						<li class="nav-item "><a
+								href="/programming/programming/">Programming documentation</a></li>
+						
+					</ul>
+				</li>
+				
+				<li class="nav-item top-level ">
+					
+					<a href="/user/dashboard/">User category</a>
+					<ul>
+						
+						<li class="nav-item "><a
+								href="/user/dashboard/">User documentation - Dashboard</a></li>
+						
+						<li class="nav-item "><a
+								href="/user/storefront/">User documentation - Storefront</a></li>
+						
+					</ul>
+				</li>
+				
+			</ul>
+
+			<ul>
+				<li class="nav-item top-level ">
+					
+					<a href="/changelog/"></a>
+				</li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="main">
+		<div class="page-header">
+			<h2>Administration documentation</h2>
+			<h3>Administration</h3>
+		</div>
+		<article class="content">
+			<h1 id="working-with-ecoseller-rest-api">Working with <strong>ecoseller</strong> REST API</h1>
+<h2 id="authentication">Authentication</h2>
+<h2 id="api-documentation">API documentation</h2>
+
+<h1 id="user-management">User management</h1>
+
+<h2 id="creating-a-superuser">Creating a superuser</h2>
+
+<h2 id="roles-and-permissions">Roles and permissions</h2>
+
+<h1 id="managing-database">Managing database</h1>
+
+<h2 id="binding-database-to-a-local-folder">Binding database to a local folder</h2>
+
+<h2 id="running-migrations">Running migrations</h2>
+
+<h2 id="backing-up-database">Backing up database</h2>
+
+<h2 id="restoring-database">Restoring database</h2>
+
+<h1 id="static-files-and-media">Static files and media</h1>
+
+<h1 id="implementing-payment-methods-paymentapi">Implementing payment methods (<code class="language-plaintext highlighter-rouge">PaymentAPI</code>)</h1>
+
+<h1 id="connecting-external-services-notificationapi">Connecting external services (<code class="language-plaintext highlighter-rouge">NotificationAPI</code>)</h1>
+
+<h1 id="search-engine">Search engine</h1>
+<p><strong>ecoseller</strong> incorporates Elasticsearch as a component of its technology stack. Elasticsearch is a powerful search engine that enables <strong>ecoseller</strong> to deliver fast and accurate search results.</p>
+<h2 id="indexing-products-to-elasticsearch">Indexing products to Elasticsearch</h2>
+
+<p>To ensure efficient product searches and recommendations within Ecoseller, it is crucial to index your products in Elasticsearch. Ecoseller provides a convenient CLI command within the backend container to perform this indexing process.</p>
+
+<p>To index your products using the CLI command, follow these steps:</p>
+
+<ol>
+  <li>Access the <code class="language-plaintext highlighter-rouge">backend</code> container: If you are running <strong>ecoseller</strong> locally using Docker, open your terminal and navigate to the Ecoseller project directory. Use the following command to access the <code class="language-plaintext highlighter-rouge">backend</code> container: <code class="language-plaintext highlighter-rouge">docker exec -it &lt;your_backend_container_id_or_name&gt; /bin/bash</code></li>
+  <li>Run the indexing command: Once inside the <code class="language-plaintext highlighter-rouge">backend</code> container, run the following command to index the products in Elasticsearch: <code class="language-plaintext highlighter-rouge">python3 manage.py search_index --rebuild</code>
+This command triggers the indexing process, where the products will be parsed, analyzed, and stored in Elasticsearch for efficient searching and recommendation functionalities.</li>
+</ol>
+
+<p>Note: Ensure that you are in the correct directory within the backend container (usually the project’s root directory) before executing the command.</p>
+
+<p>The indexing process may take some time, depending on the size of your product database. Once the process is complete, your products will be fully indexed and ready for efficient searching and recommendation generation within Ecoseller.</p>
+
+<h3 id="automation-with-cron-job">Automation with CRON job</h3>
+<p>You can also automate the indexing process by scheduling a CRON job to run the indexing command at specified intervals. This ensures that your Elasticsearch index stays up to date with any changes in your product database. Set up a CRON job with the following command:
+<code class="language-plaintext highlighter-rouge">0 2 * * * docker exec &lt;your_backend_container_id_or_name&gt; python3 manage.py search_index --rebuild</code></p>
+
+<h2 id="turning-off-elasticsearch">Turning off Elasticsearch</h2>
+<p>If you no longer wish to use Elasticsearch in your Ecoseller setup, you can easily disable it by adjusting the environment variables and stopping the Elasticsearch container. Follow the steps below to turn off Elasticsearch:</p>
+<ol>
+  <li>Update environment variables: (please see dedicated section for environment variables in the installation guide) Set the <code class="language-plaintext highlighter-rouge">USE_ELASTIC</code> variable to <code class="language-plaintext highlighter-rouge">0</code> in the <code class="language-plaintext highlighter-rouge">backend</code> env file.</li>
+  <li>Stop the Elasticsearch container</li>
+  <li>Restart the <code class="language-plaintext highlighter-rouge">backend</code> container</li>
+</ol>
+
+<p>With these steps completed, Elasticsearch will be disabled in your Ecoseller setup. However, please note that this will also disable the fast search functionality within Ecoseller. Therefore, it is recommended to keep Elasticsearch enabled for user experience.</p>
+
+
+		</article>
+	</section>
+
+	<script>
+		document.getElementById("open-nav").addEventListener("click", function () {
+			document.body.classList.toggle("nav-open");
+		});
+	</script>
+</body>
+
+</html>

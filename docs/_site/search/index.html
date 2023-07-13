@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Search | ecoseller</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Search" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="ecoseller e-commerce platform documentation" />
+<meta property="og:description" content="ecoseller e-commerce platform documentation" />
+<link rel="canonical" href="http://localhost:4000/search/" />
+<meta property="og:url" content="http://localhost:4000/search/" />
+<meta property="og:site_name" content="ecoseller" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Search" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"ecoseller e-commerce platform documentation","headline":"Search","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/siteicon.png"}},"url":"http://localhost:4000/search/"}</script>
+<!-- End Jekyll SEO tag -->
+
+	<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="ecoseller" />
+
+	<link rel="stylesheet"
+		href="//fonts.googleapis.com/css?family=Merriweather:400,400italic,700,700italic|Open+Sans:400,400italic,600,600italic,700,700italic|Inconsolata:400,700">
+	<link rel="stylesheet" href="/css/main.css">
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" href="/touch-icon.png" sizes="192x192">
+	<link rel="icon" type="image/png" href="/images/favicon.ico">
+
+	
+</head>
+
+<body>
+	<header>
+		<h1>
+			<a style="color: black;" href="/"><img src="/images/emblem.svg"
+					width="100" height="100" alt="ecoseller logo"></a>
+			<a >ecoseller</a>
+			<button type="button" class="open-nav" id="open-nav"></button>
+		</h1>
+
+		<form action="/search/" method="get">
+			<input type="text" name="q" id="search-input" placeholder="Search" autofocus>
+			<input type="submit" value="Search" style="display: none;">
+		</form>
+
+		<nav class="full-navigation" >
+			<ul>
+				<li class="nav-item top-level ">
+					
+					<a href="/">Introduction</a>
+				</li>
+			</ul>
+
+			<ul>
+				
+				
+				<li class="nav-item top-level ">
+					
+					<a href="/administration/installation/">Administration documentation</a>
+					<ul>
+						
+						<li class="nav-item "><a
+								href="/administration/installation/">Installation</a></li>
+						
+						<li class="nav-item "><a
+								href="/administration/administration/">Administration</a></li>
+						
+					</ul>
+				</li>
+				
+				<li class="nav-item top-level ">
+					
+					<a href="/programming/programming/">Programming category</a>
+					<ul>
+						
+						<li class="nav-item "><a
+								href="/programming/programming/">Programming documentation</a></li>
+						
+					</ul>
+				</li>
+				
+				<li class="nav-item top-level ">
+					
+					<a href="/user/dashboard/">User category</a>
+					<ul>
+						
+						<li class="nav-item "><a
+								href="/user/dashboard/">User documentation - Dashboard</a></li>
+						
+						<li class="nav-item "><a
+								href="/user/storefront/">User documentation - Storefront</a></li>
+						
+					</ul>
+				</li>
+				
+			</ul>
+
+			<ul>
+				<li class="nav-item top-level ">
+					
+					<a href="/changelog/"></a>
+				</li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="main">
+		<div class="page-header">
+			<h2>ecoseller</h2>
+			<h3>Search</h3>
+		</div>
+		<article class="content">
+			<p><span id="search-process">Loading</span> results <span id="search-query-container" style="display: none;">for "<strong id="search-query"></strong>"</span></p>
+<ul id="search-results"></ul>
+
+<script>
+	window.data = {
+		
+			
+				
+					
+					
+
+					"administration-administration": {
+						"id": "administration-administration",
+						"title": "Administration",
+						"category": "",
+						"url": " /administration/administration/",
+						"content": "Working with ecoseller REST API Authentication API documentation User management Creating a superuser Roles and permissions Managing database Binding database to a local folder Running migrations Backing up database Restoring database Static files and media Implementing payment methods (PaymentAPI) Connecting external services (NotificationAPI) Search engine ecoseller incorporates Elasticsearch as a component of its technology stack. Elasticsearch is a powerful search engine that enables ecoseller to deliver fast and accurate search results. Indexing products to Elasticsearch To ensure efficient product searches and recommendations within Ecoseller, it is crucial to index your products in Elasticsearch. Ecoseller provides a convenient CLI command within the backend container to perform this indexing process. To index your products using the CLI command, follow these steps: Access the backend container: If you are running ecoseller locally using Docker, open your terminal and navigate to the Ecoseller project directory. Use the following command to access the backend container: docker exec -it &lt;your_backend_container_id_or_name&gt; bin bash Run the indexing command: Once inside the backend container, run the following command to index the products in Elasticsearch: python3 manage.py search_index --rebuild This command triggers the indexing process, where the products will be parsed, analyzed, and stored in Elasticsearch for efficient searching and recommendation functionalities. Note: Ensure that you are in the correct directory within the backend container (usually the project’s root directory) before executing the command. The indexing process may take some time, depending on the size of your product database. Once the process is complete, your products will be fully indexed and ready for efficient searching and recommendation generation within Ecoseller. Automation with CRON job You can also automate the indexing process by scheduling a CRON job to run the indexing command at specified intervals. This ensures that your Elasticsearch index stays up to date with any changes in your product database. Set up a CRON job with the following command: 0 2 * * * docker exec &lt;your_backend_container_id_or_name&gt; python3 manage.py search_index --rebuild Turning off Elasticsearch If you no longer wish to use Elasticsearch in your Ecoseller setup, you can easily disable it by adjusting the environment variables and stopping the Elasticsearch container. Follow the steps below to turn off Elasticsearch: Update environment variables: (please see dedicated section for environment variables in the installation guide) Set the USE_ELASTIC variable to 0 in the backend env file. Stop the Elasticsearch container Restart the backend container With these steps completed, Elasticsearch will be disabled in your Ecoseller setup. However, please note that this will also disable the fast search functionality within Ecoseller. Therefore, it is recommended to keep Elasticsearch enabled for user experience."
+					}
+
+					
+				
+			
+		
+			
+				
+					,
+					
+
+					"administration-installation": {
+						"id": "administration-installation",
+						"title": "Installation",
+						"category": "",
+						"url": " /administration/installation/",
+						"content": "Prerequisites Before proceeding with the installation of ecoseller, it is important to ensure that your machine meets the necessary prerequisites. While ecoseller itself is not demanding and can run on less powerful devices, it is recommended to have a slightly more capable setup for the default installation, especially when including the Elasticsearch and AI recommendation system. To run ecoseller with the AI recommendation system and Elasticsearch, we recommend using a machine with the following specifications: CPU: 8 cores or more RAM: 8GB or more Free Space: 10GB It’s worth noting that Elasticsearch itself requires a significant amount of memory to run efficiently, ideally around 4GB. Therefore, the suggested 8GB RAM allocation ensures smooth operation of both ecoseller and Elasticsearch. However, if you are running ecoseller without the Elasticsearch and AI recommendation system or with a smaller dataset, you can use less powerful devices as well. Based on our testing, we have observed that for a typical scenario with 2100 product variants and several thousand events, the training process for Level 3 recommendations requires a maximum of 1GB of RAM and completes within approximately 2 seconds. For Level 2 recommendations, the memory consumption is around 130MB, and the training process takes approximately 92 seconds. By considering these prerequisites and performance benchmarks, you can ensure optimal performance and resource allocation for ecoseller and its AI recommendation system. Since ecoseller is fully containerized, make sure your system is Docker-ready before proceeding with the installation. If you are new to Docker, you can refer to the official Docker documentation for detailed instructions on installing Docker on your machine. Also you should have some experience with Docker Compose, Django, Python and Next.js (React). If not - you can learn it from the official documentations. If you don’t have time for that - you can hire us to do it for you (the way it was meant to without compromises). 😉 Running ecoseller ecoseller can be deployed in different environments depending on your needs, whether it’s for development, production, or a demo environment. This section will guide you through the steps to run Ecoseller in each of these environments. The starting point, however, is the same for all environments. You need to clone the ecoseller repository from the source code repository and navigate to the project directory in your terminal. git clone https: github.com ecoseller ecoseller.git Development environment To run ecoseller in a development environment, follow these steps: Ensure you have Docker and Docker Compose installed on your system. Clone the Ecoseller repository from the source code repository. Navigate to the project directory in your terminal. Create src backend docker-compose.env from example. Please make sure DEBUG flag is set to 1 and DJANGO_ALLOWED_HOSTS is set to \"*\" in this file. Create src recommender_system docker-compose.env from example. Run the following command to start ecoseller in development mode: docker compose up. This command will start all the containers and services required for ecoseller to run. All the containers will be started in the foreground, and you will be able to see the logs from each container in your terminal. Please note that the first time you run this command, it will take some time to download the required images and build the containers. Also note that both storefront and dashboard are quite slow in the developement mode since they are running in the debug mode and Next.js rebuilds every single page on every single request. Production environment Demo environment The demo environment in Ecoseller is designed to showcase the platform’s features and functionality using preloaded demo products (1400+), variants (2200+), and additional data. Setting up the demo environment is similar to the production environment, with the main difference being the utilization of the docker-compose.demo.yml file. Also, please note, that the demo environment is not intended for production use. It’s not setup for persistent storage so after you stop the containers all the data will be lost. With proxy Without proxy Environment variables ecoseller utilizes environment variables to configure various aspects of the backend and recommendation system. These environment variables are stored in separate files, namely docker-compose.env. For the backend it’s src backend docker-compose.env and src recommender_system docker-compose.env for recommendation system. Additionally, the storefront, dashboard, and other services have their environment variables directly specified in the YAML file for specific docker compose. Backend This is an example of src backend docker-compose.env file. You can use it as a template for your own configuration. Please note that in this file you can configure Django backend and all the connections to other services that are used by the backend. You can find more information about Django environment variables in the official documentation. Example DEBUG=1 # 1 for development, 0 for production DJANGO_ALLOWED_HOSTS=\"*\" # for development only DATABASE=postgres DB_ENGINE=django.db.backends.postgresql_psycopg2 POSTGRES_DB=ecoseller POSTGRES_USER=postgres POSTGRES_PASSWORD=postgres POSTGRES_HOST=postgres_backend POSTGRES_PORT=5432 USING_REDIS_QUEUE=1 REDIS_QUEUE_LOCATION=redis PYTHONUNBUFFERED=1 RS_URL=\"http: recommender_system:8086\" STOREFRONT_URL=\"https: www.example.com\" NOTIFICATIONS_CONFIG_PATH=\". config notifications.json\" EMAIL_USE_SSL=1 EMAIL_PORT=465 EMAIL_HOST=smtp.example.com EMAIL_HOST_USER=ecoseller@example.com EMAIL_HOST_PASSWORD=\"yourpassword EMAIL_FROM=Storefront&lt;ecoseller@example.com&gt; USE_ELASTIC=1 ELASTIC_HOST=\"elasticsearch:9200\" ELASTIC_AUTO_REBUILD_INDEX=0 Recommendation system This is an example of src recommender_system docker-compose.env file. You can use it as a template for your own configuration, but please note that you need to change the RS_URL variable to match the URL in your ecoseller backend. Example RS_SERVER_HOST=0.0.0.0 RS_SERVER_PORT=8086 RS_SERVER_DEBUG=TRUE POSTGRES_PASSWORD=zZvyAvzG2O5gfr5 RS_PRODUCT_DB_URL=postgresql: postgres:zZvyAvzG2O5gfr5@postgres_rs:5432 products RS_FEEDBACK_DB_URL=postgresql: postgres:zZvyAvzG2O5gfr5@postgres_rs:5432 feedback RS_SIMILARITY_DB_URL=postgresql: postgres:zZvyAvzG2O5gfr5@postgres_rs:5432 similarity RS_MODEL_DB_URL=postgresql: postgres:zZvyAvzG2O5gfr5@postgres_rs:5432 model Reserved ports When running ecoseller, it is important to be aware of the reserved ports used by the various services within the platform. Reserved ports ensure that different components of ecoseller can communicate with each other effectively through Docker internal network. Here are the reserved ports used in ecoseller: Backend Service: The Ecoseller backend service runs on port 8000 by default. This is the primary entry point for accessing the backend APIs. PostgreSQL Backend: The Ecoseller backend PostgreSQL service is accessible on port 5433 by default. This is the primary entry point for accessing the backend PostgreSQL database. Backend Redis: The Ecoseller backend Redis service is accessible on port 6379 by default. This is the primary entry point for accessing the backend Redis database. Elasticsearch: The Elasticsearch service is accessible on port 9200 by default. This is the primary entry point for accessing the Elasticsearch database. Dashboard: The dashboard service is accessible on port 3030 by default. This is the primary entry point for accessing the dashboard. Storefront: The storefront service is accessible on port 3000 by default. This is the primary entry point for accessing the storefront. Recommendation system: The recommendation system service is accessible on port 8086 by default. This is the primary entry point for accessing the recommendation system. PostgreSQL Recommender system: The recommender PostgreSQL service is accessible on port 5432 by default. This is the primary entry point for accessing the recommender PostgreSQL database. When deploying ecoseller, make sure that the necessary ports are accessible and properly configured in your firewall settings or network infrastructure to allow incoming and outgoing traffic to the respective services if you don’t use proxy. By understanding and managing the reserved ports, you can ensure smooth communication and access to the different components of Ecoseller, enabling seamless functionality and integration within your e-commerce platform."
+					}
+
+					
+				
+			
+		
+			
+				
+					,
+					
+
+					"programming-programming": {
+						"id": "programming-programming",
+						"title": "Programming documentation",
+						"category": "",
+						"url": " /programming/programming/",
+						"content": ""
+					}
+
+					
+				
+			
+		
+			
+				
+					,
+					
+
+					"user-dashboard": {
+						"id": "user-dashboard",
+						"title": "User documentation - Dashboard",
+						"category": "",
+						"url": " /user/dashboard/",
+						"content": ""
+					}
+
+					
+				
+			
+		
+			
+				
+					,
+					
+
+					"user-storefront": {
+						"id": "user-storefront",
+						"title": "User documentation - Storefront",
+						"category": "",
+						"url": " /user/storefront/",
+						"content": ""
+					}
+
+					
+				
+			
+		
+	};
+</script>
+<script src="/scripts/lunr.min.js"></script>
+<script src="/scripts/search.js"></script>
+
+		</article>
+	</section>
+
+	<script>
+		document.getElementById("open-nav").addEventListener("click", function () {
+			document.body.classList.toggle("nav-open");
+		});
+	</script>
+</body>
+
+</html>
