@@ -109,7 +109,7 @@ ELASTIC_AUTO_REBUILD_INDEX=0
 ```
 
 ## Recommendation system <span id="env-rs"><span>
-
+This is an example of `src/recommender_system/docker-compose.env` file. You can use it as a template for your own configuration, but please note that you need to change the `RS_URL` variable to match the URL in your **ecoseller** backend. 
 ### Example
 ```env
 RS_SERVER_HOST=0.0.0.0
@@ -124,4 +124,36 @@ RS_SIMILARITY_DB_URL=postgresql://postgres:zZvyAvzG2O5gfr5@postgres_rs:5432/simi
 RS_MODEL_DB_URL=postgresql://postgres:zZvyAvzG2O5gfr5@postgres_rs:5432/model
 ```
 # Reserved ports
+When running **ecoseller**, it is important to be aware of the reserved ports used by the various services within the platform. Reserved ports ensure that different components of **ecoseller** can communicate with each other effectively through Docker internal network. Here are the reserved ports used in **ecoseller**:
+
+* **Backend Service**: 
+The Ecoseller backend service runs on port 8000 by default. This is the primary entry point for accessing the backend APIs.
+
+* **PostgreSQL Backend**:
+The Ecoseller backend PostgreSQL service is accessible on port 5433 by default. This is the primary entry point for accessing the backend PostgreSQL database.
+
+* **Backend Redis**:
+The Ecoseller backend Redis service is accessible on port 6379 by default. This is the primary entry point for accessing the backend Redis database.
+
+* **Elasticsearch**:
+The Elasticsearch service is accessible on port 9200 by default. This is the primary entry point for accessing the Elasticsearch database.
+
+* **Dashboard**:
+The dashboard service is accessible on port 3030 by default. This is the primary entry point for accessing the dashboard.
+
+* **Storefront**:
+The storefront service is accessible on port 3000 by default. This is the primary entry point for accessing the storefront.
+
+* **Recommendation system**:
+The recommendation system service is accessible on port 8086 by default. This is the primary entry point for accessing the recommendation system.
+
+* **PostgreSQL Recommender system**:
+The recommender PostgreSQL service is accessible on port 5432 by default. This is the primary entry point for accessing the recommender PostgreSQL database.
+
+
+
+When deploying **ecoseller**, make sure that the necessary ports are accessible and properly configured in your firewall settings or network infrastructure to allow incoming and outgoing traffic to the respective services if you don't use proxy.
+
+By understanding and managing the reserved ports, you can ensure smooth communication and access to the different components of Ecoseller, enabling seamless functionality and integration within your e-commerce platform.
+
 
