@@ -33,5 +33,7 @@
   "status-APPROVED": "Schváleno",
   "status-DECLINED": "Zamítnuto",
   "claim-items-warranty": "Reklamace položky",
-  "return-item": "Vrácení položky"
+  "return-item": "Vrácení položky",
+  "complaint-request-created": "Požadavek byl vytvořen",
+  "complaint-created-summary": "Povrzující mail byl odeslán. O dalším postupu Vás budeme informovat."
 }

@@ -77,7 +77,7 @@ export interface ICartDetail {
 export interface IShippingPaymentMethod {
   id: number;
   title: string;
-  image: string;
+  image: string | null;
 }
 
 interface IShippingPaymentMethodCountry {

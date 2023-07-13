@@ -41,7 +41,7 @@
   "ORDER_ITEM_COMPLAINT_UPDATED": [
     {
       "type": "EMAIL",
-      "method": "send_review_request"
+      "method": "send_order_complaint_status_update"
     }
   ]
 }

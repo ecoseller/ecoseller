@@ -7,7 +7,7 @@ urlpatterns = [
     path("dashboard/today-stats/", views.OrderListTodayDashboardView.as_view()),
     path("dashboard/month-stats/", views.OrderListMonthDashboardView.as_view()),
     path(
-        "dashboard/complaint/<int:pk>/", views.OrderItemComplaintDashboardView.as_view()
+        "dashboard/complaint/<int:id>/", views.OrderItemComplaintDashboardView.as_view()
     ),
     path("dashboard/<str:token>/", views.OrderDetailDashboardView.as_view()),
     path("storefront/", views.OrderCreateStorefrontView.as_view()),

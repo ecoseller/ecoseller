@@ -2,9 +2,8 @@
 from datetime import datetime, timedelta
 
 from django.conf import settings
-from django.db.models import Count
 from rest_framework import permissions, status
-from rest_framework.generics import ListAPIView, RetrieveAPIView, UpdateAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -520,14 +519,11 @@ class OrderItemComplaintStorefrontView(APIView):
         if serializer.is_valid():
             instance = serializer.save()
 
-            customer_email = instance.order.customer_email
-
             try:
                 NotificationsApi.notify(
                     event=EventTypes.ORDER_ITEM_COMPLAINT_CREATED,
                     data={
-                        "complaint_id": instance.id,
-                        "customer_email": customer_email,
+                        "complaint_id": instance.id
                     },
                 )
             except Exception as e:
@@ -537,10 +533,27 @@ class OrderItemComplaintStorefrontView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class OrderItemComplaintDashboardView(UpdateAPIView):
-    serializer_class = OrderItemComplaintSerializer
-    queryset = OrderItemComplaint.objects.all()
+class OrderItemComplaintDashboardView(APIView):
 
     @check_user_access_decorator({"order_change_permission"})
-    def put(self, request, *args, **kwargs):
-        return super().put(request, args, kwargs)
+    def put(self, request, id):
+        try:
+            instance = OrderItemComplaint.objects.get(id)
+            serializer = OrderItemComplaintSerializer(instance, request.data)
+            if serializer.is_valid():
+                serializer.save()
+
+                try:
+                    NotificationsApi.notify(
+                        event=EventTypes.ORDER_ITEM_COMPLAINT_UPDATED,
+                        data={
+                            "complaint_id": id
+                        },
+                    )
+                except Exception as e:
+                    print("NotificationApi Error", e)
+
+                return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except OrderItemComplaint.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)

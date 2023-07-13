@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-13 09:59+0000\n"
+"POT-Creation-Date: 2023-07-13 18:41+0000\n"
 "PO-Revision-Date: 2023-07-13 12:02+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -23,14 +23,75 @@ msgstr ""
 msgid "Order confirmation"
 msgstr "Potvrzení objednávky"
 
-#: emails/email/return_exchange.py:24 emails/email/return_exchange.py:29
-msgid "Return request has been received"
-msgstr "Žádost o vrácení byla přiajta"
+#: emails/email/order_item.py:26 emails/email/order_item.py:37
+#, fuzzy
+#| msgid "Order confirmation"
+msgid "Order item complaint confirmation"
+msgstr "Potvrzení o vytvoření požadavku"
 
+#: emails/email/order_item.py:33
+msgid "you created the following item warranty claim"
+msgstr "reklamace byla vytvořena"
+
+#: emails/email/order_item.py:34
+msgid "you created the following item return request"
+msgstr "žádost o vrácení byla vytvořena"
+
+#: emails/email/order_item.py:38 emails/email/order_item.py:78
 #: emails/email/return_exchange.py:30 emails/email/review.py:32
 #: templates/email/order/confirmation.html:405
 msgid "Hello,"
 msgstr "Dobrý den,"
+
+#: emails/email/order_item.py:40 emails/email/order_item.py:80
+msgid "Order detail"
+msgstr "Detail objednávky"
+
+#: emails/email/order_item.py:63
+#, fuzzy
+#| msgid "Warranty claim status was updated"
+msgid "Warranty claim status update"
+msgstr "Úprava stavu reklamace"
+
+#: emails/email/order_item.py:64
+#, fuzzy
+#| msgid "Return request has been received"
+msgid "Return request status update"
+msgstr "Úprava stavu žádosti o vrácení"
+
+#: emails/email/order_item.py:71
+#, fuzzy
+#| msgid "The status of item warranty claim was updated"
+msgid "The status of item's warranty claim has been updated"
+msgstr "Stav reklamace byl upraven"
+
+#: emails/email/order_item.py:72
+#, fuzzy
+#| msgid "The status of item warranty claim was updated"
+msgid "The status of item's return request has been updated"
+msgstr "Stav žádosti o vrácení byl upraven"
+
+#: emails/email/order_item.py:73
+msgid "Status: APPROVED"
+msgstr "Stav: SCHVÁLENO"
+
+#: emails/email/order_item.py:74
+msgid "Status: DECLINED"
+msgstr "Stav: ZAMÍTNUTO"
+
+#: emails/email/order_item.py:74
+msgid "Status: CREATED"
+msgstr "Stav: VYTVOŘENO"
+
+#: emails/email/order_item.py:77
+#, fuzzy
+#| msgid "Warranty claim status was updated"
+msgid "Order item complaint status update"
+msgstr "Úprava stavu reklamace"
+
+#: emails/email/return_exchange.py:24 emails/email/return_exchange.py:29
+msgid "Return request has been received"
+msgstr "Žádost o vrácení byla přiajta"
 
 #: emails/email/return_exchange.py:32
 msgid ""
@@ -99,3 +160,6 @@ msgstr "Dodací metoda:"
 #: templates/email/order/confirmation.html:1063
 msgid "Payment method:"
 msgstr "Platební metoda:"
+
+#~ msgid "The status of item"
+#~ msgstr "Stav "

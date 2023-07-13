@@ -248,15 +248,18 @@ const OrderDetailItemList = ({
     minWidth: 150,
     renderCell: (params: any) => {
       const complaints: IOrderItemComplaint[] = params.value;
-      const lastComplaint = complaints[complaints.length - 1];
 
-      return (
-        <OrderItemComplaintModal
-          orderItemSku={params.row.product_variant_sku}
-          orderItemComplaint={lastComplaint}
-          openModalLinkText="Detail"
-        />
-      );
+      if (complaints.length > 0) {
+        const lastComplaint = complaints[complaints.length - 1];
+
+        return (
+          <OrderItemComplaintModal
+            orderItemSku={params.row.product_variant_sku}
+            orderItemComplaint={lastComplaint}
+            openModalLinkText="Detail"
+          />
+        );
+      } else return <></>;
     },
   };
 

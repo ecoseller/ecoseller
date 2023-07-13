@@ -74,6 +74,9 @@ class EmailConnector(NotificationConnector):
 
         return True
 
+    # def send_order_complaint_email(self, *args, **kwargs):
+    #     pass
+
     @classmethod
     def send_order_complaint_confirmation(self, *args, **kwargs):
         """
@@ -81,7 +84,7 @@ class EmailConnector(NotificationConnector):
         """
 
         # import it here to avoid error on not initialized django app
-        from emails.email.order_item_complaint import OrderItemComplaintConfirmationEmail
+        from emails.email.order_item import OrderItemComplaintConfirmationEmail
         from order.models import OrderItemComplaint
 
         # obtain serialized order data from kwargs (data is a dict)
@@ -97,6 +100,36 @@ class EmailConnector(NotificationConnector):
 
             customer_email = complaint.order.customer_email
             email = OrderItemComplaintConfirmationEmail(complaint, [customer_email], use_rq=True)
+
+            email.send()
+
+            return True
+        except OrderItemComplaint.DoesNotExist:
+            return False
+
+    @classmethod
+    def send_order_complaint_status_update(self, *args, **kwargs):
+        """
+        Send order item complaint status update to the user
+        """
+
+        # import it here to avoid error on not initialized django app
+        from emails.email.order_item import OrderItemComplaintStatusUpdateEmail
+        from order.models import OrderItemComplaint
+
+        # obtain serialized order data from kwargs (data is a dict)
+        data = kwargs.get("data", None)
+
+        if not data:
+            return False
+
+        complaint_id = data.get("complaint_id", None)
+
+        try:
+            complaint = OrderItemComplaint.objects.get(pk=complaint_id)
+
+            customer_email = complaint.order.customer_email
+            email = OrderItemComplaintStatusUpdateEmail(complaint, [customer_email], use_rq=True)
 
             email.send()
 

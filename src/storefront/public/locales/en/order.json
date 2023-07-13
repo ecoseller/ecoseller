@@ -33,5 +33,7 @@
   "status-APPROVED": "Approved",
   "status-DECLINED": "Declined",
   "claim-items-warranty": "Claim item's warranty",
-  "return-item": "Return item"
+  "return-item": "Return item",
+  "complaint-request-created": "The request was created",
+  "complaint-created-summary": "Confirmation mail has been sent. We'll inform you in case of any updates."
 }
