@@ -15,20 +15,26 @@ COPY ./core/ .
 # COPY ./entrypoint.sh .
 
 FROM base as development
-RUN chmod +x /usr/src/app/entrypoint.sh
-ENTRYPOINT [ "sh", "/usr/src/app/entrypoint.sh" ]
+RUN chmod +x /usr/src/app/data_preparation.sh
+RUN chmod +x  /usr/src/app/entrypoint_dev.sh
+ENTRYPOINT [ "sh", "-c", "/usr/src/app/data_preparation.sh && /usr/src/app/entrypoint_dev.sh" ]
 
 FROM base as demo
 RUN apt-get install -y git postgresql-client
-# RUN git clone https://github.com/ecoseller/demo-data.git
-# RUN mv ./demo-data/ /usr/src/demo-data
-# RUN mv /usr/src/demo-data/media /usr/src/mediafiles
-RUN chmod +x /usr/src/app/entrypoint.sh
-# load demo data
-ENTRYPOINT [ "sh", "-c", "/usr/src/app/entrypoint_demo.sh && /usr/src/app/entrypoint.sh" ]
+RUN pip3 install gunicorn==20.1.0
+RUN chmod +x /usr/src/app/demo_data_loader.sh
+RUN chmod +x /usr/src/app/data_preparation.sh
+RUN chmod +x /usr/src/app/entrypoint_prod.sh
+ENTRYPOINT [ "sh", "-c", "/usr/src/app/demo_data_loader.sh && /usr/src/app/data_preparation.sh && /usr/src/app/entrypoint_prod.sh" ]
 
 # Production branch of a Dockerfile
 # It's currently the same as development branch above but it's here for future use
 FROM base as production
-RUN chmod +x /usr/src/app/entrypoint.sh
-ENTRYPOINT [ "sh", "/usr/src/app/entrypoint.sh" ]
+RUN pip3 install gunicorn==20.1.0
+RUN chmod +x /usr/src/app/data_preparation.sh
+RUN chmod +x /usr/src/app/entrypoint_prod.sh
+ENTRYPOINT [ "sh", "-c", "/usr/src/app/data_preparation.sh && /usr/src/app/entrypoint_prod.sh" ]
+
+FROM base as rq-worker
+RUN chmod +x /usr/src/app/rq_worker.sh
+ENTRYPOINT [ "sh", "-c", "/usr/src/app/rq_worker.sh" ]
