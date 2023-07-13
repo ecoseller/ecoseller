@@ -48,7 +48,7 @@ const DashboardUserAddPage = () => {
             setPreventNavigation={setPreventNavigation}
             onButtonClick={async () => {
               await setPreventNavigation(false);
-              await fetch("/api/user/users", {
+              await fetch("/api/user/users/", {
                 method: "POST",
                 body: JSON.stringify({
                   email: email,
