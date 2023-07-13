@@ -3,7 +3,6 @@
 from datetime import datetime, timedelta
 
 from django.conf import settings
-from django.db.models import Count
 from rest_framework import permissions
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
@@ -174,21 +173,19 @@ class OrderListTodayDashboardView(APIView):
 
             # get CartItems from orders
             cart_items = CartItem.objects.filter(cart__order__in=orders)
+            product_sell_count = {}
+            for cart_item in cart_items:
+                if cart_item.product.id in product_sell_count:
+                    product_sell_count[cart_item.product.id] += cart_item.quantity
+                else:
+                    product_sell_count[cart_item.product.id] = cart_item.quantity
 
-            top_selling_product = (
-                cart_items.values("product_id")
-                .annotate(total=Count("product_id"))
-                .order_by("-total")
-                .first()
-                if cart_items
-                else None
-            )
-
-            top_selling_product = (
-                Product.objects.get(id=top_selling_product["product_id"])
-                if top_selling_product
-                else None
-            )
+            top_selling_product = None
+            if len(product_sell_count) > 0:
+                top_selling_product = max(
+                    product_sell_count, key=product_sell_count.get
+                )
+                top_selling_product = Product.objects.get(id=top_selling_product)
 
             top_selling_product = [
                 (
@@ -325,24 +322,34 @@ class OrderListMonthDashboardView(ListAPIView):
             ]
 
             cart_items = CartItem.objects.filter(cart__order__in=orders)
-            top_5_sellings_products = (
-                cart_items.values("product_id")
-                .annotate(total=Count("product_id"))
-                .order_by("-total")[:5]
-            )
-            top_5_sellings_products = [
-                Product.objects.get(id=item["product_id"])
-                for item in top_5_sellings_products
-            ]
-            top_5_sellings_products = [
-                {
-                    "title": product.title,
-                    "media": product.get_primary_photo().media.url
-                    if product.get_primary_photo()
-                    else None,
-                }
-                for product in top_5_sellings_products
-            ]
+            product_sell_count = {}
+            for cart_item in cart_items:
+                if cart_item.product.id in product_sell_count:
+                    product_sell_count[cart_item.product.id] += cart_item.quantity
+                else:
+                    product_sell_count[cart_item.product.id] = cart_item.quantity
+
+            top_5_sellings_products = None
+            if len(product_sell_count) > 0:
+                top_5_sellings_products = sorted(
+                    product_sell_count, key=product_sell_count.get, reverse=True
+                )[:5]
+                top_5_sellings_products = [
+                    Product.objects.get(id=item) for item in top_5_sellings_products
+                ]
+
+            if top_5_sellings_products:
+                top_5_sellings_products = [
+                    {
+                        "title": product.title,
+                        "media": product.get_primary_photo().media.url
+                        if product.get_primary_photo()
+                        else None,
+                    }
+                    for product in top_5_sellings_products
+                ]
+            else:
+                top_5_sellings_products = []
 
             # get daily orders count for past 30 days or 0 if no orders
             daily_orders_count = []
