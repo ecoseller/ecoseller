@@ -1,5 +1,5 @@
 ---
-title:
+title: Try
 type: major
 ---
 

@@ -64,9 +64,15 @@ defaults:
       path: ""
       type: "posts"
     values:
+      seo:
+        type: Article
       _comments:
-        type: Marks the impact of this release
-
+        category: Group navigation links with this field
+        order: Used to sort links in the navigation
+      _options:
+        content:
+          width: 800
+          height: 2000
 # -----------
 # CloudCannon
 

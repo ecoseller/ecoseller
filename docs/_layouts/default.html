@@ -31,7 +31,7 @@
 		<h1>
 			<a style="color: black;" href="{{ site.baseurl }}/"><img src="{{ site.baseurl }}/images/emblem.svg"
 					width="100" height="100" alt="{{ site.title }} logo"></a>
-			<a >{{ site.title }}</a>
+			<a>{{ site.title }}</a>
 			<button type="button" class="open-nav" id="open-nav"></button>
 		</h1>
 
@@ -65,9 +65,9 @@
 			</ul>
 
 			<ul>
-				<li class="nav-item top-level {% if page.url == '/changelog/' %}current{% endif %}">
-					{% assign changelog = site.html_pages | where: 'url', '/changelog/' | first %}
-					<a href="{{ site.baseurl }}/changelog/">{{ changelog.title }}</a>
+				<li class="nav-item top-level {% if page.url == '/contribution/' %}current{% endif %}">
+					{% assign contribution = site.html_pages | where: 'url', '/contribution/' | first %}
+					<a href="{{ site.baseurl }}/contribution/">{{ contribution.title }}</a>
 				</li>
 			</ul>
 		</nav>
