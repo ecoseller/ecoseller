@@ -47,7 +47,6 @@ const DashboardGroupAddPage = ({ permissions }: IPermissionsProps) => {
     }
   }, [group]);
 
-  console.log("GROUP", group);
 
   return (
     <DashboardLayout>
@@ -93,7 +92,7 @@ const DashboardGroupAddPage = ({ permissions }: IPermissionsProps) => {
             checkPermission={true}
           >
             <TopLineWithReturn
-              title="Add Group"
+              title="Add Role"
               returnPath="/dashboard/users-roles"
             />
             <CreateRole
