@@ -83,6 +83,30 @@ This section shows selected shipping and payment methods along with their prices
 TODO: add image
 
 # Reviews
+The reviews page consists of a list showing all reviews. The list has the following columns:
+* Review token
+* Product variant
+* Product ID
+* Rating
+* Comment
+* Created at
+* Actions
+  * Detail - clicking on the detail button opens the review details page (see [below](#review-details))
+  * Delete - clicking on the delete button deletes the review
+
+![Reviews list](../../images/reviews_list.png)
+
+## Review details
+This page shows full information about the review and overall rating of the product. The page is divided into the following sections:
+* Rating - shown via stars and percentage
+* Product ID
+* Comment
+* Average product rating
+
+![Review detail](../../images/review_detail.png)
+### Average product rating
+This section shows the average rating of the product. The rating is shown via start and average score (value from 0 to 5). It also shows the number of reviews for the product and the distribution of ratings. Distribution values are rounded up - this means that if user submitted a rating of 4.5, it will be shown as 5 in the distribution.
+
 # Catalog
 # Localization
 # CMS
