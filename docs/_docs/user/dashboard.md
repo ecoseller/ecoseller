@@ -5,7 +5,7 @@ order: 2
 ---
 
 # Overview
-Overview page provides summarized information about the store. It is the first page that is shown to the user after login. Page is divided into 2 main sections:
+The Overview page provides summarised information about the store. It is the first page that is shown to the user after logging in. The page is divided into two main sections:
 * Today's statistics
 * Statistics for the last 30 days
 
@@ -18,7 +18,7 @@ For today's statistics, the following information is shown:
 * Top selling product
 
 ## Statistics for the last 30 days
-For the last 30 days statistics, the following information is shown:
+For the last 30 days' statistics, the following information is shown:
 * Orders count
 * Revenue
 * Average order value
@@ -28,6 +28,60 @@ For the last 30 days statistics, the following information is shown:
 
 # Cart
 # Orders
+The orders page consists of a list showing all orders. The list has the following columns:
+* Order token
+* Status
+* Customer email
+* Created at
+* Actions
+
+![Orders list](../../images/orders_list.png)
+
+The actions column contains the following buttons:
+* Edit
+
+## Edit
+Clicking on the edit button opens the order details page.
+
+## Order details
+This page shows full information about the order. The page is divided into the following sections:
+* Order items
+* Status
+* Shipping Info
+* Billing info
+* Shipping and payment methods
+
+### Order items
+This section shows a list of all items in the order. The list has the following columns:
+* Product variant name - clicking on the name opens the product variant details page (described in TODO: add link)
+* SKU
+* Quantity
+* Unit price (without VAT)
+* Actions
+  * Edit - admin is able to change the quantity of the product variant
+  * Delete - admin is able to delete the product variant from the order
+  
+This section also shows the total price (without VAT) of a given order.
+
+![Order items](../../images/order_items.png)
+
+### Status
+This section shows the current status of the order. The status can be changed by the admin using a drop-down menu.
+
+![Order status](../../images/order_status.png)
+
+### Shipping and billing info
+This section shows the shipping and billing information of the order. It contains the same information as the shipping and billing information in the checkout process. Information is shown in the form view, and the admin is again able to modify its content.
+
+|                     Shipping info                      |                     Billing info                     |
+| :----------------------------------------------------: | :--------------------------------------------------: |
+| ![Shipping info](../../images/order_shipping_info.png) | ![Billing info](../../images/order_billing_info.png) |
+
+### Shipping and payment method
+This section shows selected shipping and payment methods along with their prices.
+
+TODO: add image
+
 # Reviews
 # Catalog
 # Localization
