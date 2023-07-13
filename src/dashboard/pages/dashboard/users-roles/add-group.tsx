@@ -47,7 +47,6 @@ const DashboardGroupAddPage = ({ permissions }: IPermissionsProps) => {
     }
   }, [group]);
 
-
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
