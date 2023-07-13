@@ -115,6 +115,7 @@ This page provides an overview of all users and roles. It is into two main parts
 * Users
 * Roles
 
+![Users & Roles](../../images/user_roles_list.png)
 ## Users
 This section shows a list of all users. The list has the following columns:
 * Email
@@ -134,13 +135,32 @@ The user details page shows full information about the user. The page is divided
   * Last Name
   * Is Admin - only admin can change this value
   * Is Staff
+![General information](../../images/user_edit_general_info.png)
 * Password
   * Old password - displayed only if a user is editing his profile
   * New password
   * New password confirmation
-* Groups - a checklist of all groups (roles) available in the system. If a user is a member of a group, the checkbox is checked.
-  
-Only the admin or users with the `user_change_permission` permission can edit the user (for more detailed info about permissions see TODO: add link).
+![Password](../../images/user_edit_password.png)
+* Roles - a checklist of all roles available in the system. If a user has a role assigned, the checkbox is checked.
+![Roles](../../images/user_edit_roles.png)
 
+### Create user
+To create a new user, click on the *Add New* button in the users list. This opens a new page where the user can set the email and password.
+![Create user](../../images/user_add_user.png)
+
+## Roles
+Roles are used to group various permissions into one unit. This plays a crucial role in the authorization process as it restricts access to certain parts of the system. Only the admin or users with the `user_change_permission` permission can edit the user (for more detailed info about permissions see TODO: add link). The system comes with three predefined roles:
+* Editor
+* Copywriter
+* UserManager
+
+Admin counts as a special role that has all permissions. Authorized users can create new roles or edit existing ones.
+### Create role
+To create a new role, click on the *Add New* button in the roles list. This opens a new page where the user can enter the name of the role, its description and select permissions that will be assigned to the role.
+![Create role](../../images/role_add_role.png)
+
+### Edit role
+To edit an existing role, click on the edit button in the roles list. This opens a new page where the user can edit a description of a given role and select permissions that will be assigned to the role.
+![Edit role](../../images/role_edit_role.png)
 
 # Recommender system
