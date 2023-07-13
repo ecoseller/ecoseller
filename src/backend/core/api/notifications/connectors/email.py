@@ -96,7 +96,9 @@ class EmailConnector(NotificationConnector):
             complaint = OrderItemComplaint.objects.get(pk=complaint_id)
 
             customer_email = complaint.order.customer_email
-            email = OrderItemComplaintConfirmationEmail(complaint, [customer_email], use_rq=True)
+            email = OrderItemComplaintConfirmationEmail(
+                complaint, [customer_email], use_rq=True
+            )
 
             email.send()
 
@@ -126,7 +128,9 @@ class EmailConnector(NotificationConnector):
             complaint = OrderItemComplaint.objects.get(pk=complaint_id)
 
             customer_email = complaint.order.customer_email
-            email = OrderItemComplaintStatusUpdateEmail(complaint, [customer_email], use_rq=True)
+            email = OrderItemComplaintStatusUpdateEmail(
+                complaint, [customer_email], use_rq=True
+            )
 
             email.send()
 

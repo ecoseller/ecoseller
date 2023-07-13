@@ -29,9 +29,11 @@ class OrderItemComplaintConfirmationEmail(Email):
         translation.activate(self.language)
         storefront_url = settings.STOREFRONT_URL
 
-        body_text = _(
-            "you created the following item warranty claim") if self.complaint.type == OrderItemComplaintType.WARRANTY_CLAIM else _(
-            "you created the following item return request")
+        body_text = (
+            _("you created the following item warranty claim")
+            if self.complaint.type == OrderItemComplaintType.WARRANTY_CLAIM
+            else _("you created the following item return request")
+        )
 
         self.context = {
             "main_title": _("Order item complaint confirmation"),
@@ -59,19 +61,28 @@ class OrderItemComplaintStatusUpdateEmail(Email):
 
     def generate_subject(self):
         translation.activate(self.language)
-        self.subject = _(
-            "Warranty claim status update") if self.complaint.type == OrderItemComplaintType.WARRANTY_CLAIM else _(
-            "Return request status update")
+        self.subject = (
+            _("Warranty claim status update")
+            if self.complaint.type == OrderItemComplaintType.WARRANTY_CLAIM
+            else _("Return request status update")
+        )
 
     def generate_context(self):
         translation.activate(self.language)
         storefront_url = settings.STOREFRONT_URL
 
-        body_text = _(
-            "The status of item's warranty claim has been updated") if self.complaint.type == OrderItemComplaintType.WARRANTY_CLAIM else _(
-            "The status of item's return request has been updated")
-        new_status = _("Status: APPROVED") if self.complaint.status == OrderItemComplaintStatus.APPROVED else _(
-            "Status: DECLINED") if self.complaint.status == OrderItemComplaintStatus.DECLINED else _("Status: CREATED")
+        body_text = (
+            _("The status of item's warranty claim has been updated")
+            if self.complaint.type == OrderItemComplaintType.WARRANTY_CLAIM
+            else _("The status of item's return request has been updated")
+        )
+        new_status = (
+            _("Status: APPROVED")
+            if self.complaint.status == OrderItemComplaintStatus.APPROVED
+            else _("Status: DECLINED")
+            if self.complaint.status == OrderItemComplaintStatus.DECLINED
+            else _("Status: CREATED")
+        )
 
         self.context = {
             "main_title": _("Order item complaint status update"),

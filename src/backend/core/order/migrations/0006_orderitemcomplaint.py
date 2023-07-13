@@ -9,21 +9,55 @@ import order.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cart', '0026_rename_unit_price_gross_cartitem_unit_price_incl_vat_and_more'),
-        ('order', '0005_order_payment_id'),
+        ("cart", "0026_rename_unit_price_gross_cartitem_unit_price_incl_vat_and_more"),
+        ("order", "0005_order_payment_id"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='OrderItemComplaint',
+            name="OrderItemComplaint",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('description', models.TextField()),
-                ('status', enumchoicefield.fields.EnumChoiceField(default=order.models.OrderItemComplaintStatus(1), enum_class=order.models.OrderItemComplaintStatus, max_length=8)),
-                ('type', enumchoicefield.fields.EnumChoiceField(enum_class=order.models.OrderItemComplaintType, max_length=14)),
-                ('create_at', models.DateTimeField(auto_now_add=True)),
-                ('cart_item', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='complaints', to='cart.cartitem')),
-                ('order', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='complaints', to='order.order')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("description", models.TextField()),
+                (
+                    "status",
+                    enumchoicefield.fields.EnumChoiceField(
+                        default=order.models.OrderItemComplaintStatus(1),
+                        enum_class=order.models.OrderItemComplaintStatus,
+                        max_length=8,
+                    ),
+                ),
+                (
+                    "type",
+                    enumchoicefield.fields.EnumChoiceField(
+                        enum_class=order.models.OrderItemComplaintType, max_length=14
+                    ),
+                ),
+                ("create_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "cart_item",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="complaints",
+                        to="cart.cartitem",
+                    ),
+                ),
+                (
+                    "order",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="complaints",
+                        to="order.order",
+                    ),
+                ),
             ],
         ),
     ]

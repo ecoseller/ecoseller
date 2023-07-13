@@ -522,9 +522,7 @@ class OrderItemComplaintStorefrontView(APIView):
             try:
                 NotificationsApi.notify(
                     event=EventTypes.ORDER_ITEM_COMPLAINT_CREATED,
-                    data={
-                        "complaint_id": instance.id
-                    },
+                    data={"complaint_id": instance.id},
                 )
             except Exception as e:
                 print("NotificationApi Error", e)
@@ -534,7 +532,6 @@ class OrderItemComplaintStorefrontView(APIView):
 
 
 class OrderItemComplaintDashboardView(APIView):
-
     @check_user_access_decorator({"order_change_permission"})
     def put(self, request, id):
         try:
@@ -546,9 +543,7 @@ class OrderItemComplaintDashboardView(APIView):
                 try:
                     NotificationsApi.notify(
                         event=EventTypes.ORDER_ITEM_COMPLAINT_UPDATED,
-                        data={
-                            "complaint_id": id
-                        },
+                        data={"complaint_id": id},
                     )
                 except Exception as e:
                     print("NotificationApi Error", e)
