@@ -34,6 +34,7 @@ The starting point, however, is the same for all environments. You need to clone
 ```bash
 git clone https://github.com/ecoseller/ecoseller.git
 ```
+![Docker services](../../images/admin/docker.png)
 
 ## Development environment
 To run **ecoseller** in a development environment, follow these steps:
@@ -91,7 +92,7 @@ docker compose -f docker-compose.prod.yml up -d
 ```
 
 ### Demo environment
-The demo environment in Ecoseller is designed to showcase the platform's features and functionality using preloaded demo products (1400+), variants (2200+), and additional data. Setting up the demo environment is similar to the production environment, with the main difference being the utilization of the `docker-compose.demo.yml` file. It's very similar to `docker-compose.prod.yml` but it has some additional services that are used to preload the demo data into the database.
+The demo environment in Ecoseller is designed to showcase the platform's features and functionality using preloaded demo products (1400+), variants (2100+), and additional data. Setting up the demo environment is similar to the production environment, with the main difference being the utilization of the `docker-compose.demo.yml` file. It's very similar to `docker-compose.prod.yml` but it has some additional services that are used to preload the demo data into the database.
 You can choose between using reverse proxy or accessing the services directly. However, it's recommended to use the reverse proxy configuration for the demo environment as well (please see the [Reverse Proxy](#reverse-proxy) section for more information as well ass [Production environment](#production-environment)).
 Our demo data live at public repository [ecoseller/demo-data](https://github.com/ecoseller/demo-data)
 
@@ -111,6 +112,10 @@ PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST -U $POSTGRES_USER -d $POSTG
 
 
 **Also, please note, that the demo environment is not intended for production use. It's not setup for persistent storage so after you stop the containers all the data will be lost.**
+
+![Product variants loaded to the database in demo envrionment](../../images/admin/db_product_productvariant_sql.png)
+
+
 
 # Environment variables 
 **ecoseller** utilizes environment variables to configure various aspects of the backend and recommendation system. These environment variables are stored in separate files, namely `docker-compose.env`. For the backend it's `src/backend/docker-compose.env` and `src/recommender_system/docker-compose.env` for recommendation system. Additionally, the storefront, dashboard, and other services have their environment variables directly specified in the  YAML file for specific docker compose.
