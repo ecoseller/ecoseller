@@ -1,16 +1,24 @@
-from rest_framework.views import APIView
-from rest_framework.generics import RetrieveUpdateDestroyAPIView
-from rest_framework.generics import GenericAPIView
-from rest_framework.response import Response
 from rest_framework import permissions
+from rest_framework.generics import GenericAPIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from rest_framework.parsers import (
+    MultiPartParser,
+    FormParser,
+    JSONParser,
+)
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from core.pagination import (
+    DashboardPagination,
+)
+from country.models import (
+    Country,
+)
 from roles.decorator import (
     check_user_access_decorator,
     check_user_is_staff_decorator,
 )
-from core.pagination import (
-    DashboardPagination,
-)
-
 from .models import (
     Product,
     ProductVariant,
@@ -20,11 +28,6 @@ from .models import (
     ProductMedia,
     ProductType,
 )
-
-from country.models import (
-    Country,
-)
-
 from .serializers import (
     ProductStorefrontDetailSerializer,
     ProductDashboardListSerializer,
@@ -36,13 +39,6 @@ from .serializers import (
     ProductMediaDetailsSerializer,
     ProductTypeSerializer,
 )
-
-from rest_framework.parsers import (
-    MultiPartParser,
-    FormParser,
-    JSONParser,
-)
-
 
 """
 Dashboard views
@@ -69,7 +65,7 @@ class ProductListDashboard(APIView, DashboardPagination):
 
     # TODO: add permissions for dashboard views (only for staff) <- testing purposes
     permission_classes = (permissions.AllowAny,)
-    pagination_class = DashboardPagination()
+    pagination = DashboardPagination()
 
     locale = "en"
 

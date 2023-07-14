@@ -1,19 +1,17 @@
 from rest_framework import permissions
-from rest_framework.views import APIView
-from rest_framework.generics import UpdateAPIView
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from rest_framework.generics import UpdateAPIView
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.views import APIView
 from rest_framework_simplejwt import views as jwt_views
-from core.pagination import DashboardPagination
+from rest_framework_simplejwt.tokens import RefreshToken
 
+from core.pagination import DashboardPagination
 from roles.decorator import (
     check_user_access_decorator,
     check_user_is_staff_decorator,
 )
-
 from .models import User
-
 from .serializers import (
     RegistrationSerializer,
     TokenObtainDashboardSerializer,
@@ -31,7 +29,7 @@ class UserView(APIView, DashboardPagination):
     ]
 
     serializer_class = RegistrationSerializer
-    pagination_class = DashboardPagination()
+    pagination = DashboardPagination()
 
     @check_user_is_staff_decorator()
     def get(self, request):

@@ -204,7 +204,7 @@ class CategoryDetailProductsStorefrontView(APIView):
     Used for storefront.
     """
 
-    pagination_class = StorefrontPagination()
+    pagination = StorefrontPagination()
     pricelist = None
     locale = None
     PRICE_LIST_URL_PARAM = "pricelist"
@@ -227,11 +227,11 @@ class CategoryDetailProductsStorefrontView(APIView):
         try:
             category = Category.objects.get(id=pk, published=True)
             products = _get_all_published_products(category)
-            paginated_products = self.pagination_class.paginate_queryset(
+            paginated_products = self.pagination.paginate_queryset(
                 queryset=products, request=request
             )
             serializer = self._serialize_products(paginated_products, request)
-            return self.pagination_class.get_paginated_response(serializer.data)
+            return self.pagination.get_paginated_response(serializer.data)
         except Category.DoesNotExist:
             return Response(status=HTTP_404_NOT_FOUND)
 
@@ -292,13 +292,13 @@ class CategoryDetailProductsStorefrontView(APIView):
                 else:
                     sorted_data = filtered_products
 
-                paginated_sorted_products = self.pagination_class.paginate_queryset(
+                paginated_sorted_products = self.pagination.paginate_queryset(
                     queryset=sorted_data, request=request
                 )
                 serializer = self._serialize_products(
                     paginated_sorted_products, request
                 )
-                return self.pagination_class.get_paginated_response(serializer.data)
+                return self.pagination.get_paginated_response(serializer.data)
             except Category.DoesNotExist:
                 return Response(status=HTTP_404_NOT_FOUND)
         else:
@@ -409,14 +409,14 @@ class CategoryDetailAttributesStorefrontView(APIView):
 
         for attr in attribute_types:
             if (
-                attr.value_type == AttributeTypeValueType.TEXT
-                and attr.id not in string_attributes
+                    attr.value_type == AttributeTypeValueType.TEXT
+                    and attr.id not in string_attributes
             ):
                 string_attributes[attr.id] = attr
             elif (
-                attr.value_type
-                in [AttributeTypeValueType.DECIMAL, AttributeTypeValueType.INTEGER]
-                and attr.id not in numeric_attributes
+                    attr.value_type
+                    in [AttributeTypeValueType.DECIMAL, AttributeTypeValueType.INTEGER]
+                    and attr.id not in numeric_attributes
             ):
                 numeric_attributes[attr.id] = attr
 

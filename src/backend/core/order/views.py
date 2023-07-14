@@ -492,7 +492,7 @@ class OrderListStorefrontView(ListAPIView):
         return Order.objects.filter(cart__user_id=user_id).order_by("-create_at")
 
 
-class OrderItemsListStorefrontView(ListAPIView):
+class OrderItemsListStorefrontView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def get(self, request, token):

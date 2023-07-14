@@ -59,7 +59,7 @@ from roles.decorator import check_user_is_staff_decorator, check_user_access_dec
 
 
 @permission_classes([AllowAny])  # TODO: use authentication
-class CartDetailShortStorefrontView(GenericAPIView):
+class CartDetailShortStorefrontView(APIView):
     def get(self, request, token):
         cart = Cart.objects.get(token=token)
         serializer = CartDetailSerializer(cart)
@@ -94,7 +94,7 @@ class CartDetailStorefrontView(APIView):
                 )
 
                 if (
-                    cart_item_filter.exists()
+                        cart_item_filter.exists()
                 ):  # if already present, update its quantity instead of creating new `CartItem`
                     cart_item = cart_item_filter.first()
                     cart_item.quantity += update_data.quantity
@@ -375,7 +375,7 @@ class CartCountryMethodsStorefrontView(GenericAPIView):
 
 
 @permission_classes([AllowAny])
-class MethodCountryDetailBaseView(GenericAPIView):
+class MethodCountryDetailBaseView(APIView):
     """
     Base view for getting detailed info about payment/shipping method country
 
