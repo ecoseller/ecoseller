@@ -1,5 +1,4 @@
 // next.js
-import { useTranslation } from "next-i18next";
 // react
 import React, { ReactElement } from "react";
 // layout
@@ -25,29 +24,26 @@ export interface ITrainingProps {
 }
 
 const Training = ({ name, statistics }: ITrainingProps) => {
-  const { t } = useTranslation("recommender");
-
   return (
     <Stack spacing={2}>
       <Typography variant="body1">
-        {t("Duration")} : {statistics.duration.toFixed(2)} s
+        Duration : {statistics.duration.toFixed(2)} s
       </Typography>
       <Typography variant="body1">
-        {t("Peak memory")} : {statistics.peakMemory.toFixed(2)} MB
+        Peak memory : {statistics.peakMemory.toFixed(2)} MB
       </Typography>
       <Typography variant="body1">
-        {t("Peak memory percentage")} :{" "}
-        {statistics.peakMemoryPercentage.toFixed(2)} %
+        Peak memory percentage : {statistics.peakMemoryPercentage.toFixed(2)} %
       </Typography>
       <Typography variant="body1">
-        {statistics.fullTrain ? t("Full training") : t("Incremental training")}
+        {statistics.fullTrain ? "Full training" : "Incremental training"}
       </Typography>
       <Typography variant="body1" style={{ whiteSpace: "pre-line" }}>
-        {t("Metrics")} :<br />
+        Metrics :<br />
         <code>{JSON.stringify(statistics.metrics, null, 4)}</code>
       </Typography>
       <Typography variant="body1" style={{ whiteSpace: "pre-line" }}>
-        {t("Hyperparameters used")} :<br />
+        Hyperparameters used :<br />
         <code>{JSON.stringify(statistics.hyperparameters, null, 4)}</code>
       </Typography>
     </Stack>

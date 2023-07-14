@@ -3,11 +3,13 @@ import { IBreadcrumbObject } from "@/types/common";
 import { IAttributeType } from "@/types/attributes";
 
 export interface IProductSliderData {
-  id: number;
+  product_id: number;
+  product_variant_sku: string;
   title: string;
   price: string;
   image: string;
   url: string;
+  rs_info: object;
 }
 
 export interface IBaseAttribute {

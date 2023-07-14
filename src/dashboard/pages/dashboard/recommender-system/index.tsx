@@ -29,7 +29,6 @@ import StatisticsItem, {
 } from "@/components/Dashboard/Recommender/StatisticsItem";
 import CascadeConfig from "@/components/Dashboard/Recommender/CascadeConfig";
 import { ITrainingProps } from "@/components/Dashboard/Recommender/Training";
-import { useTranslation } from "next-i18next";
 import EditableContentWrapper from "@/components/Dashboard/Generic/EditableContentWrapper";
 import { generalSnackbarError, useSnackbarState } from "@/utils/snackbar";
 import SnackbarWithAlert from "@/components/Dashboard/Generic/SnackbarWithAlert";
@@ -62,8 +61,6 @@ const DashboardRecommenderSystemPage = ({
   training,
   config,
 }: IRecommenderSystemProps) => {
-  const { t } = useTranslation("recommender");
-
   const [modelDisplayed, setModelDisplayed] = useState<string>("");
 
   useEffect(() => {
@@ -170,12 +167,12 @@ const DashboardRecommenderSystemPage = ({
         returnPath={"/dashboard/catalog/products"}
       >
         <Container maxWidth="xl">
-          <Typography variant="h4">{t("Global")}</Typography>
+          <Typography variant="h4">Global</Typography>
           <Box pl={3} py={2}>
-            <Typography variant="h6">{t("Performance")}</Typography>
+            <Typography variant="h6">Performance</Typography>
             <StatisticsItem {...performance.item} />
 
-            <Typography variant="h6">{t("Configuration")}</Typography>
+            <Typography variant="h6">Configuration</Typography>
             <RecommenderConfigForm
               retrievalSize={config.retrievalSize}
               orderingSize={config.orderingSize}
@@ -190,7 +187,7 @@ const DashboardRecommenderSystemPage = ({
 
           {/* model statistics */}
           <Typography variant="h4" sx={{ mt: 2 }}>
-            {t("Models")}
+            Models
           </Typography>
           <TabContext value={modelDisplayed}>
             <Box>
@@ -220,7 +217,7 @@ const DashboardRecommenderSystemPage = ({
 
           {/* cascade */}
           <Typography variant="h4" sx={{ mt: 2 }}>
-            {t("Cascades")}
+            Cascades
           </Typography>
           <TabContext value={cascadeDisplayed}>
             <Box>

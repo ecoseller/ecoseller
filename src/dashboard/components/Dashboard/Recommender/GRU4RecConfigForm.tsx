@@ -1,6 +1,5 @@
 // next.js
 // react
-import { useTranslation } from "next-i18next";
 import React, { ReactElement, useState } from "react";
 // layout
 import DashboardLayout from "@/pages/dashboard/layout"; //react
@@ -27,18 +26,16 @@ const GRU4RecConfigForm = ({
   hiddenSizeOptions,
   learningRateOptions,
 }: IGRU4RecConfigProps) => {
-  const { t } = useTranslation("recommender");
-
   return (
     <Stack spacing={2}>
-      <OptionsForm title={t("Number of epochs")} options={numEpochsOptions} />
-      <OptionsForm title={t("Batch size")} options={batchSizeOptions} />
+      <OptionsForm title="Number of epochs" options={numEpochsOptions} />
+      <OptionsForm title="Batch size" options={batchSizeOptions} />
       <OptionsForm
-        title={t("Embedding layer size")}
+        title="Embedding layer size"
         options={embeddingSizeOptions}
       />
-      <OptionsForm title={t("Hidden layer size")} options={hiddenSizeOptions} />
-      <OptionsForm title={t("Learning rate")} options={learningRateOptions} />
+      <OptionsForm title="Hidden layer size" options={hiddenSizeOptions} />
+      <OptionsForm title="Learning rate" options={learningRateOptions} />
     </Stack>
   );
 };

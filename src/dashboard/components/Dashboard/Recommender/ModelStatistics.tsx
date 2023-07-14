@@ -1,5 +1,4 @@
 // next.js
-import { useTranslation } from "next-i18next";
 // react
 import React, { ReactElement, useEffect, useState } from "react";
 // layout
@@ -53,8 +52,6 @@ const ModelStatistics = ({
   training,
   globalConfig,
 }: IModelStatisticsProps) => {
-  const { t } = useTranslation("recommender");
-
   const [typeDisplayed, setTypeDisplayed] = useState<string>("");
 
   useEffect(() => {
@@ -74,7 +71,7 @@ const ModelStatistics = ({
     <Box sx={{ pl: 3, py: 2 }}>
       {performance !== undefined && (
         <Box>
-          <Typography variant="h6">{t("Performance")}</Typography>
+          <Typography variant="h6">Performance</Typography>
           <StatisticsItem {...performance.item} />
 
           <TabContext value={typeDisplayed}>
@@ -95,17 +92,17 @@ const ModelStatistics = ({
       )}
 
       <Typography variant="h6" sx={{ mt: 2 }}>
-        {t("Latest training")}
+        Latest training
       </Typography>
       {training === undefined || training.statistics === undefined ? (
-        <Typography variant="body1">{t("No training found.")}</Typography>
+        <Typography variant="body1">No training found.</Typography>
       ) : (
         <Training {...training} />
       )}
 
       {(model.name === "ease" || model.name === "gru4rec") && (
         <Typography variant="h6" sx={{ mt: 2 }}>
-          {t("Model configuration")}
+          Model configuration
         </Typography>
       )}
       {model.name === "ease" && <EASEConfigForm {...globalConfig.easeConfig} />}

@@ -1,5 +1,4 @@
 // next.js
-import { useTranslation } from "next-i18next";
 // react
 import React, { ReactElement, useState } from "react";
 // layout
@@ -43,8 +42,6 @@ const RecommenderConfigForm = ({
   orderingSize,
   onChange,
 }: IRecommenderConfigFormProps) => {
-  const { t } = useTranslation("recommender");
-
   const [retrievalSizeState, setRetrievalSizeState] =
     useState<number>(retrievalSize);
   const [orderingSizeState, setOrderingSizeState] =
@@ -63,7 +60,7 @@ const RecommenderConfigForm = ({
 
   return (
     <Box pl={3} py={2}>
-      <Labeled label={t("Retrieval size")}>
+      <Labeled label="Retrieval size">
         <Input
           // disabled={!hasPermission}
           type="number"
@@ -75,7 +72,7 @@ const RecommenderConfigForm = ({
           }}
         />
       </Labeled>
-      <Labeled label={t("Ordering size")}>
+      <Labeled label="Ordering size">
         <Input
           // disabled={!hasPermission}
           type="number"

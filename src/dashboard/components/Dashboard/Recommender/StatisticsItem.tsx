@@ -1,5 +1,4 @@
 // next.js
-import { useTranslation } from "next-i18next";
 // react
 import React, { ReactElement } from "react";
 // layout
@@ -24,28 +23,20 @@ const StatisticsItem = ({
   directHit,
   futureHit,
 }: IStatisticsItemProps) => {
-  const { t } = useTranslation("recommender");
-
   return (
     <Box component="div" pl={3} py={2}>
       <Stack spacing={2}>
         <Typography variant="body1">
-          {t("Coverage")} :{" "}
-          {coverage !== null
-            ? (coverage * 100).toFixed(2) + " %"
-            : t("unknown")}
+          Coverage :{" "}
+          {coverage !== null ? (coverage * 100).toFixed(2) + " %" : "unknown"}
         </Typography>
         <Typography variant="body1">
-          {t("Direct hit")} @ {k} :{" "}
-          {directHit !== null
-            ? (directHit * 100).toFixed(2) + " %"
-            : t("unknown")}
+          Direct hit @ {k} :{" "}
+          {directHit !== null ? (directHit * 100).toFixed(2) + " %" : "unknown"}
         </Typography>
         <Typography variant="body1">
-          {t("Future hit")} @ {k} :{" "}
-          {futureHit !== null
-            ? (futureHit * 100).toFixed(2) + " %"
-            : t("unknown")}
+          Future hit @ {k} :{" "}
+          {futureHit !== null ? (futureHit * 100).toFixed(2) + " %" : "unknown"}
         </Typography>
       </Stack>
     </Box>

@@ -1,4 +1,3 @@
-import { useTranslation } from "next-i18next";
 import React from "react";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -10,8 +9,6 @@ interface IOptionsFormProps {
 }
 
 const OptionsForm = ({ title, options }: IOptionsFormProps) => {
-  const { t } = useTranslation("recommender");
-
   return (
     <Stack spacing={2}>
       <Typography variant="body1">{title}</Typography>
