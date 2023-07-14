@@ -80,7 +80,7 @@ const PageCategoryTranslatedFieldsWrapper = ({
   dispatch,
 }: IPageStorefrontTranslatedFieldsWrapperProps) => {
   const { data: languages } = useSWRImmutable<ILanguage[]>(
-    "/country/languages/"
+    "/api/country/language/"
   );
 
   const [language, setLanguage] = useState<string>("");

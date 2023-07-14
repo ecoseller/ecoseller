@@ -1,5 +1,5 @@
-import { ISelectedFiltersWithOrdering } from "@/types/category";
-import { IProductRecord } from "@/types/product";
+import { ISelectedFiltersWithOrderingToSend } from "@/types/category";
+import { IPaginatedProductRecord } from "@/types/product";
 
 /**
  * Get all products contained in the given category
@@ -12,10 +12,11 @@ export const filterProducts = async (
   categoryId: number,
   pricelist: string,
   country: string,
-  recommenderSessionId: string,
-  filters: ISelectedFiltersWithOrdering
+  filters: ISelectedFiltersWithOrderingToSend,
+  page: number,
+  recommenderSessionId: string
 ) => {
-  let url = `/api/category/${categoryId}/products?pricelist=${pricelist}&country=${country}&recommender_session_id=${
+  let url = `/api/category/${categoryId}/products?pricelist=${pricelist}&country=${country}&page=${page}&recommender_session_id=${
     recommenderSessionId || ""
   }`;
 
@@ -24,5 +25,5 @@ export const filterProducts = async (
     body: JSON.stringify(filters),
   })
     .then((res) => res.json())
-    .then((data) => data as IProductRecord[]);
+    .then((data) => data as IPaginatedProductRecord);
 };

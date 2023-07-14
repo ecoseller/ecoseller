@@ -47,7 +47,7 @@ services:
     build:
       context: ./backend
       dockerfile: ./Dockerfile
-      target: development
+      target: rq-worker
     volumes:
       - ./backend/core:/usr/src/app/core
     depends_on:
@@ -55,7 +55,6 @@ services:
       - redis
     env_file:
       - ./backend/docker-compose.env
-    command: python -u /usr/src/app/core/manage.py rqworker high low default --with-scheduler
   elasticsearch:
     container_name: elasticsearch
     build:

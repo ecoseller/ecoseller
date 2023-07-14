@@ -25,7 +25,7 @@ export const productListAPI = async (
   switch (method) {
     case "GET":
       if (queryParams) {
-        url += `?${queryParams}`;
+        url += `${queryParams}`;
       }
       return await api
         .get(url)

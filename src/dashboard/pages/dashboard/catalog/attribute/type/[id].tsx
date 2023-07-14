@@ -127,7 +127,7 @@ const DashboardAttributeTypeDetailPage = ({ attributeType }: IProps) => {
             <BaseAttributeGrid
               attributeTypeId={state.id}
               baseAttributes={state?.base_attributes}
-              attribtueTypeValueType={state?.value_type || "TEXT"}
+              attributeTypeValueType={state?.value_type || "TEXT"}
               setState={(v: IBaseAttribute[]) =>
                 setState({
                   ...state,

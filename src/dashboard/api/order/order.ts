@@ -1,4 +1,8 @@
-import { IOrderDetail, OrderStatus } from "@/types/order";
+import {
+  IOrderDetail,
+  OrderStatus,
+  OrderItemComplaintStatus,
+} from "@/types/order";
 
 /**
  * Get order by its token
@@ -15,6 +19,16 @@ export const updateOrderStatus = async (
   newStatus: OrderStatus
 ) => {
   return fetch(`/api/order/${token}`, {
+    method: "PUT",
+    body: JSON.stringify({ status: newStatus }),
+  });
+};
+
+export const updateOrderItemComplaintStatus = async (
+  complaintId: number,
+  newStatus: OrderItemComplaintStatus
+) => {
+  return fetch(`/api/order/complaint/${complaintId}`, {
     method: "PUT",
     body: JSON.stringify({ status: newStatus }),
   });

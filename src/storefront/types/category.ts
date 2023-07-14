@@ -62,3 +62,14 @@ export interface ISelectedFiltersWithOrdering {
   sort_by: string | null;
   order: string | null;
 }
+
+export interface ISelectedFiltersToSend {
+  textual: ITextualFilter[];
+  numeric: ITextualFilter[];
+}
+
+export interface ISelectedFiltersWithOrderingToSend {
+  filters: ISelectedFiltersToSend;
+  sort_by: string | null;
+  order: string | null;
+}

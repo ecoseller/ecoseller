@@ -12,6 +12,7 @@ import { Box, Table, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import {
   IBillingInfo,
+  ICart,
   IPaymentMethodCountry,
   IShippingInfo,
   IShippingMethodCountry,
@@ -32,10 +33,12 @@ import { useCart } from "@/utils/context/cart";
 import CollapsableContentWithTitle from "@/components/Generic/CollapsableContentWithTitle";
 import CartCompleteOrder from "@/components/Cart/CartCompleteOrder";
 import CartOrderSummary from "@/components/Cart/CartOrderSummary";
+import { cartDetailAPI } from "@/pages/api/cart/[token]";
 
 const { serverRuntimeConfig } = getConfig();
 
 interface ICartSummaryPageProps {
+  cart: ICart;
   billingInfo: IBillingInfo;
   shippingInfo: IShippingInfo;
   countries: ICountry[];
@@ -47,6 +50,7 @@ interface ICartSummaryPageProps {
  * Cart summary page displaying all the items, addresses and shipping & payment method
  */
 const CartSummaryPage = ({
+  cart,
   billingInfo,
   shippingInfo,
   countries,
@@ -54,7 +58,6 @@ const CartSummaryPage = ({
   selectedShippingMethod,
 }: ICartSummaryPageProps) => {
   const router = useRouter();
-  const { cart } = useCart();
   const { t } = useTranslation();
 
   return (
@@ -102,6 +105,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
+  const cart = await cartDetailAPI(
+    "GET",
+    cartToken,
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
   const shippingInfo = await cartShippingInfoAPI(
     "GET",
     cartToken,
@@ -138,6 +148,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   return {
     props: {
+      cart,
       billingInfo,
       shippingInfo,
       countries,

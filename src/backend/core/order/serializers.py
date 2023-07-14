@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from cart.serializers import CartSerializer
-from .models import Order
+from cart.serializers import CartSerializer, CartItemDetailSerializer
+from .models import Order, OrderItemComplaint
 
 
 class OrderSubmitSerializer(serializers.Serializer):
@@ -14,8 +14,32 @@ class OrderSubmitSerializer(serializers.Serializer):
     agreed_to_terms = serializers.BooleanField(default=False)
 
 
+class OrderItemComplaintSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItemComplaint
+        fields = ("id", "type", "status", "description", "create_at")
+        read_only_fields = ("id", "type", "description", "create_at")
+
+
+class OrderItemSerializer(CartItemDetailSerializer):
+    complaints = OrderItemComplaintSerializer(many=True)
+
+    class Meta(CartItemDetailSerializer.Meta):
+        # model = CartItem
+        fields = CartItemDetailSerializer.Meta.fields + ("complaints",)
+
+
+class OrderCartSerializer(CartSerializer):
+    cart_items = OrderItemSerializer(many=True, read_only=True)
+
+    class Meta(CartSerializer.Meta):
+        pass
+        # model = Cart
+        # fields = CartSerializer.Meta.fields
+
+
 class OrderDetailSerializer(serializers.ModelSerializer):
-    cart = CartSerializer()
+    cart = OrderCartSerializer()
 
     class Meta:
         model = Order
@@ -41,3 +65,9 @@ class OrderStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ("status",)
+
+
+class OrderItemComplaintCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItemComplaint
+        fields = ("cart_item", "order", "description", "type")

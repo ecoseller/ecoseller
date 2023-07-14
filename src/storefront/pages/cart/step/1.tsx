@@ -381,7 +381,7 @@ const CartStep1Page = ({
           disabled: false,
         }}
         next={{
-          title: "Next",
+          title: t("next"),
           onClick: async () => submitForm(),
           disabled:
             !validShippingInfo ||

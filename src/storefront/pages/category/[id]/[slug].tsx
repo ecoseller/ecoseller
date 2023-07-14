@@ -11,6 +11,7 @@ import {
   ICategoryDetail,
   INumericFilter,
   ISelectedFiltersWithOrdering,
+  ISelectedFiltersWithOrderingToSend,
   ITextualFilter,
 } from "@/types/category";
 import EditorJsOutput from "@/utils/editorjs/EditorJsOutput";
@@ -19,7 +20,7 @@ import SubCategoryList from "@/components/Category/SubCategoryList";
 import HeadMeta from "@/components/Common/SEO";
 import { useRouter } from "next/router";
 import ProductGrid from "@/components/Category/ProductGrid";
-import { IProductRecord } from "@/types/product";
+import { IPaginatedProductRecord, IProductRecord } from "@/types/product";
 import { IAttributeTypeWithOptions } from "@/types/attributes";
 import { categoryProductsAPI } from "@/pages/api/category/[id]/products";
 import { categoryDetailAPI } from "@/pages/api/category/[id]";
@@ -35,12 +36,14 @@ import ProductSortSelect from "@/components/Category/ProductSortSelect";
 import { categoryAttributesAPI } from "@/pages/api/category/[id]/attributes";
 import { filterProducts } from "@/api/category/products";
 import { useRecommender } from "@/utils/context/recommender";
+import PaginationWrapper from "@/components/Category/Pagination";
 
 const { serverRuntimeConfig } = getConfig();
+const isBrowser = () => typeof window !== "undefined"; //The approach recommended by Next.js
 
 interface ICategoryPageProps {
   category: ICategoryDetail;
-  products: IProductRecord[];
+  products: IPaginatedProductRecord;
   countryCode: string;
   pricelist: string;
   attributes: IAttributeSet;
@@ -91,17 +94,34 @@ const CategoryPage = ({
     order: null,
   };
 
+  const [loading, setLoading] = useState<boolean>(false);
   const [productsState, setProductsState] = useState<IProductRecord[]>([]);
+  const [categoryPage, setCategoryPage] = useState<number>(1);
+  const [categoryTotalPages, setCategoryTotalPages] = useState<number>(1);
   const [filters, setFilters] = useState<IFiltersWithOrdering>(initialFilters);
+
+  const hasAnyAttributes =
+    attributes.numeric.length > 0 || attributes.textual.length > 0;
 
   useEffect(() => {
     if (filters != initialFilters) {
+      setCategoryPage(1);
       applyFilters();
     }
   }, [filters]);
 
   useEffect(() => {
-    setProductsState(products);
+    if (categoryPage > 1) {
+      if (isBrowser()) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      applyFilters();
+    }
+  }, [categoryPage]);
+
+  useEffect(() => {
+    setProductsState(products?.results);
+    setCategoryTotalPages(products?.total_pages);
 
     const storedFilters = tryLoadFiltersFromSessionStorage();
     if (storedFilters == null) {
@@ -148,7 +168,27 @@ const CategoryPage = ({
     setFilters(emptyFilters);
   };
 
+  const getNumericFilterSelectedValues = (
+    filter: INumericAttributeFilterWithOptions,
+    min_value_id: number | null,
+    max_value_id: number | null
+  ) => {
+    const min_value = min_value_id
+      ? filter.possible_values.find((v) => v.id == min_value_id)?.value ||
+        Number.NEGATIVE_INFINITY
+      : Number.NEGATIVE_INFINITY;
+    const max_value = max_value_id
+      ? filter.possible_values.find((v) => v.id == max_value_id)?.value ||
+        Number.POSITIVE_INFINITY
+      : Number.POSITIVE_INFINITY;
+
+    return filter.possible_values
+      .filter((v) => v.value >= min_value && v.value <= max_value)
+      .map((v) => v.id);
+  };
+
   const applyFilters = () => {
+    setLoading(true);
     const filtersToApply: ISelectedFiltersWithOrdering = {
       filters: {
         numeric: Object.values(filters.filters.numeric),
@@ -159,13 +199,45 @@ const CategoryPage = ({
     };
 
     saveFiltersToSessionStorage();
+
+    // transform the numeric filters
+    const filtersToSend: ISelectedFiltersWithOrderingToSend = {
+      filters: {
+        textual: filtersToApply.filters.textual,
+        numeric: [],
+      },
+      sort_by: filtersToApply.sort_by,
+      order: filtersToApply.order,
+    };
+
+    for (const f of filtersToApply.filters.numeric) {
+      const filter = filters.filters.numeric[f.id];
+      const transformedFilter: ITextualFilter = {
+        id: f.id,
+        selected_values_ids: [],
+      };
+
+      transformedFilter.selected_values_ids = getNumericFilterSelectedValues(
+        filter,
+        f.min_value_id,
+        f.max_value_id
+      );
+
+      filtersToSend.filters.numeric.push(transformedFilter);
+    }
+
     filterProducts(
       category.id,
       pricelist,
       countryCode,
-      session,
-      filtersToApply
-    ).then((products) => setProductsState(products));
+      filtersToSend,
+      categoryPage,
+      session
+    ).then((products) => {
+      setProductsState(products?.results);
+      setCategoryTotalPages(products?.total_pages);
+      setLoading(false);
+    });
   };
 
   const sortProducts = (sortBy: string, order: string) => {
@@ -247,18 +319,27 @@ const CategoryPage = ({
             <Divider sx={{ my: 2 }} />
           </>
         ) : null}
-        <ProductFilters
-          filters={filters.filters}
-          updateTextualFilter={updateTextualFilter}
-          updateNumericFilter={updateNumericFilter}
-          setEmptyFilters={setEmptyFilters}
-        />
+        {hasAnyAttributes ? (
+          <ProductFilters
+            filters={filters.filters}
+            updateTextualFilter={updateTextualFilter}
+            updateNumericFilter={updateNumericFilter}
+            setEmptyFilters={setEmptyFilters}
+          />
+        ) : null}
         <Divider sx={{ my: 2 }} />
         <ProductSortSelect
           defaultOrdering={filters}
           sortProducts={sortProducts}
         />
-        <ProductGrid products={productsState} />
+        <ProductGrid products={productsState} loading={loading} />
+        <PaginationWrapper
+          currentPage={categoryPage}
+          totalPageCount={categoryTotalPages}
+          setPage={(page: number) => {
+            setCategoryPage(page);
+          }}
+        />
       </div>
     </>
   );
@@ -301,7 +382,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     idNumber.toString(),
     countryDetail.code,
     pricelist,
-    rsSession, // recommended session id
+    "1",
+    rsSession,
     req as NextApiRequest,
     res as NextApiResponse
   );

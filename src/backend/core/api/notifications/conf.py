@@ -1,7 +1,8 @@
 from enum import Enum
+
+from api.notifications.connectors.email import EmailConnector
 from api.notifications.connectors.http import HttpConnector
 from api.notifications.connectors.recommender import RecommenderSystemConnector
-from api.notifications.connectors.email import EmailConnector
 
 
 class EventTypes(Enum):
@@ -18,6 +19,8 @@ class EventTypes(Enum):
     ORDER_UPDATE = "ORDER_UPDATE"
     ORDER_DELETE = "ORDER_DELETE"
     REVIEW_SEND = "REVIEW_SEND"
+    ORDER_ITEM_COMPLAINT_CREATED = "ORDER_ITEM_COMPLAINT_CREATED"
+    ORDER_ITEM_COMPLAINT_UPDATED = "ORDER_ITEM_COMPLAINT_UPDATED"
 
 
 class NotificationTypes(Enum):
@@ -31,7 +34,6 @@ NOTIFICATION_TYPE_REQUIRED_FIELDS = {
     NotificationTypes.EMAIL: ["method"],
     NotificationTypes.RECOMMENDERAPI: ["method"],
 }
-
 
 NOTIFICATION_TYPE_CONNECTORS = {
     NotificationTypes.HTTP: HttpConnector,

@@ -156,6 +156,7 @@ class Product(SafeDeleteModel, TranslatableModel):
                     attribute.safe_translation_getter(
                         "name", language_code=language_code
                     )
+                    or attribute.value
                 )
         return attributes
 
@@ -287,7 +288,10 @@ class BaseAttribute(SafeDeleteModel, TranslatableModel):
     )  # it must be set to blank=True, null=True to allow empty string because of initial POST
     translations = TranslatedFields(
         name=models.CharField(
-            max_length=200, blank=True, help_text="Base Attribute in given language"
+            max_length=200,
+            blank=True,
+            help_text="Base Attribute in given language",
+            null=True,
         ),
     )
     order = models.IntegerField(blank=True, null=True)

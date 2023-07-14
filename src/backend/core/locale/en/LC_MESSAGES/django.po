@@ -1,0 +1,147 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-07-13 19:36+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: emails/email/order.py:25
+msgid "Order confirmation"
+msgstr ""
+
+#: emails/email/order_item.py:26 emails/email/order_item.py:37
+msgid "Order item complaint confirmation"
+msgstr ""
+
+#: emails/email/order_item.py:33
+msgid "you created the following item warranty claim"
+msgstr ""
+
+#: emails/email/order_item.py:34
+msgid "you created the following item return request"
+msgstr ""
+
+#: emails/email/order_item.py:38 emails/email/order_item.py:78
+#: emails/email/return_exchange.py:30 emails/email/review.py:32
+#: templates/email/order/confirmation.html:405
+msgid "Hello,"
+msgstr ""
+
+#: emails/email/order_item.py:40 emails/email/order_item.py:80
+msgid "Order detail"
+msgstr ""
+
+#: emails/email/order_item.py:63
+msgid "Warranty claim status update"
+msgstr ""
+
+#: emails/email/order_item.py:64
+msgid "Return request status update"
+msgstr ""
+
+#: emails/email/order_item.py:71
+msgid "The status of item's warranty claim has been updated"
+msgstr ""
+
+#: emails/email/order_item.py:72
+msgid "The status of item's return request has been updated"
+msgstr ""
+
+#: emails/email/order_item.py:73
+msgid "Status: APPROVED"
+msgstr ""
+
+#: emails/email/order_item.py:74
+msgid "Status: DECLINED"
+msgstr ""
+
+#: emails/email/order_item.py:74
+msgid "Status: CREATED"
+msgstr ""
+
+#: emails/email/order_item.py:77
+msgid "Order item complaint status update"
+msgstr ""
+
+#: emails/email/return_exchange.py:24 emails/email/return_exchange.py:29
+msgid "Return request has been received"
+msgstr ""
+
+#: emails/email/return_exchange.py:32
+msgid ""
+"Your return request has been received. We will contact you shortly with "
+"further instructions."
+msgstr ""
+
+#: emails/email/review.py:25 emails/email/review.py:34
+msgid "Review your order"
+msgstr ""
+
+#: emails/email/review.py:31
+msgid "Please review your order"
+msgstr ""
+
+#: emails/email/review.py:33
+msgid "We would like to ask you to review your order. "
+msgstr ""
+
+#: templates/email/order/confirmation.html:390
+msgid "Thank you!"
+msgstr ""
+
+#: templates/email/order/confirmation.html:422
+msgid "We have just received your order."
+msgstr ""
+
+#: templates/email/order/confirmation.html:446
+msgid "Date:"
+msgstr ""
+
+#: templates/email/order/confirmation.html:476
+msgid "Products"
+msgstr ""
+
+#: templates/email/order/confirmation.html:704
+msgid "Total"
+msgstr ""
+
+#: templates/email/order/confirmation.html:745
+msgid "Shipping and payment"
+msgstr ""
+
+#: templates/email/order/confirmation.html:788
+msgid "Total incl. VAT"
+msgstr ""
+
+#: templates/email/order/confirmation.html:870
+msgid "Shipping information"
+msgstr ""
+
+#: templates/email/order/confirmation.html:918
+msgid "Contact"
+msgstr ""
+
+#: templates/email/order/confirmation.html:963
+msgid "Billing info"
+msgstr ""
+
+#: templates/email/order/confirmation.html:1037
+msgid "Shipping method:"
+msgstr ""
+
+#: templates/email/order/confirmation.html:1063
+msgid "Payment method:"
+msgstr ""

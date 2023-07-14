@@ -77,12 +77,14 @@ class ProductListDashboard(APIView, DashboardPagination):
     def get(self, request):
         self.locale = request.GET.get("locale", "en")
         products = Product.objects.all()
+        paginated_products = self.paginate_queryset(products, request)
         serialized_products = ProductDashboardListSerializer(
-            products, many=True, context={"locale": self.locale, "request": request}
+            paginated_products,
+            many=True,
+            context={"locale": self.locale, "request": request},
         )
         # paginate
-        paginated_products = self.paginate_queryset(serialized_products.data, request)
-        return self.get_paginated_response(paginated_products)
+        return self.get_paginated_response(serialized_products.data)
 
 
 class ProductDashboardView(GenericAPIView):
@@ -299,6 +301,8 @@ class BaseAttributeDashboardView(GenericAPIView):
     @check_user_access_decorator({"baseattribute_add_permission"})
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
+
+        print(request.data)
         if serializer.is_valid():
             instance = serializer.save()
             return Response({**serializer.data, "id": instance.id}, status=201)

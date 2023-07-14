@@ -191,7 +191,7 @@ SIMPLE_JWT = {
 
 LANGUAGE_CODE = "en"
 PARLER_DEFAULT_LANGUAGE_CODE = "en"
-
+LOCALE_PATHS = [os.path.join(BASE_DIR, "locale")]
 PARLER_LANGUAGES = {
     None: (
         {

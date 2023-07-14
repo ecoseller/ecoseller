@@ -36,5 +36,7 @@
   "save": "Uložit",
   "created-at": "Vytvořeno: {{date}}",
   "up-to": "Až",
-  "to": "Do"
+  "to": "Do",
+  "description": "Popis",
+  "send": "Odeslat"
 }
