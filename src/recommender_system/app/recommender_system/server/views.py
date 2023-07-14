@@ -9,10 +9,6 @@ from recommender_system.managers.data_manager import DataManager
 from recommender_system.managers.model_manager import ModelManager
 from recommender_system.managers.monitoring_manager import MonitoringManager
 from recommender_system.managers.prediction_pipeline import PredictionPipeline
-from recommender_system.utils.recommendation_type import RecommendationType
-
-
-logger = logging.getLogger(__name__)
 
 
 def view_healthcheck() -> Tuple[Any, ...]:
@@ -23,7 +19,7 @@ def view_healthcheck() -> Tuple[Any, ...]:
 def view_store_object(
     data_manager: DataManager = Provide["data_manager"],
 ) -> Tuple[Any, ...]:
-    logger.info(f"Storing object {request.json}")
+    logging.info(f"Storing object {request.json}")
     data_manager.store_object(data=request.json)
     return "", 200
 
@@ -32,60 +28,18 @@ def view_store_object(
 def view_store_objects(
     data_manager: DataManager = Provide["data_manager"],
 ) -> Tuple[Any, ...]:
-    logger.info(f"Storing objects {request.json}")
+    logging.info(f"Storing objects {request.json}")
     data_manager.store_objects(data=request.json)
     return "", 200
 
 
 @inject
-def view_predict_homepage(
+def view_predict(
     prediction_pipeline: PredictionPipeline = Provide["prediction_pipeline"],
 ) -> Tuple[Any, ...]:
     data = request.json
-    predictions = prediction_pipeline.run(
-        recommendation_type=RecommendationType.HOMEPAGE,
-        session_id=data["session_id"],
-        user_id=data["user_id"],
-    )
-    return predictions, 200
-
-
-@inject
-def view_predict_category_list(
-    prediction_pipeline: PredictionPipeline = Provide["prediction_pipeline"],
-) -> Tuple[Any, ...]:
-    data = request.json
-    predictions = prediction_pipeline.run(
-        recommendation_type=RecommendationType.CATEGORY_LIST,
-        session_id=data["session_id"],
-        user_id=data["user_id"],
-    )
-    return predictions, 200
-
-
-@inject
-def view_predict_product_detail(
-    prediction_pipeline: PredictionPipeline = Provide["prediction_pipeline"],
-) -> Tuple[Any, ...]:
-    data = request.json
-    predictions = prediction_pipeline.run(
-        recommendation_type=RecommendationType.PRODUCT_DETAIL,
-        session_id=data["session_id"],
-        user_id=data["user_id"],
-    )
-    return predictions, 200
-
-
-@inject
-def view_predict_cart(
-    prediction_pipeline: PredictionPipeline = Provide["prediction_pipeline"],
-) -> Tuple[Any, ...]:
-    data = request.json
-    predictions = prediction_pipeline.run(
-        recommendation_type=RecommendationType.CART,
-        session_id=data["session_id"],
-        user_id=data["user_id"],
-    )
+    logging.info(f"Recommending for {data}")
+    predictions = prediction_pipeline.run(**data)
     return predictions, 200
 
 

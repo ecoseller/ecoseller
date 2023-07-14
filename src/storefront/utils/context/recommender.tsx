@@ -61,7 +61,7 @@ export const RecommenderProvider = ({
     const data = await fetch(`/api/recommender/${event}`, {
       method: "POST",
       body: JSON.stringify({
-        sessionId: session,
+        session_id: session,
         ...payload,
       }),
     }).then((res) => res.json());

@@ -1,7 +1,7 @@
 from datetime import datetime
 from enum import Enum
 import time
-from typing import Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 from dependency_injector.wiring import inject, Provide
 import numpy as np
@@ -46,7 +46,7 @@ class PredictionPipeline:
         recommendation_type: RecommendationType,
         session_id: str,
         user_id: Optional[int],
-        **kwargs: Any
+        **kwargs: Any,
     ) -> List[str]:
         if recommendation_type == RecommendationType.HOMEPAGE:
             return model.retrieve_homepage(session_id=session_id, user_id=user_id)
@@ -71,7 +71,7 @@ class PredictionPipeline:
         recommendation_type: RecommendationType,
         session_id: str,
         user_id: Optional[int],
-        **kwargs: Any
+        **kwargs: Any,
     ) -> List[str]:
         if recommendation_type == RecommendationType.HOMEPAGE:
             return model.score_homepage(
@@ -167,10 +167,13 @@ class PredictionPipeline:
         recommendation_type: RecommendationType,
         session_id: str,
         user_id: Optional[int],
+        limit: Optional[int],
     ) -> List[str]:
         result = self._order_by_diversity(variants=variants)
         if recommendation_type == RecommendationType.CATEGORY_LIST:
             result = self._order_by_stock(variants=result)
+        if limit is not None and limit > len(result):
+            result = result[:limit]
         return result
 
     @inject
@@ -179,8 +182,10 @@ class PredictionPipeline:
         recommendation_type: RecommendationType,
         session_id: str,
         user_id: Optional[int],
+        limit: Optional[int] = None,
         model_manager: ModelManager = Provide["model_manager"],
-    ) -> List[str]:
+        **kwargs: Any,
+    ) -> List[Dict[str, Any]]:
         retrieval_model = model_manager.get_model(
             recommendation_type=recommendation_type,
             step=PredictionPipeline.Step.RETRIEVAL,
@@ -196,6 +201,7 @@ class PredictionPipeline:
             recommendation_type=recommendation_type,
             session_id=session_id,
             user_id=user_id,
+            **kwargs,
         )
         scoring_start = time.time()
         predictions = self._score(
@@ -204,6 +210,7 @@ class PredictionPipeline:
             recommendation_type=recommendation_type,
             session_id=session_id,
             user_id=user_id,
+            **kwargs,
         )
         ordering_start = time.time()
         predictions = self._order(
@@ -211,6 +218,7 @@ class PredictionPipeline:
             recommendation_type=recommendation_type,
             session_id=session_id,
             user_id=user_id,
+            limit=limit,
         )
         ordering_end = time.time()
 
@@ -229,4 +237,15 @@ class PredictionPipeline:
         )
         result.create()
 
-        return predictions
+        return [
+            {
+                "product_variant_sku": sku,
+                "rs_info": {
+                    "recommendation_type": recommendation_type.value,
+                    "model_identifier": scoring_model.identifier,
+                    "model_name": scoring_model.Meta.model_name,
+                    "position": i,
+                },
+            }
+            for i, sku in enumerate(predictions)
+        ]

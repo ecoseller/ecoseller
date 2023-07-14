@@ -8,12 +8,23 @@ import { useRecommender } from "@/utils/context/recommender";
 
 interface IProductItemProps {
   title: string;
+  product_id: number;
+  product_variant_sku: string;
   price: string;
   image: string;
   url: string;
+  rs_info: any;
 }
 
-const ProductItem = ({ title, price, image, url }: IProductItemProps) => {
+const ProductItem = ({
+  title,
+  product_id,
+  product_variant_sku,
+  price,
+  image,
+  url,
+  rs_info,
+}: IProductItemProps) => {
   // component for rendering single product item
   const router = useRouter();
   const { sendEvent } = useRecommender();
@@ -22,9 +33,15 @@ const ProductItem = ({ title, price, image, url }: IProductItemProps) => {
     <div
       className={styles.productItem}
       onClick={() => {
-        sendEvent("RECOMMENDATION_VIEW", {
-          id: 42,
+        sendEvent("PRODUCT_DETAIL_ENTER", {
+          product_id,
+          product_variant_sku,
+          ...rs_info,
         });
+        // TODO: Trigger when visible
+        // sendEvent("RECOMMENDATION_VIEW", {
+        //   id: 42,
+        // });
         // this push will need to be changed to a link to the product page
         router.push(url, undefined, { shallow: false });
       }}

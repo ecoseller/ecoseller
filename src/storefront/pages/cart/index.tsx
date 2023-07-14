@@ -27,7 +27,10 @@ const CartPage = () => {
   const { getRecommendations } = useRecommender();
   useEffect(() => {
     // load recommended products
-    getRecommendations("CART", { limit: 10 }).then((products: any[]) => {
+    getRecommendations("CART", {
+      limit: 10,
+      skus: cart?.cart_items.map((item) => item.product_variant_sku),
+    }).then((products: any[]) => {
       setRecommendedProducts(products);
     });
   }, []);

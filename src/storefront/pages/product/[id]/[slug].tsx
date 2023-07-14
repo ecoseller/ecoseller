@@ -74,22 +74,11 @@ const ProductPage = ({
     // load recommended products
     getRecommendations("PRODUCT_DETAIL", {
       limit: 10,
-      productId: data.id,
+      product_id: data.id,
       skus: data.product_variants?.map((v) => v.sku),
     }).then((products: any[]) => {
       setRecommendedProducts(products);
     });
-
-    // send event
-    sendEvent(
-      "PRODUCT_DETAIL_ENTER",
-      data.product_variants?.map((v) => {
-        return {
-          productId: data.id,
-          sku: v.sku,
-        };
-      })
-    );
   }, []);
 
   useEffect(() => {
@@ -98,7 +87,7 @@ const ProductPage = ({
         "PRODUCT_DETAIL_LEAVE",
         data.product_variants?.map((v) => {
           return {
-            productId: data.id,
+            product_id: data.id,
             sku: v.sku,
             timeSpent: (new Date().getTime() - timeEntered.getTime()) / 1000,
           };

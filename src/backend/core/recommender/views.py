@@ -61,57 +61,39 @@ class RecommenderSystemEventView(APIView):
 
 
 class RecommenderSystemRecommendProductsView(APIView):
-    allowed_methods = ["GET"]
+    allowed_methods = ["POST"]
     permission_classes = (permissions.AllowAny,)
 
-    def get(self, request, situation):
+    def post(self, request, situation):
         if situation not in RSSituation:
             return Response({"message": "Unknown RS situation!"}, status=404)
+        data = request.data
+        data["user_id"] = request.user
+        data["recommendation_type"] = situation
+        products = RecommenderSystemApi.get_recommendations(data)
+
+        # response format
+        # [{
+        #     "product_variant_sku": "a",
+        #     "rs_info": rs_info
+        # },...]
+
+        # TODO: Add missing values
+        recommendations = [
+            {
+                "product_id": 42,
+                "product_variant_sku": p["product_variant_sku"],
+                "title": "Product 1",
+                "price": "$25",
+                "image": "/images/products/1.jpg",
+                "url": "/",
+                "rs_info": p["rs_info"],
+            }
+            for p in products
+        ]
+
         return Response(
-            [
-                {
-                    "id": 1,
-                    "title": "Product 1",
-                    "price": "$25",
-                    "image": "/images/products/1.jpg",
-                    "url": "/",
-                },
-                {
-                    "id": 2,
-                    "title": "Product 2",
-                    "price": "$20",
-                    "image": "/images/products/2.jpg",
-                    "url": "/",
-                },
-                {
-                    "id": 3,
-                    "title": "Product 3",
-                    "price": "$25",
-                    "image": "/images/products/1.jpg",
-                    "url": "/",
-                },
-                {
-                    "id": 4,
-                    "title": "Product 4",
-                    "price": "$20",
-                    "image": "/images/products/1.jpg",
-                    "url": "/",
-                },
-                {
-                    "id": 5,
-                    "title": "Product 5",
-                    "price": "$25",
-                    "image": "/images/products/1.jpg",
-                    "url": "/",
-                },
-                {
-                    "id": 6,
-                    "title": "Product 6",
-                    "price": "$20",
-                    "image": "/images/products/1.jpg",
-                    "url": "/",
-                },
-            ],
+            recommendations,
             status=200,
         )
 

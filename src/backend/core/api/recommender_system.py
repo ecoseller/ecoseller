@@ -37,3 +37,16 @@ class RecommenderSystemApi:
             )
             return response.json()
         return None
+
+    @classmethod
+    def get_recommendations(
+        cls, data: Dict[str, Any]
+    ) -> Optional[List[Dict[str, Any]]]:
+        if cls.enabled:
+            response = requests.request(
+                method="POST",
+                url=cls.server_url + "/predict",
+                json=data,
+            )
+            return response.json()
+        return []
