@@ -69,29 +69,41 @@ const ProductPage = ({
   const [recommendedProducts, setRecommendedProducts] = useState<
     IProductSliderData[]
   >([]);
+  const [timeEntered] = useState<Date>(new Date());
   useEffect(() => {
     // load recommended products
     getRecommendations("PRODUCT_DETAIL", {
       limit: 10,
-      product_id: data.id,
-      sku: data.product_variants?.map((v) => v.sku),
+      productId: data.id,
+      skus: data.product_variants?.map((v) => v.sku),
     }).then((products: any[]) => {
       setRecommendedProducts(products);
     });
 
     // send event
-    sendEvent("PRODUCT_DETAIL_ENTER", {
-      product_id: data.id,
-      sku: data.product_variants?.map((v) => v.sku),
-    });
+    sendEvent(
+      "PRODUCT_DETAIL_ENTER",
+      data.product_variants?.map((v) => {
+        return {
+          productId: data.id,
+          sku: v.sku,
+        };
+      })
+    );
   }, []);
 
   useEffect(() => {
     const exitingFunction = () => {
-      sendEvent("PRODUCT_DETAIL_LEAVE", {
-        product_id: data.id,
-        sku: data.product_variants?.map((v) => v.sku),
-      });
+      sendEvent(
+        "PRODUCT_DETAIL_LEAVE",
+        data.product_variants?.map((v) => {
+          return {
+            productId: data.id,
+            sku: v.sku,
+            timeSpent: (new Date().getTime() - timeEntered.getTime()) / 1000,
+          };
+        })
+      );
     };
     router.events.on("routeChangeStart", exitingFunction);
 

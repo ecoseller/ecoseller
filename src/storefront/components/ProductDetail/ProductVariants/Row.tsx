@@ -74,7 +74,6 @@ const ProductVariantRow = ({
   const handleAddToCart = () => {
     sendEvent("PRODUCT_ADD_TO_CART", {
       sku: variant.sku,
-      quantity: qty,
     });
     if (qty + cartProductQuantity(variant.sku) > variant.stock_quantity) {
       setSnackbar({

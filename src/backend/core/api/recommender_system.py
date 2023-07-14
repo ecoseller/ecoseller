@@ -1,5 +1,5 @@
 import requests
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 from django.conf import settings
 
@@ -13,6 +13,13 @@ class RecommenderSystemApi:
         if cls.enabled:
             _ = requests.request(
                 method="POST", url=cls.server_url + "/store_object", json=data
+            )
+
+    @classmethod
+    def store_objects(cls, data: List[Dict[str, Any]]) -> None:
+        if cls.enabled:
+            _ = requests.request(
+                method="POST", url=cls.server_url + "/store_objects", json=data
             )
 
     @classmethod

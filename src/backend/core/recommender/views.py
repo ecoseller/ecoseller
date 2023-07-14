@@ -20,6 +20,20 @@ class RSEvent(Enum, metaclass=EnumMeta):
     RECOMMENDATION_VIEW = "RECOMMENDATION_VIEW"
     ORDER = "ORDER"
 
+    @classmethod
+    def get_model_class(cls, event):
+        if event == RSEvent.PRODUCT_DETAIL_ENTER:
+            return "ProductDetailEnter"
+        if event == RSEvent.PRODUCT_DETAIL_LEAVE:
+            return "ProductDetailLeave"
+        if event == RSEvent.PRODUCT_ADD_TO_CART:
+            return "ProductAddToCart"
+        if event == RSEvent.RECOMMENDATION_VIEW:
+            return "RecommendationView"
+        if event == RSEvent.ORDER:
+            return "Order"
+        raise ValueError(f"Unknown event: {event}")
+
 
 class RSSituation(Enum, metaclass=EnumMeta):
     PRODUCT_DETAIL = "PRODUCT_DETAIL"
@@ -35,6 +49,14 @@ class RecommenderSystemEventView(APIView):
     def post(self, request, event):
         if event not in RSEvent:
             return Response({"message": "Unknown event!"}, status=404)
+        data = request.data
+        if data is not None:
+            if isinstance(data, dict):
+                data = [data]
+            for item in data:
+                item["user_id"] = request.user
+                item["_model_class"] = RSEvent.get_model_class(event)
+            RecommenderSystemApi.store_objects(data)
         return Response(status=201)
 
 
