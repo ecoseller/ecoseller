@@ -1,4 +1,4 @@
-from typing import Any, Dict, Type
+from typing import Any, Dict, List, Type
 
 from recommender_system.models.api.attribute import Attribute
 from recommender_system.models.api.attribute_type import AttributeType
@@ -41,3 +41,9 @@ class DataManager:
         model_class = self._model_class_map[data["_model_class"]]
         model = model_class.parse_obj(data)
         model.save()
+
+    def store_objects(self, data: List[Dict[str, Any]]) -> None:
+        for item in data:
+            model_class = self._model_class_map[item["_model_class"]]
+            model = model_class.parse_obj(item)
+            model.save()

@@ -1,13 +1,13 @@
 from datetime import datetime
 from typing import Optional
 
-from recommender_system.models.api.base import ApiBaseModel
+from recommender_system.models.api.immutable import ImmutableApiModel
 from recommender_system.models.stored.feedback.recommendation_view import (
     RecommendationViewModel,
 )
 
 
-class RecommendationView(ApiBaseModel):
+class RecommendationView(ImmutableApiModel):
     """
     This model represents the event of user viewing a recommended product
     (appearing on screen) as an object that is sent from core to RS component

@@ -1,13 +1,13 @@
 from datetime import datetime
 from typing import Optional
 
-from recommender_system.models.api.base import ApiBaseModel
+from recommender_system.models.api.immutable import ImmutableApiModel
 from recommender_system.models.stored.feedback.product_detail_enter import (
     ProductDetailEnterModel,
 )
 
 
-class ProductDetailEnter(ApiBaseModel):
+class ProductDetailEnter(ImmutableApiModel):
     """
     This model represents the event of user viewing a possibly recommended
     product's detail (clicking a product) as an object that is sent from core

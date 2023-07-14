@@ -3,12 +3,12 @@ from typing import List, Optional
 
 from pydantic import Field
 
-from recommender_system.models.api.base import ApiBaseModel
+from recommender_system.models.api.immutable import ImmutableApiModel
 from recommender_system.models.prediction.config import EASEConfig, GRU4RecConfig
 from recommender_system.models.stored.model.config import ConfigModel
 
 
-class Config(ApiBaseModel):
+class Config(ImmutableApiModel):
     """
     This model represents recommender system's configuration as an object that is sent from
     core to RS component via API.
@@ -44,7 +44,3 @@ class Config(ApiBaseModel):
 
     class Meta:
         stored_model_class = ConfigModel
-
-    def save(self) -> None:
-        stored_model = self.Meta.stored_model_class.from_api_model(self)
-        stored_model.create()

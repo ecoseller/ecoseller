@@ -29,6 +29,15 @@ def view_store_object(
 
 
 @inject
+def view_store_objects(
+    data_manager: DataManager = Provide["data_manager"],
+) -> Tuple[Any, ...]:
+    logger.info(f"Storing objects {request.json}")
+    data_manager.store_objects(data=request.json)
+    return "", 200
+
+
+@inject
 def view_predict_homepage(
     prediction_pipeline: PredictionPipeline = Provide["prediction_pipeline"],
 ) -> Tuple[Any, ...]:

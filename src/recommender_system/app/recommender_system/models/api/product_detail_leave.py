@@ -1,13 +1,13 @@
 from datetime import datetime
 from typing import Optional
 
-from recommender_system.models.api.base import ApiBaseModel
+from recommender_system.models.api.immutable import ImmutableApiModel
 from recommender_system.models.stored.feedback.product_detail_leave import (
     ProductDetailLeaveModel,
 )
 
 
-class ProductDetailLeave(ApiBaseModel):
+class ProductDetailLeave(ImmutableApiModel):
     """
     This model represents the event of user leaving product's detail page as
     an object that is sent from core to RS component via API.
