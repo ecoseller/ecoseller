@@ -76,8 +76,67 @@ To check whether the user is staff for accessing `get` method, put decorator abo
 # Frontend
 
 ## Context providers
+To be able to access various data in different parts of the application, we use React Context. More information about React Context can be found on the following links:
+* [Passing data deeply with context](https://react.dev/learn/passing-data-deeply-with-context)
+* [useContext](https://react.dev/reference/react/useContext)
+
+In further parts of this section, we assume that the reader is familiar with React Context and its usage from the links above.
+
+In ecoseller, we use various context providers, and now we will describe them in more detail.
 
 ### UserProvider
+UserProvider is a context provider that provides information about the currently logged in user to its children. It is used in both `Dashboard` and `Storefront` component, although they differ a bit in data they provide.
+
+#### Parameters
+- `children`: React component that is wrapped by the provider
+
+#### Return value
+- `user`: fetched data from `/user/detail/` endpoint. Consists of:
+    - `email` - email of the user
+    - `first_name` - first name of the user
+    - `last_name` - last name of the user
+    - `birth_date` - birth date of the user
+    - `is_active` - whether the user is active
+    - `is_admin` - whether the user is admin
+    - `is_staff` - whether the user is staff
+- `roles`: fetched data from `/roles/user-groups/${email}`. Consists of:
+    - `name` - name of the role
+    - `description` - description of the role
+    - `permissions` - list of permissions of the role. Each permission consists of:
+        - `name` - name of the permission
+        - `description` - description of the permission
+        - `type` - type of the permission
+        - `model` - model to which the permission corresponds
+
+`UserProvider` in `Storefront` only provides `user` data, while `Dashboard` provides both `user` and `roles` data.
+
+#### Usage example
+`UserProvider` already wraps whole application in both `Dashboard` and `Storefront` components, so we can access user data in any child component. To access user data, we use `useUser` hook:
+
+- In dashboard:
+```typescript
+const ChildComponent = () => {
+    ...
+    const { user, roles } = useUser();
+    ...
+    return (
+        ...
+    );
+};
+```
+- In storefront:
+```typescript
+const ChildComponent = () => {
+    ...
+    const { user } = useUser();
+    ...
+    return (
+        ...
+    );
+};
+```
+
+
 ### PermissionProvider
 As mentioned in [Authorization](../../administration/authorization) section, ecoseller uses roles and permissions to restrict access to certain parts of the application. `PermissionProvider` is a context provider that provides information about user's permissions to its children. It is used in `Dashboard` component.
 
