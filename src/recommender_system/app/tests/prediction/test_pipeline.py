@@ -95,7 +95,7 @@ def create_product_variants():
         product.add_product_variant(variant)
 
     variants[0].add_order(
-        order=OrderModel.parse_obj(default_dicts[OrderModel]), amount=1
+        order=OrderModel.parse_obj(default_dicts[OrderModel]), quantity=1
     )
 
     yield [variant.pk for variant in variants]
