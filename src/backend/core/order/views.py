@@ -30,6 +30,9 @@ NotificationsApi = settings.NOTIFICATIONS_API
 
 
 class OrderDetailDashboardView(RetrieveAPIView):
+    """
+    View used for getting and updating an order
+    """
     allowed_methods = ["GET", "PUT"]
     permission_classes = (permissions.AllowAny,)
     serializer_class = OrderDetailSerializer
@@ -394,6 +397,10 @@ class OrderListMonthDashboardView(ListAPIView):
 
 
 class OrderCreateStorefrontView(APIView):
+    """
+    View for creating new orders
+    """
+
     permission_classes = (permissions.AllowAny,)
     serializer_class = OrderSubmitSerializer
 
@@ -493,6 +500,9 @@ class OrderListStorefrontView(ListAPIView):
 
 
 class OrderItemsListStorefrontView(APIView):
+    """
+    View for getting all items of an order
+    """
     permission_classes = (permissions.AllowAny,)
 
     def get(self, request, token):
@@ -512,6 +522,10 @@ class OrderItemsListStorefrontView(APIView):
 
 
 class OrderItemComplaintStorefrontView(APIView):
+    """
+    View for creating order item complaint (either warranty claim or return request)
+    """
+
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
@@ -532,6 +546,10 @@ class OrderItemComplaintStorefrontView(APIView):
 
 
 class OrderItemComplaintDashboardView(APIView):
+    """
+    View for updating status of an order item complaint (either warranty claim or return request)
+    """
+
     @check_user_access_decorator({"order_change_permission"})
     def put(self, request, id):
         try:

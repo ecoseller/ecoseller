@@ -1,25 +1,26 @@
 from django.contrib.auth.models import Group
 from rest_framework import permissions
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 
-from rest_framework.generics import GenericAPIView
-from roles.decorator import check_user_is_staff_decorator
-
 from roles.decorator import check_user_access_decorator
-
+from roles.decorator import check_user_is_staff_decorator
+from user.models import User
 from .roles_manager import RolesManager, ManagerPermission, ManagerGroup
 from .serializers import (
     ManagerGroupSerializer,
     ManagerPermissionSerializer,
 )
 
-from user.models import User
 
 # Create your views here.
 
 
 class UserPermissionView(GenericAPIView):
-    permission_classes = (permissions.AllowAny,)
+    """
+    View for getting dashboard permissions of the current user
+    """
+
     allowed_methods = [
         "GET",
     ]
@@ -57,7 +58,9 @@ class UserPermissionView(GenericAPIView):
 
 
 class UserGroupView(GenericAPIView):
-    permission_classes = (permissions.AllowAny,)
+    """
+    View for getting and updating dashboard manager groups of the current user
+    """
     allowed_methods = [
         "GET",
         "PUT",
@@ -69,7 +72,7 @@ class UserGroupView(GenericAPIView):
         try:
             groups = self.get_queryset()
             if groups is None:
-                return Response(statu=400)
+                return Response(status=400)
 
             # Transform drf groups to RolesManager groups
             nonSerializedGroups = []
@@ -124,6 +127,10 @@ class UserGroupView(GenericAPIView):
 
 
 class GroupDetailView(GenericAPIView):
+    """
+    View for getting, updating and deleting dashboard maanger groups
+    """
+
     permission_classes = (permissions.AllowAny,)
     allowed_methods = [
         "GET",
@@ -198,7 +205,10 @@ class GroupDetailView(GenericAPIView):
 
 
 class PermissionDetailView(GenericAPIView):
-    permission_classes = (permissions.AllowAny,)
+    """
+    View for getting and removing dashboard permission
+    """
+
     allowed_methods = [
         "GET",
         "DELETE",
@@ -240,7 +250,9 @@ class PermissionDetailView(GenericAPIView):
 
 
 class GroupView(GenericAPIView):
-    permission_classes = (permissions.AllowAny,)
+    """
+    View for listing and creating dashboard manager groups
+    """
     allowed_methods = [
         "GET",
         "POST",
@@ -296,7 +308,10 @@ class GroupView(GenericAPIView):
 
 
 class PermissionView(GenericAPIView):
-    permission_classes = (permissions.AllowAny,)
+    """
+    View for listing all dashboard permissions
+    """
+
     allowed_methods = [
         "GET",
     ]
@@ -325,9 +340,9 @@ class PermissionView(GenericAPIView):
                 for model in filterModels:
                     modelName = permission["name"].split("_")[0]
                     if (
-                        action in permission["name"]
-                        and model == modelName
-                        and permission not in perms
+                            action in permission["name"]
+                            and model == modelName
+                            and permission not in perms
                     ):
                         perms.append(permission)
 

@@ -46,6 +46,10 @@ Dashboard views
 
 
 class ProductVariantDashboard(APIView):
+    """
+    View for getting all variants of an product
+    """
+
     permission_classes = (permissions.AllowAny,)
 
     @check_user_is_staff_decorator()
@@ -63,8 +67,6 @@ class ProductListDashboard(APIView, DashboardPagination):
     List all products for dashboard
     """
 
-    # TODO: add permissions for dashboard views (only for staff) <- testing purposes
-    permission_classes = (permissions.AllowAny,)
     pagination = DashboardPagination()
 
     locale = "en"
@@ -84,7 +86,10 @@ class ProductListDashboard(APIView, DashboardPagination):
 
 
 class ProductDashboardView(GenericAPIView):
-    permission_classes = (permissions.AllowAny,)
+    """
+    View for listing and creating products
+    """
+
     allowed_methods = [
         "GET",
         "POST",
@@ -112,6 +117,10 @@ class ProductDashboardView(GenericAPIView):
 
 
 class ProductDetailDashboardView(RetrieveUpdateDestroyAPIView):
+    """
+    View for getting, updating and deleting a product
+    """
+
     permission_classes = (permissions.AllowAny,)
     allowed_methods = ["GET", "PUT", "DELETE"]
 
@@ -136,7 +145,10 @@ class ProductDetailDashboardView(RetrieveUpdateDestroyAPIView):
 
 
 class PriceListDashboardView(GenericAPIView):
-    permission_classes = (permissions.AllowAny,)
+    """
+    View for listing and creating pricelists
+    """
+
     allowed_methods = [
         "GET",
         "POST",
@@ -163,7 +175,10 @@ class PriceListDashboardView(GenericAPIView):
 
 
 class PriceListDashboardDetailView(RetrieveUpdateDestroyAPIView):
-    permission_classes = (permissions.AllowAny,)
+    """
+    View for updating and deleting price lists
+    """
+
     allowed_methods = ["PUT", "DELETE"]
 
     serializer_class = PriceListBaseSerializer
@@ -183,7 +198,10 @@ class PriceListDashboardDetailView(RetrieveUpdateDestroyAPIView):
 
 
 class ProductTypeDashboardView(GenericAPIView):
-    permission_classes = (permissions.AllowAny,)
+    """
+    View for listing and creating product types
+    """
+
     allowed_methods = [
         "GET",
         "POST",
@@ -210,7 +228,10 @@ class ProductTypeDashboardView(GenericAPIView):
 
 
 class ProductTypeDashboardDetailView(RetrieveUpdateDestroyAPIView):
-    permission_classes = (permissions.AllowAny,)
+    """
+    View for updating and deleting product types
+    """
+
     allowed_methods = ["PUT", "DELETE"]
 
     serializer_class = ProductTypeSerializer
@@ -230,7 +251,10 @@ class ProductTypeDashboardDetailView(RetrieveUpdateDestroyAPIView):
 
 
 class AttributeTypeDashboardView(GenericAPIView):
-    permission_classes = (permissions.AllowAny,)
+    """
+    View for listing and creating attribute types
+    """
+
     allowed_methods = [
         "GET",
         "POST",
@@ -257,7 +281,10 @@ class AttributeTypeDashboardView(GenericAPIView):
 
 
 class AttributeTypeDashboardDetailView(RetrieveUpdateDestroyAPIView):
-    permission_classes = (permissions.AllowAny,)
+    """
+    View for updating and deleting attribute types
+    """
+
     allowed_methods = ["PUT", "DELETE"]
 
     serializer_class = AtrributeTypeDashboardSerializer
@@ -277,7 +304,10 @@ class AttributeTypeDashboardDetailView(RetrieveUpdateDestroyAPIView):
 
 
 class BaseAttributeDashboardView(GenericAPIView):
-    permission_classes = (permissions.AllowAny,)
+    """
+    View for listing and creating base attributes
+    """
+
     allowed_methods = [
         "GET",
         "POST",
@@ -307,7 +337,10 @@ class BaseAttributeDashboardView(GenericAPIView):
 
 
 class BaseAttributeDashboardDetailView(RetrieveUpdateDestroyAPIView):
-    permission_classes = (permissions.AllowAny,)
+    """
+    View for updating and deleting base attributes
+    """
+
     allowed_methods = ["PUT", "DELETE"]
 
     serializer_class = BaseAttributeDashboardSerializer
@@ -332,6 +365,12 @@ Storefront views
 
 
 class ProductDetailStorefront(APIView):
+    """
+    View for getting product detail.
+
+    These data are intended to be shown to the user.
+    """
+
     permission_classes = (permissions.AllowAny,)
 
     def get_pricelist(self, request):
@@ -377,8 +416,11 @@ class ProductDetailStorefront(APIView):
 
 
 class ProductMediaUpload(GenericAPIView):
+    """
+    View for uploading product media (such as images)
+    """
+
     allowed_methods = ["POST"]
-    permission_classes = (permissions.AllowAny,)
     parser_classes = (
         MultiPartParser,
         FormParser,
@@ -401,11 +443,18 @@ class ProductMediaUpload(GenericAPIView):
 
 
 class ProductMediaUploadDetailView(RetrieveUpdateDestroyAPIView):
+    """
+    View for getting, updating and deleting product media
+    """
+
     allowed_methods = ["GET", "PUT", "DELETE"]
-    permission_classes = (permissions.AllowAny,)
     serializer_class = ProductMediaDetailsSerializer
     lookup_field = "id"
     lookup_url_kwarg = "id"
+
+    @check_user_is_staff_decorator()
+    def get(self, request, *args, **kwargs):
+        return super().get(request, args, kwargs)
 
     @check_user_access_decorator({"productmedia_change_permission"})
     def put(self, request, id):

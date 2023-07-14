@@ -8,8 +8,8 @@ from rest_framework.generics import (
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from roles.decorator import check_user_is_staff_decorator
 from user.models import User
-
 from .models import (
     Country,
     Currency,
@@ -26,8 +26,6 @@ from .serializers import (
     ShippingInfoListUserSerializer,
 )
 
-from roles.decorator import check_user_is_staff_decorator
-
 DEFAULT_LANGUAGE_CODE = settings.PARLER_DEFAULT_LANGUAGE_CODE
 LANGUAGES = settings.PARLER_LANGUAGES[None]
 # from parler.utils.conf import LanguagesSetting
@@ -39,6 +37,9 @@ Country views
 
 
 class CountryListView(ListCreateAPIView):
+    """
+    View for listing and creating countries
+    """
     permission_classes = (permissions.AllowAny,)
     allowed_methods = [
         "GET",
@@ -50,11 +51,19 @@ class CountryListView(ListCreateAPIView):
     def get(self, request):
         return super().get(request)
 
+    @check_user_is_staff_decorator()
+    def post(self, request, *args, **kwargs):
+        return super().post(request, args, kwargs)
+
     def get_queryset(self):
         return Country.objects.all()
 
 
 class CountryListStorefrontView(CountryListView):
+    """
+    View for listing all countries
+    """
+
     permission_classes = (permissions.AllowAny,)
     allowed_methods = [
         "GET",
@@ -86,6 +95,14 @@ class CountryDetailView(RetrieveUpdateDestroyAPIView):
     @check_user_is_staff_decorator()
     def get(self, request, code):
         return super().get(request, code)
+
+    @check_user_is_staff_decorator()
+    def put(self, request, *args, **kwargs):
+        return super().put(request, args, kwargs)
+
+    @check_user_is_staff_decorator()
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, args, kwargs)
 
     def get_queryset(self):
         return Country.objects.all()
@@ -123,9 +140,6 @@ class LanguagesView(APIView):
     List all products for dashboard
     """
 
-    # TODO: add permissions for dashboard views (only for staff) <- testing purposes
-    permission_classes = (permissions.AllowAny,)
-
     @check_user_is_staff_decorator()
     def get(self, request):
         langs = [
@@ -140,7 +154,9 @@ class LanguagesView(APIView):
 
 
 class CurrencyListView(GenericAPIView):
-    permission_classes = (permissions.AllowAny,)
+    """
+    View for listing and creating currency objects
+    """
     allowed_methods = ["GET", "POST", "PUT", "DELETE"]
 
     serializer_class = CurrencySerializer
@@ -154,6 +170,7 @@ class CurrencyListView(GenericAPIView):
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data, status=200)
 
+    @check_user_is_staff_decorator()
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
         print(request.data)
@@ -166,7 +183,7 @@ class CurrencyListView(GenericAPIView):
 
 class CurrencyDetailView(RetrieveUpdateDestroyAPIView):
     """
-    List all products for dashboard
+    View for getting, updating and deleting currencies
     """
 
     permission_classes = (permissions.AllowAny,)
@@ -180,6 +197,14 @@ class CurrencyDetailView(RetrieveUpdateDestroyAPIView):
     def get(self, request, code):
         return super().get(request, code)
 
+    @check_user_is_staff_decorator()
+    def put(self, request, *args, **kwargs):
+        return super().put(request, args, kwargs)
+
+    @check_user_is_staff_decorator()
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, args, kwargs)
+
     def get_queryset(self):
         return Currency.objects.all()
 
@@ -190,6 +215,9 @@ Vat group views
 
 
 class VatGroupListView(GenericAPIView):
+    """
+    View for listing and creating VAT groups
+    """
     permission_classes = (permissions.AllowAny,)
     allowed_methods = [
         "GET",
@@ -207,6 +235,7 @@ class VatGroupListView(GenericAPIView):
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data, status=200)
 
+    @check_user_is_staff_decorator()
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
@@ -217,7 +246,7 @@ class VatGroupListView(GenericAPIView):
 
 class VatGroupDetailView(RetrieveUpdateDestroyAPIView):
     """
-    List all products for dashboard
+    View for getting, updating and deleting VAT groups
     """
 
     permission_classes = (permissions.AllowAny,)
@@ -235,6 +264,14 @@ class VatGroupDetailView(RetrieveUpdateDestroyAPIView):
     def get(self, request, id):
         return super().get(request, id)
 
+    @check_user_is_staff_decorator()
+    def put(self, request, *args, **kwargs):
+        return super().put(request, args, kwargs)
+
+    @check_user_is_staff_decorator()
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, args, kwargs)
+
     def get_queryset(self):
         return VatGroup.objects.all()
 
@@ -246,7 +283,7 @@ Address views
 
 class ShippingAddressDetailView(RetrieveUpdateDestroyAPIView):
     """
-    Detail of shipping address
+    View for getting, updating and removing shipping addresses
     """
 
     permission_classes = (permissions.AllowAny,)
@@ -264,13 +301,21 @@ class ShippingAddressDetailView(RetrieveUpdateDestroyAPIView):
     def get(self, request, id):
         return super().get(request, id)
 
+    @check_user_is_staff_decorator()
+    def put(self, request, *args, **kwargs):
+        return super().put(request, args, kwargs)
+
+    @check_user_is_staff_decorator()
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, args, kwargs)
+
     def get_queryset(self):
         return ShippingInfo.objects.all()
 
 
 class BillingAddressDetailView(RetrieveUpdateDestroyAPIView):
     """
-    Detail of billing address
+    View for getting, updating and removing billing addresses
     """
 
     permission_classes = (permissions.AllowAny,)
@@ -288,11 +333,23 @@ class BillingAddressDetailView(RetrieveUpdateDestroyAPIView):
     def get(self, request, id):
         return super().get(request, id)
 
+    @check_user_is_staff_decorator()
+    def put(self, request, *args, **kwargs):
+        return super().put(request, args, kwargs)
+
+    @check_user_is_staff_decorator()
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, args, kwargs)
+
     def get_queryset(self):
         return BillingInfo.objects.all()
 
 
 class ShippingInfoListView(GenericAPIView):
+    """
+    View for listing and creating shipping infos
+    """
+
     permission_classes = (permissions.AllowAny,)
     allowed_methods = ["GET", "POST"]
     serializer_class = ShippingInfoSerializer
@@ -314,6 +371,10 @@ class ShippingInfoListView(GenericAPIView):
 
 
 class BillingInfoListView(GenericAPIView):
+    """
+    View for listing and creating billing infos
+    """
+
     permission_classes = (permissions.AllowAny,)
     allowed_methods = ["GET", "POST"]
     serializer_class = BillingInfoSerializer
@@ -335,6 +396,9 @@ class BillingInfoListView(GenericAPIView):
 
 
 class ShippingInfoListUserView(GenericAPIView):
+    """
+    View for listing and creating user's shipping info
+    """
     permission_classes = (permissions.AllowAny,)
     allowed_methods = ["GET", "POST"]
     serializer_class = ShippingInfoListUserSerializer
@@ -360,6 +424,9 @@ class ShippingInfoListUserView(GenericAPIView):
 
 
 class BillingInfoListUserView(GenericAPIView):
+    """
+    View for listing and creating user's billing info
+    """
     permission_classes = (permissions.AllowAny,)
     allowed_methods = ["GET", "POST"]
     serializer_class = BillingInfoSerializer
@@ -385,6 +452,9 @@ class BillingInfoListUserView(GenericAPIView):
 
 
 class ShippingInfoUserView(GenericAPIView):
+    """
+    View for getting, updating and removing user's shipping info
+    """
     permissions_classes = (permissions.AllowAny,)
     allowed_methods = ["GET", "PUT", "DELETE"]
     serializer_class = ShippingInfoSerializer
@@ -432,6 +502,10 @@ class ShippingInfoUserView(GenericAPIView):
 
 
 class BillingInfoUserView(GenericAPIView):
+    """
+    View for getting, updating and removing user's billing info
+    """
+
     permissions_classes = (permissions.AllowAny,)
     allowed_methods = ["GET", "PUT", "DELETE"]
     serializer_class = BillingInfoSerializer

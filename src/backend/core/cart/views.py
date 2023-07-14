@@ -58,15 +58,19 @@ from product.models import ProductVariant, ProductPrice
 from roles.decorator import check_user_is_staff_decorator, check_user_access_decorator
 
 
-@permission_classes([AllowAny])  # TODO: use authentication
+@permission_classes([AllowAny])
 class CartDetailShortStorefrontView(APIView):
+    """
+    View for getting basic cart information
+    """
+
     def get(self, request, token):
         cart = Cart.objects.get(token=token)
         serializer = CartDetailSerializer(cart)
         return Response(serializer.data)
 
 
-@permission_classes([AllowAny])  # TODO: use authentication
+@permission_classes([AllowAny])
 class CartDetailStorefrontView(APIView):
     """
     View used for getting cart detail and adding items into cart
@@ -223,6 +227,10 @@ class CartUpdateQuantityBaseView(APIView):
 
 
 class CartUpdateQuantityDashboardView(CartUpdateQuantityBaseView):
+    """
+    View used for updating quantities of cart items
+    """
+
     @check_user_access_decorator({"cart_change_permission"})
     def put(self, request, token):
         return super().put(request, token)
@@ -230,6 +238,10 @@ class CartUpdateQuantityDashboardView(CartUpdateQuantityBaseView):
 
 @permission_classes([AllowAny])
 class CartUpdateQuantityStorefrontView(CartUpdateQuantityBaseView):
+    """
+    View used for updating quantities of cart items
+    """
+
     def put(self, request, token):
         return super().put(request, token)
 
@@ -320,43 +332,71 @@ class CartShippingInfoBaseView(CartInfoBaseView):
 @permission_classes([AllowAny])
 class CartBillingInfoStorefrontView(CartBillingInfoBaseView):
     def get(self, request, token):
+        """
+        Get billing info of a given cart
+        """
         return super().get(request, token)
 
     def put(self, request, token):
+        """
+        Update billing info of a given cart
+        """
         return super().put(request, token)
 
 
 @permission_classes([AllowAny])
 class CartShippingInfoStorefrontView(CartShippingInfoBaseView):
     def get(self, request, token):
+        """
+        Get shipping info of a given cart
+        """
         return super().get(request, token)
 
     def put(self, request, token):
+        """
+        Get billing info of a given cart
+        """
         return super().put(request, token)
 
 
 class CartBillingInfoDashboardView(CartBillingInfoBaseView):
     @check_user_is_staff_decorator()
     def get(self, request, token):
+        """
+        Get billing info of a given cart
+        """
         return super().get(request, token)
 
     @check_user_access_decorator({"order_change_permission"})
     def put(self, request, token):
+        """
+        Update billing info of a given cart
+        """
         return super().put(request, token)
 
 
 class CartShippingInfoDashboardView(CartShippingInfoBaseView):
     @check_user_is_staff_decorator()
     def get(self, request, token):
+        """
+        Get shipping info of a given cart
+        """
         return super().get(request, token)
 
     @check_user_access_decorator({"order_change_permission"})
     def put(self, request, token):
+        """
+        Update shipping info of a given cart
+        """
         return super().put(request, token)
 
 
 @permission_classes([AllowAny])
 class CartCountryMethodsStorefrontView(GenericAPIView):
+    """
+    View used for getting available country shipping & related payment methods
+    """
+
     serializer_class = CartShippingMethodCountrySerializer
 
     def get_queryset(self):
@@ -494,6 +534,10 @@ class CartItemDeleteBaseView(APIView):
 
 
 class CartItemDeleteDashboardView(CartItemDeleteBaseView):
+    """
+    View used for deleting cart items.
+    """
+
     @check_user_access_decorator({"cart_change_permission"})
     def delete(self, request, token, sku):
         return super().delete(request, token, sku)
@@ -501,11 +545,18 @@ class CartItemDeleteDashboardView(CartItemDeleteBaseView):
 
 @permission_classes([AllowAny])
 class CartItemDeleteStorefrontView(CartItemDeleteBaseView):
+    """
+    View used for deleting cart items.
+    """
+
     def delete(self, request, token, sku):
         return super().delete(request, token, sku)
 
 
 class PaymentMethodListDashboardView(ListCreateAPIView):
+    """
+    View for getting payment methods
+    """
     permission_classes = (AllowAny,)
     allowed_methods = [
         "GET",
@@ -548,6 +599,9 @@ class PaymentMethodDetailDashboardView(RetrieveUpdateDestroyAPIView):
 
 
 class PaymentMethodCountryListView(ListCreateAPIView):
+    """
+    View for getting payment method countries related to the given payment method
+    """
     permission_classes = (AllowAny,)
     allowed_methods = [
         "GET",
@@ -604,6 +658,9 @@ class PaymentMethodCountryDetailDashboardView(
 
 
 class PaymentMethodCountryFullListView(ListCreateAPIView):
+    """
+    View for listing and creating payment method countries
+    """
     permission_classes = (AllowAny,)
     allowed_methods = [
         "GET",
@@ -618,6 +675,9 @@ class PaymentMethodCountryFullListView(ListCreateAPIView):
 
 
 class ShippingMethodListDashboardView(ListCreateAPIView):
+    """
+    View for listing and creating shippping method countries
+    """
     permission_classes = (AllowAny,)
     allowed_methods = [
         "GET",
@@ -660,6 +720,9 @@ class ShippingMethodDetailDashboardView(RetrieveUpdateDestroyAPIView):
 
 
 class ShippingMethodCountryListView(ListCreateAPIView):
+    """
+    View for listing and creating shipping method countries
+    """
     permission_classes = (AllowAny,)
     allowed_methods = [
         "GET",

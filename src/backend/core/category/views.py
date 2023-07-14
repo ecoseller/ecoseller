@@ -41,7 +41,7 @@ from roles.decorator import check_user_access_decorator
 from roles.decorator import check_user_is_staff_decorator
 
 
-@permission_classes([AllowAny])  # TODO: use authentication
+@permission_classes([AllowAny])
 class CategoryDashboardView(APIView):
     """
     View for listing all categories and adding new ones.
@@ -75,7 +75,7 @@ class CategoryDashboardView(APIView):
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 
-@permission_classes([AllowAny])  # TODO: use authentication
+@permission_classes([AllowAny])
 class CategoryDetailDashboardView(RetrieveUpdateDestroyAPIView):
     """
     View for getting (by ID), updating and deleting categories.
@@ -95,14 +95,6 @@ class CategoryDetailDashboardView(RetrieveUpdateDestroyAPIView):
 
     queryset = Category.objects.all()
     serializer_class = CategoryDetailDashboardSerializer
-
-    # def perform_destroy(self, instance):
-    #     """
-    #     Custom method for deletion.
-    #     Marks the selected category as "not published".
-    #     """
-    #     instance.published = False
-    #     instance.save()
 
 
 @permission_classes([AllowAny])
