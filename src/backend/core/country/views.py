@@ -40,6 +40,7 @@ class CountryListView(ListCreateAPIView):
     """
     View for listing and creating countries
     """
+
     permission_classes = (permissions.AllowAny,)
     allowed_methods = [
         "GET",
@@ -157,6 +158,7 @@ class CurrencyListView(GenericAPIView):
     """
     View for listing and creating currency objects
     """
+
     allowed_methods = ["GET", "POST", "PUT", "DELETE"]
 
     serializer_class = CurrencySerializer
@@ -218,6 +220,7 @@ class VatGroupListView(GenericAPIView):
     """
     View for listing and creating VAT groups
     """
+
     permission_classes = (permissions.AllowAny,)
     allowed_methods = [
         "GET",
@@ -399,6 +402,7 @@ class ShippingInfoListUserView(GenericAPIView):
     """
     View for listing and creating user's shipping info
     """
+
     permission_classes = (permissions.AllowAny,)
     allowed_methods = ["GET", "POST"]
     serializer_class = ShippingInfoListUserSerializer
@@ -427,6 +431,7 @@ class BillingInfoListUserView(GenericAPIView):
     """
     View for listing and creating user's billing info
     """
+
     permission_classes = (permissions.AllowAny,)
     allowed_methods = ["GET", "POST"]
     serializer_class = BillingInfoSerializer
@@ -455,6 +460,7 @@ class ShippingInfoUserView(GenericAPIView):
     """
     View for getting, updating and removing user's shipping info
     """
+
     permissions_classes = (permissions.AllowAny,)
     allowed_methods = ["GET", "PUT", "DELETE"]
     serializer_class = ShippingInfoSerializer

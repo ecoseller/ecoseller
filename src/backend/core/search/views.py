@@ -90,7 +90,7 @@ class PaginatedElasticSearchAPIView(APIView):
         """
         if self.serializer_as_django_model:
             response_ids = [
-                x["_id"] for x in response.to_dict()["hits"]["hits"][0: self.limit]
+                x["_id"] for x in response.to_dict()["hits"]["hits"][0 : self.limit]
             ]
             objs = self.document_class.django.model._default_manager.filter(
                 id__in=response_ids
@@ -107,7 +107,7 @@ class PaginatedElasticSearchAPIView(APIView):
             )
             return serializer.data
         else:
-            return response.to_dict()["hits"]["hits"][0: self.limit]
+            return response.to_dict()["hits"]["hits"][0 : self.limit]
 
     def get(self, request, language, query):
         self.request = request

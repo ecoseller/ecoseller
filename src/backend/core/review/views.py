@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from order.models import Order
 from order.models import OrderStatus
 from product.models import ProductVariant, Product
+
 # from roles.decorator import check_user_access_decorator
 from roles.decorator import check_user_is_staff_decorator, check_user_access_decorator
 from .models import Review
@@ -149,6 +150,7 @@ class ReviewListDashboardView(APIView):
     """
     View for listing product reviews
     """
+
     permission_classes = (permissions.AllowAny,)
     serializer_class = ReviewSerializer
 

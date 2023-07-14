@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "rest_framework_simplejwt.token_blacklist",
     "django_rq",
-    'drf_yasg',
+    "drf_yasg",
 ]
 
 MIDDLEWARE = [
@@ -302,12 +302,12 @@ if USE_ELASTIC:
         },
     }
     if os.environ.get("ELASTICSEARCH_USERNAME") and os.environ.get(
-            "ELASTICSEARCH_PASSWORD"
+        "ELASTICSEARCH_PASSWORD"
     ):
         ELASTICSEARCH_DSL["default"]["http_auth"] = (
-                os.environ.get("ELASTICSEARCH_USERNAME")
-                + ":"
-                + os.environ.get("ELASTICSEARCH_PASSWORD")
+            os.environ.get("ELASTICSEARCH_USERNAME")
+            + ":"
+            + os.environ.get("ELASTICSEARCH_PASSWORD")
         )
     INSTALLED_APPS += [
         "django_elasticsearch_dsl",

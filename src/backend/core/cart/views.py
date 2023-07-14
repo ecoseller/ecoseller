@@ -98,7 +98,7 @@ class CartDetailStorefrontView(APIView):
                 )
 
                 if (
-                        cart_item_filter.exists()
+                    cart_item_filter.exists()
                 ):  # if already present, update its quantity instead of creating new `CartItem`
                     cart_item = cart_item_filter.first()
                     cart_item.quantity += update_data.quantity
@@ -557,6 +557,7 @@ class PaymentMethodListDashboardView(ListCreateAPIView):
     """
     View for getting payment methods
     """
+
     permission_classes = (AllowAny,)
     allowed_methods = [
         "GET",
@@ -602,6 +603,7 @@ class PaymentMethodCountryListView(ListCreateAPIView):
     """
     View for getting payment method countries related to the given payment method
     """
+
     permission_classes = (AllowAny,)
     allowed_methods = [
         "GET",
@@ -661,6 +663,7 @@ class PaymentMethodCountryFullListView(ListCreateAPIView):
     """
     View for listing and creating payment method countries
     """
+
     permission_classes = (AllowAny,)
     allowed_methods = [
         "GET",
@@ -678,6 +681,7 @@ class ShippingMethodListDashboardView(ListCreateAPIView):
     """
     View for listing and creating shippping method countries
     """
+
     permission_classes = (AllowAny,)
     allowed_methods = [
         "GET",
@@ -723,6 +727,7 @@ class ShippingMethodCountryListView(ListCreateAPIView):
     """
     View for listing and creating shipping method countries
     """
+
     permission_classes = (AllowAny,)
     allowed_methods = [
         "GET",

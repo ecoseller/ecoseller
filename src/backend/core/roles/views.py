@@ -61,6 +61,7 @@ class UserGroupView(GenericAPIView):
     """
     View for getting and updating dashboard manager groups of the current user
     """
+
     allowed_methods = [
         "GET",
         "PUT",
@@ -253,6 +254,7 @@ class GroupView(GenericAPIView):
     """
     View for listing and creating dashboard manager groups
     """
+
     allowed_methods = [
         "GET",
         "POST",
@@ -340,9 +342,9 @@ class PermissionView(GenericAPIView):
                 for model in filterModels:
                     modelName = permission["name"].split("_")[0]
                     if (
-                            action in permission["name"]
-                            and model == modelName
-                            and permission not in perms
+                        action in permission["name"]
+                        and model == modelName
+                        and permission not in perms
                     ):
                         perms.append(permission)
 

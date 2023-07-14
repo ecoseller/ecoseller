@@ -401,14 +401,14 @@ class CategoryDetailAttributesStorefrontView(APIView):
 
         for attr in attribute_types:
             if (
-                    attr.value_type == AttributeTypeValueType.TEXT
-                    and attr.id not in string_attributes
+                attr.value_type == AttributeTypeValueType.TEXT
+                and attr.id not in string_attributes
             ):
                 string_attributes[attr.id] = attr
             elif (
-                    attr.value_type
-                    in [AttributeTypeValueType.DECIMAL, AttributeTypeValueType.INTEGER]
-                    and attr.id not in numeric_attributes
+                attr.value_type
+                in [AttributeTypeValueType.DECIMAL, AttributeTypeValueType.INTEGER]
+                and attr.id not in numeric_attributes
             ):
                 numeric_attributes[attr.id] = attr
 

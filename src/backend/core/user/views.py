@@ -25,6 +25,7 @@ class UserView(APIView, DashboardPagination):
     """
     View for listing and creating dashboard users
     """
+
     allowed_methods = [
         "GET",
         "POST",
@@ -119,6 +120,7 @@ class UserViewObs(APIView):
     """
     View that returns user data from token
     """
+
     permission_classes = (permissions.AllowAny,)
 
     def get(self, request):
