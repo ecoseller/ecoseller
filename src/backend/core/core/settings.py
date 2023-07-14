@@ -10,12 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
-from pathlib import Path
 import os
+from datetime import timedelta
+from pathlib import Path
+
 from dotenv import load_dotenv
 
-
-from datetime import timedelta
 from api.notifications.api import NotificationsAPI
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -34,7 +34,6 @@ SECRET_KEY = "django-insecure-^2x#dix3t(vd1yt7bdqmhs-*=tf%)td#yxuw6s$pun(#!z=c$@
 DEBUG = os.environ.get("DEBUG", 1)
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(" ")
-
 
 # Application definition
 INSTALLED_APPS = [
@@ -59,6 +58,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "rest_framework_simplejwt.token_blacklist",
     "django_rq",
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -101,7 +101,6 @@ TEMPLATES = [
     },
 ]
 WSGI_APPLICATION = "core.wsgi.application"
-
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -185,7 +184,6 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
 }
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -212,7 +210,6 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
@@ -244,7 +241,6 @@ try:
 except Exception as e:
     print(e)
     NOTIFICATIONS_API = None
-
 
 # Online payment method APIs
 PAYMENT_CONFIG_PATH = os.environ.get("PAYMENT_CONFIG_PATH", "./config/payments.json")
@@ -281,7 +277,6 @@ if USING_REDIS_QUEUE:
         },
     }
 
-
 # Email configuration
 EMAIL_USE_SSL = bool(int(os.environ.get("EMAIL_USE_SSL", 0)))
 EMAIL_PORT = int(os.environ.get("EMAIL_PORT", 465))
@@ -307,12 +302,12 @@ if USE_ELASTIC:
         },
     }
     if os.environ.get("ELASTICSEARCH_USERNAME") and os.environ.get(
-        "ELASTICSEARCH_PASSWORD"
+            "ELASTICSEARCH_PASSWORD"
     ):
         ELASTICSEARCH_DSL["default"]["http_auth"] = (
-            os.environ.get("ELASTICSEARCH_USERNAME")
-            + ":"
-            + os.environ.get("ELASTICSEARCH_PASSWORD")
+                os.environ.get("ELASTICSEARCH_USERNAME")
+                + ":"
+                + os.environ.get("ELASTICSEARCH_PASSWORD")
         )
     INSTALLED_APPS += [
         "django_elasticsearch_dsl",
