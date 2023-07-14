@@ -1,23 +1,27 @@
 # search/views.py
 
 import abc
-from rest_framework.decorators import permission_classes
-from rest_framework.permissions import AllowAny
 
-from rest_framework.response import Response
-from elasticsearch_dsl import Q
-from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.views import APIView
 from django.conf import settings
+from elasticsearch_dsl import Q
+from rest_framework.decorators import permission_classes
+from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from country.models import Country
+from product.documents import ProductDocument
 from product.models import PriceList
 from product.serializers import ProductStorefrontListSerializer
-
-from product.documents import ProductDocument
 
 
 @permission_classes((AllowAny,))
 class PaginatedElasticSearchAPIView(APIView):
+    """
+    Base view for searching using ElasticSearch
+    """
+
     PRICE_LIST_URL_PARAM = "pricelist"
     COUNTRY_URL_PARAM = "country"
 
@@ -125,6 +129,14 @@ class PaginatedElasticSearchAPIView(APIView):
 
 
 class SearchProducts(PaginatedElasticSearchAPIView):
+    """
+    View for searching products using ElasticSearch
+
+    expected URL params:
+    - pricelist - ID of the pricelist that should be used for getting product prices
+    - country - ID of the country that should be used for getting localized product texts (name, description,...)
+    """
+
     serializer_class = ProductStorefrontListSerializer
     document_class = ProductDocument
     serializer_as_django_model = True

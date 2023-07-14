@@ -10,24 +10,7 @@ import { PermissionProvider } from "@/utils/context/permission";
 const CategoryAddPage = () => {
   const emptyCategory: ICategoryEditable = {
     published: true,
-    translations: {
-      en: {
-        slug: "",
-        title: "",
-        description: "",
-        meta_description: "",
-        description_editorjs: {} as OutputData,
-        meta_title: "",
-      },
-      cs: {
-        slug: "",
-        title: "",
-        description: "",
-        meta_description: "",
-        description_editorjs: {} as OutputData,
-        meta_title: "",
-      },
-    },
+    translations: {},
     parent: null,
   };
 
