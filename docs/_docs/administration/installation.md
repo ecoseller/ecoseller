@@ -53,16 +53,64 @@ To run **ecoseller** in a development environment, follow these steps:
   Also note that both storefront and dashboard are quite slow in the developement mode since they are running in the debug mode and Next.js rebuilds every single page on every single request. 
 
 ## Production environment
+In a production environment, Ecoseller utilizes a combination of Gunicorn for both Flask Recommender and Django backend, and Nginx to ensure a robust and efficient deployment. The production build mode of Next.js is used to run the storefront and dashboard services. Additionally, Nginx is configured as a reverse proxy to efficiently handle incoming requests and distribute them to the appropriate services.
 
-## Demo environment
-The demo environment in Ecoseller is designed to showcase the platform's features and functionality using preloaded demo products (1400+), variants (2200+), and additional data. Setting up the demo environment is similar to the production environment, with the main difference being the utilization of the docker-compose.demo.yml file. 
+### Reverse proxy
+Nginx is used as a reverse proxy to efficiently handle incoming requests and distribute them to the appropriate services.
+It acts as a middle layer between the client and the backend services, enhancing performance and enabling load balancing.
+Two configurations are supplied for the Nginx reverse proxy:
+- Simple Port Mapping: In this configuration, Nginx maps incoming requests directly to the appropriate backend service based on port numbers.
+- - Please see `/src/reverse_proxy/nginx.conf`
+- Server Name Based Routing: This configuration allows Nginx to utilize different server names to route requests to the corresponding backend services.
+- - - Please see `/src/reverse_proxy/nginx.example.conf`
+If you wish to use the Server Name Based Routing configuration, you can rename the `nginx.example.conf` file to `nginx.conf` and modify it as needed or create your own configuration file and mount it to the Nginx container in the `docker-compose.prod.yml` file as shown below:
+
+```yaml
+  reverse-proxy:
+    container_name: reverse_proxy
+    image: nginx:latest
+    ports:
+      - 80:80
+      - 8080:8080
+      - 3032:3032
+      - 3033:3033
+    volumes:
+      - ./reverse_proxy/your_nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+      - frontend_storefront
+      - frontend_dashboard
+```
+
+Please note that if you are using the Server Name Base Routing configuration, it's good practice to remove port mapping from the Nginx container in the `docker-compose.prod.yml` file.
+
+The production environment can be started by running the following command in the `/src` directory:
+
+```bash
+docker compose -f docker-compose.prod.yml up -d
+```
+
+### Demo environment
+The demo environment in Ecoseller is designed to showcase the platform's features and functionality using preloaded demo products (1400+), variants (2200+), and additional data. Setting up the demo environment is similar to the production environment, with the main difference being the utilization of the `docker-compose.demo.yml` file. It's very similar to `docker-compose.prod.yml` but it has some additional services that are used to preload the demo data into the database.
+You can choose between using reverse proxy or accessing the services directly. However, it's recommended to use the reverse proxy configuration for the demo environment as well (please see the [Reverse Proxy](#reverse-proxy) section for more information as well ass [Production environment](#production-environment)).
+Our demo data live at public repository [ecoseller/demo-data](https://github.com/ecoseller/demo-data)
+
+
+The demo environment can be started by running the following command in the `/src` directory:
+
+```bash
+docker compose -f docker-compose.demo.yml up -d
+```
+If you compare `docker-compose.demo.yml` and `docker-compose.prod.yml`, you can see that main difference is in the build target of `backend` service where `demo` is utilized.
+It means that there're different scripts ran on startup, namely `/src/backend/demo_data_loader.sh` which clones the repository and moves the data in propriate locations.
+```bash
+git clone https://github.com/ecoseller/demo-data.git
+mv /usr/src/demo-data/media /usr/src/mediafiles
+PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST -U $POSTGRES_USER -d $POSTGRES_DB -p $POSTGRES_PORT -a -f /usr/src/demo-data/sql/mock_data.sql
+```
+
 
 **Also, please note, that the demo environment is not intended for production use. It's not setup for persistent storage so after you stop the containers all the data will be lost.**
-
-
-### With proxy
-
-### Without proxy 
 
 # Environment variables 
 **ecoseller** utilizes environment variables to configure various aspects of the backend and recommendation system. These environment variables are stored in separate files, namely `docker-compose.env`. For the backend it's `src/backend/docker-compose.env` and `src/recommender_system/docker-compose.env` for recommendation system. Additionally, the storefront, dashboard, and other services have their environment variables directly specified in the  YAML file for specific docker compose.
