@@ -41,7 +41,7 @@ from roles.decorator import check_user_access_decorator
 from roles.decorator import check_user_is_staff_decorator
 
 
-@permission_classes([AllowAny])  # TODO: use authentication
+@permission_classes([AllowAny])
 class CategoryDashboardView(APIView):
     """
     View for listing all categories and adding new ones.
@@ -75,7 +75,7 @@ class CategoryDashboardView(APIView):
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 
-@permission_classes([AllowAny])  # TODO: use authentication
+@permission_classes([AllowAny])
 class CategoryDetailDashboardView(RetrieveUpdateDestroyAPIView):
     """
     View for getting (by ID), updating and deleting categories.
@@ -95,14 +95,6 @@ class CategoryDetailDashboardView(RetrieveUpdateDestroyAPIView):
 
     queryset = Category.objects.all()
     serializer_class = CategoryDetailDashboardSerializer
-
-    # def perform_destroy(self, instance):
-    #     """
-    #     Custom method for deletion.
-    #     Marks the selected category as "not published".
-    #     """
-    #     instance.published = False
-    #     instance.save()
 
 
 @permission_classes([AllowAny])
@@ -204,7 +196,7 @@ class CategoryDetailProductsStorefrontView(APIView):
     Used for storefront.
     """
 
-    pagination_class = StorefrontPagination()
+    pagination = StorefrontPagination()
     pricelist = None
     locale = None
     PRICE_LIST_URL_PARAM = "pricelist"
@@ -227,11 +219,11 @@ class CategoryDetailProductsStorefrontView(APIView):
         try:
             category = Category.objects.get(id=pk, published=True)
             products = _get_all_published_products(category)
-            paginated_products = self.pagination_class.paginate_queryset(
+            paginated_products = self.pagination.paginate_queryset(
                 queryset=products, request=request
             )
             serializer = self._serialize_products(paginated_products, request)
-            return self.pagination_class.get_paginated_response(serializer.data)
+            return self.pagination.get_paginated_response(serializer.data)
         except Category.DoesNotExist:
             return Response(status=HTTP_404_NOT_FOUND)
 
@@ -292,13 +284,13 @@ class CategoryDetailProductsStorefrontView(APIView):
                 else:
                     sorted_data = filtered_products
 
-                paginated_sorted_products = self.pagination_class.paginate_queryset(
+                paginated_sorted_products = self.pagination.paginate_queryset(
                     queryset=sorted_data, request=request
                 )
                 serializer = self._serialize_products(
                     paginated_sorted_products, request
                 )
-                return self.pagination_class.get_paginated_response(serializer.data)
+                return self.pagination.get_paginated_response(serializer.data)
             except Category.DoesNotExist:
                 return Response(status=HTTP_404_NOT_FOUND)
         else:

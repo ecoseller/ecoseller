@@ -1,19 +1,17 @@
 from rest_framework import permissions
-from rest_framework.views import APIView
-from rest_framework.generics import UpdateAPIView
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from rest_framework.generics import UpdateAPIView
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.views import APIView
 from rest_framework_simplejwt import views as jwt_views
-from core.pagination import DashboardPagination
+from rest_framework_simplejwt.tokens import RefreshToken
 
+from core.pagination import DashboardPagination
 from roles.decorator import (
     check_user_access_decorator,
     check_user_is_staff_decorator,
 )
-
 from .models import User
-
 from .serializers import (
     RegistrationSerializer,
     TokenObtainDashboardSerializer,
@@ -24,14 +22,17 @@ from .serializers import (
 
 
 class UserView(APIView, DashboardPagination):
-    permission_classes = (permissions.AllowAny,)
+    """
+    View for listing and creating dashboard users
+    """
+
     allowed_methods = [
         "GET",
         "POST",
     ]
 
     serializer_class = RegistrationSerializer
-    pagination_class = DashboardPagination()
+    pagination = DashboardPagination()
 
     @check_user_is_staff_decorator()
     def get(self, request):
@@ -55,8 +56,11 @@ class UserView(APIView, DashboardPagination):
 
 
 class UserDetailView(RetrieveUpdateDestroyAPIView):
+    """
+    View for getting, updating and deleting dashboard users
+    """
+
     allowed_methods = ["GET", "PUT", "DELETE"]
-    permission_classes = (permissions.AllowAny,)
     serializer_class = UserSerializer
     lookup_field = "email"
     lookup_url_kwarg = "id"
@@ -112,11 +116,19 @@ class BlacklistTokenView(APIView):
             return Response(status=400)
 
 
-# create view that returns user data from token
 class UserViewObs(APIView):
+    """
+    View that returns user data from token
+    """
+
     permission_classes = (permissions.AllowAny,)
 
     def get(self, request):
+        """
+        Get current user object.
+
+        If no user is logged-in, return 403.
+        """
         user = request.user
         if user is None or not user.is_authenticated:
             return Response({"error": "User does not exist"}, status=403)
@@ -125,6 +137,11 @@ class UserViewObs(APIView):
         return Response(serializer.data)
 
     def put(self, request):
+        """
+        Update current user's properties
+
+        If no user is logged-in, return 403.
+        """
         user = request.user
         if user is None or not user.is_authenticated:
             return Response({"error": "User does not exist"}, status=403)
@@ -138,6 +155,10 @@ class UserViewObs(APIView):
 
 
 class CustomTokenObtainPairView(jwt_views.TokenObtainPairView):
+    """
+    Obtain access and refresh token for the current user
+    """
+
     serializer_class = TokenObtainDashboardSerializer
 
     def post(self, request, *args, **kwargs):
@@ -156,7 +177,7 @@ class CustomTokenObtainPairView(jwt_views.TokenObtainPairView):
 
 class PasswordView(UpdateAPIView):
     """
-    View for users to change their password.
+    View for users to change their own password.
     """
 
     serializer_class = ChangePasswordSerializer
@@ -188,7 +209,7 @@ class PasswordView(UpdateAPIView):
 
 class PasswordAdminView(UpdateAPIView):
     """
-    View for admins to change users password.
+    View for dashboard users to change other users password.
     """
 
     serializer_class = ChangePasswordSerializerAdmin
