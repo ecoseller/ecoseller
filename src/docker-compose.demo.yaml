@@ -56,7 +56,7 @@ services:
     build:
         context: ./backend
         dockerfile: ./Dockerfile
-        target: production
+        target: rq-worker
     volumes:
       - ./backend/core:/usr/src/app/core
     depends_on:
@@ -64,7 +64,6 @@ services:
     - redis
     env_file:
       - ./backend/docker-compose.env
-    command: python -u /usr/src/app/core/manage.py rqworker high low default
   elasticsearch:
     container_name: elasticsearch
     build:
@@ -175,3 +174,18 @@ services:
     depends_on:
       recommender_system:
         condition: service_healthy
+  reverse-proxy:
+    container_name: reverse_proxy
+    image: nginx:latest
+    ports:
+      - 80:80
+      - 8080:8080
+      - 3032:3032
+      - 3033:3033
+    volumes:
+      - ./reverse_proxy/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+      - frontend_storefront
+      - frontend_dashboard
+
