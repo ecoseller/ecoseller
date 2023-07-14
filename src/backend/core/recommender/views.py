@@ -61,13 +61,13 @@ class RecommenderSystemEventView(APIView):
 
 
 class RecommenderSystemRecommendProductsView(APIView):
-    allowed_methods = ["POST"]
+    allowed_methods = ["GET"]
     permission_classes = (permissions.AllowAny,)
 
-    def post(self, request, situation):
+    def get(self, request, situation):
         if situation not in RSSituation:
             return Response({"message": "Unknown RS situation!"}, status=404)
-        data = request.data
+        data = request.query_params
         data["user_id"] = request.user
         data["recommendation_type"] = situation
         products = RecommenderSystemApi.get_recommendations(data)

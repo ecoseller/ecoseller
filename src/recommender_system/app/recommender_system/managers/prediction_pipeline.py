@@ -1,5 +1,6 @@
 from datetime import datetime
 from enum import Enum
+import random
 import time
 from typing import Any, Dict, List, Optional
 
@@ -82,11 +83,12 @@ class PredictionPipeline:
                 session_id=session_id, user_id=user_id, variants=variants
             )
         if recommendation_type == RecommendationType.PRODUCT_DETAIL:
+            variant = random.choice(kwargs["variants"])
             return model.score_product_detail(
                 session_id=session_id,
                 user_id=user_id,
                 variants=variants,
-                variant=kwargs["variant"],
+                variant=variant,
             )
         if recommendation_type == RecommendationType.CART:
             return model.score_cart(

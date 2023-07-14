@@ -75,7 +75,7 @@ const ProductPage = ({
     getRecommendations("PRODUCT_DETAIL", {
       limit: 10,
       product_id: data.id,
-      skus: data.product_variants?.map((v) => v.sku),
+      variants: data.product_variants?.map((v) => v.sku),
     }).then((products: any[]) => {
       setRecommendedProducts(products);
     });
