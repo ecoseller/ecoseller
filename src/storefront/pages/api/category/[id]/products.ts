@@ -8,6 +8,7 @@ export const categoryProductsAPI = async (
   id: string,
   country: string,
   pricelist: string,
+  recommenderSessionId: string,
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
@@ -15,7 +16,7 @@ export const categoryProductsAPI = async (
     setRequestResponse(req, res);
   }
 
-  let url = `/category/storefront/${id}/products/?country=${country}&pricelist=${pricelist}`;
+  let url = `/category/storefront/${id}/products/?country=${country}&pricelist=${pricelist}&recommender_session_id=${recommenderSessionId}`;
   switch (method) {
     case "GET":
       return await api.get(url).then((response) => response.data);
@@ -33,14 +34,15 @@ export const categoryProductsAPI = async (
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;
-  const { id, country, pricelist } = req.query;
-
+  const { id, country, pricelist, recommender_session_id } = req.query;
+  console.log("recommenderSessionId", recommender_session_id);
   if (method == "GET" || method == "POST") {
     return categoryProductsAPI(
       method,
       id?.toString() || "",
       country?.toString() || "",
       pricelist?.toString() || "",
+      recommender_session_id?.toString() || "",
       req,
       res
     )

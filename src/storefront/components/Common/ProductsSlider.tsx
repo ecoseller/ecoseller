@@ -59,6 +59,8 @@ const ProductsSlider = ({ data }: IProductSliderProps) => {
     ]
   );
 
+  if (!data || data?.length === 0) return null;
+
   return (
     <div ref={sliderRef} className="keen-slider">
       {data?.length > 0

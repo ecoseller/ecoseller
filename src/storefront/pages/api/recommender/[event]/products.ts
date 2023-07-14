@@ -26,9 +26,9 @@ export const recommenderProductsAPI = async (
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
-  const { event, payload } = req.query;
+  const { event, ...payload } = req.query;
 
-  console.log("payload", payload);
+  console.log("payload", payload, "event", event, "method", method);
 
   if (method == "GET") {
     return recommenderProductsAPI(

@@ -34,6 +34,7 @@ import React, { useEffect, useState } from "react";
 import ProductSortSelect from "@/components/Category/ProductSortSelect";
 import { categoryAttributesAPI } from "@/pages/api/category/[id]/attributes";
 import { filterProducts } from "@/api/category/products";
+import { useRecommender } from "@/utils/context/recommender";
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -79,6 +80,7 @@ const CategoryPage = ({
   const router = useRouter();
 
   const { id } = router.query;
+  const { session } = useRecommender();
 
   const initialFilters: IFiltersWithOrdering = {
     filters: {
@@ -157,10 +159,14 @@ const CategoryPage = ({
     };
 
     saveFiltersToSessionStorage();
-
-    filterProducts(category.id, pricelist, countryCode, filtersToApply).then(
-      (products) => setProductsState(products)
-    );
+    console.log("RecommenderSessionId", session);
+    filterProducts(
+      category.id,
+      pricelist,
+      countryCode,
+      session,
+      filtersToApply
+    ).then((products) => setProductsState(products));
   };
 
   const sortProducts = (sortBy: string, order: string) => {
@@ -274,6 +280,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const country = getCookie("country", { req, res });
 
+  const rsSession = (getCookie("rsSession", { req, res }) as string) || "";
+
   const countryDetail: ICountry = await countryDetailAPI(
     "GET",
     country?.toString() || DEFAULT_COUNTRY,
@@ -294,6 +302,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     idNumber.toString(),
     countryDetail.code,
     pricelist,
+    rsSession, // recommended session id
     req as NextApiRequest,
     res as NextApiResponse
   );

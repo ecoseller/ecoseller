@@ -12,9 +12,12 @@ export const filterProducts = async (
   categoryId: number,
   pricelist: string,
   country: string,
+  recommenderSessionId: string,
   filters: ISelectedFiltersWithOrdering
 ) => {
-  let url = `/api/category/${categoryId}/products?pricelist=${pricelist}&country=${country}`;
+  let url = `/api/category/${categoryId}/products?pricelist=${pricelist}&country=${country}&recommender_session_id=${
+    recommenderSessionId || ""
+  }`;
 
   return fetch(url, {
     method: "POST",

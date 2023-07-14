@@ -43,7 +43,7 @@ import { productReviewListAPI } from "@/pages/api/review/list/[token]";
 import { IReview } from "@/types/review";
 import { ReviewsList } from "@/components/Review/RatingsList";
 import { useRecommender } from "@/utils/context/recommender";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -64,8 +64,18 @@ const ProductPage = ({
 }: IProductPageProps) => {
   const { basePath } = useRouter();
   const { t } = useTranslation("product");
-
   const { getRecommendations } = useRecommender();
+  const [recommendedProducts, setRecommendedProducts] = useState<
+    IProductSliderData[]
+  >([]);
+  useEffect(() => {
+    // load recommended products
+    getRecommendations("PRODUCT_DETAIL", { limit: 10 }).then(
+      (products: any[]) => {
+        setRecommendedProducts(products);
+      }
+    );
+  }, []);
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -125,11 +135,7 @@ const ProductPage = ({
           <Typography variant="body1" gutterBottom>
             {t("recommended-products-description")}
           </Typography>
-          <ProductsSlider
-            data={getRecommendations("view_product", {
-              product_id: data.id,
-            })}
-          />
+          <ProductsSlider data={recommendedProducts || []} />
         </Box>
         <Box sx={{ pt: 5 }}>
           <Typography variant="h4" gutterBottom>
