@@ -159,7 +159,6 @@ const CategoryPage = ({
     };
 
     saveFiltersToSessionStorage();
-    console.log("RecommenderSessionId", session);
     filterProducts(
       category.id,
       pricelist,

@@ -63,18 +63,42 @@ const ProductPage = ({
   productReviews,
 }: IProductPageProps) => {
   const { basePath } = useRouter();
+  const router = useRouter();
   const { t } = useTranslation("product");
-  const { getRecommendations } = useRecommender();
+  const { getRecommendations, sendEvent } = useRecommender();
   const [recommendedProducts, setRecommendedProducts] = useState<
     IProductSliderData[]
   >([]);
   useEffect(() => {
     // load recommended products
-    getRecommendations("PRODUCT_DETAIL", { limit: 10 }).then(
-      (products: any[]) => {
-        setRecommendedProducts(products);
-      }
-    );
+    getRecommendations("PRODUCT_DETAIL", {
+      limit: 10,
+      product_id: data.id,
+      sku: data.product_variants?.map((v) => v.sku),
+    }).then((products: any[]) => {
+      setRecommendedProducts(products);
+    });
+
+    // send event
+    sendEvent("PRODUCT_DETAIL_ENTER", {
+      product_id: data.id,
+      sku: data.product_variants?.map((v) => v.sku),
+    });
+  }, []);
+
+  useEffect(() => {
+    const exitingFunction = () => {
+      sendEvent("PRODUCT_DETAIL_LEAVE", {
+        product_id: data.id,
+        sku: data.product_variants?.map((v) => v.sku),
+      });
+    };
+    router.events.on("routeChangeStart", exitingFunction);
+
+    return () => {
+      console.log("unmounting component...");
+      router.events.off("routeChangeStart", exitingFunction);
+    };
   }, []);
 
   const theme = useTheme();
