@@ -11,9 +11,9 @@ router = routers.DefaultRouter()
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Ecoseller API",
+        title="Ecoseller Core API",
         default_version='v1',
-        description="Ecoseller Core API",
+        description="Ecoseller Core API OpenAPI description",
     ),
     public=True,
     permission_classes=(permissions.AllowAny,)
