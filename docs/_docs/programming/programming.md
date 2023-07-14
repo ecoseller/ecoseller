@@ -6,7 +6,44 @@ order: 1
 # Overview
 # Backend
 ## Authorization
-As mentioned in [Authorization](../../administration/authorization) section, ecoseller uses roles and permissions to restrict access to certain parts of the application. To achieve this two custom decorators are defined: `@check_user_access_decorator` and `@check_user_is_staff_decorator` (their definition can be found in `backend/core/roles/decorator.py`).
+As mentioned in [Authorization](../../administration/authorization) section, ecoseller uses roles and permissions to restrict access to certain parts of the application. 
+
+To have better control over permissions representation and their grouping, we created 2 new models: 
+* `ManagerPermission` - for permission representation. It consists of:
+  * `name` - name of permission with predefined format: *\<model_name\>*_*\<permission_type\>*_permission.
+  * `model` - name of model to which this permission corresponds
+  * `description` - text description of permission
+  * `type` - type of permission. Enum of 4 possible values:
+    * `view`
+    * `add`
+    * `change`
+    * `delete`
+* `ManagerGroup` - for group representation. It consists of:
+  * `name` - name of group
+  * `description` - text description of group
+  * `permissions` - M2M field to permissions of which this group consists.
+
+Each group/permission should be convertable to DRF group/permission.
+
+### RolesManager
+`RolesManager` is our internal python class for handling permissions and (almost) everything related to them. It consists purely of static methods, so we can call them anywhere across the code. 
+
+Its main usage is:
+* Loading initial predefined roles from config and creating `ManagerGroup` and `ManagerPermission` objects from it
+* Conversion between `DRF Group` and `ManagerGroup`, and also between `DRF Permission` and `ManagerPermission`
+
+### Initial roles definitions and their loading
+As mentioned earlier, we have [`roles.json` config](../../administration/authorization) file which has initial roles definition and [`RolesManager`](#rolesmanager) class which is responsible for loading it. We achieved this behaviour by following adjustments:
+1. We created `initial_data.py` file along with `populate_groups` method in it. In this method, we :
+   1. load `roles.json` config with `RolesManager` class and create instances of `ManagerGroup` and `ManagerPermission`
+   2. Create DRF Groups from loaded `ManagerGroup` objects
+   3. Create general DRF permissions from `app_config`
+   4. Convert all DRF permissions to `ManagerPermission` objects
+   5. Assign `ManagerPermission` objects to corresponding `ManagerGroup` objects
+2. We put `populate_groups` method in our `user` migration file `0002_auto_20230316_1534.py` to the `operations` part - this will ensure that when this migration runs, it will also trigger `populate_groups` method
+
+### Protecting views with permissions
+In order to apply our permission restrictions, we defined two custom decorators are defined: `@check_user_access_decorator` and `@check_user_is_staff_decorator` (their definition can be found in `backend/core/roles/decorator.py`).
 
 ### `@check_user_access_decorator`
 The decorator is used mainly for `POST`, `PUT` and `DELETE` views.
