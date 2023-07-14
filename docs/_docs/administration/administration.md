@@ -45,7 +45,7 @@ If the provided refresh token is valid, the API will return a response containin
 
 Once you obtain a JWT, you need to include it in the `Authorization` header of your API requests. The header should have the following format:
 ```
-Authorization: Bearer your_access_token
+Authorization: JWT your_access_token
 ```
 
 ## API documentation
@@ -53,24 +53,65 @@ The ecoseller backend provides a comprehensive API documentation that can be acc
 Please make sure to use primairly `/dashboard` endpoints since they're designed to to modify data and require authentication. Storefront endpoints don't.
 
 # User management
+The user management functionality in **ecoseller's** dashboard allows administrators to create and manage user accounts with various roles and permissions. This section of the administration documentation focuses on the process of creating a initial user in **ecoseller** using the Django Command-Line Interface (CLI).
 
-## Creating a superuser
+A admin is a special type of user account which has access to all administrative functions and controls within the **ecoseller** platform. Creating an initial admin user is an essential step in setting up your **ecoseller** administration panel, as it provides you with all privileges to manage and configure your e-commerce platform.
+All other admin users can be allways setup in the dashboard, but you need at least one user to be able to login to the dashboard.
+For more information about roles, permissions and users in general, please refer to [Authorization section in admin. documentation](./authroization).
 
-
-## Roles and permissions
+## Creating an initial admin user without dashboard
+Creating an admin user without dashboard can be done through the Django CLI. To do so, run the following command:
+```bash
+python3 manage.py createsuperuser
+```
 
 # Managing database
+Ecoseller utilizes a PostgreSQL database to store and manage data. This section of the documentation focuses on managing a PostgreSQL database within a Docker container and connecting it to a Django application.
+
+## Django <-> PostgreSQL connection
+The Django application is configured to connect to a PostgreSQL database using the following environment variables:
+```env
+POSTGRES_DB=ecoseller
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_HOST=postgres_backend
+POSTGRES_PORT=5432
+```
 
 ## Binding database to a local folder
-
+To persist the data in the PostgreSQL container, you can bind a local folder on your host machine to the container's data directory using Docker Compose.
+In your docker-compose.yml file, add the following volume configuration under the services section for the `postgres_backend` container:
+```yaml
+volumes:
+    - ./backend/postgres/data:/var/lib/postgresql/data/
+```
+This configuration ensures that the PostgreSQL data is stored in the `./src/backend/postgres` folder on your local machine.
 ## Running migrations
+It shouldn't be neccessary to run migrations manually, but if you need to do so, you can run the following command:
+```bash
+python3 manage.py makemigrations
+python3 manage.py migrate
+```
 
 ## Backing up database
+It is crucial to regularly back up your PostgreSQL database to prevent data loss and ensure data integrity.
+Use the pg_dump utility to create a backup of the database. Run the following command to back up the database to a file:
+```bash
+pg_dump -U your_username -d your_database_name -f /path/to/backup.sql
 
+```
+Replace `your_username` and `your_database_name` with the appropriate values. Specify the path where you want to save the backup file.
 ## Restoring database
+To restore a PostgreSQL database from a backup file, use the pg_restore utility.
+Run the following command to restore the database from a backup file:
+```bash
+pg_restore -U your_username -d your_database_name /path/to/backup.sql
+```
+Replace `your_username`, `your_database_name`, and `/path/to/backup.sql` with the appropriate values.
 
 
 # Static files and media
+Ecoseller currently supports storing static and media files using local storage. While it does not natively integrate with object storage services like Amazon S3, it is possible to implement such functionality using the Python package s3boto3.
 
 # Implementing payment methods (`PaymentAPI`)
 This guide will walk you through the process of extending the Core application with new payment methods without encountering conflicts with the existing codebase. By following the provided guidelines and leveraging the system's flexible architecture, you'll be able to seamlessly integrate various online payment gateways into your ecoseller ecommerce platform.
