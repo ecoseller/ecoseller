@@ -85,7 +85,7 @@ In further parts of this section, we assume that the reader is familiar with Rea
 In ecoseller, we use various context providers, and now we will describe them in more detail.
 
 ### UserProvider
-UserProvider is a context provider that provides information about the currently logged in user to its children. It is used in both `Dashboard` and `Storefront` component, although they differ a bit in data they provide.
+`UserProvider` is a context provider that provides information about the currently logged in user to its children. It is used in both `Dashboard` and `Storefront` component, although they differ a bit in data they provide.
 
 #### Parameters
 - `children`: React component that is wrapped by the provider
@@ -195,5 +195,67 @@ This will disable the `TextField` and `Button` components if the user does not h
 
 
 ### CartProvider
+`CartProvider` is a context provider that provides information about the user's cart as well as some usefull functions to its children. It is used only in `Storefront` component.
+
+#### Parameters
+- `children`: React component that is wrapped by the provider
+
+#### Return value
+- `cart`: fetched data from `/cart/storefront/<str:token>` endpoint. Consists of:
+    - `token` - token of the cart
+    - `cart_items` - items of the cart
+    - `update_at` - date of the last update of the cart
+    - `total_items_price_incl_vat_formatted` - total price of the cart including VAT
+    - `total_items_price_without_vat_formatted` - total price of the cart without VAT
+    - `total_price_incl_vat_formatted` - total price of the cart including VAT and shipping
+    - `total_price_without_vat_formatted` - total price of the cart without VAT and shipping
+    - `shipping_method_country` - id to `ShippingMethodCountry` object
+    - `payment_method_country` - id to `PaymentMethodCountry` object
+- `cartSize`: number of items in the cart
+- `addToCart` - function for adding item to the cart
+- `removeFromCart` - function for removing item from the cart
+- `updateQueantity` - function for updating quantity of the item in the cart
+- `clearCart` - function for clearing the cart
+- `cartProductQuantity` - function for getting quantity of the product in the cart
+
+#### Functions provided by `CartProvider`
+##### `addToCart`
+Adds item to the cart. If the item is already in the cart, it updates its quantity.
+Takes following parameters:
+* `sku`: SKU of the product
+* `qty`: quantity of the product
+* `product`: product ID
+* `pricelist`: pricelist ID
+* `country`: country ID
+
+##### `removeFromCart`
+Deletes item from the cart. Takes following parameters:
+* `sku`: SKU of the product
+
+##### `updateQuantity`
+Updates quantity of the item in the cart. Takes following parameters:
+* `sku`: SKU of the product
+* `quantity`: new quantity of the product
+
+##### `clearCart`
+Clears the cart. Takes no parameters.
+
+##### `cartProductQuantity`
+Returns quantity of the product in the cart. Takes following parameters:
+* `sku`: SKU of the product
+
+#### Usage example
+`CartProvider` already wraps whole application, so we can access data or functions in any child component. To do so, we use `useCart` hook:
+```typescript
+const ChildComponent = () => {
+    ...
+    const { cart, cartSize, addToCart, removeFromCart, updateQuantity, clearCart, cartProductQuantity } = useCart();
+    ...
+    return (
+        ...
+    );
+};
+```
+
 ### CookieProvider
 ### CountryProvider
