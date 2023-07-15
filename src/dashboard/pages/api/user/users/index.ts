@@ -37,7 +37,7 @@ export const usersAPI = async (
         });
     case "POST":
       return await api
-        .post("/user/users", body)
+        .post("/user/users/", body)
         .then((response) => response.data)
         .then((data) => {
           return data;
