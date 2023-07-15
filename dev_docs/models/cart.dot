@@ -1,0 +1,229 @@
+digraph model_graph {
+  // Dotfile by Django-Extensions graph_models
+  // Created: 2023-07-15 16:05
+  // Cli Options: -a -d -
+
+  fontname = "Roboto"
+  fontsize = 8
+  splines  = true
+  rankdir = "TB"
+
+  node [
+    fontname = "Roboto"
+    fontsize = 8
+    shape = "plaintext"
+  ]
+
+  edge [
+    fontname = "Roboto"
+    fontsize = 8
+  ]
+
+  // Labels
+
+
+
+  cart_models_ShippingMethodCountry [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    ShippingMethodCountry<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+
+  cart_models_PaymentMethodCountry [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    PaymentMethodCountry<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  cart_models_Cart [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Cart
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+    
+  user_models_User [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    User<BR/>&lt;<FONT FACE="Roboto"><I>AbstractBaseUser,PermissionsMixin</I></FONT>&gt;
+    </B></FONT></TD></TR>
+    </TABLE>
+    >]
+
+
+  cart_models_CartItem [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    CartItem
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+
+
+  country_models_Country [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Country<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+
+  country_models_BillingInfo [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    BillingInfo<BR/>&lt;<FONT FACE="Roboto"><I>Address</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  country_models_ShippingInfo [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    ShippingInfo<BR/>&lt;<FONT FACE="Roboto"><I>Address</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+
+
+
+  order_models_Order [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Order
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+
+
+  product_models_ProductVariant [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    ProductVariant<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+
+  product_models_Product [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Product<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel,TranslatableModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+ review_models_Review [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Review
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+
+  product_models_PriceList [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    PriceList<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+
+
+  // Relations
+
+
+
+cart_models_ShippingMethodCountry -> country_models_Country
+  [label=" country (shippingmethodcountry)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+
+  cart_models_Cart -> country_models_Country
+  [label=" country (cart)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_Cart -> product_models_PriceList
+  [label=" pricelist (cart)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_Cart -> user_models_User
+  [label=" user (cart)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_Cart -> country_models_BillingInfo
+  [label=" billing_info (+)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_Cart -> country_models_ShippingInfo
+  [label=" shipping_info (+)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_Cart -> cart_models_PaymentMethodCountry
+  [label=" payment_method_country (+)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_Cart -> cart_models_ShippingMethodCountry
+  [label=" shipping_method_country (+)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_CartItem -> cart_models_Cart
+  [label=" cart (cart_items)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_CartItem -> product_models_ProductVariant
+  [label=" product_variant (cartitem)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_CartItem -> product_models_Product
+  [label=" product (cartitem)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+
+  review_models_Review -> product_models_ProductVariant
+  [label=" product_variant (review)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  review_models_Review -> product_models_Product
+  [label=" product (review)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  review_models_Review -> order_models_Order
+  [label=" order (review)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+
+
+  country_models_ShippingInfo -> user_models_User
+  [label=" user (shippinginfo)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  country_models_ShippingInfo -> country_models_Country
+  [label=" country (shippinginfo)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  order_models_Order -> cart_models_Cart
+  [label=" cart (order)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+
+}
