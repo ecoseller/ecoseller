@@ -11,6 +11,44 @@ describe architecture (probably using C4 diagrams)
 In this section we will describe data models of the backend part of the application. To do so, we will go over various parts of system and describe them in more detail using diagrams.
 To create diagrams, we used `django-extensions` app and its Graph models part, which generates a Graphviz `.dot` file from our django models. From that `.dot` file we used [GraphvizOnline](https://dreampuf.github.io/GraphvizOnline/) site to generate images of the diagrams.
 
+### Country
+![Country model](../../images/models_country.png)
+
+Above is the diagram of models with country specific data. The model is defined in `backend/core/country/models.py` file.
+The main "building" block is a `Country` model which holds all the data related to countries - like name, code, language, pricelist and vat groups.
+`VatGroup` itself defines binding between country and VAT percentage. 
+`Currency` looks like a separate model with no relations, but it's mainly related to the `PriceList` model which will be described in a later sections.
+`Address` model is used to store addresses of users and is used during checkout process or are directly bindined to `Cart` model as well as `User` model.
+`ShippingInfo` and `BillingInfo` models are used to store user's shipping and billing information during checkout process. They inherit from `Address` model and add some additional fields.
+
+
+### Product
+![Product model](../../images/models_product.png)
+
+Above is the diagram of models related to products and categories. The models are defined in `backend/core/product/models.py` file and are divided into 2 groups:
+* **Product models** - models that are directly related to products. They are:
+  * `Product` - main product model. 
+  * `ProductMedia` - model for product media. It has a FK to `Product` model.
+  * `ProductType` - model for product types. It defines the type of product (e.g. t-shirts, coffee, etc.). It defines allowed [`AttributeType`s](#variant-attribute-type) for product variants of this type and vat group for each country of this product.
+  * `Category` - model for product categories. It's a tree structure, so it has a `parent` field which is a FK to itself.
+* **Product Variant models** - models that are related to product variants. They are:
+  * `ProductVariant` - main product variant model. It has a FK to `Product` model.
+  * `AttributeType` <span id="variant-attribute-type"></span> - model for product variant attributes. It defines the type of attribute (e.g. color, size, etc.).
+  * `BaseAttribute` - model for product variant attribute values. It defines the value of attribute (e.g. red, blue, etc.). It has a FK to `AttributeType` model.
+
+Logic behind product variants is that each product variant has a set of attributes, which are defined by `AttributeType` model. Each attribute has a value, which is defined by `BaseAttribute` model. For example, if we have a product variant of type `t-shirt`, it will have 2 attributes: `color` and `size`. Each attribute will have a value, e.g. `color` will have values `red`, `blue`, `green`, etc. and `size` will have values `S`, `M`, `L`, etc.
+
+### Pricelist/Currency
+![Pricelist/Currency model](../../images/models_pricelist_currency.png)
+
+Above is the diagram of models related to price lists and currencies. The models are defined in `backend/core/product/models.py` and `backend/core/country/models.py` files.
+Every price (`ProductPrice`) represents a price of `ProductVariant` in a `PriceList`. Where `PriceList` usually represents a specific group of prices - it might be a group of prices for a specific country or a group of prices for a specific customers (like B2B or B2C). `PriceList` is also related to `Currency` model, which defines the currency of the prices in the price list. 
+The interesting part of *ecoseller* pricing logic comes as `VatGroup` model which allows you to define different VAT groups for different countries. This allows you to have different VAT value (incl. different group of VAT - reduced, standard, ...) for different countries.
+With this logic, you can define a price list for a specific country and define different VAT groups for different countries. This allows you to have different prices for different countries, which is a common practice in e-commerce (for example due to different expenses for marketing, stocking, etc.).
+
+### Page
+![Page model](../../images/models_page.png)
+
 ### User
 ![User model](../../images/models_user.png)
 
