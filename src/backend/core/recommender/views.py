@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework import permissions
 
 from api.recommender_system import RecommenderSystemApi
+import copy
 
 
 class EnumMeta(EnumMeta):
@@ -64,14 +65,31 @@ class RecommenderSystemRecommendProductsView(APIView):
     allowed_methods = ["GET"]
     permission_classes = (permissions.AllowAny,)
 
+    def _try_parse_number(self, value):
+        try:
+            return int(value)
+        except:
+            return value
+
+    def _parse_query_params(self, request):
+        data = {**request.GET}
+
+        for key in data:
+            if len(data[key]) == 1:
+                data[key] = data[key][0]
+                if data[key].isdigit():
+                    data[key] = self._try_parse_number(data[key])
+        return data
+
     def get(self, request, situation):
         if situation not in RSSituation:
             return Response({"message": "Unknown RS situation!"}, status=404)
-        data = request.query_params
-        data["user_id"] = request.user
+        data = self._parse_query_params(request)
+        data["user_id"] = request.user if request.user.is_authenticated else None
+        print("DATA", data, situation)
         data["recommendation_type"] = situation
         products = RecommenderSystemApi.get_recommendations(data)
-
+        print("PRODUCTS", products)
         # response format
         # [{
         #     "product_variant_sku": "a",

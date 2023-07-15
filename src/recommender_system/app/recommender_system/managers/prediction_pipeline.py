@@ -49,15 +49,15 @@ class PredictionPipeline:
         user_id: Optional[int],
         **kwargs: Any,
     ) -> List[str]:
-        if recommendation_type == RecommendationType.HOMEPAGE:
+        if recommendation_type == RecommendationType.HOMEPAGE.value:
             return model.retrieve_homepage(session_id=session_id, user_id=user_id)
-        if recommendation_type == RecommendationType.CATEGORY_LIST:
+        if recommendation_type == RecommendationType.CATEGORY_LIST.value:
             return self._retrieve_category(category_id=kwargs["category_id"])
-        if recommendation_type == RecommendationType.PRODUCT_DETAIL:
+        if recommendation_type == RecommendationType.PRODUCT_DETAIL.value:
             return model.retrieve_product_detail(
                 session_id=session_id, user_id=user_id, variant=kwargs["variant"]
             )
-        if recommendation_type == RecommendationType.CART:
+        if recommendation_type == RecommendationType.CART.value:
             return model.retrieve_cart(
                 session_id=session_id,
                 user_id=user_id,
@@ -74,15 +74,15 @@ class PredictionPipeline:
         user_id: Optional[int],
         **kwargs: Any,
     ) -> List[str]:
-        if recommendation_type == RecommendationType.HOMEPAGE:
+        if recommendation_type == RecommendationType.HOMEPAGE.value:
             return model.score_homepage(
                 session_id=session_id, user_id=user_id, variants=variants
             )
-        if recommendation_type == RecommendationType.CATEGORY_LIST:
+        if recommendation_type == RecommendationType.CATEGORY_LIST.value:
             return model.score_category_list(
                 session_id=session_id, user_id=user_id, variants=variants
             )
-        if recommendation_type == RecommendationType.PRODUCT_DETAIL:
+        if recommendation_type == RecommendationType.PRODUCT_DETAIL.value:
             variant = random.choice(kwargs["variants"])
             return model.score_product_detail(
                 session_id=session_id,
@@ -90,7 +90,7 @@ class PredictionPipeline:
                 variants=variants,
                 variant=variant,
             )
-        if recommendation_type == RecommendationType.CART:
+        if recommendation_type == RecommendationType.CART.value:
             return model.score_cart(
                 session_id=session_id,
                 user_id=user_id,
@@ -229,7 +229,7 @@ class PredictionPipeline:
             retrieval_model_identifier=retrieval_model.identifier,
             scoring_model_name=scoring_model.Meta.model_name,
             scoring_model_identifier=scoring_model.identifier,
-            recommendation_type=recommendation_type.value,
+            recommendation_type=recommendation_type,
             session_id=session_id,
             retrieval_duration=scoring_start - retrieval_start,
             scoring_duration=ordering_start - scoring_start,

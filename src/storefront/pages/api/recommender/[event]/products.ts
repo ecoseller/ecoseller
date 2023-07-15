@@ -12,9 +12,11 @@ export const recommenderProductsAPI = async (
     setRequestResponse(req, res);
   }
 
-  const url = `recommender/storefront/${situation}/products/?payload=${JSON.stringify(
-    payload
-  )}`;
+  // create query params from payload
+
+  const params = new URLSearchParams(payload).toString();
+  console.log("params", params);
+  const url = `recommender/storefront/${situation}/products/?${params}`;
   console.log("payload", payload);
   console.log(url);
 

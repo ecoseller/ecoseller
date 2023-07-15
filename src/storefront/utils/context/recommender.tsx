@@ -58,10 +58,11 @@ export const RecommenderProvider = ({
      * @param payload - event payload (product_id, category_id, cart_id, etc.)
      */
     // send POST event to Core API
+    const rsSession = Cookies.get(RS_SESSION_COOKIE);
     const data = await fetch(`/api/recommender/${event}`, {
       method: "POST",
       body: JSON.stringify({
-        session_id: session,
+        session_id: rsSession,
         ...payload,
       }),
     }).then((res) => res.json());
@@ -80,12 +81,13 @@ export const RecommenderProvider = ({
      * @returns list of products
      */
 
-    // TODO: call Core API to get recommendations
+    const rsSession = Cookies.get(RS_SESSION_COOKIE);
+    const params = new URLSearchParams({
+      ...payload,
+      session_id: rsSession,
+    }).toString();
     const data = await fetch(
-      `/api/recommender/${situation}/products?payload=${JSON.stringify({
-        ...payload,
-        session_id: session,
-      })}`
+      `/api/recommender/${situation}/products?${params}`
     ).then((res) => res.json());
     console.log("getRecommendations", data);
 
