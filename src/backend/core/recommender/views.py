@@ -7,6 +7,24 @@ from api.recommender_system import RecommenderSystemApi
 import copy
 
 
+def _try_parse_number(value):
+    try:
+        return int(value)
+    except:
+        return value
+
+
+def _parse_query_params(request):
+    data = {**request.GET}
+
+    for key in data:
+        if len(data[key]) == 1:
+            data[key] = data[key][0]
+            if data[key].isdigit():
+                data[key] = _try_parse_number(data[key])
+    return data
+
+
 class EnumMeta(EnumMeta):
     def __contains__(cls, item):
         return isinstance(item, cls) or item in [
@@ -23,15 +41,15 @@ class RSEvent(Enum, metaclass=EnumMeta):
 
     @classmethod
     def get_model_class(cls, event):
-        if event == RSEvent.PRODUCT_DETAIL_ENTER:
+        if event == RSEvent.PRODUCT_DETAIL_ENTER.value:
             return "ProductDetailEnter"
-        if event == RSEvent.PRODUCT_DETAIL_LEAVE:
+        if event == RSEvent.PRODUCT_DETAIL_LEAVE.value:
             return "ProductDetailLeave"
-        if event == RSEvent.PRODUCT_ADD_TO_CART:
+        if event == RSEvent.PRODUCT_ADD_TO_CART.value:
             return "ProductAddToCart"
-        if event == RSEvent.RECOMMENDATION_VIEW:
+        if event == RSEvent.RECOMMENDATION_VIEW.value:
             return "RecommendationView"
-        if event == RSEvent.ORDER:
+        if event == RSEvent.ORDER.value:
             return "Order"
         raise ValueError(f"Unknown event: {event}")
 
@@ -51,13 +69,20 @@ class RecommenderSystemEventView(APIView):
         if event not in RSEvent:
             return Response({"message": "Unknown event!"}, status=404)
         data = request.data
+        print("DATA", data)
         if data is not None:
             if isinstance(data, dict):
                 data = [data]
             for item in data:
-                item["user_id"] = request.user
+                item["user_id"] = (
+                    request.user if request.user.is_authenticated else None
+                )
                 item["_model_class"] = RSEvent.get_model_class(event)
-            RecommenderSystemApi.store_objects(data)
+            try:
+                RecommenderSystemApi.store_objects(data)
+            except Exception as e:
+                print(e)
+                return Response({"message": "Error while storing data!"}, status=500)
         return Response(status=201)
 
 
@@ -65,26 +90,10 @@ class RecommenderSystemRecommendProductsView(APIView):
     allowed_methods = ["GET"]
     permission_classes = (permissions.AllowAny,)
 
-    def _try_parse_number(self, value):
-        try:
-            return int(value)
-        except:
-            return value
-
-    def _parse_query_params(self, request):
-        data = {**request.GET}
-
-        for key in data:
-            if len(data[key]) == 1:
-                data[key] = data[key][0]
-                if data[key].isdigit():
-                    data[key] = self._try_parse_number(data[key])
-        return data
-
     def get(self, request, situation):
         if situation not in RSSituation:
             return Response({"message": "Unknown RS situation!"}, status=404)
-        data = self._parse_query_params(request)
+        data = _parse_query_params(request)
         data["user_id"] = request.user if request.user.is_authenticated else None
         print("DATA", data, situation)
         data["recommendation_type"] = situation

@@ -16,7 +16,11 @@ export const recommenderEventAPI = async (
 
   console.log(url);
 
-  return await api.post(url).then((response) => response.data);
+  return await api
+    .post(url, {
+      ...payload,
+    })
+    .then((response) => response.data);
 };
 
 /**
