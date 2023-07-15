@@ -82,7 +82,7 @@ const GroupsGrid = () => {
   const columns: GridColDef[] = [
     {
       field: "name",
-      headerName: "Group Name",
+      headerName: "Role Name",
       editable: false,
       maxWidth: 200,
       sortable: false,
