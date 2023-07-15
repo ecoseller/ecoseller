@@ -301,5 +301,35 @@ const ChildComponent = () => {
 };
 ```
 
-
 ### CountryProvider
+`CountryProvider` is a context provider that provides information about the country that is currently set by the user, as well as some usefull functions to its children. It is used only in `Storefront` component.
+
+#### Parameters
+- `children`: React component that is wrapped by the provider
+
+#### Return value
+- `country`: object representing country. Consists of:
+  - `code` - id of the country
+  - `name` - name of the country
+  - `locale` - locale of the country
+  - `default_price_list` - id of the default price list of the country
+- `countryList`: list of `country` objects - all available countries
+- `setCountryCookieAndLocale` - function for setting country cookie and locale
+
+#### Functions provided by `CountryProvider`
+##### `setCountryCookieAndLocale`
+Sets country cookie and locale. Takes following parameters:
+* `countryCode`: code of the country
+
+#### Usage example
+`CountryProvider` already wraps whole application, so we can access data or functions in any child component. To do so, we use `useCountry` hook:
+```typescript
+const ChildComponent = () => {
+    ...
+    const { country, countryList, setCountryCookieAndLocale } = useCountry();
+    ...
+    return (
+        ...
+    );
+};
+```
