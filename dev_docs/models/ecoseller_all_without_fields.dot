@@ -1,0 +1,1203 @@
+digraph model_graph {
+  // Dotfile by Django-Extensions graph_models
+  // Created: 2023-07-15 16:05
+  // Cli Options: -a -d -
+
+  fontname = "Roboto"
+  fontsize = 8
+  splines  = true
+  rankdir = "TB"
+
+  node [
+    fontname = "Roboto"
+    fontsize = 8
+    shape = "plaintext"
+  ]
+
+  edge [
+    fontname = "Roboto"
+    fontsize = 8
+  ]
+
+  // Labels
+
+
+  django_contrib_admin_models_LogEntry [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    LogEntry
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+
+
+
+  django_contrib_auth_models_Permission [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Permission
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  django_contrib_auth_models_Group [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Group
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+
+
+
+  django_contrib_contenttypes_models_ContentType [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    ContentType
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+
+
+
+  django_contrib_sessions_base_session_AbstractBaseSession [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    AbstractBaseSession
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  django_contrib_sessions_models_Session [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Session<BR/>&lt;<FONT FACE="Roboto"><I>AbstractBaseSession</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+
+
+
+  parler_models_TranslatableModel [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    TranslatableModel
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  core_safe_delete_SafeDeleteModel [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    SafeDeleteModel
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  core_models_SortableModel [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    SortableModel
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  polymorphic_models_PolymorphicModel [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    PolymorphicModel
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  parler_models_TranslatedFieldsModel [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    TranslatedFieldsModel
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  cms_models_PageCategoryType [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    PageCategoryType<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  cms_models_PageCategoryTranslation [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    PageCategoryTranslation<BR/>&lt;<FONT FACE="Roboto"><I>TranslatedFieldsModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  cms_models_PageCategory [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    PageCategory<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel,TranslatableModel,SortableModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  cms_models_Page [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Page<BR/>&lt;<FONT FACE="Roboto"><I>PolymorphicModel,SafeDeleteModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  cms_models_PageCMSTranslation [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    PageCMSTranslation<BR/>&lt;<FONT FACE="Roboto"><I>TranslatedFieldsModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  cms_models_PageCMS [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    PageCMS<BR/>&lt;<FONT FACE="Roboto"><I>TranslatableModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  cms_models_PageFrontendTranslation [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    PageFrontendTranslation<BR/>&lt;<FONT FACE="Roboto"><I>TranslatedFieldsModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  cms_models_PageFrontend [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    PageFrontend<BR/>&lt;<FONT FACE="Roboto"><I>TranslatableModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+
+
+
+  parler_models_TranslatableModel [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    TranslatableModel
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  parler_models_TranslatedFieldsModel [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    TranslatedFieldsModel
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  core_safe_delete_SafeDeleteModel [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    SafeDeleteModel
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  cart_models_ShippingMethodTranslation [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    ShippingMethodTranslation<BR/>&lt;<FONT FACE="Roboto"><I>TranslatedFieldsModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  cart_models_ShippingMethod [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    ShippingMethod<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel,TranslatableModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  cart_models_ShippingMethodCountry [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    ShippingMethodCountry<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  cart_models_PaymentMethodTranslation [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    PaymentMethodTranslation<BR/>&lt;<FONT FACE="Roboto"><I>TranslatedFieldsModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  cart_models_PaymentMethod [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    PaymentMethod<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel,TranslatableModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  cart_models_PaymentMethodCountry [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    PaymentMethodCountry<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  cart_models_Cart [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Cart
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  cart_models_CartItem [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    CartItem
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+
+
+
+  parler_models_TranslatableModel [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    TranslatableModel
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  mptt_models_MPTTModel [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    MPTTModel
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  parler_models_TranslatedFieldsModel [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    TranslatedFieldsModel
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  core_safe_delete_SafeDeleteModel [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    SafeDeleteModel
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  category_models_CategoryTranslation [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    CategoryTranslation<BR/>&lt;<FONT FACE="Roboto"><I>TranslatedFieldsModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  category_models_Category [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Category<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel,MPTTModel,TranslatableModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+
+
+
+  country_models_Address [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Address<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  core_safe_delete_SafeDeleteModel [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    SafeDeleteModel
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  country_models_Country [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Country<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  country_models_Currency [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Currency<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  country_models_VatGroup [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    VatGroup<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  country_models_BillingInfo [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    BillingInfo<BR/>&lt;<FONT FACE="Roboto"><I>Address</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  country_models_ShippingInfo [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    ShippingInfo<BR/>&lt;<FONT FACE="Roboto"><I>Address</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+
+
+
+  order_models_Order [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Order
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  order_models_OrderItemComplaint [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    OrderItemComplaint
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+
+
+
+  parler_models_TranslatableModel [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    TranslatableModel
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  parler_models_TranslatedFieldsModel [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    TranslatedFieldsModel
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  core_models_SortableModel [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    SortableModel
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  core_safe_delete_SafeDeleteModel [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    SafeDeleteModel
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  product_models_ProductVariant [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    ProductVariant<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  product_models_ProductType [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    ProductType<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  product_models_ProductTranslation [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    ProductTranslation<BR/>&lt;<FONT FACE="Roboto"><I>TranslatedFieldsModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  product_models_Product [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Product<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel,TranslatableModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  product_models_AttributeTypeTranslation [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    AttributeTypeTranslation<BR/>&lt;<FONT FACE="Roboto"><I>TranslatedFieldsModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  product_models_AttributeType [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    AttributeType<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel,TranslatableModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  product_models_BaseAttributeTranslation [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    BaseAttributeTranslation<BR/>&lt;<FONT FACE="Roboto"><I>TranslatedFieldsModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  product_models_BaseAttribute [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    BaseAttribute<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel,TranslatableModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  product_models_ExtAttributeType [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    ExtAttributeType
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  product_models_ExtensionAttribute [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    ExtensionAttribute
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  product_models_PriceList [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    PriceList<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  product_models_ProductPrice [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    ProductPrice<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  product_models_ProductMedia [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    ProductMedia<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel,SortableModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  product_models_ProductVariantMedia [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    ProductVariantMedia<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+
+
+
+  review_models_Review [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Review
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+
+
+
+  django_contrib_auth_models_PermissionsMixin [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    PermissionsMixin
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  django_contrib_auth_base_user_AbstractBaseUser [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    AbstractBaseUser
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  user_models_User [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    User<BR/>&lt;<FONT FACE="Roboto"><I>AbstractBaseUser,PermissionsMixin</I></FONT>&gt;
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+
+
+
+  roles_models_ManagerPermission [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    ManagerPermission
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  roles_models_ManagerGroup [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    ManagerGroup
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+
+
+
+  rest_framework_authtoken_models_Token [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Token
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  rest_framework_authtoken_models_TokenProxy [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    TokenProxy
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+
+
+
+  rest_framework_simplejwt_token_blacklist_models_OutstandingToken [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    OutstandingToken
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+  rest_framework_simplejwt_token_blacklist_models_BlacklistedToken [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    BlacklistedToken
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+
+
+
+  django_rq_models_Queue [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Queue
+    </B></FONT></TD></TR>
+  
+    </TABLE>
+    >]
+
+
+
+
+  // Relations
+
+  django_contrib_admin_models_LogEntry -> user_models_User
+  [label=" user (logentry)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  django_contrib_admin_models_LogEntry -> django_contrib_contenttypes_models_ContentType
+  [label=" content_type (logentry)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+
+  django_contrib_auth_models_Permission -> django_contrib_contenttypes_models_ContentType
+  [label=" content_type (permission)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  django_contrib_auth_models_Group -> django_contrib_auth_models_Permission
+  [label=" permissions (group)"] [arrowhead=dot arrowtail=dot, dir=both];
+
+
+
+  django_contrib_sessions_models_Session -> django_contrib_sessions_base_session_AbstractBaseSession
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+
+  polymorphic_models_PolymorphicModel -> django_contrib_contenttypes_models_ContentType
+  [label=" polymorphic_ctype (polymorphic_%(app_label)s.%(class)s_set+)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cms_models_PageCategoryType -> core_safe_delete_SafeDeleteModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  cms_models_PageCategoryTranslation -> cms_models_PageCategory
+  [label=" master (translations)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cms_models_PageCategoryTranslation -> parler_models_TranslatedFieldsModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  cms_models_PageCategory -> cms_models_PageCategoryType
+  [label=" type (pagecategory)"] [arrowhead=dot arrowtail=dot, dir=both];
+
+  cms_models_PageCategory -> core_safe_delete_SafeDeleteModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  cms_models_PageCategory -> parler_models_TranslatableModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  cms_models_PageCategory -> core_models_SortableModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  cms_models_Page -> django_contrib_contenttypes_models_ContentType
+  [label=" polymorphic_ctype (polymorphic_cms.page_set+)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cms_models_Page -> cms_models_PageCategory
+  [label=" categories (page)"] [arrowhead=dot arrowtail=dot, dir=both];
+
+  cms_models_Page -> polymorphic_models_PolymorphicModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  cms_models_Page -> core_safe_delete_SafeDeleteModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  cms_models_PageCMSTranslation -> cms_models_PageCMS
+  [label=" master (translations)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cms_models_PageCMSTranslation -> parler_models_TranslatedFieldsModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  cms_models_PageCMS -> cms_models_Page
+  [label=" multi-table\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  cms_models_PageCMS -> parler_models_TranslatableModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  cms_models_PageFrontendTranslation -> cms_models_PageFrontend
+  [label=" master (translations)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cms_models_PageFrontendTranslation -> parler_models_TranslatedFieldsModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  cms_models_PageFrontend -> cms_models_Page
+  [label=" multi-table\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  cms_models_PageFrontend -> parler_models_TranslatableModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+
+  cart_models_ShippingMethodTranslation -> cart_models_ShippingMethod
+  [label=" master (translations)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_ShippingMethodTranslation -> parler_models_TranslatedFieldsModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  cart_models_ShippingMethod -> core_safe_delete_SafeDeleteModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  cart_models_ShippingMethod -> parler_models_TranslatableModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  cart_models_ShippingMethodCountry -> cart_models_ShippingMethod
+  [label=" shipping_method (shippingmethodcountry)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_ShippingMethodCountry -> country_models_Country
+  [label=" country (shippingmethodcountry)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_ShippingMethodCountry -> country_models_Currency
+  [label=" currency (shippingmethodcountry)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_ShippingMethodCountry -> country_models_VatGroup
+  [label=" vat_group (shippingmethodcountry)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_ShippingMethodCountry -> cart_models_PaymentMethodCountry
+  [label=" payment_methods (shippingmethodcountry)"] [arrowhead=dot arrowtail=dot, dir=both];
+
+  cart_models_ShippingMethodCountry -> core_safe_delete_SafeDeleteModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  cart_models_PaymentMethodTranslation -> cart_models_PaymentMethod
+  [label=" master (translations)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_PaymentMethodTranslation -> parler_models_TranslatedFieldsModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  cart_models_PaymentMethod -> core_safe_delete_SafeDeleteModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  cart_models_PaymentMethod -> parler_models_TranslatableModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  cart_models_PaymentMethodCountry -> cart_models_PaymentMethod
+  [label=" payment_method (paymentmethodcountry)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_PaymentMethodCountry -> country_models_Country
+  [label=" country (paymentmethodcountry)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_PaymentMethodCountry -> country_models_Currency
+  [label=" currency (paymentmethodcountry)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_PaymentMethodCountry -> country_models_VatGroup
+  [label=" vat_group (paymentmethodcountry)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_PaymentMethodCountry -> core_safe_delete_SafeDeleteModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  cart_models_Cart -> country_models_Country
+  [label=" country (cart)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_Cart -> product_models_PriceList
+  [label=" pricelist (cart)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_Cart -> user_models_User
+  [label=" user (cart)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_Cart -> country_models_BillingInfo
+  [label=" billing_info (+)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_Cart -> country_models_ShippingInfo
+  [label=" shipping_info (+)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_Cart -> cart_models_PaymentMethodCountry
+  [label=" payment_method_country (+)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_Cart -> cart_models_ShippingMethodCountry
+  [label=" shipping_method_country (+)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_CartItem -> cart_models_Cart
+  [label=" cart (cart_items)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_CartItem -> product_models_ProductVariant
+  [label=" product_variant (cartitem)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_CartItem -> product_models_Product
+  [label=" product (cartitem)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+
+  category_models_CategoryTranslation -> category_models_Category
+  [label=" master (translations)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  category_models_CategoryTranslation -> parler_models_TranslatedFieldsModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  category_models_Category -> category_models_Category
+  [label=" parent (children)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  category_models_Category -> core_safe_delete_SafeDeleteModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  category_models_Category -> mptt_models_MPTTModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  category_models_Category -> parler_models_TranslatableModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+
+  country_models_Address -> user_models_User
+  [label=" user (address)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  country_models_Address -> country_models_Country
+  [label=" country (address)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  country_models_Address -> core_safe_delete_SafeDeleteModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  country_models_Country -> product_models_PriceList
+  [label=" default_price_list (country)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  country_models_Country -> core_safe_delete_SafeDeleteModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  country_models_Currency -> core_safe_delete_SafeDeleteModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  country_models_VatGroup -> country_models_Country
+  [label=" country (vatgroup)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  country_models_VatGroup -> core_safe_delete_SafeDeleteModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  country_models_BillingInfo -> user_models_User
+  [label=" user (billinginfo)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  country_models_BillingInfo -> country_models_Country
+  [label=" country (billinginfo)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  country_models_BillingInfo -> country_models_Address
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  country_models_ShippingInfo -> user_models_User
+  [label=" user (shippinginfo)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  country_models_ShippingInfo -> country_models_Country
+  [label=" country (shippinginfo)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  country_models_ShippingInfo -> country_models_Address
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+
+  order_models_Order -> cart_models_Cart
+  [label=" cart (order)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  order_models_OrderItemComplaint -> cart_models_CartItem
+  [label=" cart_item (complaints)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  order_models_OrderItemComplaint -> order_models_Order
+  [label=" order (complaints)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+
+  product_models_ProductVariant -> product_models_BaseAttribute
+  [label=" attributes (productvariant)"] [arrowhead=dot arrowtail=dot, dir=both];
+
+  product_models_ProductVariant -> core_safe_delete_SafeDeleteModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  product_models_ProductType -> product_models_AttributeType
+  [label=" allowed_attribute_types (producttype)"] [arrowhead=dot arrowtail=dot, dir=both];
+
+  product_models_ProductType -> country_models_VatGroup
+  [label=" vat_groups (product_types)"] [arrowhead=dot arrowtail=dot, dir=both];
+
+  product_models_ProductType -> core_safe_delete_SafeDeleteModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  product_models_ProductTranslation -> product_models_Product
+  [label=" master (translations)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  product_models_ProductTranslation -> parler_models_TranslatedFieldsModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  product_models_Product -> product_models_ProductType
+  [label=" type (product)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  product_models_Product -> category_models_Category
+  [label=" category (product)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  product_models_Product -> product_models_ProductVariant
+  [label=" product_variants (product)"] [arrowhead=dot arrowtail=dot, dir=both];
+
+  product_models_Product -> core_safe_delete_SafeDeleteModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  product_models_Product -> parler_models_TranslatableModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  product_models_AttributeTypeTranslation -> product_models_AttributeType
+  [label=" master (translations)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  product_models_AttributeTypeTranslation -> parler_models_TranslatedFieldsModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  product_models_AttributeType -> core_safe_delete_SafeDeleteModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  product_models_AttributeType -> parler_models_TranslatableModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  product_models_BaseAttributeTranslation -> product_models_BaseAttribute
+  [label=" master (translations)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  product_models_BaseAttributeTranslation -> parler_models_TranslatedFieldsModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  product_models_BaseAttribute -> product_models_AttributeType
+  [label=" type (base_attributes)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  product_models_BaseAttribute -> product_models_ExtensionAttribute
+  [label=" ext_attributes (baseattribute)"] [arrowhead=dot arrowtail=dot, dir=both];
+
+  product_models_BaseAttribute -> core_safe_delete_SafeDeleteModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  product_models_BaseAttribute -> parler_models_TranslatableModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  product_models_ExtensionAttribute -> product_models_ExtAttributeType
+  [label=" type (extensionattribute)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  product_models_ExtensionAttribute -> product_models_ExtensionAttribute
+  [label=" ext_attributes (extensionattribute)"] [arrowhead=dot arrowtail=dot, dir=both];
+
+  product_models_PriceList -> country_models_Currency
+  [label=" currency (pricelist)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  product_models_PriceList -> core_safe_delete_SafeDeleteModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  product_models_ProductPrice -> product_models_PriceList
+  [label=" price_list (productprice)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  product_models_ProductPrice -> product_models_ProductVariant
+  [label=" product_variant (price)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  product_models_ProductPrice -> core_safe_delete_SafeDeleteModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  product_models_ProductMedia -> product_models_Product
+  [label=" product (product_media)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  product_models_ProductMedia -> core_safe_delete_SafeDeleteModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  product_models_ProductMedia -> core_models_SortableModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  product_models_ProductVariantMedia -> product_models_ProductVariant
+  [label=" product_variant (productvariantmedia)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  product_models_ProductVariantMedia -> product_models_ProductMedia
+  [label=" media (productvariantmedia)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  product_models_ProductVariantMedia -> core_safe_delete_SafeDeleteModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+
+  review_models_Review -> product_models_ProductVariant
+  [label=" product_variant (review)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  review_models_Review -> product_models_Product
+  [label=" product (review)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  review_models_Review -> order_models_Order
+  [label=" order (review)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+
+  user_models_User -> django_contrib_auth_models_Group
+  [label=" groups (user)"] [arrowhead=dot arrowtail=dot, dir=both];
+
+  user_models_User -> django_contrib_auth_models_Permission
+  [label=" user_permissions (user)"] [arrowhead=dot arrowtail=dot, dir=both];
+
+  user_models_User -> django_contrib_auth_base_user_AbstractBaseUser
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  user_models_User -> django_contrib_auth_models_PermissionsMixin
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+
+  roles_models_ManagerGroup -> roles_models_ManagerPermission
+  [label=" permissions (managergroup)"] [arrowhead=dot arrowtail=dot, dir=both];
+
+
+  rest_framework_authtoken_models_Token -> user_models_User
+  [label=" user (auth_token)"] [arrowhead=none, arrowtail=none, dir=both];
+
+  rest_framework_authtoken_models_TokenProxy -> rest_framework_authtoken_models_Token
+  [label=" proxy\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+
+  rest_framework_simplejwt_token_blacklist_models_OutstandingToken -> user_models_User
+  [label=" user (outstandingtoken)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  rest_framework_simplejwt_token_blacklist_models_BlacklistedToken -> rest_framework_simplejwt_token_blacklist_models_OutstandingToken
+  [label=" token (blacklistedtoken)"] [arrowhead=none, arrowtail=none, dir=both];
+
+
+
+}

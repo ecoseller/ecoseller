@@ -1,0 +1,231 @@
+digraph model_graph {
+  // Dotfile by Django-Extensions graph_models
+  // Created: 2023-07-15 14:41
+  // Cli Options: -a -
+
+  fontname = "Roboto"
+  fontsize = 8
+  splines  = true
+  rankdir = "TB"
+
+  node [
+    fontname = "Roboto"
+    fontsize = 8
+    shape = "plaintext"
+  ]
+
+  edge [
+    fontname = "Roboto"
+    fontsize = 8
+  ]
+
+  // Labels
+
+
+
+  django_contrib_auth_models_Permission [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Permission
+    </B></FONT></TD></TR>
+    </TABLE>
+    >]
+
+  django_contrib_auth_models_Group [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Group
+    </B></FONT></TD></TR>
+    </TABLE>
+    >]
+
+  cart_models_Cart [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Cart
+    </B></FONT></TD></TR>
+    </TABLE>
+    >]
+
+  country_models_Address [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Address<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+     </TABLE>
+    >]
+
+  country_models_Country [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Country<BR/>&lt;<FONT FACE="Roboto"><I>SafeDeleteModel</I></FONT>&gt;
+    </B></FONT></TD></TR>
+    </TABLE>
+    >]
+
+  country_models_BillingInfo [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    BillingInfo<BR/>&lt;<FONT FACE="Roboto"><I>Address</I></FONT>&gt;
+    </B></FONT></TD></TR>
+    </TABLE>
+    >]
+
+  country_models_ShippingInfo [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    ShippingInfo<BR/>&lt;<FONT FACE="Roboto"><I>Address</I></FONT>&gt;
+    </B></FONT></TD></TR>
+    </TABLE>
+    >]
+
+  order_models_Order [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Order
+    </B></FONT></TD></TR>
+   </TABLE>
+    >]
+
+  django_contrib_auth_models_PermissionsMixin [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    PermissionsMixin
+    </B></FONT></TD></TR>
+   </TABLE>
+    >]
+
+  django_contrib_auth_base_user_AbstractBaseUser [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    AbstractBaseUser
+    </B></FONT></TD></TR>
+    </TABLE>
+    >]
+
+  user_models_User [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    User<BR/>&lt;<FONT FACE="Roboto"><I>AbstractBaseUser,PermissionsMixin</I></FONT>&gt;
+    </B></FONT></TD></TR>
+    </TABLE>
+    >]
+
+  rest_framework_authtoken_models_Token [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Token
+    </B></FONT></TD></TR>
+   </TABLE>
+    >]
+
+  rest_framework_simplejwt_token_blacklist_models_OutstandingToken [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    OutstandingToken
+    </B></FONT></TD></TR>
+    </TABLE>
+    >]
+
+  rest_framework_simplejwt_token_blacklist_models_BlacklistedToken [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    BlacklistedToken
+    </B></FONT></TD></TR>
+    </TABLE>
+    >]
+
+
+  // Relations
+  django_contrib_auth_models_Group -> django_contrib_auth_models_Permission
+  [label=" permissions (group)"] [arrowhead=dot arrowtail=dot, dir=both];
+
+
+
+  cart_models_Cart -> country_models_Country
+  [label=" country (cart)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+
+  cart_models_Cart -> user_models_User
+  [label=" user (cart)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_Cart -> country_models_BillingInfo
+  [label=" billing_info (+)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  cart_models_Cart -> country_models_ShippingInfo
+  [label=" shipping_info (+)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+
+
+
+  country_models_Address -> user_models_User
+  [label=" user (address)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  country_models_Address -> country_models_Country
+  [label=" country (address)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+
+
+  country_models_BillingInfo -> user_models_User
+  [label=" user (billinginfo)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  country_models_BillingInfo -> country_models_Country
+  [label=" country (billinginfo)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  country_models_BillingInfo -> country_models_Address
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  country_models_ShippingInfo -> user_models_User
+  [label=" user (shippinginfo)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  country_models_ShippingInfo -> country_models_Country
+  [label=" country (shippinginfo)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  country_models_ShippingInfo -> country_models_Address
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+
+  order_models_Order -> cart_models_Cart
+  [label=" cart (order)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+
+  user_models_User -> django_contrib_auth_models_Group
+  [label=" groups (user)"] [arrowhead=dot arrowtail=dot, dir=both];
+
+  user_models_User -> django_contrib_auth_models_Permission
+  [label=" user_permissions (user)"] [arrowhead=dot arrowtail=dot, dir=both];
+
+  user_models_User -> django_contrib_auth_base_user_AbstractBaseUser
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  user_models_User -> django_contrib_auth_models_PermissionsMixin
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+
+  rest_framework_authtoken_models_Token -> user_models_User
+  [label=" user (auth_token)"] [arrowhead=none, arrowtail=none, dir=both];
+
+
+  rest_framework_simplejwt_token_blacklist_models_OutstandingToken -> user_models_User
+  [label=" user (outstandingtoken)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  rest_framework_simplejwt_token_blacklist_models_BlacklistedToken -> rest_framework_simplejwt_token_blacklist_models_OutstandingToken
+  [label=" token (blacklistedtoken)"] [arrowhead=none, arrowtail=none, dir=both];
+
+
+
+}
