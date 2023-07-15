@@ -258,4 +258,48 @@ const ChildComponent = () => {
 ```
 
 ### CookieProvider
+`CookieProvider` is a context provider that provides information about the user's cookies as well as some usefull functions to its children. It is used only in `Storefront` component.
+
+#### Parameters
+- `children`: React component that is wrapped by the provider
+
+#### Return value
+- `cookieState` - set consisting of set of boolean flags:
+  - `neccessaryCookies` - whether the user has accepted neccessary cookies
+  - `preferenceCookies` - whether the user has accepted preference cookies
+  - `statisticalCookies` - whether the user has accepted statistical cookies
+  - `adsCookies` - whether the user has accepted ads cookies
+  - `openDisclaimer` - whether to show cookie disclaimer
+- `setCookieState` - function for setting cookie state
+- `setCookieSettingToCookies` - function for setting cookie setting to cookies
+- `toggleDisclaimer` - function for toggling cookie disclaimer
+
+#### Functions provided by `CookieProvider`
+##### `setCookieState`
+Sets cookie state. Takes following parameters:
+* `key`: type of cookie
+* `value`: boolean value to set to the cookie
+
+##### `setCookieSettingToCookies`
+Sets cookie setting to cookies. Takes following parameters:
+* `allTrue`: whether all cookies are accepted
+
+##### `toggleDisclaimer`
+Toggles cookie disclaimer. Takes following parameters:
+* `value`: whether to show cookie disclaimer
+
+#### Usage example
+`CookieProvider` already wraps whole application, so we can access data or functions in any child component. To do so, we use `useCookie` hook:
+```typescript
+const ChildComponent = () => {
+    ...
+    const { cookieState, setCookieState, setCookieSettingToCookies, toggleDisclaimer } = useCookie();
+    ...
+    return (
+        ...
+    );
+};
+```
+
+
 ### CountryProvider
