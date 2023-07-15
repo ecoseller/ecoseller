@@ -14,6 +14,15 @@ To create diagrams, we used `django-extensions` app and its Graph models part, w
 ### User
 ![User model](../../images/models_user.png)
 
+Above is the diagram of the `User` model with its main relations to other models. The model is defined in `backend/core/user/models.py` file.
+In ecoseller, we replaced default django `User` model with our own `User` model in order to have more control over it. You can see that it has 2 abstract models as its parents: `AbstractBaseUser` and `PermissionsMixin`: 
+* `AbstractBaseUser` is a django abstract model that provides basic user functionality
+* `PermissionsMixin` is a django abstract model that provides permissions functionality.
+
+Another authorozation related models are `Group` and `Permission` models. They are django models that are used for authorization purposes. `Group` model is used to group users into units, while `Permission` model is used to define permissions for users. More on how we handle user authorization can be found in [Authorization](../../administration/authorization) section.
+Next important relation is to `Address` model. It is used to store user's address. As we can see, there is also a connection to `ShippingInfo` and `BillingInfo`, which are used during checkout process, to store user's shipping and billing information. The last relation is to `Cart` model, which binds user to his cart.
+
+
 ## Authorization
 As mentioned in [Authorization](../../administration/authorization) section, ecoseller uses roles and permissions to restrict access to certain parts of the application. 
 
