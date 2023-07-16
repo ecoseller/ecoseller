@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Authorization | ecoseller</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Authorization" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Table of contents:" />
+<meta property="og:description" content="Table of contents:" />
+<link rel="canonical" href="http://localhost:4000/administration/authorization/" />
+<meta property="og:url" content="http://localhost:4000/administration/authorization/" />
+<meta property="og:site_name" content="ecoseller" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Authorization" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","description":"Table of contents:","headline":"Authorization","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/siteicon.png"}},"url":"http://localhost:4000/administration/authorization/"}</script>
+<!-- End Jekyll SEO tag -->
+
+	<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="ecoseller" />
+
+	<link rel="stylesheet"
+		href="//fonts.googleapis.com/css?family=Merriweather:400,400italic,700,700italic|Open+Sans:400,400italic,600,600italic,700,700italic|Inconsolata:400,700">
+	<link rel="stylesheet" href="/css/main.css">
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" href="/touch-icon.png" sizes="192x192">
+	<link rel="icon" type="image/png" href="/images/favicon.ico">
+
+	
+</head>
+
+<body>
+	<header>
+		<h1>
+			<a style="color: black;" href="/"><img src="/images/emblem.svg"
+					width="100" height="100" alt="ecoseller logo"></a>
+			<a>ecoseller</a>
+			<button type="button" class="open-nav" id="open-nav"></button>
+		</h1>
+
+		<form action="/search/" method="get">
+			<input type="text" name="q" id="search-input" placeholder="Search" autofocus>
+			<input type="submit" value="Search" style="display: none;">
+		</form>
+
+		<nav class="full-navigation" >
+			<ul>
+				<li class="nav-item top-level ">
+					
+					<a href="/">Introduction</a>
+				</li>
+			</ul>
+
+			<ul>
+				
+				
+				<li class="nav-item top-level current">
+					
+					<a href="/administration/installation/">Administration documentation</a>
+					<ul>
+						
+						<li class="nav-item "><a
+								href="/administration/installation/">Installation</a></li>
+						
+						<li class="nav-item "><a
+								href="/administration/administration/">Administration</a></li>
+						
+						<li class="nav-item "><a
+								href="/administration/localization/">Localization</a></li>
+						
+						<li class="nav-item current"><a
+								href="/administration/authorization/">Authorization</a></li>
+						
+					</ul>
+				</li>
+				
+				<li class="nav-item top-level ">
+					
+					<a href="/programming/technical-design/">Programming documentation</a>
+					<ul>
+						
+						<li class="nav-item "><a
+								href="/programming/technical-design/">Technical design</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/backend/">Backend</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/dashboard_storefront/">Dashboard and Storefront</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/recommender_system/">Recommender system</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/supportive_services/">Supportive services</a></li>
+						
+					</ul>
+				</li>
+				
+				<li class="nav-item top-level ">
+					
+					<a href="/user/dashboard/">User category</a>
+					<ul>
+						
+						<li class="nav-item "><a
+								href="/user/dashboard/">User documentation - Dashboard</a></li>
+						
+						<li class="nav-item "><a
+								href="/user/storefront/">User documentation - Storefront</a></li>
+						
+					</ul>
+				</li>
+				
+			</ul>
+
+			<ul>
+				<li class="nav-item top-level ">
+					
+					<a href="/contribution/">Contribution</a>
+				</li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="main">
+		<div class="page-header">
+			<h2>Administration documentation</h2>
+			<h3>Authorization</h3>
+		</div>
+		<article class="content">
+			<p>Table of contents:</p>
+<ul id="markdown-toc">
+  <li><a href="#backend" id="markdown-toc-backend">Backend</a></li>
+  <li><a href="#frontend" id="markdown-toc-frontend">Frontend</a>    <ul>
+      <li><a href="#hiding-components" id="markdown-toc-hiding-components">Hiding components</a></li>
+      <li><a href="#disabling-components" id="markdown-toc-disabling-components">Disabling components</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p>To achieve better security, ecoseller introduces so-called <em>Roles</em>. Each role has a set of permissions. Permissions are used to restrict access to certain parts of the application. For future use, ecoseller creates a new permission (more precisely four for each action - add/change/view/delete) for each model. At this moment, ecoseller is actively using the following permissions:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- add role                  | group_add_permission
+- change role               | group_change_permission
+- can change cart           | cart_change_permission
+- add category              | category_add_permission
+- change category           | category_change_permission
+- add page (cms)            | page_add_permission
+- change page (cms)         | page_change_permission
+- change product price      | productprice_change_permission
+- add product price         | productprice_add_permission
+- add product media         | productmedia_add_permission
+- change product media      | productmedia_change_permission
+- add product type          | producttype_add_permission
+- change product type       | producttype_change_permission
+- add product               | product_add_permission
+- change product            | product_change_permission
+- add user                  | user_add_permission
+- change user               | user_change_permission
+- add price list            | pricelist_add_permission
+- change price list         | pricelist_change_permission
+- add attribute type        | attributetype_add_permission
+- change attribute type     | attributetype_change_permission
+- add base attribute        | baseattribute_add_permission
+- change base attribute     | baseattribute_change_permission
+
+</code></pre></div></div>
+
+<p>Ecoseller also comes with three predefined roles with the following permissions:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Editor permissions:
+    -can change cart 
+    -can change product price  
+    -can add product price  
+    -can change product media 
+    -can add product media 
+    -can change product 
+    -can add product 
+    -can change category 
+    -can add category 
+    -can change page (cms) 
+    -can add page (cms) 
+    -can add product type          
+    -can change product type       
+    -can add price list            
+    -can change price list         
+    -can add attribute type        
+    -can change attribute type     
+    -can add base attribute        
+    -can change base attribute     
+
+UserManager permissions:
+    -can add user
+    -can change user
+    -can add group
+    -can change group
+
+Copywriter permissions:
+    -can change page (cms)
+    -can change product
+    -can change product media
+    -can change category
+</code></pre></div></div>
+
+<p>Ecoseller also comes with a predefined admin role that has all permissions. To allow users to specify new roles on deployment, we created a special config defined in <code class="language-plaintext highlighter-rouge">backend/core/roles/config/roles.json</code> (with predefined roles mentioned above) file with the following structure:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[
+    {
+        "Role1" : {
+            "permissions" : [
+                {
+                    "name" : "Permission1",
+                    "description" : "Permission1 description"
+                    "type" : "ADD",
+                    "model" : "Model1"
+                },
+                {
+                    "name" : "Permission2",
+                    "description" : "Permission2 description",
+                    "type" : "CHANGE",
+                    "model" : "Model1"
+                },
+                {
+                    "name" : "Permission3",
+                    "description" : "Permission3 description",
+                    "type" : "DELETE",
+                    "model" : "Model2"
+                }
+            ],
+            "decription" : "Description of Role1",
+            "name" : "Role1Name"
+        }
+    },
+    {
+        "Role2" :{
+                "permissions" : [
+                    {               
+                        "name" : "Permission4",
+                        "description" : "Permission4 description",
+                        "type" : "VIEW",
+                        "model" : "Model1"
+                    },
+                    {
+                        "name" : "Permission5",
+                        "description" : "Permission5 description"
+                        "type" : "DELETE",
+                        "model" : "Model3"
+                    },
+                    {
+                        "name" : "Permission6",
+                        "description" : "Permission6 description",
+                        "type" : "CHANGE",
+                        "model" : "Model3"
+                    },
+                    {
+                        "name" : "Permission1",
+                        "description" : "Permission1 description"
+                        "type" : "ADD",
+                        "model" : "Model1"
+                    }
+                ]
+                "description" : "Description of Role2",
+                "name" : "Role2Name"
+            }
+    }
+]
+</code></pre></div></div>
+
+<p>Each role has a unique name, description and a list of permissions. Each permission has a unique name, description, type and model. The type can be one of the following: <code class="language-plaintext highlighter-rouge">ADD</code>, <code class="language-plaintext highlighter-rouge">CHANGE</code>, <code class="language-plaintext highlighter-rouge">VIEW</code>, <code class="language-plaintext highlighter-rouge">DELETE</code>. The model is the name of the model to which the permission is assigned. The name of the model is the same as the name of the model in the database. For example, the name of the model for the <code class="language-plaintext highlighter-rouge">Product</code> model is <code class="language-plaintext highlighter-rouge">product</code>. The name of the model for the <code class="language-plaintext highlighter-rouge">ProductPrice</code> model is <code class="language-plaintext highlighter-rouge">productprice</code>. Each role and its corresponding permissions are created once the system is deployed during a migration process.</p>
+
+<p>A description of the whole workflow with permissions (e.g. creating a new role, assigning it to specific users) can be found in the <a href="../../user/dashboard/#users--roles">Users &amp; Roles</a> section.</p>
+
+<p>To ensure maximum security, the way roles affect workflow differs between the frontend and the backend. The following sections describe how.</p>
+
+<h3 id="backend">Backend</h3>
+<p>The backend uses decorators to restrict access to certain endpoints. Each endpoint has a corresponding decorator that checks if the user has the required permission. If the user does not have the required permission, the decorator returns a <code class="language-plaintext highlighter-rouge">403</code> response. More information about decorators can be found in the <a href="../../programming/programming/#backend">Programming documentation</a>.</p>
+
+<h3 id="frontend">Frontend</h3>
+<p>The frontend uses context providers to hide/show or enable/disable certain components based on the user’s permissions.Some components have a corresponding permission that is checked before the component is rendered. If the user does not have the required permission, the component is not rendered or is disabled. More information about context providers can be found in the <a href="../../programming/programming/#frontend">Programming documentation</a>.</p>
+
+<h4 id="hiding-components">Hiding components</h4>
+<p>In the dashboard, we have a sidebar with links to various parts of the system. Some links have a corresponding permission that is checked before the link is rendered. If the user does not have the required permission, the link is not rendered. Currently restricted links and their corresponding permissions are:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Products 
+    - product_change_permission
+    - product_add_permission
+Categories
+    - category_change_permission
+    - category_add_permission
+CMS 
+    - page_change_permission 
+    - page_add_permission
+Users &amp; Roles 
+    - user_change_permission
+    - user_add_permission
+    - group_change_permission
+    - group_add_permission
+</code></pre></div></div>
+<h4 id="disabling-components">Disabling components</h4>
+<p>We restricted disabling to specific actions - e.g. button click or dragging component. Some components have corresponding permissions that are checked before the component itself is enabled. If the user does not have the required permission, the components are disabled, preventing the user to trigger further action. Some of the currently restricted actions and their corresponding permissions are:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Adding new category
+    - category_add_permission
+Adding/Dragging media components
+    - productmedia_change_permission
+Creating role
+    - group_add_permission
+Editing user general information
+    - user_change_permission
+</code></pre></div></div>
+
+		</article>
+	</section>
+
+	<script>
+		document.getElementById("open-nav").addEventListener("click", function () {
+			document.body.classList.toggle("nav-open");
+		});
+	</script>
+</body>
+
+</html>

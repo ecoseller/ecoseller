@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Dashboard and Storefront | ecoseller</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Dashboard and Storefront" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Table of contents:" />
+<meta property="og:description" content="Table of contents:" />
+<link rel="canonical" href="http://localhost:4000/programming/dashboard_storefront/" />
+<meta property="og:url" content="http://localhost:4000/programming/dashboard_storefront/" />
+<meta property="og:site_name" content="ecoseller" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Dashboard and Storefront" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","description":"Table of contents:","headline":"Dashboard and Storefront","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/siteicon.png"}},"url":"http://localhost:4000/programming/dashboard_storefront/"}</script>
+<!-- End Jekyll SEO tag -->
+
+	<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="ecoseller" />
+
+	<link rel="stylesheet"
+		href="//fonts.googleapis.com/css?family=Merriweather:400,400italic,700,700italic|Open+Sans:400,400italic,600,600italic,700,700italic|Inconsolata:400,700">
+	<link rel="stylesheet" href="/css/main.css">
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" href="/touch-icon.png" sizes="192x192">
+	<link rel="icon" type="image/png" href="/images/favicon.ico">
+
+	
+</head>
+
+<body>
+	<header>
+		<h1>
+			<a style="color: black;" href="/"><img src="/images/emblem.svg"
+					width="100" height="100" alt="ecoseller logo"></a>
+			<a>ecoseller</a>
+			<button type="button" class="open-nav" id="open-nav"></button>
+		</h1>
+
+		<form action="/search/" method="get">
+			<input type="text" name="q" id="search-input" placeholder="Search" autofocus>
+			<input type="submit" value="Search" style="display: none;">
+		</form>
+
+		<nav class="full-navigation" >
+			<ul>
+				<li class="nav-item top-level ">
+					
+					<a href="/">Introduction</a>
+				</li>
+			</ul>
+
+			<ul>
+				
+				
+				<li class="nav-item top-level ">
+					
+					<a href="/administration/installation/">Administration documentation</a>
+					<ul>
+						
+						<li class="nav-item "><a
+								href="/administration/installation/">Installation</a></li>
+						
+						<li class="nav-item "><a
+								href="/administration/administration/">Administration</a></li>
+						
+						<li class="nav-item "><a
+								href="/administration/localization/">Localization</a></li>
+						
+						<li class="nav-item "><a
+								href="/administration/authorization/">Authorization</a></li>
+						
+					</ul>
+				</li>
+				
+				<li class="nav-item top-level current">
+					
+					<a href="/programming/technical-design/">Programming documentation</a>
+					<ul>
+						
+						<li class="nav-item "><a
+								href="/programming/technical-design/">Technical design</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/backend/">Backend</a></li>
+						
+						<li class="nav-item current"><a
+								href="/programming/dashboard_storefront/">Dashboard and Storefront</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/recommender_system/">Recommender system</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/supportive_services/">Supportive services</a></li>
+						
+					</ul>
+				</li>
+				
+				<li class="nav-item top-level ">
+					
+					<a href="/user/dashboard/">User category</a>
+					<ul>
+						
+						<li class="nav-item "><a
+								href="/user/dashboard/">User documentation - Dashboard</a></li>
+						
+						<li class="nav-item "><a
+								href="/user/storefront/">User documentation - Storefront</a></li>
+						
+					</ul>
+				</li>
+				
+			</ul>
+
+			<ul>
+				<li class="nav-item top-level ">
+					
+					<a href="/contribution/">Contribution</a>
+				</li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="main">
+		<div class="page-header">
+			<h2>Programming documentation</h2>
+			<h3>Dashboard and Storefront</h3>
+		</div>
+		<article class="content">
+			<p>Table of contents:</p>
+<ul id="markdown-toc">
+  <li><a href="#dashboard" id="markdown-toc-dashboard">Dashboard</a></li>
+  <li><a href="#storefront" id="markdown-toc-storefront">Storefront</a></li>
+  <li><a href="#context-providers" id="markdown-toc-context-providers">Context providers</a>    <ul>
+      <li><a href="#userprovider" id="markdown-toc-userprovider">UserProvider</a>        <ul>
+          <li><a href="#parameters" id="markdown-toc-parameters">Parameters</a></li>
+          <li><a href="#return-value" id="markdown-toc-return-value">Return value</a></li>
+          <li><a href="#usage-example" id="markdown-toc-usage-example">Usage example</a></li>
+        </ul>
+      </li>
+      <li><a href="#permissionprovider" id="markdown-toc-permissionprovider">PermissionProvider</a>        <ul>
+          <li><a href="#parameters-1" id="markdown-toc-parameters-1">Parameters</a></li>
+          <li><a href="#return-value-1" id="markdown-toc-return-value-1">Return value</a></li>
+          <li><a href="#usage-example-1" id="markdown-toc-usage-example-1">Usage example</a></li>
+        </ul>
+      </li>
+      <li><a href="#cartprovider" id="markdown-toc-cartprovider">CartProvider</a>        <ul>
+          <li><a href="#parameters-2" id="markdown-toc-parameters-2">Parameters</a></li>
+          <li><a href="#return-value-2" id="markdown-toc-return-value-2">Return value</a></li>
+          <li><a href="#functions-provided-by-cartprovider" id="markdown-toc-functions-provided-by-cartprovider">Functions provided by <code class="language-plaintext highlighter-rouge">CartProvider</code></a>            <ul>
+              <li><a href="#addtocart" id="markdown-toc-addtocart"><code class="language-plaintext highlighter-rouge">addToCart</code></a></li>
+              <li><a href="#removefromcart" id="markdown-toc-removefromcart"><code class="language-plaintext highlighter-rouge">removeFromCart</code></a></li>
+              <li><a href="#updatequantity" id="markdown-toc-updatequantity"><code class="language-plaintext highlighter-rouge">updateQuantity</code></a></li>
+              <li><a href="#clearcart" id="markdown-toc-clearcart"><code class="language-plaintext highlighter-rouge">clearCart</code></a></li>
+              <li><a href="#cartproductquantity" id="markdown-toc-cartproductquantity"><code class="language-plaintext highlighter-rouge">cartProductQuantity</code></a></li>
+            </ul>
+          </li>
+          <li><a href="#usage-example-2" id="markdown-toc-usage-example-2">Usage example</a></li>
+        </ul>
+      </li>
+      <li><a href="#cookieprovider" id="markdown-toc-cookieprovider">CookieProvider</a>        <ul>
+          <li><a href="#parameters-3" id="markdown-toc-parameters-3">Parameters</a></li>
+          <li><a href="#return-value-3" id="markdown-toc-return-value-3">Return value</a></li>
+          <li><a href="#functions-provided-by-cookieprovider" id="markdown-toc-functions-provided-by-cookieprovider">Functions provided by <code class="language-plaintext highlighter-rouge">CookieProvider</code></a>            <ul>
+              <li><a href="#setcookiestate" id="markdown-toc-setcookiestate"><code class="language-plaintext highlighter-rouge">setCookieState</code></a></li>
+              <li><a href="#setcookiesettingtocookies" id="markdown-toc-setcookiesettingtocookies"><code class="language-plaintext highlighter-rouge">setCookieSettingToCookies</code></a></li>
+              <li><a href="#toggledisclaimer" id="markdown-toc-toggledisclaimer"><code class="language-plaintext highlighter-rouge">toggleDisclaimer</code></a></li>
+            </ul>
+          </li>
+          <li><a href="#usage-example-3" id="markdown-toc-usage-example-3">Usage example</a></li>
+        </ul>
+      </li>
+      <li><a href="#countryprovider" id="markdown-toc-countryprovider">CountryProvider</a>        <ul>
+          <li><a href="#parameters-4" id="markdown-toc-parameters-4">Parameters</a></li>
+          <li><a href="#return-value-4" id="markdown-toc-return-value-4">Return value</a></li>
+          <li><a href="#functions-provided-by-countryprovider" id="markdown-toc-functions-provided-by-countryprovider">Functions provided by <code class="language-plaintext highlighter-rouge">CountryProvider</code></a>            <ul>
+              <li><a href="#setcountrycookieandlocale" id="markdown-toc-setcountrycookieandlocale"><code class="language-plaintext highlighter-rouge">setCountryCookieAndLocale</code></a></li>
+            </ul>
+          </li>
+          <li><a href="#usage-example-4" id="markdown-toc-usage-example-4">Usage example</a></li>
+        </ul>
+      </li>
+      <li><a href="#recommenderprovider" id="markdown-toc-recommenderprovider">RecommenderProvider</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="dashboard">Dashboard</h1>
+
+<h1 id="storefront">Storefront</h1>
+
+<h1 id="context-providers">Context providers</h1>
+<p>To be able to access various data in different parts of the application, we use React Context. More information about React Context can be found on the following links:</p>
+<ul>
+  <li><a href="https://react.dev/learn/passing-data-deeply-with-context">Passing data deeply with context</a></li>
+  <li><a href="https://react.dev/reference/react/useContext">useContext</a></li>
+</ul>
+
+<p>In further parts of this section, we assume that the reader is familiar with React Context and its usage from the links above.</p>
+
+<p>In ecoseller, we use various context providers, and now we will describe them in more detail.</p>
+
+<h2 id="userprovider">UserProvider</h2>
+<p><code class="language-plaintext highlighter-rouge">UserProvider</code> is a context provider that provides information about the currently logged in user to its children. It is used in both <code class="language-plaintext highlighter-rouge">Dashboard</code> and <code class="language-plaintext highlighter-rouge">Storefront</code> component, although they differ a bit in data they provide.</p>
+
+<h3 id="parameters">Parameters</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">children</code>: React component that is wrapped by the provider</li>
+</ul>
+
+<h3 id="return-value">Return value</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">user</code>: fetched data from <code class="language-plaintext highlighter-rouge">/user/detail/</code> endpoint. Consists of:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">email</code> - email of the user</li>
+      <li><code class="language-plaintext highlighter-rouge">first_name</code> - first name of the user</li>
+      <li><code class="language-plaintext highlighter-rouge">last_name</code> - last name of the user</li>
+      <li><code class="language-plaintext highlighter-rouge">birth_date</code> - birth date of the user</li>
+      <li><code class="language-plaintext highlighter-rouge">is_active</code> - whether the user is active</li>
+      <li><code class="language-plaintext highlighter-rouge">is_admin</code> - whether the user is admin</li>
+      <li><code class="language-plaintext highlighter-rouge">is_staff</code> - whether the user is staff</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">roles</code>: fetched data from <code class="language-plaintext highlighter-rouge">/roles/user-groups/${email}</code>. Consists of:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">name</code> - name of the role</li>
+      <li><code class="language-plaintext highlighter-rouge">description</code> - description of the role</li>
+      <li><code class="language-plaintext highlighter-rouge">permissions</code> - list of permissions of the role. Each permission consists of:
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">name</code> - name of the permission</li>
+          <li><code class="language-plaintext highlighter-rouge">description</code> - description of the permission</li>
+          <li><code class="language-plaintext highlighter-rouge">type</code> - type of the permission</li>
+          <li><code class="language-plaintext highlighter-rouge">model</code> - model to which the permission corresponds</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">UserProvider</code> in <code class="language-plaintext highlighter-rouge">Storefront</code> only provides <code class="language-plaintext highlighter-rouge">user</code> data, while <code class="language-plaintext highlighter-rouge">Dashboard</code> provides both <code class="language-plaintext highlighter-rouge">user</code> and <code class="language-plaintext highlighter-rouge">roles</code> data.</p>
+
+<h3 id="usage-example">Usage example</h3>
+<p><code class="language-plaintext highlighter-rouge">UserProvider</code> already wraps whole application in both <code class="language-plaintext highlighter-rouge">Dashboard</code> and <code class="language-plaintext highlighter-rouge">Storefront</code> components, so we can access user data in any child component. To access user data, we use <code class="language-plaintext highlighter-rouge">useUser</code> hook:</p>
+
+<ul>
+  <li>In dashboard:
+    <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">ChildComponent</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="p">...</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">user</span><span class="p">,</span> <span class="nx">roles</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">useUser</span><span class="p">();</span>
+  <span class="p">...</span>
+  <span class="k">return</span> <span class="p">(</span>
+      <span class="p">...</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div>    </div>
+  </li>
+  <li>In storefront:
+    <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">ChildComponent</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="p">...</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">user</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">useUser</span><span class="p">();</span>
+  <span class="p">...</span>
+  <span class="k">return</span> <span class="p">(</span>
+      <span class="p">...</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h2 id="permissionprovider">PermissionProvider</h2>
+<p>As mentioned in <a href="../../administration/authorization">Authorization</a> section, ecoseller uses roles and permissions to restrict access to certain parts of the application. <code class="language-plaintext highlighter-rouge">PermissionProvider</code> is a context provider that provides information about user’s permissions to its children. It is used in <code class="language-plaintext highlighter-rouge">Dashboard</code> component.</p>
+
+<p>To ensure proper usage, we defined <code class="language-plaintext highlighter-rouge">ContextPermissions</code> type with permissions that may be passed to the provider. The type is defined in <code class="language-plaintext highlighter-rouge">dashboard/utils/context/permission.tsx</code> file.</p>
+
+<h3 id="parameters-1">Parameters</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">allowedPermissions</code>: Array of <code class="language-plaintext highlighter-rouge">ContextPermissions</code> - permissions the user needs to have to gain access to the component</li>
+  <li><code class="language-plaintext highlighter-rouge">children</code>: React component that is wrapped by the provider</li>
+</ul>
+
+<h3 id="return-value-1">Return value</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">hasPermission</code>: boolean - true if the user has all permissions from <code class="language-plaintext highlighter-rouge">allowedPermissions</code> array, false otherwise</li>
+</ul>
+
+<h3 id="usage-example-1">Usage example</h3>
+<p>To check whether the user has <code class="language-plaintext highlighter-rouge">user_add_permission</code> permission for adding new user, wrap the component with <code class="language-plaintext highlighter-rouge">PermissionProvider</code>:</p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="o">&lt;</span><span class="nx">PermissionProvider</span> <span class="nx">allowedPermissions</span><span class="o">=</span><span class="p">{[</span><span class="dl">"</span><span class="s2">user_add_permission</span><span class="dl">"</span><span class="p">]}</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">EditableContentWrapper</span><span class="o">&gt;</span>
+            <span class="o">&lt;</span><span class="nx">CreateUser</span> <span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="sr">/EditableContentWrapper</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/PermissionProvider</span><span class="err">&gt;
+</span></code></pre></div></div>
+<p>Now, we can check in respective component whether the user has the permission:</p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kd">const</span> <span class="nx">CreateUser</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="p">...</span>
+        <span class="kd">const</span> <span class="p">{</span> <span class="nx">hasPermission</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">usePermission</span><span class="p">();</span>
+        <span class="p">...</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="p">...</span>
+            <span class="o">&lt;</span><span class="nx">TextField</span>
+                <span class="nx">disabled</span><span class="o">=</span><span class="p">{</span><span class="o">!</span><span class="nx">hasPermission</span><span class="p">}</span>
+            <span class="o">&gt;</span>
+            <span class="nx">Email</span>
+            <span class="o">&lt;</span><span class="sr">/TextField</span><span class="err">&gt;
+</span>            <span class="p">...</span>
+        <span class="p">);</span>
+    <span class="p">};</span>
+</code></pre></div></div>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">EditableContentWrapper</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="p">...</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">hasPermission</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">usePermission</span><span class="p">();</span>
+    <span class="p">...</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="p">...</span>
+        <span class="o">&lt;</span><span class="nx">Button</span>
+            <span class="nx">disabled</span><span class="o">=</span><span class="p">{</span><span class="o">!</span><span class="nx">hasPermission</span><span class="p">}</span>
+        <span class="o">&gt;</span>
+        <span class="nx">Save</span>
+        <span class="o">&lt;</span><span class="sr">/Button</span><span class="err">&gt;
+</span>        <span class="p">...</span>
+    <span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<p>This will disable the <code class="language-plaintext highlighter-rouge">TextField</code> and <code class="language-plaintext highlighter-rouge">Button</code> components if the user does not have <code class="language-plaintext highlighter-rouge">user_add_permission</code> permission.</p>
+
+<h2 id="cartprovider">CartProvider</h2>
+<p><code class="language-plaintext highlighter-rouge">CartProvider</code> is a context provider that provides information about the user’s cart as well as some usefull functions to its children. It is used only in <code class="language-plaintext highlighter-rouge">Storefront</code> component.</p>
+
+<h3 id="parameters-2">Parameters</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">children</code>: React component that is wrapped by the provider</li>
+</ul>
+
+<h3 id="return-value-2">Return value</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">cart</code>: fetched data from <code class="language-plaintext highlighter-rouge">/cart/storefront/&lt;str:token&gt;</code> endpoint. Consists of:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">token</code> - token of the cart</li>
+      <li><code class="language-plaintext highlighter-rouge">cart_items</code> - items of the cart</li>
+      <li><code class="language-plaintext highlighter-rouge">update_at</code> - date of the last update of the cart</li>
+      <li><code class="language-plaintext highlighter-rouge">total_items_price_incl_vat_formatted</code> - total price of the cart including VAT</li>
+      <li><code class="language-plaintext highlighter-rouge">total_items_price_without_vat_formatted</code> - total price of the cart without VAT</li>
+      <li><code class="language-plaintext highlighter-rouge">total_price_incl_vat_formatted</code> - total price of the cart including VAT and shipping</li>
+      <li><code class="language-plaintext highlighter-rouge">total_price_without_vat_formatted</code> - total price of the cart without VAT and shipping</li>
+      <li><code class="language-plaintext highlighter-rouge">shipping_method_country</code> - id to <code class="language-plaintext highlighter-rouge">ShippingMethodCountry</code> object</li>
+      <li><code class="language-plaintext highlighter-rouge">payment_method_country</code> - id to <code class="language-plaintext highlighter-rouge">PaymentMethodCountry</code> object</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">cartSize</code>: number of items in the cart</li>
+  <li><code class="language-plaintext highlighter-rouge">addToCart</code> - function for adding item to the cart</li>
+  <li><code class="language-plaintext highlighter-rouge">removeFromCart</code> - function for removing item from the cart</li>
+  <li><code class="language-plaintext highlighter-rouge">updateQueantity</code> - function for updating quantity of the item in the cart</li>
+  <li><code class="language-plaintext highlighter-rouge">clearCart</code> - function for clearing the cart</li>
+  <li><code class="language-plaintext highlighter-rouge">cartProductQuantity</code> - function for getting quantity of the product in the cart</li>
+</ul>
+
+<h3 id="functions-provided-by-cartprovider">Functions provided by <code class="language-plaintext highlighter-rouge">CartProvider</code></h3>
+<h4 id="addtocart"><code class="language-plaintext highlighter-rouge">addToCart</code></h4>
+<p>Adds item to the cart. If the item is already in the cart, it updates its quantity.
+Takes following parameters:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">sku</code>: SKU of the product</li>
+  <li><code class="language-plaintext highlighter-rouge">qty</code>: quantity of the product</li>
+  <li><code class="language-plaintext highlighter-rouge">product</code>: product ID</li>
+  <li><code class="language-plaintext highlighter-rouge">pricelist</code>: pricelist ID</li>
+  <li><code class="language-plaintext highlighter-rouge">country</code>: country ID</li>
+</ul>
+
+<h4 id="removefromcart"><code class="language-plaintext highlighter-rouge">removeFromCart</code></h4>
+<p>Deletes item from the cart. Takes following parameters:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">sku</code>: SKU of the product</li>
+</ul>
+
+<h4 id="updatequantity"><code class="language-plaintext highlighter-rouge">updateQuantity</code></h4>
+<p>Updates quantity of the item in the cart. Takes following parameters:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">sku</code>: SKU of the product</li>
+  <li><code class="language-plaintext highlighter-rouge">quantity</code>: new quantity of the product</li>
+</ul>
+
+<h4 id="clearcart"><code class="language-plaintext highlighter-rouge">clearCart</code></h4>
+<p>Clears the cart. Takes no parameters.</p>
+
+<h4 id="cartproductquantity"><code class="language-plaintext highlighter-rouge">cartProductQuantity</code></h4>
+<p>Returns quantity of the product in the cart. Takes following parameters:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">sku</code>: SKU of the product</li>
+</ul>
+
+<h3 id="usage-example-2">Usage example</h3>
+<p><code class="language-plaintext highlighter-rouge">CartProvider</code> already wraps whole application, so we can access data or functions in any child component. To do so, we use <code class="language-plaintext highlighter-rouge">useCart</code> hook:</p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">ChildComponent</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="p">...</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">cart</span><span class="p">,</span> <span class="nx">cartSize</span><span class="p">,</span> <span class="nx">addToCart</span><span class="p">,</span> <span class="nx">removeFromCart</span><span class="p">,</span> <span class="nx">updateQuantity</span><span class="p">,</span> <span class="nx">clearCart</span><span class="p">,</span> <span class="nx">cartProductQuantity</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">useCart</span><span class="p">();</span>
+    <span class="p">...</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="p">...</span>
+    <span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="cookieprovider">CookieProvider</h2>
+<p><code class="language-plaintext highlighter-rouge">CookieProvider</code> is a context provider that provides information about the user’s cookies as well as some usefull functions to its children. It is used only in <code class="language-plaintext highlighter-rouge">Storefront</code> component.</p>
+
+<h3 id="parameters-3">Parameters</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">children</code>: React component that is wrapped by the provider</li>
+</ul>
+
+<h3 id="return-value-3">Return value</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">cookieState</code> - set consisting of set of boolean flags:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">neccessaryCookies</code> - whether the user has accepted neccessary cookies</li>
+      <li><code class="language-plaintext highlighter-rouge">preferenceCookies</code> - whether the user has accepted preference cookies</li>
+      <li><code class="language-plaintext highlighter-rouge">statisticalCookies</code> - whether the user has accepted statistical cookies</li>
+      <li><code class="language-plaintext highlighter-rouge">adsCookies</code> - whether the user has accepted ads cookies</li>
+      <li><code class="language-plaintext highlighter-rouge">openDisclaimer</code> - whether to show cookie disclaimer</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">setCookieState</code> - function for setting cookie state</li>
+  <li><code class="language-plaintext highlighter-rouge">setCookieSettingToCookies</code> - function for setting cookie setting to cookies</li>
+  <li><code class="language-plaintext highlighter-rouge">toggleDisclaimer</code> - function for toggling cookie disclaimer</li>
+</ul>
+
+<h3 id="functions-provided-by-cookieprovider">Functions provided by <code class="language-plaintext highlighter-rouge">CookieProvider</code></h3>
+<h4 id="setcookiestate"><code class="language-plaintext highlighter-rouge">setCookieState</code></h4>
+<p>Sets cookie state. Takes following parameters:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">key</code>: type of cookie</li>
+  <li><code class="language-plaintext highlighter-rouge">value</code>: boolean value to set to the cookie</li>
+</ul>
+
+<h4 id="setcookiesettingtocookies"><code class="language-plaintext highlighter-rouge">setCookieSettingToCookies</code></h4>
+<p>Sets cookie setting to cookies. Takes following parameters:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">allTrue</code>: whether all cookies are accepted</li>
+</ul>
+
+<h4 id="toggledisclaimer"><code class="language-plaintext highlighter-rouge">toggleDisclaimer</code></h4>
+<p>Toggles cookie disclaimer. Takes following parameters:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">value</code>: whether to show cookie disclaimer</li>
+</ul>
+
+<h3 id="usage-example-3">Usage example</h3>
+<p><code class="language-plaintext highlighter-rouge">CookieProvider</code> already wraps whole application, so we can access data or functions in any child component. To do so, we use <code class="language-plaintext highlighter-rouge">useCookie</code> hook:</p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">ChildComponent</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="p">...</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">cookieState</span><span class="p">,</span> <span class="nx">setCookieState</span><span class="p">,</span> <span class="nx">setCookieSettingToCookies</span><span class="p">,</span> <span class="nx">toggleDisclaimer</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">useCookie</span><span class="p">();</span>
+    <span class="p">...</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="p">...</span>
+    <span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="countryprovider">CountryProvider</h2>
+<p><code class="language-plaintext highlighter-rouge">CountryProvider</code> is a context provider that provides information about the country that is currently set by the user, as well as some usefull functions to its children. It is used only in <code class="language-plaintext highlighter-rouge">Storefront</code> component.</p>
+
+<h3 id="parameters-4">Parameters</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">children</code>: React component that is wrapped by the provider</li>
+</ul>
+
+<h3 id="return-value-4">Return value</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">country</code>: object representing country. Consists of:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">code</code> - id of the country</li>
+      <li><code class="language-plaintext highlighter-rouge">name</code> - name of the country</li>
+      <li><code class="language-plaintext highlighter-rouge">locale</code> - locale of the country</li>
+      <li><code class="language-plaintext highlighter-rouge">default_price_list</code> - id of the default price list of the country</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">countryList</code>: list of <code class="language-plaintext highlighter-rouge">country</code> objects - all available countries</li>
+  <li><code class="language-plaintext highlighter-rouge">setCountryCookieAndLocale</code> - function for setting country cookie and locale</li>
+</ul>
+
+<h3 id="functions-provided-by-countryprovider">Functions provided by <code class="language-plaintext highlighter-rouge">CountryProvider</code></h3>
+<h4 id="setcountrycookieandlocale"><code class="language-plaintext highlighter-rouge">setCountryCookieAndLocale</code></h4>
+<p>Sets country cookie and locale. Takes following parameters:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">countryCode</code>: code of the country</li>
+</ul>
+
+<h3 id="usage-example-4">Usage example</h3>
+<p><code class="language-plaintext highlighter-rouge">CountryProvider</code> already wraps whole application, so we can access data or functions in any child component. To do so, we use <code class="language-plaintext highlighter-rouge">useCountry</code> hook:</p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">ChildComponent</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="p">...</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">country</span><span class="p">,</span> <span class="nx">countryList</span><span class="p">,</span> <span class="nx">setCountryCookieAndLocale</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">useCountry</span><span class="p">();</span>
+    <span class="p">...</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="p">...</span>
+    <span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="recommenderprovider">RecommenderProvider</h2>
+<p><code class="language-plaintext highlighter-rouge">RecommenderProvider</code> is a context provider that provides information about the user’s recommender session as well as some usefull functions to send either recommender event or retrive recommendations. It is used only in <code class="language-plaintext highlighter-rouge">Storefront</code> component.</p>
+
+		</article>
+	</section>
+
+	<script>
+		document.getElementById("open-nav").addEventListener("click", function () {
+			document.body.classList.toggle("nav-open");
+		});
+	</script>
+</body>
+
+</html>

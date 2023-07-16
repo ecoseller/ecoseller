@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Administration | ecoseller</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Administration" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Table of contents:" />
+<meta property="og:description" content="Table of contents:" />
+<link rel="canonical" href="http://localhost:4000/administration/administration/" />
+<meta property="og:url" content="http://localhost:4000/administration/administration/" />
+<meta property="og:site_name" content="ecoseller" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Administration" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","description":"Table of contents:","headline":"Administration","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/siteicon.png"}},"url":"http://localhost:4000/administration/administration/"}</script>
+<!-- End Jekyll SEO tag -->
+
+	<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="ecoseller" />
+
+	<link rel="stylesheet"
+		href="//fonts.googleapis.com/css?family=Merriweather:400,400italic,700,700italic|Open+Sans:400,400italic,600,600italic,700,700italic|Inconsolata:400,700">
+	<link rel="stylesheet" href="/css/main.css">
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" href="/touch-icon.png" sizes="192x192">
+	<link rel="icon" type="image/png" href="/images/favicon.ico">
+
+	
+</head>
+
+<body>
+	<header>
+		<h1>
+			<a style="color: black;" href="/"><img src="/images/emblem.svg"
+					width="100" height="100" alt="ecoseller logo"></a>
+			<a>ecoseller</a>
+			<button type="button" class="open-nav" id="open-nav"></button>
+		</h1>
+
+		<form action="/search/" method="get">
+			<input type="text" name="q" id="search-input" placeholder="Search" autofocus>
+			<input type="submit" value="Search" style="display: none;">
+		</form>
+
+		<nav class="full-navigation" >
+			<ul>
+				<li class="nav-item top-level ">
+					
+					<a href="/">Introduction</a>
+				</li>
+			</ul>
+
+			<ul>
+				
+				
+				<li class="nav-item top-level current">
+					
+					<a href="/administration/installation/">Administration documentation</a>
+					<ul>
+						
+						<li class="nav-item "><a
+								href="/administration/installation/">Installation</a></li>
+						
+						<li class="nav-item current"><a
+								href="/administration/administration/">Administration</a></li>
+						
+						<li class="nav-item "><a
+								href="/administration/localization/">Localization</a></li>
+						
+						<li class="nav-item "><a
+								href="/administration/authorization/">Authorization</a></li>
+						
+					</ul>
+				</li>
+				
+				<li class="nav-item top-level ">
+					
+					<a href="/programming/technical-design/">Programming documentation</a>
+					<ul>
+						
+						<li class="nav-item "><a
+								href="/programming/technical-design/">Technical design</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/backend/">Backend</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/dashboard_storefront/">Dashboard and Storefront</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/recommender_system/">Recommender system</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/supportive_services/">Supportive services</a></li>
+						
+					</ul>
+				</li>
+				
+				<li class="nav-item top-level ">
+					
+					<a href="/user/dashboard/">User category</a>
+					<ul>
+						
+						<li class="nav-item "><a
+								href="/user/dashboard/">User documentation - Dashboard</a></li>
+						
+						<li class="nav-item "><a
+								href="/user/storefront/">User documentation - Storefront</a></li>
+						
+					</ul>
+				</li>
+				
+			</ul>
+
+			<ul>
+				<li class="nav-item top-level ">
+					
+					<a href="/contribution/">Contribution</a>
+				</li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="main">
+		<div class="page-header">
+			<h2>Administration documentation</h2>
+			<h3>Administration</h3>
+		</div>
+		<article class="content">
+			<p>Table of contents:</p>
+<ul id="markdown-toc">
+  <li><a href="#working-with-ecoseller-rest-api" id="markdown-toc-working-with-ecoseller-rest-api">Working with <strong>ecoseller</strong> REST API</a>    <ul>
+      <li><a href="#authentication" id="markdown-toc-authentication">Authentication</a>        <ul>
+          <li><a href="#obtaining-a-jwt" id="markdown-toc-obtaining-a-jwt">Obtaining a JWT</a></li>
+          <li><a href="#using-a-jwt" id="markdown-toc-using-a-jwt">Using a JWT</a></li>
+        </ul>
+      </li>
+      <li><a href="#api-documentation" id="markdown-toc-api-documentation">API documentation</a></li>
+    </ul>
+  </li>
+  <li><a href="#user-management" id="markdown-toc-user-management">User management</a>    <ul>
+      <li><a href="#creating-an-initial-admin-user-without-dashboard" id="markdown-toc-creating-an-initial-admin-user-without-dashboard">Creating an initial admin user without dashboard</a></li>
+    </ul>
+  </li>
+  <li><a href="#managing-database" id="markdown-toc-managing-database">Managing database</a>    <ul>
+      <li><a href="#django---postgresql-connection" id="markdown-toc-django---postgresql-connection">Django &lt;-&gt; PostgreSQL connection</a></li>
+      <li><a href="#binding-database-to-a-local-folder" id="markdown-toc-binding-database-to-a-local-folder">Binding database to a local folder</a></li>
+      <li><a href="#running-migrations" id="markdown-toc-running-migrations">Running migrations</a></li>
+      <li><a href="#backing-up-database" id="markdown-toc-backing-up-database">Backing up database</a></li>
+      <li><a href="#restoring-database" id="markdown-toc-restoring-database">Restoring database</a></li>
+    </ul>
+  </li>
+  <li><a href="#static-files-and-media" id="markdown-toc-static-files-and-media">Static files and media</a></li>
+  <li><a href="#implementing-payment-methods-paymentapi" id="markdown-toc-implementing-payment-methods-paymentapi">Implementing payment methods (<code class="language-plaintext highlighter-rouge">PaymentAPI</code>)</a>    <ul>
+      <li><a href="#payment-gateway-integration-process" id="markdown-toc-payment-gateway-integration-process">Payment Gateway Integration Process</a>        <ul>
+          <li><a href="#paybysquaremethod" id="markdown-toc-paybysquaremethod"><code class="language-plaintext highlighter-rouge">PayBySquareMethod</code></a></li>
+          <li><a href="#onlinepaymentmethod" id="markdown-toc-onlinepaymentmethod"><code class="language-plaintext highlighter-rouge">OnlinePaymentMethod</code></a></li>
+        </ul>
+      </li>
+      <li><a href="#recommendations" id="markdown-toc-recommendations">Recommendations</a></li>
+    </ul>
+  </li>
+  <li><a href="#connecting-external-services-notificationapi" id="markdown-toc-connecting-external-services-notificationapi">Connecting external services (<code class="language-plaintext highlighter-rouge">NotificationAPI</code>)</a>    <ul>
+      <li><a href="#key-features-of-the-ecoseller-notification-api" id="markdown-toc-key-features-of-the-ecoseller-notification-api">Key Features of the ecoseller Notification API:</a></li>
+      <li><a href="#usage" id="markdown-toc-usage">Usage</a>        <ul>
+          <li><a href="#configuring-notification-api-configuration" id="markdown-toc-configuring-notification-api-configuration">Configuring Notification API configuration</a></li>
+        </ul>
+      </li>
+      <li><a href="#todo" id="markdown-toc-todo">TODO:</a></li>
+    </ul>
+  </li>
+  <li><a href="#search-engine" id="markdown-toc-search-engine">Search engine</a>    <ul>
+      <li><a href="#indexing-products-to-elasticsearch" id="markdown-toc-indexing-products-to-elasticsearch">Indexing products to Elasticsearch</a>        <ul>
+          <li><a href="#automation-with-cron-job" id="markdown-toc-automation-with-cron-job">Automation with CRON job</a></li>
+        </ul>
+      </li>
+      <li><a href="#turning-off-elasticsearch" id="markdown-toc-turning-off-elasticsearch">Turning off Elasticsearch</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="working-with-ecoseller-rest-api">Working with <strong>ecoseller</strong> REST API</h1>
+<p>The ecoseller platform provides a comprehensive and powerful REST API that allows developers to interact with and extend the functionality of the e-commerce platform. This section of the documentation focuses on working with the ecoseller REST API and provides detailed guidance on utilizing its endpoints and authentication mechanisms. Please note that the ecoseller REST API was designed to be used primarily for dashboard purposes and is not intended to be used as a public API for the ecoseller platform. However, feel free to use it as you see fit.
+On the other hand, please consider using <code class="language-plaintext highlighter-rouge">NotificationAPI</code> for public API purposes and calling external services directly from ecoseller backend.</p>
+<h2 id="authentication">Authentication</h2>
+<p>Ecoseller’s REST API authentication relies on JSON Web Tokens (JWT) to secure and authorize API requests. JWT is a compact and self-contained token format that securely transmits information between parties using digitally signed tokens. In the context of ecoseller, JWTs are utilized to authenticate and authorize API access intended for dashboard.</p>
+<h3 id="obtaining-a-jwt">Obtaining a JWT</h3>
+<p>To obtain a JWT, you need to send a POST request to the <code class="language-plaintext highlighter-rouge">/user/login/</code> endpoint with the following payload:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your_email"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your_password"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"dashboard_login"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>If the provided credentials are valid, the API will return a response containing the JWT token:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"access"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your_access_token"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"refresh"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your_refresh_token"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">access</code> token is used to authenticate API requests, while the <code class="language-plaintext highlighter-rouge">refresh</code> token is used to obtain a new access token once the current one expires. The access token is valid for 5 minutes, while the refresh token is valid for 24 hours. To obtain a new access token, you need to send a POST request to the <code class="language-plaintext highlighter-rouge">/user/refresh-token/</code> endpoint with the following payload:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"refresh"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your_refresh_token"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>If the provided refresh token is valid, the API will return a response containing the new access token:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"access"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your_new_access_token"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="using-a-jwt">Using a JWT</h3>
+
+<p>Once you obtain a JWT, you need to include it in the <code class="language-plaintext highlighter-rouge">Authorization</code> header of your API requests. The header should have the following format:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Authorization: JWT your_access_token
+</code></pre></div></div>
+
+<h2 id="api-documentation">API documentation</h2>
+<p>The ecoseller backend provides a comprehensive API documentation that can be accessed by navigating to the <code class="language-plaintext highlighter-rouge">/api/docs/</code> endpoint. This documentation is generated automatically using the <a href="https://drf-yasg.readthedocs.io/en/stable/">drf-yasg</a> package and provides detailed information about the available endpoints, their parameters, and the expected responses. 
+Please make sure to use primairly <code class="language-plaintext highlighter-rouge">/dashboard</code> endpoints since they’re designed to to modify data and require authentication. Storefront endpoints don’t.</p>
+
+<h1 id="user-management">User management</h1>
+<p>The user management functionality in <strong>ecoseller’s</strong> dashboard allows administrators to create and manage user accounts with various roles and permissions. This section of the administration documentation focuses on the process of creating a initial user in <strong>ecoseller</strong> using the Django Command-Line Interface (CLI).</p>
+
+<p>A admin is a special type of user account which has access to all administrative functions and controls within the <strong>ecoseller</strong> platform. Creating an initial admin user is an essential step in setting up your <strong>ecoseller</strong> administration panel, as it provides you with all privileges to manage and configure your e-commerce platform.
+All other admin users can be allways setup in the dashboard, but you need at least one user to be able to login to the dashboard.
+For more information about roles, permissions and users in general, please refer to <a href="./authroization">Authorization section in admin. documentation</a>.</p>
+
+<h2 id="creating-an-initial-admin-user-without-dashboard">Creating an initial admin user without dashboard</h2>
+<p>Creating an admin user without dashboard can be done through the Django CLI. To do so, run the following command:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 manage.py createsuperuser
+</code></pre></div></div>
+
+<h1 id="managing-database">Managing database</h1>
+<p>Ecoseller utilizes a PostgreSQL database to store and manage data. This section of the documentation focuses on managing a PostgreSQL database within a Docker container and connecting it to a Django application.</p>
+
+<h2 id="django---postgresql-connection">Django &lt;-&gt; PostgreSQL connection</h2>
+<p>The Django application is configured to connect to a PostgreSQL database using the following environment variables:</p>
+<pre><code class="language-env">POSTGRES_DB=ecoseller
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_HOST=postgres_backend
+POSTGRES_PORT=5432
+</code></pre>
+
+<h2 id="binding-database-to-a-local-folder">Binding database to a local folder</h2>
+<p>To persist the data in the PostgreSQL container, you can bind a local folder on your host machine to the container’s data directory using Docker Compose.
+In your docker-compose.yml file, add the following volume configuration under the services section for the <code class="language-plaintext highlighter-rouge">postgres_backend</code> container:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">volumes</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">./backend/postgres/data:/var/lib/postgresql/data/</span>
+</code></pre></div></div>
+<p>This configuration ensures that the PostgreSQL data is stored in the <code class="language-plaintext highlighter-rouge">./src/backend/postgres</code> folder on your local machine.</p>
+<h2 id="running-migrations">Running migrations</h2>
+<p>It shouldn’t be neccessary to run migrations manually, but if you need to do so, you can run the following command:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 manage.py makemigrations
+python3 manage.py migrate
+</code></pre></div></div>
+
+<h2 id="backing-up-database">Backing up database</h2>
+<p>It is crucial to regularly back up your PostgreSQL database to prevent data loss and ensure data integrity.
+Use the pg_dump utility to create a backup of the database. Run the following command to back up the database to a file:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pg_dump <span class="nt">-U</span> your_username <span class="nt">-d</span> your_database_name <span class="nt">-f</span> /path/to/backup.sql
+
+</code></pre></div></div>
+<p>Replace <code class="language-plaintext highlighter-rouge">your_username</code> and <code class="language-plaintext highlighter-rouge">your_database_name</code> with the appropriate values. Specify the path where you want to save the backup file.</p>
+<h2 id="restoring-database">Restoring database</h2>
+<p>To restore a PostgreSQL database from a backup file, use the pg_restore utility.
+Run the following command to restore the database from a backup file:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pg_restore <span class="nt">-U</span> your_username <span class="nt">-d</span> your_database_name /path/to/backup.sql
+</code></pre></div></div>
+<p>Replace <code class="language-plaintext highlighter-rouge">your_username</code>, <code class="language-plaintext highlighter-rouge">your_database_name</code>, and <code class="language-plaintext highlighter-rouge">/path/to/backup.sql</code> with the appropriate values.</p>
+
+<h1 id="static-files-and-media">Static files and media</h1>
+<p>Ecoseller currently supports storing static and media files using local storage. While it does not natively integrate with object storage services like Amazon S3, it is possible to implement such functionality using the Python package s3boto3.</p>
+
+<h1 id="implementing-payment-methods-paymentapi">Implementing payment methods (<code class="language-plaintext highlighter-rouge">PaymentAPI</code>)</h1>
+<p>This guide will walk you through the process of extending the Core application with new payment methods without encountering conflicts with the existing codebase. By following the provided guidelines and leveraging the system’s flexible architecture, you’ll be able to seamlessly integrate various online payment gateways into your ecoseller ecommerce platform.</p>
+
+<p>Integrating online payment gateways into your ecommerce system offers numerous advantages. It allows your customers to securely make payments using their preferred payment methods, which can boost conversion rates and provide a seamless checkout experience. The ecoseller system’s architecture has been designed to make the implementation of new payment methods straightforward, enabling you to expand your payment gateway options as your business grows.</p>
+
+<h2 id="payment-gateway-integration-process">Payment Gateway Integration Process</h2>
+
+<p>To implement a new payment method within the ecoseller ecommerce system, you will need to follow these steps:</p>
+
+<ol>
+  <li>
+    <p>Choose the appropriate base class:
+Your new payment method should inherit from either the <code class="language-plaintext highlighter-rouge">PayBySquareMethod</code> class or the <code class="language-plaintext highlighter-rouge">OnlinePaymentMethod</code> class. Both of these classes are derived from the <code class="language-plaintext highlighter-rouge">BasePaymentMethod</code> class and can be imported from <code class="language-plaintext highlighter-rouge">core.api.payments.modules.BasePaymentMethod</code>. Select the base class that aligns with the requirements of the payment gateway you are integrating. <code class="language-plaintext highlighter-rouge">PayBySquareMethod</code> is used in situations where it’s neccessary to provide user payment QR code. On the other hand <code class="language-plaintext highlighter-rouge">OnlinePaymentMethod</code> is used for generating link for third party payment gateway where is user usually redirected.
+<strong>Note that classes inherited from <code class="language-plaintext highlighter-rouge">BasePaymentMethod</code> obtain instance of <code class="language-plaintext highlighter-rouge">Order</code> model (see <code class="language-plaintext highlighter-rouge">core.order.models</code>) on initialization. So you can freely access data of <code class="language-plaintext highlighter-rouge">Order</code> and <code class="language-plaintext highlighter-rouge">Cart</code>.</strong></p>
+  </li>
+  <li>
+    <p>Create a new payment method class:
+In your codebase, create a new class that extends the chosen base class. Ideally put your code into separate file stored in <code class="language-plaintext highlighter-rouge">core/api/payments/modules</code>. Provide a meaningful name for the class that reflects the payment gateway you are integrating. For example, if integrating the “XYZ Gateway,” you could name your class XYZGatewayMethod.
+Implement the necessary methods:</p>
+  </li>
+</ol>
+
+<h3 id="paybysquaremethod"><code class="language-plaintext highlighter-rouge">PayBySquareMethod</code></h3>
+<p><code class="language-plaintext highlighter-rouge">PayBySquareMethod</code> is used to return Base64 encoded image and provide payment data such as IBAN, BIC, etc. In order to implement a payment method inherited from <code class="language-plaintext highlighter-rouge">PayBySquareMethod</code> you need to define two methods:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">pay</code> - it’s expected that this method return a dictonary containing two required keys.</li>
+  <li>
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">qr_code</code> - Base64 encoded image of the payment QR</li>
+    </ul>
+  </li>
+  <li>
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">payment_data</code> - dictionary containing payment information stored in text with keys such as <code class="language-plaintext highlighter-rouge">amount</code>, <code class="language-plaintext highlighter-rouge">IBAN</code>, <code class="language-plaintext highlighter-rouge">payment_identification</code>, etc.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">status</code> - method returning <code class="language-plaintext highlighter-rouge">PaymentStatus</code> (<code class="language-plaintext highlighter-rouge">core.api.payments.conf.PaymentStatus</code>). So for example - calling API of your bank and checking icomming payments.</li>
+</ul>
+
+<h3 id="onlinepaymentmethod"><code class="language-plaintext highlighter-rouge">OnlinePaymentMethod</code></h3>
+<p><code class="language-plaintext highlighter-rouge">OnlinePaymentMethod</code> is used to return payment link so that user can be redirected. In order to implement a payment method inherited from <code class="language-plaintext highlighter-rouge">OnlinePaymentMethod </code> you need to define two methods:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">pay</code> - it’s expected that this method return a dictonary containing two required keys.</li>
+  <li>
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">payment_url</code> - link to the payment gateway (usually provided by the payment gateway API with <code class="language-plaintext highlighter-rouge">payment_id</code> in it).</li>
+    </ul>
+  </li>
+  <li>
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">payment_id</code> - ID of the payment in the payment gateway</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">status</code> - method returning <code class="language-plaintext highlighter-rouge">PaymentStatus</code> (<code class="language-plaintext highlighter-rouge">core.api.payments.conf.PaymentStatus</code>). Usually implemented as a wrapper around payment gateway’s status getter.</li>
+</ul>
+
+<p>Examples:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">.BasePaymentMethod</span> <span class="kn">import</span> <span class="n">OnlinePaymentMethod</span><span class="p">,</span> <span class="n">PayBySquareMethod</span>
+<span class="kn">from</span> <span class="nn">..conf</span> <span class="kn">import</span> <span class="n">PaymentStatus</span>
+
+
+<span class="k">class</span> <span class="nc">TestGateway</span><span class="p">(</span><span class="n">OnlinePaymentMethod</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">pay</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">"payment_url"</span><span class="p">:</span> <span class="s">"https://payment.url"</span><span class="p">,</span> <span class="s">"payment_id"</span><span class="p">:</span> <span class="s">"1234567890"</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PaymentStatus</span><span class="p">:</span>
+        <span class="s">"""
+        Moc status and return paid with some probability
+        """</span>
+        <span class="kn">import</span> <span class="nn">random</span>
+
+        <span class="k">if</span> <span class="n">random</span><span class="p">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">PaymentStatus</span><span class="p">.</span><span class="n">PAID</span>
+        <span class="k">return</span> <span class="n">PaymentStatus</span><span class="p">.</span><span class="n">PENDING</span>
+
+<span class="k">class</span> <span class="nc">BankTransfer</span><span class="p">(</span><span class="n">PayBySquareMethod</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">pay</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">bic</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">kwargs</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"bic"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">iban</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">kwargs</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"iban"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">currency</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">kwargs</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"currency"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">variable_symbol</span> <span class="o">=</span> <span class="mi">123456789</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">amount</span> <span class="o">=</span> <span class="mi">100</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s">"qr_code"</span><span class="p">:</span> <span class="s">"base64 encoded image"</span><span class="p">,</span>
+            <span class="s">"payment_data"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">"amount"</span><span class="p">:</span> <span class="bp">self</span><span class="p">.</span><span class="n">amount</span><span class="p">,</span>
+                <span class="s">"currency"</span><span class="p">:</span> <span class="bp">self</span><span class="p">.</span><span class="n">currency</span><span class="p">,</span>
+                <span class="s">"variable_symbol"</span><span class="p">:</span> <span class="bp">self</span><span class="p">.</span><span class="n">variable_symbol</span><span class="p">,</span>
+                <span class="s">"iban"</span><span class="p">:</span> <span class="bp">self</span><span class="p">.</span><span class="n">iban</span><span class="p">,</span>
+                <span class="s">"bic"</span><span class="p">:</span> <span class="bp">self</span><span class="p">.</span><span class="n">bic</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PaymentStatus</span><span class="p">:</span>
+        <span class="s">"""
+        Mock status and return paid with some probability
+        """</span>
+        <span class="kn">import</span> <span class="nn">random</span>
+
+        <span class="k">if</span> <span class="n">random</span><span class="p">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">PaymentStatus</span><span class="p">.</span><span class="n">PAID</span>
+        <span class="k">return</span> <span class="n">PaymentStatus</span><span class="p">.</span><span class="n">PENDING</span>
+
+</code></pre></div></div>
+
+<ol>
+  <li>Registering payment method in the <code class="language-plaintext highlighter-rouge">Core</code>
+In order to let the <code class="language-plaintext highlighter-rouge">Core</code> know about your payment methods, you need to define JSON configuration file. This file can be stored anywhere within accessible space for the <code class="language-plaintext highlighter-rouge">core</code>. However, to keep ecoseller practices, we recommend to store this file in <code class="language-plaintext highlighter-rouge">core/config/payments.json</code> (default path). Your custom path must be stored in the <code class="language-plaintext highlighter-rouge">PAYMENT_CONFIG_PATH</code> environment variable.</li>
+</ol>
+
+<p>It’s a dictionary containing unique identifiers of payment methods. Those identifiers are up to you, the only requirement is that you keep the unique constraint and that the name makes somehow sense. You will use this name also in the <code class="language-plaintext highlighter-rouge">dashboard</code> to link the payment method with your backend implementation.</p>
+
+<p>Every payment method is required to have <code class="language-plaintext highlighter-rouge">implementation</code> key which is in the format <code class="language-plaintext highlighter-rouge">{module}.{class}</code>, so for example <code class="language-plaintext highlighter-rouge">api.payments.modules.BankTransfer.BankTransfer</code> or <code class="language-plaintext highlighter-rouge">api.payments.modules.TestGateway.TestGateway</code>. You can use optional key <code class="language-plaintext highlighter-rouge">kwargs</code> (keyword arguments) into which you can store everything constant that you want to access in the <code class="language-plaintext highlighter-rouge">BasePaymentMethod</code> implementation (it’s stored into <code class="language-plaintext highlighter-rouge">self.kwargs</code> variable 😉). Usually this is used to pass your IBAN, … into <code class="language-plaintext highlighter-rouge">PayBySquareMethod</code> or public key or path to public certificate into <code class="language-plaintext highlighter-rouge">OnlinePaymentMethod </code>.</p>
+
+<p>Example:</p>
+
+<pre><code class="language-JSON">{
+    "BANKTRANSFER_EUR": {
+        "implementation": "api.payments.modules.BankTransfer.BankTransfer",
+        "kwargs": {
+            "currency": "EUR",
+            "bankName": "Deutsche Bank",
+            "accountNumber": "DE12500105170648489890",
+            "swiftCode": "DEUTDEDBBER"
+        }
+    },
+    "BANKTRANSFER_CZK": {
+        "implementation": "api.payments.modules.BankTransfer.BankTransfer",
+        "kwargs": {
+            "currency": "CZK",
+            "bankName": "CŠOB",
+            "accountNumber": "CZ5855000000001265098001",
+            "swiftCode": "CEKOCZPP"
+        }
+    },
+    "TEST_API": {
+        "implementation": "api.payments.modules.TestGateway.TestGateway",
+        "kwargs": {
+            "merchant": "123456",
+            "secret": "1234567890abcdef1234567890abcdef",
+            "url": "https://payments.comgate.cz/v1.0/"
+        }
+    }
+}
+</code></pre>
+
+<ol>
+  <li>Binding payment method to the implementation
+So you have your payment method implementation ready and want to bind to your payment method object. On the <code class="language-plaintext highlighter-rouge">PaymentMethodCountry</code> model is a field ready for this situation. There’re two ways to do it:</li>
+</ol>
+
+<ul>
+  <li>
+    <p><strong>Using dashboard:</strong> Navigate to the detail of payment method (Cart/Payment Methods) in the dashboard, scroll to <em>Country variants</em> and set <code class="language-plaintext highlighter-rouge">API Request</code> for required country variant.</p>
+  </li>
+  <li>
+    <p><strong>Using direct database access:</strong> Find <code class="language-plaintext highlighter-rouge">cart_paymentmethodcountry</code> table in your database and set <code class="language-plaintext highlighter-rouge">api_request</code> field for the specific row the the value which you used as unique identifier of your payment method in the <code class="language-plaintext highlighter-rouge">JSON</code> config. So for example <code class="language-plaintext highlighter-rouge">BANKTRANSFER_CZK</code>. However direct database access is not recommended.</p>
+  </li>
+</ul>
+
+<ol>
+  <li>Now you only need to process the data correctly on the storefront and you’re ready to go. So either redirect you user automatically, show the payment square or do something else. We tried to make it generic so that it’s not anyhow limiting for your specific use-case.</li>
+</ol>
+
+<h2 id="recommendations">Recommendations</h2>
+<p>Because online payments are crucial part for customer’s safety and comfort, we recommend to use online payment gateways that are known to the users in specific country. For example, don’t use czech payment gateway for german customers and vice-versa. Use something that your customers know and are familiar with. Due to that we decided that we will allow to bind payment method implementation to every country variant.</p>
+
+<h1 id="connecting-external-services-notificationapi">Connecting external services (<code class="language-plaintext highlighter-rouge">NotificationAPI</code>)</h1>
+<p>This comprehensive guide will provide you with all the necessary information to seamlessly extend ecoseller’s functionality by leveraging external APIs. With the Notification API, you can effortlessly integrate your own systems and services to respond to specific events within the ecoseller platform, such as product save, order save, and more.</p>
+
+<p>The ecoseller Notification API empowers you to enhance your ecoseller experience by enabling real-time communication and synchronization with external applications. By leveraging this API, you can ensure that your external systems stay up to date with the latest changes and events happening within ecoseller, allowing for a seamless and efficient workflow.</p>
+
+<p>This documentation will walk you through the entire process of integrating the Notification API into your application. You’ll learn how to configure endpoints and interpret the data sent by ecoseller.</p>
+
+<h3 id="key-features-of-the-ecoseller-notification-api">Key Features of the ecoseller Notification API:</h3>
+
+<p><strong>Event-based Triggers:</strong> The notifications API allows you to define specific events within ecoseller, such as <code class="language-plaintext highlighter-rouge">PRODUCT_SAVE</code> and <code class="language-plaintext highlighter-rouge">ORDER_SAVE</code>. These events serve as triggers for the notifications.</p>
+
+<p><strong>Multiple Notification Types:</strong> The API supports various notification types, including <code class="language-plaintext highlighter-rouge">RECOMMENDERAPI</code>, <code class="language-plaintext highlighter-rouge">HTTP</code>, and <code class="language-plaintext highlighter-rouge">EMAIL</code>. You can choose the appropriate type based on your integration requirements.</p>
+
+<p><strong>Flexible Methods:</strong> Each notification type can have different methods associated with it. For example, for the <code class="language-plaintext highlighter-rouge">RECOMMENDERAPI</code> type, the method <code class="language-plaintext highlighter-rouge">store_object</code> is used, while for the <code class="language-plaintext highlighter-rouge">HTTP</code> type, methods like <code class="language-plaintext highlighter-rouge">POST</code> are utilized.</p>
+
+<p><strong>HTTP Integration:</strong> The API allows you to send HTTP requests to external endpoints by specifying the URL. This enables seamless integration with other systems or services that can receive and process the notifications.</p>
+
+<p><strong>Email Notifications:</strong> With the “EMAIL” type, you can send email notifications related to specific events. In the given configuration file, the “send_order_confirmation” method is used to trigger the sending of an order confirmation email.
+Customization: The JSON configuration file provides flexibility for customization. You can easily add or modify notification types, methods, and URLs based on your specific integration requirements.</p>
+
+<p><strong>Expandable Event List:</strong> The JSON configuration can be extended to include additional events and corresponding notifications. This allows you to adapt the API to match a wide range of events and actions within the ecoseller platform.</p>
+
+<p>By leveraging these key features of the notifications API, you can extend the functionality of ecoseller by seamlessly integrating with external systems, such as recommender engines, HTTP-based APIs, and email services. This enables you to create powerful workflows and automate processes based on specific events occurring within ecoseller.</p>
+
+<h2 id="usage">Usage</h2>
+<p>Here is some example (default) NotificationAPI configuration.</p>
+
+<h3 id="configuring-notification-api-configuration">Configuring Notification API configuration</h3>
+<p>To configure your notifications, you need to edit provided JSON configurations in the Core component.</p>
+
+<p>The provided configuration might look like this:</p>
+<pre><code class="language-JSON">{
+    "PRODUCT_SAVE": [
+        {
+            "type": "RECOMMENDERAPI",
+            "method": "store_object"
+        },
+        {
+            "type": "HTTP",
+            "method": "POST",
+            "url": "http://example.com/api/product"
+        }
+    ],
+    "ORDER_SAVE": [
+        {
+            "type": "HTTP",
+            "method": "POST",
+            "url": "http://example.com/api/order"
+        },
+        {
+            "type": "EMAIL",
+            "method": "send_order_confirmation"
+        }
+    ]
+}
+</code></pre>
+
+<p>As you can see, for every trigger you can setup list of events that will be performed. There are multiple actions you can perform:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">HTTP</code> type: this action requires to have <code class="language-plaintext highlighter-rouge">method</code> and <code class="language-plaintext highlighter-rouge">url</code> provided. As the title says, <code class="language-plaintext highlighter-rouge">method</code> is mean as an HTTP Method. You can use all methods utilized by <a href="https://requests.readthedocs.io/en/latest/">Python <code class="language-plaintext highlighter-rouge">requests</code> module</a>.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">EMAIL</code> type: you can control sending e-mails using internal <code class="language-plaintext highlighter-rouge">email app</code>. Feel free to remove e-mail events that you don’t want to be sent using the Django interface.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">RECOMMENDER</code> type: if you don’t want to use provided recommendation system feature, feel free to remove events providing data to the recommender.</p>
+  </li>
+</ul>
+
+<p>We recommend to edit configuration JSON directly (core/config/notifications.json). However, you can define your custom one and installing it by setting <code class="language-plaintext highlighter-rouge">NOTIFICATIONS_CONFIG_PATH</code> as your environment variable.</p>
+
+<h2 id="todo">TODO:</h2>
+
+<p>* List of triggers</p>
+<h1 id="search-engine">Search engine</h1>
+<p><strong>ecoseller</strong> incorporates Elasticsearch as a component of its technology stack. Elasticsearch is a powerful search engine that enables <strong>ecoseller</strong> to deliver fast and accurate search results.</p>
+<h2 id="indexing-products-to-elasticsearch">Indexing products to Elasticsearch</h2>
+
+<p>To ensure efficient product searches and recommendations within Ecoseller, it is crucial to index your products in Elasticsearch. Ecoseller provides a convenient CLI command within the backend container to perform this indexing process.</p>
+
+<p>To index your products using the CLI command, follow these steps:</p>
+
+<ol>
+  <li>Access the <code class="language-plaintext highlighter-rouge">backend</code> container: If you are running <strong>ecoseller</strong> locally using Docker, open your terminal and navigate to the Ecoseller project directory. Use the following command to access the <code class="language-plaintext highlighter-rouge">backend</code> container: <code class="language-plaintext highlighter-rouge">docker exec -it &lt;your_backend_container_id_or_name&gt; /bin/bash</code></li>
+  <li>Run the indexing command: Once inside the <code class="language-plaintext highlighter-rouge">backend</code> container, run the following command to index the products in Elasticsearch: <code class="language-plaintext highlighter-rouge">python3 manage.py search_index --rebuild</code>
+This command triggers the indexing process, where the products will be parsed, analyzed, and stored in Elasticsearch for efficient searching and recommendation functionalities.</li>
+</ol>
+
+<p>Note: Ensure that you are in the correct directory within the backend container (usually the project’s root directory) before executing the command.</p>
+
+<p>The indexing process may take some time, depending on the size of your product database. Once the process is complete, your products will be fully indexed and ready for efficient searching and recommendation generation within Ecoseller.</p>
+
+<h3 id="automation-with-cron-job">Automation with CRON job</h3>
+<p>You can also automate the indexing process by scheduling a CRON job to run the indexing command at specified intervals. This ensures that your Elasticsearch index stays up to date with any changes in your product database. Set up a CRON job with the following command:
+<code class="language-plaintext highlighter-rouge">0 2 * * * docker exec &lt;your_backend_container_id_or_name&gt; python3 manage.py search_index --rebuild</code></p>
+
+<h2 id="turning-off-elasticsearch">Turning off Elasticsearch</h2>
+<p>If you no longer wish to use Elasticsearch in your Ecoseller setup, you can easily disable it by adjusting the environment variables and stopping the Elasticsearch container. Follow the steps below to turn off Elasticsearch:</p>
+<ol>
+  <li>Update environment variables: (please see dedicated section for environment variables in the installation guide) Set the <code class="language-plaintext highlighter-rouge">USE_ELASTIC</code> variable to <code class="language-plaintext highlighter-rouge">0</code> in the <code class="language-plaintext highlighter-rouge">backend</code> env file.</li>
+  <li>Stop the Elasticsearch container</li>
+  <li>Restart the <code class="language-plaintext highlighter-rouge">backend</code> container</li>
+</ol>
+
+<p>With these steps completed, Elasticsearch will be disabled in your Ecoseller setup. However, please note that this will also disable the fast search functionality within Ecoseller. Therefore, it is recommended to keep Elasticsearch enabled for user experience.</p>
+
+
+		</article>
+	</section>
+
+	<script>
+		document.getElementById("open-nav").addEventListener("click", function () {
+			document.body.classList.toggle("nav-open");
+		});
+	</script>
+</body>
+
+</html>
