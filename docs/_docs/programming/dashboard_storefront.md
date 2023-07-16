@@ -273,3 +273,82 @@ const ChildComponent = () => {
 
 ## RecommenderProvider
 `RecommenderProvider` is a context provider that provides information about the user's recommender session as well as some usefull functions to send either recommender event or retrive recommendations. It is used only in `Storefront` component.
+
+# Interceptors
+Interceptors are used to intercept requests and responses before they are handled by the application. In ecoseller, we use them to add authorization token and other data to requests and to handle errors. We use `axios` library for handling requests and responses. More information about interceptors can be found on the following links:
+* [Axios - Getting started](https://axios-http.com/docs/intro)
+* [Axios interceptors](https://axios-http.com/docs/interceptors)
+
+In further parts of this section, we assume that the reader is familiar with `axios` library and its usage from the links above.
+Interceptors in the `Dashboard` and `Storefront` differ a bit, so we will describe them separately.
+## Request interceptor - Dashboard
+In the `Dashboard`, we use request interceptor to add authorization token to requests. The interceptor is defined in `dashboard/utils/interceptors/api.ts` file.
+Fisrtly, we define `api` axios instance with base url and headers:
+```typescript
+export const api = axios.create({
+  baseURL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+  withCredentials: true,
+});
+```
+Then, we add request interceptor to the `api` instance:
+* for the request
+```typescript
+api.interceptors.request.use((config) => {
+  let access = "";
+  let refresh = "";
+  if (isServer()) {
+    access = getCookie("accessToken", { req, res }) as string;
+    refresh = getCookie("refreshToken", { req, res }) as string;
+  } else {
+    access = Cookies.get("accessToken") || "";
+    refresh = Cookies.get("refreshToken") || "";
+  }
+
+  if (access) {
+    config.headers.Authorization = `JWT ${access}`;
+  }
+  return config;
+});
+```
+* for the response
+```typescript
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error: AxiosError) => {
+    // check conditions to refresh token
+    if (
+      (error.response?.status === 401 || error.response?.status === 403) &&
+      !error.response?.config?.url?.includes("user/refresh-token") &&
+      !error.response?.config?.url?.includes("user/login")
+    ) {
+      return refreshToken(error);
+    }
+    return Promise.reject(error);
+  }
+);
+```
+Where the `refreshToken` is a function responsible for fetchiing a new access token and retrying the request. It is defined in `dashboard/utils/interceptors/api.ts` file.
+
+## Request interceptor - Storefront
+In the `Storefront`, we use request interceptor to add authorization token and country locale to requests. The interceptor is defined in `storefront/utils/interceptors/api.ts` file.
+Axios instance in the `Storefront` is defined similarly as in the `Dashboard` ([see above](#request-interceptor---dashboard)).
+The difference is in the request interceptor, where we also add a country locale to the `Accept-Language` header:
+```typescript
+api.interceptors.request.use((config) => {
+
+  ... // similar to the Dashboard
+
+  // set locale (if present)
+  const locale = getLocale();
+  if (locale) {
+    config.headers["Accept-Language"] = locale;
+  }
+
+  return config;
+});
+```
