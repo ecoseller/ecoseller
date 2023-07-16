@@ -17,7 +17,7 @@ class ProductAddToCart(ImmutableApiModel):
     user_id: Optional[int]
     product_id: int
     product_variant_sku: str
-    create_at: datetime
+    create_at: datetime = datetime.now()
 
     class Meta:
         stored_model_class = ProductAddToCartModel

@@ -59,12 +59,26 @@ export const RecommenderProvider = ({
      */
     // send POST event to Core API
     const rsSession = Cookies.get(RS_SESSION_COOKIE);
+    let new_payload = {
+      session_id: rsSession,
+      ...payload,
+    };
+    if (Array.isArray(payload)) {
+      new_payload = payload.map((item) => {
+        return {
+          session_id: rsSession,
+          ...item,
+        };
+      });
+      console.warn(JSON.stringify(new_payload));
+    }
     const data = await fetch(`/api/recommender/${event}`, {
       method: "POST",
-      body: JSON.stringify({
-        session_id: rsSession,
-        ...payload,
-      }),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ data: new_payload }),
     }).then((res) => res.json());
     console.log("data", data);
     return data;

@@ -22,7 +22,7 @@ class ProductDetailEnter(ImmutableApiModel):
     model_identifier: Optional[str]
     model_name: Optional[str]
     position: Optional[int]
-    create_at: datetime
+    create_at: datetime = datetime.now()
 
     class Meta:
         stored_model_class = ProductDetailEnterModel

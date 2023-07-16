@@ -16,8 +16,8 @@ class Review(ImmutableApiModel):
     product_id: int
     product_variant_sku: str
     rating: int
-    update_at: datetime
-    create_at: datetime
+    update_at: datetime = datetime.now()
+    create_at: datetime = datetime.now()
 
     class Meta:
         stored_model_class = ReviewModel

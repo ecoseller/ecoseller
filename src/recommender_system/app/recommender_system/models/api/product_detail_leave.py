@@ -18,7 +18,7 @@ class ProductDetailLeave(ImmutableApiModel):
     product_id: int
     product_variant_sku: str
     time_spent: float
-    create_at: datetime
+    create_at: datetime = datetime.now()
 
     class Meta:
         stored_model_class = ProductDetailLeaveModel

@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework import permissions
 
 from api.recommender_system import RecommenderSystemApi
-import copy
+from order.models import Order
 
 
 def _try_parse_number(value):
@@ -68,7 +68,7 @@ class RecommenderSystemEventView(APIView):
     def post(self, request, event):
         if event not in RSEvent:
             return Response({"message": "Unknown event!"}, status=404)
-        data = request.data
+        data = request.data["data"]
         print("DATA", data)
         if data is not None:
             if isinstance(data, dict):
@@ -78,6 +78,12 @@ class RecommenderSystemEventView(APIView):
                     request.user if request.user.is_authenticated else None
                 )
                 item["_model_class"] = RSEvent.get_model_class(event)
+                if event == RSEvent.ORDER.value:
+                    order = Order.objects.get(pk=item["token"])
+                    item["product_variants"] = [
+                        (item.product_variant.sku, item.quantity)
+                        for item in order.cart.cart_items.all()
+                    ]
             try:
                 RecommenderSystemApi.store_objects(data)
             except Exception as e:

@@ -21,7 +21,7 @@ class RecommendationView(ImmutableApiModel):
     recommendation_type: str
     model_identifier: str
     position: Optional[int]
-    create_at: datetime
+    create_at: datetime = datetime.now()
 
     class Meta:
         stored_model_class = RecommendationViewModel

@@ -34,7 +34,7 @@ const OrderCompletedPage = ({
 
   useEffect(() => {
     sendEvent("ORDER", {
-      order_id: orderId,
+      token: orderId,
     });
   }, []);
 

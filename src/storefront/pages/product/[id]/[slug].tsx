@@ -88,8 +88,8 @@ const ProductPage = ({
         data.product_variants?.map((v) => {
           return {
             product_id: data.id,
-            sku: v.sku,
-            timeSpent: (new Date().getTime() - timeEntered.getTime()) / 1000,
+            product_variant_sku: v.sku,
+            time_spent: (new Date().getTime() - timeEntered.getTime()) / 1000,
           };
         })
       );

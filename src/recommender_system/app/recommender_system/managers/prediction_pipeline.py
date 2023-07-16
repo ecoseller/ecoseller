@@ -49,15 +49,15 @@ class PredictionPipeline:
         user_id: Optional[int],
         **kwargs: Any,
     ) -> List[str]:
-        if recommendation_type == RecommendationType.HOMEPAGE.value:
+        if recommendation_type == RecommendationType.HOMEPAGE:
             return model.retrieve_homepage(session_id=session_id, user_id=user_id)
-        if recommendation_type == RecommendationType.CATEGORY_LIST.value:
+        if recommendation_type == RecommendationType.CATEGORY_LIST:
             return self._retrieve_category(category_id=kwargs["category_id"])
-        if recommendation_type == RecommendationType.PRODUCT_DETAIL.value:
+        if recommendation_type == RecommendationType.PRODUCT_DETAIL:
             return model.retrieve_product_detail(
                 session_id=session_id, user_id=user_id, variant=kwargs["variant"]
             )
-        if recommendation_type == RecommendationType.CART.value:
+        if recommendation_type == RecommendationType.CART:
             return model.retrieve_cart(
                 session_id=session_id,
                 user_id=user_id,
@@ -74,23 +74,22 @@ class PredictionPipeline:
         user_id: Optional[int],
         **kwargs: Any,
     ) -> List[str]:
-        if recommendation_type == RecommendationType.HOMEPAGE.value:
+        if recommendation_type == RecommendationType.HOMEPAGE:
             return model.score_homepage(
                 session_id=session_id, user_id=user_id, variants=variants
             )
-        if recommendation_type == RecommendationType.CATEGORY_LIST.value:
+        if recommendation_type == RecommendationType.CATEGORY_LIST:
             return model.score_category_list(
                 session_id=session_id, user_id=user_id, variants=variants
             )
-        if recommendation_type == RecommendationType.PRODUCT_DETAIL.value:
-            variant = random.choice(kwargs["variants"])
+        if recommendation_type == RecommendationType.PRODUCT_DETAIL:
             return model.score_product_detail(
                 session_id=session_id,
                 user_id=user_id,
                 variants=variants,
-                variant=variant,
+                variant=kwargs["variant"],
             )
-        if recommendation_type == RecommendationType.CART.value:
+        if recommendation_type == RecommendationType.CART:
             return model.score_cart(
                 session_id=session_id,
                 user_id=user_id,
@@ -174,20 +173,21 @@ class PredictionPipeline:
         result = self._order_by_diversity(variants=variants)
         if recommendation_type == RecommendationType.CATEGORY_LIST:
             result = self._order_by_stock(variants=result)
-        if limit is not None and limit > len(result):
+        if limit is not None and limit < len(result):
             result = result[:limit]
         return result
 
     @inject
     def run(
         self,
-        recommendation_type: RecommendationType,
+        recommendation_type: str,
         session_id: str,
         user_id: Optional[int],
         limit: Optional[int] = None,
         model_manager: ModelManager = Provide["model_manager"],
         **kwargs: Any,
     ) -> List[Dict[str, Any]]:
+        recommendation_type = RecommendationType[recommendation_type]
         retrieval_model = model_manager.get_model(
             recommendation_type=recommendation_type,
             step=PredictionPipeline.Step.RETRIEVAL,
@@ -196,6 +196,9 @@ class PredictionPipeline:
             recommendation_type=recommendation_type,
             step=PredictionPipeline.Step.SCORING,
         )
+
+        if recommendation_type == RecommendationType.PRODUCT_DETAIL:
+            kwargs["variant"] = random.choice(kwargs.pop("variants"))
 
         retrieval_start = time.time()
         predictions = self._retrieve(
@@ -229,7 +232,7 @@ class PredictionPipeline:
             retrieval_model_identifier=retrieval_model.identifier,
             scoring_model_name=scoring_model.Meta.model_name,
             scoring_model_identifier=scoring_model.identifier,
-            recommendation_type=recommendation_type,
+            recommendation_type=recommendation_type.value,
             session_id=session_id,
             retrieval_duration=scoring_start - retrieval_start,
             scoring_duration=ordering_start - scoring_start,

@@ -18,8 +18,8 @@ class Order(ApiBaseModel):
     """
 
     token: str
-    update_at: datetime
-    create_at: datetime
+    update_at: datetime = datetime.now()
+    create_at: datetime = datetime.now()
 
     session_id: str
     product_variants: List[Tuple[str, int]]
