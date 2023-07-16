@@ -86,6 +86,10 @@ This section shows selected shipping and payment methods along with their prices
 
 TODO: add image
 
+### Order item complaints
+
+TODO: describe
+
 # Reviews
 The reviews page consists of a list showing all reviews. The list has the following columns:
 * Review token
