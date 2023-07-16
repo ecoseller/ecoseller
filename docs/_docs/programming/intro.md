@@ -1,5 +1,5 @@
 ---
-title: Intro
+title: Architecture
 category: Programming documentation
 order: 1
 ---
@@ -27,7 +27,7 @@ The **ecoseller** platform includes two user-facing interfaces: the storefront a
 
 The technical design of the **ecoseller** system seamlessly integrates these components, ensuring efficient data management, reliable operations, and a delightful user experience. By combining the power of Django, PostgreSQL, Next.js, Elasticsearch, Redis, and Flask, Ecoseller delivers a feature-rich and scalable e-commerce platform for businesses of all sizes with modern technologies.
 
-
+ 
 ## Backend
 We can divide the backend part into several subsections based on the area it handles.
 ### Core Application
