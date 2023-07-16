@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>User documentation - Dashboard | ecoseller</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="User documentation - Dashboard" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Table of contents:" />
+<meta property="og:description" content="Table of contents:" />
+<link rel="canonical" href="http://localhost:4000/user/dashboard/" />
+<meta property="og:url" content="http://localhost:4000/user/dashboard/" />
+<meta property="og:site_name" content="ecoseller" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="User documentation - Dashboard" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","description":"Table of contents:","headline":"User documentation - Dashboard","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/siteicon.png"}},"url":"http://localhost:4000/user/dashboard/"}</script>
+<!-- End Jekyll SEO tag -->
+
+	<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="ecoseller" />
+
+	<link rel="stylesheet"
+		href="//fonts.googleapis.com/css?family=Merriweather:400,400italic,700,700italic|Open+Sans:400,400italic,600,600italic,700,700italic|Inconsolata:400,700">
+	<link rel="stylesheet" href="/css/main.css">
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" href="/touch-icon.png" sizes="192x192">
+	<link rel="icon" type="image/png" href="/images/favicon.ico">
+
+	
+</head>
+
+<body>
+	<header>
+		<h1>
+			<a style="color: black;" href="/"><img src="/images/emblem.svg"
+					width="100" height="100" alt="ecoseller logo"></a>
+			<a>ecoseller</a>
+			<button type="button" class="open-nav" id="open-nav"></button>
+		</h1>
+
+		<form action="/search/" method="get">
+			<input type="text" name="q" id="search-input" placeholder="Search" autofocus>
+			<input type="submit" value="Search" style="display: none;">
+		</form>
+
+		<nav class="full-navigation" >
+			<ul>
+				<li class="nav-item top-level ">
+					
+					<a href="/">Introduction</a>
+				</li>
+			</ul>
+
+			<ul>
+				
+				
+				<li class="nav-item top-level ">
+					
+					<a href="/administration/installation/">Administration documentation</a>
+					<ul>
+						
+						<li class="nav-item "><a
+								href="/administration/installation/">Installation</a></li>
+						
+						<li class="nav-item "><a
+								href="/administration/administration/">Administration</a></li>
+						
+						<li class="nav-item "><a
+								href="/administration/localization/">Localization</a></li>
+						
+						<li class="nav-item "><a
+								href="/administration/authorization/">Authorization</a></li>
+						
+					</ul>
+				</li>
+				
+				<li class="nav-item top-level ">
+					
+					<a href="/programming/technical-design/">Programming documentation</a>
+					<ul>
+						
+						<li class="nav-item "><a
+								href="/programming/technical-design/">Technical design</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/backend/">Backend</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/dashboard_storefront/">Dashboard and Storefront</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/recommender_system/">Recommender system</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/supportive_services/">Supportive services</a></li>
+						
+					</ul>
+				</li>
+				
+				<li class="nav-item top-level current">
+					
+					<a href="/user/dashboard/">User category</a>
+					<ul>
+						
+						<li class="nav-item current"><a
+								href="/user/dashboard/">User documentation - Dashboard</a></li>
+						
+						<li class="nav-item "><a
+								href="/user/storefront/">User documentation - Storefront</a></li>
+						
+					</ul>
+				</li>
+				
+			</ul>
+
+			<ul>
+				<li class="nav-item top-level ">
+					
+					<a href="/contribution/">Contribution</a>
+				</li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="main">
+		<div class="page-header">
+			<h2>User category</h2>
+			<h3>User documentation - Dashboard</h3>
+		</div>
+		<article class="content">
+			<p>Table of contents:</p>
+<ul id="markdown-toc">
+  <li><a href="#overview" id="markdown-toc-overview">Overview</a>    <ul>
+      <li><a href="#todays-statistics" id="markdown-toc-todays-statistics">Today’s statistics</a></li>
+      <li><a href="#statistics-for-the-last-30-days" id="markdown-toc-statistics-for-the-last-30-days">Statistics for the last 30 days</a></li>
+    </ul>
+  </li>
+  <li><a href="#cart" id="markdown-toc-cart">Cart</a></li>
+  <li><a href="#orders" id="markdown-toc-orders">Orders</a>    <ul>
+      <li><a href="#edit" id="markdown-toc-edit">Edit</a></li>
+      <li><a href="#order-details" id="markdown-toc-order-details">Order details</a>        <ul>
+          <li><a href="#order-items" id="markdown-toc-order-items">Order items</a></li>
+          <li><a href="#status" id="markdown-toc-status">Status</a></li>
+          <li><a href="#shipping-and-billing-info" id="markdown-toc-shipping-and-billing-info">Shipping and billing info</a></li>
+          <li><a href="#shipping-and-payment-method" id="markdown-toc-shipping-and-payment-method">Shipping and payment method</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#reviews" id="markdown-toc-reviews">Reviews</a>    <ul>
+      <li><a href="#review-details" id="markdown-toc-review-details">Review details</a>        <ul>
+          <li><a href="#average-product-rating" id="markdown-toc-average-product-rating">Average product rating</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#catalog" id="markdown-toc-catalog">Catalog</a></li>
+  <li><a href="#localization" id="markdown-toc-localization">Localization</a></li>
+  <li><a href="#cms" id="markdown-toc-cms">CMS</a></li>
+  <li><a href="#users--roles" id="markdown-toc-users--roles">Users &amp; Roles</a>    <ul>
+      <li><a href="#users" id="markdown-toc-users">Users</a>        <ul>
+          <li><a href="#user-details" id="markdown-toc-user-details">User details</a></li>
+          <li><a href="#create-user" id="markdown-toc-create-user">Create user</a></li>
+        </ul>
+      </li>
+      <li><a href="#roles" id="markdown-toc-roles">Roles</a>        <ul>
+          <li><a href="#create-role" id="markdown-toc-create-role">Create role</a></li>
+          <li><a href="#edit-role" id="markdown-toc-edit-role">Edit role</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#recommender-system" id="markdown-toc-recommender-system">Recommender system</a></li>
+</ul>
+
+<h1 id="overview">Overview</h1>
+<p>The Overview page provides summarised information about the store. It is the first page that is shown to the user after logging in. The page is divided into two main sections:</p>
+<ul>
+  <li>Today’s statistics</li>
+  <li>Statistics for the last 30 days</li>
+</ul>
+
+<h2 id="todays-statistics">Today’s statistics</h2>
+<p>For today’s statistics, the following information is shown:</p>
+<ul>
+  <li>Orders count</li>
+  <li>Revenue</li>
+  <li>Average order value</li>
+  <li>Average items per order</li>
+  <li>Top selling product</li>
+</ul>
+
+<h2 id="statistics-for-the-last-30-days">Statistics for the last 30 days</h2>
+<p>For the last 30 days’ statistics, the following information is shown:</p>
+<ul>
+  <li>Orders count</li>
+  <li>Revenue</li>
+  <li>Average order value</li>
+  <li>Average items per order</li>
+  <li>Up to 5 top selling products</li>
+  <li>Line graph showing orders count for the last 30 days</li>
+</ul>
+
+<h1 id="cart">Cart</h1>
+<h1 id="orders">Orders</h1>
+<p>The orders page consists of a list showing all orders. The list has the following columns:</p>
+<ul>
+  <li>Order token</li>
+  <li>Status</li>
+  <li>Customer email</li>
+  <li>Created at</li>
+  <li>Actions</li>
+</ul>
+
+<p><img src="../../images/orders_list.png" alt="Orders list" /></p>
+
+<p>The actions column contains the following buttons:</p>
+<ul>
+  <li>Edit</li>
+</ul>
+
+<h2 id="edit">Edit</h2>
+<p>Click on the edit button opens the order details page.</p>
+
+<h2 id="order-details">Order details</h2>
+<p>This page shows full information about the order. The page is divided into the following sections:</p>
+<ul>
+  <li>Order items</li>
+  <li>Status</li>
+  <li>Shipping Info</li>
+  <li>Billing info</li>
+  <li>Shipping and payment methods</li>
+</ul>
+
+<h3 id="order-items">Order items</h3>
+<p>This section shows a list of all items in the order. The list has the following columns:</p>
+<ul>
+  <li>Product variant name - click on the name opens the product variant details page (described in TODO: add link)</li>
+  <li>SKU</li>
+  <li>Quantity</li>
+  <li>Unit price (without VAT)</li>
+  <li>Actions
+    <ul>
+      <li>Edit - admin can change the quantity of the product variant</li>
+      <li>Delete - admin can delete the product variant from the order</li>
+    </ul>
+  </li>
+</ul>
+
+<p>This section also shows the total price (without VAT) of a given order.</p>
+
+<p><img src="../../images/order_items.png" alt="Order items" /></p>
+
+<h3 id="status">Status</h3>
+<p>This section shows the current status of the order. The status can be changed by the admin using a drop-down menu.</p>
+
+<p><img src="../../images/order_status.png" alt="Order status" /></p>
+
+<h3 id="shipping-and-billing-info">Shipping and billing info</h3>
+<p>This section shows the shipping and billing information of the order. It contains the same information as the shipping and billing information in the checkout process. Information is shown in the form view, and the admin is again able to modify its content.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Shipping info</th>
+      <th style="text-align: center">Billing info</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><img src="../../images/order_shipping_info.png" alt="Shipping info" /></td>
+      <td style="text-align: center"><img src="../../images/order_billing_info.png" alt="Billing info" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="shipping-and-payment-method">Shipping and payment method</h3>
+<p>This section shows selected shipping and payment methods along with their prices.</p>
+
+<p>TODO: add image</p>
+
+<h1 id="reviews">Reviews</h1>
+<p>The reviews page consists of a list showing all reviews. The list has the following columns:</p>
+<ul>
+  <li>Review token</li>
+  <li>Product variant</li>
+  <li>Product ID</li>
+  <li>Rating</li>
+  <li>Comment</li>
+  <li>Created at</li>
+  <li>Actions
+    <ul>
+      <li>Detail - click on the detail button opens the review details page (see <a href="#review-details">below</a>)</li>
+      <li>Delete - click on the delete button deletes the review</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="../../images/reviews_list.png" alt="Reviews list" /></p>
+
+<h2 id="review-details">Review details</h2>
+<p>This page shows full information about the review and overall rating of the product. The page is divided into the following sections:</p>
+<ul>
+  <li>Rating - shown via stars and percentage</li>
+  <li>Product ID</li>
+  <li>Comment</li>
+  <li>Average product rating</li>
+</ul>
+
+<p><img src="../../images/review_detail.png" alt="Review detail" /></p>
+<h3 id="average-product-rating">Average product rating</h3>
+<p>This section shows the average rating of the product. The rating is shown via start and average score (value from 0 to 5). It also shows the number of reviews for the product and the distribution of ratings. Distribution values are rounded up - this means that if the user submitted a rating of 4.5, it will be shown as 5 in the distribution.</p>
+
+<h1 id="catalog">Catalog</h1>
+<h1 id="localization">Localization</h1>
+<h1 id="cms">CMS</h1>
+<h1 id="users--roles">Users &amp; Roles</h1>
+<p>This page provides an overview of all users and roles. It is into two main parts:</p>
+<ul>
+  <li>Users</li>
+  <li>Roles</li>
+</ul>
+
+<p><img src="../../images/user_roles_list.png" alt="Users &amp; Roles" /></p>
+<h2 id="users">Users</h2>
+<p>This section shows a list of all users. The list has the following columns:</p>
+<ul>
+  <li>Email</li>
+  <li>First name</li>
+  <li>Last name</li>
+  <li>Is Admin</li>
+  <li>Roles</li>
+  <li>Actions
+    <ul>
+      <li>Edit - click on the edit button opens the user details page (see <a href="#user-details">below</a>)</li>
+      <li>Delete - click on the delete button deletes the user</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="user-details">User details</h3>
+<p>The user details page shows full information about the user. The page is divided into three main parts:</p>
+<ul>
+  <li>General information:
+    <ul>
+      <li>Email (cannot be changed)</li>
+      <li>First Name</li>
+      <li>Last Name</li>
+      <li>Is Admin - only admin can change this value</li>
+      <li>Is Staff
+<img src="../../images/user_edit_general_info.png" alt="General information" /></li>
+    </ul>
+  </li>
+  <li>Password
+    <ul>
+      <li>Old password - displayed only if a user is editing his profile</li>
+      <li>New password</li>
+      <li>New password confirmation
+<img src="../../images/user_edit_password.png" alt="Password" /></li>
+    </ul>
+  </li>
+  <li>Roles - a checklist of all roles available in the system. If a user has a role assigned, the checkbox is checked.
+<img src="../../images/user_edit_roles.png" alt="Roles" /></li>
+</ul>
+
+<h3 id="create-user">Create user</h3>
+<p>To create a new user, click on the <em>Add New</em> button in the users list. This opens a new page where the user can set the email and password.
+<img src="../../images/user_add_user.png" alt="Create user" /></p>
+
+<h2 id="roles">Roles</h2>
+<p>Roles are used to group various permissions into one unit. This plays a crucial role in the authorization process as it restricts access to certain parts of the system. Only the admin or users with the <code class="language-plaintext highlighter-rouge">user_change_permission</code> permission can edit the user (for more detailed info about permissions see <a href="../../administration/authorization">Authorization page</a>). The system comes with three predefined roles:</p>
+<ul>
+  <li>Editor</li>
+  <li>Copywriter</li>
+  <li>UserManager</li>
+</ul>
+
+<p>Admin counts as a special role that has all permissions. Authorized users can create new roles or edit existing ones.</p>
+<h3 id="create-role">Create role</h3>
+<p>To create a new role, click on the <em>Add New</em> button in the roles list. This opens a new page where the user can enter the name of the role, its description and select permissions that will be assigned to the role.
+<img src="../../images/role_add_role.png" alt="Create role" /></p>
+
+<h3 id="edit-role">Edit role</h3>
+<p>To edit an existing role, click on the edit button in the roles list. This opens a new page where the user can edit a description of a given role and select permissions that will be assigned to the role.
+<img src="../../images/role_edit_role.png" alt="Edit role" /></p>
+
+<h1 id="recommender-system">Recommender system</h1>
+
+		</article>
+	</section>
+
+	<script>
+		document.getElementById("open-nav").addEventListener("click", function () {
+			document.body.classList.toggle("nav-open");
+		});
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Technical design | ecoseller</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Technical design" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Table of contents:" />
+<meta property="og:description" content="Table of contents:" />
+<link rel="canonical" href="http://localhost:4000/programming/technical-design/" />
+<meta property="og:url" content="http://localhost:4000/programming/technical-design/" />
+<meta property="og:site_name" content="ecoseller" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Technical design" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","description":"Table of contents:","headline":"Technical design","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/siteicon.png"}},"url":"http://localhost:4000/programming/technical-design/"}</script>
+<!-- End Jekyll SEO tag -->
+
+	<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="ecoseller" />
+
+	<link rel="stylesheet"
+		href="//fonts.googleapis.com/css?family=Merriweather:400,400italic,700,700italic|Open+Sans:400,400italic,600,600italic,700,700italic|Inconsolata:400,700">
+	<link rel="stylesheet" href="/css/main.css">
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" href="/touch-icon.png" sizes="192x192">
+	<link rel="icon" type="image/png" href="/images/favicon.ico">
+
+	
+</head>
+
+<body>
+	<header>
+		<h1>
+			<a style="color: black;" href="/"><img src="/images/emblem.svg"
+					width="100" height="100" alt="ecoseller logo"></a>
+			<a>ecoseller</a>
+			<button type="button" class="open-nav" id="open-nav"></button>
+		</h1>
+
+		<form action="/search/" method="get">
+			<input type="text" name="q" id="search-input" placeholder="Search" autofocus>
+			<input type="submit" value="Search" style="display: none;">
+		</form>
+
+		<nav class="full-navigation" >
+			<ul>
+				<li class="nav-item top-level ">
+					
+					<a href="/">Introduction</a>
+				</li>
+			</ul>
+
+			<ul>
+				
+				
+				<li class="nav-item top-level ">
+					
+					<a href="/administration/installation/">Administration documentation</a>
+					<ul>
+						
+						<li class="nav-item "><a
+								href="/administration/installation/">Installation</a></li>
+						
+						<li class="nav-item "><a
+								href="/administration/administration/">Administration</a></li>
+						
+						<li class="nav-item "><a
+								href="/administration/localization/">Localization</a></li>
+						
+						<li class="nav-item "><a
+								href="/administration/authorization/">Authorization</a></li>
+						
+					</ul>
+				</li>
+				
+				<li class="nav-item top-level current">
+					
+					<a href="/programming/technical-design/">Programming documentation</a>
+					<ul>
+						
+						<li class="nav-item current"><a
+								href="/programming/technical-design/">Technical design</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/backend/">Backend</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/dashboard_storefront/">Dashboard and Storefront</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/recommender_system/">Recommender system</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/supportive_services/">Supportive services</a></li>
+						
+					</ul>
+				</li>
+				
+				<li class="nav-item top-level ">
+					
+					<a href="/user/dashboard/">User category</a>
+					<ul>
+						
+						<li class="nav-item "><a
+								href="/user/dashboard/">User documentation - Dashboard</a></li>
+						
+						<li class="nav-item "><a
+								href="/user/storefront/">User documentation - Storefront</a></li>
+						
+					</ul>
+				</li>
+				
+			</ul>
+
+			<ul>
+				<li class="nav-item top-level ">
+					
+					<a href="/contribution/">Contribution</a>
+				</li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="main">
+		<div class="page-header">
+			<h2>Programming documentation</h2>
+			<h3>Technical design</h3>
+		</div>
+		<article class="content">
+			<p>Table of contents:</p>
+<ul id="markdown-toc">
+  <li><a href="#architecture-design" id="markdown-toc-architecture-design">Architecture &amp; Design</a>    <ul>
+      <li><a href="#backend-written-in-django" id="markdown-toc-backend-written-in-django">Backend written in Django:</a>        <ul>
+          <li><a href="#core-application" id="markdown-toc-core-application">Core Application</a></li>
+        </ul>
+      </li>
+      <li><a href="#postgresql-database" id="markdown-toc-postgresql-database">PostgreSQL Database:</a></li>
+      <li><a href="#storefront-and-dashboard-written-in-nextjs" id="markdown-toc-storefront-and-dashboard-written-in-nextjs">Storefront and Dashboard written in Next.js:</a></li>
+      <li><a href="#elasticsearch-for-fast-product-search" id="markdown-toc-elasticsearch-for-fast-product-search">Elasticsearch for Fast Product Search:</a></li>
+      <li><a href="#redis-for-asynchronous-tasks-via-rq-worker" id="markdown-toc-redis-for-asynchronous-tasks-via-rq-worker">Redis for Asynchronous Tasks via RQ-Worker:</a></li>
+      <li><a href="#recommender-system-written-in-flask" id="markdown-toc-recommender-system-written-in-flask">Recommender System written in Flask:</a></li>
+    </ul>
+  </li>
+  <li><a href="#version-control" id="markdown-toc-version-control">Version control</a></li>
+  <li><a href="#coding-style" id="markdown-toc-coding-style">Coding style</a></li>
+  <li><a href="#links" id="markdown-toc-links">Links</a></li>
+</ul>
+
+<p>The technical design of the <strong>ecoseller</strong> system combines a robust backend written in Django, a PostgreSQL database for efficient data storage, and user-facing interfaces built with Next.js for the storefront and dashboard. Elasticsearch enhances product search capabilities, while Redis enables asynchronous task processing via RQ-Worker. Additionally, the Flask-based recommender system provides personalized product recommendations. This integrated architecture ensures a performant, and programmer-friendly e-commerce platform written in Python and TypeScript.</p>
+
+<h1 id="architecture-design">Architecture &amp; Design</h1>
+<p><img src="../../images/c4_highlevel_architecture.png" alt="C4 architecture model" />
+The Ecoseller system is built upon an architecture incorporating various services and technologies to deliver a powerful e-commerce platform. This section provides an overview of the technical design of the <strong>ecoseller</strong> system, highlighting the key components and their interactions.</p>
+
+<h2 id="backend-written-in-django">Backend written in Django:</h2>
+<p>The core of the <strong>ecoseller</strong> system is the backend, developed using the Django Rest Framework. Django provides a solid foundation for building web applications and offers a range of features such as user management, data modeling, and API development. The backend handles crucial functionalities like product management, order processing, user authentication, and more.
+We can divide the backend part into several subsections based on the area it handles.</p>
+<h3 id="core-application">Core Application</h3>
+<p>Core part of the application will be implemented in Python using the following technologies:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Django Rest Framework</code> – open source Python web framework</li>
+  <li><a href="#redis-for-asynchronous-tasks-via-rq-worker"><code class="language-plaintext highlighter-rouge">Redis</code></a> – open source data store that will help us with back-end task queuing</li>
+  <li><a href="elasticsearch-for-fast-product-search"><code class="language-plaintext highlighter-rouge">Elasticsearch</code></a> – search engine for storing and searching product data
+More technical details about the Core application can be found in the <a href="./backend.md">backend documentation</a>.
+    <h2 id="postgresql-database">PostgreSQL Database:</h2>
+    <p><strong>ecoseller</strong> utilizes a PostgreSQL database to store and manage data efficiently. PostgreSQL is a reliable and feature-rich open-source database that ensures data integrity, scalability, and performance for the platform. It handles critical data related to products, orders, user information, and various other entities within the system.
+The only system accessing this database is the backend described above.</p>
+    <h2 id="storefront-and-dashboard-written-in-nextjs">Storefront and Dashboard written in Next.js:</h2>
+    <p>The <strong>ecoseller</strong> platform includes two user-facing interfaces: the storefront and the dashboard. Both are developed using Next.js, a powerful React framework. Next.js enables the creation of dynamic, high-performance web applications with server-side rendering and optimized client-side navigation. The storefront serves as the online storefront for customers, while the dashboard provides a comprehensive administration panel for managing the e-commerce platform.
+Both applications are written in <code class="language-plaintext highlighter-rouge">TypeScript</code> and technical details can be found in the <a href="./dashboard_storefront.md">storefront &amp; dashboard documentation</a>.</p>
+    <h2 id="elasticsearch-for-fast-product-search">Elasticsearch for Fast Product Search:</h2>
+    <p><strong>ecoseller</strong> integrates Elasticsearch, a powerful search and analytics engine, to enhance the speed and accuracy of product searches. Elasticsearch enables efficient indexing, querying, and filtering of product data, ensuring a seamless and responsive search experience for users. The integration with Django allows for easy synchronization of product data between the backend and Elasticsearch.
+We use custom settings of Elasticsearch to improve the search experience. More on that in the section dedicated to <a href="./supportive_services.md">supportive services</a>.</p>
+    <h2 id="redis-for-asynchronous-tasks-via-rq-worker">Redis for Asynchronous Tasks via RQ-Worker:</h2>
+    <p><strong>ecoseller</strong> utilizes Redis, an in-memory data structure store, to support asynchronous task processing. The RQ (Redis Queue) library leverages Redis to manage and distribute tasks across workers. The RQ-Worker, an instance of the Ecoseller backend, processes tasks from the Redis queue, enabling efficient handling of background processes and time-consuming operations.
+More on that in the section dedicated to <a href="./supportive_services.md">supportive services</a>.</p>
+    <h2 id="recommender-system-written-in-flask">Recommender System written in Flask:</h2>
+    <p><strong>ecoseller</strong> incorporates a recommender system to provide personalized product recommendations to users. The recommender system is developed using Flask, a lightweight Python web framework. It leverages user behavior and preferences to generate relevant recommendations, enhancing the user experience and driving engagement.
+The recommender system is implemented in Python, the following technologies are used as well:</p>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">Flask</code> – open source Python web framework</li>
+  <li><code class="language-plaintext highlighter-rouge">NumPy</code> – open source Python library used to work with vectors and matrices</li>
+  <li><code class="language-plaintext highlighter-rouge">TensorFlow</code> – open source Python library used for machine learning</li>
+</ul>
+
+<p>The technical design of the <strong>ecoseller</strong> system seamlessly integrates these components, ensuring efficient data management, reliable operations, and a delightful user experience. By combining the power of Django, PostgreSQL, Next.js, Elasticsearch, Redis, and Flask, Ecoseller delivers a feature-rich and scalable e-commerce platform for businesses of all sizes with modern technologies.</p>
+
+<h1 id="version-control">Version control</h1>
+<p>As a version control system, current state-of the art <code class="language-plaintext highlighter-rouge">git</code> is used. More specifically <a href="https://github.com/ecoseller"><code class="language-plaintext highlighter-rouge">GitHub</code></a>.</p>
+
+<h1 id="coding-style">Coding style</h1>
+<p>We use several tools for enforcing our code style. In both the dashboard and the storefront, we use:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Prettier</code> – an opinionated code formatter with support for many languages, including <code class="language-plaintext highlighter-rouge">JavaScript</code> and <code class="language-plaintext highlighter-rouge">TypeScript</code></li>
+  <li><code class="language-plaintext highlighter-rouge">ESLint</code> – a static analysis tool identifying problematic patterns found in <code class="language-plaintext highlighter-rouge">JavaScript</code> and <code class="language-plaintext highlighter-rouge">TypeScript</code> code</li>
+</ul>
+
+<p>Similarly, in <code class="language-plaintext highlighter-rouge">Core</code> component (which is written in <code class="language-plaintext highlighter-rouge">Python</code>) we use <code class="language-plaintext highlighter-rouge">black</code> code formatter and <code class="language-plaintext highlighter-rouge">flake8</code> linter.
+This way, we ensure consistent formatting of our code and avoid common bugs, which can be found by static analysis tools. We further use these tools in our Continuous integration setup, as described in <a href="../../contribution#continuous-integration">Contribution - Continuous integration</a> section.</p>
+
+<h1 id="links">Links</h1>
+
+		</article>
+	</section>
+
+	<script>
+		document.getElementById("open-nav").addEventListener("click", function () {
+			document.body.classList.toggle("nav-open");
+		});
+	</script>
+</body>
+
+</html>

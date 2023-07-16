@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Contribution | ecoseller</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Contribution" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="ecoseller e-commerce platform documentation" />
+<meta property="og:description" content="ecoseller e-commerce platform documentation" />
+<link rel="canonical" href="http://localhost:4000/contribution/" />
+<meta property="og:url" content="http://localhost:4000/contribution/" />
+<meta property="og:site_name" content="ecoseller" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Contribution" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"ecoseller e-commerce platform documentation","headline":"Contribution","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/siteicon.png"}},"url":"http://localhost:4000/contribution/"}</script>
+<!-- End Jekyll SEO tag -->
+
+	<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="ecoseller" />
+
+	<link rel="stylesheet"
+		href="//fonts.googleapis.com/css?family=Merriweather:400,400italic,700,700italic|Open+Sans:400,400italic,600,600italic,700,700italic|Inconsolata:400,700">
+	<link rel="stylesheet" href="/css/main.css">
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" href="/touch-icon.png" sizes="192x192">
+	<link rel="icon" type="image/png" href="/images/favicon.ico">
+
+	
+</head>
+
+<body>
+	<header>
+		<h1>
+			<a style="color: black;" href="/"><img src="/images/emblem.svg"
+					width="100" height="100" alt="ecoseller logo"></a>
+			<a>ecoseller</a>
+			<button type="button" class="open-nav" id="open-nav"></button>
+		</h1>
+
+		<form action="/search/" method="get">
+			<input type="text" name="q" id="search-input" placeholder="Search" autofocus>
+			<input type="submit" value="Search" style="display: none;">
+		</form>
+
+		<nav class="full-navigation" >
+			<ul>
+				<li class="nav-item top-level ">
+					
+					<a href="/">Introduction</a>
+				</li>
+			</ul>
+
+			<ul>
+				
+				
+				<li class="nav-item top-level ">
+					
+					<a href="/administration/installation/">Administration documentation</a>
+					<ul>
+						
+						<li class="nav-item "><a
+								href="/administration/installation/">Installation</a></li>
+						
+						<li class="nav-item "><a
+								href="/administration/administration/">Administration</a></li>
+						
+						<li class="nav-item "><a
+								href="/administration/localization/">Localization</a></li>
+						
+						<li class="nav-item "><a
+								href="/administration/authorization/">Authorization</a></li>
+						
+					</ul>
+				</li>
+				
+				<li class="nav-item top-level ">
+					
+					<a href="/programming/technical-design/">Programming documentation</a>
+					<ul>
+						
+						<li class="nav-item "><a
+								href="/programming/technical-design/">Technical design</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/backend/">Backend</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/dashboard_storefront/">Dashboard and Storefront</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/recommender_system/">Recommender system</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/supportive_services/">Supportive services</a></li>
+						
+					</ul>
+				</li>
+				
+				<li class="nav-item top-level ">
+					
+					<a href="/user/dashboard/">User category</a>
+					<ul>
+						
+						<li class="nav-item "><a
+								href="/user/dashboard/">User documentation - Dashboard</a></li>
+						
+						<li class="nav-item "><a
+								href="/user/storefront/">User documentation - Storefront</a></li>
+						
+					</ul>
+				</li>
+				
+			</ul>
+
+			<ul>
+				<li class="nav-item top-level current">
+					
+					<a href="/contribution/">Contribution</a>
+				</li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="main">
+		<div class="page-header">
+			<h2>ecoseller</h2>
+			<h3>Contribution</h3>
+		</div>
+		<article class="content">
+			<div class="contribution">
+	
+	<div class="changelog-item">
+		<p>To contribute to ecoseller, please stick to the following rules:</p>
+
+<h1 id="git-workflow">GIT Workflow</h1>
+
+<p>When working on a project, it is important to have a workflow that is easy to understand and follow. This document describes the workflow that we use at <a href="https://ecoseller.io/">ecoseller</a>.</p>
+
+<h2 id="working-on-a-new-featurebug">Working on a new feature/bug</h2>
+
+<ol>
+  <li>Update your master branch - on <code class="language-plaintext highlighter-rouge">master</code> branch run the following:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> git pull origin master
+</code></pre></div>    </div>
+  </li>
+  <li>Create a new branch and checkout to it
+    <ul>
+      <li>follow naming convetion for branch names <code class="language-plaintext highlighter-rouge">T-&lt;task-number&gt;</code>
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> git checkout -b T-&lt;task-number&gt;
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>Work on a given feature/bug. Commit your work often (you do not need to push these commits to remote branch)
+    <ul>
+      <li>follow naming convention for commits <code class="language-plaintext highlighter-rouge">[T-&lt;task-numbe&gt;] &lt;short-description&gt;</code>
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> git add .
+ git commit -m "[T-&lt;task-number&gt;] &lt;short-description&gt;"
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>Push changes to remote branch
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> git push origin T-&lt;task-number&gt;
+</code></pre></div>    </div>
+    <ul>
+      <li>First push to remote branch will create pull request - go to the project github page and click on <em>Compare &amp; pull request</em> button</li>
+    </ul>
+  </li>
+</ol>
+
+<p><img src="../images/git_pull_request.png" alt="" /></p>
+<ul>
+  <li>If you are not done with the feature/bug yet, mark this pull request as draft</li>
+</ul>
+
+<p><img src="../images/git_pull_request_2.png" alt="" /></p>
+
+<ol>
+  <li>After feature/bug is done, fill in nice description, mark pull request as ready and send it to review</li>
+  <li>When a feature/bug branch is ready to be merged into a <code class="language-plaintext highlighter-rouge">master</code> branch, do the following:
+    <ol>
+      <li>Update your master branch to the latest state
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  git checkout master
+  git pull origin master
+</code></pre></div>        </div>
+      </li>
+      <li>Checkout to feature/bug branch
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> git checkout T-&lt;task-number&gt;
+</code></pre></div>        </div>
+      </li>
+      <li>Rebase feature/bug branch on top of <code class="language-plaintext highlighter-rouge">master</code> branch and squash commits into one
+        <ul>
+          <li>This can be achieved via interactive rebase (<code class="language-plaintext highlighter-rouge">-i</code> option) which will bring up editor where you can squash all commits to the first one (let <code class="language-plaintext highlighter-rouge">pick</code> option for the first commit and on all the follwoing commits use <code class="language-plaintext highlighter-rouge">s</code> option)</li>
+          <li>After squashing, do not forget about naming convention of representative commit <code class="language-plaintext highlighter-rouge">[T-&lt;task-numbe&gt;] &lt;short-description&gt;</code>
+            <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> git rebase -i master
+</code></pre></div>            </div>
+          </li>
+          <li>Fix all potential conflicts while rebasing</li>
+        </ul>
+      </li>
+      <li>Checkout to <code class="language-plaintext highlighter-rouge">master</code> branch and merge feature/task branch
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> git checkout master
+ git merge T-&lt;task-number&gt;
+</code></pre></div>        </div>
+      </li>
+    </ol>
+  </li>
+</ol>
+
+<h2 id="linear-history">Linear history</h2>
+<p>Applying this workflow keeps the git history of a project <strong>linear</strong>. That is good for the following reasons:</p>
+<ul>
+  <li>Easier to read
+    <ul>
+      <li>History is more clear</li>
+      <li>No useless commits and new merge commits</li>
+    </ul>
+  </li>
+  <li>Easier reverting and cherry-picking</li>
+  <li>Git bisect</li>
+</ul>
+
+<h2 id="what-to-do-when">What to do when</h2>
+<h3 id="forgot-to-create-a-new-branch">Forgot to create a new branch</h3>
+<p>You already made some changes and forgot to switch to new branch. At this point its easy fix, just add what you have done so far and then switch to new branch:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git add .
+git checkout -b T-&lt;task-number&gt;
+</code></pre></div></div>
+
+<h2 id="useful-commands-to-remember">Useful commands to remember</h2>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">git log</code> - shows commits log
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">--oneline</code> option</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">git status</code> - status on current branch</li>
+  <li><code class="language-plaintext highlighter-rouge">git fetch origin</code> - fetch remote branches</li>
+  <li><code class="language-plaintext highlighter-rouge">git reset HEAD~&lt;number&gt;</code> - moves <code class="language-plaintext highlighter-rouge">HEAD</code> pointer <code class="language-plaintext highlighter-rouge">&lt;number&gt;</code> commits behind
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">--hard</code> option - discards local changes</li>
+      <li><code class="language-plaintext highlighter-rouge">--soft</code> option - keeps local changes</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="continuous-integration">Continuous integration</h1>
+
+<p>We use <a href="https://docs.github.com/en/actions">Github actions</a> for CI.<br />
+There are multiple jobs set up (1 for each project component + action for docker compose), which automatically run on every commit to <code class="language-plaintext highlighter-rouge">master</code> branch
+and pull request update.</p>
+
+<h2 id="what-to-do-if-ci-jobs-fail">What to do if CI jobs fail</h2>
+<p>See the error in Github Action detail.</p>
+
+<p>If it’s a linter/formatter error, see the section of corresponding component.</p>
+<ul>
+  <li><a href="#backend">backend</a></li>
+  <li><a href="#dashboard">dashboard</a></li>
+  <li><a href="#storefront">storefront</a></li>
+  <li><a href="#recommender">recommender</a></li>
+</ul>
+
+<p>Follow the instructions for linting / formatting.</p>
+
+<p>After everything works locally, commit and push the changes, CI jobs will start automatically.</p>
+
+<h3 id="backend">Backend</h3>
+
+<h4 id="black"><code class="language-plaintext highlighter-rouge">black</code></h4>
+<p>We’re using <a href="https://black.readthedocs.io/en/stable/">black</a> code formatter.</p>
+
+<p>Run</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>black ./core
+</code></pre></div></div>
+<p>to format source files (you need to have virtual env activated).</p>
+
+<h4 id="flake8"><code class="language-plaintext highlighter-rouge">flake8</code></h4>
+<p>We’re using <a href="https://flake8.pycqa.org/en/latest/">flake8</a> linter.</p>
+
+<p>Run</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>flake8 ./core
+</code></pre></div></div>
+<p>to check for errors and warnings. If there are any errors, you need to fix them manually.</p>
+
+<h3 id="dashboard">Dashboard</h3>
+
+<h4 id="debugging">Debugging</h4>
+
+<h5 id="webstorm">Webstorm</h5>
+<ol>
+  <li>Run dashboard app using <code class="language-plaintext highlighter-rouge">docker compose</code> or locally</li>
+  <li>Open <a href=".">dashboard</a> folder in Webstorm</li>
+  <li>Select Run/debug configuration &gt; Add New &gt; Select <em>JavaScript Debug</em></li>
+  <li>
+    <p>Use the URL, where the dashboard is running (see the example below)
+ <img src="../images/configuration.png" alt="" /></p>
+  </li>
+  <li>Then, run debuging using <em>Debug</em> button in menu. <br />
+(Also note that this way, you’ll be able to debug client-side code 
+only - therefore not e.g. <code class="language-plaintext highlighter-rouge">getServerSideProps</code> method)</li>
+</ol>
+
+<h4 id="eslint"><code class="language-plaintext highlighter-rouge">eslint</code></h4>
+<p>We use <a href="https://nextjs.org/docs/basic-features/eslint">ESLint integrated in Next.js</a> for linting</p>
+
+<p>Run</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run lint
+</code></pre></div></div>
+<p>to check for warnings.</p>
+
+<p>If there are any warnings, you can fix them automatically (if possible) by running:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run lint <span class="nt">--</span> <span class="nt">--fix</span> 
+</code></pre></div></div>
+
+<h4 id="prettier"><code class="language-plaintext highlighter-rouge">prettier</code></h4>
+<p>We use <a href="https://prettier.io/">prettier</a> code formatter.</p>
+
+<p>Run</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run format
+</code></pre></div></div>
+<p>to format source code files.</p>
+
+<h3 id="storefront">Storefront</h3>
+
+<h4 id="eslint-1"><code class="language-plaintext highlighter-rouge">eslint</code></h4>
+<p>We use <a href="https://nextjs.org/docs/basic-features/eslint">ESLint integrated in Next.js</a> for linting</p>
+
+<p>Run</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run lint
+</code></pre></div></div>
+<p>to check for warnings.</p>
+
+<p>If there are any warnings, you can fix them automatically (if possible) by running:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run lint <span class="nt">--</span> <span class="nt">--fix</span> 
+</code></pre></div></div>
+
+<h4 id="prettier-1"><code class="language-plaintext highlighter-rouge">prettier</code></h4>
+<p>We use <a href="https://prettier.io/">prettier</a> code formatter.</p>
+
+<p>Run</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run format
+</code></pre></div></div>
+<p>to format source code files.</p>
+
+<h3 id="recommender">Recommender</h3>
+
+<h4 id="black-1"><code class="language-plaintext highlighter-rouge">black</code></h4>
+<p>We’re using <a href="https://black.readthedocs.io/en/stable/">black</a> code formatter.</p>
+
+<p>Run</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>black ./src
+</code></pre></div></div>
+<p>to format source files (you need to have virtual env activated).</p>
+
+<h4 id="flake8-1"><code class="language-plaintext highlighter-rouge">flake8</code></h4>
+<p>We’re using <a href="https://flake8.pycqa.org/en/latest/">flake8</a> linter.</p>
+
+<p>Run</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>flake8 ./src
+</code></pre></div></div>
+<p>to check for errors and warnings. If there are any errors, you need to fix them manually.</p>
+
+	</div>
+	
+</div>
+		</article>
+	</section>
+
+	<script>
+		document.getElementById("open-nav").addEventListener("click", function () {
+			document.body.classList.toggle("nav-open");
+		});
+	</script>
+</body>
+
+</html>

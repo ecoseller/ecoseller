@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Backend | ecoseller</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Backend" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Table of contents:" />
+<meta property="og:description" content="Table of contents:" />
+<link rel="canonical" href="http://localhost:4000/programming/backend/" />
+<meta property="og:url" content="http://localhost:4000/programming/backend/" />
+<meta property="og:site_name" content="ecoseller" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Backend" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","description":"Table of contents:","headline":"Backend","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/siteicon.png"}},"url":"http://localhost:4000/programming/backend/"}</script>
+<!-- End Jekyll SEO tag -->
+
+	<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="ecoseller" />
+
+	<link rel="stylesheet"
+		href="//fonts.googleapis.com/css?family=Merriweather:400,400italic,700,700italic|Open+Sans:400,400italic,600,600italic,700,700italic|Inconsolata:400,700">
+	<link rel="stylesheet" href="/css/main.css">
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" href="/touch-icon.png" sizes="192x192">
+	<link rel="icon" type="image/png" href="/images/favicon.ico">
+
+	
+</head>
+
+<body>
+	<header>
+		<h1>
+			<a style="color: black;" href="/"><img src="/images/emblem.svg"
+					width="100" height="100" alt="ecoseller logo"></a>
+			<a>ecoseller</a>
+			<button type="button" class="open-nav" id="open-nav"></button>
+		</h1>
+
+		<form action="/search/" method="get">
+			<input type="text" name="q" id="search-input" placeholder="Search" autofocus>
+			<input type="submit" value="Search" style="display: none;">
+		</form>
+
+		<nav class="full-navigation" >
+			<ul>
+				<li class="nav-item top-level ">
+					
+					<a href="/">Introduction</a>
+				</li>
+			</ul>
+
+			<ul>
+				
+				
+				<li class="nav-item top-level ">
+					
+					<a href="/administration/installation/">Administration documentation</a>
+					<ul>
+						
+						<li class="nav-item "><a
+								href="/administration/installation/">Installation</a></li>
+						
+						<li class="nav-item "><a
+								href="/administration/administration/">Administration</a></li>
+						
+						<li class="nav-item "><a
+								href="/administration/localization/">Localization</a></li>
+						
+						<li class="nav-item "><a
+								href="/administration/authorization/">Authorization</a></li>
+						
+					</ul>
+				</li>
+				
+				<li class="nav-item top-level current">
+					
+					<a href="/programming/technical-design/">Programming documentation</a>
+					<ul>
+						
+						<li class="nav-item "><a
+								href="/programming/technical-design/">Technical design</a></li>
+						
+						<li class="nav-item current"><a
+								href="/programming/backend/">Backend</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/dashboard_storefront/">Dashboard and Storefront</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/recommender_system/">Recommender system</a></li>
+						
+						<li class="nav-item "><a
+								href="/programming/supportive_services/">Supportive services</a></li>
+						
+					</ul>
+				</li>
+				
+				<li class="nav-item top-level ">
+					
+					<a href="/user/dashboard/">User category</a>
+					<ul>
+						
+						<li class="nav-item "><a
+								href="/user/dashboard/">User documentation - Dashboard</a></li>
+						
+						<li class="nav-item "><a
+								href="/user/storefront/">User documentation - Storefront</a></li>
+						
+					</ul>
+				</li>
+				
+			</ul>
+
+			<ul>
+				<li class="nav-item top-level ">
+					
+					<a href="/contribution/">Contribution</a>
+				</li>
+			</ul>
+		</nav>
+	</header>
+
+	<section class="main">
+		<div class="page-header">
+			<h2>Programming documentation</h2>
+			<h3>Backend</h3>
+		</div>
+		<article class="content">
+			<p>Table of contents:</p>
+<ul id="markdown-toc">
+  <li><a href="#data-models" id="markdown-toc-data-models">Data models</a>    <ul>
+      <li><a href="#country" id="markdown-toc-country">Country</a></li>
+      <li><a href="#product" id="markdown-toc-product">Product</a></li>
+      <li><a href="#pricelistcurrency" id="markdown-toc-pricelistcurrency">Pricelist/Currency</a></li>
+      <li><a href="#cms" id="markdown-toc-cms">CMS</a></li>
+      <li><a href="#cart" id="markdown-toc-cart">Cart</a></li>
+      <li><a href="#user" id="markdown-toc-user">User</a></li>
+    </ul>
+  </li>
+  <li><a href="#authorization" id="markdown-toc-authorization">Authorization</a>    <ul>
+      <li><a href="#rolesmanager" id="markdown-toc-rolesmanager">RolesManager</a></li>
+      <li><a href="#initial-roles-definitions-and-their-loading" id="markdown-toc-initial-roles-definitions-and-their-loading">Initial roles definitions and their loading</a></li>
+      <li><a href="#protecting-views-with-permissions" id="markdown-toc-protecting-views-with-permissions">Protecting views with permissions</a></li>
+      <li><a href="#check_user_access_decorator" id="markdown-toc-check_user_access_decorator"><code class="language-plaintext highlighter-rouge">@check_user_access_decorator</code></a>        <ul>
+          <li><a href="#parameters" id="markdown-toc-parameters">Parameters</a></li>
+          <li><a href="#usage-example" id="markdown-toc-usage-example">Usage example</a></li>
+        </ul>
+      </li>
+      <li><a href="#check_user_is_staff_decorator" id="markdown-toc-check_user_is_staff_decorator"><code class="language-plaintext highlighter-rouge">@check_user_is_staff_decorator</code></a>        <ul>
+          <li><a href="#parameters-1" id="markdown-toc-parameters-1">Parameters</a></li>
+          <li><a href="#usage-example-1" id="markdown-toc-usage-example-1">Usage example</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="data-models">Data models</h1>
+<p>In this section we will describe data models of the backend part of the application. To do so, we will go over various parts of system and describe them in more detail using diagrams.
+To create diagrams, we used <code class="language-plaintext highlighter-rouge">django-extensions</code> app and its Graph models part, which generates a Graphviz <code class="language-plaintext highlighter-rouge">.dot</code> file from our django models. From that <code class="language-plaintext highlighter-rouge">.dot</code> file we used <a href="https://dreampuf.github.io/GraphvizOnline/">GraphvizOnline</a> site to generate images of the diagrams.</p>
+
+<h2 id="country">Country</h2>
+<p><img src="../../images/models_country.png" alt="Country model" /></p>
+
+<p>Above is the diagram of models with country specific data. The model is defined in <code class="language-plaintext highlighter-rouge">backend/core/country/models.py</code> file.
+The main “building” block is a <code class="language-plaintext highlighter-rouge">Country</code> model which holds all the data related to countries - like name, code, language, pricelist and vat groups.
+<code class="language-plaintext highlighter-rouge">VatGroup</code> itself defines binding between country and VAT percentage. 
+<code class="language-plaintext highlighter-rouge">Currency</code> looks like a separate model with no relations, but it’s mainly related to the <code class="language-plaintext highlighter-rouge">PriceList</code> model which will be described in a later sections.
+<code class="language-plaintext highlighter-rouge">Address</code> model is used to store addresses of users and is used during checkout process or are directly bindined to <code class="language-plaintext highlighter-rouge">Cart</code> model as well as <code class="language-plaintext highlighter-rouge">User</code> model.
+<code class="language-plaintext highlighter-rouge">ShippingInfo</code> and <code class="language-plaintext highlighter-rouge">BillingInfo</code> models are used to store user’s shipping and billing information during checkout process. They inherit from <code class="language-plaintext highlighter-rouge">Address</code> model and add some additional fields.</p>
+
+<h2 id="product">Product</h2>
+<p><img src="../../images/models_product.png" alt="Product model" /></p>
+
+<p>Above is the diagram of models related to products and categories. The models are defined in <code class="language-plaintext highlighter-rouge">backend/core/product/models.py</code> file and are divided into 2 groups:</p>
+<ul>
+  <li><strong>Product models</strong> - models that are directly related to products. They are:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">Product</code> - main product model.</li>
+      <li><code class="language-plaintext highlighter-rouge">ProductMedia</code> - model for product media. It has a FK to <code class="language-plaintext highlighter-rouge">Product</code> model.</li>
+      <li><code class="language-plaintext highlighter-rouge">ProductType</code> - model for product types. It defines the type of product (e.g. t-shirts, coffee, etc.). It defines allowed <a href="#variant-attribute-type"><code class="language-plaintext highlighter-rouge">AttributeType</code>s</a> for product variants of this type and vat group for each country of this product.</li>
+      <li><code class="language-plaintext highlighter-rouge">Category</code> - model for product categories. It’s a tree structure, so it has a <code class="language-plaintext highlighter-rouge">parent</code> field which is a FK to itself.</li>
+    </ul>
+  </li>
+  <li><strong>Product Variant models</strong> - models that are related to product variants. They are:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">ProductVariant</code> - main product variant model. It has a FK to <code class="language-plaintext highlighter-rouge">Product</code> model.</li>
+      <li><code class="language-plaintext highlighter-rouge">AttributeType</code> <span id="variant-attribute-type"></span> - model for product variant attributes. It defines the type of attribute (e.g. color, size, etc.).</li>
+      <li><code class="language-plaintext highlighter-rouge">BaseAttribute</code> - model for product variant attribute values. It defines the value of attribute (e.g. red, blue, etc.). It has a FK to <code class="language-plaintext highlighter-rouge">AttributeType</code> model.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Logic behind product variants is that each product variant has a set of attributes, which are defined by <code class="language-plaintext highlighter-rouge">AttributeType</code> model. Each attribute has a value, which is defined by <code class="language-plaintext highlighter-rouge">BaseAttribute</code> model. For example, if we have a product variant of type <code class="language-plaintext highlighter-rouge">t-shirt</code>, it will have 2 attributes: <code class="language-plaintext highlighter-rouge">color</code> and <code class="language-plaintext highlighter-rouge">size</code>. Each attribute will have a value, e.g. <code class="language-plaintext highlighter-rouge">color</code> will have values <code class="language-plaintext highlighter-rouge">red</code>, <code class="language-plaintext highlighter-rouge">blue</code>, <code class="language-plaintext highlighter-rouge">green</code>, etc. and <code class="language-plaintext highlighter-rouge">size</code> will have values <code class="language-plaintext highlighter-rouge">S</code>, <code class="language-plaintext highlighter-rouge">M</code>, <code class="language-plaintext highlighter-rouge">L</code>, etc.</p>
+
+<h2 id="pricelistcurrency">Pricelist/Currency</h2>
+<p><img src="../../images/models_pricelist_currency.png" alt="Pricelist/Currency model" /></p>
+
+<p>Above is the diagram of models related to price lists and currencies. The models are defined in <code class="language-plaintext highlighter-rouge">backend/core/product/models.py</code> and <code class="language-plaintext highlighter-rouge">backend/core/country/models.py</code> files.
+Every price (<code class="language-plaintext highlighter-rouge">ProductPrice</code>) represents a price of <code class="language-plaintext highlighter-rouge">ProductVariant</code> in a <code class="language-plaintext highlighter-rouge">PriceList</code>. Where <code class="language-plaintext highlighter-rouge">PriceList</code> usually represents a specific group of prices - it might be a group of prices for a specific country or a group of prices for a specific customers (like B2B or B2C). <code class="language-plaintext highlighter-rouge">PriceList</code> is also related to <code class="language-plaintext highlighter-rouge">Currency</code> model, which defines the currency of the prices in the price list. 
+The interesting part of <em>ecoseller</em> pricing logic comes as <code class="language-plaintext highlighter-rouge">VatGroup</code> model which allows you to define different VAT groups for different countries. This allows you to have different VAT value (incl. different group of VAT - reduced, standard, …) for different countries.
+With this logic, you can define a price list for a specific country and define different VAT groups for different countries. This allows you to have different prices for different countries, which is a common practice in e-commerce (for example due to different expenses for marketing, stocking, etc.).</p>
+
+<h2 id="cms">CMS</h2>
+<p><img src="../../images/models_page.png" alt="Page model" /></p>
+
+<p>Above is the diagram of the CMS models with its main relations. Models are defined in <code class="language-plaintext highlighter-rouge">backend/core/cms/models.py</code> file. It allows to create content pages with different types of content. The main model is <code class="language-plaintext highlighter-rouge">PageCMS</code> model, which represents a page with content in a specific language. It contains a content field in <a href="http://editorjs.io"><code class="language-plaintext highlighter-rouge">editorjs</code> language</a>. <code class="language-plaintext highlighter-rouge">PageFrontend</code> is an unussual idea in ecommerce platform. Since can have some specific pages that might not be stored in the database but would be represented as a HTML/JSX page, <code class="language-plaintext highlighter-rouge">PageFrontend</code> is simply a link to that page - or, to be clear, path of that page in the frontend. Why do we need that? Imagine a situation where you simply want some extra CSS styles or some specific layout of the (landing) page. It’s made directly in the frontend app and you simply store link in the database.
+This is perfectly usefull if you consider other model <code class="language-plaintext highlighter-rouge">PageCategory</code> which basically puts a page in a category. This allows you to create a group of different <code class="language-plaintext highlighter-rouge">PageCMS</code> and <code class="language-plaintext highlighter-rouge">PageFrontned</code>. For example, you can create a category <code class="language-plaintext highlighter-rouge">Info pages</code> and put all your info pages in it. 
+We can go a bit further and create <code class="language-plaintext highlighter-rouge">PageCategoryType</code>, which can group these categories. For example, you can create a <code class="language-plaintext highlighter-rouge">PageCategoryType</code> <code class="language-plaintext highlighter-rouge">Footer</code> and put all your categoreis that should display in footer. You can then fetch those footer specific categories and display them in the footer of your website. This is a very flexible way of creating content pages and displaying them in the frontend.</p>
+
+<h2 id="cart">Cart</h2>
+<p><img src="../../images/models_cart.png" alt="Cart model" /></p>
+
+<p>Above is the diagram of the <code class="language-plaintext highlighter-rouge">Cart</code> model with its main relations to other models. The model is defined in <code class="language-plaintext highlighter-rouge">backend/core/cart/models.py</code> file.
+The <code class="language-plaintext highlighter-rouge">Cart</code> model is used to store user’s cart. It has a FK to <code class="language-plaintext highlighter-rouge">User</code> model, which binds the cart to the user. It also has a FK to <code class="language-plaintext highlighter-rouge">ShippingMethodCountry</code> and <code class="language-plaintext highlighter-rouge">PaymentMethodCountry</code> models, which are used to store user’s selected shipping and payment methods. 
+We also have a <code class="language-plaintext highlighter-rouge">CartItem</code> model, which represents concrete item in the cart and has a FK relation to <code class="language-plaintext highlighter-rouge">Cart</code>. Each <code class="language-plaintext highlighter-rouge">CartItem</code> also has a FK to <code class="language-plaintext highlighter-rouge">ProductVariant</code> and <code class="language-plaintext highlighter-rouge">Product</code> models, to bind the item with the concrete product.
+The <code class="language-plaintext highlighter-rouge">Cart</code> model also has relations to country specific models such as <code class="language-plaintext highlighter-rouge">Country</code>, <code class="language-plaintext highlighter-rouge">PriceList</code>, <code class="language-plaintext highlighter-rouge">PaymentMethodCountry</code> and <code class="language-plaintext highlighter-rouge">ShippingMethodCountry</code> to ensure that the cart is bind to the concrete country specific data.
+Once the user creates an order, new relation is created - a FK from <code class="language-plaintext highlighter-rouge">Order</code> model to <code class="language-plaintext highlighter-rouge">Cart</code>. We can see one more model in the diagram - <code class="language-plaintext highlighter-rouge">Review</code>. It’s used to store user’s reviews of products. It has a FK to <code class="language-plaintext highlighter-rouge">ProductVariant</code>, <code class="language-plaintext highlighter-rouge">Product</code> and <code class="language-plaintext highlighter-rouge">Order</code> models.</p>
+<h2 id="user">User</h2>
+<p><img src="../../images/models_user.png" alt="User model" /></p>
+
+<p>Above is the diagram of the <code class="language-plaintext highlighter-rouge">User</code> model with its main relations to other models. The model is defined in <code class="language-plaintext highlighter-rouge">backend/core/user/models.py</code> file.
+In ecoseller, we replaced default django <code class="language-plaintext highlighter-rouge">User</code> model with our own <code class="language-plaintext highlighter-rouge">User</code> model in order to have more control over it. You can see that it has 2 abstract models as its parents: <code class="language-plaintext highlighter-rouge">AbstractBaseUser</code> and <code class="language-plaintext highlighter-rouge">PermissionsMixin</code>:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">AbstractBaseUser</code> is a django abstract model that provides basic user functionality</li>
+  <li><code class="language-plaintext highlighter-rouge">PermissionsMixin</code> is a django abstract model that provides permissions functionality.</li>
+</ul>
+
+<p>Another authorozation related models are <code class="language-plaintext highlighter-rouge">Group</code> and <code class="language-plaintext highlighter-rouge">Permission</code> models. They are django models that are used for authorization purposes. <code class="language-plaintext highlighter-rouge">Group</code> model is used to group users into units, while <code class="language-plaintext highlighter-rouge">Permission</code> model is used to define permissions for users. More on how we handle user authorization can be found in <a href="../../administration/authorization">Authorization</a> section.
+Next important relation is to <code class="language-plaintext highlighter-rouge">Address</code> model. It is used to store user’s address. As we can see, there is also a connection to <code class="language-plaintext highlighter-rouge">ShippingInfo</code> and <code class="language-plaintext highlighter-rouge">BillingInfo</code>, which are used during checkout process, to store user’s shipping and billing information. The last relation is to <code class="language-plaintext highlighter-rouge">Cart</code> model, which binds user to his cart.</p>
+
+<h1 id="authorization">Authorization</h1>
+<p>As mentioned in <a href="../../administration/authorization">Authorization</a> section, ecoseller uses roles and permissions to restrict access to certain parts of the application.</p>
+
+<p>To have better control over permissions representation and their grouping, we created 2 new models:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">ManagerPermission</code> - for permission representation. It consists of:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">name</code> - name of permission with predefined format: <em>&lt;model_name&gt;</em>_<em>&lt;permission_type&gt;</em>_permission.</li>
+      <li><code class="language-plaintext highlighter-rouge">model</code> - name of model to which this permission corresponds</li>
+      <li><code class="language-plaintext highlighter-rouge">description</code> - text description of permission</li>
+      <li><code class="language-plaintext highlighter-rouge">type</code> - type of permission. Enum of 4 possible values:
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">view</code></li>
+          <li><code class="language-plaintext highlighter-rouge">add</code></li>
+          <li><code class="language-plaintext highlighter-rouge">change</code></li>
+          <li><code class="language-plaintext highlighter-rouge">delete</code></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">ManagerGroup</code> - for group representation. It consists of:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">name</code> - name of group</li>
+      <li><code class="language-plaintext highlighter-rouge">description</code> - text description of group</li>
+      <li><code class="language-plaintext highlighter-rouge">permissions</code> - M2M field to permissions of which this group consists.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Each group/permission should be convertable to DRF group/permission.</p>
+
+<h2 id="rolesmanager">RolesManager</h2>
+<p><code class="language-plaintext highlighter-rouge">RolesManager</code> is our internal python class for handling permissions and (almost) everything related to them. It consists purely of static methods, so we can call them anywhere across the code.</p>
+
+<p>Its main usage is:</p>
+<ul>
+  <li>Loading initial predefined roles from config and creating <code class="language-plaintext highlighter-rouge">ManagerGroup</code> and <code class="language-plaintext highlighter-rouge">ManagerPermission</code> objects from it</li>
+  <li>Conversion between <code class="language-plaintext highlighter-rouge">DRF Group</code> and <code class="language-plaintext highlighter-rouge">ManagerGroup</code>, and also between <code class="language-plaintext highlighter-rouge">DRF Permission</code> and <code class="language-plaintext highlighter-rouge">ManagerPermission</code></li>
+</ul>
+
+<h2 id="initial-roles-definitions-and-their-loading">Initial roles definitions and their loading</h2>
+<p>As mentioned earlier, we have <a href="../../administration/authorization"><code class="language-plaintext highlighter-rouge">roles.json</code> config</a> file which has initial roles definition and <a href="#rolesmanager"><code class="language-plaintext highlighter-rouge">RolesManager</code></a> class which is responsible for loading it. We achieved this behaviour by following adjustments:</p>
+<ol>
+  <li>We created <code class="language-plaintext highlighter-rouge">initial_data.py</code> file along with <code class="language-plaintext highlighter-rouge">populate_groups</code> method in it. In this method, we :
+    <ol>
+      <li>load <code class="language-plaintext highlighter-rouge">roles.json</code> config with <code class="language-plaintext highlighter-rouge">RolesManager</code> class and create instances of <code class="language-plaintext highlighter-rouge">ManagerGroup</code> and <code class="language-plaintext highlighter-rouge">ManagerPermission</code></li>
+      <li>Create DRF Groups from loaded <code class="language-plaintext highlighter-rouge">ManagerGroup</code> objects</li>
+      <li>Create general DRF permissions from <code class="language-plaintext highlighter-rouge">app_config</code></li>
+      <li>Convert all DRF permissions to <code class="language-plaintext highlighter-rouge">ManagerPermission</code> objects</li>
+      <li>Assign <code class="language-plaintext highlighter-rouge">ManagerPermission</code> objects to corresponding <code class="language-plaintext highlighter-rouge">ManagerGroup</code> objects</li>
+    </ol>
+  </li>
+  <li>We put <code class="language-plaintext highlighter-rouge">populate_groups</code> method in our <code class="language-plaintext highlighter-rouge">user</code> migration file <code class="language-plaintext highlighter-rouge">0002_auto_20230316_1534.py</code> to the <code class="language-plaintext highlighter-rouge">operations</code> part - this will ensure that when this migration runs, it will also trigger <code class="language-plaintext highlighter-rouge">populate_groups</code> method</li>
+</ol>
+
+<h2 id="protecting-views-with-permissions">Protecting views with permissions</h2>
+<p>In order to apply our permission restrictions, we defined two custom decorators are defined: <code class="language-plaintext highlighter-rouge">@check_user_access_decorator</code> and <code class="language-plaintext highlighter-rouge">@check_user_is_staff_decorator</code> (their definition can be found in <code class="language-plaintext highlighter-rouge">backend/core/roles/decorator.py</code>).</p>
+
+<h2 id="check_user_access_decorator"><code class="language-plaintext highlighter-rouge">@check_user_access_decorator</code></h2>
+<p>The decorator is used mainly for <code class="language-plaintext highlighter-rouge">POST</code>, <code class="language-plaintext highlighter-rouge">PUT</code> and <code class="language-plaintext highlighter-rouge">DELETE</code> views.
+It checks if the user has the permission to perform the action. If the user has the permission, the view is executed. Otherwise, the view returns <code class="language-plaintext highlighter-rouge">403</code> status code.</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">permissions</code>: Set of permissions that the user needs to have to access view</li>
+</ul>
+
+<h3 id="usage-example">Usage example</h3>
+<p>To check whether the user has <code class="language-plaintext highlighter-rouge">product_change_permission</code> permission for accessing <code class="language-plaintext highlighter-rouge">put</code> method, put decorator above the method:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="o">@</span><span class="n">check_user_access_decorator</span><span class="p">({</span><span class="s">"product_change_permission"</span><span class="p">})</span>
+    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">().</span><span class="n">put</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="check_user_is_staff_decorator"><code class="language-plaintext highlighter-rouge">@check_user_is_staff_decorator</code></h2>
+<p>The decorator is used mainly for <code class="language-plaintext highlighter-rouge">GET</code> views. It checks if the user is staff (<code class="language-plaintext highlighter-rouge">is_staff</code> field in <code class="language-plaintext highlighter-rouge">User</code> model). If the user is staff, the view is executed. Otherwise, the view returns <code class="language-plaintext highlighter-rouge">403</code> status code.</p>
+
+<h3 id="parameters-1">Parameters</h3>
+<ul>
+  <li>None: The decorator does not take any parameters</li>
+</ul>
+
+<h3 id="usage-example-1">Usage example</h3>
+<p>To check whether the user is staff for accessing <code class="language-plaintext highlighter-rouge">get</code> method, put decorator above the method:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="o">@</span><span class="n">check_user_is_staff_decorator</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">().</span><span class="n">get</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+</code></pre></div></div>
+
+		</article>
+	</section>
+
+	<script>
+		document.getElementById("open-nav").addEventListener("click", function () {
+			document.body.classList.toggle("nav-open");
+		});
+	</script>
+</body>
+
+</html>
