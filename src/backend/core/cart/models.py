@@ -447,6 +447,21 @@ class CartItem(models.Model):
         return self.cart.pricelist.format_price(total_price_before_discount)
 
     @property
+    def total_price_incl_vat_before_discount_formatted(self):
+        """
+        Get total price including VAT before discount (unit price * quantity) of this item with currency symbol
+
+        This price is intended to be shown to the user.
+        """
+        if not self.discount or (self.discount == 0):
+            return self.total_price_incl_vat_formatted
+
+        total_price = self.unit_price_incl_vat * self.quantity
+        total_price_before_discount = total_price / (1 - self.discount / 100)
+
+        return self.cart.pricelist.format_price(total_price_before_discount)
+
+    @property
     def unit_price_incl_vat_formatted(self):
         """
         Get unit price including VAT of this item with currency symbol

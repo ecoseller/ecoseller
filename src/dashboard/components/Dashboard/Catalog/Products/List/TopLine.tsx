@@ -27,10 +27,6 @@ const ProductListTopLine = () => {
         mb={5}
         spacing={2}
       >
-        <SettingsPopover>
-          <Button sx={{ p: 2 }}>Import</Button>
-          <Button sx={{ p: 2 }}>Export</Button>
-        </SettingsPopover>
         <Button
           variant="contained"
           startIcon={<AddIcon />}

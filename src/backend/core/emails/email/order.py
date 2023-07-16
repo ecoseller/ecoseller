@@ -81,9 +81,9 @@ class EmailOrderConfirmation(Email):
                             for attribute in item.product_variant.attributes.all()
                         ]
                     ),
-                    "base_price": item.total_price_without_vat_before_discount_formatted,
+                    "base_price": item.total_price_incl_vat_before_discount_formatted,
                     "is_discounted": item.discount and item.discount > 0,
-                    "discount_price": item.total_price_without_vat_formatted,
+                    "discount_price": item.total_price_incl_vat_formatted,
                 }
                 for item in self.order.cart.cart_items.all()
             ],
