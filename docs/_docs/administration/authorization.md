@@ -4,6 +4,10 @@ category: Administration documentation
 order: 4
 ---
 
+Table of contents:
+* TOC
+{:toc}
+
 To achieve better security, ecoseller introduces so-called *Roles*. Each role has a set of permissions. Permissions are used to restrict access to certain parts of the application. For future use, ecoseller creates a new permission (more precisely four for each action - add/change/view/delete) for each model. At this moment, ecoseller is actively using the following permissions:
 ```
 - add role                  | group_add_permission

@@ -2,6 +2,10 @@
 title: Introduction
 ---
 
+Table of contents:
+* TOC
+{:toc}
+
 Welcome to the documentation page of **ecoseller**, a cutting-edge open-source e-commerce platform built using the powerful combination of Django Rest Framework and React. Ecoseller offers a comprehensive solution for creating, managing, and optimizing your online store, empowering you to deliver better user experiences and drive business growth with system that ships quickly.
 
 Designed with developers and users in mind, Ecoseller comes bundled with a range of essential features, including an administration panel, a storefront, and an AI-powered recommendation system. This documentation serves as a comprehensive resource, offering detailed guidance on utilizing and customizing multiple aspects of the platform, from the frontend to the backend.

@@ -4,6 +4,10 @@ category: Programming documentation
 order: 3
 ---
 
+Table of contents:
+* TOC
+{:toc}
+
 # Dashboard
 
 # Storefront

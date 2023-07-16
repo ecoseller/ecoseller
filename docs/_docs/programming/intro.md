@@ -4,6 +4,10 @@ category: Programming documentation
 order: 1
 ---
 
+Table of contents:
+* TOC
+{:toc}
+
 # Technical design
 In this section we will briefly introduce technologies that are used to build our application.
 ## Backend

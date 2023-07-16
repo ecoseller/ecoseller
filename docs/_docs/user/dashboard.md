@@ -4,6 +4,10 @@ category: User category
 order: 2
 ---
 
+Table of contents:
+* TOC
+{:toc}
+
 # Overview
 The Overview page provides summarised information about the store. It is the first page that is shown to the user after logging in. The page is divided into two main sections:
 * Today's statistics

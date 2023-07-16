@@ -4,6 +4,10 @@ category: Administration documentation
 order: 3
 ---
 
+Table of contents:
+* TOC
+{:toc}
+
 Ecoseller is designed to be a versatile and comprehensive e-commerce platform that caters to a global audience. With its aim to support multi-country operations, Ecoseller provides extensive localization capabilities across all aspects of user communication. This section of the administration documentation focuses on the localization features and configuration options available within Ecoseller.
 
 However, to understand the localization capabilities of Ecoseller, it is important to first understand the concept of locales and how they are used within the platform. 

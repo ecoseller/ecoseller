@@ -4,6 +4,10 @@ category: Administration documentation
 order: 2
 ---
 
+Table of contents:
+* TOC
+{:toc}
+
 # Working with **ecoseller** REST API
 The ecoseller platform provides a comprehensive and powerful REST API that allows developers to interact with and extend the functionality of the e-commerce platform. This section of the documentation focuses on working with the ecoseller REST API and provides detailed guidance on utilizing its endpoints and authentication mechanisms. Please note that the ecoseller REST API was designed to be used primarily for dashboard purposes and is not intended to be used as a public API for the ecoseller platform. However, feel free to use it as you see fit.
 On the other hand, please consider using `NotificationAPI` for public API purposes and calling external services directly from ecoseller backend.

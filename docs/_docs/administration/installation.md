@@ -4,6 +4,10 @@ category: Administration documentation
 order: 1
 ---
 
+Table of contents:
+* TOC
+{:toc}
+
 ## Prerequisites
 Before proceeding with the installation of **ecoseller**, it is important to ensure that your machine meets the necessary prerequisites. While **ecoseller** itself is not demanding and can run on less powerful devices, it is recommended to have a slightly more capable setup for the default installation, especially when including the Elasticsearch and AI recommendation system.
 

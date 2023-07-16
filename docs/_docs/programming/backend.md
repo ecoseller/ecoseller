@@ -4,6 +4,9 @@ category: Programming documentation
 order: 2
 ---
 
+Table of contents:
+* TOC
+{:toc}
 
 # Data models
 In this section we will describe data models of the backend part of the application. To do so, we will go over various parts of system and describe them in more detail using diagrams.
