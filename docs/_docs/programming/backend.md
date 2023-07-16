@@ -23,6 +23,8 @@ As mentioned in [Architecture](../architecture) section, ecoseller's backend is 
 * `search` - provides functionality for searching products using ElasticSearch
 * `user` - provides functionality for user related operations
 
+To see the full core API specification, navigate to [localhost:8000/swagger/](http://localhost:8000/swagger/) (if you are running the application locally). This will open the Swagger UI, where you can see all the endpoints and their documentation. Beware that many endpoints are protected by authorization, so you will not be able to access them without a proper JWT token.
+
 # Data models
 In this section we will describe data models of the backend part of the application. To do so, we will go over various parts of system and describe them in more detail using diagrams.
 To create diagrams, we used `django-extensions` app and its Graph models part, which generates a Graphviz `.dot` file from our django models. From that `.dot` file we used [GraphvizOnline](https://dreampuf.github.io/GraphvizOnline/) site to generate images of the diagrams.
