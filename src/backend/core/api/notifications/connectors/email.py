@@ -81,7 +81,9 @@ class EmailConnector(NotificationConnector):
         """
 
         # import it here to avoid error on not initialized django app
-        from emails.email.order_item_complaint import OrderItemComplaintConfirmationEmail
+        from emails.email.order_item_complaint import (
+            OrderItemComplaintConfirmationEmail,
+        )
         from order.models import OrderItemComplaint
 
         # obtain serialized order data from kwargs (data is a dict)
@@ -113,7 +115,9 @@ class EmailConnector(NotificationConnector):
         """
 
         # import it here to avoid error on not initialized django app
-        from emails.email.order_item_complaint import OrderItemComplaintStatusUpdateEmail
+        from emails.email.order_item_complaint import (
+            OrderItemComplaintStatusUpdateEmail,
+        )
         from order.models import OrderItemComplaint
 
         # obtain serialized order data from kwargs (data is a dict)
