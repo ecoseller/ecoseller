@@ -9,8 +9,10 @@ Table of contents:
 {:toc}
 
 # Dashboard
+TODO: add description
 
 # Storefront
+TODO: add description
 
 # Context providers
 To be able to access various data in different parts of the application, we use React Context. More information about React Context can be found on the following links:
@@ -274,6 +276,8 @@ const ChildComponent = () => {
 ## RecommenderProvider
 `RecommenderProvider` is a context provider that provides information about the user's recommender session as well as some usefull functions to send either recommender event or retrive recommendations. It is used only in `Storefront` component.
 
+TODO: add more info like obove
+
 # Interceptors
 Interceptors are used to intercept requests and responses before they are handled by the application. In ecoseller, we use them to add authorization token and other data to requests and to handle errors. We use `axios` library for handling requests and responses. More information about interceptors can be found on the following links:
 * [Axios - Getting started](https://axios-http.com/docs/intro)
@@ -352,3 +356,6 @@ api.interceptors.request.use((config) => {
   return config;
 });
 ```
+
+# API Routes 
+TODO: https://nextjs.org/docs/pages/building-your-application/routing/api-routes
