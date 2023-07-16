@@ -8,6 +8,21 @@ Table of contents:
 * TOC
 {:toc}
 
+As mentioned in [Architecture](../architecture) section, ecoseller's backend is mainly a django application. It consists of main `core` project and following apps:
+* `api` - provides logic of NotificationAPI and PaymentsAPI for integration of 3rd party payment methods and notifying external services
+* `cart` - provides functionality for user's cart
+* `category` - provides functionality for product categories
+* `cms` - provides functionality for content pages
+* `core` - main app of the project
+* `country` - provides functionality for countries, addresses, shipping and billing information, currencies and VAT groups
+* `emails` - provides functionality for order confirmation emails
+* `order` - provides functionality for orders
+* `product` - provides functionality for products and product variants
+* `review` - provides functionality for product reviews
+* `roles` - provides functionality for user roles and permissions
+* `search` - provides functionality for searching products using ElasticSearch
+* `user` - provides functionality for user related operations
+
 # Data models
 In this section we will describe data models of the backend part of the application. To do so, we will go over various parts of system and describe them in more detail using diagrams.
 To create diagrams, we used `django-extensions` app and its Graph models part, which generates a Graphviz `.dot` file from our django models. From that `.dot` file we used [GraphvizOnline](https://dreampuf.github.io/GraphvizOnline/) site to generate images of the diagrams.
