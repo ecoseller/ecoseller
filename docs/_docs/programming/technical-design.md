@@ -55,6 +55,3 @@ We use several tools for enforcing our code style. In both the dashboard and the
   
 Similarly, in `Core` component (which is written in `Python`) we use `black` code formatter and `flake8` linter.
 This way, we ensure consistent formatting of our code and avoid common bugs, which can be found by static analysis tools. We further use these tools in our Continuous integration setup, as described in [Contribution - Continuous integration](../../contribution#continuous-integration) section.
-
-
-# Links
