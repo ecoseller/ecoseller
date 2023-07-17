@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from typing import Optional
 
 import pytest
 
@@ -39,7 +40,11 @@ class MockModelManager(ModelManager):
         self.scoring_model = scoring_model
 
     def get_model(
-        self, recommendation_type: RecommendationType, step: PredictionPipeline.Step
+        self,
+        recommendation_type: RecommendationType,
+        step: PredictionPipeline.Step,
+        session_id: str,
+        user_id: Optional[int],
     ) -> AbstractPredictionModel:
         if step == PredictionPipeline.Step.RETRIEVAL:
             return self.retrieval_model
