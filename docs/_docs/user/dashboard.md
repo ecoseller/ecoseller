@@ -121,13 +121,50 @@ This section shows the average rating of the product. The rating is shown via st
 This section describes creating and editing pages and menus (of pages). We have two types of pages:
 * CMS Page
 * * CMS Page is a page that is created and edited by the admin in the dashboard. It can contain any content that the admin wants to show to the user. The admin can create as many CMS pages as he wants.
-* Storefront Page
-* * Storefront page is a special type of a page that lives in the storefront and is created and edited by the storefront programmer. In dashboard you can just create a information about the page and link it to the storefront page. This is useful when you want to create a link to a page that is not a CMS page (e.g. something with more CSS and Java/TypeScript).
+* Storefront Link
+* * Storefront page/link is a special type of a page that lives in the storefront and is created and edited by the storefront programmer. In dashboard you can just create a information about the page and link it to the storefront page. This is useful when you want to create a link to a page that is not a CMS page (e.g. something with more CSS and Java/TypeScript).
 
 Both pages can be categorized into "menus" - this means that you can create a menu and add pages to it. The menu can then be fetched from storefront.
 
 ## Pages
 The pages page consists of a list showing all pages. The list has the following columns:
+* ID
+* Title
+* Type - CMS or Storefront
+* Actions
+
+### Creating new CMS page
+To create a new CMS page, click on the arrow next to *Create New Page* button in the upper right corner. This opens a drop-down menu with two options:
+* Page
+* Storefront link
+Select the *Page* option to create a new CMS page and click the button.
+![Create new page](../../images/cms_create_new_page.png)
+
+### Editing CMS page
+Simply click on the edit icon of page that you want to edit in the list. This opens a page with the following fields:
+* Title
+* Slug - this is the URL of the page. It is automatically generated from the title, but you can change it if you want. Just click on the *sync* button in the to the slug field. Just make sure that the slug is unique.
+* Content - this is the content of the page. Use *editorjs* to create the content. You can find more information about *editorjs* [here](https://editorjs.io/).
+* Published - this is a checkbox that indicates whether the page is published or not. If the page is not published, it will not be shown in the storefront and will not be accessible via the URL - 404 error will be shown instead.
+* Categories - this is a list of categories that the page belongs to.
+
+![CMS page edit](../../images/cms_page_edit.png)
+
+### Creating new storefront link
+To create a new storefront link, click on the arrow next to *Create New Page* button in the upper right corner. This opens a drop-down menu with two options:
+* Page
+* Storefront link
+Select the *Storefront link* option to create a new storefront link and click the button.
+![Create new page](../../images/cms_create_new_page.png)
+
+### Editing storefront link
+Simply click on the edit icon of page that you want to edit in the list. This opens a page with the following fields:
+* Title - this is the title of the page. It is shown in the storefront.
+* Storefront path - this is the path to the storefront page.
+* Published - this is a checkbox that indicates whether the page is published or not. If the page is not published, it will not be shown in the storefront and will not be accessible via the URL - 404 error will be shown instead.
+* Categories - this is a list of categories that the page belongs to.
+![CMS link edit](../../images/cms_link_edit.png)
+
 
 ### Pages list
 This page shows a list of all pages. The list has the following columns:
