@@ -121,6 +121,17 @@ This section shows the average rating of the product. The rating is shown via st
 This section describes creating and editing pages and menus (of pages). We have two types of pages:
 * CMS Page
 * * CMS Page is a page that is created and edited by the admin in the dashboard. It can contain any content that the admin wants to show to the user. The admin can create as many CMS pages as he wants.
+* Storefront Page
+* * Storefront page is a special type of a page that lives in the storefront and is created and edited by the storefront programmer. In dashboard you can just create a information about the page and link it to the storefront page. This is useful when you want to create a link to a page that is not a CMS page (e.g. something with more CSS and Java/TypeScript).
+
+Both pages can be categorized into "menus" - this means that you can create a menu and add pages to it. The menu can then be fetched from storefront.
+
+## Pages
+The pages page consists of a list showing all pages. The list has the following columns:
+
+### Pages list
+This page shows a list of all pages. The list has the following columns:
+
 
 # Users & Roles
 This page provides an overview of all users and roles. It is into two main parts:
