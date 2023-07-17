@@ -35,7 +35,11 @@ class ModelManager:
         return SelectionPredictionModel()
 
     def get_model(
-        self, recommendation_type: RecommendationType, step: "PredictionPipeline.Step"
+        self,
+        recommendation_type: RecommendationType,
+        step: "PredictionPipeline.Step",
+        session_id: str,
+        user_id: Optional[int],
     ) -> AbstractPredictionModel:
         from recommender_system.models.prediction.selection.model import (
             SelectionPredictionModel,
@@ -52,7 +56,9 @@ class ModelManager:
             )
             return SelectionPredictionModel()
 
-        return self.get_model_from_cascade(cascade=cascade)
+        return self.get_model_from_cascade(
+            cascade=cascade, session_id=session_id, user_id=user_id
+        )
 
     def create_model(self, model_name: str) -> AbstractPredictionModel:
         model_class = PredictionModelMapper.map(model_name)
