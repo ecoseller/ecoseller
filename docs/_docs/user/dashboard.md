@@ -117,14 +117,79 @@ This section shows the average rating of the product. The rating is shown via st
 
 # Catalog
 # Localization
+The localization part of the dashboard is used to manage country-specific parts of the system. This includes:
+* Countries
+* Vat Groups
+* Price Lists
+* Currency
+
+Each of these parts has its page in the dashboard. We will describe them in more detail in the following sections.
+
+## Countries
+This page consists of a list showing all countries. The list has the following columns:
+* Code
+* Name
+* Locale
+* Default pricelist
+* Actions
+  * Edit - click on the edit button unlocks the row for editing
+  * Delete - click on the delete button deletes the country
+
+To add a new country, click on the *Add New* button in the upper left corner of the table. This adds a new row to the table. Fill in the code, name, locale and default pricelist of the country and click on the *Save* icon.
+
+![Countries list](../../images/localization_countries_list.png)
+
+## Vat Groups
+This page consists of a list showing all vat groups. The list has the following columns:
+* Vat rate (in %)
+* Name
+* Country
+* Default
+* Actions
+  * Edit - click on the edit button unlocks the row for editing
+  * Delete - click on the delete button deletes the vat group
+
+To add a new vat group, click on the *Add New* button in the upper left corner of the table. This adds a new row to the table. Fill in the vat rate, name, and country, set the default option and click on the *Save* icon.
+
+![Vat groups list](../../images/localization_vat_groups_list.png)
+
+## Price Lists
+This page consists of a list showing all price lists. The list has the following columns:
+* Code
+* Currency
+* Rounding
+* Is default
+* Actions
+  * Edit - click on the edit button unlocks the row for editing
+  * Delete - click on the delete button deletes the price list
+
+To add a new price list, click on the *Add New* button in the upper left corner of the table. This adds a new row to the table. Fill in the code and currency, set rounding and default option and click on the *Save* icon.
+
+![Price lists list](../../images/localization_price_lists_list.png)
+
+## Currency
+This page consists of a list showing all currencies. The list has the following columns:
+* Code
+* Symbol
+* Symbol position
+  * Before price
+  * After price
+* Actions
+  * Edit - click on the edit button unlocks the row for editing
+  * Delete - click on the delete button deletes the currency
+
+To add a new currency, click on the *Add New* button in the upper left corner of the table. This adds a new row to the table. Fill in the code and symbol, set the symbol position and click on the *Save* icon.
+
+![Currencies list](../../images/localization_currency_list.png)
+
 # CMS
 This section describes creating and editing pages and menus (of pages). We have two types of pages:
 * CMS Page
-* * CMS Page is a page that is created and edited by the admin in the dashboard. It can contain any content that the admin wants to show to the user. The admin can create as many CMS pages as he wants.
+  * CMS Page is a page that is created and edited by the admin in the dashboard. It can contain any content that the admin wants to show to the user. The admin can create as many CMS pages as he wants.
 * Storefront Link
-* * Storefront page/link is a special type of a page that lives in the storefront and is created and edited by the storefront programmer. In dashboard you can just create a information about the page and link it to the storefront page. This is useful when you want to create a link to a page that is not a CMS page (e.g. something with more CSS and Java/TypeScript).
+  * A storefront page/link is a special type of page that lives in the storefront and is created and edited by the storefront programmer. In the dashboard, you can just create a piece of information about the page and link it to the storefront page. This is useful when you want to create a link to a page that is not a CMS page (e.g. something with more CSS and Java/TypeScript).
 
-Both pages can be categorized into "menus" - this means that you can create a menu and add pages to it. The menu can then be fetched from storefront.
+Both pages can be categorized into "menus" - this means that you can create a menu and add pages to it. The menu can then be fetched from the storefront.
 
 ## Pages
 The pages page consists of a list showing all pages. The list has the following columns:
@@ -133,7 +198,7 @@ The pages page consists of a list showing all pages. The list has the following 
 * Type - CMS or Storefront
 * Actions
 
-### Creating new CMS page
+### Creating a new CMS page
 To create a new CMS page, click on the arrow next to *Create New Page* button in the upper right corner. This opens a drop-down menu with two options:
 * Page
 * Storefront link
@@ -141,16 +206,16 @@ Select the *Page* option to create a new CMS page and click the button.
 ![Create new page](../../images/cms_create_new_page.png)
 
 ### Editing CMS page
-Simply click on the edit icon of page that you want to edit in the list. This opens a page with the following fields:
+Simply click on the edit icon of the page that you want to edit in the list. This opens a page with the following fields:
 * Title
-* Slug - this is the URL of the page. It is automatically generated from the title, but you can change it if you want. Just click on the *sync* button in the to the slug field. Just make sure that the slug is unique.
+* Slug - this is the URL of the page. It is automatically generated from the title, but you can change it if you want. Just click on the *sync* button in the slug field. Just make sure that the slug is unique.
 * Content - this is the content of the page. Use *editorjs* to create the content. You can find more information about *editorjs* [here](https://editorjs.io/).
-* Published - this is a checkbox that indicates whether the page is published or not. If the page is not published, it will not be shown in the storefront and will not be accessible via the URL - 404 error will be shown instead.
+* Published - this is a checkbox that indicates whether the page is published or not. If the page is not published, it will not be shown in the storefront and will not be accessible via the URL - a 404 error will be shown instead.
 * Categories - this is a list of categories that the page belongs to.
 
 ![CMS page edit](../../images/cms_page_edit.png)
 
-### Creating new storefront link
+### Creating a new storefront link
 To create a new storefront link, click on the arrow next to *Create New Page* button in the upper right corner. This opens a drop-down menu with two options:
 * Page
 * Storefront link
@@ -158,10 +223,10 @@ Select the *Storefront link* option to create a new storefront link and click th
 ![Create new page](../../images/cms_create_new_page.png)
 
 ### Editing storefront link
-Simply click on the edit icon of page that you want to edit in the list. This opens a page with the following fields:
-* Title - this is the title of the page. It is shown in the storefront.
+Simply click on the edit icon of the page that you want to edit in the list. This opens a page with the following fields:
+* Title - this is the title of the page. It is shown on the storefront.
 * Storefront path - this is the path to the storefront page.
-* Published - this is a checkbox that indicates whether the page is published or not. If the page is not published, it will not be shown in the storefront and will not be accessible via the URL - 404 error will be shown instead.
+* Published - this is a checkbox that indicates whether the page is published or not. If the page is not published, it will not be shown in the storefront and will not be accessible via the URL - a 404 error will be shown instead.
 * Categories - this is a list of categories that the page belongs to.
 ![CMS link edit](../../images/cms_link_edit.png)
 
@@ -170,7 +235,7 @@ This page consists of two parts:
 * Categories
 * Page category types
 
-**Page category type** basically works as a groupping of **categories**. It is used to group categories that are used for the same purpose. For example, you can create a page category type called *FOOTER* and add categories *About us*, *Contact us*, *Terms and conditions* to it. Then you can use this page category type in the footer of the storefront - since it's automatically fetched from the dashboard.
+**Page category type** works as a grouping of **categories****. It is used to group categories that are used for the same purpose. For example, you can create a page category type called *FOOTER* and add categories *About us*, *Contact us* and *Terms and conditions* to it. Then you can use this page category type in the footer of the storefront - since it's automatically fetched from the dashboard.
 
 ### Page category type
 This section shows a list of all page category types. The list has the following columns:
@@ -191,16 +256,15 @@ This section shows a list of all categories. The list has the following columns:
 
 ![Categories](../../images/cms_page_category_list.png)
 #### Creating a new category
-In order to create new category, click on the *New page category* button in the upper left corner of the table. This redirects you to the detail category page. 
-Now follow steps the same as for editing a category (see [below](#editing-a-category)).
+In order to create a new category, click on the *New page category* button in the upper left corner of the table. This redirects you to the detail category page. Now follow the steps the same as for editing a category (see [below](#editing-a-category)).
 
 #### Editing a category
 In order to edit a category, click on the edit icon in the table. This redirects you to the detail category page.
 
 1. Fill in the title of the category
 2. Select the page category type from the drop-down menu.
-3. Set unique code of the category. This code is used to identify the category in the storefront. It is also used to fetch the category as a group.
-4. Set published checkbox. If the category is not published, it will not be shown in the storefront.
+Set the unique code of the category. This code is used to identify the category in the storefront. It is also used to fetch the category as a group.
+Set the published checkbox. If the category is not published, it will not be shown on the storefront.
 Then click on the *Save* button.
 
 ![Category edit](../../images/cms_page_category_edit.png)
