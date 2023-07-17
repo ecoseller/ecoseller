@@ -18,7 +18,6 @@ services:
       # - ./backend/demo_data/images:/usr/src/mediafiles
     ports:
       - 8000:8000
-      - 8001:8001
     env_file:
       - ./backend/docker-compose.env
     depends_on:
