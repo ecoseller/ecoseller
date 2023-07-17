@@ -262,8 +262,15 @@ This section contains the prices of the product. It comes from defined price lis
 ![Product prices](../../images/catalog_product_edit_prices.png)
 
 #### Product media
-This section contains the media of the product. You can add multiple media (images) to the product using the *Upload* button. 
-The primary image (shown in the category) is the first image in the list. You can reorder the images by drag and drop. You can also delete the images by clicking on the *Delete* icon.
+This section contains the media of the product. 
+##### Adding images
+You can add multiple media (images) to the product using the *Upload* button. 
+##### Reordering images (setting primary image)
+The primary image (shown in the category) is the first image in the list. You can reorder the images by drag and drop. 
+![Product media reorder](../../images/catalog_product_edit_media_reorder.gif)
+
+##### Deleting images
+You can also delete the images by clicking on the *Delete* icon.
 ![Product media](../../images/catalog_product_edit_media.png)
 
 #### General FAQ about products
