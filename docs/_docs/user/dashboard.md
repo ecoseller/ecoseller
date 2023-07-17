@@ -165,9 +165,53 @@ Simply click on the edit icon of page that you want to edit in the list. This op
 * Categories - this is a list of categories that the page belongs to.
 ![CMS link edit](../../images/cms_link_edit.png)
 
+## Categories & Types
+This page consists of two parts:
+* Categories
+* Page category types
 
-### Pages list
-This page shows a list of all pages. The list has the following columns:
+**Page category type** basically works as a groupping of **categories**. It is used to group categories that are used for the same purpose. For example, you can create a page category type called *FOOTER* and add categories *About us*, *Contact us*, *Terms and conditions* to it. Then you can use this page category type in the footer of the storefront - since it's automatically fetched from the dashboard.
+
+### Page category type
+This section shows a list of all page category types. The list has the following columns:
+* Name (unique code)
+* Actions (delete)
+
+![Page category types](../../images/cms_page_category_types.png)
+
+#### Creating a new category type
+In order to create a new page category type, click on the *Add category type* button in the upper left corner of the table. This adds a new row to the table. Fill in the unique name of the page category type and click on the *Save* button.
+Since the **Name** field is unique and serves as an identifier of the page category type, it cannot be changed thus editing is not allowed.
+
+### Categories
+This section shows a list of all categories. The list has the following columns:
+* ID
+* Title
+* Actions
+
+![Categories](../../images/cms_page_category_list.png)
+#### Creating a new category
+In order to create new category, click on the *New page category* button in the upper left corner of the table. This redirects you to the detail category page. 
+Now follow steps the same as for editing a category (see [below](#editing-a-category)).
+
+#### Editing a category
+In order to edit a category, click on the edit icon in the table. This redirects you to the detail category page.
+
+1. Fill in the title of the category
+2. Select the page category type from the drop-down menu.
+3. Set unique code of the category. This code is used to identify the category in the storefront. It is also used to fetch the category as a group.
+4. Set published checkbox. If the category is not published, it will not be shown in the storefront.
+Then click on the *Save* button.
+
+![Category edit](../../images/cms_page_category_edit.png)
+
+
+
+
+
+
+
+
 
 
 # Users & Roles
