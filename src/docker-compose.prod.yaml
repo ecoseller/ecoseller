@@ -33,7 +33,7 @@ services:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 20
   redis:
     container_name: redis
     image: redis
@@ -133,7 +133,7 @@ services:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 20
   recommender_system:
     container_name: recommender_system
     build:
@@ -149,7 +149,7 @@ services:
       test: curl --fail http://localhost:8086 || exit 1
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 20
     depends_on:
       postgres_rs:
         condition: service_healthy
