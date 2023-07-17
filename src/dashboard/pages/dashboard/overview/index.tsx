@@ -130,9 +130,9 @@ const DashboardOverviewPage = ({
                       ordersTodayStats.top_selling_products == null
                         ? ""
                         : imgPath(
-                          ordersTodayStats.top_selling_products[0]?.media,
-                          true
-                        )
+                            ordersTodayStats.top_selling_products[0]?.media,
+                            true
+                          )
                     }
                     alt={""}
                   />
