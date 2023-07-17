@@ -121,10 +121,11 @@ Catalog is the place where you can manage all products and categories. The catal
 * Product types - Product types define the structure of the product (what attributes it has)
 * Products - Products are the actual products that are shown in the storefront and their variants, prices, etc.
 * Categories - Categories are used to group products into categories
+
 ## Attributes
 Attributes are used to define the structure of the product variant. For example, if you want to sell t-shirts, you need to define attributes like size, color, etc. Attributes are then used in the product type to define the structure of the product variant. Attributes are also used in the product variant to define the actual values of the attributes.
 
-### Attribute list
+### Attribute list
 Under the attributes section, you can see a list of all attributes. The list has the following columns:
 * Name - unique name of the attribute, it's not shown in the storefront and is used only in the administration
 * Unit - unit of the attribute, for example, cm, kg, etc. It's shown in the storefront next to the value of the attribute (for example 10 cm)
