@@ -104,6 +104,10 @@ def send(self):
 
 The message is simply attached to the queue and the queue is processed in the background. 
 
+## Worker 
+In order to process the queue, we need to run a worker. We can do that by running `python manage.py rqworker` command. This command will start a worker that will process the queue.
+However single worker is already included in all Docker Compose files supplied with **ecoseller**.
+
 # PostgreSQL
 PostgreSQL, a robust and feature-rich open-source relational database, forms the core of **ecoseller**'s data storage and management. By integrating PostgreSQL with the Django backend, **ecoseller** ensures secure, reliable, and scalable storage for critical data, such as product information, user details, and order history. PostgreSQL's advanced features, including ACID compliance and support for complex data structures, make it an excellent choice for managing structured data in **ecoseller**.
 
