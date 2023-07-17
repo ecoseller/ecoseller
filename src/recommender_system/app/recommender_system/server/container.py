@@ -9,6 +9,7 @@ from recommender_system.managers.monitoring_manager import MonitoringManager
 from recommender_system.managers.prediction_pipeline import PredictionPipeline
 from recommender_system.managers.request_manager import RequestManager
 from recommender_system.managers.trainer import Trainer
+from recommender_system.storage.cache.storage import FileCacheStorage
 from recommender_system.storage.feedback.storage import SQLFeedbackStorage
 from recommender_system.storage.ease.storage import FileEASEStorage
 from recommender_system.storage.gru4rec.storage import FileGRU4RecStorage
@@ -30,6 +31,11 @@ class Container(containers.DeclarativeContainer):
     request_manager = providers.Singleton(RequestManager)
     trainer = providers.Singleton(Trainer)
 
+    cache_storage = providers.Singleton(
+        FileCacheStorage,
+        directory=os.path.join("data", "cache"),
+        size=int(os.environ.get("RS_CACHE_SIZE", "1000")),
+    )
     feedback_storage = providers.Singleton(
         SQLFeedbackStorage,
         connection_string=os.environ["RS_FEEDBACK_DB_URL"],

@@ -7,6 +7,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from dependency_injector.wiring import inject, Provide
 import numpy as np
 
+from recommender_system.managers.cache_manager import CacheManager
 from recommender_system.managers.model_manager import ModelManager
 from recommender_system.models.prediction.abstract import AbstractPredictionModel
 from recommender_system.models.prediction.similarity.model import (
@@ -183,9 +184,16 @@ class PredictionPipeline:
         session_id: str,
         user_id: Optional[int],
         limit: Optional[int] = None,
+        cache_manager: CacheManager = Provide["cache_manager"],
         model_manager: ModelManager = Provide["model_manager"],
         **kwargs: Any,
-    ) -> Tuple[AbstractPredictionModel, AbstractPredictionModel, List[str]]:
+    ) -> Tuple[Optional[AbstractPredictionModel], Optional[AbstractPredictionModel], List[str]]:
+        cached = cache_manager.get(
+            recommendation_type=recommendation_type, session_id=session_id, **kwargs
+        )
+        if cached is not None:
+            return None, None, cached
+
         recommendation_type = RecommendationType[recommendation_type]
         retrieval_model = model_manager.get_model(
             recommendation_type=recommendation_type,
@@ -259,18 +267,26 @@ class PredictionPipeline:
             **kwargs,
         )
 
+        if scoring_model is not None:
+            return [
+                {
+                    "product_variant_sku": sku,
+                    "rs_info": {
+                        "recommendation_type": recommendation_type,
+                        "model_identifier": scoring_model.identifier,
+                        "model_name": scoring_model.Meta.model_name,
+                        "position": i,
+                    },
+                }
+                for i, sku in enumerate(predictions)
+            ]
         return [
-            {
-                "product_variant_sku": sku,
-                "rs_info": {
-                    "recommendation_type": recommendation_type,
-                    "model_identifier": scoring_model.identifier,
-                    "model_name": scoring_model.Meta.model_name,
-                    "position": i,
-                },
-            }
-            for i, sku in enumerate(predictions)
-        ]
+                {
+                    "product_variant_sku": sku,
+                    "rs_info": {},
+                }
+                for sku in predictions
+            ]
 
     @inject
     def get_product_positions(
