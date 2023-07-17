@@ -60,10 +60,15 @@ GEM
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
+    tzinfo (2.0.6)
+      concurrent-ruby (~> 1.0)
+    tzinfo-data (1.2023.3)
+      tzinfo (>= 1.0.0)
     webrick (1.8.1)
 
 PLATFORMS
   arm64-darwin-22
+  x64-mingw-ucrt
 
 DEPENDENCIES
   jekyll (= 3.9.3)
@@ -71,6 +76,8 @@ DEPENDENCIES
   jekyll-seo-tag (= 2.8.0)
   jekyll-sitemap (= 1.4.0)
   kramdown-parser-gfm
+  tzinfo (~> 2.0)
+  tzinfo-data (~> 1.2023)
   webrick (~> 1.8)
 
 BUNDLED WITH
