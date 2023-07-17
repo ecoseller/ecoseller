@@ -29,6 +29,11 @@ To see the full core API specification, navigate to [localhost:8000/swagger/](ht
 In this section we will describe data models of the backend part of the application. To do so, we will go over various parts of system and describe them in more detail using diagrams.
 To create diagrams, we used `django-extensions` app and its Graph models part, which generates a Graphviz `.dot` file from our django models. From that `.dot` file we used [GraphvizOnline](https://dreampuf.github.io/GraphvizOnline/) site to generate images of the diagrams.
 
+The whole diagram of the models is shown below:
+![All models](../../images/models_all.png)
+
+Due to the size of the diagram and complexity of the system, we will go over the models in smaller groups.
+
 ## Country
 ![Country model](../../images/models_country.png)
 
