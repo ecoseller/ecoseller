@@ -188,6 +188,3 @@ class MonitoringManager:
                 pass
 
         return TrainingDetails(models=models_training_details)
-
-    def get_config(self) -> ConfigModel:
-        return ConfigModel.get_current()

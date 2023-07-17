@@ -1,6 +1,6 @@
 import logging
 import time
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, TYPE_CHECKING
 
 from dependency_injector.wiring import inject, Provide
 import torch
@@ -26,6 +26,10 @@ from recommender_system.storage.product.abstract import AbstractProductStorage
 from recommender_system.storage.gru4rec.abstract import AbstractGRU4RecStorage
 from recommender_system.utils.data_loader_type import DataLoaderType
 from recommender_system.utils.memory import get_current_memory_usage
+
+if TYPE_CHECKING:
+    from recommender_system.managers.model_manager import ModelManager
+    from recommender_system.models.stored.model.config import ConfigModel
 
 
 class NeuralNetwork:
@@ -123,22 +127,28 @@ class NeuralNetwork:
 
     @inject
     def needs_full_train(
-        self, model_storage: AbstractModelStorage = Provide["model_storage"]
+        self,
+        model_storage: AbstractModelStorage = Provide["model_storage"],
+        model_manager: "ModelManager" = Provide["model_manager"],
     ) -> bool:
-        from recommender_system.models.stored.model.config import ConfigModel
-
-        config = ConfigModel.get_current()
         num_incremental_trainings = model_storage.count_incremental_trainings(
             model_name=self.model_name
         )
-        return num_incremental_trainings >= config.gru4rec_config.incremental_trainings
+        return (
+            num_incremental_trainings
+            >= model_manager.config.gru4rec_config.incremental_trainings
+        )
+
+    @inject
+    def _get_config(
+        self, model_manager: "ModelManager" = Provide["model_manager"]
+    ) -> "ConfigModel":
+        return model_manager.config
 
     @property
     def possible_parameters(self) -> List[Dict[str, Any]]:
-        from recommender_system.models.stored.model.config import ConfigModel
-
         parameters = []
-        config = ConfigModel.get_current()
+        config = self._get_config()
         for num_epochs in config.gru4rec_config.num_epochs_options:
             for batch_size in config.gru4rec_config.batch_size_options:
                 for embedding_size in config.gru4rec_config.embedding_size_options:

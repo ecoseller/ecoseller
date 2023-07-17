@@ -48,5 +48,3 @@ class Trainer:
         model.train()
         model.replace_old()
         logging.info(f"Training of model {queue_item.model_name} finished.")
-
-        # TODO: Save training stats.

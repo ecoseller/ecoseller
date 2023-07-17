@@ -22,6 +22,9 @@ class DummyPredictionModel(AbstractPredictionModel):
     def is_ready(self, session_id: str, user_id: Optional[int]) -> bool:
         return True
 
+    def is_ready_for_training(self) -> bool:
+        return False
+
     @inject
     def retrieve(
         self,

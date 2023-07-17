@@ -1,16 +1,19 @@
 from datetime import datetime
 import logging
-from typing import List, Optional
+from typing import List, Optional, TYPE_CHECKING
 
 from dependency_injector.wiring import inject, Provide
 
 from recommender_system.models.prediction.abstract import AbstractPredictionModel
 from recommender_system.models.prediction.ease.ease import EASE
-from recommender_system.models.stored.model.latest_identifier import (
-    LatestIdentifierModel,
-)
+from recommender_system.models.stored.feedback.review import ReviewModel
+from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.storage.ease.abstract import AbstractEASEStorage
+from recommender_system.storage.feedback.abstract import AbstractFeedbackStorage
 from recommender_system.storage.product.abstract import AbstractProductStorage
+
+if TYPE_CHECKING:
+    from recommender_system.managers.model_manager import ModelManager
 
 
 class EASEPredictionModel(AbstractPredictionModel):
@@ -53,9 +56,26 @@ class EASEPredictionModel(AbstractPredictionModel):
         return user_id in user_mapping
 
     @inject
+    def is_ready_for_training(
+        self,
+        model_manager: "ModelManager" = Provide["model_manager"],
+        feedback_storage: AbstractFeedbackStorage = Provide["feedback_storage"],
+        product_storage: AbstractProductStorage = Provide["product_storage"],
+    ) -> bool:
+        return feedback_storage.count_objects(
+            model_class=ReviewModel
+        ) > model_manager.config.ease_config.reviews_multiplier * product_storage.count_objects(
+            model_class=ProductVariantModel
+        )
+
+    @inject
     def train(
         self, product_storage: AbstractProductStorage = Provide["product_storage"]
     ) -> None:
+        if not self.is_ready_for_training():
+            logging.info(
+                f"Skipping training of model {self.Meta.model_name}. Model is not ready."
+            )
         self.ease = EASE(identifier=self.identifier)
         self.ease.train()
         self.ease.save(identifier=self.identifier)

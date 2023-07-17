@@ -31,6 +31,9 @@ class PopularityPredictionModel(AbstractPredictionModel):
             model_class=OrderModel
         ) > product_storage.count_objects(model_class=ProductVariantModel)
 
+    def is_ready_for_training(self) -> bool:
+        return False
+
     @inject
     def retrieve(
         self,

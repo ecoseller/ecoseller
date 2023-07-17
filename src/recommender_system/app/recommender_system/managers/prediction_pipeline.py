@@ -99,13 +99,16 @@ class PredictionPipeline:
             )
         raise ValueError("Unknown recommendation type.")
 
-    def _order_by_diversity(self, variants: List[str]) -> List[str]:
-        from recommender_system.models.stored.model.config import ConfigModel
-
+    @inject
+    def _order_by_diversity(
+        self,
+        variants: List[str],
+        model_manager: ModelManager = Provide["model_manager"],
+    ) -> List[str]:
         def intra_list_distance(indices: List[int], dists: np.ndarray) -> float:
             return np.mean(dists[np.ix_(indices, indices)]).item()
 
-        order_top_k = ConfigModel.get_current().ordering_size
+        order_top_k = model_manager.config.ordering_size
 
         top_k = variants
         left_out = []

@@ -42,6 +42,9 @@ class SimilarityPredictionModel(AbstractPredictionModel):
             return False
         return True
 
+    def is_ready_for_training(self) -> bool:
+        return True
+
     @inject
     def delete_distances(
         self,

@@ -52,7 +52,9 @@ const ModelStatistics = ({
   training,
   globalConfig,
 }: IModelStatisticsProps) => {
-  const [typeDisplayed, setTypeDisplayed] = useState<string>("");
+  const [typeDisplayed, setTypeDisplayed] = useState<string>(
+    performance?.types[0].name || ""
+  );
 
   useEffect(() => {
     if (performance !== undefined) {

@@ -34,20 +34,26 @@ class ConfigModel(ImmutableModelStoredModel):
     retrieval_size: int = Field(default=1000, alias="retrievalSize")
     ordering_size: int = Field(default=50, alias="orderingSize")
 
-    homepage_retrieval_cascade: List[str] = Field(alias="homepageRetrievalCascade")
-    homepage_scoring_cascade: List[str] = Field(alias="homepageScoringCascade")
+    homepage_retrieval_cascade: Optional[List[str]] = Field(
+        alias="homepageRetrievalCascade"
+    )
+    homepage_scoring_cascade: Optional[List[str]] = Field(
+        alias="homepageScoringCascade"
+    )
 
-    category_list_scoring_cascade: List[str] = Field(alias="categoryListScoringCascade")
+    category_list_scoring_cascade: Optional[List[str]] = Field(
+        alias="categoryListScoringCascade"
+    )
 
-    product_detail_retrieval_cascade: List[str] = Field(
+    product_detail_retrieval_cascade: Optional[List[str]] = Field(
         alias="productDetailRetrievalCascade"
     )
-    product_detail_scoring_cascade: List[str] = Field(
+    product_detail_scoring_cascade: Optional[List[str]] = Field(
         alias="productDetailScoringCascade"
     )
 
-    cart_retrieval_cascade: List[str] = Field(alias="cartRetrievalCascade")
-    cart_scoring_cascade: List[str] = Field(alias="cartScoringCascade")
+    cart_retrieval_cascade: Optional[List[str]] = Field(alias="cartRetrievalCascade")
+    cart_scoring_cascade: Optional[List[str]] = Field(alias="cartScoringCascade")
 
     ease_config: EASEConfig = Field(default=EASEConfig(), alias="easeConfig")
     gru4rec_config: GRU4RecConfig = Field(
