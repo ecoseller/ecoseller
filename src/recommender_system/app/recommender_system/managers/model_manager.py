@@ -23,8 +23,8 @@ class ModelManager:
     def get_model_from_cascade(
         self, cascade: List[str], session_id: str, user_id: Optional[int]
     ) -> AbstractPredictionModel:
-        from recommender_system.models.prediction.selection.model import (
-            SelectionPredictionModel,
+        from recommender_system.models.prediction.dummy.model import (
+            DummyPredictionModel,
         )
 
         for model_name in cascade:
@@ -32,7 +32,7 @@ class ModelManager:
             if model_class.is_ready(session_id=session_id, user_id=user_id):
                 return model_class(identifier=model_class.get_latest_identifier())
 
-        return SelectionPredictionModel()
+        return DummyPredictionModel()
 
     def get_model(
         self,

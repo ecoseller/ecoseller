@@ -20,9 +20,10 @@ class PopularityPredictionModel(AbstractPredictionModel):
     def default_identifier(self) -> str:
         return self.Meta.model_name
 
+    @classmethod
     @inject
     def is_ready(
-        self,
+        cls,
         session_id: str,
         user_id: Optional[int],
         product_storage: AbstractProductStorage = Provide["product_storage"],
@@ -31,8 +32,13 @@ class PopularityPredictionModel(AbstractPredictionModel):
             model_class=OrderModel
         ) > product_storage.count_objects(model_class=ProductVariantModel)
 
-    def is_ready_for_training(self) -> bool:
+    @classmethod
+    def is_ready_for_training(cls) -> bool:
         return False
+
+    @classmethod
+    def get_latest_identifier(cls) -> str:
+        return cls().default_identifier
 
     @inject
     def retrieve(
@@ -58,16 +64,12 @@ class PopularityPredictionModel(AbstractPredictionModel):
     def retrieve_product_detail(
         self, session_id: str, user_id: Optional[int], variant: str
     ) -> List[str]:
-        raise TypeError(
-            f"{self.__class__.__name__} can not perform retrieval for product detail recommendations."
-        )
+        return self.retrieve()
 
     def retrieve_cart(
         self, session_id: str, user_id: Optional[int], variants_in_cart: List[str]
     ) -> List[str]:
-        raise TypeError(
-            f"{self.__class__.__name__} can not perform retrieval for cart recommendations."
-        )
+        return self.retrieve()
 
     def score_homepage(
         self, session_id: str, user_id: Optional[int], variants: List[str]

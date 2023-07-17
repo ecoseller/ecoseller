@@ -35,14 +35,16 @@ class SimilarityPredictionModel(AbstractPredictionModel):
     def default_identifier(self) -> str:
         return f"{self.Meta.model_name}_{datetime.now().isoformat()}"
 
-    def is_ready(self, session_id: str, user_id: Optional[int]) -> bool:
+    @classmethod
+    def is_ready(cls, session_id: str, user_id: Optional[int]) -> bool:
         try:
-            _ = self.get_latest_identifier()
+            _ = cls.get_latest_identifier()
         except LatestIdentifierModel.DoesNotExist:
             return False
         return True
 
-    def is_ready_for_training(self) -> bool:
+    @classmethod
+    def is_ready_for_training(cls) -> bool:
         return True
 
     @inject

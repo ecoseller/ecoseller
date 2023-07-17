@@ -21,8 +21,9 @@ class AbstractPredictionModel(ABC):
     def default_identifier(self) -> str:
         raise NotImplementedError()
 
+    @classmethod
     @abstractmethod
-    def is_ready(self, session_id: str, user_id: Optional[int]) -> bool:
+    def is_ready(cls, session_id: str, user_id: Optional[int]) -> bool:
         raise NotImplementedError()
 
     @abstractmethod

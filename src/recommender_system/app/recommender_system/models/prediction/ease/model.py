@@ -36,9 +36,10 @@ class EASEPredictionModel(AbstractPredictionModel):
     def default_identifier(self) -> str:
         return f"{self.Meta.model_name}_{datetime.now().isoformat()}"
 
+    @classmethod
     @inject
     def is_ready(
-        self,
+        cls,
         session_id: str,
         user_id: Optional[int],
         ease_storage: AbstractEASEStorage = Provide["ease_storage"],
@@ -47,7 +48,7 @@ class EASEPredictionModel(AbstractPredictionModel):
             return False
 
         try:
-            user_mapping = ease_storage.get_mappings(self.get_latest_identifier())[
+            user_mapping = ease_storage.get_mappings(cls.get_latest_identifier())[
                 "user_mapping"
             ]
         except Exception:
@@ -55,9 +56,10 @@ class EASEPredictionModel(AbstractPredictionModel):
 
         return user_id in user_mapping
 
+    @classmethod
     @inject
     def is_ready_for_training(
-        self,
+        cls,
         model_manager: "ModelManager" = Provide["model_manager"],
         feedback_storage: AbstractFeedbackStorage = Provide["feedback_storage"],
         product_storage: AbstractProductStorage = Provide["product_storage"],
