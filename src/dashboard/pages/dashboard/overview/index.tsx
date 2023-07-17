@@ -130,9 +130,9 @@ const DashboardOverviewPage = ({
                       ordersTodayStats.top_selling_products == null
                         ? ""
                         : imgPath(
-                            ordersTodayStats.top_selling_products[0]?.media,
-                            true
-                          )
+                          ordersTodayStats.top_selling_products[0]?.media,
+                          true
+                        )
                     }
                     alt={""}
                   />
@@ -278,48 +278,6 @@ const DashboardOverviewPage = ({
               },
             }}
           />
-        </Grid>
-      </Container>
-      <Container maxWidth="xl" sx={{ paddingTop: 8 }}>
-        <Typography variant="h4" sx={{ mb: 5 }}>
-          {`Today's recommender overview`}
-        </Typography>
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={3}>
-            <SummaryWidget
-              title="Orders today"
-              value={ordersMonthStats.average_order_value}
-              color="info"
-              icon={<ShoppingBagIcon sx={{ fontSize: 40 }} />}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={3}>
-            <SummaryWidget
-              title="Revenue today"
-              value={ordersMonthStats.revenue}
-              color="info"
-              icon={<ShoppingBagIcon sx={{ fontSize: 40 }} />}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={3}>
-            <SummaryWidget
-              title="Average order value"
-              value={ordersMonthStats.average_order_value}
-              color="info"
-              icon={<ShoppingBagIcon sx={{ fontSize: 40 }} />}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={3}>
-            <SummaryWidget
-              title="Completed orders"
-              value={ordersMonthStats.average_order_value}
-              color="info"
-              icon={<ShoppingBagIcon sx={{ fontSize: 40 }} />}
-            />
-          </Grid>
         </Grid>
       </Container>
     </DashboardLayout>
