@@ -5,6 +5,9 @@ import time
 from dependency_injector.wiring import inject, Provide
 
 from recommender_system.managers.trainer import Trainer
+from recommender_system.models.stored.model.trainer_queue_item import (
+    TrainerQueueItemModel,
+)
 from recommender_system.server.app import create_app
 
 logging.basicConfig(level=logging.DEBUG)
@@ -21,7 +24,9 @@ def run_server() -> None:
 
 @inject
 def run_trainer(trainer: Trainer = Provide["trainer"]) -> None:
+    trainer.init()
     while True:
         trainer.train()
-        logging.info("waiting")
-        time.sleep(60)
+        if TrainerQueueItemModel.get_next_item_from_queue() is None:
+            logging.info("waiting")
+            time.sleep(60)

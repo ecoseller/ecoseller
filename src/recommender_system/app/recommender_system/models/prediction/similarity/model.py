@@ -12,6 +12,9 @@ from recommender_system.models.prediction.similarity.tools import (
     compute_numerical_distances,
     compute_categorical_distances,
 )
+from recommender_system.models.stored.model.latest_identifier import (
+    LatestIdentifierModel,
+)
 from recommender_system.models.stored.model.training_statistics import (
     TrainingStatisticsModel,
 )
@@ -31,6 +34,16 @@ class SimilarityPredictionModel(AbstractPredictionModel):
     @property
     def default_identifier(self) -> str:
         return f"{self.Meta.model_name}_{datetime.now().isoformat()}"
+
+    def is_ready(self, session_id: str, user_id: Optional[int]) -> bool:
+        try:
+            _ = self.get_latest_identifier()
+        except LatestIdentifierModel.DoesNotExist:
+            return False
+        return True
+
+    def is_ready_for_training(self) -> bool:
+        return True
 
     @inject
     def delete_distances(

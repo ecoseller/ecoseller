@@ -28,6 +28,19 @@ class Trainer:
         TrainerQueueItemModel(model_name=model_name).create()
 
     @inject
+    def init(self, model_manager: "ModelManager" = Provide["model_manager"]) -> None:
+        """
+        Initialize Trainer - schedule trainings of all models.
+
+        Returns
+        -------
+            None
+
+        """
+        for model_name in model_manager.get_all_model_names():
+            self.schedule_train(model_name=model_name)
+
+    @inject
     def train(self, model_manager: "ModelManager" = Provide["model_manager"]) -> None:
         """
         Trains the first model in queue.
@@ -48,5 +61,3 @@ class Trainer:
         model.train()
         model.replace_old()
         logging.info(f"Training of model {queue_item.model_name} finished.")
-
-        # TODO: Save training stats.
