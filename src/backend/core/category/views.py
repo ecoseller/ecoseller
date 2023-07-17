@@ -2,18 +2,7 @@
 from typing import Dict
 
 from django.apps import apps
-from django.contrib.postgres.fields import ArrayField
-from django.db.models import (
-    Min,
-    QuerySet,
-    IntegerField,
-    TextField,
-    OuterRef,
-    Subquery,
-    Value,
-    Case,
-    When,
-)
+from django.db.models import Min, QuerySet, OuterRef, Subquery, Value, Case, When
 from rest_framework.decorators import permission_classes
 from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,

@@ -10,7 +10,7 @@ from order.models import Order
 def _try_parse_number(value):
     try:
         return int(value)
-    except:
+    except ValueError:
         return value
 
 
