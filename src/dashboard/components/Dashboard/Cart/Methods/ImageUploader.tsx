@@ -91,10 +91,12 @@ const ShippingPaymentMethodImageUploader = ({
             textAlign: "left",
           }}
         >
-          <img
-            src={imgPath(methodImage)}
-            style={{ width: "100%", height: "auto" }}
-          />
+          {methodImage ? (
+            <img
+              src={imgPath(methodImage)}
+              style={{ width: "100%", height: "auto" }}
+            />
+          ) : null}
         </div>
       </Box>
     </EditorCard>
