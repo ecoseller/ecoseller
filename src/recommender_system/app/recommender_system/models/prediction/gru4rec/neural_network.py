@@ -121,9 +121,17 @@ class NeuralNetwork:
     def num_features(self) -> int:
         return len(self.mapping.keys())
 
-    @property
-    def needs_full_train(self) -> bool:
-        return True
+    @inject
+    def needs_full_train(
+        self, model_storage: AbstractModelStorage = Provide["model_storage"]
+    ) -> bool:
+        from recommender_system.models.stored.model.config import ConfigModel
+
+        config = ConfigModel.get_current()
+        num_incremental_trainings = model_storage.count_incremental_trainings(
+            model_name=self.model_name
+        )
+        return num_incremental_trainings >= config.gru4rec_config.incremental_trainings
 
     @property
     def possible_parameters(self) -> List[Dict[str, Any]]:

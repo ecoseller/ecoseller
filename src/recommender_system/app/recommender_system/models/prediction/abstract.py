@@ -22,6 +22,10 @@ class AbstractPredictionModel(ABC):
         raise NotImplementedError()
 
     @abstractmethod
+    def is_ready(self, session_id: str, user_id: Optional[int]) -> bool:
+        raise NotImplementedError()
+
+    @abstractmethod
     def delete(self) -> None:
         raise NotImplementedError()
 

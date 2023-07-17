@@ -190,13 +190,15 @@ class PredictionPipeline:
     ) -> Tuple[
         Optional[AbstractPredictionModel], Optional[AbstractPredictionModel], List[str]
     ]:
+        recommendation_type = RecommendationType[recommendation_type]
         cached = cache_manager.get(
-            recommendation_type=recommendation_type, session_id=session_id, **kwargs
+            recommendation_type=recommendation_type,
+            session_id=session_id,
+            **kwargs,
         )
         if cached is not None:
             return None, None, cached
 
-        recommendation_type = RecommendationType[recommendation_type]
         retrieval_model = model_manager.get_model(
             recommendation_type=recommendation_type,
             step=PredictionPipeline.Step.RETRIEVAL,

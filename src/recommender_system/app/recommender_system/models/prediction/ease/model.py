@@ -6,6 +6,10 @@ from dependency_injector.wiring import inject, Provide
 
 from recommender_system.models.prediction.abstract import AbstractPredictionModel
 from recommender_system.models.prediction.ease.ease import EASE
+from recommender_system.models.stored.model.latest_identifier import (
+    LatestIdentifierModel,
+)
+from recommender_system.storage.ease.abstract import AbstractEASEStorage
 from recommender_system.storage.product.abstract import AbstractProductStorage
 
 
@@ -28,6 +32,25 @@ class EASEPredictionModel(AbstractPredictionModel):
     @property
     def default_identifier(self) -> str:
         return f"{self.Meta.model_name}_{datetime.now().isoformat()}"
+
+    @inject
+    def is_ready(
+        self,
+        session_id: str,
+        user_id: Optional[int],
+        ease_storage: AbstractEASEStorage = Provide["ease_storage"],
+    ) -> bool:
+        if user_id is None:
+            return False
+
+        try:
+            user_mapping = ease_storage.get_mappings(self.get_latest_identifier())[
+                "user_mapping"
+            ]
+        except Exception:
+            return False
+
+        return user_id in user_mapping
 
     @inject
     def train(

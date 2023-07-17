@@ -19,3 +19,4 @@ class GRU4RecConfig(BaseModel):
     learning_rate_options: List[float] = Field(
         default=[0.0001], alias="learningRateOptions"
     )
+    incremental_trainings: int = Field(default=10, alias="incrementalTrainings")

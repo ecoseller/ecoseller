@@ -28,5 +28,11 @@ class AbstractModelStorage(AbstractStorage, ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def get_last_training_date(self, model_name: str) -> Optional[datetime]:
+    def get_last_training_date(
+        self, model_name: str, full_train: bool = False
+    ) -> Optional[datetime]:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def count_incremental_trainings(self, model_name: str) -> int:
         raise NotImplementedError()

@@ -19,6 +19,9 @@ class DummyPredictionModel(AbstractPredictionModel):
     def default_identifier(self) -> str:
         return self.Meta.model_name
 
+    def is_ready(self, session_id: str, user_id: Optional[int]) -> bool:
+        return True
+
     @inject
     def retrieve(
         self,
