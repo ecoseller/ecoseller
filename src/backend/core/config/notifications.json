@@ -44,16 +44,28 @@
       "method": "send_order_complaint_status_update"
     }
   ],
-  "RECOMMENDER_STORE_OBJECTS": [
+  "PRODUCT_DETAIL_ENTER": [
     {
       "type": "RECOMMENDERAPI",
       "method": "store_objects"
     }
   ],
-  "RECOMMENDER_STORE_OBJECT": [
+  "PRODUCT_DETAIL_LEAVE": [
     {
       "type": "RECOMMENDERAPI",
-      "method": "store_object"
+      "method": "store_objects"
+    }
+  ],
+  "PRODUCT_ADD_TO_CART": [
+    {
+      "type": "RECOMMENDERAPI",
+      "method": "store_objects"
+    }
+  ],
+  "RECOMMENDATION_VIEW": [
+    {
+      "type": "RECOMMENDERAPI",
+      "method": "store_objects"
     }
   ]
 }

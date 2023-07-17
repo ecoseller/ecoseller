@@ -90,7 +90,7 @@ class RecommenderSystemEventView(APIView):
                     ]
             try:
                 settings.NOTIFICATIONS_API.notify(
-                    EventTypes.RECOMMENDER_STORE_OBJECTS,
+                    EventTypes[event],
                     data=data,
                 )
             except Exception as e:
