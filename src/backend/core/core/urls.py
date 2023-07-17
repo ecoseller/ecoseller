@@ -35,6 +35,7 @@ urlpatterns = [
     path("editorjs/", include("cms.editorjs.urls")),
     path("django-rq/", include("django_rq.urls")),
     path("search/", include("search.urls")),
+    path("recommender/", include("recommender.urls")),
     re_path(
         r"^swagger(?P<format>\.json|\.yaml)$",
         schema_view.without_ui(cache_timeout=0),

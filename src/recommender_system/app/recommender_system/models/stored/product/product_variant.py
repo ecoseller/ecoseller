@@ -113,13 +113,13 @@ class ProductVariantModel(ProductStoredBaseModel):
 
         product_storage.bulk_create_objects(models=apvs)
 
-    def add_order(self, order: "OrderModel", amount: int) -> None:
+    def add_order(self, order: "OrderModel", quantity: int) -> None:
         from recommender_system.models.stored.product.order_product_variant import (
             OrderProductVariantModel,
         )
 
         OrderProductVariantModel(
-            order_id=order.id, product_variant_sku=self.sku, amount=amount
+            order_token=order.token, product_variant_sku=self.sku, quantity=quantity
         ).create()
 
     def add_product(self, product: "ProductModel") -> None:

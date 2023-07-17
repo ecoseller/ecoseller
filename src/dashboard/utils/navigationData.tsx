@@ -4,6 +4,7 @@ import GroupIcon from "@mui/icons-material/Group";
 import ArticleIcon from "@mui/icons-material/Article";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
+import StarIcon from "@mui/icons-material/Star";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import LanguageIcon from "@mui/icons-material/Language";
 import MoneyIcon from "@mui/icons-material/Money";
@@ -138,6 +139,11 @@ const navigationData: INavigationItem[] = [
       "group_change_permission",
       "group_add_permission",
     ],
+  },
+  {
+    title: "Recommender System",
+    path: "/dashboard/recommender-system",
+    icon: <StarIcon />,
   },
 ];
 

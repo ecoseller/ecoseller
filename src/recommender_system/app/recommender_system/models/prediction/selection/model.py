@@ -13,6 +13,7 @@ if TYPE_CHECKING:
 class SelectionPredictionModel(AbstractPredictionModel):
     class Meta:
         model_name = "selection"
+        title = "Selection"
 
     @property
     def default_identifier(self) -> str:

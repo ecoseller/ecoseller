@@ -59,13 +59,17 @@ const ProductsSlider = ({ data }: IProductSliderProps) => {
     ]
   );
 
+  if (!data || data?.length === 0) return null;
+
   return (
     <div ref={sliderRef} className="keen-slider">
-      {data.map((item) => (
-        <div key={item.id} className="keen-slider__slide">
-          <ProductItem {...item} />
-        </div>
-      ))}
+      {data?.length > 0
+        ? data.map((item) => (
+            <div key={item.product_variant_sku} className="keen-slider__slide">
+              <ProductItem {...item} />
+            </div>
+          ))
+        : null}
     </div>
   );
 };

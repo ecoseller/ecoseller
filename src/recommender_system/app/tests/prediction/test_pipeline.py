@@ -95,7 +95,7 @@ def create_product_variants():
         product.add_product_variant(variant)
 
     variants[0].add_order(
-        order=OrderModel.parse_obj(default_dicts[OrderModel]), amount=1
+        order=OrderModel.parse_obj(default_dicts[OrderModel]), quantity=1
     )
 
     yield [variant.pk for variant in variants]
@@ -170,10 +170,11 @@ def test_dummy(app, create_product_variants, prediction_pipeline):
         date_from = datetime.now()
 
         predictions = prediction_pipeline.run(
-            recommendation_type=RecommendationType.HOMEPAGE,
+            recommendation_type=RecommendationType.HOMEPAGE.value,
             session_id="unittest",
             user_id=None,
         )
+        predictions = [pred["product_variant_sku"] for pred in predictions]
 
         for sku in variant_skus:
             if sku == "unittest4":
@@ -197,10 +198,11 @@ def test_popularity(app, create_product_variants, prediction_pipeline):
         date_from = datetime.now()
 
         predictions = prediction_pipeline.run(
-            recommendation_type=RecommendationType.HOMEPAGE,
+            recommendation_type=RecommendationType.HOMEPAGE.value,
             session_id="unittest",
             user_id=None,
         )
+        predictions = [pred["product_variant_sku"] for pred in predictions]
 
         for sku in variant_skus:
             if sku == "unittest4":
@@ -226,10 +228,11 @@ def test_selection(app, create_product_variants, prediction_pipeline):
         date_from = datetime.now()
 
         predictions = prediction_pipeline.run(
-            recommendation_type=RecommendationType.HOMEPAGE,
+            recommendation_type=RecommendationType.HOMEPAGE.value,
             session_id="unittest",
             user_id=None,
         )
+        predictions = [pred["product_variant_sku"] for pred in predictions]
 
         for sku in variant_skus:
             if sku == "unittest4":
@@ -260,10 +263,11 @@ def test_gru4rec(
             date_from = datetime.now()
 
             predictions = prediction_pipeline.run(
-                recommendation_type=RecommendationType.HOMEPAGE,
+                recommendation_type=RecommendationType.HOMEPAGE.value,
                 session_id=session_id,
                 user_id=None,
             )
+            predictions = [pred["product_variant_sku"] for pred in predictions]
 
             for sku in variant_skus:
                 if sku == "unittest4":
@@ -299,10 +303,11 @@ def test_ease(
             date_from = datetime.now()
 
             predictions = prediction_pipeline.run(
-                recommendation_type=RecommendationType.HOMEPAGE,
+                recommendation_type=RecommendationType.HOMEPAGE.value,
                 session_id=str(user_id),
                 user_id=user_id,
             )
+            predictions = [pred["product_variant_sku"] for pred in predictions]
 
             for sku in variant_skus:
                 if sku == "unittest4":

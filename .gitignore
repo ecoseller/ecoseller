@@ -113,7 +113,7 @@ celerybeat-schedule.*
 env/
 venv/ 
 ENV/ 
-env.bak/ 
+env.bak/ `
 venv.bak/ 
 
 
@@ -159,5 +159,6 @@ src/recommender_system/data
 # Elastic
 src/backend/elasticsearch/data
 
-# Django cache
-src/cache
+# Docs
+docs/.sass-cache
+docs/_site

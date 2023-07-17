@@ -1,7 +1,8 @@
 # from django.contrib.auth.models import User
+from typing import Dict
+
 from django.apps import apps
-from django.db.models import Min
-from django.db.models import OuterRef, Subquery
+from django.db.models import Min, QuerySet, OuterRef, Subquery, Value, Case, When
 from rest_framework.decorators import permission_classes
 from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
@@ -15,6 +16,7 @@ from rest_framework.status import (
 )
 from rest_framework.views import APIView
 
+from api.recommender_system import RecommenderSystemApi
 from category.models import Category
 from category.serializers import (
     CategoryDetailDashboardSerializer,
@@ -189,6 +191,23 @@ def _order_by_title(products, is_reverse_order, locale: str):
     return products
 
 
+def _order_by_recommendation(
+    products, is_reverse_order, recommendations: Dict[str, int]
+):
+    products = products.annotate(
+        recommended=Case(
+            *[
+                When(id=int(product_id), then=Value(position))
+                for product_id, position in recommendations.items()
+            ],
+            default=len(recommendations)
+        )
+    ).order_by("recommended" if not is_reverse_order else "-recommended")
+    query = products.query
+    query.group_by = ["id"]
+    return QuerySet(query=query, model=Product)
+
+
 @permission_classes([AllowAny])
 class CategoryDetailProductsStorefrontView(APIView):
     """
@@ -199,7 +218,10 @@ class CategoryDetailProductsStorefrontView(APIView):
     pagination = StorefrontPagination()
     pricelist = None
     locale = None
+    session_id = None
+    recommendations = None
     PRICE_LIST_URL_PARAM = "pricelist"
+    SESSION_ID_URL_PARAM = "recommender_session_id"
     COUNTRY_URL_PARAM = "country"
 
     ALLOWED_ORDER_FIELDS = ["asc", "desc"]
@@ -212,6 +234,10 @@ class CategoryDetailProductsStorefrontView(APIView):
         "price": {
             "sort_function": _order_by_price,
             "additional_params": [pricelist],
+        },
+        "recommended": {
+            "sort_function": _order_by_recommendation,
+            "additional_params": [recommendations],
         },
     }
 
@@ -230,6 +256,7 @@ class CategoryDetailProductsStorefrontView(APIView):
     def post(self, request, pk):
         self.pricelist = self._get_pricelist(request)
         self.locale = self._get_locale(request)
+        self.session_id = self._get_session_id(request)
         request_serializer = SelectedFiltersWithOrderingSerializer(data=request.data)
 
         if request_serializer.is_valid():
@@ -244,6 +271,21 @@ class CategoryDetailProductsStorefrontView(APIView):
                     filters_with_ordering.sort_by,
                     filters_with_ordering.order,
                 )
+
+                if sort_by == "recommended":
+                    self.recommendations = (
+                        RecommenderSystemApi.get_category_product_positions(
+                            category_id=pk,
+                            user_id=request.user
+                            if request.user.is_authenticated
+                            else None,
+                            session_id=self.session_id,
+                        )
+                    )
+                    self.SORT_FIELDS_CONFIG["recommended"]["additional_params"] = [
+                        self.recommendations
+                    ]
+
                 order = (
                     order
                     if order in self.ALLOWED_ORDER_FIELDS
@@ -318,6 +360,12 @@ class CategoryDetailProductsStorefrontView(APIView):
         self.locale = request.META.get("HTTP_ACCEPT_LANGUAGE", "en")
         self.SORT_FIELDS_CONFIG["title"]["additional_params"] = [self.locale]
         return self.locale
+
+    def _get_session_id(self, request):
+        if self.session_id is not None:
+            return self.session_id
+        self.session_id = request.query_params.get(self.SESSION_ID_URL_PARAM)
+        return self.session_id
 
     def _get_pricelist(self, request):
         """get price list from request params or default to the default one"""

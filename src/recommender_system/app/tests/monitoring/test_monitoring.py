@@ -41,8 +41,8 @@ def prepare_data():
 
     results = [
         PredictionResultModel(
-            retrieval_model_name="dummy",
-            retrieval_model_identifier="dummy",
+            retrieval_model_name="selection",
+            retrieval_model_identifier="selection",
             scoring_model_name="similarity",
             scoring_model_identifier="similarity",
             recommendation_type=RecommendationType.CART.value,
@@ -54,8 +54,8 @@ def prepare_data():
             create_at=datetime.now() - timedelta(seconds=1),
         ),
         PredictionResultModel(
-            retrieval_model_name="dummy",
-            retrieval_model_identifier="dummy",
+            retrieval_model_name="selection",
+            retrieval_model_identifier="selection",
             scoring_model_name="similarity",
             scoring_model_identifier="similarity",
             recommendation_type=RecommendationType.CART.value,
@@ -69,8 +69,8 @@ def prepare_data():
         PredictionResultModel(
             retrieval_model_name="similarity",
             retrieval_model_identifier="similarity",
-            scoring_model_name="dummy",
-            scoring_model_identifier="dummy",
+            scoring_model_name="selection",
+            scoring_model_identifier="selection",
             recommendation_type=RecommendationType.PRODUCT_DETAIL.value,
             session_id="1",
             retrieval_duration=1.0,
@@ -173,13 +173,15 @@ def test_statistics(
     assert detail.item.direct_hit == 1 / 1
     assert detail.item.future_hit == 0
 
-    dummy = [item for item in statistics.models if item.model_name == "dummy"][0]
-    assert dummy.item.coverage == 2 / 4
-    assert dummy.item.direct_hit == 0
-    assert dummy.item.future_hit == 0
+    selection = [item for item in statistics.models if item.model_name == "selection"][
+        0
+    ]
+    assert selection.item.coverage == 2 / 4
+    assert selection.item.direct_hit == 0
+    assert selection.item.future_hit == 0
 
     detail = [
-        item for item in dummy.types if item.recommendation_type == "PRODUCT_DETAIL"
+        item for item in selection.types if item.recommendation_type == "PRODUCT_DETAIL"
     ][0]
     assert detail.item.coverage == 2 / 4
     assert detail.item.direct_hit == 0

@@ -1,15 +1,21 @@
 from typing import List
 
-from pydantic import BaseModel
+from pydantic import Field
+
+from recommender_system.utils.base_model import BaseModel
 
 
 class EASEConfig(BaseModel):
-    l2_options: List[float] = [1, 10, 100]
+    l2_options: List[float] = Field(default=[1, 10, 100], alias="l2Options")
 
 
 class GRU4RecConfig(BaseModel):
-    num_epochs_options: List[int] = [1]
-    batch_size_options: List[int] = [64]
-    embedding_size_options: List[int] = [100]
-    hidden_size_options: List[int] = [100]
-    learning_rate_options: List[float] = [0.0001]
+    num_epochs_options: List[int] = Field(default=[1], alias="numEpochsOptions")
+    batch_size_options: List[int] = Field(default=[64], alias="batchSizeOptions")
+    embedding_size_options: List[int] = Field(
+        default=[100], alias="embeddingSizeOptions"
+    )
+    hidden_size_options: List[int] = Field(default=[100], alias="hiddenSizeOptions")
+    learning_rate_options: List[float] = Field(
+        default=[0.0001], alias="learningRateOptions"
+    )

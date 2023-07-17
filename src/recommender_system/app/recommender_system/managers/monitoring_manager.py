@@ -4,14 +4,20 @@ from typing import Any, Dict, List, Tuple
 from dependency_injector.wiring import inject, Provide
 
 from recommender_system.managers.model_manager import ModelManager
+from recommender_system.models.stored.model.config import ConfigModel
+from recommender_system.models.stored.model.training_statistics import (
+    TrainingStatisticsModel,
+)
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.storage.feedback.abstract import AbstractFeedbackStorage
 from recommender_system.storage.product.abstract import AbstractProductStorage
 from recommender_system.utils.monitoring_statistics import (
-    MonitoringStatistics,
-    MonitoringModelStatistics,
-    MonitoringTypeStatistics,
-    MonitoringStatisticsItem,
+    Statistics,
+    ModelStatistics,
+    TypeStatistics,
+    StatisticsItem,
+    TrainingDetails,
+    ModelTrainingDetails,
 )
 from recommender_system.utils.recommendation_type import RecommendationType
 
@@ -89,7 +95,7 @@ class MonitoringManager:
         date_to: datetime,
         feedback_storage: AbstractFeedbackStorage = Provide["feedback_storage"],
         model_manager: ModelManager = Provide["model_manager"],
-    ) -> MonitoringStatistics:
+    ) -> Statistics:
         k = 10
         direct_hit_data = feedback_storage.count_direct_hit(
             date_from=date_from, date_to=date_to, k=k
@@ -114,7 +120,8 @@ class MonitoringManager:
             detailed=detailed_coverage_data,
         )
 
-        global_item = MonitoringStatisticsItem(
+        global_item = StatisticsItem(
+            k=k,
             direct_hit=direct_hit["global"],
             future_hit=future_hit["global"],
             coverage=coverage["global"],
@@ -125,9 +132,13 @@ class MonitoringManager:
             types = []
             for recommendation_type in RecommendationType.values():
                 types.append(
-                    MonitoringTypeStatistics(
+                    TypeStatistics(
                         recommendation_type=recommendation_type,
-                        item=MonitoringStatisticsItem(
+                        recommendation_type_title=RecommendationType.get_title(
+                            value=recommendation_type
+                        ),
+                        item=StatisticsItem(
+                            k=k,
                             direct_hit=direct_hit["detailed"]
                             .get(model_name, {})
                             .get(recommendation_type),
@@ -141,9 +152,10 @@ class MonitoringManager:
                     )
                 )
             model_statistics.append(
-                MonitoringModelStatistics(
+                ModelStatistics(
                     model_name=model_name,
-                    item=MonitoringStatisticsItem(
+                    item=StatisticsItem(
+                        k=k,
                         direct_hit=direct_hit["model"].get(model_name),
                         future_hit=future_hit["model"].get(model_name),
                         coverage=coverage["model"].get(model_name),
@@ -152,8 +164,30 @@ class MonitoringManager:
                 )
             )
 
-        return MonitoringStatistics(
-            k=k,
+        return Statistics(
             item=global_item,
             models=model_statistics,
         )
+
+    @inject
+    def get_training_details(
+        self, model_manager: ModelManager = Provide["model_manager"]
+    ) -> TrainingDetails:
+        models_training_details = []
+        for model in model_manager.get_all_models():
+            try:
+                statistics = TrainingStatisticsModel.get_latest(
+                    model_name=model.Meta.model_name
+                )
+                models_training_details.append(
+                    ModelTrainingDetails(
+                        model_name=model.Meta.model_name, statistics=statistics
+                    )
+                )
+            except TrainingStatisticsModel.DoesNotExist:
+                pass
+
+        return TrainingDetails(models=models_training_details)
+
+    def get_config(self) -> ConfigModel:
+        return ConfigModel.get_current()

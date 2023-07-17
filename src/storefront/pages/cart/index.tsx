@@ -2,7 +2,7 @@ import getConfig from "next/config";
 // utils
 import { useTranslation } from "next-i18next";
 import Typography from "@mui/material/Typography";
-import React from "react";
+import React, { useEffect } from "react";
 import CartItemList from "@/components/Cart/CartItemList";
 import CartStepper from "@/components/Cart/Stepper";
 import CartButtonRow from "@/components/Cart/ButtonRow";
@@ -10,6 +10,9 @@ import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useCart } from "@/utils/context/cart";
+import { IProductSliderData } from "@/types/product";
+import { useRecommender } from "@/utils/context/recommender";
+import ProductsSlider from "@/components/Common/ProductsSlider";
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -17,6 +20,22 @@ const CartPage = () => {
   const router = useRouter();
   const { cart } = useCart();
   const { t } = useTranslation("cart");
+  const [recommendedProducts, setRecommendedProducts] = React.useState<
+    IProductSliderData[]
+  >([]);
+
+  const { getRecommendations } = useRecommender();
+  useEffect(() => {
+    // load recommended products
+    getRecommendations("CART", {
+      limit: 10,
+      variants_in_cart: cart?.cart_items.map(
+        (item) => item.product_variant_sku
+      ),
+    }).then((products: any[]) => {
+      setRecommendedProducts(products);
+    });
+  }, []);
 
   return (
     <div className="container">
@@ -41,6 +60,7 @@ const CartPage = () => {
           disabled: false,
         }}
       />
+      <ProductsSlider data={recommendedProducts || []} />
     </div>
   );
 };

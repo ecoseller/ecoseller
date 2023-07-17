@@ -31,7 +31,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (method == "GET") {
     return pageCategoryTypeAPI("GET", identifier as string, req, res)
       .then((data) => res.status(200).json(data))
-      .catch((error) => res.status(400).json(error.response.data));
+      .catch((error) => res.status(400).json(error.response?.data));
   }
   return res.status(404).json({ message: "Method not supported" });
 };

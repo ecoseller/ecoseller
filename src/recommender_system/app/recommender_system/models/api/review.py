@@ -1,10 +1,10 @@
 from datetime import datetime
 
-from recommender_system.models.api.base import ApiBaseModel
+from recommender_system.models.api.immutable import ImmutableApiModel
 from recommender_system.models.stored.feedback.review import ReviewModel
 
 
-class Review(ApiBaseModel):
+class Review(ImmutableApiModel):
     """
     This model represents user's review of a product as an object that is sent
     from core to RS component via API.
@@ -16,8 +16,8 @@ class Review(ApiBaseModel):
     product_id: int
     product_variant_sku: str
     rating: int
-    update_at: datetime
-    create_at: datetime
+    update_at: datetime = datetime.now()
+    create_at: datetime = datetime.now()
 
     class Meta:
         stored_model_class = ReviewModel

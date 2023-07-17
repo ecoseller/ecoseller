@@ -151,6 +151,7 @@ def test_pipeline_ordering(
         recommendation_type=RecommendationType.PRODUCT_DETAIL,
         session_id="session",
         user_id=1,
+        limit=None,
     )
     assert result == ["1", "4", "2", "3"]
 
@@ -160,6 +161,7 @@ def test_pipeline_ordering(
         recommendation_type=RecommendationType.PRODUCT_DETAIL,
         session_id="session",
         user_id=1,
+        limit=None,
     )
     assert result[0] == "4"
     assert result[-1] == "3"
@@ -170,5 +172,6 @@ def test_pipeline_ordering(
         recommendation_type=RecommendationType.CATEGORY_LIST,
         session_id="session",
         user_id=1,
+        limit=None,
     )
     assert result[-1] == "3"  # Is not in stock

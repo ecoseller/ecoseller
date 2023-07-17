@@ -3,7 +3,8 @@ import uuid
 from django.db import models
 from enumchoicefield import ChoiceEnum, EnumChoiceField
 
-from cart.models import Cart, CartItem
+from cart.models import CartItem
+from cart.models import Cart
 
 
 class OrderStatus(ChoiceEnum):

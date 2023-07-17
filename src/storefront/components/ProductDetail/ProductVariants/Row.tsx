@@ -40,6 +40,7 @@ import QuantitySelect from "@/components/Common/QuantitySelect";
 import DiscountText from "@/components/Generic/DiscountText";
 import { useTranslation } from "next-i18next";
 import { useSnackbarState } from "@/utils/snackbar";
+import { useRecommender } from "@/utils/context/recommender";
 
 const ProductVariantRow = ({
   variant,
@@ -53,6 +54,7 @@ const ProductVariantRow = ({
   pricelist: string;
 }) => {
   const { addToCart } = useCart();
+  const { sendEvent } = useRecommender();
   const { cartProductQuantity } = useCart();
   const { query } = useRouter();
   const { t } = useTranslation("product");
@@ -70,6 +72,10 @@ const ProductVariantRow = ({
   };
 
   const handleAddToCart = () => {
+    sendEvent("PRODUCT_ADD_TO_CART", {
+      product_id: productId,
+      product_variant_sku: variant.sku,
+    });
     if (qty + cartProductQuantity(variant.sku) > variant.stock_quantity) {
       setSnackbar({
         open: true,

@@ -1,4 +1,5 @@
 from unittest import TestCase
+import uuid
 
 import pytest
 
@@ -32,7 +33,7 @@ def delete_attributes(product_variant_pk: str):
 def delete_orders(product_variant_pk: str):
     for opv in OrderProductVariantModel.gets(product_variant_sku=product_variant_pk):
         try:
-            OrderModel.get(pk=opv.order_id).delete()
+            OrderModel.get(pk=opv.order_token).delete()
         except OrderModel.DoesNotExist:
             pass
         opv.delete()
@@ -159,10 +160,10 @@ def test_product_variant_orders(create_product_variant):
     old_orders = len(product_variant.orders)
 
     order = OrderModel.parse_obj(order_dict)
-    order.id = None
+    order.token = uuid.uuid4()
     order.create()
 
-    product_variant.add_order(order=order, amount=1)
+    product_variant.add_order(order=order, quantity=1)
 
     assert len(product_variant.orders) == old_orders + 1
 
