@@ -1,11 +1,12 @@
 from datetime import datetime
 from enum import Enum
 import time
-from typing import Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 from dependency_injector.wiring import inject, Provide
 import numpy as np
 
+from recommender_system.managers.cache_manager import CacheManager
 from recommender_system.managers.model_manager import ModelManager
 from recommender_system.models.prediction.abstract import AbstractPredictionModel
 from recommender_system.models.prediction.similarity.model import (
@@ -48,7 +49,7 @@ class PredictionPipeline:
         recommendation_type: RecommendationType,
         session_id: str,
         user_id: Optional[int],
-        **kwargs: Any
+        **kwargs: Any,
     ) -> List[str]:
         if recommendation_type == RecommendationType.HOMEPAGE:
             return model.retrieve_homepage(session_id=session_id, user_id=user_id)
@@ -73,7 +74,7 @@ class PredictionPipeline:
         recommendation_type: RecommendationType,
         session_id: str,
         user_id: Optional[int],
-        **kwargs: Any
+        **kwargs: Any,
     ) -> List[str]:
         if recommendation_type == RecommendationType.HOMEPAGE:
             return model.score_homepage(
@@ -177,8 +178,16 @@ class PredictionPipeline:
         recommendation_type: RecommendationType,
         session_id: str,
         user_id: Optional[int],
+        cache_manager: CacheManager = Provide["cache_manager"],
         model_manager: ModelManager = Provide["model_manager"],
-    ) -> List[str]:
+        **kwargs: Any,
+    ) -> List[Dict[str, Any]]:
+        cached = cache_manager.get(
+            recommendation_type=recommendation_type, session_id=session_id, **kwargs
+        )
+        if cached is not None:
+            return [{"product_variant_sku": sku, "rs_info": {}} for sku in cached]
+
         retrieval_model = model_manager.get_model(
             recommendation_type=recommendation_type,
             step=PredictionPipeline.Step.RETRIEVAL,
