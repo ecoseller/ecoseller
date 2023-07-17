@@ -19,11 +19,17 @@ class DummyPredictionModel(AbstractPredictionModel):
     def default_identifier(self) -> str:
         return self.Meta.model_name
 
-    def is_ready(self, session_id: str, user_id: Optional[int]) -> bool:
+    @classmethod
+    def is_ready(cls, session_id: str, user_id: Optional[int]) -> bool:
         return True
 
-    def is_ready_for_training(self) -> bool:
+    @classmethod
+    def is_ready_for_training(cls) -> bool:
         return False
+
+    @classmethod
+    def get_latest_identifier(cls) -> str:
+        return cls().default_identifier
 
     @inject
     def retrieve(

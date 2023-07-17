@@ -48,8 +48,9 @@ class RecommenderSystemApi:
                 url=cls.server_url + "/predict",
                 json=data,
             )
-            return response.json()
-        return []
+            if response.status_code == 200:
+                return response.json()
+        return None
 
     @classmethod
     def get_category_product_positions(
