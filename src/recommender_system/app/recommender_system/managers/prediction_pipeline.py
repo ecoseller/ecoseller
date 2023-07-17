@@ -205,10 +205,14 @@ class PredictionPipeline:
         retrieval_model = model_manager.get_model(
             recommendation_type=recommendation_type,
             step=PredictionPipeline.Step.RETRIEVAL,
+            session_id=session_id,
+            user_id=user_id,
         )
         scoring_model = model_manager.get_model(
             recommendation_type=recommendation_type,
             step=PredictionPipeline.Step.SCORING,
+            session_id=session_id,
+            user_id=user_id,
         )
 
         if recommendation_type == RecommendationType.PRODUCT_DETAIL:
