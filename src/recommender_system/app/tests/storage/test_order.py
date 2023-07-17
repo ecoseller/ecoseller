@@ -1,5 +1,6 @@
 from datetime import datetime
 from unittest import TestCase
+import uuid
 
 import pytest
 
@@ -11,8 +12,8 @@ from recommender_system.models.stored.product.product_variant import ProductVari
 from tests.storage.tools import get_or_create_model, delete_model, default_dicts
 
 
-def delete_product_variants(order_pk: int):
-    for opv in OrderProductVariantModel.gets(order_id=order_pk):
+def delete_product_variants(order_pk: uuid.UUID):
+    for opv in OrderProductVariantModel.gets(order_token=order_pk):
         try:
             ProductVariantModel.get(pk=opv.product_variant_sku).delete()
         except ProductVariantModel.DoesNotExist:
@@ -22,7 +23,7 @@ def delete_product_variants(order_pk: int):
 
 @pytest.fixture
 def clear_order():
-    order_pk = 0
+    order_pk = uuid.uuid4()
 
     delete_model(model_class=OrderModel, pk=order_pk)
 
@@ -44,6 +45,7 @@ def create_order():
 def test_order_create(clear_order):
     order_pk = clear_order
     order_dict = default_dicts[OrderModel]
+    order_dict["token"] = order_pk
 
     with pytest.raises(OrderModel.DoesNotExist):
         _ = OrderModel.get(pk=order_pk)
@@ -108,6 +110,6 @@ def test_order_product_variants(create_order):
     product_variant.sku = datetime.now().isoformat()
     product_variant.create()
 
-    order.add_product_variant(product_variant=product_variant, amount=1)
+    order.add_product_variant(product_variant=product_variant, quantity=1)
 
     assert len(order.product_variants) == old_variants + 1

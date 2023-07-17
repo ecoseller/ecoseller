@@ -1,7 +1,8 @@
 from datetime import datetime
 from enum import Enum
+import random
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from dependency_injector.wiring import inject, Provide
 import numpy as np
@@ -25,8 +26,6 @@ from recommender_system.utils.recommendation_type import RecommendationType
 
 
 class PredictionPipeline:
-    order_top_k: int = 50
-
     class Step(Enum):
         RETRIEVAL = "RETRIEVAL"
         FILTERING = "FILTERING"
@@ -101,14 +100,18 @@ class PredictionPipeline:
         raise ValueError("Unknown recommendation type.")
 
     def _order_by_diversity(self, variants: List[str]) -> List[str]:
+        from recommender_system.models.stored.model.config import ConfigModel
+
         def intra_list_distance(indices: List[int], dists: np.ndarray) -> float:
             return np.mean(dists[np.ix_(indices, indices)]).item()
 
+        order_top_k = ConfigModel.get_current().ordering_size
+
         top_k = variants
         left_out = []
-        if self.order_top_k < len(variants):
-            top_k = variants[: self.order_top_k]
-            left_out = variants[self.order_top_k :]
+        if order_top_k < len(variants):
+            top_k = variants[:order_top_k]
+            left_out = variants[order_top_k:]
         try:
             model_identifier = SimilarityPredictionModel.get_latest_identifier()
         except LatestIdentifierModel.DoesNotExist:
@@ -166,28 +169,34 @@ class PredictionPipeline:
         recommendation_type: RecommendationType,
         session_id: str,
         user_id: Optional[int],
+        limit: Optional[int],
     ) -> List[str]:
         result = self._order_by_diversity(variants=variants)
         if recommendation_type == RecommendationType.CATEGORY_LIST:
             result = self._order_by_stock(variants=result)
+        if limit is not None and limit < len(result):
+            result = result[:limit]
         return result
 
-    @inject
-    def run(
+    def _run_steps(
         self,
-        recommendation_type: RecommendationType,
+        recommendation_type: str,
         session_id: str,
         user_id: Optional[int],
+        limit: Optional[int] = None,
         cache_manager: CacheManager = Provide["cache_manager"],
         model_manager: ModelManager = Provide["model_manager"],
         **kwargs: Any,
-    ) -> List[Dict[str, Any]]:
+    ) -> Tuple[
+        Optional[AbstractPredictionModel], Optional[AbstractPredictionModel], List[str]
+    ]:
         cached = cache_manager.get(
             recommendation_type=recommendation_type, session_id=session_id, **kwargs
         )
         if cached is not None:
-            return [{"product_variant_sku": sku, "rs_info": {}} for sku in cached]
+            return None, None, cached
 
+        recommendation_type = RecommendationType[recommendation_type]
         retrieval_model = model_manager.get_model(
             recommendation_type=recommendation_type,
             step=PredictionPipeline.Step.RETRIEVAL,
@@ -197,12 +206,16 @@ class PredictionPipeline:
             step=PredictionPipeline.Step.SCORING,
         )
 
+        if recommendation_type == RecommendationType.PRODUCT_DETAIL:
+            kwargs["variant"] = random.choice(kwargs.pop("variants"))
+
         retrieval_start = time.time()
         predictions = self._retrieve(
             model=retrieval_model,
             recommendation_type=recommendation_type,
             session_id=session_id,
             user_id=user_id,
+            **kwargs,
         )
         scoring_start = time.time()
         predictions = self._score(
@@ -211,6 +224,7 @@ class PredictionPipeline:
             recommendation_type=recommendation_type,
             session_id=session_id,
             user_id=user_id,
+            **kwargs,
         )
         ordering_start = time.time()
         predictions = self._order(
@@ -218,6 +232,7 @@ class PredictionPipeline:
             recommendation_type=recommendation_type,
             session_id=session_id,
             user_id=user_id,
+            limit=limit,
         )
         ordering_end = time.time()
 
@@ -236,4 +251,74 @@ class PredictionPipeline:
         )
         result.create()
 
-        return predictions
+        return retrieval_model, scoring_model, predictions
+
+    def run(
+        self,
+        recommendation_type: str,
+        session_id: str,
+        user_id: Optional[int],
+        limit: Optional[int] = None,
+        **kwargs: Any,
+    ) -> List[Dict[str, Any]]:
+        retrieval_model, scoring_model, predictions = self._run_steps(
+            recommendation_type=recommendation_type,
+            session_id=session_id,
+            user_id=user_id,
+            limit=limit,
+            **kwargs,
+        )
+
+        if scoring_model is not None:
+            return [
+                {
+                    "product_variant_sku": sku,
+                    "rs_info": {
+                        "recommendation_type": recommendation_type,
+                        "model_identifier": scoring_model.identifier,
+                        "model_name": scoring_model.Meta.model_name,
+                        "position": i,
+                    },
+                }
+                for i, sku in enumerate(predictions)
+            ]
+        return [
+            {
+                "product_variant_sku": sku,
+                "rs_info": {},
+            }
+            for sku in predictions
+        ]
+
+    @inject
+    def get_product_positions(
+        self,
+        recommendation_type: str,
+        session_id: str,
+        user_id: Optional[int],
+        category_id: int,
+        limit: Optional[int] = None,
+        product_storage: AbstractProductStorage = Provide["product_storage"],
+        **kwargs: Any,
+    ) -> Dict[int, int]:
+        retrieval_model, scoring_model, predictions = self._run_steps(
+            recommendation_type=recommendation_type,
+            session_id=session_id,
+            user_id=user_id,
+            limit=limit,
+            category_id=category_id,
+            **kwargs,
+        )
+
+        mapping = {sku: pos for pos, sku in enumerate(predictions)}
+        ppvs = product_storage.get_product_product_variants_in_category(
+            category_id=category_id
+        )
+        result = {}
+        for ppv in ppvs:
+            pos = mapping.get(ppv.product_variant_sku, len(predictions))
+            if ppv.product_id not in result:
+                result[ppv.product_id] = pos
+            if result[ppv.product_id] > pos:
+                result[ppv.product_id] = pos
+        return result

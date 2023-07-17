@@ -1,6 +1,6 @@
 from typing import Type, TYPE_CHECKING
 
-from pydantic import BaseModel
+from recommender_system.utils.base_model import BaseModel
 
 if TYPE_CHECKING:
     from recommender_system.models.stored.base import StoredBaseModel

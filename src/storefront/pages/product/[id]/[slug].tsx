@@ -42,6 +42,8 @@ import { productRatingAPI } from "@/pages/api/review/rating/[token]";
 import { productReviewListAPI } from "@/pages/api/review/list/[token]";
 import { IReview } from "@/types/review";
 import { ReviewsList } from "@/components/Review/RatingsList";
+import { useRecommender } from "@/utils/context/recommender";
+import { useEffect, useState } from "react";
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -53,51 +55,6 @@ interface IProductPageProps {
   productReviews: IReview[];
 }
 
-const recommendedProducts: IProductSliderData[] = [
-  {
-    id: 1,
-    title: "Product 1",
-    price: "$25",
-    image: "/images/products/1.jpg",
-    url: "/",
-  },
-  {
-    id: 2,
-    title: "Product 2",
-    price: "$20",
-    image: "/images/products/2.jpg",
-    url: "/",
-  },
-  {
-    id: 3,
-    title: "Product 3",
-    price: "$25",
-    image: "/images/products/1.jpg",
-    url: "/",
-  },
-  {
-    id: 4,
-    title: "Product 4",
-    price: "$20",
-    image: "/images/products/1.jpg",
-    url: "/",
-  },
-  {
-    id: 5,
-    title: "Product 5",
-    price: "$25",
-    image: "/images/products/1.jpg",
-    url: "/",
-  },
-  {
-    id: 6,
-    title: "Product 6",
-    price: "$20",
-    image: "/images/products/1.jpg",
-    url: "/",
-  },
-];
-
 const ProductPage = ({
   data,
   country,
@@ -106,7 +63,44 @@ const ProductPage = ({
   productReviews,
 }: IProductPageProps) => {
   const { basePath } = useRouter();
+  const router = useRouter();
   const { t } = useTranslation("product");
+  const { getRecommendations, sendEvent } = useRecommender();
+  const [recommendedProducts, setRecommendedProducts] = useState<
+    IProductSliderData[]
+  >([]);
+  const [timeEntered] = useState<Date>(new Date());
+  useEffect(() => {
+    // load recommended products
+    getRecommendations("PRODUCT_DETAIL", {
+      limit: 10,
+      product_id: data.id,
+      variants: data.product_variants?.map((v) => v.sku),
+    }).then((products: any[]) => {
+      setRecommendedProducts(products);
+    });
+  }, []);
+
+  useEffect(() => {
+    const exitingFunction = () => {
+      sendEvent(
+        "PRODUCT_DETAIL_LEAVE",
+        data.product_variants?.map((v) => {
+          return {
+            product_id: data.id,
+            product_variant_sku: v.sku,
+            time_spent: (new Date().getTime() - timeEntered.getTime()) / 1000,
+          };
+        })
+      );
+    };
+    router.events.on("routeChangeStart", exitingFunction);
+
+    return () => {
+      console.log("unmounting component...");
+      router.events.off("routeChangeStart", exitingFunction);
+    };
+  }, []);
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -145,7 +139,7 @@ const ProductPage = ({
                 component={"h3"}
                 sx={{ fontSize: "1.25rem", paddingTop: "20px" }}
               >
-                {t("varinats")}
+                {t("variants")}
               </Typography>
               <ProductVariants
                 variants={data.product_variants}
@@ -166,7 +160,7 @@ const ProductPage = ({
           <Typography variant="body1" gutterBottom>
             {t("recommended-products-description")}
           </Typography>
-          <ProductsSlider data={recommendedProducts} />
+          <ProductsSlider data={recommendedProducts || []} />
         </Box>
         <Box sx={{ pt: 5 }}>
           <Typography variant="h4" gutterBottom>

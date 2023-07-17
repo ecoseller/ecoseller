@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, TYPE_CHECKING
 
 from sqlalchemy import and_, func, case, or_
 from sqlalchemy.sql.functions import random
@@ -19,23 +19,28 @@ from recommender_system.storage.sql.models.products import (
 from recommender_system.storage.sql.models.similarity import SQLDistance
 from recommender_system.storage.sql.storage import SQLStorage
 
+if TYPE_CHECKING:
+    from recommender_system.models.stored.product.product_product_variant import (
+        ProductProductVariantModel,
+    )
+
 
 class SQLProductStorage(SQLStorage, AbstractProductStorage):
     def get_popular_product_variant_skus(
         self, filter_in_stock: bool, limit: Optional[int] = None
     ) -> List[str]:
-        amount = case(
+        quantity = case(
             (
                 SQLOrderProductVariant.product_variant_sku.isnot(None),
-                SQLOrderProductVariant.amount,
+                SQLOrderProductVariant.quantity,
             ),
             else_=0,
-        ).label("amount")
+        ).label("quantity")
 
         number_of_orders = (
             self.session.query(
                 SQLProductVariant.sku,
-                amount,
+                quantity,
             )
             .select_from(SQLProductVariant)
             .outerjoin(
@@ -45,7 +50,7 @@ class SQLProductStorage(SQLStorage, AbstractProductStorage):
             .subquery()
         )
 
-        priority = func.sum(random() * number_of_orders.c.amount)
+        priority = func.sum(random() * number_of_orders.c.quantity)
 
         query = (
             self.session.query(SQLProductVariant.sku, priority)
@@ -65,18 +70,18 @@ class SQLProductStorage(SQLStorage, AbstractProductStorage):
         return [row[0] for row in query.all()]
 
     def get_product_variant_popularities(self, skus: List[str]) -> Dict[str, int]:
-        amount = case(
+        quantity = case(
             (
                 SQLOrderProductVariant.product_variant_sku.isnot(None),
-                SQLOrderProductVariant.amount,
+                SQLOrderProductVariant.quantity,
             ),
             else_=0,
-        ).label("amount")
+        ).label("quantity")
 
         number_of_orders = (
             self.session.query(
                 SQLProductVariant.sku,
-                amount,
+                quantity,
             )
             .select_from(SQLProductVariant)
             .outerjoin(
@@ -86,7 +91,7 @@ class SQLProductStorage(SQLStorage, AbstractProductStorage):
             .subquery()
         )
 
-        priority = func.sum(number_of_orders.c.amount)
+        priority = func.sum(number_of_orders.c.quantity)
 
         query = (
             self.session.query(SQLProductVariant.sku, priority)
@@ -178,6 +183,26 @@ class SQLProductStorage(SQLStorage, AbstractProductStorage):
         )
 
         return [row[0] for row in query.all()]
+
+    def get_product_product_variants_in_category(
+        self, category_id: int
+    ) -> List["ProductProductVariantModel"]:
+        from recommender_system.models.stored.product.product_product_variant import (
+            ProductProductVariantModel,
+        )
+
+        query = self.session.query(SQLProductProductVariant).select_from(
+            SQLProductProductVariant
+        )
+        query = query.join(
+            SQLProduct, SQLProduct.id == SQLProductProductVariant.product_id
+        )
+        query = query.filter(SQLProduct.category_id == category_id)
+
+        result = []
+        for row in query.all():
+            result.append(ProductProductVariantModel(**row.__dict__))
+        return result
 
     def get_product_variant_prices(self) -> Dict[str, float]:
         query = self.session.query(

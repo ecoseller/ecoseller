@@ -1,6 +1,8 @@
 from datetime import datetime
 from typing import Any, Dict, Optional
 
+from pydantic import Field
+
 from recommender_system.models.stored.model.immutable import ImmutableModelStoredModel
 
 
@@ -14,9 +16,9 @@ class TrainingStatisticsModel(ImmutableModelStoredModel):
     model_identifier: str
 
     duration: float
-    peak_memory: float
-    peak_memory_percentage: float
-    full_train: bool = True
+    peak_memory: float = Field(alias="peakMemory")
+    peak_memory_percentage: float = Field(alias="peakMemoryPercentage")
+    full_train: bool = Field(default=True, alias="fullTrain")
 
     metrics: Dict[str, Any]
     hyperparameters: Dict[str, Any]

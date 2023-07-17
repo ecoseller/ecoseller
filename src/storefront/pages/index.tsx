@@ -4,7 +4,7 @@
  */
 
 // react
-import React from "react";
+import React, { useEffect } from "react";
 // next
 import getConfig from "next/config";
 import { GetServerSideProps } from "next";
@@ -22,56 +22,23 @@ import Grid from "@mui/material/Grid";
 import CompanyBenefit from "@/components/Homepage/CompanyBenefit";
 import { IProductSliderData } from "@/types/product";
 import ProductsSlider from "@/components/Common/ProductsSlider";
+import { useRecommender } from "@/utils/context/recommender";
 
 const { serverRuntimeConfig } = getConfig();
 
-const bestSellersData: IProductSliderData[] = [
-  {
-    id: 1,
-    title: "Product 1",
-    price: "$25",
-    image: "/images/products/1.jpg",
-    url: "/",
-  },
-  {
-    id: 2,
-    title: "Product 2",
-    price: "$20",
-    image: "/images/products/2.jpg",
-    url: "/",
-  },
-  {
-    id: 3,
-    title: "Product 3",
-    price: "$25",
-    image: "/images/products/1.jpg",
-    url: "/",
-  },
-  {
-    id: 4,
-    title: "Product 4",
-    price: "$20",
-    image: "/images/products/1.jpg",
-    url: "/",
-  },
-  {
-    id: 5,
-    title: "Product 5",
-    price: "$25",
-    image: "/images/products/1.jpg",
-    url: "/",
-  },
-  {
-    id: 6,
-    title: "Product 6",
-    price: "$20",
-    image: "/images/products/1.jpg",
-    url: "/",
-  },
-];
-
 const HomePage = () => {
   const { t } = useTranslation("home");
+  const [recommendedProducts, setRecommendedProducts] = React.useState<
+    IProductSliderData[]
+  >([]);
+
+  const { getRecommendations } = useRecommender();
+  useEffect(() => {
+    // load recommended products
+    getRecommendations("HOMEPAGE", { limit: 10 }).then((products: any[]) => {
+      setRecommendedProducts(products);
+    });
+  }, []);
   return (
     <div className={`container`}>
       <div className={styles.homePage}>
@@ -131,7 +98,7 @@ const HomePage = () => {
               ) /* Check out our best selling products */
             }
           </Typography>
-          <ProductsSlider data={bestSellersData} />
+          <ProductsSlider data={recommendedProducts || []} />
         </Box>
       </div>
     </div>

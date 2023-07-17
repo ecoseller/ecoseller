@@ -39,6 +39,15 @@ class SimilarityStoredBaseModel(StoredBaseModel):
 
     @classmethod
     @inject
+    def get_latest(
+        cls,
+        storage: "AbstractSimilarityStorage" = Provide["similarity_storage"],
+        **kwargs
+    ) -> "StoredBaseModel":
+        return super().get_latest(storage=storage, **kwargs)
+
+    @classmethod
+    @inject
     def gets(
         cls,
         storage: "AbstractSimilarityStorage" = Provide["similarity_storage"],

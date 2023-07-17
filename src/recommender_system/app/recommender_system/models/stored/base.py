@@ -1,8 +1,7 @@
 from typing import Any, List, TYPE_CHECKING
 
-from pydantic import BaseModel
-
 from recommender_system.models.api.base import ApiBaseModel
+from recommender_system.utils.base_model import BaseModel
 
 if TYPE_CHECKING:
     from recommender_system.storage.abstract import AbstractStorage
@@ -45,6 +44,10 @@ class StoredBaseModel(BaseModel):
     @classmethod
     def get(cls, storage: "AbstractStorage", **kwargs) -> "StoredBaseModel":
         return storage.get_object(model_class=cls, **kwargs)
+
+    @classmethod
+    def get_latest(cls, storage: "AbstractStorage", **kwargs) -> "StoredBaseModel":
+        return storage.get_latest_object(model_class=cls, **kwargs)
 
     @classmethod
     def gets(cls, storage: "AbstractStorage", **kwargs) -> List["StoredBaseModel"]:

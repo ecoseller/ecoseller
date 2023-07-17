@@ -1,8 +1,13 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, TYPE_CHECKING
 
 from recommender_system.storage.abstract import AbstractStorage
 from recommender_system.storage.product.statistics import NumericalStatistics
+
+if TYPE_CHECKING:
+    from recommender_system.models.stored.product.product_product_variant import (
+        ProductProductVariantModel,
+    )
 
 
 class AbstractProductStorage(AbstractStorage, ABC):
@@ -131,6 +136,12 @@ class AbstractProductStorage(AbstractStorage, ABC):
             Product variants SKUs that are in the given category and all its children.
 
         """
+        raise NotImplementedError()
+
+    @abstractmethod
+    def get_product_product_variants_in_category(
+        self, category_id: int
+    ) -> List["ProductProductVariantModel"]:
         raise NotImplementedError()
 
     @abstractmethod

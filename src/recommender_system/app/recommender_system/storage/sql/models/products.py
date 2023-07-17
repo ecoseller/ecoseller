@@ -1,11 +1,5 @@
 from sqlalchemy.sql.schema import Column
-from sqlalchemy.sql.sqltypes import (
-    Boolean,
-    DECIMAL,
-    Integer,
-    String,
-    TIMESTAMP,
-)
+from sqlalchemy.sql.sqltypes import Boolean, DECIMAL, Integer, String, TIMESTAMP, UUID
 from sqlalchemy.orm import declarative_base, DeclarativeBase
 
 from recommender_system.models.stored.product.attribute import AttributeModel
@@ -135,7 +129,7 @@ class SQLOrder(ProductBase):
     This model represents order table in SQL database.
     """
 
-    id = Column(Integer(), primary_key=True)
+    token = Column(UUID(as_uuid=True), primary_key=True)
     update_at = Column(TIMESTAMP(), nullable=False)
     create_at = Column(TIMESTAMP(), nullable=False)
 
@@ -153,9 +147,9 @@ class SQLOrderProductVariant(ProductBase):
     """
 
     id = Column(Integer(), primary_key=True)
-    amount = Column(Integer(), nullable=False)
+    quantity = Column(Integer(), nullable=False)
 
-    order_id = Column(Integer(), nullable=False)
+    order_token = Column(UUID(as_uuid=True), nullable=False)
     product_variant_sku = Column(String(255), nullable=False)
 
     __tablename__ = "order_product_variant"
