@@ -154,7 +154,7 @@ class RecommenderSystemConfigView(APIView):
         data = request.data
         data["_model_class"] = "Config"
         settings.NOTIFICATIONS_API.notify(
-            EventTypes.RECOMMENDER_STORE_OBJECT,
+            EventTypes.RECOMMENDER_CONFIG_SAVE,
             data=data,
         )
         return Response({}, status=200)

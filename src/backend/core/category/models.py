@@ -63,6 +63,8 @@ class Category(SafeDeleteModel, MPTTModel, TranslatableModel):
             "parent_id": self.parent.id if self.parent is not None else None,
         }
         settings.NOTIFICATIONS_API.notify(
-            EventTypes.RECOMMENDER_STORE_OBJECT,
+            EventTypes.CATEGORY_SAVE
+            if self._state.adding
+            else EventTypes.CATEGORY_UPDATE,
             data=data,
         )

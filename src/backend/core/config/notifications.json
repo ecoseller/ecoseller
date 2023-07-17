@@ -1,4 +1,16 @@
 {
+  "CATEGORY_SAVE": [
+    {
+      "type": "RECOMMENDERAPI",
+      "method": "store_object"
+    }
+  ],
+  "CATEGORY_UPDATE": [
+    {
+      "type": "RECOMMENDERAPI",
+      "method": "store_object"
+    }
+  ],
   "PRODUCT_SAVE": [
     {
       "type": "RECOMMENDERAPI",
@@ -8,6 +20,72 @@
       "type": "HTTP",
       "method": "POST",
       "url": "http://example.com/api/product"
+    }
+  ],
+  "PRODUCT_UPDATE": [
+    {
+      "type": "RECOMMENDERAPI",
+      "method": "store_object"
+    }
+  ],
+  "PRODUCTVARIANT_SAVE": [
+    {
+      "type": "RECOMMENDERAPI",
+      "method": "store_object"
+    }
+  ],
+  "PRODUCTVARIANT_UPDATE": [
+    {
+      "type": "RECOMMENDERAPI",
+      "method": "store_object"
+    }
+  ],
+  "PRODUCTTYPE_SAVE": [
+    {
+      "type": "RECOMMENDERAPI",
+      "method": "store_object"
+    }
+  ],
+  "PRODUCTTYPE_UPDATE": [
+    {
+      "type": "RECOMMENDERAPI",
+      "method": "store_object"
+    }
+  ],
+  "ATTRIBUTETYPE_SAVE": [
+    {
+      "type": "RECOMMENDERAPI",
+      "method": "store_object"
+    }
+  ],
+  "ATTRIBUTETYPE_UPDATE": [
+    {
+      "type": "RECOMMENDERAPI",
+      "method": "store_object"
+    }
+  ],
+  "ATTRIBUTE_SAVE": [
+    {
+      "type": "RECOMMENDERAPI",
+      "method": "store_object"
+    }
+  ],
+  "ATTRIBUTE_UPDATE": [
+    {
+      "type": "RECOMMENDERAPI",
+      "method": "store_object"
+    }
+  ],
+  "PRICE_SAVE": [
+    {
+      "type": "RECOMMENDERAPI",
+      "method": "store_object"
+    }
+  ],
+  "PRICE_UPDATE": [
+    {
+      "type": "RECOMMENDERAPI",
+      "method": "store_object"
     }
   ],
   "ORDER_SAVE": [
@@ -70,6 +148,12 @@
     {
       "type": "RECOMMENDERAPI",
       "method": "store_objects"
+    }
+  ],
+  "RECOMMENDER_CONFIG_SAVE": [
+    {
+      "type": "RECOMMENDERAPI",
+      "method": "store_object"
     }
   ]
 }

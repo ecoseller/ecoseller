@@ -37,3 +37,7 @@ class Category(ApiBaseModel):
                 category_id=self.id,
                 category_ancestor_id=self.parent_id,
             ).create()
+        CategoryAncestorModel(
+            category_id=self.id,
+            category_ancestor_id=self.id,
+        ).create()

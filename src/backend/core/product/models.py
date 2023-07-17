@@ -56,7 +56,9 @@ class ProductVariant(SafeDeleteModel):
             "attributes": [attribute.id for attribute in self.attributes.all()],
         }
         settings.NOTIFICATIONS_API.notify(
-            EventTypes.RECOMMENDER_STORE_OBJECT,
+            EventTypes.PRODUCTVARIANT_SAVE
+            if self._state.adding
+            else EventTypes.PRODUCTVARIANT_UPDATE,
             data=data,
         )
 
@@ -92,7 +94,9 @@ class ProductType(SafeDeleteModel):
             "create_at": self.create_at.isoformat(),
         }
         settings.NOTIFICATIONS_API.notify(
-            EventTypes.RECOMMENDER_STORE_OBJECT,
+            EventTypes.PRODUCTTYPE_SAVE
+            if self._state.adding
+            else EventTypes.PRODUCTTYPE_UPDATE,
             data=data,
         )
 
@@ -202,7 +206,9 @@ class Product(SafeDeleteModel, TranslatableModel):
             "create_at": self.create_at.isoformat(),
         }
         settings.NOTIFICATIONS_API.notify(
-            EventTypes.RECOMMENDER_STORE_OBJECT,
+            EventTypes.PRODUCT_SAVE
+            if self._state.adding
+            else EventTypes.PRODUCT_UPDATE,
             data=data,
         )
 
@@ -275,7 +281,9 @@ class AttributeType(SafeDeleteModel, TranslatableModel, models.Model):
             "unit": self.unit,
         }
         settings.NOTIFICATIONS_API.notify(
-            EventTypes.RECOMMENDER_STORE_OBJECT,
+            EventTypes.ATTRIBUTETYPE_SAVE
+            if self._state.adding
+            else EventTypes.ATTRIBUTETYPE_UPDATE,
             data=data,
         )
 
@@ -347,7 +355,9 @@ class BaseAttribute(SafeDeleteModel, TranslatableModel):
             "ext_attributes": [attribute.id for attribute in self.ext_attributes.all()],
         }
         settings.NOTIFICATIONS_API.notify(
-            EventTypes.RECOMMENDER_STORE_OBJECT,
+            EventTypes.ATTRIBUTE_SAVE
+            if self._state.adding
+            else EventTypes.ATTRIBUTE_UPDATE,
             data=data,
         )
 
@@ -398,7 +408,9 @@ class ExtAttributeType(models.Model):
             "unit": self.unit,
         }
         settings.NOTIFICATIONS_API.notify(
-            EventTypes.RECOMMENDER_STORE_OBJECT,
+            EventTypes.ATTRIBUTETYPE_SAVE
+            if self._state.adding
+            else EventTypes.ATTRIBUTETYPE_UPDATE,
             data=data,
         )
 
@@ -429,7 +441,9 @@ class ExtensionAttribute(models.Model):
             "ext_attributes": [attribute.id for attribute in self.ext_attributes.all()],
         }
         settings.NOTIFICATIONS_API.notify(
-            EventTypes.RECOMMENDER_STORE_OBJECT,
+            EventTypes.ATTRIBUTE_SAVE
+            if self._state.adding
+            else EventTypes.ATTRIBUTE_UPDATE,
             data=data,
         )
 
@@ -560,7 +574,7 @@ class ProductPrice(SafeDeleteModel):
             "create_at": self.create_at.isoformat(),
         }
         settings.NOTIFICATIONS_API.notify(
-            EventTypes.RECOMMENDER_STORE_OBJECT,
+            EventTypes.PRICE_SAVE if self._state.adding else EventTypes.PRICE_UPDATE,
             data=data,
         )
 
