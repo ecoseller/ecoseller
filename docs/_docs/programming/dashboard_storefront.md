@@ -398,4 +398,135 @@ api.interceptors.request.use((config) => {
 ```
 
 # API Routes 
-TODO: https://nextjs.org/docs/pages/building-your-application/routing/api-routes
+(Next.js API Routes)[https://nextjs.org/docs/pages/building-your-application/routing/api-routes] provide a convenient way to create server-side endpoints within your Next.js application. These API routes allow you to handle server-side logic and expose custom API endpoints. This section of the documentation explores the usage of Next.js API Routes in the context of **ecoseller**.
+
+In the Ecoseller architecture, it is recommended to avoid exposing the backend service directly to the client. By using Next.js API Routes, you can encapsulate server-side logic within your Next.js application, ensuring a secure and controlled environment for handling data and performing server-side operations. This approach provides several benefits:
+* **Security**: By not exposing the backend service to the client, you reduce the risk of potential security vulnerabilities. It prevents unauthorized access or tampering of sensitive data and operations that should be restricted to server-side execution only.
+* **Imporved control**: Keeping the backend service separate from the client-side code gives you better control over the server-side operations and access to the underlying data. It allows you to enforce business logic, perform validations, and apply necessary security measures within the API routes.
+* **Simplified Architecture**: The separation of concerns between the client-side code and the server-side logic simplifies the overall architecture. It enables cleaner code organization and promotes modularity, making it easier to maintain and scale the application in the long run.
+
+This approach also helped us with cookie handling and token refreshing. Setting cookie client side caused some problems with refreshing tokens, so we decided to set cookies in API routes instead. 
+
+## API Routes in the Dashboard
+All API routes can be found in the `dashboard/pages/api` directory. All those routes use simmilar logic and send requests to the backend via [`api` interceptor](#request-interceptor---dashboard).
+
+```typescript
+export const productDetailAPI = async (
+  method: HTTPMETHOD,
+  id: number,
+  req?: NextApiRequest,
+  res?: NextApiResponse
+) => {
+  if (req && res) {
+    setRequestResponse(req, res);
+  }
+
+  const url = `/product/dashboard/detail/${id}/`;
+
+  switch (method) {
+    case "GET":
+      return await api
+        .get(url)
+        .then((response) => response.data)
+        .then((data: IProduct) => {
+          return data;
+        })
+        .catch((error: any) => {
+          throw error;
+        });
+    case "DELETE":
+      return await api
+        .delete(url)
+        .then((response) => response.data)
+        .then((data: IProduct) => {
+          return data;
+        })
+        .catch((error: any) => {
+          throw error;
+        });
+    case "PUT":
+      const body = req?.body;
+      if (!body) throw new Error("Body is empty");
+      return await api
+        .put(url, body)
+        .then((response) => response.data)
+        .then((data: IProduct) => {
+          return data;
+        })
+        .catch((error: any) => {
+          throw error;
+        });
+
+    default:
+      throw new Error("Method not supported");
+  }
+};
+
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  /**
+   * This is a wrapper for the product detail api in the backend
+   */
+
+  const { id } = req.query;
+  const { method } = req;
+
+  if (!id) return res.status(400).json({ message: "id is required" });
+  if (Array.isArray(id) || isNaN(Number(id)))
+    return res.status(400).json({ message: "id must be a number" });
+
+  if (method === "GET" || method === "PUT" || method === "DELETE") {
+    return productDetailAPI(method, Number(id), req, res)
+      .then((data) => res.status(200).json(data))
+      .catch((error) => res.status(400).json(null));
+  } else {
+    return res.status(400).json({ message: "Method not supported" });
+  }
+};
+
+export default handler;
+```
+
+## API Routes in the Storefront
+All API routes can be found in the `storefront/pages/api` directory. All those routes use simmilar logic and send requests to the backend via [`api` interceptor](#request-interceptor---storefront).
+
+```typescript
+export const cartAPI = async (
+  method: HTTPMETHOD,
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
+  if (req && res) {
+    setRequestResponse(req, res);
+  }
+
+  const url = `/cart/storefront/`;
+
+  switch (method) {
+    case "POST":
+      return await api
+        .post(url, req.body)
+        .then((response) => response.data)
+        .then((data) => {
+          return data;
+        })
+        .catch((error: any) => {
+          throw error;
+        });
+    default:
+      throw new Error("Method not supported");
+  }
+};
+
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { method } = req;
+
+  if (method == "POST") {
+    return cartAPI("POST", req, res)
+      .then((data) => res.status(201).json(data))
+      .catch((error) => res.status(400).json(null));
+  }
+  return res.status(404).json({ message: "Method not supported" });
+};
+
+export default handler;
+```
