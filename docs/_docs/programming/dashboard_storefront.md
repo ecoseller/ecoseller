@@ -275,8 +275,48 @@ const ChildComponent = () => {
 
 ## RecommenderProvider
 `RecommenderProvider` is a context provider that provides information about the user's recommender session as well as some usefull functions to send either recommender event or retrive recommendations. It is used only in `Storefront` component.
+This context provider creates a new recommender session for each user (if it does not exist yet) and stores it in the cookie storage under `rsSession` key. 
+### Parameters
+- `children`: React component that is wrapped by the provider
 
-TODO: add more info like obove
+### Recommender events
+Recommender events are used to track user's behaviour on the website. They are sent to the recommender server and are used to generate recommendations. They are defined in `RS_EVENT` variablle. Each event has its own payload. More information about recommender events can be found on the following links: #TODO: add links to recommender documentation
+
+### Recommender situations
+Recommender situations are used to define the context in which the user is currently in. They are defined in `RS_RECOMMENDATIONS_SITUATIONS` variable. Each situation has its own payload. More information about recommender situations can be found on the following links: #TODO: add links to recommender documentation
+
+### Return value
+- `session`: string `uuid` session id
+- `sendEvent` - function for sending recommender event
+- `getRecommendations` - function for getting recommendations for given situation
+
+### Functions provided by `RecommenderProvider`
+User does not have to send session id directly, it's injected to each request automatically.
+#### `sendEvent`
+Sends recommender event. For example it can be information about adding product to the cart, or leaving product page. Takes following parameters:
+* `event: RS_EVENT`: event to send
+* `payload: any`: payload of the event (depends on the event)
+It returns noting (void).
+
+#### `getRecommendations`
+Gets recommendations for given situation. It returns recommmended products for the given session. Takes following parameters:
+* `situation: RS_RECOMMENDATIONS_SITUATIONS`: situation for which to get recommendations
+* `payload: any`: payload of the situation (depends on the situation - might be product_id, etc.)
+
+
+### Usage example
+`RecommenderProvider` already wraps whole application, so we can access data or functions in any child component. To do so, we use `useRecommender` hook:
+```typescript
+const ChildComponent = () => {
+    ...
+    const { session, sendEvent, getRecommendations } = useRecommender();
+    ...
+    return (
+        ...
+    );
+};
+```
+
 
 # Interceptors
 Interceptors are used to intercept requests and responses before they are handled by the application. In ecoseller, we use them to add authorization token and other data to requests and to handle errors. We use `axios` library for handling requests and responses. More information about interceptors can be found on the following links:
