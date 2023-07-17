@@ -72,6 +72,7 @@ export interface IProductVariantPrice {
   without_vat_formatted: string;
   incl_vat_formatted: string;
   discount: number | null;
+  sku?: string;
 }
 
 /**

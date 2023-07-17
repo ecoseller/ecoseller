@@ -1,11 +1,12 @@
 from ckeditor.fields import RichTextField
+from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.forms import ValidationError as FormValidationError
 from django_editorjs_fields import EditorJsJSONField
 from parler.models import TranslatableModel, TranslatedFields
 
-from api.recommender_system import RecommenderSystemApi
+from api.notifications.conf import EventTypes
 from category.models import (
     Category,
 )
@@ -54,7 +55,10 @@ class ProductVariant(SafeDeleteModel):
             "create_at": self.create_at.isoformat(),
             "attributes": [attribute.id for attribute in self.attributes.all()],
         }
-        RecommenderSystemApi.store_object(data=data)
+        settings.NOTIFICATIONS_API.notify(
+            EventTypes.RECOMMENDER_STORE_OBJECT,
+            data=data,
+        )
 
 
 class ProductType(SafeDeleteModel):
@@ -87,7 +91,10 @@ class ProductType(SafeDeleteModel):
             "update_at": self.update_at.isoformat(),
             "create_at": self.create_at.isoformat(),
         }
-        RecommenderSystemApi.store_object(data=data)
+        settings.NOTIFICATIONS_API.notify(
+            EventTypes.RECOMMENDER_STORE_OBJECT,
+            data=data,
+        )
 
 
 class Product(SafeDeleteModel, TranslatableModel):
@@ -174,7 +181,7 @@ class Product(SafeDeleteModel, TranslatableModel):
             "id": self.id,
             "published": self.published,
             "type": self.type.id if self.type is not None else None,
-            "category": self.category.id if self.category is not None else None,
+            "category_id": self.category.id if self.category is not None else None,
             "product_translations": [
                 {
                     "id": translation.id,
@@ -194,7 +201,10 @@ class Product(SafeDeleteModel, TranslatableModel):
             "update_at": self.create_at.isoformat(),
             "create_at": self.create_at.isoformat(),
         }
-        RecommenderSystemApi.store_object(data=data)
+        settings.NOTIFICATIONS_API.notify(
+            EventTypes.RECOMMENDER_STORE_OBJECT,
+            data=data,
+        )
 
 
 # Attributes
@@ -264,7 +274,10 @@ class AttributeType(SafeDeleteModel, TranslatableModel, models.Model):
             "type_name": self.type_name,
             "unit": self.unit,
         }
-        RecommenderSystemApi.store_object(data=data)
+        settings.NOTIFICATIONS_API.notify(
+            EventTypes.RECOMMENDER_STORE_OBJECT,
+            data=data,
+        )
 
 
 # class TranslatableAttributeType(TranslatableModel, AttributeType):
@@ -333,7 +346,10 @@ class BaseAttribute(SafeDeleteModel, TranslatableModel):
             "order": self.order,
             "ext_attributes": [attribute.id for attribute in self.ext_attributes.all()],
         }
-        RecommenderSystemApi.store_object(data=data)
+        settings.NOTIFICATIONS_API.notify(
+            EventTypes.RECOMMENDER_STORE_OBJECT,
+            data=data,
+        )
 
 
 # class TranslatableBaseAttribute(TranslatableModel, BaseAttribute):
@@ -381,7 +397,10 @@ class ExtAttributeType(models.Model):
             "type_name": self.type_name,
             "unit": self.unit,
         }
-        RecommenderSystemApi.store_object(data=data)
+        settings.NOTIFICATIONS_API.notify(
+            EventTypes.RECOMMENDER_STORE_OBJECT,
+            data=data,
+        )
 
 
 class ExtensionAttribute(models.Model):
@@ -409,7 +428,10 @@ class ExtensionAttribute(models.Model):
             "order": self.order,
             "ext_attributes": [attribute.id for attribute in self.ext_attributes.all()],
         }
-        RecommenderSystemApi.store_object(data=data)
+        settings.NOTIFICATIONS_API.notify(
+            EventTypes.RECOMMENDER_STORE_OBJECT,
+            data=data,
+        )
 
 
 # Prices
@@ -537,7 +559,10 @@ class ProductPrice(SafeDeleteModel):
             "update_at": self.update_at.isoformat(),
             "create_at": self.create_at.isoformat(),
         }
-        RecommenderSystemApi.store_object(data=data)
+        settings.NOTIFICATIONS_API.notify(
+            EventTypes.RECOMMENDER_STORE_OBJECT,
+            data=data,
+        )
 
 
 class ProductMediaTypes:

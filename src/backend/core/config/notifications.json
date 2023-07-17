@@ -43,5 +43,17 @@
       "type": "EMAIL",
       "method": "send_order_complaint_status_update"
     }
+  ],
+  "RECOMMENDER_STORE_OBJECTS": [
+    {
+      "type": "RECOMMENDERAPI",
+      "method": "store_objects"
+    }
+  ],
+  "RECOMMENDER_STORE_OBJECT": [
+    {
+      "type": "RECOMMENDERAPI",
+      "method": "store_object"
+    }
   ]
 }

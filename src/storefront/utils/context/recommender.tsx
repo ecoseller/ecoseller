@@ -70,7 +70,6 @@ export const RecommenderProvider = ({
           ...item,
         };
       });
-      console.warn(JSON.stringify(new_payload));
     }
     const data = await fetch(`/api/recommender/${event}`, {
       method: "POST",
