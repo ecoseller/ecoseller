@@ -174,6 +174,7 @@ def test_dummy(app, create_product_variants, prediction_pipeline):
             session_id="unittest",
             user_id=None,
         )
+        predictions = [pred["product_variant_sku"] for pred in predictions]
 
         for sku in variant_skus:
             if sku == "unittest4":
@@ -201,6 +202,7 @@ def test_popularity(app, create_product_variants, prediction_pipeline):
             session_id="unittest",
             user_id=None,
         )
+        predictions = [pred["product_variant_sku"] for pred in predictions]
 
         for sku in variant_skus:
             if sku == "unittest4":
@@ -230,6 +232,7 @@ def test_selection(app, create_product_variants, prediction_pipeline):
             session_id="unittest",
             user_id=None,
         )
+        predictions = [pred["product_variant_sku"] for pred in predictions]
 
         for sku in variant_skus:
             if sku == "unittest4":
@@ -264,6 +267,7 @@ def test_gru4rec(
                 session_id=session_id,
                 user_id=None,
             )
+            predictions = [pred["product_variant_sku"] for pred in predictions]
 
             for sku in variant_skus:
                 if sku == "unittest4":
@@ -303,6 +307,7 @@ def test_ease(
                 session_id=str(user_id),
                 user_id=user_id,
             )
+            predictions = [pred["product_variant_sku"] for pred in predictions]
 
             for sku in variant_skus:
                 if sku == "unittest4":
