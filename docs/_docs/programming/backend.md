@@ -158,3 +158,10 @@ To check whether the user is staff for accessing `get` method, put decorator abo
     def get(self, request, id):
         return super().get(request, id)
 ```
+
+# Email sending
+TODO
+## SMTP settings
+TODO 
+## Email templates & objects
+TODO
