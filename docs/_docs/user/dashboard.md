@@ -118,6 +118,10 @@ This section shows the average rating of the product. The rating is shown via st
 # Catalog
 # Localization
 # CMS
+This section describes creating and editing pages and menus (of pages). We have two types of pages:
+* CMS Page
+* * CMS Page is a page that is created and edited by the admin in the dashboard. It can contain any content that the admin wants to show to the user. The admin can create as many CMS pages as he wants.
+
 # Users & Roles
 This page provides an overview of all users and roles. It is into two main parts:
 * Users
