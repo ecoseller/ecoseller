@@ -187,7 +187,9 @@ class PredictionPipeline:
         cache_manager: CacheManager = Provide["cache_manager"],
         model_manager: ModelManager = Provide["model_manager"],
         **kwargs: Any,
-    ) -> Tuple[Optional[AbstractPredictionModel], Optional[AbstractPredictionModel], List[str]]:
+    ) -> Tuple[
+        Optional[AbstractPredictionModel], Optional[AbstractPredictionModel], List[str]
+    ]:
         cached = cache_manager.get(
             recommendation_type=recommendation_type, session_id=session_id, **kwargs
         )
@@ -281,12 +283,12 @@ class PredictionPipeline:
                 for i, sku in enumerate(predictions)
             ]
         return [
-                {
-                    "product_variant_sku": sku,
-                    "rs_info": {},
-                }
-                for sku in predictions
-            ]
+            {
+                "product_variant_sku": sku,
+                "rs_info": {},
+            }
+            for sku in predictions
+        ]
 
     @inject
     def get_product_positions(
