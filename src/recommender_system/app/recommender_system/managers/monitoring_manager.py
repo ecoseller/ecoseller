@@ -4,7 +4,6 @@ from typing import Any, Dict, List, Tuple
 from dependency_injector.wiring import inject, Provide
 
 from recommender_system.managers.model_manager import ModelManager
-from recommender_system.models.stored.model.config import ConfigModel
 from recommender_system.models.stored.model.training_statistics import (
     TrainingStatisticsModel,
 )
