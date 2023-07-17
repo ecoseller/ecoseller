@@ -26,7 +26,7 @@ class TrainerQueueItemModel(ModelStoredBaseModel):
     @inject
     def get_next_item_from_queue(
         cls, storage: "AbstractModelStorage" = Provide["model_storage"]
-    ) -> "TrainerQueueItemModel":
+    ) -> Optional["TrainerQueueItemModel"]:
         return storage.get_next_item_from_trainer_queue()
 
     def set_processed(self) -> None:

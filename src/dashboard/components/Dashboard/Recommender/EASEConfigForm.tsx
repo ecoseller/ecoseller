@@ -12,12 +12,14 @@ import Stack from "@mui/material/Stack";
 
 export interface IEASEConfigProps {
   l2Options: number[];
+  reviewsMultiplier: number;
 }
 
-const EASEConfigForm = ({ l2Options }: IEASEConfigProps) => {
+const EASEConfigForm = ({ l2Options, reviewsMultiplier }: IEASEConfigProps) => {
   return (
     <Stack spacing={2}>
       <OptionsForm title="L2 regularization" options={l2Options} />
+      <OptionsForm title="Reviews multiplier" options={[reviewsMultiplier]} />
     </Stack>
   );
 };

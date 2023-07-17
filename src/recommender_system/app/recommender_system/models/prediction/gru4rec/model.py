@@ -1,13 +1,24 @@
 from datetime import datetime
 import logging
-from typing import List, Optional
+from typing import List, Optional, TYPE_CHECKING
 
 from dependency_injector.wiring import inject, Provide
 
 from recommender_system.models.prediction.gru4rec.neural_network import NeuralNetwork
 from recommender_system.models.prediction.abstract import AbstractPredictionModel
+from recommender_system.models.stored.feedback.product_detail_enter import (
+    ProductDetailEnterModel,
+)
+from recommender_system.models.stored.feedback.session import SessionModel
+from recommender_system.models.stored.model.latest_identifier import (
+    LatestIdentifierModel,
+)
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
+from recommender_system.storage.feedback.abstract import AbstractFeedbackStorage
 from recommender_system.storage.product.abstract import AbstractProductStorage
+
+if TYPE_CHECKING:
+    from recommender_system.managers.model_manager import ModelManager
 
 
 class GRU4RecPredictionModel(AbstractPredictionModel):
@@ -29,6 +40,32 @@ class GRU4RecPredictionModel(AbstractPredictionModel):
     @property
     def default_identifier(self) -> str:
         return f"{self.Meta.model_name}_{datetime.now().isoformat()}"
+
+    def is_ready(self, session_id: str, user_id: Optional[int]) -> bool:
+        try:
+            _ = self.get_latest_identifier()
+        except LatestIdentifierModel.DoesNotExist:
+            return False
+
+        try:
+            visited_variants = SessionModel.get(pk=session_id).visited_product_variants
+        except SessionModel.DoesNotExist:
+            return False
+
+        return visited_variants > 0
+
+    @inject
+    def is_ready_for_training(
+        self,
+        model_manager: "ModelManager" = Provide["model_manager"],
+        feedback_storage: AbstractFeedbackStorage = Provide["feedback_storage"],
+        product_storage: AbstractProductStorage = Provide["product_storage"],
+    ) -> bool:
+        return feedback_storage.count_objects(
+            model_class=ProductDetailEnterModel
+        ) > model_manager.config.gru4rec_config.events_multiplier * product_storage.count_objects(
+            model_class=ProductVariantModel
+        )
 
     @inject
     def train(

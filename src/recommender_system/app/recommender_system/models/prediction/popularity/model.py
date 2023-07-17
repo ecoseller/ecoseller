@@ -3,6 +3,8 @@ from typing import Optional, List, TYPE_CHECKING
 from dependency_injector.wiring import inject, Provide
 
 from recommender_system.models.prediction.abstract import AbstractPredictionModel
+from recommender_system.models.stored.product.order import OrderModel
+from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.storage.product.abstract import AbstractProductStorage
 
 if TYPE_CHECKING:
@@ -17,6 +19,20 @@ class PopularityPredictionModel(AbstractPredictionModel):
     @property
     def default_identifier(self) -> str:
         return self.Meta.model_name
+
+    @inject
+    def is_ready(
+        self,
+        session_id: str,
+        user_id: Optional[int],
+        product_storage: AbstractProductStorage = Provide["product_storage"],
+    ) -> bool:
+        return product_storage.count_objects(
+            model_class=OrderModel
+        ) > product_storage.count_objects(model_class=ProductVariantModel)
+
+    def is_ready_for_training(self) -> bool:
+        return False
 
     @inject
     def retrieve(
