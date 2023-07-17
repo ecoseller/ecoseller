@@ -170,7 +170,7 @@ def test_dummy(app, create_product_variants, prediction_pipeline):
         date_from = datetime.now()
 
         predictions = prediction_pipeline.run(
-            recommendation_type=RecommendationType.HOMEPAGE,
+            recommendation_type=RecommendationType.HOMEPAGE.value,
             session_id="unittest",
             user_id=None,
         )
@@ -197,7 +197,7 @@ def test_popularity(app, create_product_variants, prediction_pipeline):
         date_from = datetime.now()
 
         predictions = prediction_pipeline.run(
-            recommendation_type=RecommendationType.HOMEPAGE,
+            recommendation_type=RecommendationType.HOMEPAGE.value,
             session_id="unittest",
             user_id=None,
         )
@@ -226,7 +226,7 @@ def test_selection(app, create_product_variants, prediction_pipeline):
         date_from = datetime.now()
 
         predictions = prediction_pipeline.run(
-            recommendation_type=RecommendationType.HOMEPAGE,
+            recommendation_type=RecommendationType.HOMEPAGE.value,
             session_id="unittest",
             user_id=None,
         )
@@ -260,7 +260,7 @@ def test_gru4rec(
             date_from = datetime.now()
 
             predictions = prediction_pipeline.run(
-                recommendation_type=RecommendationType.HOMEPAGE,
+                recommendation_type=RecommendationType.HOMEPAGE.value,
                 session_id=session_id,
                 user_id=None,
             )
@@ -299,7 +299,7 @@ def test_ease(
             date_from = datetime.now()
 
             predictions = prediction_pipeline.run(
-                recommendation_type=RecommendationType.HOMEPAGE,
+                recommendation_type=RecommendationType.HOMEPAGE.value,
                 session_id=str(user_id),
                 user_id=user_id,
             )
