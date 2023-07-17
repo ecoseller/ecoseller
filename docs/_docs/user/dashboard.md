@@ -116,6 +116,211 @@ This page shows full information about the review and overall rating of the prod
 This section shows the average rating of the product. The rating is shown via start and average score (value from 0 to 5). It also shows the number of reviews for the product and the distribution of ratings. Distribution values are rounded up - this means that if the user submitted a rating of 4.5, it will be shown as 5 in the distribution.
 
 # Catalog
+Catalog is the place where you can manage all products and categories. The catalog page consists of:
+* Attributes - Attributes binded to the product variants
+* Product types - Product types define the structure of the product (what attributes it has)
+* Products - Products are the actual products that are shown in the storefront and their variants, prices, etc.
+* Categories - Categories are used to group products into categories
+## Attributes
+Attributes are used to define the structure of the product variant. For example, if you want to sell t-shirts, you need to define attributes like size, color, etc. Attributes are then used in the product type to define the structure of the product variant. Attributes are also used in the product variant to define the actual values of the attributes.
+
+### Attribute list
+Under the attributes section, you can see a list of all attributes. The list has the following columns:
+* Name - unique name of the attribute, it's not shown in the storefront and is used only in the administration
+* Unit - unit of the attribute, for example, cm, kg, etc. It's shown in the storefront next to the value of the attribute (for example 10 cm)
+* N. of attributes - just a number of values under the given attribute
+* Actions - edit button
+![Attribute list](../../images/catalog_attribtues_list.png)
+
+### Creating new attribute
+To create a new attribute, click on the button in the upper left corner of the attribute table - *Add New*. You will be redirected to the attribute details page (see [below](#editing-attributes)).
+
+### Editing attribute
+To edit an attribute, click on the edit button in the attribute list. This opens the attribute details page.
+The detail page consists of the following sections:
+1. *General information* - this section contains the name and unit of the attribute. If you've just created the attribute or it has no values, you can change type of attribute (see [below](#attribute-types))
+2. *Translated fields* - this section contains the translated name of the attribute. You can translate the name of the attribute into multiple languages.
+3. *Attributes* - this section contains the list of values of the attribute. The list has the following columns:
+  * Value - the value of the attribute
+  * List of languages (if it's `text` attribute type) - the value of the attribute in the given language
+  * Actions - edit and delete buttons
+    * Edit - click on the edit button opens the edit attribute value page (see [below](#editing-attribute-values))
+    * Delete - click on the delete button deletes the attribute value
+![Attribute details](../../images/catalog_attributes_detail.png)
+
+
+#### Attribute types
+There are three expected type of the value. If you select numerical values, ecoseller recommender system will take care order the values correctly and even determine distances between values. But you can change it only if there are no values for this type.
+The types are:
+* Text
+* Integer
+* Decimal
+
+![Attribute types](../../images/catalog_attribute_types.png)
+
+
+## Product Types
+Product types define the structure of the product. For example, if you want to sell t-shirts, you need to define attributes like size, color, etc. Product types are then used in the product to define the structure of the product variant. Product types are also used in the product variant to define the actual values of the attributes.
+
+### Product type list
+Under the product types section, you can see a list of all product types. The list has the following columns:
+* Name - unique name of the product type, it's not shown in the storefront and is used only in the administration
+* Created - date when the product type was created
+* Last updated - date when the product type was last updated
+* Actions - edit button
+
+![Product type list](../../images/catalog_product_types_list.png)
+
+### Creating new product type
+To create a new product type, click on the button in the upper left corner of the product type table - *Add New*. You will be redirected to the product type details page (see [below](#editing-product-type)).
+
+### Editing product type
+To edit a product type, click on the edit button in the product type list. This opens the product type details page. 
+![Product type details](../../images/catalog_product_types_detail.png)
+
+The detail page consists of the following sections:
+1. *General information* - this section contains the name of the product type. You'll see this name in the Product edit page (see [below](#editing-product)) when you select the product type. It's not visible in the storefront.
+2. *Allowed attributes* - this section contains the list of attributes that are allowed in the product type. It's a dropdown list from which you can select the attributes. You can select multiple attributes. Those are the attribtues that you'll be able to select in the product edit page (see [below](#editing-product)) when you select the product type. 
+    ![Product type details](../../images/catalog_attributes_allowed_attributes.png)
+3. *Vat groups* - this section contains the list of vat groups that are allowed in the product type. They're listed in a sections groupped by the country. You need to select *Vat group* for each country. You can select only one vat group per country. When calculating price incl VAT for each product x country, selected vat group will be used.
+    ![Product type details](../../images/catalog_product_types_vat_groups.png)
+## Products
+Products are the core of the catalog. They're the actual products that are shown in the storefront and their variants, prices, etc.
+
+### Product list 
+Under the products section, you can see a list of all products. The list has the following columns:
+* ID - unique ID of the product
+* Title - title of the product
+* Photo - primary image of the product
+* Published - whether the product is published or not
+* Updated at
+* Actions - edit button
+
+![Product list](../../images/catalog_products_list.png)
+
+### Creating new product
+If you want to create a new product, click on the button in the upper right corner above the product table - *New product*. You will be redirected to the product details page (see [below](#editing-product)).
+![Product list](../../images/catalog_products_new_product.png)
+At this point, you can start setting data fields of the product. Make sure you select the product type first. The product type defines the structure of the product variant and it cannot be changed after the product is created.
+![New product page](../../images/catalog_product_new_product_page.png)
+After you firstly save the product, you'll be redirected to the product edit page (see [below](#editing-product)). 
+
+### Editing product
+Editing a product is quite large topic. It's because the product is the core of the catalog and it has many different fields. The product edit page is divided into multiple sections. Each section is described in the following subsections.
+
+![Product edit page](../../images/catalog_product_editing_product.png)
+
+#### Translated fields
+This section contains the translated fields of the product. You can translate:
+* Title - title of the product
+* Slug - slug of the product
+  * Slug is a part of the URL of the product. It's the part that comes after the domain name. For example, if the domain name is `www.example.com` and the slug is `my-product`, the URL of the product will be `www.example.com/product/{id}/my-product`.
+  * It must be unique across all products
+  * Slug is automatically generated from the title of the product. If you change the title, the slug will be automatically updated. If you don't want to use the automatically generated slug, you can change it manually by clicking on the sync button in the slug field. ![Sync button](../../images/catalog_product_edit_slug.png)
+* Description - description of the productin [editorjs](https://editorjs.io/) editor.
+
+of the product into your defined languages.
+![Translated fields](../../images/catalog_product_edit_translated_fields.png)
+
+#### SEO
+
+This section contains SEO fields of the product. You can set:
+* Meta title - title of the product that is shown in the browser tab or in the search engine results
+* Meta description - description of the product that is shown in the search engine results.
+
+![SEO](../../images/catalog_product_edit_seo.png)
+
+
+#### Category
+This section contains the category of the product. You can select only one category for each product. 
+
+![Category](../../images/catalog_product_edit_category.png)
+
+
+#### Product type
+Product type cannot be changed after the product is created. Please see [Product types](#product-types) and [Q: Why can't I change product type after I've created the product](#changing-product-type) for more information.
+![Product type](../../images/catalog_product_product_type_change.png)
+
+#### Visibility
+This section contains the visibility of the product. You can set:
+* Published - whether the product is published or not. If the product is not published, it won't be shown in the storefront.
+
+#### Product variants
+This section contains the product variants of the product. You can add multiple product variants to the product. Each product variant has the following fields:
+* SKU - unique identifier of the product variant. It's used to identify the product variant in the warehouse. It must be unique across all product variants.
+* EAN - EAN code of the product variant. It's used to identify the product variant in the warehouse. It's not required.
+* Weight - weight of the product variant in grams. It's not required.
+* Stock quantity - stock of the product variant. It's not required.
+* Attributes - You will see list of attributes based on your selected product type.
+* Actions - edit and delete button
+![Product variants](../../images/catalog_product_edit_variant.png)
+
+#### Product prices
+This section contains the prices of the product. It comes from defined price lists in the Localization section. You can set for each SKU and pricelist:
+* Price excl VAT - price of the product variant without VAT. Vat is calculated based on the selected vat group in the product type for given country.
+* Discount - discount of the product variant in percentage. It's not required.
+![Product prices](../../images/catalog_product_edit_prices.png)
+
+#### Product media
+This section contains the media of the product. You can add multiple media (images) to the product using the *Upload* button. 
+The primary image (shown in the category) is the first image in the list. You can reorder the images by drag and drop. You can also delete the images by clicking on the *Delete* icon.
+![Product media](../../images/catalog_product_edit_media.png)
+
+#### General FAQ about products
+Here you can find some general questions about editing products and variants.
+
+##### Q: What is the difference between product and product variant?
+A: Product is a wrapper around multiple product variants. Imagine that you're selling t-shirts. You have a t-shirt in two sizes (S and M) and two colors (red and blue). This means that you have 4 product variants. But you have only one product. The product is the t-shirt and the product variants are the t-shirt in different sizes and colors.
+Product variant is what a actually ship from your warehouse. It's the actual product that the customer buys. In the example above, the product variant is the t-shirt in size S and color red.
+
+##### Q: Why do I need to create product type? 
+A: With selected product type at product creation, you can define the structure of the product variant. For example, if you want to sell t-shirts, you need to define attributes like size, color, etc. Product types are then used in the product to define the structure of the product variant. Product types are also used in the product variant to define the actual values of the attributes.
+So imagine you have product type `CLOTHING` with attribtues `size` and `color`. If your product is type `CLOTHING`, it's variants need to define values for `size` and `color` attributes.
+
+##### Q: Why can't I change product type after I've created the product? <span id="changing-product-type"></span>
+A: You can't change product type after you've created the product because the product type defines the structure of the product variant. If you change the product type, you would need to change the structure of the product variant. This would mean that you would need to change the values of the attributes of the product variant.
+
+##### Q: Why do I need to create product variant?
+A: Product variant is what a actually ship from your warehouse. It's the actual product that the customer buys.
+
+## Categories
+In order to group products into categories, you need to create categories. Categories can be nested - this means that you can create a category and then create a subcategory of that category. You can create as many subcategories as you want. The nesting is not limited. The categories are shown in the storefront in the navigation menu up to the third level of nesting.
+
+### Category list
+The category list shows all categories in the store. The list has the following columns:
+* ID
+* Title - the title of the category with the nesting level shown via indentation
+* Published - whether the category is published or not (visible and browsable in the storefront)
+* Updated at
+* Actions - edit button
+
+![Category list](../../images/catalog_categories_list.png)
+
+### Creating new category
+To create a new category, click on the button in the upper right corner  *New Category*. You will be redirected to the category details page. 
+Now you can follow steps described in the [editing category](#editing-category) section.
+
+### Editing category
+To edit a category, click on the edit button in the category list. This opens the category details page.
+
+![Category detail](../../images/catalog_categories_detail.png)
+1. In the *Translated fields* section, you can: 
+   1. Edit or add title of the category. The title is required and doesn't have to  unique. 
+   2. Edit or add slug of the category. Slug is required and has to be unique. The slug is used in the URL of the category page in the storefront and is generated automatically from the title. You can change the slug to anything you want, but it has to be unique. If you change the slug, the URL of the category page in the storefront will change. In order to change the slug, click the button in the right corner of the slug field.
+   3. You can also add a description of the category. The description is optional and is in the [*editorjs* format](https://editorjs.io/). The description is shown in the storefront on the category page.
+2. In the *SEO*  section, you can:
+   1. Edit or add meta title of the category. The meta title is optional and doesn't have to be unique. The meta title is shown in the browser tab and in the search results. Otherwise, title of the category is shown.
+   2. Edit or add meta description of the category. The meta description is optional and doesn't have to be unique. The meta description is shown in the search results.
+3. In the *Parent category* section, you can:
+   1. Select parent category of the category. The parent category is optional. If you select a parent category, the category will be nested under the parent category. The nesting is not limited. The categories are shown in the storefront in the navigation menu up to the third level of nesting. If you don't select parent, the category will be a root category.
+4. In the *Visibility* section, you can:
+   1. Select whether the category is published or not. If the category is published, it is visible and browsable in the storefront. If the category is not published, it is not visible and not browsable in the storefront.
+
+
+
+
+
+
 # Localization
 The localization part of the dashboard is used to manage country-specific parts of the system. This includes:
 * Countries
