@@ -22,7 +22,7 @@ interface IUserProviderProps {
 
 const RecommenderContext = createContext<Partial<IRecommenderContextProps>>({});
 
-const RS_SESSION_COOKIE = "rsSession";
+export const RS_SESSION_COOKIE = "rsSession";
 
 export type RS_EVENT =
   | "PRODUCT_DETAIL_ENTER"

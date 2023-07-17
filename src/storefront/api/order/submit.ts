@@ -3,7 +3,8 @@ export const orderSubmitAPI = async (
   data: {
     agreeWithTerms: boolean;
     agreeWithDataProcessing: boolean;
-  }
+  },
+  session_id: string | undefined
 ) => {
   return await fetch(`/api/order/`, {
     method: "POST",
@@ -14,6 +15,7 @@ export const orderSubmitAPI = async (
       cart_token: token,
       marketing_flag: data.agreeWithDataProcessing,
       agreed_to_terms: data.agreeWithTerms,
+      session_id: session_id,
     }),
   });
 };

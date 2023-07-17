@@ -84,9 +84,15 @@ class NotificationsAPI:
         """
         Notify users about an event
         """
+        exceptions = []
         if event not in self.config:
             raise ValueError(f"Event type '{event}' not present in config")
         for _notification in self.config[event]:
-            # obtain notification connector from config and call it
-            _connector = NOTIFICATION_TYPE_CONNECTORS[_notification["type"]]
-            _connector.send(**_notification, **kwargs)
+            try:
+                # obtain notification connector from config and call it
+                _connector = NOTIFICATION_TYPE_CONNECTORS[_notification["type"]]
+                _connector.send(**_notification, **kwargs)
+            except Exception as e:
+                exceptions.append(e)
+        if len(exceptions) > 0:
+            raise Exception(";".join(str(exceptions)))

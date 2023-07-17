@@ -32,7 +32,7 @@ class EmailConnector(NotificationConnector):
         if not data:
             return False
 
-        order_token = data.get("order_token", None)
+        order_token = data.get("token", None)
 
         try:
             order = Order.objects.get(pk=order_token)
@@ -61,7 +61,7 @@ class EmailConnector(NotificationConnector):
         if not data:
             return False
 
-        order_token = data.get("order_token", None)
+        order_token = data.get("token", None)
 
         try:
             order = Order.objects.get(pk=order_token)

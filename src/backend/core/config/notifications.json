@@ -19,6 +19,10 @@
     {
       "type": "EMAIL",
       "method": "send_order_confirmation"
+    },
+    {
+      "type": "RECOMMENDERAPI",
+      "method": "store_object"
     }
   ],
   "REVIEW_SEND": [

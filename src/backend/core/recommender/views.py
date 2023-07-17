@@ -8,7 +8,6 @@ from api.notifications.conf import (
     EventTypes,
 )
 from api.recommender_system import RecommenderSystemApi
-from order.models import Order
 
 
 def _try_parse_number(value):
@@ -82,12 +81,6 @@ class RecommenderSystemEventView(APIView):
                     request.user if request.user.is_authenticated else None
                 )
                 item["_model_class"] = RSEvent.get_model_class(event)
-                if event == RSEvent.ORDER.value:
-                    order = Order.objects.get(pk=item["token"])
-                    item["product_variants"] = [
-                        (item.product_variant.sku, item.quantity)
-                        for item in order.cart.cart_items.all()
-                    ]
             try:
                 settings.NOTIFICATIONS_API.notify(
                     EventTypes[event],
