@@ -179,6 +179,18 @@
           "description": "Can change user",
           "type": "CHANGE",
           "model": "user"
+        },
+        {
+          "name": "group_add_permission",
+          "description": "Can add group",
+          "type": "ADD",
+          "model": "group"
+        },
+        {
+          "name": "group_change_permission",
+          "description": "Can change group",
+          "type": "CHANGE",
+          "model": "group"
         }
       ],
       "description": "User manager role",

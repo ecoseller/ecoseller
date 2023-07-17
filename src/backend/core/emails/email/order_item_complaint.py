@@ -38,7 +38,7 @@ class OrderItemComplaintConfirmationEmail(Email):
         self.context = {
             "main_title": _("Order item complaint confirmation"),
             "subtitle": _("Hello,"),
-            "body": f"{body_text}<br/>{self.complaint.cart_item.product_variant_name}",
+            "body": f"{body_text}\n{self.complaint.cart_item.product_variant_name}",
             "button_title": _("Order detail"),
             "button_link": f"{storefront_url}/review/{self.complaint.order.token}",
         }
@@ -87,7 +87,7 @@ class OrderItemComplaintStatusUpdateEmail(Email):
         self.context = {
             "main_title": _("Order item complaint status update"),
             "subtitle": _("Hello,"),
-            "body": f"{body_text}<br/>{self.complaint.cart_item.product_variant_name}<br/>{new_status}",
+            "body": f"{body_text}\n{self.complaint.cart_item.product_variant_name}\n{new_status}",
             "button_title": _("Order detail"),
             "button_link": f"{storefront_url}/review/{self.complaint.order.token}",
         }

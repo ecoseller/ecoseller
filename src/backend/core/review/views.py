@@ -1,17 +1,15 @@
-from rest_framework.views import APIView
 from rest_framework import permissions
 from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from order.models import Order
+from order.models import OrderStatus
+from product.models import ProductVariant, Product
 
 # from roles.decorator import check_user_access_decorator
-from roles.decorator import check_user_is_staff_decorator
-
-from order.models import OrderStatus
-
-from .serializers import ReviewSerializer
+from roles.decorator import check_user_is_staff_decorator, check_user_access_decorator
 from .models import Review
-
-from product.models import ProductVariant, Product
-from order.models import Order
+from .serializers import ReviewSerializer
 
 
 class ReviewCreateStorefrontView(APIView):
@@ -19,6 +17,9 @@ class ReviewCreateStorefrontView(APIView):
     serializer_class = ReviewSerializer
 
     def post(self, request):
+        """
+        Create new review
+        """
         product_id = request.data.get("product_id")
         product_variant_sku = request.data.get("product_variant_sku")
         order_id = request.data.get("order")
@@ -53,6 +54,10 @@ class ReviewCreateStorefrontView(APIView):
 
 
 class ReviewDetailDashboardView(APIView):
+    """
+    View for getting and deleting reviews
+    """
+
     permission_classes = (permissions.AllowAny,)
     serializer_class = ReviewSerializer
 
@@ -65,8 +70,7 @@ class ReviewDetailDashboardView(APIView):
         except Review.DoesNotExist:
             return Response(status=404)
 
-    # TODO: Uncomment once roles will be re-deployed with their final permission set
-    # @check_user_access_decorator({"review_change_permission"})
+    @check_user_access_decorator({"review_change_permission"})
     def delete(self, request, token):
         try:
             review = Review.objects.get(token=token)
@@ -81,6 +85,9 @@ class ProductReviewListStorefrontView(APIView):
     serializer_class = ReviewSerializer
 
     def get(self, request, product_id, country):
+        """
+        Get all reviews of the selected product (created by users in the given country)
+        """
         reviews = Review.objects.filter(product__id=product_id, country=country)
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data)
@@ -90,6 +97,9 @@ class ProductRatingDetailView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def get(self, request, product_id):
+        """
+        Get rating of the given product
+        """
         reviews = Review.objects.filter(product__id=product_id)
         if len(reviews) == 0:
             return Response(
@@ -137,6 +147,10 @@ class ProductRatingDetailView(APIView):
 
 
 class ReviewListDashboardView(APIView):
+    """
+    View for listing product reviews
+    """
+
     permission_classes = (permissions.AllowAny,)
     serializer_class = ReviewSerializer
 

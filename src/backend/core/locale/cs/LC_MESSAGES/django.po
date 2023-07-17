@@ -24,8 +24,6 @@ msgid "Order confirmation"
 msgstr "Potvrzení objednávky"
 
 #: emails/email/order_item.py:26 emails/email/order_item.py:37
-#, fuzzy
-#| msgid "Order confirmation"
 msgid "Order item complaint confirmation"
 msgstr "Potvrzení o vytvoření požadavku"
 
@@ -48,26 +46,18 @@ msgid "Order detail"
 msgstr "Detail objednávky"
 
 #: emails/email/order_item.py:63
-#, fuzzy
-#| msgid "Warranty claim status was updated"
 msgid "Warranty claim status update"
 msgstr "Úprava stavu reklamace"
 
 #: emails/email/order_item.py:64
-#, fuzzy
-#| msgid "Return request has been received"
 msgid "Return request status update"
 msgstr "Úprava stavu žádosti o vrácení"
 
 #: emails/email/order_item.py:71
-#, fuzzy
-#| msgid "The status of item warranty claim was updated"
 msgid "The status of item's warranty claim has been updated"
 msgstr "Stav reklamace byl upraven"
 
 #: emails/email/order_item.py:72
-#, fuzzy
-#| msgid "The status of item warranty claim was updated"
 msgid "The status of item's return request has been updated"
 msgstr "Stav žádosti o vrácení byl upraven"
 
@@ -84,8 +74,6 @@ msgid "Status: CREATED"
 msgstr "Stav: VYTVOŘENO"
 
 #: emails/email/order_item.py:77
-#, fuzzy
-#| msgid "Warranty claim status was updated"
 msgid "Order item complaint status update"
 msgstr "Úprava stavu reklamace"
 

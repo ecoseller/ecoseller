@@ -38,7 +38,7 @@ const UserGroupsInformation = ({ state, setState, groups }: IGroupsProps) => {
 
   return (
     <EditorCard>
-      <Typography variant="h6">Groups</Typography>
+      <Typography variant="h6">Roles</Typography>
       <Box mt={2}>
         <FormControl fullWidth>
           <Stack spacing={2}>

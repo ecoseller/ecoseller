@@ -20,6 +20,7 @@ import {
 } from "@/types/product";
 import { IUser } from "@/types/user";
 import { usePermission } from "@/utils/context/permission";
+import { useUser } from "@/utils/context/user";
 
 interface IUserProps {
   state: IUser;
@@ -27,7 +28,7 @@ interface IUserProps {
 }
 
 const UserGeneralInformation = ({ state, setState }: IUserProps) => {
-  // simple select with categories
+  const { user } = useUser();
 
   const { hasPermission } = usePermission();
   return (
@@ -77,7 +78,7 @@ const UserGeneralInformation = ({ state, setState }: IUserProps) => {
               control={
                 <Checkbox
                   checked={state.is_admin}
-                  disabled={!hasPermission}
+                  disabled={!user?.is_admin}
                   onChange={(e) => {
                     setState({
                       ...state,

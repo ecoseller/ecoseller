@@ -29,7 +29,7 @@ const CreateRole = ({ group, setGroup, permissions }: ICreateRoleProps) => {
   const { hasPermission } = usePermission();
   return (
     <EditorCard>
-      <Typography variant="h6">Create new group</Typography>
+      <Typography variant="h6">Create new role</Typography>
       <Box mt={2}>
         <Stack spacing={2}>
           <TextField
