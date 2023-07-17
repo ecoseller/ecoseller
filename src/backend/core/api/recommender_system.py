@@ -50,3 +50,21 @@ class RecommenderSystemApi:
             )
             return response.json()
         return []
+
+    @classmethod
+    def get_category_product_positions(
+        cls, category_id: int, session_id: str, user_id: Optional[int]
+    ) -> Optional[Dict[str, int]]:
+        if cls.enabled:
+            response = requests.request(
+                method="POST",
+                url=cls.server_url + "/predict/product_positions",
+                json={
+                    "recommendation_type": "CATEGORY_LIST",
+                    "category_id": category_id,
+                    "session_id": session_id,
+                    "user_id": user_id,
+                },
+            )
+            return response.json()
+        return {}

@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum
 import random
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from dependency_injector.wiring import inject, Provide
 import numpy as np
@@ -177,8 +177,7 @@ class PredictionPipeline:
             result = result[:limit]
         return result
 
-    @inject
-    def run(
+    def _run_steps(
         self,
         recommendation_type: str,
         session_id: str,
@@ -186,7 +185,7 @@ class PredictionPipeline:
         limit: Optional[int] = None,
         model_manager: ModelManager = Provide["model_manager"],
         **kwargs: Any,
-    ) -> List[Dict[str, Any]]:
+    ) -> Tuple[AbstractPredictionModel, AbstractPredictionModel, List[str]]:
         recommendation_type = RecommendationType[recommendation_type]
         retrieval_model = model_manager.get_model(
             recommendation_type=recommendation_type,
@@ -242,11 +241,29 @@ class PredictionPipeline:
         )
         result.create()
 
+        return retrieval_model, scoring_model, predictions
+
+    def run(
+        self,
+        recommendation_type: str,
+        session_id: str,
+        user_id: Optional[int],
+        limit: Optional[int] = None,
+        **kwargs: Any,
+    ) -> List[Dict[str, Any]]:
+        retrieval_model, scoring_model, predictions = self._run_steps(
+            recommendation_type=recommendation_type,
+            session_id=session_id,
+            user_id=user_id,
+            limit=limit,
+            **kwargs,
+        )
+
         return [
             {
                 "product_variant_sku": sku,
                 "rs_info": {
-                    "recommendation_type": recommendation_type.value,
+                    "recommendation_type": recommendation_type,
                     "model_identifier": scoring_model.identifier,
                     "model_name": scoring_model.Meta.model_name,
                     "position": i,
@@ -254,3 +271,36 @@ class PredictionPipeline:
             }
             for i, sku in enumerate(predictions)
         ]
+
+    @inject
+    def get_product_positions(
+        self,
+        recommendation_type: str,
+        session_id: str,
+        user_id: Optional[int],
+        category_id: int,
+        limit: Optional[int] = None,
+        product_storage: AbstractProductStorage = Provide["product_storage"],
+        **kwargs: Any,
+    ) -> Dict[int, int]:
+        retrieval_model, scoring_model, predictions = self._run_steps(
+            recommendation_type=recommendation_type,
+            session_id=session_id,
+            user_id=user_id,
+            limit=limit,
+            category_id=category_id,
+            **kwargs,
+        )
+
+        mapping = {sku: pos for pos, sku in enumerate(predictions)}
+        ppvs = product_storage.get_product_product_variants_in_category(
+            category_id=category_id
+        )
+        result = {}
+        for ppv in ppvs:
+            pos = mapping.get(ppv.product_variant_sku, len(predictions))
+            if ppv.product_id not in result:
+                result[ppv.product_id] = pos
+            if result[ppv.product_id] > pos:
+                result[ppv.product_id] = pos
+        return result

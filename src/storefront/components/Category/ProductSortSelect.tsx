@@ -59,7 +59,7 @@ const ProductSortSelect = ({
   const availableOrderings: { [key: string]: IOrderingType } = {
     recommended: {
       sortBy: "recommended",
-      order: "desc",
+      order: "asc",
       description: t("order-by-recommended"), //"Recommended",
     },
     priceAsc: {

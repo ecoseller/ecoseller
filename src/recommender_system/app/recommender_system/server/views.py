@@ -44,6 +44,16 @@ def view_predict(
 
 
 @inject
+def view_predict_product_positions(
+    prediction_pipeline: PredictionPipeline = Provide["prediction_pipeline"],
+) -> Tuple[Any, ...]:
+    data = request.json
+    logging.info(f"Recommending product positions for {data}")
+    predictions = prediction_pipeline.get_product_positions(**data)
+    return predictions, 200
+
+
+@inject
 def view_get_dashboard_data(
     model_manager: ModelManager = Provide["model_manager"],
     monitoring_manager: MonitoringManager = Provide["monitoring_manager"],
