@@ -349,7 +349,7 @@ The triggers that you can respond to are derived from the `ecoseller` models. It
 Make sure you are fammiliar with [**ecoseller** data models](../programming/backend.md#data-models). Events are then pretty self-explanatory. Here is the list of all events that you can respond to:
 #### Product
 ##### `PRODUCT_SAVE`
-##### ` PRODUCT_UPDATE`
+##### `PRODUCT_UPDATE`
 ##### `PRODUCT_DELETE`
 
 #### ProductVariant
