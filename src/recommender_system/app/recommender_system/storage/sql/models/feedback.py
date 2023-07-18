@@ -1,6 +1,7 @@
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.sql.schema import Column, Index
 from sqlalchemy.sql.sqltypes import (
+    Boolean,
     DECIMAL,
     Integer,
     String,
@@ -48,6 +49,7 @@ class SQLPredictionResult(FeedbackBase):
     ordering_duration = Column(DECIMAL(), nullable=False)
     predicted_items = Column(postgresql.ARRAY(String(255)), nullable=False)
     create_at = Column(TIMESTAMP(), nullable=False)
+    deleted = Column(Boolean(), nullable=False)
 
     __tablename__ = "prediction_result"
 
@@ -65,6 +67,7 @@ class SQLProductAddToCart(FeedbackBase):
     product_id = Column(Integer(), nullable=False)
     product_variant_sku = Column(String(255), nullable=False)
     create_at = Column(TIMESTAMP(), nullable=False)
+    deleted = Column(Boolean(), nullable=False)
 
     session_id = Column(String(100), nullable=False)
 
@@ -88,6 +91,7 @@ class SQLProductDetailEnter(FeedbackBase):
     model_name = Column(String(255), nullable=True)
     position = Column(Integer(), nullable=True)
     create_at = Column(TIMESTAMP(), nullable=False)
+    deleted = Column(Boolean(), nullable=False)
 
     session_id = Column(String(100), nullable=False)
 
@@ -113,6 +117,7 @@ class SQLProductDetailLeave(FeedbackBase):
     product_variant_sku = Column(String(255), nullable=False)
     time_spent = Column(DECIMAL(), nullable=False)
     create_at = Column(TIMESTAMP(), nullable=False)
+    deleted = Column(Boolean(), nullable=False)
 
     session_id = Column(String(100), nullable=False)
 
@@ -135,6 +140,7 @@ class SQLRecommendationView(FeedbackBase):
     model_identifier = Column(String(255), nullable=False)
     position = Column(Integer(), nullable=True)
     create_at = Column(TIMESTAMP(), nullable=False)
+    deleted = Column(Boolean(), nullable=False)
 
     session_id = Column(String(100), nullable=False)
 
@@ -156,6 +162,7 @@ class SQLReview(FeedbackBase):
     rating = Column(Integer(), nullable=False)
     update_at = Column(TIMESTAMP(), nullable=False)
     create_at = Column(TIMESTAMP(), nullable=False)
+    deleted = Column(Boolean(), nullable=False)
 
     session_id = Column(String(100), nullable=False)
 
@@ -176,6 +183,7 @@ class SQLSession(FeedbackBase):
         postgresql.ARRAY(String(255)), nullable=False, default=[]
     )
     create_at = Column(TIMESTAMP(), nullable=False)
+    deleted = Column(Boolean(), nullable=False)
 
     __tablename__ = "session"
 

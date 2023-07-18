@@ -54,6 +54,7 @@ class ProductVariant(SafeDeleteModel):
             "update_at": self.update_at.isoformat(),
             "create_at": self.create_at.isoformat(),
             "attributes": [attribute.id for attribute in self.attributes.all()],
+            "deleted": self.safe_deleted,
         }
         if self._state.adding:
             event = EventTypes.PRODUCTVARIANT_SAVE
@@ -96,6 +97,7 @@ class ProductType(SafeDeleteModel):
             "products": [product.id for product in self.product_set.all()],
             "update_at": self.update_at.isoformat(),
             "create_at": self.create_at.isoformat(),
+            "deleted": self.safe_deleted,
         }
         if self._state.adding:
             event = EventTypes.PRODUCTTYPE_SAVE
@@ -212,6 +214,7 @@ class Product(SafeDeleteModel, TranslatableModel):
             ],
             "update_at": self.create_at.isoformat(),
             "create_at": self.create_at.isoformat(),
+            "deleted": self.safe_deleted,
         }
         if self._state.adding:
             event = EventTypes.PRODUCT_SAVE
@@ -369,6 +372,7 @@ class BaseAttribute(SafeDeleteModel, TranslatableModel):
             "raw_value": self.value,
             "order": self.order,
             "ext_attributes": [attribute.id for attribute in self.ext_attributes.all()],
+            "deleted": self.safe_deleted,
         }
         if self._state.adding:
             event = EventTypes.ATTRIBUTE_SAVE
@@ -426,6 +430,7 @@ class ExtAttributeType(SafeDeleteModel):
             "type": "CATEGORICAL",
             "type_name": self.type_name,
             "unit": self.unit,
+            "deleted": self.safe_deleted,
         }
         if self._state.adding:
             event = EventTypes.ATTRIBUTETYPE_SAVE
@@ -463,6 +468,7 @@ class ExtensionAttribute(SafeDeleteModel):
             "raw_value": self.value,
             "order": self.order,
             "ext_attributes": [attribute.id for attribute in self.ext_attributes.all()],
+            "deleted": self.safe_deleted,
         }
         if self._state.adding:
             event = EventTypes.ATTRIBUTE_SAVE
@@ -600,6 +606,7 @@ class ProductPrice(SafeDeleteModel):
             "price": float(self.price),
             "update_at": self.update_at.isoformat(),
             "create_at": self.create_at.isoformat(),
+            "deleted": self.safe_deleted,
         }
         if self._state.adding:
             event = EventTypes.PRICE_SAVE
