@@ -64,6 +64,7 @@ GEM
       concurrent-ruby (~> 1.0)
     tzinfo-data (1.2023.3)
       tzinfo (>= 1.0.0)
+    wdm (0.1.1)
     webrick (1.8.1)
 
 PLATFORMS
@@ -78,6 +79,7 @@ DEPENDENCIES
   kramdown-parser-gfm
   tzinfo (~> 2.0)
   tzinfo-data (~> 1.2023)
+  wdm (>= 0.1.0)
   webrick (~> 1.8)
 
 BUNDLED WITH
