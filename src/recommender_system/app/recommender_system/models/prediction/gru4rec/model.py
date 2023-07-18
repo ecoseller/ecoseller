@@ -60,7 +60,7 @@ class GRU4RecPredictionModel(AbstractPredictionModel):
         except SessionModel.DoesNotExist:
             return False
 
-        return visited_variants > 0
+        return len(visited_variants) > 0
 
     @classmethod
     @inject
