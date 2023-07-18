@@ -96,10 +96,12 @@ Another authorozation related models are `Group` and `Permission` models. They a
 Next important relation is to `Address` model. It is used to store user's address. As we can see, there is also a connection to `ShippingInfo` and `BillingInfo`, which are used during checkout process, to store user's shipping and billing information. The last relation is to `Cart` model, which binds user to his cart.
 
 ## SafeDeleteModel
-Also note, that all ecoseller models inherit from `SafeDeleteModel` class, which looks like this:
+Note that all ecoseller models inherit from `SafeDeleteModel` class, which looks like this:
 ```python
 class SafeDeleteModel(models.Model):
+    objects = SafeDeleteManager()
     safe_deleted = models.BooleanField(default=False)
+
     ...
 
     def delete(self, *args, **kwargs):
@@ -111,6 +113,15 @@ class SafeDeleteModel(models.Model):
 
 We can see, that this class basically adds one field (`safe_deleted`) and overrides `delete` method.  
 This way we implement safe deletion, so every time we call `delete` method on a model, it's not physically removed from the DB, rather marked as deleted.
+
+Also note, that we also override `objects` class variable in order to return just non-deleted products when querying.
+
+So, if you call e.g.
+```python
+Product.objects.all()
+```
+
+only the non-deleted products (i.e. those with `safe_deleted = False`) are returned.
 
 # Authorization
 As mentioned in [Authorization](../../administration/authorization) section, ecoseller uses roles and permissions to restrict access to certain parts of the application. 
