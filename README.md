@@ -32,7 +32,7 @@
   <p align="center">
     Jumpstart your business! Ecoseller provides ready to use backend, storefront, dashboard and smart event based recommendation system.
     <br />
-    <a href="https://github.com/ecoseller/ecoseller/wiki"><strong>Explore the docs »</strong></a>
+    <a href="https://docs.ecoseller.io"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <!-- <a href="">View Demo</a> -->
