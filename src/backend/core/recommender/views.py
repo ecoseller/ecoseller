@@ -2,9 +2,12 @@ from enum import Enum, EnumMeta
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import permissions
+from django.conf import settings
 
+from api.notifications.conf import (
+    EventTypes,
+)
 from api.recommender_system import RecommenderSystemApi
-from order.models import Order
 from product.models import ProductVariant
 
 
@@ -79,14 +82,11 @@ class RecommenderSystemEventView(APIView):
                     request.user if request.user.is_authenticated else None
                 )
                 item["_model_class"] = RSEvent.get_model_class(event)
-                if event == RSEvent.ORDER.value:
-                    order = Order.objects.get(pk=item["token"])
-                    item["product_variants"] = [
-                        (item.product_variant.sku, item.quantity)
-                        for item in order.cart.cart_items.all()
-                    ]
             try:
-                RecommenderSystemApi.store_objects(data)
+                settings.NOTIFICATIONS_API.notify(
+                    EventTypes[event],
+                    data=data,
+                )
             except Exception as e:
                 print(e)
                 return Response({"message": "Error while storing data!"}, status=500)
@@ -161,5 +161,10 @@ class RecommenderSystemConfigView(APIView):
         user_id = request.user
         if user_id is None or not user_id.is_authenticated:
             return Response({"error": "Not logged in user"}, status=400)
-        RecommenderSystemApi.update_config(data=request.data)
+        data = request.data
+        data["_model_class"] = "Config"
+        settings.NOTIFICATIONS_API.notify(
+            EventTypes.RECOMMENDER_CONFIG_SAVE,
+            data=data,
+        )
         return Response({}, status=200)

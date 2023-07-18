@@ -12,6 +12,7 @@ import { number } from "prop-types";
 import DiscountText from "@/components/Generic/DiscountText";
 // utils
 import { useTranslation } from "next-i18next";
+import { useRecommender } from "@/utils/context/recommender";
 interface IProductCardProps {
   product: IProductRecord;
 }
@@ -47,6 +48,8 @@ const ProductCard = ({ product }: IProductCardProps) => {
 
   discounts.sort((d1, d2) => d2 - d1);
 
+  const { sendEvent } = useRecommender();
+
   const renderDiscountIfAny = () => {
     const maxDiscount = discounts[0];
     const minDiscount = discounts[discounts.length - 1];
@@ -68,6 +71,21 @@ const ProductCard = ({ product }: IProductCardProps) => {
       <NextLink
         href={`/product/${product.id}/${product.slug}`}
         style={{ height: "100%" }}
+        onClick={() => {
+          sendEvent(
+            "PRODUCT_DETAIL_ENTER",
+            product.variant_prices.map((p) => {
+              return {
+                product_id: product.id,
+                product_variant_sku: p.sku,
+              };
+            })
+          );
+          // TODO: Trigger when visible
+          // sendEvent("RECOMMENDATION_VIEW", {
+          //   id: 42,
+          // });
+        }}
       >
         <CardMedia
           component="img"

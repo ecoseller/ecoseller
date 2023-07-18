@@ -59,7 +59,7 @@ class OrderDetailDashboardView(RetrieveAPIView):
                     NotificationsApi.notify(
                         EventTypes.REVIEW_SEND,
                         data={
-                            "order_token": str(order.token),
+                            "token": str(order.token),
                             "order": OrderDetailSerializer(order).data,
                         },
                     )
@@ -439,9 +439,15 @@ class OrderCreateStorefrontView(APIView):
             NotificationsApi.notify(
                 event=EventTypes.ORDER_SAVE,
                 data={
-                    "order_token": str(order.token),
+                    "token": str(order.token),
                     "customer_email": order.customer_email,
                     "order": OrderDetailSerializer(order).data,
+                    "product_variants": [
+                        (item.product_variant.sku, item.quantity)
+                        for item in cart.cart_items.all()
+                    ],
+                    "_model_class": "Order",
+                    "session_id": request.data["session_id"],
                 },
             )
         except Exception as e:

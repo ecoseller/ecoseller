@@ -22,7 +22,7 @@ interface IUserProviderProps {
 
 const RecommenderContext = createContext<Partial<IRecommenderContextProps>>({});
 
-const RS_SESSION_COOKIE = "rsSession";
+export const RS_SESSION_COOKIE = "rsSession";
 
 export type RS_EVENT =
   | "PRODUCT_DETAIL_ENTER"
@@ -70,7 +70,6 @@ export const RecommenderProvider = ({
           ...item,
         };
       });
-      console.warn(JSON.stringify(new_payload));
     }
     const data = await fetch(`/api/recommender/${event}`, {
       method: "POST",

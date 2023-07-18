@@ -7,6 +7,8 @@ if TYPE_CHECKING:
 
 
 class ApiBaseModel(BaseModel):
+    deleted: bool = False
+
     class Meta:
         stored_model_class: Type["StoredBaseModel"]
 

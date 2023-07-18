@@ -47,6 +47,7 @@ class SQLAttribute(ProductBase):
 
     attribute_type_id = Column(Integer(), nullable=False)
     parent_attribute_id = Column(Integer(), nullable=True)
+    deleted = Column(Boolean(), nullable=False)
 
     __tablename__ = "attribute"
 
@@ -64,6 +65,7 @@ class SQLAttributeProductVariant(ProductBase):
 
     attribute_id = Column(Integer(), nullable=False)
     product_variant_sku = Column(String(255), nullable=False)
+    deleted = Column(Boolean(), nullable=False)
 
     __tablename__ = "attribute_product_variant"
 
@@ -84,6 +86,7 @@ class SQLAttributeType(ProductBase):
     )
     type_name = Column(String(200), nullable=True)
     unit = Column(String(200), nullable=True)
+    deleted = Column(Boolean(), nullable=False)
 
     __tablename__ = "attribute_type"
 
@@ -101,6 +104,7 @@ class SQLAttributeTypeProductType(ProductBase):
 
     attribute_type_id = Column(Integer(), nullable=False)
     product_type_id = Column(Integer(), nullable=False)
+    deleted = Column(Boolean(), nullable=False)
 
     __tablename__ = "attribute_type_product_type"
 
@@ -117,6 +121,7 @@ class SQLCategoryAncestor(ProductBase):
 
     category_id = Column(Integer(), nullable=False)
     category_ancestor_id = Column(Integer(), nullable=False)
+    deleted = Column(Boolean(), nullable=False)
 
     __tablename__ = "category_ancestor"
 
@@ -132,6 +137,7 @@ class SQLOrder(ProductBase):
     token = Column(UUID(as_uuid=True), primary_key=True)
     update_at = Column(TIMESTAMP(), nullable=False)
     create_at = Column(TIMESTAMP(), nullable=False)
+    deleted = Column(Boolean(), nullable=False)
 
     session_id = Column(String(100), nullable=False)
 
@@ -151,6 +157,7 @@ class SQLOrderProductVariant(ProductBase):
 
     order_token = Column(UUID(as_uuid=True), nullable=False)
     product_variant_sku = Column(String(255), nullable=False)
+    deleted = Column(Boolean(), nullable=False)
 
     __tablename__ = "order_product_variant"
 
@@ -168,6 +175,7 @@ class SQLProduct(ProductBase):
     category_id = Column(Integer(), nullable=True)
     update_at = Column(TIMESTAMP(), nullable=False)
     create_at = Column(TIMESTAMP(), nullable=False)
+    deleted = Column(Boolean(), nullable=False)
 
     product_type_id = Column(Integer(), nullable=True)
 
@@ -187,6 +195,7 @@ class SQLProductPrice(ProductBase):
     price = Column(DECIMAL(), nullable=False)
     update_at = Column(TIMESTAMP(), nullable=False)
     create_at = Column(TIMESTAMP(), nullable=False)
+    deleted = Column(Boolean(), nullable=False)
 
     product_variant_sku = Column(String(255), nullable=True)
 
@@ -206,6 +215,7 @@ class SQLProductProductVariant(ProductBase):
 
     product_id = Column(Integer(), nullable=False)
     product_variant_sku = Column(String(255), nullable=False)
+    deleted = Column(Boolean(), nullable=False)
 
     __tablename__ = "product_product_variant"
 
@@ -226,6 +236,7 @@ class SQLProductTranslation(ProductBase):
     short_description = Column(String(), nullable=True)
     description = Column(String(), nullable=True)
     slug = Column(String(200), nullable=False)
+    deleted = Column(Boolean(), nullable=False)
 
     product_id = Column(Integer(), nullable=False)
 
@@ -244,6 +255,7 @@ class SQLProductType(ProductBase):
     name = Column(String(200), nullable=False)
     update_at = Column(TIMESTAMP(), nullable=False)
     create_at = Column(TIMESTAMP(), nullable=False)
+    deleted = Column(Boolean(), nullable=False)
 
     __tablename__ = "product_type"
 
@@ -263,6 +275,7 @@ class SQLProductVariant(ProductBase):
     recommendation_weight = Column(DECIMAL(), nullable=False)
     update_at = Column(TIMESTAMP(), nullable=False)
     create_at = Column(TIMESTAMP(), nullable=False)
+    deleted = Column(Boolean(), nullable=False)
 
     __tablename__ = "product_variant"
 

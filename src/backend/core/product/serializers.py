@@ -661,6 +661,7 @@ class ProductVariantStorefrontPriceSerializer(ModelSerializer):
             "without_vat_formatted": pricelist.format_price(price_without_vat),
             "incl_vat_formatted": pricelist.format_price(price_incl_vat),
             "discount": price.discount,
+            "sku": instance.sku,
         }
 
 

@@ -1,11 +1,12 @@
 from django.db import models
+from django.conf import settings
 from ckeditor.fields import RichTextField
 from parler.models import TranslatableModel, TranslatedFields
 from django_editorjs_fields import EditorJsJSONField
 from mptt.models import MPTTModel
 from mptt.fields import TreeForeignKey
 from core.safe_delete import SafeDeleteModel
-from api.recommender_system import RecommenderSystemApi
+from api.notifications.conf import EventTypes
 
 
 class Category(SafeDeleteModel, MPTTModel, TranslatableModel):
@@ -60,5 +61,15 @@ class Category(SafeDeleteModel, MPTTModel, TranslatableModel):
             "_model_class": self.__class__.__name__,
             "id": self.id,
             "parent_id": self.parent.id if self.parent is not None else None,
+            "deleted": self.safe_deleted,
         }
-        RecommenderSystemApi.store_object(data=data)
+        if self._state.adding:
+            event = EventTypes.CATEGORY_SAVE
+        elif self.safe_deleted:
+            event = EventTypes.CATEGORY_DELETE
+        else:
+            event = EventTypes.CATEGORY_UPDATE
+        settings.NOTIFICATIONS_API.notify(
+            event,
+            data=data,
+        )

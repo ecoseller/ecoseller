@@ -1,5 +1,6 @@
 from sqlalchemy.sql.schema import Column, Index
 from sqlalchemy.sql.sqltypes import (
+    Boolean,
     DECIMAL,
     Integer,
     String,
@@ -23,6 +24,7 @@ class SQLDistance(SimilarityBase):
     rhs = Column(String(255), nullable=False)
     distance = Column(DECIMAL(), nullable=False)
     model_identifier = Column(String(255), nullable=False)
+    deleted = Column(Boolean(), nullable=False)
 
     __tablename__ = "distance"
 

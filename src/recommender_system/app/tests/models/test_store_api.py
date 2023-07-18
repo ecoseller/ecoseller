@@ -45,6 +45,11 @@ def prepare_categories():
     new_category_parent_id = 3
 
     ancestors = [
+        CategoryAncestorModel(category_id=1, category_ancestor_id=1),
+        CategoryAncestorModel(category_id=2, category_ancestor_id=2),
+        CategoryAncestorModel(category_id=3, category_ancestor_id=3),
+        CategoryAncestorModel(category_id=4, category_ancestor_id=4),
+        CategoryAncestorModel(category_id=5, category_ancestor_id=5),
         CategoryAncestorModel(category_id=2, category_ancestor_id=1),
         CategoryAncestorModel(category_id=3, category_ancestor_id=2),
         CategoryAncestorModel(category_id=3, category_ancestor_id=1),
@@ -105,7 +110,7 @@ def test_category(prepare_categories):
     category = Category(id=category_id, parent_id=category_parent_id)
     category.save()
 
-    assert {1, 2, 3} == {
+    assert {1, 2, 3, 6} == {
         ancestor.category_ancestor_id
         for ancestor in CategoryAncestorModel.gets(category_id=category_id)
     }
