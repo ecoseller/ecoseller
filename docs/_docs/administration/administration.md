@@ -417,13 +417,13 @@ This trigger reacts to the situation when user clicks on some recommendation.
 ## Use cases
 NotificationAPI is here to help you. It's up to you how you will use it, since it very convinient and flexible. Here are some examples of how we imagine you can use it. If you have any other ideas, feel free to share them with us.
 
-### Connecting cutom e-mail service
+### Connecting cutom e-mail service
 If you want to connect your custom e-mail service, you can do it by removing `EMAIL` events from the configuration and adding your own `HTTP` events that will send data to your custom e-mail service.
 
 ### Connecting company internal API
 If you want to connect your company internal API, you can do it by adding `HTTP` events that will send data to your custom API. For example data about orders (`ORDER_SAVE`, ...) and complaints.
 
-### Connecting custom analytics
+### Connecting custom analytics
 Make usage of [action based triggers](#action-based-triggers) to connect your custom analytics. For example, you can track how many users are entering product detail page (`PRODUCT_DETAIL_ENTER`), how many of them are leaving it (`PRODUCT_DETAIL_LEAVE`) and how many of them are adding product to cart (`PRODUCT_ADD_TO_CART`).
 
 ### Disconnecting recommendation system
