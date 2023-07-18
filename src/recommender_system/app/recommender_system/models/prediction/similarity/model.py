@@ -1,7 +1,7 @@
 from datetime import datetime
 import random
 import time
-from typing import List, Optional, TYPE_CHECKING
+from typing import Any, List, Optional, TYPE_CHECKING
 
 from dependency_injector.wiring import inject, Provide
 import numpy as np
@@ -20,6 +20,7 @@ from recommender_system.models.stored.model.training_statistics import (
 )
 from recommender_system.models.stored.similarity.distance import DistanceModel
 from recommender_system.storage.similarity.abstract import AbstractSimilarityStorage
+from recommender_system.utils.recommendation_type import RecommendationType
 from recommender_system.utils.memory import get_current_memory_usage
 
 if TYPE_CHECKING:
@@ -36,7 +37,18 @@ class SimilarityPredictionModel(AbstractPredictionModel):
         return f"{self.Meta.model_name}_{datetime.now().isoformat()}"
 
     @classmethod
-    def is_ready(cls, session_id: str, user_id: Optional[int]) -> bool:
+    def is_ready(
+        cls,
+        recommendation_type: RecommendationType,
+        session_id: str,
+        user_id: Optional[int],
+        **kwargs: Any,
+    ) -> bool:
+        if (
+            recommendation_type == RecommendationType.CART
+            and kwargs.get("variants_in_cart") == []
+        ):
+            return False
         try:
             _ = cls.get_latest_identifier()
         except LatestIdentifierModel.DoesNotExist:
@@ -133,7 +145,6 @@ class SimilarityPredictionModel(AbstractPredictionModel):
         similarity_storage: AbstractSimilarityStorage = Provide["similarity_storage"],
         model_manager: "ModelManager" = Provide["model_manager"],
     ) -> List[str]:
-        # TODO: Check if there are variants in cart in model manager
         return similarity_storage.get_closest_product_variant_skus(
             to=random.choice(variants_in_cart),
             limit=model_manager.config.retrieval_size,

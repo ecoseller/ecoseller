@@ -1,6 +1,6 @@
 from datetime import datetime
 import logging
-from typing import List, Optional, TYPE_CHECKING
+from typing import Any, List, Optional, TYPE_CHECKING
 
 from dependency_injector.wiring import inject, Provide
 
@@ -11,6 +11,7 @@ from recommender_system.models.stored.product.product_variant import ProductVari
 from recommender_system.storage.ease.abstract import AbstractEASEStorage
 from recommender_system.storage.feedback.abstract import AbstractFeedbackStorage
 from recommender_system.storage.product.abstract import AbstractProductStorage
+from recommender_system.utils.recommendation_type import RecommendationType
 
 if TYPE_CHECKING:
     from recommender_system.managers.model_manager import ModelManager
@@ -40,9 +41,11 @@ class EASEPredictionModel(AbstractPredictionModel):
     @inject
     def is_ready(
         cls,
+        recommendation_type: RecommendationType,
         session_id: str,
         user_id: Optional[int],
         ease_storage: AbstractEASEStorage = Provide["ease_storage"],
+        **kwargs: Any,
     ) -> bool:
         if user_id is None:
             return False

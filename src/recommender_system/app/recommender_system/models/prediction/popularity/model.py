@@ -1,4 +1,4 @@
-from typing import Optional, List, TYPE_CHECKING
+from typing import Any, Optional, List, TYPE_CHECKING
 
 from dependency_injector.wiring import inject, Provide
 
@@ -6,6 +6,7 @@ from recommender_system.models.prediction.abstract import AbstractPredictionMode
 from recommender_system.models.stored.product.order import OrderModel
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.storage.product.abstract import AbstractProductStorage
+from recommender_system.utils.recommendation_type import RecommendationType
 
 if TYPE_CHECKING:
     from recommender_system.managers.model_manager import ModelManager
@@ -24,9 +25,11 @@ class PopularityPredictionModel(AbstractPredictionModel):
     @inject
     def is_ready(
         cls,
+        recommendation_type: RecommendationType,
         session_id: str,
         user_id: Optional[int],
         product_storage: AbstractProductStorage = Provide["product_storage"],
+        **kwargs: Any
     ) -> bool:
         return product_storage.count_objects(
             model_class=OrderModel

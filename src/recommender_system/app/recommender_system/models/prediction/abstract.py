@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from recommender_system.models.stored.model.latest_identifier import (
     LatestIdentifierModel,
 )
+from recommender_system.utils.recommendation_type import RecommendationType
 
 
 class AbstractPredictionModel(ABC):
@@ -23,7 +24,13 @@ class AbstractPredictionModel(ABC):
 
     @classmethod
     @abstractmethod
-    def is_ready(cls, session_id: str, user_id: Optional[int]) -> bool:
+    def is_ready(
+        cls,
+        recommendation_type: RecommendationType,
+        session_id: str,
+        user_id: Optional[int],
+        **kwargs: Any
+    ) -> bool:
         raise NotImplementedError()
 
     @abstractmethod
