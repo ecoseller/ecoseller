@@ -129,7 +129,6 @@ class RecommenderSystemRecommendProductsView(APIView):
             if p_obj is not None:
                 recommended_products.append(p_obj)
 
-        print("RECOMMENDED PRODUCTS", recommended_products, "for", products)
         # serialize products into simmilar format as in the category
         serializer = self._serialize_products(recommended_products, request)
 
