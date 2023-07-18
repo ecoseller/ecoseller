@@ -27,7 +27,7 @@ import OrderItemClaimModal from "@/components/Order/OrderItemClaimModal";
 import { IOrderCart, IOrderItem, OrderItemComplaintType } from "@/types/order";
 
 function isOrderCart(cart: ICart | IOrderCart): boolean {
-  return "complaints" in cart.cart_items[0];
+  return cart.cart_items.length > 0 && "complaints" in cart.cart_items[0];
 }
 
 interface ICartItemListProps {

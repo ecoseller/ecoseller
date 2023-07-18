@@ -183,7 +183,7 @@ const ProductMediaCard = ({
         onDelete={() => {
           removeCard();
         }}
-        text="this payment method"
+        text="this product media"
       />
     </ProductMediaItem>
   );

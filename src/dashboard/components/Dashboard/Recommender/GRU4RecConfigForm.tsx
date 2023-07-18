@@ -17,6 +17,8 @@ export interface IGRU4RecConfigProps {
   embeddingSizeOptions: number[];
   hiddenSizeOptions: number[];
   learningRateOptions: number[];
+  incrementalTrainings: number;
+  eventsMultiplier: number;
 }
 
 const GRU4RecConfigForm = ({
@@ -25,6 +27,8 @@ const GRU4RecConfigForm = ({
   embeddingSizeOptions,
   hiddenSizeOptions,
   learningRateOptions,
+  incrementalTrainings,
+  eventsMultiplier,
 }: IGRU4RecConfigProps) => {
   return (
     <Stack spacing={2}>
@@ -36,6 +40,11 @@ const GRU4RecConfigForm = ({
       />
       <OptionsForm title="Hidden layer size" options={hiddenSizeOptions} />
       <OptionsForm title="Learning rate" options={learningRateOptions} />
+      <OptionsForm
+        title="Incremental trainings"
+        options={[incrementalTrainings]}
+      />
+      <OptionsForm title="Events multiplier" options={[eventsMultiplier]} />
     </Stack>
   );
 };

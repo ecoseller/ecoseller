@@ -1,10 +1,11 @@
-from typing import Optional, List, TYPE_CHECKING
+from typing import Any, Optional, List, TYPE_CHECKING
 
 from dependency_injector.wiring import inject, Provide
 
 from recommender_system.models.prediction.abstract import AbstractPredictionModel
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.storage.product.abstract import AbstractProductStorage
+from recommender_system.utils.recommendation_type import RecommendationType
 
 if TYPE_CHECKING:
     from recommender_system.managers.model_manager import ModelManager
@@ -18,6 +19,24 @@ class SelectionPredictionModel(AbstractPredictionModel):
     @property
     def default_identifier(self) -> str:
         return self.Meta.model_name
+
+    @classmethod
+    def is_ready(
+        cls,
+        recommendation_type: RecommendationType,
+        session_id: str,
+        user_id: Optional[int],
+        **kwargs: Any
+    ) -> bool:
+        return True
+
+    @classmethod
+    def is_ready_for_training(cls) -> bool:
+        return False
+
+    @classmethod
+    def get_latest_identifier(cls) -> str:
+        return cls().default_identifier
 
     @inject
     def retrieve(
@@ -54,16 +73,12 @@ class SelectionPredictionModel(AbstractPredictionModel):
     def retrieve_product_detail(
         self, session_id: str, user_id: Optional[int], variant: str
     ) -> List[str]:
-        raise TypeError(
-            f"{self.__class__.__name__} can not perform retrieval for product detail recommendations."
-        )
+        return self.retrieve()
 
     def retrieve_cart(
         self, session_id: str, user_id: Optional[int], variants_in_cart: List[str]
     ) -> List[str]:
-        raise TypeError(
-            f"{self.__class__.__name__} can not perform retrieval for cart recommendations."
-        )
+        return self.retrieve()
 
     def score_homepage(
         self, session_id: str, user_id: Optional[int], variants: List[str]

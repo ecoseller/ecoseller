@@ -1,4 +1,5 @@
-from typing import List, Type, TYPE_CHECKING
+import logging
+from typing import Any, List, Optional, Type, TYPE_CHECKING
 
 from dependency_injector.wiring import inject, Provide
 
@@ -19,15 +20,60 @@ class ModelManager:
 
         return ConfigModel.get_current()
 
-    def get_model(
-        self, recommendation_type: RecommendationType, step: "PredictionPipeline.Step"
+    def get_model_from_cascade(
+        self,
+        recommendation_type: RecommendationType,
+        cascade: List[str],
+        session_id: str,
+        user_id: Optional[int],
+        **kwargs: Any,
     ) -> AbstractPredictionModel:
         from recommender_system.models.prediction.dummy.model import (
             DummyPredictionModel,
         )
 
-        # TODO: get latest model identifier and pass it as argument to constructor
+        for model_name in cascade:
+            model_class = PredictionModelMapper.map(model_name=model_name)
+            if model_class.is_ready(
+                recommendation_type=recommendation_type,
+                session_id=session_id,
+                user_id=user_id,
+                **kwargs,
+            ):
+                return model_class(identifier=model_class.get_latest_identifier())
+
         return DummyPredictionModel()
+
+    def get_model(
+        self,
+        recommendation_type: RecommendationType,
+        step: "PredictionPipeline.Step",
+        session_id: str,
+        user_id: Optional[int],
+        **kwargs: Any,
+    ) -> AbstractPredictionModel:
+        from recommender_system.models.prediction.selection.model import (
+            SelectionPredictionModel,
+        )
+
+        attribute_name = (
+            f"{recommendation_type.value.lower()}_{step.value.lower()}_cascade"
+        )
+        try:
+            cascade = getattr(self.config, attribute_name)
+        except Exception as e:
+            logging.warning(
+                f"Unable to obtain cascade for {recommendation_type} and {step}: {e}"
+            )
+            return SelectionPredictionModel()
+
+        return self.get_model_from_cascade(
+            recommendation_type=recommendation_type,
+            cascade=cascade,
+            session_id=session_id,
+            user_id=user_id,
+            **kwargs,
+        )
 
     def create_model(self, model_name: str) -> AbstractPredictionModel:
         model_class = PredictionModelMapper.map(model_name)

@@ -20,6 +20,7 @@ from recommender_system.utils.memory import get_current_memory_usage
 
 if TYPE_CHECKING:
     from recommender_system.managers.model_manager import ModelManager
+    from recommender_system.models.stored.model.config import ConfigModel
 
 
 class EASE:
@@ -84,13 +85,16 @@ class EASE:
     def _get_matrices(self) -> Dict[str, np.ndarray]:
         return {"X": self.X, "B": self.B}
 
+    @inject
+    def _get_config(
+        self, model_manager: "ModelManager" = Provide["model_manager"]
+    ) -> "ConfigModel":
+        return model_manager.config
+
     @property
     def possible_parameters(self) -> List[Dict[str, Any]]:
-        from recommender_system.models.stored.model.config import ConfigModel
-
         parameters = []
-        config = ConfigModel.get_current()
-        for l2 in config.ease_config.l2_options:
+        for l2 in self._get_config().ease_config.l2_options:
             parameters.append({"l2": l2})
         return parameters
 

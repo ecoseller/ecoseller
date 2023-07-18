@@ -8,6 +8,7 @@ from api.notifications.conf import (
     EventTypes,
 )
 from api.recommender_system import RecommenderSystemApi
+from product.models import ProductVariant
 
 
 def _try_parse_number(value):
@@ -105,6 +106,15 @@ class RecommenderSystemRecommendProductsView(APIView):
         data["recommendation_type"] = situation
         products = RecommenderSystemApi.get_recommendations(data)
         print("PRODUCTS", products)
+        if products is None:
+            products_query = ProductVariant.objects.order_by("?").all()
+            limit = data.get("limit")
+            if limit is not None:
+                products_query = products_query[:limit]
+            products = [
+                {"product_variant_sku": pv.sku, "rs_info": {}} for pv in products_query
+            ]
+
         # response format
         # [{
         #     "product_variant_sku": "a",
