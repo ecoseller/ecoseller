@@ -16,7 +16,7 @@ const PageCategoryTypeListTopLine = () => {
         <Typography variant="caption" gutterBottom>
           {`Page category types are used to group page categories together. For
           example, you can create a category type called "About us" and "About
-          product" then create a category type called "Footer" and "Header" and
+          product" then create a category type called "FOOTER" and "HEADER" and
           fetch those categories by their type.`}
         </Typography>
       </Box>
