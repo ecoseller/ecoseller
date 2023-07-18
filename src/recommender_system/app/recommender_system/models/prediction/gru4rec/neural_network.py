@@ -75,12 +75,17 @@ class NeuralNetwork:
         identifier: str,
         gru4rec_storage: AbstractGRU4RecStorage = Provide["gru4rec_storage"],
     ) -> "NeuralNetwork":
-        gru4rec = cls(identifier=identifier)
+        net = gru4rec_storage.get_module(identifier=identifier)
+        embedding = net[0]
+        gru = net[1]
+        feedforward = net[-1]
 
-        gru4rec.net = gru4rec_storage.get_module(identifier=identifier)
-        gru4rec.embedding = gru4rec.net[0]
-        gru4rec.gru = gru4rec.net[1]
-        gru4rec.feedforward = gru4rec.net[-1]
+        gru4rec = cls(identifier=identifier, num_product_variants=embedding.in_features)
+
+        gru4rec.net = net
+        gru4rec.embedding = embedding
+        gru4rec.gru = gru
+        gru4rec.feedforward = feedforward
         gru4rec.mapping = gru4rec_storage.get_mapping(identifier=identifier)
 
         parameters = gru4rec_storage.get_parameters(identifier=identifier)
@@ -92,7 +97,7 @@ class NeuralNetwork:
     def __init__(
         self,
         identifier: str,
-        num_product_variants: int,
+        num_product_variants: Optional[int] = None,
         product_storage: AbstractProductStorage = Provide["product_storage"],
     ):
         self.model_identifier = identifier
