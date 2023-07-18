@@ -348,24 +348,246 @@ The triggers that you can respond to are derived from the `ecoseller` models. It
 ### Model based triggers
 Make sure you are fammiliar with [**ecoseller** data models](../programming/backend.md#data-models). Events are then pretty self-explanatory. Here is the list of all events that you can respond to:
 #### Product
+Whenever product is saved, updated or deleted, you can respond to it using following events:
 ##### `PRODUCT_SAVE`
+JSON Payload sent to the connector is the product itself simmilar to the example below:
+```json
+{
+   "_model_class":"Product",
+   "id":2,
+   "published":true,
+   "type":3,
+   "category_id":3,
+   "product_translations":[
+      {
+         "id":3,
+         "language_code":"en",
+         "title":"Jumanji",
+         "meta_title":"Jumanji",
+         "description":"None",
+         "meta_description":"When two kids find and play a magical board game, they release a man trapped in it for decades - and a host of dangers that can only be stopped by fin",
+         "short_description":"None",
+         "slug":"jumanji"
+      },
+      {
+         "id":4,
+         "language_code":"cs",
+         "title":"Jumanji",
+         "meta_title":"Jumanji",
+         "description":"None",
+         "meta_description":"Když dvě děti najdou a hrají kouzelnou deskovou hru, osvobodí muže, který v ní byl po desetiletí uvězněn - a spoustu nebezpečí, která lze zastavit pou",
+         "short_description":"None",
+         "slug":"jumanji"
+      }
+   ],
+   "product_variants":[
+      "2-cs-1080p",
+      "2-en-720p"
+   ],
+   "update_at":"2023-07-09T17:35:11.713935+00:00",
+   "create_at":"2023-07-09T17:35:11.713935+00:00",
+   "deleted":false
+}
+```
 ##### `PRODUCT_UPDATE`
+JSON Payload sent to the connector is the product itself simmilar to the example below:
+```json
+{
+   "_model_class":"Product",
+   "id":2,
+   "published":true,
+   "type":3,
+   "category_id":3,
+   "product_translations":[
+      {
+         "id":3,
+         "language_code":"en",
+         "title":"Jumanji",
+         "meta_title":"Jumanji",
+         "description":"None",
+         "meta_description":"When two kids find and play a magical board game, they release a man trapped in it for decades - and a host of dangers that can only be stopped by fin",
+         "short_description":"None",
+         "slug":"jumanji"
+      },
+      {
+         "id":4,
+         "language_code":"cs",
+         "title":"Jumanji",
+         "meta_title":"Jumanji",
+         "description":"None",
+         "meta_description":"Když dvě děti najdou a hrají kouzelnou deskovou hru, osvobodí muže, který v ní byl po desetiletí uvězněn - a spoustu nebezpečí, která lze zastavit pou",
+         "short_description":"None",
+         "slug":"jumanji"
+      }
+   ],
+   "product_variants":[
+      "2-cs-1080p",
+      "2-en-720p"
+   ],
+   "update_at":"2023-07-09T17:35:11.713935+00:00",
+   "create_at":"2023-07-09T17:35:11.713935+00:00",
+   "deleted":false
+}
+```
 ##### `PRODUCT_DELETE`
+JSON Payload sent to the connector is the product itself simmilar to the example below:
+```json
+{
+   "_model_class":"Product",
+   "id":2,
+   "published":true,
+   "type":3,
+   "category_id":3,
+   "product_translations":[
+      {
+         "id":3,
+         "language_code":"en",
+         "title":"Jumanji",
+         "meta_title":"Jumanji",
+         "description":"None",
+         "meta_description":"When two kids find and play a magical board game, they release a man trapped in it for decades - and a host of dangers that can only be stopped by fin",
+         "short_description":"None",
+         "slug":"jumanji"
+      },
+      {
+         "id":4,
+         "language_code":"cs",
+         "title":"Jumanji",
+         "meta_title":"Jumanji",
+         "description":"None",
+         "meta_description":"Když dvě děti najdou a hrají kouzelnou deskovou hru, osvobodí muže, který v ní byl po desetiletí uvězněn - a spoustu nebezpečí, která lze zastavit pou",
+         "short_description":"None",
+         "slug":"jumanji"
+      }
+   ],
+   "product_variants":[
+      "2-cs-1080p",
+      "2-en-720p"
+   ],
+   "update_at":"2023-07-09T17:35:11.713935+00:00",
+   "create_at":"2023-07-09T17:35:11.713935+00:00",
+   "deleted":false
+}
+```
 
 #### ProductVariant
-##### `PRODUCTVARIANT_SAVE`
-##### `PRODUCTVARIANT_UPDATE`
-##### `PRODUCTVARIANT_DELETE`
+Whenever product variant is saved, updated or deleted, you can respond to it using following events:
 
+##### `PRODUCTVARIANT_SAVE`
+JSON Payload sent to the connector is the product variant itself simmilar to the example below:
+```json
+{
+   "_model_class":"ProductVariant",
+   "sku":"2-en-720p",
+   "ean":"",
+   "weight":189.0,
+   "stock_quantity":63,
+   "recommendation_weight":1.0,
+   "update_at":"2023-07-18T10:27:19.559905+00:00",
+   "create_at":"2023-07-09T17:38:10.811513+00:00",
+   "attributes":[
+      3,
+      5,
+      8,
+      9,
+      10
+   ],
+   "deleted":false
+}
+```
+##### `PRODUCTVARIANT_UPDATE`
+JSON Payload sent to the connector is the product variant itself simmilar to the example below:
+```json
+{
+   "_model_class":"ProductVariant",
+   "sku":"2-en-720p",
+   "ean":"",
+   "weight":189.0,
+   "stock_quantity":63,
+   "recommendation_weight":1.0,
+   "update_at":"2023-07-18T10:27:19.559905+00:00",
+   "create_at":"2023-07-09T17:38:10.811513+00:00",
+   "attributes":[
+      3,
+      5,
+      8,
+      9,
+      10
+   ],
+   "deleted":false
+}
+```
+##### `PRODUCTVARIANT_DELETE`
+JSON Payload sent to the connector is the product variant itself simmilar to the example below:
+```json
+{
+   "_model_class":"ProductVariant",
+   "sku":"2-en-720p",
+   "ean":"",
+   "weight":189.0,
+   "stock_quantity":63,
+   "recommendation_weight":1.0,
+   "update_at":"2023-07-18T10:27:19.559905+00:00",
+   "create_at":"2023-07-09T17:38:10.811513+00:00",
+   "attributes":[
+      3,
+      5,
+      8,
+      9,
+      10
+   ],
+   "deleted":false
+}
+```
+
+#### ProductPrice
+Whenever product price is saved, updated or deleted, you can respond to it using following events:
+##### `PRICE_SAVE`
+JSON Payload sent to the connector is the product variant itself simmilar to the example below:
+```json
+{
+   "_model_class":"ProductPrice",
+   "id":13,
+   "price_list_code":"CZK_retail",
+   "product_variant_sku":"2-cs-1080p",
+   "price":229.0,
+   "update_at":"2023-07-18T10:31:56.386815+00:00",
+   "create_at":"2023-07-09T17:37:28.340365+00:00",
+   "deleted":false
+}
+```
+##### `PRICE_UPDATE`
+JSON Payload sent to the connector is the product variant itself simmilar to the example below:
+```json
+{
+   "_model_class":"ProductPrice",
+   "id":13,
+   "price_list_code":"CZK_retail",
+   "product_variant_sku":"2-cs-1080p",
+   "price":229.0,
+   "update_at":"2023-07-18T10:31:56.386815+00:00",
+   "create_at":"2023-07-09T17:37:28.340365+00:00",
+   "deleted":false
+}
+```
+##### `PRICE_DELETE`
+JSON Payload sent to the connector is the product variant itself simmilar to the example below:
+```json
+{
+   "_model_class":"ProductPrice",
+   "id":13,
+   "price_list_code":"CZK_retail",
+   "product_variant_sku":"2-cs-1080p",
+   "price":229.0,
+   "update_at":"2023-07-18T10:31:56.386815+00:00",
+   "create_at":"2023-07-09T17:37:28.340365+00:00",
+   "deleted":false
+}
+```
 #### ProductType
 ##### `PRODUCTTYPE_SAVE`
 ##### `PRODUCTTYPE_UPDATE`
 ##### `PRODUCTTYPE_DELETE`
-
-#### ProductPrice
-##### `PRICE_SAVE`
-##### `PRICE_UPDATE`
-##### `PRICE_DELETE`
 
 #### AttributeType
 ##### `ATTRIBUTETYPE_SAVE`
@@ -377,7 +599,7 @@ Make sure you are fammiliar with [**ecoseller** data models](../programming/back
 ##### `ATTRIBUTE_UPDATE`
 ##### `ATTRIBUTE_DELETE`
 
-#### BaseAttribute
+#### Category
 ##### `CATEGORY_SAVE`
 ##### `CATEGORY_UPDATE`
 ##### `CATEGORY_DELETE`
