@@ -543,7 +543,7 @@ JSON Payload sent to the connector is the product variant itself simmilar to the
 #### ProductPrice
 Whenever product price is saved, updated or deleted, you can respond to it using following events:
 ##### `PRICE_SAVE`
-JSON Payload sent to the connector is the product variant itself simmilar to the example below:
+JSON Payload sent to the connector is the product price itself simmilar to the example below:
 ```json
 {
    "_model_class":"ProductPrice",
@@ -557,7 +557,7 @@ JSON Payload sent to the connector is the product variant itself simmilar to the
 }
 ```
 ##### `PRICE_UPDATE`
-JSON Payload sent to the connector is the product variant itself simmilar to the example below:
+JSON Payload sent to the connector is the product price itself simmilar to the example below:
 ```json
 {
    "_model_class":"ProductPrice",
@@ -571,7 +571,7 @@ JSON Payload sent to the connector is the product variant itself simmilar to the
 }
 ```
 ##### `PRICE_DELETE`
-JSON Payload sent to the connector is the product variant itself simmilar to the example below:
+JSON Payload sent to the connector is the product price itself simmilar to the example below:
 ```json
 {
    "_model_class":"ProductPrice",
@@ -585,41 +585,323 @@ JSON Payload sent to the connector is the product variant itself simmilar to the
 }
 ```
 #### ProductType
+Whenever product type is saved, updated or deleted, you can respond to it using following events:
 ##### `PRODUCTTYPE_SAVE`
+JSON Payload sent to the connector is the product type itself simmilar to the example below:
+
+```json
+{
+   "_model_class":"ProductType",
+   "id":3,
+   "name":"Movie",
+   "attribute_types":[
+      1,
+      2,
+      3,
+      4
+   ],
+   "products":[
+      6,
+      10,
+      16,
+      1
+   ],
+   "update_at":"2023-07-18T10:34:06.786793+00:00",
+   "create_at":"2023-07-08T15:38:32.982680+00:00",
+   "deleted":false
+}
+```
 ##### `PRODUCTTYPE_UPDATE`
+JSON Payload sent to the connector is the product type itself simmilar to the example below:
+```json
+{
+   "_model_class":"ProductType",
+   "id":3,
+   "name":"Movie",
+   "attribute_types":[
+      1,
+      2,
+      3,
+      4
+   ],
+   "products":[
+      6,
+      10,
+      16,
+      1
+   ],
+   "update_at":"2023-07-18T10:34:06.786793+00:00",
+   "create_at":"2023-07-08T15:38:32.982680+00:00",
+   "deleted":false
+}
+```
 ##### `PRODUCTTYPE_DELETE`
+JSON Payload sent to the connector is the product type itself simmilar to the example below:
+```json
+{
+   "_model_class":"ProductType",
+   "id":3,
+   "name":"Movie",
+   "attribute_types":[
+      1,
+      2,
+      3,
+      4
+   ],
+   "products":[
+      6,
+      10,
+      16,
+      1
+   ],
+   "update_at":"2023-07-18T10:34:06.786793+00:00",
+   "create_at":"2023-07-08T15:38:32.982680+00:00",
+   "deleted":false
+}
+```
 
 #### AttributeType
+Whenever product attribute type is saved, updated or deleted, you can respond to it using following events:
+
 ##### `ATTRIBUTETYPE_SAVE`
+JSON Payload sent to the connector is the attribute type itself simmilar to the example below:
+
+```json
+{
+   "_model_class":"AttributeType",
+   "id":1,
+   "type":"CATEGORICAL",
+   "type_name":"GENRE",
+   "unit":"None"
+}
+```
 ##### `ATTRIBUTETYPE_UPDATE`
+JSON Payload sent to the connector is the attribute type itself simmilar to the example below:
+
+```json
+{
+   "_model_class":"AttributeType",
+   "id":1,
+   "type":"CATEGORICAL",
+   "type_name":"GENRE",
+   "unit":"None"
+}
+```
 ##### `ATTRIBUTETYPE_DELETE`
+JSON Payload sent to the connector is the attribute type itself simmilar to the example below:
+
+```json
+{
+   "_model_class":"AttributeType",
+   "id":1,
+   "type":"CATEGORICAL",
+   "type_name":"GENRE",
+   "unit":"None"
+}
+```
 
 #### BaseAttribute
+Whenever product base attribute is saved, updated or deleted, you can respond to it using following events:
+
 ##### `ATTRIBUTE_SAVE`
+JSON Payload sent to the connector is the base attribute itself simmilar to the example below:
+```json
+{
+   "_model_class":"Attribute",
+   "id":9,
+   "type":1,
+   "raw_value":"Adventure",
+   "order":"None",
+   "ext_attributes":[
+      
+   ],
+   "deleted":false
+}
+```
+
 ##### `ATTRIBUTE_UPDATE`
+JSON Payload sent to the connector is the base attribute itself simmilar to the example below:
+```json
+{
+   "_model_class":"Attribute",
+   "id":9,
+   "type":1,
+   "raw_value":"Adventure",
+   "order":"None",
+   "ext_attributes":[
+      
+   ],
+   "deleted":false
+}
+```
 ##### `ATTRIBUTE_DELETE`
+JSON Payload sent to the connector is the base attribute itself simmilar to the example below:
+```json
+{
+   "_model_class":"Attribute",
+   "id":9,
+   "type":1,
+   "raw_value":"Adventure",
+   "order":"None",
+   "ext_attributes":[
+      
+   ],
+   "deleted":false
+}
+```
 
 #### Category
+Whenever category is saved, updated or deleted, you can respond to it using following events:
+
 ##### `CATEGORY_SAVE`
+JSON Payload sent to the connector is the category itself simmilar to the example below:
+```json
+{
+   "_model_class":"Category",
+   "id":3,
+   "parent_id":2,
+   "deleted":false
+}
+```
 ##### `CATEGORY_UPDATE`
+JSON Payload sent to the connector is the category itself simmilar to the example below:
+```json
+{
+   "_model_class":"Category",
+   "id":3,
+   "parent_id":2,
+   "deleted":false
+}
+```
 ##### `CATEGORY_DELETE`
+JSON Payload sent to the connector is the category itself simmilar to the example below:
+```json
+{
+   "_model_class":"Category",
+   "id":3,
+   "parent_id":2,
+   "deleted":false
+}
+```
 
 #### Order
+Whenever order is saved, updated or deleted, you can respond to it using following events:
+
 ##### `ORDER_SAVE`
+JSON Payload sent to the connector is the order itself simmilar to the example below:
+
+```json
+{
+   "token":"545107d5-59ad-41d6-9f70-782828afdce2",
+   "customer_email":"jdoe@example.com",
+   "order":{
+      "token":"545107d5-59ad-41d6-9f70-782828afdce2",
+      "cart":{
+         "token":"c637d1b1-d5fd-4a15-a14f-1e57b6b94a4d",
+         "cart_items":[
+            {
+               "product_id":159858,
+               "product_variant_sku":"159858-en-720p",
+               "unit_price_without_vat":"170.00",
+               "unit_price_incl_vat":"205.70",
+               "quantity":1
+            }
+         ],
+         "shipping_method_country":1,
+         "payment_method_country":1,
+         "create_at":"2023-07-18T10:44:40.222194Z",
+         "status":"PENDING",
+         "marketing_flag":true,
+         "agreed_to_terms":true,
+         "payment_id":"None"
+      },
+      "_model_class":"Order",
+      "session_id":"cc024f1d-160a-427c-a821-1e84126eb45f"
+   }
+}
+```
 ##### `ORDER_UPDATE`
+JSON Payload sent to the connector is the order itself simmilar to the example below:
+
+```json
+{
+   "token":"545107d5-59ad-41d6-9f70-782828afdce2",
+   "customer_email":"jdoe@example.com",
+   "order":{
+      "token":"545107d5-59ad-41d6-9f70-782828afdce2",
+      "cart":{
+         "token":"c637d1b1-d5fd-4a15-a14f-1e57b6b94a4d",
+         "cart_items":[
+            {
+               "product_id":159858,
+               "product_variant_sku":"159858-en-720p",
+               "unit_price_without_vat":"170.00",
+               "unit_price_incl_vat":"205.70",
+               "quantity":1
+            }
+         ],
+         "shipping_method_country":1,
+         "payment_method_country":1,
+         "create_at":"2023-07-18T10:44:40.222194Z",
+         "status":"PENDING",
+         "marketing_flag":true,
+         "agreed_to_terms":true,
+         "payment_id":"None"
+      },
+      "_model_class":"Order",
+      "session_id":"cc024f1d-160a-427c-a821-1e84126eb45f"
+   }
+}
+```
 ##### `ORDER_DELETE`
+JSON Payload sent to the connector is the order itself simmilar to the example below:
 
-#### Review
-##### `REVIEW_SEND`
-
+```json
+{
+   "token":"545107d5-59ad-41d6-9f70-782828afdce2",
+   "customer_email":"jdoe@example.com",
+   "order":{
+      "token":"545107d5-59ad-41d6-9f70-782828afdce2",
+      "cart":{
+         "token":"c637d1b1-d5fd-4a15-a14f-1e57b6b94a4d",
+         "cart_items":[
+            {
+               "product_id":159858,
+               "product_variant_sku":"159858-en-720p",
+               "unit_price_without_vat":"170.00",
+               "unit_price_incl_vat":"205.70",
+               "quantity":1
+            }
+         ],
+         "shipping_method_country":1,
+         "payment_method_country":1,
+         "create_at":"2023-07-18T10:44:40.222194Z",
+         "status":"PENDING",
+         "marketing_flag":true,
+         "agreed_to_terms":true,
+         "payment_id":"None"
+      },
+      "_model_class":"Order",
+      "session_id":"cc024f1d-160a-427c-a821-1e84126eb45f"
+   }
+}
+```
 #### OrderItemComplaint
 ##### `ORDER_ITEM_COMPLAINT_CREATED`
-##### `ORDER_ITEM_COMPLAINT_UPDATED`
+JSON Payload sent to the connector is the order item complaint is created.
+```json
+{
+    "complaint_id": 1,
+}
+```
 
-#### OrderItemComplaint
-##### `ORDER_ITEM_COMPLAINT_CREATED`
 ##### `ORDER_ITEM_COMPLAINT_UPDATED`
-
+JSON Payload sent to the connector is the order item complaint is created.
+```json
+{
+    "complaint_id": 1,
+}
+```
 
 ### Action based triggers
 Action based triggers are based on user actions. They are not related to any model, they're usually sent from storefront. 
@@ -627,14 +909,36 @@ Here is the list of all events that you can respond to:
 #### Product page
 ##### `PRODUCT_DETAIL_ENTER`
 This trigger reacts to the situation when user enters product detail page.
+Data passed to this action trigger are simply those that are sent from the storefront so you can easily extend it. In a basic configuration it's just:
+```json
+{
+    "product_id": 1,
+    "product_variant_sku": "1-en-720p",
+    "session_id": "cc024f1d-160a-427c-a821-1e84126eb45f"
+}
+```
+Make sure you don't change these data, because they are required by recommender system.
 ##### `PRODUCT_DETAIL_LEAVE`
 This trigger reacts to the situation when user leaves product detail page.
+Data passed to this action trigger are simply those that are sent from the storefront so you can easily extend it. In a basic configuration it's just:
+```json
+{
+    "product_id": 1,
+    "product_variant_sku": "1-en-720p",
+    "session_id": "cc024f1d-160a-427c-a821-1e84126eb45f"
+}
+```
+Make sure you don't change these data, because they are required by recommender system.
 ##### `PRODUCT_ADD_TO_CART`
+This trigger reacts to the situation when user adds product to the cart.
 
-#### Recommendations
-##### `RECOMMENDATION_VIEW`
-This trigger reacts to the situation when user clicks on some recommendation.
-
+```json
+{
+    "product_id": 1,
+    "product_variant_sku": "1-en-720p",
+    "session_id": "cc024f1d-160a-427c-a821-1e84126eb45f"
+}
+```
 
 ## Use cases
 NotificationAPI is here to help you. It's up to you how you will use it, since it very convinient and flexible. Here are some examples of how we imagine you can use it. If you have any other ideas, feel free to share them with us.
