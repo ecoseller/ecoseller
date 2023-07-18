@@ -95,12 +95,11 @@ const DashboardAttributeTypeDetailPage = ({ attributeType }: IProps) => {
                 .then((res: any) => {
                   setSnackbar({
                     open: true,
-                    message: "Product type updated",
+                    message: "Attribute type updated",
                     severity: "success",
                   });
                 })
                 .catch((err: any) => {
-                  console.log("postProduct", err);
                   setSnackbar({
                     open: true,
                     message: "Something went wrong",

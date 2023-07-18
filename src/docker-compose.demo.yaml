@@ -18,7 +18,6 @@ services:
       # - ./backend/demo_data/images:/usr/src/mediafiles
     ports:
       - 8000:8000
-      - 8001:8001
     env_file:
       - ./backend/docker-compose.env
     depends_on:
@@ -40,7 +39,7 @@ services:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 20s
       timeout: 5s
-      retries: 5
+      retries: 20
   redis:
     container_name: redis
     image: redis
@@ -48,8 +47,8 @@ services:
     ports:
       - 6379:6379
     command: redis-server --save 20 1 --loglevel warning
-    volumes:
-      - ./cache:/data
+    # volumes:
+    #   - ./cache:/data
     depends_on:
       - backend
   rq-worker:
@@ -71,8 +70,8 @@ services:
     environment:
       - discovery.type=single-node
       - cluster.routing.allocation.disk.threshold_enabled=false
-    volumes:
-      - ./backend/elasticsearch/data:/usr/share/elasticsearch/data
+    # volumes:
+    #   - ./backend/elasticsearch/data:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
       - "9300:9300"
@@ -141,7 +140,7 @@ services:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 20
   recommender_system:
     container_name: recommender_system
     build:
@@ -157,7 +156,7 @@ services:
       test: curl --fail http://localhost:8086 || exit 1
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 20
     depends_on:
       postgres_rs:
         condition: service_healthy
