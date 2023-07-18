@@ -8,11 +8,16 @@ Table of contents:
 * TOC
 {:toc}
 
-# Dashboard
-TODO: add description
+# Dashboard & Storefront
+The dashboard is a part of the application that is used by the administrators to manage the application. The storefront on the other hand, is a part of the application that is used by the customers to browse and buy products. Both of these parts are standalone applications built using [Next.js](https://nextjs.org/) framework and are served by the same server. Their directory structure consists of various parts, among which the most important are:
+* `api` - contains various API route functions that are used to send requests to the backend
+* `components` - contains a collection of React components that are used in the dashboard
+* `pages` - contains React components that are used as pages in the dashboard, also ensures routing (more information about routing can be found in [API routes section](#api-routes))
+* `public` - contains static files that are used in the dashboard
+* `styles` - contains styles definitions that are used in the dashboard
+* `types` - contains TypeScript type definitions that are used in the dashboard
+* `utils` - contains various utility functions that are used in the dashboard along with context providers and interceptors (more information about context providers and interceptors can be found in [Context providers section](#context-providers) and [Interceptors section](#interceptors))
 
-# Storefront
-TODO: add description
 
 # Context providers
 To be able to access various data in different parts of the application, we use React Context. More information about React Context can be found on the following links:
