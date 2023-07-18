@@ -56,7 +56,7 @@ const CartPage = () => {
           onClick: () => {
             router.push("/cart/step/1");
           },
-          disabled: false,
+          disabled: !cart || cart === null ? true : false,
         }}
       />
       <ProductsSlider data={recommendedProducts || []} />
