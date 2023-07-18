@@ -117,6 +117,18 @@ Replace `your_username`, `your_database_name`, and `/path/to/backup.sql` with th
 # Static files and media
 Ecoseller currently supports storing static and media files using local storage. While it does not natively integrate with object storage services like Amazon S3, it is possible to implement such functionality using the Python package s3boto3.
 
+However, in most cases, storing static and media files locally is sufficient for the needs of an e-commerce platform. Hence why we decided to use simplest solution possible using [WhiteNoise](https://whitenoise.readthedocs.io/en/latest/) package. It was neccassary to use this package because of the way Django works. Django does not serve static files in production, so serving the app via Gunicon or uWSGI would not work propely. WhiteNoise is a middleware that allows Django to serve static files in production.
+
+If you want to disable WhiteNoise, you can change `MIDDLEWARE` in `backend/core/settings.py` to:
+```python
+MIDDLEWARE = [
+    # ...
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware", # Remove this line
+    # ...
+]
+```
+
 # Implementing payment methods (`PaymentAPI`)
 This guide will walk you through the process of extending the Core application with new payment methods without encountering conflicts with the existing codebase. By following the provided guidelines and leveraging the system's flexible architecture, you'll be able to seamlessly integrate various online payment gateways into your ecoseller ecommerce platform.
 
