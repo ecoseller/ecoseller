@@ -17,6 +17,8 @@ import { useRouter } from "next/router";
 import { orderSubmitAPI } from "@/api/order/submit";
 import { useSnackbarState } from "@/utils/snackbar";
 import { useCart } from "@/utils/context/cart";
+import Cookies from "js-cookie";
+import { RS_SESSION_COOKIE } from "@/utils/context/recommender";
 
 interface ICartCompleteOrderProps {
   cart: ICart;
@@ -35,6 +37,7 @@ const CartCompleteOrder = ({ cart }: ICartCompleteOrderProps) => {
   const [snackbar, setSnackbar] = useSnackbarState();
   const { clearCart } = useCart();
   const router = useRouter();
+  const rsSession = Cookies.get(RS_SESSION_COOKIE);
 
   return (
     <>
@@ -83,10 +86,14 @@ const CartCompleteOrder = ({ cart }: ICartCompleteOrderProps) => {
           size="large"
           disabled={!agreeWithTerms}
           onClick={async () => {
-            const response = await orderSubmitAPI(cart.token, {
-              agreeWithTerms: agreeWithTerms,
-              agreeWithDataProcessing: agreeWithDataProcessing,
-            });
+            const response = await orderSubmitAPI(
+              cart.token,
+              {
+                agreeWithTerms: agreeWithTerms,
+                agreeWithDataProcessing: agreeWithDataProcessing,
+              },
+              rsSession
+            );
 
             const data = await response.json();
             if (response.status != 201) {

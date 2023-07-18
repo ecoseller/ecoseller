@@ -13,6 +13,7 @@ class StoredBaseModel(BaseModel):
     """
 
     _storage: "AbstractStorage"
+    deleted: bool = False
 
     class Meta:
         primary_key: str

@@ -61,6 +61,7 @@ def _attribute_type(id: int = 0) -> Dict[str, Any]:
         "type": AttributeTypeModel.Type.CATEGORICAL,
         "type_name": "type_name",
         "unit": "unit",
+        "deleted": False,
     }
 
 
@@ -82,6 +83,7 @@ def _attribute_model(id: int = 0, parent_id: Optional[int] = None) -> Dict[str, 
         "order": id,
         "attribute_type_id": id,
         "parent_attribute_id": parent_id,
+        "deleted": False,
     }
 
 
@@ -117,6 +119,7 @@ def _config_model(id: Optional[int] = None) -> Dict[str, Any]:
         "cart_scoring_cascade": ["selection"],
         "ease_config": EASEConfig().dict(),
         "gru4rec_config": GRU4RecConfig().dict(),
+        "deleted": False,
     }
 
 
@@ -130,6 +133,7 @@ def _product_translation(id: int = 0) -> Dict[str, Any]:
         "short_description": "short_description",
         "description": "description",
         "slug": "slug",
+        "deleted": False,
     }
 
 
@@ -148,6 +152,7 @@ def _product_variant_model(sku: str = "sku") -> Dict[str, Any]:
         "recommendation_weight": 1.0,
         "update_at": _now,
         "create_at": _now,
+        "deleted": False,
     }
 
 
@@ -164,11 +169,18 @@ def _product_raw(id: int = 0) -> Dict[str, Any]:
         "category_id": 0,
         "update_at": _now,
         "create_at": _now,
+        "deleted": False,
     }
 
 
 def _product_type_empty(id: int = 0) -> Dict[str, Any]:
-    return {"id": id, "name": "name", "update_at": _now, "create_at": _now}
+    return {
+        "id": id,
+        "name": "name",
+        "update_at": _now,
+        "create_at": _now,
+        "deleted": False,
+    }
 
 
 def _order(token: str = str(_uuid()), session_id: str = "session") -> Dict[str, Any]:
@@ -189,6 +201,7 @@ def _order_model(
         "create_at": _now,
         "update_at": _now,
         "session_id": session_id,
+        "deleted": False,
     }
 
 
@@ -227,6 +240,7 @@ def _product_add_to_cart(
         "product_id": product_id,
         "product_variant_sku": product_variant_sku,
         "create_at": _now,
+        "deleted": False,
     }
 
 
@@ -248,6 +262,7 @@ def _product_detail_enter(
         "model_name": None,
         "position": 1,
         "create_at": _now,
+        "deleted": False,
     }
 
 
@@ -266,6 +281,7 @@ def _product_detail_leave(
         "product_variant_sku": product_variant_sku,
         "time_spent": 13.5,
         "create_at": _now,
+        "deleted": False,
     }
 
 
@@ -280,6 +296,7 @@ def _product_price(
         "price": 100.0,
         "update_at": _now,
         "create_at": _now,
+        "deleted": False,
     }
 
 
@@ -300,6 +317,7 @@ def _recommendation_view(
         "model_identifier": "unittest",
         "position": 1,
         "create_at": _now,
+        "deleted": False,
     }
 
 
@@ -319,6 +337,7 @@ def _review(
         "rating": 4,
         "update_at": _now,
         "create_at": _now,
+        "deleted": False,
     }
 
 
