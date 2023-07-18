@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('product', '0046_alter_baseattributetranslation_name'),
+        ("product", "0046_alter_baseattributetranslation_name"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='extattributetype',
-            name='safe_deleted',
+            model_name="extattributetype",
+            name="safe_deleted",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='extensionattribute',
-            name='safe_deleted',
+            model_name="extensionattribute",
+            name="safe_deleted",
             field=models.BooleanField(default=False),
         ),
     ]
