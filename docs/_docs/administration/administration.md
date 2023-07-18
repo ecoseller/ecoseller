@@ -346,7 +346,7 @@ We recommend to edit configuration JSON directly (`core/config/notifications.jso
 The triggers that you can respond to are derived from the `ecoseller` models. It's usually an action based on `save`, `update` or `delete`.
 
 ### Model based triggers
-Make sure you are fammiliar with [**ecoseller** data models](../programming/backend.md#data-models). Events are then pretty self-explanatory. Here is the list of all events that you can respond to:
+Make sure you are fammiliar with [**ecoseller** data models](../programming/backend#data-models). Events are then pretty self-explanatory. Here is the list of all events that you can respond to:
 #### Product
 Whenever product is saved, updated or deleted, you can respond to it using following events:
 ##### `PRODUCT_SAVE`
@@ -364,7 +364,6 @@ JSON Payload sent to the connector is the product itself simmilar to the example
          "language_code":"en",
          "title":"Jumanji",
          "meta_title":"Jumanji",
-         "description":"None",
          "meta_description":"When two kids find and play a magical board game, they release a man trapped in it for decades - and a host of dangers that can only be stopped by fin",
          "short_description":"None",
          "slug":"jumanji"
@@ -374,7 +373,6 @@ JSON Payload sent to the connector is the product itself simmilar to the example
          "language_code":"cs",
          "title":"Jumanji",
          "meta_title":"Jumanji",
-         "description":"None",
          "meta_description":"Když dvě děti najdou a hrají kouzelnou deskovou hru, osvobodí muže, který v ní byl po desetiletí uvězněn - a spoustu nebezpečí, která lze zastavit pou",
          "short_description":"None",
          "slug":"jumanji"
@@ -404,7 +402,6 @@ JSON Payload sent to the connector is the product itself simmilar to the example
          "language_code":"en",
          "title":"Jumanji",
          "meta_title":"Jumanji",
-         "description":"None",
          "meta_description":"When two kids find and play a magical board game, they release a man trapped in it for decades - and a host of dangers that can only be stopped by fin",
          "short_description":"None",
          "slug":"jumanji"
@@ -414,7 +411,6 @@ JSON Payload sent to the connector is the product itself simmilar to the example
          "language_code":"cs",
          "title":"Jumanji",
          "meta_title":"Jumanji",
-         "description":"None",
          "meta_description":"Když dvě děti najdou a hrají kouzelnou deskovou hru, osvobodí muže, který v ní byl po desetiletí uvězněn - a spoustu nebezpečí, která lze zastavit pou",
          "short_description":"None",
          "slug":"jumanji"
@@ -444,7 +440,6 @@ JSON Payload sent to the connector is the product itself simmilar to the example
          "language_code":"en",
          "title":"Jumanji",
          "meta_title":"Jumanji",
-         "description":"None",
          "meta_description":"When two kids find and play a magical board game, they release a man trapped in it for decades - and a host of dangers that can only be stopped by fin",
          "short_description":"None",
          "slug":"jumanji"
@@ -454,7 +449,6 @@ JSON Payload sent to the connector is the product itself simmilar to the example
          "language_code":"cs",
          "title":"Jumanji",
          "meta_title":"Jumanji",
-         "description":"None",
          "meta_description":"Když dvě děti najdou a hrají kouzelnou deskovou hru, osvobodí muže, který v ní byl po desetiletí uvězněn - a spoustu nebezpečí, která lze zastavit pou",
          "short_description":"None",
          "slug":"jumanji"
