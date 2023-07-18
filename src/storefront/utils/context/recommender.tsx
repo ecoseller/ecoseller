@@ -99,6 +99,7 @@ export const RecommenderProvider = ({
       ...payload,
       session_id: rsSession,
     }).toString();
+
     const data = await fetch(
       `/api/recommender/${situation}/products?${params}`
     ).then((res) => res.json());

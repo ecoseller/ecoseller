@@ -3,13 +3,14 @@ import Image from "next/image";
 // libs
 import { useKeenSlider } from "keen-slider/react";
 // types
-import { IProductSliderData } from "@/types/product";
+import { IProductRecord, IProductSliderData } from "@/types/product";
 // styles
 import styles from "@/styles/Common/ProductsSlider.module.scss";
 import ProductItem from "./ProductItem";
+import ProductCard from "../Category/ProductCard";
 
 interface IProductSliderProps {
-  data: IProductSliderData[];
+  data: IProductRecord[];
 }
 
 const ProductsSlider = ({ data }: IProductSliderProps) => {
@@ -65,8 +66,8 @@ const ProductsSlider = ({ data }: IProductSliderProps) => {
     <div ref={sliderRef} className="keen-slider">
       {data?.length > 0
         ? data.map((item) => (
-            <div key={item.product_variant_sku} className="keen-slider__slide">
-              <ProductItem {...item} />
+            <div key={item.id} className="keen-slider__slide">
+              <ProductCard product={item} />
             </div>
           ))
         : null}

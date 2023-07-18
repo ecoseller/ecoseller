@@ -20,25 +20,32 @@ import Box from "@mui/material/Box";
 import styles from "@/styles/Homepage/Homepage.module.scss";
 import Grid from "@mui/material/Grid";
 import CompanyBenefit from "@/components/Homepage/CompanyBenefit";
-import { IProductSliderData } from "@/types/product";
+import { IProductRecord, IProductSliderData } from "@/types/product";
 import ProductsSlider from "@/components/Common/ProductsSlider";
 import { useRecommender } from "@/utils/context/recommender";
+import { useCountry } from "@/utils/context/country";
 
 const { serverRuntimeConfig } = getConfig();
 
 const HomePage = () => {
   const { t } = useTranslation("home");
   const [recommendedProducts, setRecommendedProducts] = React.useState<
-    IProductSliderData[]
+    IProductRecord[]
   >([]);
 
   const { getRecommendations } = useRecommender();
+  const { country } = useCountry();
   useEffect(() => {
+    if (!country) return;
     // load recommended products
-    getRecommendations("HOMEPAGE", { limit: 10 }).then((products: any[]) => {
+    getRecommendations("HOMEPAGE", {
+      limit: 10,
+      country: country?.code,
+      pricelist: country?.default_price_list,
+    }).then((products: any[]) => {
       setRecommendedProducts(products);
     });
-  }, []);
+  }, [country]);
   return (
     <div className={`container`}>
       <div className={styles.homePage}>
