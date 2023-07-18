@@ -357,7 +357,7 @@ Make sure you are fammiliar with [**ecoseller** data models](../programming/back
 ##### `PRODUCTVARIANT_UPDATE`
 ##### `PRODUCTVARIANT_DELETE`
 
-#### ProductType
+#### ProductType
 ##### `PRODUCTTYPE_SAVE`
 ##### `PRODUCTTYPE_UPDATE`
 ##### `PRODUCTTYPE_DELETE`
