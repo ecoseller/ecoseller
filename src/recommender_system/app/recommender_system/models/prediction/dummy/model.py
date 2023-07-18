@@ -1,10 +1,11 @@
-from typing import Optional, List, TYPE_CHECKING
+from typing import Any, Optional, List, TYPE_CHECKING
 
 from dependency_injector.wiring import inject, Provide
 
 from recommender_system.models.prediction.abstract import AbstractPredictionModel
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.storage.product.abstract import AbstractProductStorage
+from recommender_system.utils.recommendation_type import RecommendationType
 
 if TYPE_CHECKING:
     from recommender_system.managers.model_manager import ModelManager
@@ -19,11 +20,23 @@ class DummyPredictionModel(AbstractPredictionModel):
     def default_identifier(self) -> str:
         return self.Meta.model_name
 
-    def is_ready(self, session_id: str, user_id: Optional[int]) -> bool:
+    @classmethod
+    def is_ready(
+        cls,
+        recommendation_type: RecommendationType,
+        session_id: str,
+        user_id: Optional[int],
+        **kwargs: Any
+    ) -> bool:
         return True
 
-    def is_ready_for_training(self) -> bool:
+    @classmethod
+    def is_ready_for_training(cls) -> bool:
         return False
+
+    @classmethod
+    def get_latest_identifier(cls) -> str:
+        return cls().default_identifier
 
     @inject
     def retrieve(

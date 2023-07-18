@@ -1,6 +1,6 @@
 from datetime import datetime
 import logging
-from typing import List, Optional, TYPE_CHECKING
+from typing import Any, List, Optional, TYPE_CHECKING
 
 from dependency_injector.wiring import inject, Provide
 
@@ -16,6 +16,7 @@ from recommender_system.models.stored.model.latest_identifier import (
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.storage.feedback.abstract import AbstractFeedbackStorage
 from recommender_system.storage.product.abstract import AbstractProductStorage
+from recommender_system.utils.recommendation_type import RecommendationType
 
 if TYPE_CHECKING:
     from recommender_system.managers.model_manager import ModelManager
@@ -41,9 +42,16 @@ class GRU4RecPredictionModel(AbstractPredictionModel):
     def default_identifier(self) -> str:
         return f"{self.Meta.model_name}_{datetime.now().isoformat()}"
 
-    def is_ready(self, session_id: str, user_id: Optional[int]) -> bool:
+    @classmethod
+    def is_ready(
+        cls,
+        recommendation_type: RecommendationType,
+        session_id: str,
+        user_id: Optional[int],
+        **kwargs: Any,
+    ) -> bool:
         try:
-            _ = self.get_latest_identifier()
+            _ = cls.get_latest_identifier()
         except LatestIdentifierModel.DoesNotExist:
             return False
 
@@ -52,11 +60,12 @@ class GRU4RecPredictionModel(AbstractPredictionModel):
         except SessionModel.DoesNotExist:
             return False
 
-        return visited_variants > 0
+        return len(visited_variants) > 0
 
+    @classmethod
     @inject
     def is_ready_for_training(
-        self,
+        cls,
         model_manager: "ModelManager" = Provide["model_manager"],
         feedback_storage: AbstractFeedbackStorage = Provide["feedback_storage"],
         product_storage: AbstractProductStorage = Provide["product_storage"],
