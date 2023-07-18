@@ -23,7 +23,7 @@ const CartPage = () => {
   const [recommendedProducts, setRecommendedProducts] = React.useState<
     IProductSliderData[]
   >([]);
-
+  console.log("CART", cart);
   const { getRecommendations } = useRecommender();
   useEffect(() => {
     // load recommended products
@@ -56,7 +56,7 @@ const CartPage = () => {
           onClick: () => {
             router.push("/cart/step/1");
           },
-          disabled: false,
+          disabled: !cart || cart === null ? true : false,
         }}
       />
       <ProductsSlider data={recommendedProducts || []} />
