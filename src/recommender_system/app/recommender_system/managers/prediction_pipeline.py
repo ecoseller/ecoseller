@@ -211,12 +211,14 @@ class PredictionPipeline:
             step=PredictionPipeline.Step.RETRIEVAL,
             session_id=session_id,
             user_id=user_id,
+            **kwargs,
         )
         scoring_model = model_manager.get_model(
             recommendation_type=recommendation_type,
             step=PredictionPipeline.Step.SCORING,
             session_id=session_id,
             user_id=user_id,
+            **kwargs,
         )
 
         if recommendation_type == RecommendationType.PRODUCT_DETAIL:

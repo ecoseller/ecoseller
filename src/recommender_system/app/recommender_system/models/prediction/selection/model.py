@@ -1,10 +1,11 @@
-from typing import Optional, List, TYPE_CHECKING
+from typing import Any, Optional, List, TYPE_CHECKING
 
 from dependency_injector.wiring import inject, Provide
 
 from recommender_system.models.prediction.abstract import AbstractPredictionModel
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.storage.product.abstract import AbstractProductStorage
+from recommender_system.utils.recommendation_type import RecommendationType
 
 if TYPE_CHECKING:
     from recommender_system.managers.model_manager import ModelManager
@@ -20,7 +21,13 @@ class SelectionPredictionModel(AbstractPredictionModel):
         return self.Meta.model_name
 
     @classmethod
-    def is_ready(cls, session_id: str, user_id: Optional[int]) -> bool:
+    def is_ready(
+        cls,
+        recommendation_type: RecommendationType,
+        session_id: str,
+        user_id: Optional[int],
+        **kwargs: Any
+    ) -> bool:
         return True
 
     @classmethod
