@@ -111,7 +111,7 @@ const CategoryPage = ({
   }, [filters]);
 
   useEffect(() => {
-    if (categoryPage > 1) {
+    if (categoryPage >= 1) {
       if (isBrowser()) {
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
