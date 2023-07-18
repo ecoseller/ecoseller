@@ -8,8 +8,6 @@ import OnlinePayment from "@/components/Order/Payment/Online";
 import PayBySquare from "@/components/Order/Payment/PayBySquare";
 import { orderDetailAPI } from "@/pages/api/order/[id]";
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
-import { useRecommender } from "@/utils/context/recommender";
-import { useEffect } from "react";
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -30,13 +28,6 @@ const OrderCompletedPage = ({
   orderData,
 }: IOrderCompletedPageProps) => {
   const { t } = useTranslation("order");
-  const { sendEvent } = useRecommender();
-
-  useEffect(() => {
-    sendEvent("ORDER", {
-      token: orderId,
-    });
-  }, []);
 
   console.log("orderData", orderData);
   if (!orderData?.payment) {

@@ -1,11 +1,12 @@
 from ckeditor.fields import RichTextField
+from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.forms import ValidationError as FormValidationError
 from django_editorjs_fields import EditorJsJSONField
 from parler.models import TranslatableModel, TranslatedFields
 
-from api.recommender_system import RecommenderSystemApi
+from api.notifications.conf import EventTypes
 from category.models import (
     Category,
 )
@@ -53,8 +54,18 @@ class ProductVariant(SafeDeleteModel):
             "update_at": self.update_at.isoformat(),
             "create_at": self.create_at.isoformat(),
             "attributes": [attribute.id for attribute in self.attributes.all()],
+            "deleted": self.safe_deleted,
         }
-        RecommenderSystemApi.store_object(data=data)
+        if self._state.adding:
+            event = EventTypes.PRODUCTVARIANT_SAVE
+        elif self.safe_deleted:
+            event = EventTypes.PRODUCTVARIANT_DELETE
+        else:
+            event = EventTypes.PRODUCTVARIANT_UPDATE
+        settings.NOTIFICATIONS_API.notify(
+            event,
+            data=data,
+        )
 
 
 class ProductType(SafeDeleteModel):
@@ -86,8 +97,18 @@ class ProductType(SafeDeleteModel):
             "products": [product.id for product in self.product_set.all()],
             "update_at": self.update_at.isoformat(),
             "create_at": self.create_at.isoformat(),
+            "deleted": self.safe_deleted,
         }
-        RecommenderSystemApi.store_object(data=data)
+        if self._state.adding:
+            event = EventTypes.PRODUCTTYPE_SAVE
+        elif self.safe_deleted:
+            event = EventTypes.PRODUCTTYPE_DELETE
+        else:
+            event = EventTypes.PRODUCTTYPE_UPDATE
+        settings.NOTIFICATIONS_API.notify(
+            event,
+            data=data,
+        )
 
 
 class Product(SafeDeleteModel, TranslatableModel):
@@ -174,7 +195,7 @@ class Product(SafeDeleteModel, TranslatableModel):
             "id": self.id,
             "published": self.published,
             "type": self.type.id if self.type is not None else None,
-            "category": self.category.id if self.category is not None else None,
+            "category_id": self.category.id if self.category is not None else None,
             "product_translations": [
                 {
                     "id": translation.id,
@@ -193,8 +214,18 @@ class Product(SafeDeleteModel, TranslatableModel):
             ],
             "update_at": self.create_at.isoformat(),
             "create_at": self.create_at.isoformat(),
+            "deleted": self.safe_deleted,
         }
-        RecommenderSystemApi.store_object(data=data)
+        if self._state.adding:
+            event = EventTypes.PRODUCT_SAVE
+        elif self.safe_deleted:
+            event = EventTypes.PRODUCT_DELETE
+        else:
+            event = EventTypes.PRODUCT_UPDATE
+        settings.NOTIFICATIONS_API.notify(
+            event,
+            data=data,
+        )
 
 
 # Attributes
@@ -264,7 +295,16 @@ class AttributeType(SafeDeleteModel, TranslatableModel, models.Model):
             "type_name": self.type_name,
             "unit": self.unit,
         }
-        RecommenderSystemApi.store_object(data=data)
+        if self._state.adding:
+            event = EventTypes.ATTRIBUTETYPE_SAVE
+        elif self.safe_deleted:
+            event = EventTypes.ATTRIBUTETYPE_DELETE
+        else:
+            event = EventTypes.ATTRIBUTETYPE_UPDATE
+        settings.NOTIFICATIONS_API.notify(
+            event,
+            data=data,
+        )
 
 
 # class TranslatableAttributeType(TranslatableModel, AttributeType):
@@ -332,8 +372,18 @@ class BaseAttribute(SafeDeleteModel, TranslatableModel):
             "raw_value": self.value,
             "order": self.order,
             "ext_attributes": [attribute.id for attribute in self.ext_attributes.all()],
+            "deleted": self.safe_deleted,
         }
-        RecommenderSystemApi.store_object(data=data)
+        if self._state.adding:
+            event = EventTypes.ATTRIBUTE_SAVE
+        elif self.safe_deleted:
+            event = EventTypes.ATTRIBUTE_DELETE
+        else:
+            event = EventTypes.ATTRIBUTE_UPDATE
+        settings.NOTIFICATIONS_API.notify(
+            event,
+            data=data,
+        )
 
 
 # class TranslatableBaseAttribute(TranslatableModel, BaseAttribute):
@@ -348,7 +398,7 @@ class BaseAttribute(SafeDeleteModel, TranslatableModel):
 #     )
 
 
-class ExtAttributeType(models.Model):
+class ExtAttributeType(SafeDeleteModel):
     type_name = models.CharField(
         max_length=200,
         blank=False,
@@ -380,11 +430,21 @@ class ExtAttributeType(models.Model):
             "type": "CATEGORICAL",
             "type_name": self.type_name,
             "unit": self.unit,
+            "deleted": self.safe_deleted,
         }
-        RecommenderSystemApi.store_object(data=data)
+        if self._state.adding:
+            event = EventTypes.ATTRIBUTETYPE_SAVE
+        elif self.safe_deleted:
+            event = EventTypes.ATTRIBUTETYPE_DELETE
+        else:
+            event = EventTypes.ATTRIBUTETYPE_UPDATE
+        settings.NOTIFICATIONS_API.notify(
+            event,
+            data=data,
+        )
 
 
-class ExtensionAttribute(models.Model):
+class ExtensionAttribute(SafeDeleteModel):
     type = models.ForeignKey("ExtAttributeType", on_delete=models.CASCADE)
     value = models.CharField(max_length=200, blank=False, null=False)
     ext_attributes = models.ManyToManyField("self", blank=True, symmetrical=False)
@@ -408,8 +468,18 @@ class ExtensionAttribute(models.Model):
             "raw_value": self.value,
             "order": self.order,
             "ext_attributes": [attribute.id for attribute in self.ext_attributes.all()],
+            "deleted": self.safe_deleted,
         }
-        RecommenderSystemApi.store_object(data=data)
+        if self._state.adding:
+            event = EventTypes.ATTRIBUTE_SAVE
+        elif self.safe_deleted:
+            event = EventTypes.ATTRIBUTE_DELETE
+        else:
+            event = EventTypes.ATTRIBUTE_UPDATE
+        settings.NOTIFICATIONS_API.notify(
+            event,
+            data=data,
+        )
 
 
 # Prices
@@ -536,8 +606,18 @@ class ProductPrice(SafeDeleteModel):
             "price": float(self.price),
             "update_at": self.update_at.isoformat(),
             "create_at": self.create_at.isoformat(),
+            "deleted": self.safe_deleted,
         }
-        RecommenderSystemApi.store_object(data=data)
+        if self._state.adding:
+            event = EventTypes.PRICE_SAVE
+        elif self.safe_deleted:
+            event = EventTypes.PRICE_DELETE
+        else:
+            event = EventTypes.PRICE_UPDATE
+        settings.NOTIFICATIONS_API.notify(
+            event,
+            data=data,
+        )
 
 
 class ProductMediaTypes:

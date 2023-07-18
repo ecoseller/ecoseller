@@ -124,6 +124,30 @@ As you can see from the example, we have four stages in this Dockerfile:
 * `demo` - This stage runs the project in production mode. It also loads demo data into the database. Production mode is ran using `gunicorn` server as `gunicorn core.wsgi -c ./gunicorn/conf.py`.
 * `production` - This stage runs the project in production mode. Production mode is ran using `gunicorn` server as `gunicorn core.wsgi -c ./gunicorn/conf.py`. 
 
+#### Gunicon
+The basic settings for Gunicorn are defined in the `backend/core/gunicorn/conf.py` file. Here is an example of `gunicorn/conf.py` file:
+```python
+import multiprocessing
+# gunicorn.conf.py
+# Non logging stuff
+bind = "0.0.0.0:8000"
+workers = multiprocessing.cpu_count() * 2 + 1
+threads = 2
+# Access log - records incoming HTTP requests
+accesslog = "/var/log/gunicorn.access.log"
+# Error log - records Gunicorn server goings-on
+errorlog = "/var/log/gunicorn.error.log"
+# Whether to send Django output to the error log
+capture_output = True
+# How verbose the Gunicorn error logs should be
+loglevel = "info"
+```
+
+All logs are stored in `/var/log` directory. This directory is not mounted to the host machine, so you can't access it directly. However, you can access it using `docker exec` command. For example, if you want to see the content of `gunicorn.access.log` file, you would use the following command:
+```bash
+docker exec -it backend cat /var/log/gunicorn.access.log
+```
+
 ### Docker cache
 Docker can cache the results of each build step. This is useful when you are building an image that is based on another image. If the previous build step has not changed, Docker will reuse the cache and skip the build step. This can significantly speed up the build process. However, if you are not careful, this can lead to unexpected results. For example, if you change the order of the build steps, Docker will not reuse the cache. This can lead to unexpected results.
 

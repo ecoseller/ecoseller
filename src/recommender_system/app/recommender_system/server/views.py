@@ -69,8 +69,6 @@ def view_get_dashboard_data(
             date_from=date_from, date_to=date_to
         ).dict(by_alias=True),
         "training": monitoring_manager.get_training_details().dict(by_alias=True),
-        "config": monitoring_manager.get_config().dict(
-            by_alias=True, exclude={"create_at", "id"}
-        ),
+        "config": model_manager.config.dict(by_alias=True, exclude={"create_at", "id"}),
     }
     return result, 200
