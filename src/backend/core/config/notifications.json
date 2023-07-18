@@ -11,6 +11,7 @@
       "method": "store_object"
     }
   ],
+  "CATEGORY_DELETE": [],
   "PRODUCT_SAVE": [
     {
       "type": "RECOMMENDERAPI",
@@ -28,6 +29,7 @@
       "method": "store_object"
     }
   ],
+  "PRODUCT_DELETE": [],
   "PRODUCTVARIANT_SAVE": [
     {
       "type": "RECOMMENDERAPI",
@@ -40,6 +42,7 @@
       "method": "store_object"
     }
   ],
+  "PRODUCTVARIANT_DELETE": [],
   "PRODUCTTYPE_SAVE": [
     {
       "type": "RECOMMENDERAPI",
@@ -52,6 +55,7 @@
       "method": "store_object"
     }
   ],
+  "PRODUCTTYPE_DELETE": [],
   "ATTRIBUTETYPE_SAVE": [
     {
       "type": "RECOMMENDERAPI",
@@ -64,6 +68,7 @@
       "method": "store_object"
     }
   ],
+  "ATTRIBUTETYPE_DELETE": [],
   "ATTRIBUTE_SAVE": [
     {
       "type": "RECOMMENDERAPI",
@@ -76,6 +81,7 @@
       "method": "store_object"
     }
   ],
+  "ATTRIBUTE_DELETE": [],
   "PRICE_SAVE": [
     {
       "type": "RECOMMENDERAPI",
@@ -88,6 +94,7 @@
       "method": "store_object"
     }
   ],
+  "PRICE_DELETE": [],
   "ORDER_SAVE": [
     {
       "type": "HTTP",
@@ -103,6 +110,7 @@
       "method": "store_object"
     }
   ],
+  "ORDER_DELETE": [],
   "REVIEW_SEND": [
     {
       "type": "EMAIL",

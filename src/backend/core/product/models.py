@@ -55,10 +55,14 @@ class ProductVariant(SafeDeleteModel):
             "create_at": self.create_at.isoformat(),
             "attributes": [attribute.id for attribute in self.attributes.all()],
         }
+        if self._state.adding:
+            event = EventTypes.PRODUCTVARIANT_SAVE
+        elif self.safe_deleted:
+            event = EventTypes.PRODUCTVARIANT_DELETE
+        else:
+            event = EventTypes.PRODUCTVARIANT_UPDATE
         settings.NOTIFICATIONS_API.notify(
-            EventTypes.PRODUCTVARIANT_SAVE
-            if self._state.adding
-            else EventTypes.PRODUCTVARIANT_UPDATE,
+            event,
             data=data,
         )
 
@@ -93,10 +97,14 @@ class ProductType(SafeDeleteModel):
             "update_at": self.update_at.isoformat(),
             "create_at": self.create_at.isoformat(),
         }
+        if self._state.adding:
+            event = EventTypes.PRODUCTTYPE_SAVE
+        elif self.safe_deleted:
+            event = EventTypes.PRODUCTTYPE_DELETE
+        else:
+            event = EventTypes.PRODUCTTYPE_UPDATE
         settings.NOTIFICATIONS_API.notify(
-            EventTypes.PRODUCTTYPE_SAVE
-            if self._state.adding
-            else EventTypes.PRODUCTTYPE_UPDATE,
+            event,
             data=data,
         )
 
@@ -205,10 +213,14 @@ class Product(SafeDeleteModel, TranslatableModel):
             "update_at": self.create_at.isoformat(),
             "create_at": self.create_at.isoformat(),
         }
+        if self._state.adding:
+            event = EventTypes.PRODUCT_SAVE
+        elif self.safe_deleted:
+            event = EventTypes.PRODUCT_DELETE
+        else:
+            event = EventTypes.PRODUCT_UPDATE
         settings.NOTIFICATIONS_API.notify(
-            EventTypes.PRODUCT_SAVE
-            if self._state.adding
-            else EventTypes.PRODUCT_UPDATE,
+            event,
             data=data,
         )
 
@@ -280,10 +292,14 @@ class AttributeType(SafeDeleteModel, TranslatableModel, models.Model):
             "type_name": self.type_name,
             "unit": self.unit,
         }
+        if self._state.adding:
+            event = EventTypes.ATTRIBUTETYPE_SAVE
+        elif self.safe_deleted:
+            event = EventTypes.ATTRIBUTETYPE_DELETE
+        else:
+            event = EventTypes.ATTRIBUTETYPE_UPDATE
         settings.NOTIFICATIONS_API.notify(
-            EventTypes.ATTRIBUTETYPE_SAVE
-            if self._state.adding
-            else EventTypes.ATTRIBUTETYPE_UPDATE,
+            event,
             data=data,
         )
 
@@ -354,10 +370,14 @@ class BaseAttribute(SafeDeleteModel, TranslatableModel):
             "order": self.order,
             "ext_attributes": [attribute.id for attribute in self.ext_attributes.all()],
         }
+        if self._state.adding:
+            event = EventTypes.ATTRIBUTE_SAVE
+        elif self.safe_deleted:
+            event = EventTypes.ATTRIBUTE_DELETE
+        else:
+            event = EventTypes.ATTRIBUTE_UPDATE
         settings.NOTIFICATIONS_API.notify(
-            EventTypes.ATTRIBUTE_SAVE
-            if self._state.adding
-            else EventTypes.ATTRIBUTE_UPDATE,
+            event,
             data=data,
         )
 
@@ -374,7 +394,7 @@ class BaseAttribute(SafeDeleteModel, TranslatableModel):
 #     )
 
 
-class ExtAttributeType(models.Model):
+class ExtAttributeType(SafeDeleteModel):
     type_name = models.CharField(
         max_length=200,
         blank=False,
@@ -407,15 +427,19 @@ class ExtAttributeType(models.Model):
             "type_name": self.type_name,
             "unit": self.unit,
         }
+        if self._state.adding:
+            event = EventTypes.ATTRIBUTETYPE_SAVE
+        elif self.safe_deleted:
+            event = EventTypes.ATTRIBUTETYPE_DELETE
+        else:
+            event = EventTypes.ATTRIBUTETYPE_UPDATE
         settings.NOTIFICATIONS_API.notify(
-            EventTypes.ATTRIBUTETYPE_SAVE
-            if self._state.adding
-            else EventTypes.ATTRIBUTETYPE_UPDATE,
+            event,
             data=data,
         )
 
 
-class ExtensionAttribute(models.Model):
+class ExtensionAttribute(SafeDeleteModel):
     type = models.ForeignKey("ExtAttributeType", on_delete=models.CASCADE)
     value = models.CharField(max_length=200, blank=False, null=False)
     ext_attributes = models.ManyToManyField("self", blank=True, symmetrical=False)
@@ -440,10 +464,14 @@ class ExtensionAttribute(models.Model):
             "order": self.order,
             "ext_attributes": [attribute.id for attribute in self.ext_attributes.all()],
         }
+        if self._state.adding:
+            event = EventTypes.ATTRIBUTE_SAVE
+        elif self.safe_deleted:
+            event = EventTypes.ATTRIBUTE_DELETE
+        else:
+            event = EventTypes.ATTRIBUTE_UPDATE
         settings.NOTIFICATIONS_API.notify(
-            EventTypes.ATTRIBUTE_SAVE
-            if self._state.adding
-            else EventTypes.ATTRIBUTE_UPDATE,
+            event,
             data=data,
         )
 
@@ -573,8 +601,14 @@ class ProductPrice(SafeDeleteModel):
             "update_at": self.update_at.isoformat(),
             "create_at": self.create_at.isoformat(),
         }
+        if self._state.adding:
+            event = EventTypes.PRICE_SAVE
+        elif self.safe_deleted:
+            event = EventTypes.PRICE_DELETE
+        else:
+            event = EventTypes.PRICE_UPDATE
         settings.NOTIFICATIONS_API.notify(
-            EventTypes.PRICE_SAVE if self._state.adding else EventTypes.PRICE_UPDATE,
+            event,
             data=data,
         )
 

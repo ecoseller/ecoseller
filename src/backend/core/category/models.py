@@ -62,9 +62,13 @@ class Category(SafeDeleteModel, MPTTModel, TranslatableModel):
             "id": self.id,
             "parent_id": self.parent.id if self.parent is not None else None,
         }
+        if self._state.adding:
+            event = EventTypes.CATEGORY_SAVE
+        elif self.safe_deleted:
+            event = EventTypes.CATEGORY_DELETE
+        else:
+            event = EventTypes.CATEGORY_UPDATE
         settings.NOTIFICATIONS_API.notify(
-            EventTypes.CATEGORY_SAVE
-            if self._state.adding
-            else EventTypes.CATEGORY_UPDATE,
+            event,
             data=data,
         )
