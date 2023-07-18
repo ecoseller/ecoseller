@@ -29,9 +29,8 @@ const CartPage = () => {
     // load recommended products
     getRecommendations("CART", {
       limit: 10,
-      variants_in_cart: cart?.cart_items.map(
-        (item) => item.product_variant_sku
-      ),
+      variants_in_cart:
+        cart?.cart_items.map((item) => item.product_variant_sku) || [],
     }).then((products: any[]) => {
       setRecommendedProducts(products);
     });

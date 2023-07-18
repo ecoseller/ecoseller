@@ -1,5 +1,6 @@
 from datetime import datetime
 from enum import Enum
+import logging
 import random
 import time
 from typing import Any, Dict, List, Optional, Tuple
@@ -200,15 +201,24 @@ class PredictionPipeline:
             **kwargs,
         )
         if cached is not None:
+            logging.info(
+                f"Returning cached response for {recommendation_type}, {session_id}"
+            )
             return None, None, cached
 
         retrieval_model = model_manager.get_model(
             recommendation_type=recommendation_type,
             step=PredictionPipeline.Step.RETRIEVAL,
+            session_id=session_id,
+            user_id=user_id,
+            **kwargs,
         )
         scoring_model = model_manager.get_model(
             recommendation_type=recommendation_type,
             step=PredictionPipeline.Step.SCORING,
+            session_id=session_id,
+            user_id=user_id,
+            **kwargs,
         )
 
         if recommendation_type == RecommendationType.PRODUCT_DETAIL:
@@ -222,6 +232,9 @@ class PredictionPipeline:
             user_id=user_id,
             **kwargs,
         )
+        logging.info(
+            f"Retrieved {len(predictions)} items ({retrieval_model.identifier}, {recommendation_type}, {session_id}, {user_id})"
+        )
         scoring_start = time.time()
         predictions = self._score(
             model=scoring_model,
@@ -231,6 +244,9 @@ class PredictionPipeline:
             user_id=user_id,
             **kwargs,
         )
+        logging.info(
+            f"Scored {len(predictions)} items ({scoring_model.identifier}, {recommendation_type}, {session_id}, {user_id})"
+        )
         ordering_start = time.time()
         predictions = self._order(
             variants=predictions,
@@ -238,6 +254,9 @@ class PredictionPipeline:
             session_id=session_id,
             user_id=user_id,
             limit=limit,
+        )
+        logging.info(
+            f"Ordered {len(predictions)} items ({recommendation_type}, {session_id}, {user_id})"
         )
         ordering_end = time.time()
 
