@@ -342,7 +342,7 @@ There are multiple actions you can perform using predefined connectors:
 
 We recommend to edit configuration JSON directly (`core/config/notifications.json`). However, you can define your custom one and installing it by setting `NOTIFICATIONS_CONFIG_PATH` as your environment variable. 
 
-## List of triggers
+## List of triggers
 The triggers that you can respond to are derived from the `ecoseller` models. It's usually an action based on `save`, `update` or `delete`.
 
 ### Model based triggers
