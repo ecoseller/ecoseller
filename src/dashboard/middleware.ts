@@ -2,7 +2,7 @@
  * Purpose of this middleware is to control access to the dashboard.
  * If the user is not logged in, it will redirect to the login page.
  * * Not beeing logged in can be checked based on the refreshToken cookie - if it's not present, the user is not logged in.
- * * If cookie is present, we need to check if it's valid - if it's not, we need to redirect to login page. (via backend call to /user/refresh-token/verify/)
+ * * TODO: If cookie is present, we need to check if it's valid - if it's not, we need to redirect to login page. (via backend call to /user/refresh-token/verify/)
  */
 
 import { NextResponse } from "next/server";
