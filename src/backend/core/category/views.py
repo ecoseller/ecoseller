@@ -1,5 +1,5 @@
 # from django.contrib.auth.models import User
-from typing import Dict
+from typing import Dict, Optional
 
 from django.apps import apps
 from django.db.models import Min, QuerySet, OuterRef, Subquery, Value, Case, When
@@ -192,8 +192,11 @@ def _order_by_title(products, is_reverse_order, locale: str):
 
 
 def _order_by_recommendation(
-    products, is_reverse_order, recommendations: Dict[str, int]
+    products, is_reverse_order, recommendations: Optional[Dict[str, int]]
 ):
+    if recommendations is None:
+        recommendations = {}
+
     products = products.annotate(
         recommended=Case(
             *[

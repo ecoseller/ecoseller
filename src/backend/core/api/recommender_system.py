@@ -67,5 +67,6 @@ class RecommenderSystemApi:
                     "user_id": user_id,
                 },
             )
-            return response.json()
-        return {}
+            if response.status_code == 200:
+                return response.json()
+        return None
