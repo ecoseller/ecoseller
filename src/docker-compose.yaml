@@ -139,6 +139,7 @@ services:
       target: development # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
     volumes:
       - ./recommender_system/app:/usr/src/app/
+      - shared-volume:/usr/src/app/data/
     ports:
       - 8086:8086
     env_file:
@@ -159,8 +160,12 @@ services:
     entrypoint: sh /usr/src/app/run_trainer.sh
     volumes:
       - ./recommender_system/app:/usr/src/app/
+      - shared-volume:/usr/src/app/data/
     env_file:
       - ./recommender_system/docker-compose.env
     depends_on:
       recommender_system:
         condition: service_healthy
+
+volumes:
+  shared-volume:

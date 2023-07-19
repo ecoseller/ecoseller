@@ -146,8 +146,9 @@ services:
     build:
       context: ./recommender_system
       target: demo # runs given branch in Dockerfile https://stackoverflow.com/a/65624157/16587316
-    # volumes:
+    volumes:
       # - ./recommender_system/app:/usr/src/app/
+      - shared-volume:/usr/src/app/data/
     ports:
       - 8086:8086
     env_file:
@@ -168,6 +169,7 @@ services:
     entrypoint: sh /usr/src/app/run_trainer.sh
     volumes:
       - ./recommender_system/app:/usr/src/app/
+      - shared-volume:/usr/src/app/data/
     env_file:
       - ./recommender_system/docker-compose.env
     depends_on:
@@ -188,3 +190,5 @@ services:
       - frontend_storefront
       - frontend_dashboard
 
+volumes:
+  shared-volume:

@@ -245,7 +245,7 @@ class EASE:
             duration=end - start,
             peak_memory=peak_memory,
             peak_memory_percentage=peak_memory_percentage,
-            metrics={"error": best_error},
+            metrics={"error": best_error if best_error != math.inf else "unknown"},
             hyperparameters=self.parameters,
         )
         statistics.create()
