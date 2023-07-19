@@ -28,5 +28,12 @@
   "qr-label": "QR",
   "payment-completed-text": "Platbu jsme obdrželi, děkujeme",
   "complaint-request-created": "Požadavek byl vytvořen",
-  "complaint-created-summary": "Povrzující mail byl odeslán. O dalším postupu Vás budeme informovat."
+  "complaint-created-summary": "Povrzující mail byl odeslán. O dalším postupu Vás budeme informovat.",
+  "order-status-PENDING": "Čeká na vyřízení",
+  "order-status-PROCESSING": "Zpracovává se",
+  "order-status-SHIPPED": "Odeslána",
+  "order-status-CANCELLED": "Zrušena",
+  "status-CREATED": "Vytvořeno",
+  "status-APPROVED": "Schváleno",
+  "status-DECLINED": "Zamítnuto"
 }

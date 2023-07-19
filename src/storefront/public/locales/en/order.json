@@ -28,5 +28,12 @@
   "qr-label": "QR",
   "payment-completed-text": "Payment was successfully completed",
   "complaint-request-created": "The request was created",
-  "complaint-created-summary": "Confirmation mail has been sent. We'll inform you in case of any updates."
+  "complaint-created-summary": "Confirmation mail has been sent. We'll inform you in case of any updates.",
+  "order-status-PENDING": "Pending",
+  "order-status-PROCESSING": "Processing",
+  "order-status-SHIPPED": "Shipped",
+  "order-status-CANCELLED": "Cancelled",
+  "status-CREATED": "Created",
+  "status-APPROVED": "Approved",
+  "status-DECLINED": "Declined"
 }
