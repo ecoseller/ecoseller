@@ -163,7 +163,7 @@ class PaymentMethodCountry(SafeDeleteModel):
         return self.currency.format_price(price_str)
 
 
-class Cart(models.Model):
+class Cart(SafeDeleteModel):
     """
     Object representing cart of user (either logged in on identified just by "token" which is also a primary key).
     """
@@ -347,7 +347,7 @@ class Cart(models.Model):
             cart_item.recalculate(pricelist, country)
 
 
-class CartItem(models.Model):
+class CartItem(SafeDeleteModel):
     """
     Cart line object representing one product variant in cart.
     """

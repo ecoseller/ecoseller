@@ -3,8 +3,9 @@ import uuid
 from django.db import models
 from enumchoicefield import ChoiceEnum, EnumChoiceField
 
-from cart.models import CartItem
 from cart.models import Cart
+from cart.models import CartItem
+from core.safe_delete import SafeDeleteModel
 
 
 class OrderStatus(ChoiceEnum):
@@ -37,7 +38,7 @@ class OrderItemComplaintType(ChoiceEnum):
     WARRANTY_CLAIM = "WARRANTY_CLAIM"
 
 
-class Order(models.Model):
+class Order(SafeDeleteModel):
     """
     Object representing order of user.
     """
@@ -59,7 +60,7 @@ class Order(models.Model):
         return self.cart.shipping_info.email
 
 
-class OrderItemComplaint(models.Model):
+class OrderItemComplaint(SafeDeleteModel):
     """
     Class representing order item complaint (either a warranty claim or return)
     """

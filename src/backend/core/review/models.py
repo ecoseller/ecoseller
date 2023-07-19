@@ -1,11 +1,13 @@
 import uuid
 
 from django.db import models
-from product.models import Product, ProductVariant
+
+from core.safe_delete import SafeDeleteModel
 from order.models import Order
+from product.models import Product, ProductVariant
 
 
-class Review(models.Model):
+class Review(SafeDeleteModel):
     """
     Object representing review of user.
     """
