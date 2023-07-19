@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cart', '0026_rename_unit_price_gross_cartitem_unit_price_incl_vat_and_more'),
+        ("cart", "0026_rename_unit_price_gross_cartitem_unit_price_incl_vat_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='cart',
-            name='safe_deleted',
+            model_name="cart",
+            name="safe_deleted",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='cartitem',
-            name='safe_deleted',
+            model_name="cartitem",
+            name="safe_deleted",
             field=models.BooleanField(default=False),
         ),
     ]

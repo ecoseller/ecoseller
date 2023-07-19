@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('roles', '0001_initial'),
+        ("roles", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='managergroup',
-            name='safe_deleted',
+            model_name="managergroup",
+            name="safe_deleted",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='managerpermission',
-            name='safe_deleted',
+            model_name="managerpermission",
+            name="safe_deleted",
             field=models.BooleanField(default=False),
         ),
     ]
