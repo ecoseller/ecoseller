@@ -27,7 +27,11 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import Box from "@mui/material/Box";
 
 // types
-import { IProductDetail, IProductSliderData } from "@/types/product";
+import {
+  IProductDetail,
+  IProductRecord,
+  IProductSliderData,
+} from "@/types/product";
 import {
   GetServerSideProps,
   NextApiRequest,
@@ -53,6 +57,7 @@ interface IProductPageProps {
   pricelist: string;
   productRating: any;
   productReviews: IReview[];
+  countryDetail: ICountry;
 }
 
 const ProductPage = ({
@@ -61,25 +66,30 @@ const ProductPage = ({
   pricelist,
   productRating,
   productReviews,
+  countryDetail,
 }: IProductPageProps) => {
   const { basePath } = useRouter();
   const router = useRouter();
   const { t } = useTranslation("product");
   const { getRecommendations, sendEvent } = useRecommender();
   const [recommendedProducts, setRecommendedProducts] = useState<
-    IProductSliderData[]
+    IProductRecord[]
   >([]);
   const [timeEntered] = useState<Date>(new Date());
   useEffect(() => {
     // load recommended products
+    if (!country) return;
+
     getRecommendations("PRODUCT_DETAIL", {
       limit: 10,
       product_id: data.id,
       variants: data.product_variants?.map((v) => v.sku),
+      country: countryDetail?.code,
+      pricelist: countryDetail?.default_price_list,
     }).then((products: any[]) => {
       setRecommendedProducts(products);
     });
-  }, []);
+  }, [countryDetail]);
 
   useEffect(() => {
     const exitingFunction = () => {
@@ -242,6 +252,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       pricelist,
       productRating,
       productReviews,
+      countryDetail,
       ...(await serverSideTranslations(locale as string, [
         "product",
         "review",

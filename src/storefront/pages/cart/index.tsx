@@ -10,9 +10,10 @@ import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useCart } from "@/utils/context/cart";
-import { IProductSliderData } from "@/types/product";
+import { IProductRecord, IProductSliderData } from "@/types/product";
 import { useRecommender } from "@/utils/context/recommender";
 import ProductsSlider from "@/components/Common/ProductsSlider";
+import { useCountry } from "@/utils/context/country";
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -21,20 +22,26 @@ const CartPage = () => {
   const { cart } = useCart();
   const { t } = useTranslation("cart");
   const [recommendedProducts, setRecommendedProducts] = React.useState<
-    IProductSliderData[]
+    IProductRecord[]
   >([]);
 
   const { getRecommendations } = useRecommender();
+  const { country } = useCountry();
+
   useEffect(() => {
     // load recommended products
+    if (!country) return;
+
     getRecommendations("CART", {
       limit: 10,
       variants_in_cart:
         cart?.cart_items.map((item) => item.product_variant_sku) || [],
+      country: country?.code,
+      pricelist: country?.default_price_list,
     }).then((products: any[]) => {
       setRecommendedProducts(products);
     });
-  }, []);
+  }, [country]);
 
   return (
     <div className="container">
