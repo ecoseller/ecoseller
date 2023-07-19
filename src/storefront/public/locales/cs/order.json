@@ -35,6 +35,5 @@
   "order-status-CANCELLED": "Zrušena",
   "status-CREATED": "Vytvořeno",
   "status-APPROVED": "Schváleno",
-  "status-DECLINED": "Zamítnuto",
-  
+  "status-DECLINED": "Zamítnuto"
 }
