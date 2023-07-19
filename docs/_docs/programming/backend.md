@@ -103,7 +103,7 @@ In ecoseller, we replaced default django `User` model with our own `User` model 
 Another authorozation related models are `Group` and `Permission` models. They are django models that are used for authorization purposes. `Group` model is used to group users into units, while `Permission` model is used to define permissions for users. More on how we handle user authorization can be found in [Authorization](../../administration/authorization) section.
 Next important relation is to `Address` model. It is used to store user's address. As we can see, there is also a connection to `ShippingInfo` and `BillingInfo`, which are used during checkout process, to store user's shipping and billing information. The last relation is to `Cart` model, which binds user to his cart.
 
-## SafeDeleteModel
+# SafeDeleteModel
 Note that all ecoseller models inherit from `SafeDeleteModel` class, which looks like this:
 ```python
 class SafeDeleteModel(models.Model):
