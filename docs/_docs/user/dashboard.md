@@ -75,7 +75,7 @@ This section shows the current status of the order. The status can be changed by
 ![Order status](../../images/order_status.png)
 
 ### Shipping and billing info
-This section shows the shipping and billing information of the order. It contains the same information as the shipping and billing information in the checkout process. Information is shown in the form view, and the admin is again able to modify its content.
+This section shows the shipping and billing information of the order. It contains the same information as the shipping and billing information in the checkout process. Information is shown in the form view, and the admin is again able to modify its content (if the order's status is set to *PENDING* or *PROCESSING*)
 
 |                     Shipping info                      |                     Billing info                     |
 | :----------------------------------------------------: | :--------------------------------------------------: |
@@ -84,11 +84,21 @@ This section shows the shipping and billing information of the order. It contain
 ### Shipping and payment method
 This section shows selected shipping and payment methods along with their prices.
 
-TODO: add image
+![Shipping & payment method](../../images/order_shipping_payment.png)
+
+Note that these values cannot be changed.
 
 ### Order item complaints
 
-TODO: describe
+If there are any complaints (warranty claim / return requests) for an order item, you'll see it in `Complaints` column.
+
+![Complaints list](../../images/complaints_list.png)
+
+After you click on the complaint detail button, pop-up with complaint details is displayed.
+
+![Complaint detail](../../images/complaint_modal.png)
+
+In this pop-up, all complaint details are displayed, and you're able to change its status.
 
 # Reviews
 The reviews page consists of a list showing all reviews. The list has the following columns:
