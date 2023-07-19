@@ -115,7 +115,10 @@ const CategoryPage = ({
       if (isBrowser()) {
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
-      applyFilters();
+
+      if (filters != initialFilters) {
+        applyFilters();
+      }
     }
   }, [categoryPage]);
 
