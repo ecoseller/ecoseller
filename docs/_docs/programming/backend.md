@@ -83,7 +83,15 @@ Above is the diagram of the `Cart` model with its main relations to other models
 The `Cart` model is used to store user's cart. It has a FK to `User` model, which binds the cart to the user. It also has a FK to `ShippingMethodCountry` and `PaymentMethodCountry` models, which are used to store user's selected shipping and payment methods. 
 We also have a `CartItem` model, which represents concrete item in the cart and has a FK relation to `Cart`. Each `CartItem` also has a FK to `ProductVariant` and `Product` models, to bind the item with the concrete product.
 The `Cart` model also has relations to country specific models such as `Country`, `PriceList`, `PaymentMethodCountry` and `ShippingMethodCountry` to ensure that the cart is bind to the concrete country specific data.
-Once the user creates an order, new relation is created - a FK from `Order` model to `Cart`. We can see one more model in the diagram - `Review`. It's used to store user's reviews of products. It has a FK to `ProductVariant`, `Product` and `Order` models.
+
+
+## Order
+![Order model](../../images/models_order.png)
+
+Once the user creates an order, new relation is created - a FK from `Order` model to `Cart`. 
+We can see also another model in the diagram - `Review`, which is used to store user's reviews of products. It has a FK to `ProductVariant`, `Product` and `Order` models.
+Furthermore, there's also `OrderItemComplaint` model representing complaints (either warranty claim or request for return of an item), which has FK to `CartItem` and `Order` tables.
+
 ## User
 ![User model](../../images/models_user.png)
 
