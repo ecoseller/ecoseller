@@ -163,15 +163,21 @@ class CustomTokenObtainPairView(jwt_views.TokenObtainPairView):
 
     def post(self, request, *args, **kwargs):
         try:
+            user = User.objects.get(email=request.data["email"])
+            if hasattr(request.data, "_mutable"):
+                request.data._mutable = True
+            request.data.update({"dashboard_user": user.is_staff})
+            if hasattr(request.data, "_mutable"):
+                request.data._mutable = False
             response = super().post(request, *args, **kwargs)
             serializedData = self.serializer_class(data=request.data)
             serializedData.is_valid(raise_exception=True)
             dashboardLogin = serializedData.validated_data["dashboard_login"]
-            user = User.objects.get(email=request.data["email"])
             if dashboardLogin is True and not user.is_staff:
                 return Response({"error": "Not authorized"}, status=400)
             return response
-        except Exception:
+        except Exception as e:
+            print("Error", e)
             return Response("Error login", status=400)
 
 

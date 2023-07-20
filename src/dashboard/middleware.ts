@@ -27,7 +27,7 @@ export function middleware(request: NextRequest, response: NextResponse) {
   // verify the refreshToken
   const refreshTokenDecoded: any = jwt_decode(refreshToken);
   // redirect to login if refreshToken doesnt have dashboard_login flag
-  if (refreshTokenDecoded.dashboard_login !== true)
+  if (refreshTokenDecoded.dashboard_user !== true)
     return redirectToLogin(request);
   // redirect to login if refreshToken is expired
   if (refreshTokenDecoded.exp < Date.now() / 1000)
