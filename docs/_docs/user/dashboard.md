@@ -31,6 +31,72 @@ For the last 30 days' statistics, the following information is shown:
 * Line graph showing orders count for the last 30 days
 
 # Cart
+
+Cart section is used to manage shipping and payment methods that can customers use.  
+We will describe the both parts in more detail in the following sections.
+
+## Shipping methods
+
+Shipping method page displays list of all shipping methods with the following fields:
+- title
+- image
+- created
+- last update
+
+![Shipping method list](../../images/shipping_method_list.png)
+
+There are also 2 action buttons:
+- *Edit* - after you click on this button, you'll be redirected to Shipping metod detail page (see below)
+- *Delete* - used for deleting the given shipping method
+
+### Shipping method detail
+
+This page contains detailed info about a shipping method
+
+![Shipping method detail](../../images/shipping_method_detail.png)
+
+You can edit all of the fields and also add an image (which is shown to customers when they select shipping method). Note that title and description is set individually for each language.  
+Below, there's also a table of individual country variants.
+
+This table is editable - you can edit & remove individual rows (using action buttons) as well as add new ones.
+
+![Shipping method country](../../images/shipping_method_country.png)
+
+The image above shows that you're able to edit all fields and select available payment methods as well. 
+In this case we selected all of the 3 available payment methods.
+
+## Payment methods
+
+Payment method page displays list of all shipping methods with the following fields:
+- title
+- image
+- created
+- last update
+
+Note that it looks basically the same as shipping methods page.
+
+![Payment method list](../../images/payment_method_list.png)
+
+There are also 2 action buttons:
+- *Edit* - after you click on this button, you'll be redirected to Payment metod detail page (see below)
+- *Delete* - used for deleting the given payment method
+
+### Payment method detail
+
+This page contains detailed info about a payment method.
+
+![Payment method detail](../../images/payment_method_detail.png)
+
+You can edit all of the fields and also add an image (which is shown to customers when they select payment method). Note that title and description is set individually for each language.  
+Below, there's also a table of individual country variants.
+
+This table is editable - you can edit & remove individual rows (using action buttons) as well as add new ones.
+
+![Payment method country](../../images/payment_method_country.png)
+
+The image above shows that you're able to edit all fields including API request - this way, you're able to select which code should be executed when the customer is about to pay.  
+See [Payment Gateway integration process section](../../administration/administration/#payment-gateway-integration-process) for further information.
+
 # Orders
 The orders page consists of a list showing all orders. The list has the following columns:
 * Order token
