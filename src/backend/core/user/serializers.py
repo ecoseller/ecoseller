@@ -76,6 +76,7 @@ class TokenObtainDashboardSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
         refresh = self.get_token(self.user)
+        refresh["dashboard_login"] = attrs.get("dashboard_login")
         data["refresh"] = str(refresh)
         data["access"] = str(refresh.access_token)
         data["dashboard_login"] = attrs.get("dashboard_login")

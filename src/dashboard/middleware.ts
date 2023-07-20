@@ -6,10 +6,9 @@
  */
 
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { userLoginVerifyAPI } from "./pages/api/user/verify";
-import { NextApiRequest, NextApiResponse } from "next";
-import { api } from "./utils/interceptors/api";
+import { NextRequest } from "next/server";
+// JWT
+import jwt_decode from "jwt-decode";
 
 const REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
 
@@ -17,43 +16,22 @@ const redirectToLogin = (request: NextRequest): NextResponse => {
   return NextResponse.redirect(new URL("/login", request.url));
 };
 
-// const verifyRefreshToken = async (refreshToken: string) => {
-//   const body = { token: refreshToken };
-//   return await fetch("/api/user/verify", {
-//     method: "POST",
-//     body: JSON.stringify(body),
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//   })
-//     .then((response) => response.json())
-//     .then((data) => {
-//       return data;
-//     })
-//     .catch((error: any) => {
-//       throw error;
-//     });
-// };
-
 export function middleware(request: NextRequest, response: NextResponse) {
   // read the refreshToken cookie
   if (!request.cookies.has(REFRESH_TOKEN_COOKIE_NAME))
     return redirectToLogin(request);
 
   const refreshToken = request.cookies.get(REFRESH_TOKEN_COOKIE_NAME)?.value;
-  console.log("REFRESH TOKEN", refreshToken);
   if (!refreshToken) return redirectToLogin(request);
 
-  //   // verify the refreshToken
-  //   verifyRefreshToken(refreshToken)
-  //     .then((data) => {
-  //       console.log("DATA", data);
-  //       if (!data) return redirectToLogin(request);
-  //     })
-  //     .catch((error) => {
-  //       console.log("ERROR", error);
-  //       return redirectToLogin(request);
-  //     });
+  // verify the refreshToken
+  const refreshTokenDecoded: any = jwt_decode(refreshToken);
+  // redirect to login if refreshToken doesnt have dashboard_login flag
+  if (refreshTokenDecoded.dashboard_login !== true)
+    return redirectToLogin(request);
+  // redirect to login if refreshToken is expired
+  if (refreshTokenDecoded.exp < Date.now() / 1000)
+    return redirectToLogin(request);
 
   return NextResponse.next();
 }
