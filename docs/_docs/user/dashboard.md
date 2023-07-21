@@ -142,7 +142,7 @@ This page shows full information about the order. The page is divided into the f
 
 ### Order items
 This section shows a list of all items in the order. The list has the following columns:
-* Product variant name - click on the name opens the product variant details page (described in TODO: add link)
+* Product variant name - click on the name opens the product variant details page (described [here](#editing-product))
 * SKU
 * Quantity
 * Unit price (without VAT)
