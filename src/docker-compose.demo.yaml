@@ -97,6 +97,7 @@ services:
       - ./dashboard/src:/usr/src/app/src
       - ./dashboard/public:/usr/src/app/public
       - ./dashboard/api:/usr/src/app/api
+      - ./dashboard/middleware.ts:/usr/src/app/middleware.ts
     ports:
       - 3030:3000
     depends_on:
