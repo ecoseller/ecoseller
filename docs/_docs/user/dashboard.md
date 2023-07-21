@@ -43,7 +43,7 @@ Shipping method page displays list of all shipping methods with the following fi
 - created
 - last update
 
-![Shipping method list](../../images/shipping_method_list.png)
+![Shipping method list](../../images/dashboard/shipping_method_list.png)
 
 There are also 2 action buttons:
 - *Edit* - after you click on this button, you'll be redirected to Shipping metod detail page (see below)
@@ -53,14 +53,14 @@ There are also 2 action buttons:
 
 This page contains detailed info about a shipping method
 
-![Shipping method detail](../../images/shipping_method_detail.png)
+![Shipping method detail](../../images/dashboard/shipping_method_detail.png)
 
 You can edit all of the fields and also add an image (which is shown to customers when they select shipping method). Note that title and description is set individually for each language.  
 Below, there's also a table of individual country variants.
 
 This table is editable - you can edit & remove individual rows (using action buttons) as well as add new ones.
 
-![Shipping method country](../../images/shipping_method_country.png)
+![Shipping method country](../../images/dashboard/shipping_method_country.png)
 
 The image above shows that you're able to edit all fields and select available payment methods as well. 
 In this case we selected all of the 3 available payment methods.
@@ -75,7 +75,7 @@ Payment method page displays list of all shipping methods with the following fie
 
 Note that it looks basically the same as shipping methods page.
 
-![Payment method list](../../images/payment_method_list.png)
+![Payment method list](../../images/dashboard/payment_method_list.png)
 
 There are also 2 action buttons:
 - *Edit* - after you click on this button, you'll be redirected to Payment metod detail page (see below)
@@ -85,14 +85,14 @@ There are also 2 action buttons:
 
 This page contains detailed info about a payment method.
 
-![Payment method detail](../../images/payment_method_detail.png)
+![Payment method detail](../../images/dashboard/payment_method_detail.png)
 
 You can edit all of the fields and also add an image (which is shown to customers when they select payment method). Note that title and description is set individually for each language.  
 Below, there's also a table of individual country variants.
 
 This table is editable - you can edit & remove individual rows (using action buttons) as well as add new ones.
 
-![Payment method country](../../images/payment_method_country.png)
+![Payment method country](../../images/dashboard/payment_method_country.png)
 
 The image above shows that you're able to edit all fields including API request - this way, you're able to select which code should be executed when the customer is about to pay.  
 See [Payment Gateway integration process section](../../administration/administration/#payment-gateway-integration-process) for further information.
@@ -105,7 +105,7 @@ The orders page consists of a list showing all orders. The list has the followin
 * Created at
 * Actions
 
-![Orders list](../../images/orders_list.png)
+![Orders list](../../images/dashboard/orders_list.png)
 
 The actions column contains the following buttons:
 * Edit
@@ -133,24 +133,24 @@ This section shows a list of all items in the order. The list has the following 
   
 This section also shows the total price (without VAT) of a given order.
 
-![Order items](../../images/order_items.png)
+![Order items](../../images/dashboard/order_items.png)
 
 ### Status
 This section shows the current status of the order. The status can be changed by the admin using a drop-down menu.
 
-![Order status](../../images/order_status.png)
+![Order status](../../images/dashboard/order_status.png)
 
 ### Shipping and billing info
 This section shows the shipping and billing information of the order. It contains the same information as the shipping and billing information in the checkout process. Information is shown in the form view, and the admin is again able to modify its content (if the order's status is set to *PENDING* or *PROCESSING*)
 
-|                     Shipping info                      |                     Billing info                     |
-| :----------------------------------------------------: | :--------------------------------------------------: |
-| ![Shipping info](../../images/order_shipping_info.png) | ![Billing info](../../images/order_billing_info.png) |
+|                          Shipping info                           |                          Billing info                          |
+| :--------------------------------------------------------------: | :------------------------------------------------------------: |
+| ![Shipping info](../../images/dashboard/order_shipping_info.png) | ![Billing info](../../images/dashboard/order_billing_info.png) |
 
 ### Shipping and payment method
 This section shows selected shipping and payment methods along with their prices.
 
-![Shipping & payment method](../../images/order_shipping_payment.png)
+![Shipping & payment method](../../images/dashboard/order_shipping_payment.png)
 
 Note that these values cannot be changed.
 
@@ -158,11 +158,11 @@ Note that these values cannot be changed.
 
 If there are any complaints (warranty claim / return requests) for an order item, you'll see it in `Complaints` column.
 
-![Complaints list](../../images/complaints_list.png)
+![Complaints list](../../images/dashboard/complaints_list.png)
 
 After you click on the complaint detail button, pop-up with complaint details is displayed.
 
-![Complaint detail](../../images/complaint_modal.png)
+![Complaint detail](../../images/dashboard/complaint_modal.png)
 
 In this pop-up, all complaint details are displayed, and you're able to change its status.
 
@@ -178,7 +178,7 @@ The reviews page consists of a list showing all reviews. The list has the follow
   * Detail - click on the detail button opens the review details page (see [below](#review-details))
   * Delete - click on the delete button deletes the review
 
-![Reviews list](../../images/reviews_list.png)
+![Reviews list](../../images/dashboard/reviews_list.png)
 
 ## Review details
 This page shows full information about the review and overall rating of the product. The page is divided into the following sections:
@@ -187,7 +187,7 @@ This page shows full information about the review and overall rating of the prod
 * Comment
 * Average product rating
 
-![Review detail](../../images/review_detail.png)
+![Review detail](../../images/dashboard/review_detail.png)
 ### Average product rating
 This section shows the average rating of the product. The rating is shown via start and average score (value from 0 to 5). It also shows the number of reviews for the product and the distribution of ratings. Distribution values are rounded up - this means that if the user submitted a rating of 4.5, it will be shown as 5 in the distribution.
 
@@ -207,7 +207,7 @@ Under the attributes section, you can see a list of all attributes. The list has
 * Unit - unit of the attribute, for example, cm, kg, etc. It's shown in the storefront next to the value of the attribute (for example 10 cm)
 * N. of attributes - just a number of values under the given attribute
 * Actions - edit button
-![Attribute list](../../images/catalog_attribtues_list.png)
+![Attribute list](../../images/dashboard/catalog_attribtues_list.png)
 
 ### Creating new attribute
 To create a new attribute, click on the button in the upper left corner of the attribute table - *Add New*. You will be redirected to the attribute details page (see [below](#editing-attributes)).
@@ -223,7 +223,7 @@ The detail page consists of the following sections:
   * Actions - edit and delete buttons
     * Edit - click on the edit button opens the edit attribute value page (see [below](#editing-attribute-values))
     * Delete - click on the delete button deletes the attribute value
-![Attribute details](../../images/catalog_attributes_detail.png)
+![Attribute details](../../images/dashboard/catalog_attributes_detail.png)
 
 
 #### Attribute types
@@ -233,7 +233,7 @@ The types are:
 * Integer
 * Decimal
 
-![Attribute types](../../images/catalog_attribute_types.png)
+![Attribute types](../../images/dashboard/catalog_attribute_types.png)
 
 
 ## Product Types
@@ -246,21 +246,21 @@ Under the product types section, you can see a list of all product types. The li
 * Last updated - date when the product type was last updated
 * Actions - edit button
 
-![Product type list](../../images/catalog_product_types_list.png)
+![Product type list](../../images/dashboard/catalog_product_types_list.png)
 
 ### Creating new product type
 To create a new product type, click on the button in the upper left corner of the product type table - *Add New*. You will be redirected to the product type details page (see [below](#editing-product-type)).
 
 ### Editing product type
 To edit a product type, click on the edit button in the product type list. This opens the product type details page. 
-![Product type details](../../images/catalog_product_types_detail.png)
+![Product type details](../../images/dashboard/catalog_product_types_detail.png)
 
 The detail page consists of the following sections:
 1. *General information* - this section contains the name of the product type. You'll see this name in the Product edit page (see [below](#editing-product)) when you select the product type. It's not visible in the storefront.
 2. *Allowed attributes* - this section contains the list of attributes that are allowed in the product type. It's a dropdown list from which you can select the attributes. You can select multiple attributes. Those are the attribtues that you'll be able to select in the product edit page (see [below](#editing-product)) when you select the product type. 
-    ![Product type details](../../images/catalog_attributes_allowed_attributes.png)
+    ![Product type details](../../images/dashboard/catalog_attributes_allowed_attributes.png)
 3. *Vat groups* - this section contains the list of vat groups that are allowed in the product type. They're listed in a sections groupped by the country. You need to select *Vat group* for each country. You can select only one vat group per country. When calculating price incl VAT for each product x country, selected vat group will be used.
-    ![Product type details](../../images/catalog_product_types_vat_groups.png)
+    ![Product type details](../../images/dashboard/catalog_product_types_vat_groups.png)
 ## Products
 Products are the core of the catalog. They're the actual products that are shown in the storefront and their variants, prices, etc.
 
@@ -273,19 +273,19 @@ Under the products section, you can see a list of all products. The list has the
 * Updated at
 * Actions - edit button
 
-![Product list](../../images/catalog_products_list.png)
+![Product list](../../images/dashboard/catalog_products_list.png)
 
 ### Creating new product
 If you want to create a new product, click on the button in the upper right corner above the product table - *New product*. You will be redirected to the product details page (see [below](#editing-product)).
-![Product list](../../images/catalog_products_new_product.png)
+![Product list](../../images/dashboard/catalog_products_new_product.png)
 At this point, you can start setting data fields of the product. Make sure you select the product type first. The product type defines the structure of the product variant and it cannot be changed after the product is created.
-![New product page](../../images/catalog_product_new_product_page.png)
+![New product page](../../images/dashboard/catalog_product_new_product_page.png)
 After you firstly save the product, you'll be redirected to the product edit page (see [below](#editing-product)). 
 
 ### Editing product
 Editing a product is quite large topic. It's because the product is the core of the catalog and it has many different fields. The product edit page is divided into multiple sections. Each section is described in the following subsections.
 
-![Product edit page](../../images/catalog_product_editing_product.png)
+![Product edit page](../../images/dashboard/catalog_product_editing_product.png)
 
 #### Translated fields
 This section contains the translated fields of the product. You can translate:
@@ -293,11 +293,11 @@ This section contains the translated fields of the product. You can translate:
 * Slug - slug of the product
   * Slug is a part of the URL of the product. It's the part that comes after the domain name. For example, if the domain name is `www.example.com` and the slug is `my-product`, the URL of the product will be `www.example.com/product/{id}/my-product`.
   * It must be unique across all products
-  * Slug is automatically generated from the title of the product. If you change the title, the slug will be automatically updated. If you don't want to use the automatically generated slug, you can change it manually by clicking on the sync button in the slug field. ![Sync button](../../images/catalog_product_edit_slug.png)
+  * Slug is automatically generated from the title of the product. If you change the title, the slug will be automatically updated. If you don't want to use the automatically generated slug, you can change it manually by clicking on the sync button in the slug field. ![Sync button](../../images/dashboard/catalog_product_edit_slug.png)
 * Description - description of the productin [editorjs](https://editorjs.io/) editor.
 
 of the product into your defined languages.
-![Translated fields](../../images/catalog_product_edit_translated_fields.png)
+![Translated fields](../../images/dashboard/catalog_product_edit_translated_fields.png)
 
 #### SEO
 
@@ -305,18 +305,18 @@ This section contains SEO fields of the product. You can set:
 * Meta title - title of the product that is shown in the browser tab or in the search engine results
 * Meta description - description of the product that is shown in the search engine results.
 
-![SEO](../../images/catalog_product_edit_seo.png)
+![SEO](../../images/dashboard/catalog_product_edit_seo.png)
 
 
 #### Category
 This section contains the category of the product. You can select only one category for each product. 
 
-![Category](../../images/catalog_product_edit_category.png)
+![Category](../../images/dashboard/catalog_product_edit_category.png)
 
 
 #### Product type
 Product type cannot be changed after the product is created. Please see [Product types](#product-types) and [Q: Why can't I change product type after I've created the product](#changing-product-type) for more information.
-![Product type](../../images/catalog_product_product_type_change.png)
+![Product type](../../images/dashboard/catalog_product_product_type_change.png)
 
 #### Visibility
 This section contains the visibility of the product. You can set:
@@ -330,13 +330,13 @@ This section contains the product variants of the product. You can add multiple 
 * Stock quantity - stock of the product variant. It's not required.
 * Attributes - You will see list of attributes based on your selected product type.
 * Actions - edit and delete button
-![Product variants](../../images/catalog_product_edit_variant.png)
+![Product variants](../../images/dashboard/catalog_product_edit_variant.png)
 
 #### Product prices
 This section contains the prices of the product. It comes from defined price lists in the Localization section. You can set for each SKU and pricelist:
 * Price excl VAT - price of the product variant without VAT. Vat is calculated based on the selected vat group in the product type for given country.
 * Discount - discount of the product variant in percentage. It's not required.
-![Product prices](../../images/catalog_product_edit_prices.png)
+![Product prices](../../images/dashboard/catalog_product_edit_prices.png)
 
 #### Product media
 This section contains the media of the product. 
@@ -344,11 +344,11 @@ This section contains the media of the product.
 You can add multiple media (images) to the product using the *Upload* button. 
 ##### Reordering images (setting primary image)
 The primary image (shown in the category) is the first image in the list. You can reorder the images by drag and drop. 
-![Product media reorder](../../images/catalog_product_edit_media_reorder.gif)
+![Product media reorder](../../images/dashboard/catalog_product_edit_media_reorder.gif)
 
 ##### Deleting images
 You can also delete the images by clicking on the *Delete* icon.
-![Product media](../../images/catalog_product_edit_media.png)
+![Product media](../../images/dashboard/catalog_product_edit_media.png)
 
 #### General FAQ about products
 Here you can find some general questions about editing products and variants.
@@ -378,7 +378,7 @@ The category list shows all categories in the store. The list has the following 
 * Updated at
 * Actions - edit button
 
-![Category list](../../images/catalog_categories_list.png)
+![Category list](../../images/dashboard/catalog_categories_list.png)
 
 ### Creating new category
 To create a new category, click on the button in the upper right corner  *New Category*. You will be redirected to the category details page. 
@@ -387,7 +387,7 @@ Now you can follow steps described in the [editing category](#editing-category) 
 ### Editing category
 To edit a category, click on the edit button in the category list. This opens the category details page.
 
-![Category detail](../../images/catalog_categories_detail.png)
+![Category detail](../../images/dashboard/catalog_categories_detail.png)
 1. In the *Translated fields* section, you can: 
    1. Edit or add title of the category. The title is required and doesn't have to  unique. 
    2. Edit or add slug of the category. Slug is required and has to be unique. The slug is used in the URL of the category page in the storefront and is generated automatically from the title. You can change the slug to anything you want, but it has to be unique. If you change the slug, the URL of the category page in the storefront will change. In order to change the slug, click the button in the right corner of the slug field.
@@ -426,7 +426,7 @@ This page consists of a list showing all countries. The list has the following c
 
 To add a new country, click on the *Add New* button in the upper left corner of the table. This adds a new row to the table. Fill in the code, name, locale and default pricelist of the country and click on the *Save* icon.
 
-![Countries list](../../images/localization_countries_list.png)
+![Countries list](../../images/dashboard/localization_countries_list.png)
 
 ## Vat Groups
 This page consists of a list showing all vat groups. The list has the following columns:
@@ -440,7 +440,7 @@ This page consists of a list showing all vat groups. The list has the following 
 
 To add a new vat group, click on the *Add New* button in the upper left corner of the table. This adds a new row to the table. Fill in the vat rate, name, and country, set the default option and click on the *Save* icon.
 
-![Vat groups list](../../images/localization_vat_groups_list.png)
+![Vat groups list](../../images/dashboard/localization_vat_groups_list.png)
 
 ## Price Lists
 This page consists of a list showing all price lists. The list has the following columns:
@@ -454,7 +454,7 @@ This page consists of a list showing all price lists. The list has the following
 
 To add a new price list, click on the *Add New* button in the upper left corner of the table. This adds a new row to the table. Fill in the code and currency, set rounding and default option and click on the *Save* icon.
 
-![Price lists list](../../images/localization_price_lists_list.png)
+![Price lists list](../../images/dashboard/localization_price_lists_list.png)
 
 ## Currency
 This page consists of a list showing all currencies. The list has the following columns:
@@ -469,7 +469,7 @@ This page consists of a list showing all currencies. The list has the following 
 
 To add a new currency, click on the *Add New* button in the upper left corner of the table. This adds a new row to the table. Fill in the code and symbol, set the symbol position and click on the *Save* icon.
 
-![Currencies list](../../images/localization_currency_list.png)
+![Currencies list](../../images/dashboard/localization_currency_list.png)
 
 # CMS
 This section describes creating and editing pages and menus (of pages). We have two types of pages:
@@ -492,7 +492,7 @@ To create a new CMS page, click on the arrow next to *Create New Page* button in
 * Page
 * Storefront link
 Select the *Page* option to create a new CMS page and click the button.
-![Create new page](../../images/cms_create_new_page.png)
+![Create new page](../../images/dashboard/cms_create_new_page.png)
 
 ### Editing CMS page
 Simply click on the edit icon of the page that you want to edit in the list. This opens a page with the following fields:
@@ -502,14 +502,14 @@ Simply click on the edit icon of the page that you want to edit in the list. Thi
 * Published - this is a checkbox that indicates whether the page is published or not. If the page is not published, it will not be shown in the storefront and will not be accessible via the URL - a 404 error will be shown instead.
 * Categories - this is a list of categories that the page belongs to.
 
-![CMS page edit](../../images/cms_page_edit.png)
+![CMS page edit](../../images/dashboard/cms_page_edit.png)
 
 ### Creating a new storefront link
 To create a new storefront link, click on the arrow next to *Create New Page* button in the upper right corner. This opens a drop-down menu with two options:
 * Page
 * Storefront link
 Select the *Storefront link* option to create a new storefront link and click the button.
-![Create new page](../../images/cms_create_new_page.png)
+![Create new page](../../images/dashboard/cms_create_new_page.png)
 
 ### Editing storefront link
 Simply click on the edit icon of the page that you want to edit in the list. This opens a page with the following fields:
@@ -517,7 +517,7 @@ Simply click on the edit icon of the page that you want to edit in the list. Thi
 * Storefront path - this is the path to the storefront page.
 * Published - this is a checkbox that indicates whether the page is published or not. If the page is not published, it will not be shown in the storefront and will not be accessible via the URL - a 404 error will be shown instead.
 * Categories - this is a list of categories that the page belongs to.
-![CMS link edit](../../images/cms_link_edit.png)
+![CMS link edit](../../images/dashboard/cms_link_edit.png)
 
 ## Categories & Types
 This page consists of two parts:
@@ -531,7 +531,7 @@ This section shows a list of all page category types. The list has the following
 * Name (unique code)
 * Actions (delete)
 
-![Page category types](../../images/cms_page_category_types.png)
+![Page category types](../../images/dashboard/cms_page_category_types.png)
 
 #### Creating a new category type
 In order to create a new page category type, click on the *Add category type* button in the upper left corner of the table. This adds a new row to the table. Fill in the unique name of the page category type and click on the *Save* button.
@@ -543,7 +543,7 @@ This section shows a list of all categories. The list has the following columns:
 * Title
 * Actions
 
-![Categories](../../images/cms_page_category_list.png)
+![Categories](../../images/dashboard/cms_page_category_list.png)
 #### Creating a new category
 In order to create a new category, click on the *New page category* button in the upper left corner of the table. This redirects you to the detail category page. Now follow the steps the same as for editing a category (see [below](#editing-a-category)).
 
@@ -556,7 +556,7 @@ Set the unique code of the category. This code is used to identify the category 
 Set the published checkbox. If the category is not published, it will not be shown on the storefront.
 Then click on the *Save* button.
 
-![Category edit](../../images/cms_page_category_edit.png)
+![Category edit](../../images/dashboard/cms_page_category_edit.png)
 
 
 
@@ -573,7 +573,7 @@ This page provides an overview of all users and roles. It is into two main parts
 * Roles
 
 
-![Users & Roles](../../images/user_roles_list.png)
+![Users & Roles](../../images/dashboard/user_roles_list.png)
 ## Users
 This section shows a list of all users. The list has the following columns:
 * Email
@@ -593,18 +593,18 @@ The user details page shows full information about the user. The page is divided
   * Last Name
   * Is Admin - only admin can change this value
   * Is Staff
-![General information](../../images/user_edit_general_info.png)
+![General information](../../images/dashboard/user_edit_general_info.png)
 * Password
   * Old password - displayed only if a user is editing his profile
   * New password
   * New password confirmation
-![Password](../../images/user_edit_password.png)
+![Password](../../images/dashboard/user_edit_password.png)
 * Roles - a checklist of all roles available in the system. If a user has a role assigned, the checkbox is checked.
-![Roles](../../images/user_edit_roles.png)
+![Roles](../../images/dashboard/user_edit_roles.png)
 
 ### Create user
 To create a new user, click on the *Add New* button in the users list. This opens a new page where the user can set the email and password.
-![Create user](../../images/user_add_user.png)
+![Create user](../../images/dashboard/user_add_user.png)
 
 ## Roles
 Roles are used to group various permissions into one unit. This plays a crucial role in the authorization process as it restricts access to certain parts of the system. Only the admin or users with the `user_change_permission` permission can edit the user (for more detailed info about permissions see [Authorization page](../../administration/authorization)). The system comes with three predefined roles:
@@ -615,10 +615,10 @@ Roles are used to group various permissions into one unit. This plays a crucial 
 Admin counts as a special role that has all permissions. Authorized users can create new roles or edit existing ones.
 ### Create role
 To create a new role, click on the *Add New* button in the roles list. This opens a new page where the user can enter the name of the role, its description and select permissions that will be assigned to the role.
-![Create role](../../images/role_add_role.png)
+![Create role](../../images/dashboard/role_add_role.png)
 
 ### Edit role
 To edit an existing role, click on the edit button in the roles list. This opens a new page where the user can edit a description of a given role and select permissions that will be assigned to the role.
-![Edit role](../../images/role_edit_role.png)
+![Edit role](../../images/dashboard/role_edit_role.png)
 
 # Recommender system

@@ -8,14 +8,18 @@ Table of contents:
 * TOC
 {:toc}
 
+
+
+## Product browsing
+
+## Creating an order
+
 ## Log-in
 
 ## Registration
 
 ## User details
 
-## Product browsing
-
-## Creating an order
+## Order detail
 
 ## Warranty claim / return request
