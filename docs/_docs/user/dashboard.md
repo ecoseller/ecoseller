@@ -146,6 +146,7 @@ This section shows a list of all items in the order. The list has the following 
 * SKU
 * Quantity
 * Unit price (without VAT)
+* Complaints - this column is displayed only if there are any complaints this item
 * Actions
   * Edit - admin can change the quantity of the product variant
   * Delete - admin can delete the product variant from the order
