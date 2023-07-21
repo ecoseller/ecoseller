@@ -64,6 +64,7 @@ defaults:
       path: ""
       type: "posts"
     values:
+      mathjax: true
       seo:
         type: Article
       _comments:
