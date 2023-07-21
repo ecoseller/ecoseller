@@ -8,10 +8,25 @@ Table of contents:
 * TOC
 {:toc}
 
+# Login page
+
+When you first open dashboard, the login page is displayed.
+
+![Login page](../../images/dashboard/login.png)
+
+After you login, you're redirected to *Overview* page
+
 # Overview
-The Overview page provides summarised information about the store. It is the first page that is shown to the user after logging in. The page is divided into two main sections:
+The Overview page provides summarized information about the store. It is the first page that is shown to the user after logging in. The page is divided into two main sections:
 * Today's statistics
 * Statistics for the last 30 days
+
+![Overview](../../images/dashboard/overview.png)
+
+Using the icon on the top right, you can display your profile or logout.
+
+**There's a sidebar menu on the left, which is used for navigation and it's shown on all dashboard pages.**  
+The chapters of documentation correspond to these menu items.
 
 ## Today's statistics
 For today's statistics, the following information is shown:
@@ -21,6 +36,8 @@ For today's statistics, the following information is shown:
 * Average items per order
 * Top selling product
 
+![Overview](../../images/dashboard/overview2.png)
+
 ## Statistics for the last 30 days
 For the last 30 days' statistics, the following information is shown:
 * Orders count
@@ -29,6 +46,8 @@ For the last 30 days' statistics, the following information is shown:
 * Average items per order
 * Up to 5 top selling products
 * Line graph showing orders count for the last 30 days
+
+![Overview](../../images/dashboard/overview3.png)
 
 # Cart
 
