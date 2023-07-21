@@ -641,3 +641,56 @@ To edit an existing role, click on the edit button in the roles list. This opens
 ![Edit role](../../images/dashboard/role_edit_role.png)
 
 # Recommender system
+
+This page provides an overview of the Recommender system as well as the possibility to configure the Recommender system in real-time.
+
+## Metrics
+
+The Recommender system's performance is monitored the metrics described below.
+
+### Coverage
+
+This metric describes which fraction of the product catalogue did the Recommender system recommend in the last 30 days.
+
+### Direct hit @ $k$
+
+This metric describes how often the users opened one of the top $k$ product details recommended to them as soon as the recommendation occurred.
+
+### Future hit @ $k$
+
+This metric describes how often the users opened one of the top $k$ product details recommended to them if their whole session is considered.
+For example a user has been recommended product A's variant in one of the top $k$ recommendations. He then visited products B, C, D and then A.
+This counts as hit of recommendation, that provided product A's variant. But it wouldn't count as *Direct hit @ $k$* (if the same recommendation
+did not contain product B's variant among the top $k$ variants).
+
+## Global
+
+The performance of the Recommender system as a whole is displayed first. It is also possible to adjust global parameters of the Recommender system.
+
+Global parameters include *retrieval size* and *ordering size*.
+
+*Retrieval size* specifies the number of product variants selected in the *retrieval*
+step of the *Prediction pipeline*. These variants are typically selected by less complex model so the more complex model can recommend the best in
+reasonable time. Higher number thus means more computational complexity, but better results as the elementary model can filter out relevant product
+variants.
+
+*Ordering size* specified the number of product variants that are selected for ordering step of the pipeline. This step reorders the top product variants
+to maximize diversity, for example.
+![Global](../../images/dashboard/recommender_system_global.png)
+
+## Models 
+
+The performance of the Recommender system can be inspected by the model providing recommendations and the situation, when the recommendation takes place.
+The selected situation contains only the performance of the model selected above.
+![Models](../../images/dashboard/recommender_system_models.png)
+
+Latest training statistics are displayed in this section as well as the selected model's configuration.
+All configuration options are listed in the [configuration section](../../programming/recommender_system#configuration) of the Recommender system page in the programming documentation.
+![Training](../../images/dashboard/recommender_system_training.png)
+
+## Cascades
+
+The last section of this page displays the cascades used by the Recommender system in each situation and pipeline's step.
+
+The Recommender system uses the first model of the cascade that is possible in the current situation - regarding its data and the current user.
+![Cascades](../../images/dashboard/recommender_system_cascades.png)

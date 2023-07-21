@@ -53,7 +53,7 @@ Authorization: JWT your_access_token
 ```
 
 ## API documentation
-The **ecoseller**backend provides a comprehensive API documentation that can be accessed by navigating to the `/api/docs/` endpoint. This documentation is generated automatically using the [drf-yasg](https://drf-yasg.readthedocs.io/en/stable/) package and provides detailed information about the available endpoints, their parameters, and the expected responses. 
+The **ecoseller** backend provides a comprehensive API documentation that can be accessed by navigating to the `/api/docs/` endpoint. This documentation is generated automatically using the [drf-yasg](https://drf-yasg.readthedocs.io/en/stable/) package and provides detailed information about the available endpoints, their parameters, and the expected responses. 
 Please make sure to use primairly `/dashboard` endpoints since they're designed to to modify data and require authentication. Storefront endpoints don't.
 
 # User management
@@ -70,7 +70,7 @@ python3 manage.py createsuperuser
 ```
 
 # Managing database
-**ecoseller**utilizes a PostgreSQL database to store and manage data. This section of the documentation focuses on managing a PostgreSQL database within a Docker container and connecting it to a Django application.
+**ecoseller** utilizes a PostgreSQL database to store and manage data. This section of the documentation focuses on managing a PostgreSQL database within a Docker container and connecting it to a Django and Recommender system application.
 
 ## Django <-> PostgreSQL connection
 The Django application is configured to connect to a PostgreSQL database using the following environment variables:
@@ -82,20 +82,37 @@ POSTGRES_HOST=postgres_backend
 POSTGRES_PORT=5432
 ```
 
+## Recommender system <-> PostgreSQL connection
+The Recommender system's application is configured to connect to several PostgreSQL databases using the following environment variables:
+```env
+RS_PRODUCT_DB_URL=postgresql://postgres:zZvyAvzG2O5gfr5@postgres_rs:5432/products
+RS_FEEDBACK_DB_URL=postgresql://postgres:zZvyAvzG2O5gfr5@postgres_rs:5432/feedback
+RS_SIMILARITY_DB_URL=postgresql://postgres:zZvyAvzG2O5gfr5@postgres_rs:5432/similarity
+RS_MODEL_DB_URL=postgresql://postgres:zZvyAvzG2O5gfr5@postgres_rs:5432/model
+```
+where each environment variable defines a connection string to one database.
+
 ## Binding database to a local folder
 To persist the data in the PostgreSQL container, you can bind a local folder on your host machine to the container's data directory using Docker Compose.
-In your docker-compose.yml file, add the following volume configuration under the services section for the `postgres_backend` container:
+In your docker-compose.yml file, add the following volume configuration under the services section for the `postgres_backend` and `postgres_rs` container:
 ```yaml
 volumes:
     - ./backend/postgres/data:/var/lib/postgresql/data/
 ```
 This configuration ensures that the PostgreSQL data is stored in the `./src/backend/postgres` folder on your local machine.
 ## Running migrations
-It shouldn't be neccessary to run migrations manually, but if you need to do so, you can run the following command:
+It shouldn't be necessary to run migrations manually, but if you need to do so, you can run the following commands in the `backend` container:
 ```bash
 python3 manage.py makemigrations
 python3 manage.py migrate
 ```
+or the following commands in the `recommender_system` container:
+```bash
+python3 -m recommender_system.scripts.makemigrations {storage_name}
+python3 -m recommender_system.scripts.migrate
+```
+where `{storage_name}` is one of `feedback_storage`, `model_storage`, `product_storage` or `similarity_storage`. This also creates migrations if there is a change in one of the storages.
+For more information about the Recommender system's storages, see [storages section](../../programming/recommender_system#storages) of the Recommender system page in the programming documentation.
 
 ## Backing up database
 It is crucial to regularly back up your PostgreSQL database to prevent data loss and ensure data integrity.
@@ -117,7 +134,7 @@ Replace `your_username`, `your_database_name`, and `/path/to/backup.sql` with th
 # Static files and media
 **ecoseller**currently supports storing static and media files using local storage. While it does not natively integrate with object storage services like Amazon S3, it is possible to implement such functionality using the Python package s3boto3.
 
-However, in most cases, storing static and media files locally is sufficient for the needs of an e-commerce platform. Hence why we decided to use simplest solution possible using [WhiteNoise](https://whitenoise.readthedocs.io/en/latest/) package. It was neccassary to use this package because of the way Django works. Django does not serve static files in production, so serving the app via Gunicon or uWSGI would not work propely. WhiteNoise is a middleware that allows Django to serve static files in production.
+However, in most cases, storing static and media files locally is sufficient for the needs of an e-commerce platform. Hence, why we decided to use simplest solution possible using [WhiteNoise](https://whitenoise.readthedocs.io/en/latest/) package. It was neccassary to use this package because of the way Django works. Django does not serve static files in production, so serving the app via Gunicon or uWSGI would not work propely. WhiteNoise is a middleware that allows Django to serve static files in production.
 
 If you want to disable WhiteNoise, you can change `MIDDLEWARE` in `backend/core/settings.py` to:
 ```python
@@ -136,7 +153,7 @@ Integrating online payment gateways into your ecommerce system offers numerous a
 
 ## Payment Gateway Integration Process
 
-To implement a new payment method within the **ecoseller**ecommerce system, you will need to follow these steps:
+To implement a new payment method within the **ecoseller** ecommerce system, you will need to follow these steps:
 
 1. Choose the appropriate base class:
 Your new payment method should inherit from either the `PayBySquareMethod` class or the `OnlinePaymentMethod` class. Both of these classes are derived from the `BasePaymentMethod` class and can be imported from `core.api.payments.modules.BasePaymentMethod`. Select the base class that aligns with the requirements of the payment gateway you are integrating. `PayBySquareMethod` is used in situations where it's neccessary to provide user payment QR code. On the other hand `OnlinePaymentMethod` is used for generating link for third party payment gateway where is user usually redirected.
