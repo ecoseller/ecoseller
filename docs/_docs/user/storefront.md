@@ -177,3 +177,5 @@ Then, a form is displayed.
 After you submit the form, the confirmation page is displayed and an email is sent.
 
 ![Warranty claim](../../images/storefront/warranty-claim-done.png)
+
+You're notified about any updates using the email as well.
