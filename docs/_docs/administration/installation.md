@@ -97,7 +97,7 @@ docker compose -f docker-compose.prod.yml up -d
 
 ### Demo environment
 The demo environment in Ecoseller is designed to showcase the platform's features and functionality using preloaded demo products (1400+), variants (2100+), and additional data. Setting up the demo environment is similar to the production environment, with the main difference being the utilization of the `docker-compose.demo.yml` file. It's very similar to `docker-compose.prod.yml` but it has some additional services that are used to preload the demo data into the database.
-You can choose between using reverse proxy or accessing the services directly. However, it's recommended to use the reverse proxy configuration for the demo environment as well (please see the [Reverse Proxy](#reverse-proxy) section for more information as well ass [Production environment](#production-environment)).
+You can choose between using reverse proxy or accessing the services directly. However, it's recommended to use the reverse proxy configuration for the demo environment as well (please see the [Reverse Proxy](#reverse-proxy) section for more information as well as [Production environment](#production-environment)).
 Our demo data live at public repository [ecoseller/demo-data](https://github.com/ecoseller/demo-data)
 
 
