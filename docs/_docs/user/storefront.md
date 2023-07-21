@@ -8,18 +8,127 @@ Table of contents:
 * TOC
 {:toc}
 
+# Homepage
 
+When you first open storefront, the homepage is displayed.
 
-## Product browsing
+![Homepage](../../images/storefront/homepage-category.png)
 
-## Creating an order
+There are several components denoted at the image above
 
-## Log-in
+1. Country change button (see below)
+2. Category menu - using this menu, you can navigate to individual categories
+3. Search bar - used for searching products
+4. Profile icon - using this icon, you can login or display your profile info and logout (if already logged-in)
+5. Cart icon - after you click on this icon, you're redirected to the cart
 
-## Registration
+The most common use-cases are described below.
 
-## User details
+## Country change
 
-## Order detail
+To change country, firstly click on the country button mentioned above and then select the desired country.
 
-## Warranty claim / return request
+![Country change](../../images/storefront/country-select.png)
+
+## Best selling products
+
+When you scroll down on homepage, you can see our best selling products.
+
+![Homepage](../../images/storefront/best-sellers.png)
+
+# Product browsing
+
+After you select category in top menu, you're redirected to category page
+
+![Category](../../images/storefront/products.png)
+
+You can filter the products and select their ordering.  
+Below, there is a grid of products displayed (using pagination).
+
+![Category](../../images/storefront/products2.png)
+
+Each product card shows its
+- photo
+- title
+- brief description
+- price. Note that some products show the price like *From $ 7.31*, which means that there are multiple product variants with different prices and the cheapest of them is displayed.
+
+## Go to product detail
+
+After you click on product card, product detail page is displayed
+
+# Product detail
+
+Product detail page shows product's
+- title
+- description
+- gallery of its photos
+- list of its variants including prices.
+
+![Product detail](../../images/storefront/product-detail.png)
+
+## Add to cart
+In order to add product variant to cart, firstly select its quantity and then click on the *Cart* button next to it.
+
+At the bottom of the page, you can also see recommended products and product reviews.
+
+![Product detail](../../images/storefront/product-detail2.png)
+
+# Creating an order
+
+After you click on the *Cart* button in top menu, you're redirected to Cart detail page.
+
+## Cart detail
+
+This page shows all of your cart items including their prices
+
+![Cart](../../images/storefront/cart-detail.png)
+
+You can update their quantities or remove them.  
+Also note that the *Cart* icon in top menu contains a badge showing number of items in your cart (cool, right? 😎).  
+
+At the bottom, there's a list of recommended products.
+
+After you select *Next*, you're redirected to shipping & billing info page.
+
+## Shipping & billing information
+
+Here, you need to specify your shipping and billing information.  
+If you're logged in and you've saved your billing & shipping info, you can use these saved values. Otherwise, you must fill in the forms.
+
+![Cart infos](../../images/storefront/cart-info.png)
+
+## Shipping & payment method
+
+In the next step, you select firstly the desired shipping method and then payment method as well.
+
+![Cart methods](../../images/storefront/cart-methods.png)
+
+## Order summary
+
+In the last step, summary of your order is displayed.
+
+![Order summary](../../images/storefront/cart-summary.png)
+
+To complete the order, you must 
+1. Agree with our terms and conditions
+2. Click on *Complete order* button
+
+## Order completed page
+
+After you complete the order, the following page is displayed and you recieve a confirmation email.
+
+![Order completed](../../images/storefront/order-done.png)
+
+You can proceed to payment using the link displayed.  
+Note that currently, it doesn't work, because no payments are configured. Go to [admin section](../../administration/administration/#implementing-payment-methods-paymentapi) to see a step-by-step guide on how to configure payments.
+
+# Log-in
+
+# Registration
+
+# User details
+
+# Order detail
+
+# Warranty claim / return request
