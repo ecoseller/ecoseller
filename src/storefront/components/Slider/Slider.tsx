@@ -29,7 +29,7 @@ const data: ISliderData[] = [
     id: 2,
     alt: "image 2",
     url: "/",
-    image: "/images/slider/1.jpg",
+    image: "/images/slider/2.jpg",
   },
 ];
 
