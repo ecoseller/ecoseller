@@ -83,29 +83,143 @@ described in [monitoring manager](#monitoring-manager) and dashboard's [recommen
 
 ## Data manager
 
+Data manager handles all data coming to the Recommender system. It stores objects to the corresponding storage inside the Recommender system.
+
+Data manager obtains data from the request, parses API model(s) from them, converts them to Stored models and then saves those Stored models
+to the appropriate storage.
+
 ### API models
+
+API models are objects, that correspond to the format which is sent via API. Each API model is a subclass of [Pydantic](https://docs.pydantic.dev)'s
+`BaseModel`.
+
+Parsing these models by the Data manager is handled by mapping a field `_model_class` to the corresponding API model's type and then parsing the
+data using `parse_obj` method.
+
+Each API model has `save` method, that performs the conversion to Stored model and saves that model to the storage.
+
+API models include the following objects:
+
+- `Attribute`
+- `AttributeType`
+- `Category`
+- `Config`
+- `Order`
+- `Product`
+- `ProductAddToCart`
+- `ProductDetailEnter`
+- `ProductDetailLeave`
+- `ProductPrice`
+- `ProductTranslation`
+- `ProductType`
+- `ProductVariant`
+- `RecommendationView`
+- `Review`
 
 ### Stored models
 
+Stored models represent objects that are stored into a storage, but they are storage-implementation independent. This means that changing storage from
+SQL to filesystem does not affect these objects in any way. All operations with their storage are done by calling the appropriate methods on that storage.
+Each model has its storage as a `_storage` attribute that is set during the model's initialization.
+
+These models are also subclasses of the Pydantic's `BaseModel`, this makes it easy to work with [SQLAlchemy ORM](https://docs.sqlalchemy.org/en/20/orm/).
+
+#### Immutable
+
+Some objects are immutable, editing these objects raises `TypeError`. These objects can only be created once.
+
 #### Many-to-many relations
+
+Several objects represent *many-to-many* relations, for example `ProductModel` and `ProductVariantModel` have *many-to-many* relation among them.
+
+Related models can be obtained by calling the `get_target_model_class` of the `ManyToManyRelationMixin`, which provides you with the `target_model_class`,
+and primary key field names of both classes of this relation. This allows the storage to implement just one general method to obtain *many-to-many* related
+objects.
 
 ## Storages
 
-## ORM
+The Recommender system uses several storages to store the objects it needs to provide recommendations.
 
-## Cache
+Each storage is initialized as a Singleton in the application's container and is accessed via dependency injection.
 
-## Feedback
+### ORM
 
-## Model
+Working with SQL (via [SQLAlchemy](https://www.sqlalchemy.org)) takes advantage of its ORM functionality. Tables are defined as subclasses of SQLAlchemy's
+`DeclarativeBase`. Mapping from Stored models to those table definitions is performed by `SQLModelMapper`, each table object has `origin_model` attribute
+of its `Meta` class to tell the mapper which Stored model to map to which table.
 
-## Product
+### Cache
 
-## Prediction model-specific
+Cache storage is implemented as a filesystem storage. It saves category list recommendations performed by the Recommender system.
+
+It has limited size since old data will not be used once a session ends.
+
+More information about this storage's usage is described in the [Cache manager](#cache-manager) section.
+
+### Feedback
+
+Feedback storage is implemented as a PostgreSQL database. All models regarding feedback data are stored here. They include the following:
+
+- `ProductDetailEnterModel`
+- `ProductDetailLeaveModel`
+- `ProductAddToCartModel`
+- `ReviewModel`
+- `RecommendationViewModel`
+
+There are two other models stored in this storage: `PredictionResultModel` and `SessionModel`. Prediction results are stored here so that
+monitoring manager can evaluate user feedback data based on the provided recommendations by applying SQL joins inside a single database.
+
+### Model
+
+Model storage includes models that are related to the prediction models in general. The following models are stored here:
+
+- `ConfigModel` that contains configuration of the whole Recommender system
+- `LatestIdentifierModel` that contains the identifier of the latest trained model for each of the prediction models
+- `TrainerQueueItemModel` that represents item in the queue of the prediction models to be trained
+- `TrainingStatisticsModel` that contains statistics describing each training performed by the Recommender system
+
+Model storage is implemented as a PostgreSQL database.
+
+### Product
+
+Product storage is a PostgreSQL database containing all product-related models. They are stored in the same format as in Django backend
+application, some models or fields are missing as they are not needed by the Recommender system.
+
+Converting those objects to a more Recommender system-friendly structure is done during training in order to keep the complexity of storing
+models as low as possible.
+
+### Prediction model-specific
+
+Some prediction models have their own storages implemented, namely *EASE* (filesystem), *GRU4Rec* (filesystem) and *Similarity* (PostgreSQL).
+These storages are used to store the models parameters that are loaded when given model is being used. *Similarity* model also saves distances
+of all product variants into the database and performs ordered queries on those data during prediction.
+
+More information about these storages is provided in the sections describing the prediction models themselves.
+
+### Migrations
+
+All SQL storages use [Alembic](https://alembic.sqlalchemy.org) to manage migrations. Each storage has its own `alembic.ini` file and `alembic`
+folder containing its versions.
+
+Each `alembic.ini` file contains path to the migration script of the corresponding file that runs the migrations (`env.py`), this file needs
+to have `target_metadata` variable assigned to the proper base class in order to generate the correct migrations.
 
 ### Changing storage type
 
-### Adding new storage
+In order to change storage type (for example changing *EASE* storage from filesystem to SQL) the following steps are necessary:
+
+1. Create a new subclass of the `SQLBase` class located in the file `recommender_system/storage/sql/models/base.py`.
+2. Define the tables by subclassing the created base class in a newly created file `recommender_system/storage/sql/models/ease.py`.
+3. Create a new subclass of the appropriate *Abstract storage class* (in this case `AbstractEASEStorage`) and implement all the defined methods. Make this class a subclass of `SQLStorage` as well to be able to use SQL-specific functionality.
+4. Change the Dependency injector's Singletion initialization in the application's container to this new class.
+5. Create new database for this storage in the `../setup_database.sql` file, add connection string to environment variables files and use this connection string when initializing the storage in the container.
+6. Add this storage to the `recommender_system/scripts/migrate.py` file so that migrations are applied when the **ecoseller** starts.
+7. Copy `alembic.ini` file and `alembic` folder from different SQL storage and adjust paths and metadata as described in the [migrations](#migrations) section above. Delete all version files.
+8. Generate migrations by running `python3 -m recommender_system.scripts.makemigrations {storage_name}` (`{storage_name}` in this case is `ease_storage`).
+
+*All paths above are relative to `src/recommender_system/app`.*
+
+To add a new storage, use similar process to the one described above, it does not differ much.
 
 ## Prediction models
 
@@ -120,6 +234,8 @@ described in [monitoring manager](#monitoring-manager) and dashboard's [recommen
 ### GRU4Rec (level 4)
 
 ### EASE (level 5)
+
+### Adding new prediction model
 
 ## Prediction pipeline
 
