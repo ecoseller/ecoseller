@@ -308,3 +308,91 @@ For this purpose, we've [`NotificationsAPI`](../administration/administration.md
     ...
   ],
 ```
+
+# Product filtering & ordering
+In this chapter, we'll describe product filtering and ordering, which is used for storefront, in more detail.
+
+First of all, it's important to mention several important things
+- On the storefront category page, products are displayed, however attributes (and therefore filters) are assigned to product variants. So, the filtering is done in a following way:  
+**A product matches the filters if there's at least 1 of its variants matching them.**
+- We use 2 endpoints for getting the products in a given category:
+  - GET `category/storefront/<int:pk>/products/` -- used for initial getting of the products (with no filters selected)
+  - POST `category/storefront/<int:pk>/products/` -- used for getting products with filtering & order selected. It's neccessary to pass the object containing selected filters and ordering in the request body. 
+  Note that this object can be possible quite complex, so we decided to implement filtering using POST method and pass the data in request body, instead of another GET.
+
+When filtering products (using the POST request mentioned before), you should pass JSON with the following structure in a body:
+
+```json
+{
+  "filters":{
+    "numeric": [...],
+    "textual": [...],
+  },
+  "sort_by": "...",
+  "order': "...'
+}
+```
+
+- `filters` -- contains serialized filters
+- `sort_by` -- denotes a value which should be used for ordering products
+- `order` -- denotes ordering of products (ascending/descending), possible values are: `asc` (default) and `desc`
+
+We're going to describe `sort_by` field in more detail, because the logic is a little bit more complex here.  
+That's because we often want to sort products by a value, that's not directly present in `Product` or `ProductVariant` objects (e.g. *title*, which is stored in multiple translations or *price*, which is stored in a separate object `ProductPrice`, as you can see [here](#product)).
+ 
+We decided to implement ordering in a following way:  
+`CategoryDetailProductsStorefrontView` contains static property `SORT_FIELDS_CONFIG`, which contains configuration of possible orderings and looks as follows:
+
+```python
+SORT_FIELDS_CONFIG = {
+  "title": {
+      "sort_function": _order_by_title,
+      "additional_params": [locale],
+  },
+  "price": {
+      "sort_function": _order_by_price,
+      "additional_params": [pricelist],
+  },
+  "recommended": {
+      "sort_function": _order_by_recommendation,
+      "additional_params": [recommendations],
+  }
+]
+```
+
+We see that there are 3 possible orderings:
+- by title
+- by price
+- by recommendation
+
+Each of the possible orderings needs to have configured
+- `sort_function` -- reference to function used for sorting by this value
+- `additional_params` -- array of additional parameters that are passed to the sort function, except the list of products and ordering type (asc/desc) which are passed always. You can omit this field if there are no additional params, the default value -- empty list will be used
+
+Then, the sort function looks like this:
+
+```python
+def _order_by_price(products, is_reverse_order, pricelist: PriceList):
+    """
+    Extend product query by extra field with lowest price of the product's variant prices
+    """
+
+    products = products.annotate(
+        price=Subquery(
+            ProductPrice.objects.filter(
+                product_variant__in=OuterRef("product_variants"),
+                price_list__code=pricelist.code,
+            )
+            .order_by("price")
+            .values("price")[:1]
+        )
+    ).order_by("price" if not is_reverse_order else "-price")
+    return products
+```
+
+We see that the function above sorts the products by their price; note that it contains an extra parameter (`pricelist`), which was specified in `additional_params`.  
+Again, it's important to mention that **the first 2 arguments (`products` and `is_reverse_order`) are passed to any sort function.**
+
+If your goal is to add another product ordering, you need to firstly implement a sort function in a similar way as above and then add it to `SORT_FIELDS_CONFIG` as well.
+
+Also note, that on storefront, filters for each category are stored in [session storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage), so when an user e.g. filters the products, goes to product detail page and then back, the same filters as before are applied.
