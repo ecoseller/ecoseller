@@ -315,10 +315,11 @@ In this chapter, we'll describe product filtering and ordering, which is used fo
 First of all, it's important to mention several important things
 - On the storefront category page, products are displayed, however attributes (and therefore filters) are assigned to product variants. So, the filtering is done in a following way:  
 **A product matches the filters if there's at least 1 of its variants matching them.**
-- We use 2 endpoints for getting the products in a given category:
+- In Core, there are 2 endpoints for getting the products in a given category:
   - GET `category/storefront/<int:pk>/products/` -- used for initial getting of the products (with no filters selected)
   - POST `category/storefront/<int:pk>/products/` -- used for getting products with filtering & order selected. It's neccessary to pass the object containing selected filters and ordering in the request body. 
-  Note that this object can be possible quite complex, so we decided to implement filtering using POST method and pass the data in request body, instead of another GET.
+  Note that this object can be possible quite complex, so we decided to implement it using POST method and pass the data in request body, instead of another GET.
+- Both filtering and ordering is done using DB queries, in order to optimize the performance.
 
 When filtering products (using the POST request mentioned before), you should pass JSON with the following structure in a body:
 
