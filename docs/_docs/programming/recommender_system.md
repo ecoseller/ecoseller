@@ -223,17 +223,91 @@ To add a new storage, use similar process to the one described above, it does no
 
 ## Prediction models
 
+The Recommender system contains several prediction models that perform the recommendations. This section describes the models, their usage is described in the [Prediction pipeline](#prediction-pipeline) section.
+
+Each model's task is to select a subset of product variant from the Product storage. Input differs based on the type of recommendation, the differences are described in the [Prediction pipeline](#prediction-pipeline) section.
+
+Some of the models can not be used in all situations based on their properties.
+
 ### Dummy (level 0)
+
+This is the simplest model, which is used only if an error occurs when more complex models perform their prediction.
+
+Dummy model returns randomly selected subset of product variants.
+
+This model does not need any training.
+
 
 ### Selection (level 1)
 
+This model is also randomized, but users can select product variants that should be recommended more often. Each product variant has its recommendation weight specified,
+this value is used as weight when the random sampling is performed.
+
+This model does not need any training.
+
 ### Popularity (level 2)
+
+Popularity-based model tends to recommend popular product variants more. The popularity is represented by the number of orders of that product variant.
+
+The recommendations are sampled, similarly to the Selection model, popularity is used as the sampling weight.
+
+[//]: # (TODO: Change popularity definition)
+
+This model does not need any training.
 
 ### Similarity (level 3)
 
+Similarity-based model is a content-based model. It recommends the most similar product variants to the product variant passed as input.
+
+Training computes distances of all pairs of product variants and saves them to the Similarity storage. Each record contains identifier of
+the model, SKUs of both product variants and their distance.
+
+This model selects the closest product variants to the given product variant during prediction.
+
+During training, each product variant is represented by two vectors. One is in numerical attribute space, the second in categorical attribute space.
+
+Vectors contain values of all existing attributes so that product variants of different product types can be compared.
+
+If a product variant has no value of a numerical attribute, the average value is used.
+
+If a product variant has no value of a categorical attribute, the most common value is used.
+
+The distance of two product variants is computed as addition of Euclidean distances in numerical and categorical space.
+Distance in each space is multiplied by a coefficient that decreases when the product variants share more attributes.
+This coefficient is defined as the size of union of the attributes defined for the product variants divided by the size
+intersection of the attributes defined for the product variants.
+
+If product variant $p$ has $m$ attributes, product variant $q$ has $n$ attributes and they share $k$ product variants,
+then the coefficient is $\frac{m + n - k}{k}$. If $k=0$, then the coefficient is $m + n$.
+
 ### GRU4Rec (level 4)
 
+This is a session-based model based on [this article](https://arxiv.org/abs/1706.03847).
+
+It uses a recurrent neural network. The input of the network is a vector representing the current session. Each value of
+the input vector represents one product variant. The session is represented as a list of visited product variants, each
+visited product variant has value of $x^k$ where $x \in [0,1]$ is a parameter of this model and $k$ is the number of product
+variants visited after that product variant.
+
+The neural network used here consists of three layers: embedding, GRU and output. Embedding and output layers are linear.
+
+The output of the network consists of scores for each product variant, the product variants with the highest scores are selected.
+
 ### EASE (level 5)
+
+EASE is a collaborative-filtering model. This model approximates a user-item rating matrix. Value at position $(i,j)$ is
+user $i$'s rating of item $j$.
+
+[//]: # (TODO: Change rating definition)
+
+The [EASE algorithm](https://arxiv.org/abs/1905.03375) predicts the user's preferences by a dot product the user's representation
+and a matrix it computes during training. The user is represented by a vector of ratings of all the project variants - it is
+basically the same as a row in the user-item rating matrix.
+
+The output contains estimated ratings of all the product variants, the top-rated ones are recommended to the user.
+
+The training computes the matrix that is used during prediction, it is done by inversion of a slightly modified user-item rating
+matrix. The resulting matrix's diagonal is set to 0.
 
 ### Adding new prediction model
 
