@@ -311,19 +311,72 @@ matrix. The resulting matrix's diagonal is set to 0.
 
 ### Adding new prediction model
 
+New prediction models can be implemented and added to be used by the Recommender system by following the steps below:
+
+1. Create class of your model by subclassing `AbstractPredictionModel` and implementing its abstract methods.
+2. Add your class to `ModelManager`'s `get_all_models` method.
+3. Add your model to cascade on dashboard, so it can be used by the Recommender system.
+
 ## Prediction pipeline
+
+Prediction pipeline takes care of recommending products. It consists of three phases - retrieval, scoring and ordering.
+
+#### Retrieval
+
+Retrieval phase of prediction pipeline selects product variants to be considered when recommending product variants to the user. It typically
+uses simple models so that the time complexity is kept low.
+
+The default number of selected product variants is 1000. This step is different for category list recommendations - product variants of given
+category are selected in that case.
+
+#### Scoring
+
+Scoring phase orders the retrieved product variants based on scores obtained from the used prediction model.
+
+#### Ordering
+
+Ordering phase of the prediction pipeline re-orders the top product variants obtained by the scoring phase.
+
+It takes the top $k$ (default is 50) product variants and maximizes the *intra list distance* among them.
+This phase uses the Similarity prediction model, this phase is skipped if the model is not ready.
 
 ### Cache manager
 
+The recommendations provided by the prediction pipeline are cached. Only category list recommendations are cached. Only
+the category that was visited last by a user is cached.
+
+The cache size can hold up to 1000 items by default. This value can be changed via `RS_CACHE_SIZE` environment variable.
+
+[//]: # (TODO: Config instead of env var)
+
 ### Model manager
+
+The models used in the retrieval and scoring phases are selected by *Model manager*. The model is selected from the corresponding cascade.
+Cascade is an ordered list of models where if the first one is not available, the second is used. If no model is available, Dummy model is used -
+this one is available all the time.
+
+There are cascades for all recommendation situations (homepage, product detail, category list and cart) and both phases of the pipeline (without
+retrieval for category list).
 
 ## Monitoring manager
 
+Monitoring data to be displayed on dashboard are prepared by monitoring manager. It simply selects prediction and training-related data from the database.
+
 ## Trainer
+
+Trainer runs in a separate container to keep the Recommender system's response fast.
+
+It checks a database containing items representing training requests and once there are new requests, it starts training the corresponding prediction model.
 
 # Dockerization
 
-## Entrypoint
+The recommender system consists of one server (Recommender system), one trainer and one PostgreSQL instance.
+
+The Recommender system uses Gunicorn in production mode, default Flask WSGI otherwise.
+
+Only the recommender system's server performs database migrations, this is possible due to healthchecks of PostgreSQL and the Recommender system's server.
+PostgreSQL instance is started first, once it is up and running, the Recommender system's server starts. It performs migrations and starts the server.
+Once the server is started and starts responding, the trainer is started with all its dependencies ready.
 
 # Configuration
 
