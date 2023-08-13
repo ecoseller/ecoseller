@@ -2,6 +2,37 @@
 title: Introduction
 ---
 
+Unlock the future of e-commerce success with **ecoseller** – headless e-commerce solution that empowers your brand. **ecoseller** redefines the game, separating the captivating front-end from the dynamic back-end, setting the stage for unparalleled flexibility and growth.
+
+![Overview](../../images/ecoseller.io.svg)
+
+Designed to cater to businesses of every scale, from the most daring sole proprietor to the middle size, **ecoseller** is your partner in success. Our platform's agility adapts to your ambitions, ensuring your digital presence resonates with impact.
+
+Powered by the technological prowess of Django and Next.JS, our dashboard is a symphony of innovation, delivering real-time insights and intuitive control. Feast your eyes on the future with our dashboard screenshots, a glimpse into the seamless control that fuels your journey to the top.
+
+![Overview](../../images/dashboard/overview.png)
+
+![Overview](../../images/dashboard/catalog_product_edit_media_reorder.gif)
+
+But that's just the beginning – we go beyond, embracing the art of recommendation to engage users and boosting sales like. **ecoseller's** recommendation system doesn't just sell, it captivates, creating personalized experiences that fuel engagement.
+
+**ecoseller** aims to extensible platofrm, powered by our notification API. Seamlessly connect events, unlock the power to call external APIs – it's your gateway to endless possibilities, making **ecoseller** not just a platform but a universe of opportunities.
+
+The data model, the dynamic canvas that lets you sell an infinite array of products with diverse attributes. Your product catalog is limitless, your customer's journey refined.
+
+![Overview](../../images/models_all.png)
+
+Elevate your sales, engage your audience, and embrace a future where innovation thrives – all with **ecoseller** by your side. Your e-commerce empire starts here.
+
+So let's get started!
+- [Administation Documentation](/administration/installation/)
+  - Get started quickly and with ease.
+- [Programming Documentation](/programming/technical-design/)
+  - Get a deeper understanding of the platform and ways to extend it.
+- [User Documentation of dashboard](/user/dashboard/) and [User Documentation of storefront](/user/storefront/)
+  - Learn how to use the dashboard and storefront.
+
+<!-- 
 Table of contents:
 * TOC
 {:toc}
@@ -41,4 +72,4 @@ This section focuses on the user-facing aspects of Ecoseller.
 In this section, you will find comprehensive information on leveraging the administration dashboard of Ecoseller. From configuring settings to managing inventory and browsing through orders, this documentation will guide you through all the necessary steps to efficiently handle the backend operations of your online store.
 
 
-
+ -->
