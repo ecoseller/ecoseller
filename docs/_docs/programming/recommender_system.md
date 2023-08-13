@@ -380,6 +380,40 @@ Once the server is started and starts responding, the trainer is started with al
 
 # Configuration
 
-# Unit testing
+The Recommender system is configured via `ConfigModel` object that contains options for the Recommender system as a whole as well as
+for individual prediction models.
+
+This object is editable from dashboard, each version is saved to the database with the appropriate timestamp to keep track of changes.
+The most current version is used each time the configuration is being accessed.
 
 # Importing data
+
+It is possible to import data from two datasets to the Recommender system to test its offline performance.
+
+Both datasets fill the storages with product and feedback data. 
+
+## Demo
+
+Demo data are imported to the Recommender system using SQL script during container initialization. These contain product and feedback data
+representing a subset of [MovieLens dataset](https://movielens.org).
+
+Product variant sequences visited by the users were generated randomly.
+
+These data are imported when you select the `demo` branch of *ecoseller*'s `docker-compose`.
+
+This dataset contains ~ 1000 products, ~ 2000 product variants and ~ 500 users.
+
+## Retailrocket
+
+[Retailrocket RS dataset](https://www.kaggle.com/datasets/retailrocket/ecommerce-dataset) can be imported to the Recommender system as well.
+
+It is necessary to save the files of the dataset into the folder `src/recommender_system/data`. Running the script
+`recommender_system/scripts/fill_data.py` saves those data to the database.
+
+The whole Retailrocket dataset contains over 400k products and over 1M users.
+
+# Unit testing
+
+The Recommender system contains several unit tests to ensure proper functionality of individual components of the Recommender system.
+
+The tests are written using [`pytest` framework](https://pytest.org).
