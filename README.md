@@ -11,8 +11,8 @@
 [![Build][build-shield]][build-url]
 [![Contributors][contributors-shield]][contributors-url]
 [![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-<!-- [![Stargazers][stars-shield]][stars-url] -->
+<!-- [![MIT License][license-shield]][license-url] -->
+[![Stargazers][stars-shield]][stars-url]
 
 
 <!-- PROJECT LOGO -->
@@ -64,8 +64,8 @@
     </li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
+    <!-- <li><a href="#license">License</a></li> -->
+    <!-- <li><a href="#acknowledgments">Acknowledgments</a></li> -->
   </ol>
 </details>
 
@@ -73,7 +73,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-TODO:
+This headless platform, powered by Django Rest Framework and Next.JS, offers dynamic flexibility for businesses of all sizes. Our recommendation system boosts engagement and sales, while the notification API ensures easy extensibility, letting you seamlessly connect to external APIs. The data model's complexity allows unlimited product possibilities with unique attributes. Dive into the code and join the **ecoseller** revolution today! 🚀
 <!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
 
 
@@ -90,6 +90,8 @@ Whole stack of ecoseller.io is built with multiple technologies. Our goal is to 
 ## Getting Started
 
 How to get a local copy up and running. Easiest way is to use docker-compose.
+Simply run `docker compose up -d` to start the development project. However, for more advanced usage, please refer to the [documentation](https://docs.ecoseller.io/administration/installation/).
+
 
 ### Prerequisites
 
@@ -100,7 +102,7 @@ Docker and docker-compose are required to run ecoseller.io. You can install them
 ## Usage
 TODO: Add usage examples
 
-_For more examples, please refer to the [Documentation](https://docs.ecoseller.io)_
+_For more examples, please refer to the [Documentation](https://docs.ecoseller.io/administration/installation/#running-ecoseller). Please refer to the [documentation](https://docs.ecoseller.io/administration/installation/#prerequisites).
 
 
 <!-- ROADMAP -->
@@ -125,15 +127,15 @@ Don't forget to give the project a star! Thanks again!
 
 
 <!-- LICENSE -->
-## License
+<!-- ## License
 TODO
-<!-- Distributed under the MIT License. See `LICENSE.txt` for more information. -->
+Distributed under the MIT License. See `LICENSE.txt` for more information. -->
 
 <!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
+<!-- ## Acknowledgments
 
 Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
-TODO
+TODO -->
 <!-- * [Choose an Open Source License](https://choosealicense.com)
 * [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
 * [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
