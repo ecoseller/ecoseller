@@ -93,7 +93,7 @@ Docker and docker-compose are required to run ecoseller.io. You can install them
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-_For prerequisities and installation, please refer to the [Documentation](https://docs.ecoseller.io/administration/installation/).
+For prerequisites and installation, please refer to the [Documentation](https://docs.ecoseller.io/administration/installation/).
 
 
 <!-- ROADMAP -->
