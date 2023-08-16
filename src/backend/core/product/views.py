@@ -74,7 +74,7 @@ class ProductListDashboard(APIView, DashboardPagination):
     @check_user_is_staff_decorator()
     def get(self, request):
         self.locale = request.GET.get("locale", "en")
-        products = Product.objects.all()
+        products = Product.objects.order_by("id")
         paginated_products = self.paginate_queryset(products, request)
         serialized_products = ProductDashboardListSerializer(
             paginated_products,
