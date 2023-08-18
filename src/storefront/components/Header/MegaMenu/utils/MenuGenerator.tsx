@@ -40,10 +40,6 @@ export const MenuGenerator = (
     }
     let cat = null;
 
-    /**
-     * TODO: this might benefit from some refactoring, because it's a bit of a mess and not exactly DRY
-     */
-
     switch (level) {
       case 0:
         console.log("level 0 has children", category.title, children);
@@ -61,8 +57,8 @@ export const MenuGenerator = (
               isForward={children && children?.length > 0 ? true : false}
               isActive={
                 children &&
-                children?.length > 0 &&
-                !!activeMenus.includes(`nav-mega-${category.id}`)
+                  children?.length > 0 &&
+                  !!activeMenus.includes(`nav-mega-${category.id}`)
                   ? true
                   : false
               }

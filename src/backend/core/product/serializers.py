@@ -156,10 +156,6 @@ class ProductPriceListSerializer(serializers.ListSerializer):
 
 
 class ProductPriceSerializer(ModelSerializer):
-    # price_list = PriceListSerializer(read_only=True, many=False) <-- TODO: ucommenting this line breaks the serializer or at least
-    # the price_list field is not serialized correctly when sent as:
-    # {"price_list": "CZK_maloobchod", "price": 1000} <-- price list is not serialized and hence not returned
-
     class Meta:
         list_serializer_class = ProductPriceListSerializer
         model = ProductPrice
@@ -241,7 +237,6 @@ class ProductVariantSerializer(ModelSerializer):
     """
     Product Variant Serializer (see product/models.py)
     returns only basic variant fields such as SKU, EAN, weight
-    TODO: price, stock, attributes
     """
 
     sku = CharField()

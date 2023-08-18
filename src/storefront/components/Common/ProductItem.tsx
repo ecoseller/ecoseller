@@ -38,10 +38,6 @@ const ProductItem = ({
           product_variant_sku,
           ...rs_info,
         });
-        // TODO: Trigger when visible
-        // sendEvent("RECOMMENDATION_VIEW", {
-        //   id: 42,
-        // });
         // this push will need to be changed to a link to the product page
         router.push(url, undefined, { shallow: false });
       }}

@@ -31,8 +31,8 @@ const ProductCard = ({ product }: IProductCardProps) => {
   const imgHeight = isSmallScreen
     ? "100px"
     : isMediumScreen
-    ? "150px"
-    : "200px";
+      ? "150px"
+      : "200px";
 
   // sort variant prices from cheapest to the most expensive
   product.variant_prices.sort((p1, p2) => p1.incl_vat - p2.incl_vat);
@@ -81,10 +81,6 @@ const ProductCard = ({ product }: IProductCardProps) => {
               };
             })
           );
-          // TODO: Trigger when visible
-          // sendEvent("RECOMMENDATION_VIEW", {
-          //   id: 42,
-          // });
         }}
       >
         <CardMedia

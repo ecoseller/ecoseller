@@ -144,15 +144,15 @@ const ProductVariantsEditor = ({
     setRows(
       state?.product_variants
         ? state?.product_variants.map((variant: IProductVariant) => ({
-            ...variant,
-            ...deserializeProductVariantAttributesToRow(
-              variant,
-              attributesData
-            ),
-            ...deserializeProductVariantPricesToRow(variant, pricelistsData),
-            id: variant.sku,
-            isNew: false,
-          }))
+          ...variant,
+          ...deserializeProductVariantAttributesToRow(
+            variant,
+            attributesData
+          ),
+          ...deserializeProductVariantPricesToRow(variant, pricelistsData),
+          id: variant.sku,
+          isNew: false,
+        }))
         : []
     );
   }, [state.product_variants]);
@@ -176,14 +176,14 @@ const ProductVariantsEditor = ({
 
     const variantsToSet = rows.map(
       (row) =>
-        ({
-          ...(row as IProductVariant),
-          attributes: serializeProductVariantAttributesFromRow(
-            row,
-            attributesData
-          ),
-          price: serializeProductVariantPricesFromRow(row, pricelistsData),
-        } as IProductVariant)
+      ({
+        ...(row as IProductVariant),
+        attributes: serializeProductVariantAttributesFromRow(
+          row,
+          attributesData
+        ),
+        price: serializeProductVariantPricesFromRow(row, pricelistsData),
+      } as IProductVariant)
     );
 
     dispatch({
@@ -251,23 +251,23 @@ const ProductVariantsEditor = ({
     //   : []), // <-- this generates pricelist columns
     ...(attributesData
       ? attributesData?.map((attribute) => ({
-          field: `$ATTRIBUTE_${attribute.type_name}`,
-          headerName: attribute.type_name,
-          editable: true,
-          width: 125,
-          minWidth: 150,
-          maxWidth: 200,
-          sortable: false,
-          disableColumnMenu: true,
-          type: "singleSelect",
-          valueOptions: [
-            ...(attribute?.base_attributes?.map((value: IBaseAttribute) => ({
-              value: value.id,
-              label:
-                value.value + `${attribute.unit ? " " + attribute.unit : ""}`,
-            })) || []),
-          ],
-        })) || []
+        field: `$ATTRIBUTE_${attribute.type_name}`,
+        headerName: attribute.type_name,
+        editable: true,
+        width: 125,
+        minWidth: 150,
+        maxWidth: 200,
+        sortable: false,
+        disableColumnMenu: true,
+        type: "singleSelect",
+        valueOptions: [
+          ...(attribute?.base_attributes?.map((value: IBaseAttribute) => ({
+            value: value.id,
+            label:
+              value.value + `${attribute.unit ? " " + attribute.unit : ""}`,
+          })) || []),
+        ],
+      })) || []
       : []), // <-- this generates attributes columns
     {
       field: "actions",
@@ -324,29 +324,6 @@ const ProductVariantsEditor = ({
       },
     },
   ];
-  // TODO: SINCE COLUMN GROUPING IS EXPERIMENTAL, IT IS NOT WORKING PROPERLY
-  // CURRENTLY IT IS NOT POSSIBLE TO GROUP COLUMNS DUE TO PRODUCT TYPES
-
-  // const columnGroupingModel: GridColumnGroupingModel = [
-  //   {
-  //     groupId: "Prices",
-  //     children: [
-  //       ...(pricelistsData?.map((pricelist: IPriceList) => ({
-  //         field: `$PRICE_${pricelist.code}`,
-  //       })) || []), // <-- this creates groupping for pricelists
-  //     ],
-  //   },
-  //   {
-  //     groupId: "Attributes",
-  //     children: attributesData
-  //       ? [
-  //           ...(attributesData?.map((attribute) => ({
-  //             field: `$ATTRIBUTE_${attribute.type_name}`,
-  //           })) || []), // <-- this creates groupping for attributes
-  //         ]
-  //       : [],
-  //   },
-  // ];
 
   const handleRowEditStart = (
     params: GridRowParams,
@@ -492,7 +469,7 @@ const ProductVariantsEditor = ({
             }}
             sx={{ overflowX: "scroll" }}
             experimentalFeatures={{ columnGrouping: true }} // <-- this enables column grouping (experimental)
-            // columnGroupingModel={columnGroupingModel} // <-- this creates groupping for attributes, but it is not working properly :(
+          // columnGroupingModel={columnGroupingModel} // <-- this creates groupping for attributes, but it is not working properly :(
           />
           // </div>
         )}

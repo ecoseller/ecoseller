@@ -1,12 +1,6 @@
 # Ecoseller recommender system
 This folder contains Ecoseller recommender system app, using [flask](https://flask.palletsprojects.com).
 
-
-## Dev tools
-
-### Debugging
-- TODO
-
 ### `black`
 We're using [black](https://black.readthedocs.io/en/stable/) code formatter.  
 

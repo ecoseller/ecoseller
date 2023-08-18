@@ -173,7 +173,6 @@ class EASE:
 
         logging.info("Preparing rating matrix")
 
-        # TODO: Use better rating matrix estimate
         reviews = ReviewModel.gets()
         user_ids = [review.user_id for review in reviews]
         # reviews = ProductAddToCartModel.gets()

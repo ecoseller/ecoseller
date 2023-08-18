@@ -33,7 +33,7 @@ export interface IProductTranslation {
 }
 
 export interface IProductTranslations {
-  [locale: string]: IProductTranslation; // TODO: this needs to be extended according to iso 639 (TLocale)
+  [locale: string]: IProductTranslation;
 }
 
 export interface IProductMedia {
