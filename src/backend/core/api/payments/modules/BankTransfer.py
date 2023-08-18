@@ -70,7 +70,8 @@ class BankTransferCZK(PayBySquareMethod):
 class BankTransferEUR(BankTransferCZK):
     """
     Bank transfer for EUR
-    Currently same as CZK
+    This class inherits from the CZK version and is left empty, as no changes have been made.
+    If you wish to customize the behavior for EUR bank transfers, you can do so based on the CZK version.
     """
 
     pass
