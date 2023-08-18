@@ -15,7 +15,6 @@ services:
       target: demo
     volumes:
       - ./backend/core:/usr/src/app/
-      # - ./backend/demo_data/images:/usr/src/mediafiles
     ports:
       - 8000:8000
     env_file:
@@ -26,8 +25,6 @@ services:
   postgres_backend:
     image: postgres:13.0-alpine
     container_name: postgres_backend
-    # volumes:
-      # - ./backend/demo_data/mock_data.sql:/docker-entrypoint-initdb.d/setup_database.sql
     ports:
       - 5433:5432
     environment:
@@ -47,8 +44,6 @@ services:
     ports:
       - 6379:6379
     command: redis-server --save 20 1 --loglevel warning
-    # volumes:
-    #   - ./cache:/data
     depends_on:
       - backend
   rq-worker:
@@ -66,12 +61,10 @@ services:
   elasticsearch:
     container_name: elasticsearch
     build:
-      context: ./backend/elasticsearch
+      context: ./elasticsearch
     environment:
       - discovery.type=single-node
       - cluster.routing.allocation.disk.threshold_enabled=false
-    # volumes:
-    #   - ./backend/elasticsearch/data:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
       - "9300:9300"
