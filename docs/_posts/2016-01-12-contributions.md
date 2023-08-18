@@ -71,12 +71,13 @@ Applying this workflow keeps the git history of a project **linear**. That is go
 - Git bisect
 
 ## What to do when
-### Forgot to create a new branch
-You already made some changes and forgot to switch to new branch. At this point its easy fix, just add what you have done so far and then switch to new branch:
-```
-git add .
-git checkout -b T-<task-number>
-```
+This section describes some common made mistakes and how to fix them.
+* **Forgot to create a new branch**
+    You already made some changes and forgot to switch to new branch. At this point its easy fix, just add what you have done so far and then switch to new branch:
+    ```
+    git add .
+    git checkout -b T-<task-number>
+    ```
 
 ## Useful commands to remember
 - `git log` - shows commits log

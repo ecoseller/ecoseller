@@ -17,24 +17,29 @@ The Ecoseller system is built upon an architecture incorporating various service
 ## Backend written in Django:
 The core of the **ecoseller** system is the backend, developed using the Django Rest Framework. Django provides a solid foundation for building web applications and offers a range of features such as user management, data modeling, and API development. The backend handles crucial functionalities like product management, order processing, user authentication, and more.
 We can divide the backend part into several subsections based on the area it handles.
+
 ### Core Application
 Core part of the application is implemented in Python using the following technologies:
 * `Django Rest Framework` – open source Python web framework
 * [`Redis`](#redis-for-asynchronous-tasks-via-rq-worker) – open source data store that will help us with back-end task queuing
 * [`Elasticsearch`](elasticsearch-for-fast-product-search) – search engine for storing and searching product data
 More technical details about the Core application can be found in the [backend documentation](../backend).
+
 ## PostgreSQL Database:
 **ecoseller** utilizes a PostgreSQL database to store and manage data efficiently. PostgreSQL is a reliable and feature-rich open-source database that ensures data integrity, scalability, and performance for the platform. It handles critical data related to products, orders, user information, and various other entities within the system.
 The only system accessing this database is the backend described above.
 ## Storefront and Dashboard written in Next.js:
 The **ecoseller** platform includes two user-facing interfaces: the storefront and the dashboard. Both are developed using Next.js, a powerful React framework. Next.js enables the creation of dynamic, high-performance web applications with server-side rendering and optimized client-side navigation. The storefront serves as the online storefront for customers, while the dashboard provides a comprehensive administration panel for managing the e-commerce platform.
 Both applications are written in `TypeScript` and technical details can be found in the [storefront & dashboard documentation](../dashboard_storefront).
+
 ## Elasticsearch for Fast Product Search:
 **ecoseller** integrates Elasticsearch, a powerful search and analytics engine, to enhance the speed and accuracy of product searches. Elasticsearch enables efficient indexing, querying, and filtering of product data, ensuring a seamless and responsive search experience for users. The integration with Django allows for easy synchronization of product data between the backend and Elasticsearch.
 We use custom settings of Elasticsearch to improve the search experience. More on that in the section dedicated to [supportive services](../supportive_services).
+
 ## Redis for Asynchronous Tasks via RQ-Worker:
 **ecoseller** utilizes Redis, an in-memory data structure store, to support asynchronous task processing. The RQ (Redis Queue) library leverages Redis to manage and distribute tasks across workers. The RQ-Worker, an instance of the Ecoseller backend, processes tasks from the Redis queue, enabling efficient handling of background processes and time-consuming operations.
 More on that in the section dedicated to [supportive services](../supportive_services).
+
 ## Recommender System written in Flask:
 **ecoseller** incorporates a recommender system to provide personalized product recommendations to users. The recommender system is developed using [Flask](https://flask.palletsprojects.com), a lightweight Python web framework. It leverages user behavior and preferences to generate relevant recommendations, enhancing the user experience and driving engagement.
 The recommender system is implemented in Python, the following technologies are used as well:
@@ -46,7 +51,7 @@ The technical design of the **ecoseller** system seamlessly integrates these com
 
 
 # Version control
-As a version control system, current state-of the art `git` is used. More specifically [`GitHub`](https://github.com/ecoseller).
+As a version control system, we use `git`. More specifically [`GitHub`](https://github.com/ecoseller).
 
 # Coding style
 We use several tools for enforcing our code style. In both the dashboard and the storefront, we use:

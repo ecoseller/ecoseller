@@ -16,7 +16,7 @@ When you first open storefront, the homepage is displayed.
 
 There are several components denoted at the image above
 
-1. Country change button (see below)
+1. Country change button (see [Country change](#country-change))
 2. Category menu - using this menu, you can navigate to individual categories
 3. Search bar - used for searching products
 4. Profile icon - using this icon, you can login or display your profile info and logout (if already logged-in)

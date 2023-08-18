@@ -65,7 +65,7 @@ Shipping method page displays list of all shipping methods with the following fi
 ![Shipping method list](../../images/dashboard/shipping_method_list.png)
 
 There are also 2 action buttons:
-- *Edit* - after you click on this button, you'll be redirected to Shipping metod detail page (see below)
+- *Edit* - after you click on this button, you'll be redirected to Shipping metod detail page (see [Shipping method detail](#shipping-method-detail))
 - *Delete* - used for deleting the given shipping method
 
 ### Shipping method detail
@@ -97,7 +97,7 @@ Note that it looks basically the same as shipping methods page.
 ![Payment method list](../../images/dashboard/payment_method_list.png)
 
 There are also 2 action buttons:
-- *Edit* - after you click on this button, you'll be redirected to Payment metod detail page (see below)
+- *Edit* - after you click on this button, you'll be redirected to Payment metod detail page (see [Payment method detail](#payment-method-detail))
 - *Delete* - used for deleting the given payment method
 
 ### Payment method detail
@@ -195,7 +195,7 @@ The reviews page consists of a list showing all reviews. The list has the follow
 * Comment
 * Created at
 * Actions
-  * Detail - click on the detail button opens the review details page (see [below](#review-details))
+  * Detail - click on the detail button opens the review details page (see [Review details](#review-details))
   * Delete - click on the delete button deletes the review
 
 ![Reviews list](../../images/dashboard/reviews_list.png)
@@ -230,18 +230,18 @@ Under the attributes section, you can see a list of all attributes. The list has
 ![Attribute list](../../images/dashboard/catalog_attribtues_list.png)
 
 ### Creating new attribute
-To create a new attribute, click on the button in the upper left corner of the attribute table - *Add New*. You will be redirected to the attribute details page (see [below](#editing-attributes)).
+To create a new attribute, click on the button in the upper left corner of the attribute table - *Add New*. You will be redirected to the attribute details page (see [Editing attributes](#editing-attributes)).
 
 ### Editing attribute
 To edit an attribute, click on the edit button in the attribute list. This opens the attribute details page.
 The detail page consists of the following sections:
-1. *General information* - this section contains the name and unit of the attribute. If you've just created the attribute or it has no values, you can change type of attribute (see [below](#attribute-types))
+1. *General information* - this section contains the name and unit of the attribute. If you've just created the attribute or it has no values, you can change type of attribute (see [Attribute types](#attribute-types))
 2. *Translated fields* - this section contains the translated name of the attribute. You can translate the name of the attribute into multiple languages.
 3. *Attributes* - this section contains the list of values of the attribute. The list has the following columns:
   * Value - the value of the attribute
   * List of languages (if it's `text` attribute type) - the value of the attribute in the given language
   * Actions - edit and delete buttons
-    * Edit - click on the edit button opens the edit attribute value page (see [below](#editing-attribute-values))
+    * Edit - click on the edit button opens the edit attribute value page (see [Editing attribute values](#editing-attribute-values))
     * Delete - click on the delete button deletes the attribute value
 ![Attribute details](../../images/dashboard/catalog_attributes_detail.png)
 
@@ -269,15 +269,15 @@ Under the product types section, you can see a list of all product types. The li
 ![Product type list](../../images/dashboard/catalog_product_types_list.png)
 
 ### Creating new product type
-To create a new product type, click on the button in the upper left corner of the product type table - *Add New*. You will be redirected to the product type details page (see [below](#editing-product-type)).
+To create a new product type, click on the button in the upper left corner of the product type table - *Add New*. You will be redirected to the product type details page (see [Editing product type](#editing-product-type)).
 
 ### Editing product type
 To edit a product type, click on the edit button in the product type list. This opens the product type details page. 
 ![Product type details](../../images/dashboard/catalog_product_types_detail.png)
 
 The detail page consists of the following sections:
-1. *General information* - this section contains the name of the product type. You'll see this name in the Product edit page (see [below](#editing-product)) when you select the product type. It's not visible in the storefront.
-2. *Allowed attributes* - this section contains the list of attributes that are allowed in the product type. It's a dropdown list from which you can select the attributes. You can select multiple attributes. Those are the attribtues that you'll be able to select in the product edit page (see [below](#editing-product)) when you select the product type. 
+1. *General information* - this section contains the name of the product type. You'll see this name in the Product edit page (see [Editing product](#editing-product)) when you select the product type. It's not visible in the storefront.
+2. *Allowed attributes* - this section contains the list of attributes that are allowed in the product type. It's a dropdown list from which you can select the attributes. You can select multiple attributes. Those are the attribtues that you'll be able to select in the product edit page (see [Editing product](#editing-product)) when you select the product type. 
     ![Product type details](../../images/dashboard/catalog_attributes_allowed_attributes.png)
 3. *Vat groups* - this section contains the list of vat groups that are allowed in the product type. They're listed in a sections groupped by the country. You need to select *Vat group* for each country. You can select only one vat group per country. When calculating price incl VAT for each product x country, selected vat group will be used.
     ![Product type details](../../images/dashboard/catalog_product_types_vat_groups.png)
@@ -296,11 +296,11 @@ Under the products section, you can see a list of all products. The list has the
 ![Product list](../../images/dashboard/catalog_products_list.png)
 
 ### Creating new product
-If you want to create a new product, click on the button in the upper right corner above the product table - *New product*. You will be redirected to the product details page (see [below](#editing-product)).
+If you want to create a new product, click on the button in the upper right corner above the product table - *New product*. You will be redirected to the product details page (see [Editing product](#editing-product)).
 ![Product list](../../images/dashboard/catalog_products_new_product.png)
 At this point, you can start setting data fields of the product. Make sure you select the product type first. The product type defines the structure of the product variant and it cannot be changed after the product is created.
 ![New product page](../../images/dashboard/catalog_product_new_product_page.png)
-After you firstly save the product, you'll be redirected to the product edit page (see [below](#editing-product)). 
+After you firstly save the product, you'll be redirected to the product edit page (see [Editing product](#editing-product)). 
 
 ### Editing product
 Editing a product is quite large topic. It's because the product is the core of the catalog and it has many different fields. The product edit page is divided into multiple sections. Each section is described in the following subsections.
@@ -565,7 +565,7 @@ This section shows a list of all categories. The list has the following columns:
 
 ![Categories](../../images/dashboard/cms_page_category_list.png)
 #### Creating a new category
-In order to create a new category, click on the *New page category* button in the upper left corner of the table. This redirects you to the detail category page. Now follow the steps the same as for editing a category (see [below](#editing-a-category)).
+In order to create a new category, click on the *New page category* button in the upper left corner of the table. This redirects you to the detail category page. Now follow the steps the same as for editing a category (see [Editing a category](#editing-a-category)).
 
 #### Editing a category
 In order to edit a category, click on the edit icon in the table. This redirects you to the detail category page.
@@ -602,7 +602,7 @@ This section shows a list of all users. The list has the following columns:
 * Is Admin
 * Roles
 * Actions
-  * Edit - click on the edit button opens the user details page (see [below](#user-details))
+  * Edit - click on the edit button opens the user details page (see [User details](#user-details))
   * Delete - click on the delete button deletes the user
 
 ### User details
