@@ -162,3 +162,14 @@ src/backend/elasticsearch/data
 # Docs
 docs/.sass-cache
 docs/_site
+
+
+
+# Elastic search data
+src/elasticsearch/data
+src/elasticsearch/hunspell/**/*.aff
+src/elasticsearch/hunspell/**/*.dic
+
+
+# DB
+src/postgres_backend/data*
