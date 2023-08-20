@@ -20,6 +20,8 @@ services:
       - 8001:8001
     env_file:
       - ./backend/docker-compose.env
+    depends_on:
+      - postgres_backend
   postgres_backend:
     image: postgres:13.0-alpine
     container_name: postgres_backend
