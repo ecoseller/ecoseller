@@ -1,6 +1,6 @@
 ---
 title: User documentation - Storefront
-category: User category
+category: User documentation
 order: 3
 ---
 

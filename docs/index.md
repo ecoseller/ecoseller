@@ -2,15 +2,16 @@
 title: Introduction
 ---
 
-Unlock the future of e-commerce success with **ecoseller** – headless e-commerce solution that empowers your brand. **ecoseller** redefines the game, separating the captivating front-end from the dynamic back-end, setting the stage for unparalleled flexibility and growth.
+Unlock the future of e-commerce success with **ecoseller** – headless e-commerce solution that empowers your brand. **ecoseller** redefines the game, separating the captivating frontend from the dynamic backend, setting the stage for unparalleled flexibility and growth.
+
 
 ![Overview](../../images/ecoseller.io.svg)
 
 Designed to cater to businesses of every scale, from the most daring sole proprietor to the middle size, **ecoseller** is your partner in success. Our platform's agility adapts to your ambitions, ensuring your digital presence resonates with impact.
 
-Powered by the technological prowess of Django and Next.JS, our dashboard is a symphony of innovation, delivering real-time insights and intuitive control. Feast your eyes on the future with our dashboard screenshots, a glimpse into the seamless control that fuels your journey to the top.
-
 ![Overview](../../images/dashboard/overview.png)
+Powered by the technological prowess of Django and Next.JS, our dashboard is a symphony of innovation, delivering real-time insights and intuitive control. Feast your eyes on the future with our dashboard, a glimpse into the seamless control that fuels your journey to the top.
+
 
 ![Overview](../../images/dashboard/catalog_product_edit_media_reorder.gif)
 
@@ -22,15 +23,13 @@ The data model, the dynamic canvas that lets you sell an infinite array of produ
 
 ![Overview](../../images/models_all.png)
 
-Elevate your sales, engage your audience, and embrace a future where innovation thrives – all with **ecoseller** by your side. Your e-commerce empire starts here.
+Elevate your sales, engage your audience, and embrace a future where innovation thrives – all with **ecoseller** by your side. Your e-commerce empire starts here, ready to take on the world?
+
 
 So let's get started!
-- [Administation Documentation](/administration/installation/)
-  - Get started quickly and with ease.
-- [Programming Documentation](/programming/technical-design/)
-  - Get a deeper understanding of the platform and ways to extend it.
-- [User Documentation of dashboard](/user/dashboard/) and [User Documentation of storefront](/user/storefront/)
-  - Learn how to use the dashboard and storefront.
+- [Get started](/administration/installation/) quickly and with ease.
+- [Get a deeper understanding](/programming/technical-design/) of the platform and ways to extend it.
+- Learn how to [use the dashboard](/user/dashboard/) and [storefront](/user/storefront/).
 
 <!-- 
 Table of contents:

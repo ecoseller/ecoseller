@@ -1,6 +1,6 @@
 ---
 title: User documentation - Dashboard
-category: User category
+category: User documentation
 order: 2
 ---
 
