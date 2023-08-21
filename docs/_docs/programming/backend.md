@@ -224,8 +224,8 @@ You can, of course translate email templates and strings contained in it. It's d
 With that included we can use {% raw %} `{% translate 'str_id' %}` {% endraw %} tag provided by Django to translate strings. For more information about Django translation, please refer to [Django documentation](https://docs.djangoproject.com/en/4.2/topics/i18n/translation/) and for generating translation files, please refer to [**ecoseller** administrative documentation](../administration/localization.md).
 
 ### Email objects
+Ecoseller is provided with a main class called `Email` that serves as a base class for all "emails" having following methods and attributes:
 
-The `Email` objects that serves as a base class for all emails has following methods and attributes:
 * `generate_context` - method for generating context for email template. It's used for rendering email template with context.
 * `generate_subject` - method for generating email subject. It's used for generating email subject.
 * `send` - method for sending email. It's used for sending email with rendered template and generated subject to the user. If object property `use_rq` is set to `True`, it will send email via RQ. Otherwise, it will send email synchronously.
@@ -234,7 +234,7 @@ The `Email` objects that serves as a base class for all emails has following met
 * `recepient_list` - property for determining recepients of the email. It's set to `[]` by default.
 * `language` - property for determining language of the email. It's set to `cs` by default and can use only `settings.PARLER_LANGUAGES`
 
-### Pre-defined email objects
+### Pre-defined email classes
 **ecoseller** has pre-defined email objects that are used for sending emails to users. They are located in `backend/core/emails/email` directory. 
 
 #### OrderItemComplaintConfirmationEmail
