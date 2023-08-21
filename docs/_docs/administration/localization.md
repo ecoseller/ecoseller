@@ -52,7 +52,7 @@ After that, Django will create or append to the `locale` folder in the `backend`
 python3 manage.py compilemessages
 ```
 
-Editing data in the database is a little bit more complicated and is fully handled by **ecoseller** dashboard. Everything is described in the [user documentation](../../user/dashboard).
+Editing data in the database is a little bit more complicated and is fully handled by ecoseller dashboard. Everything is described in the [user documentation](../../user/dashboard).
 
 
 ### Storefront
@@ -70,23 +70,23 @@ npm run translate
 to extend the `src/storefront/public/locales` folder with new namespaces and strings.
 
 ## Country
-The country is the main localization unit in the **ecoseller**. It's used to define the following:
+The country is the main localization unit in the ecoseller. It's used to define the following:
 - Currency
 - VAT groups
 - locale
 - shipping methods
 
-Countries are stored in the database and can be edited in the **ecoseller** dashboard. Everything is described in the [localization section](../../user/dashboard#localization) of the user documentation.
+Countries are stored in the database and can be edited in the ecoseller dashboard. Everything is described in the [localization section](../../user/dashboard#localization) of the user documentation.
 
 ## Currency
 
 Currency should allow you to make user more comfortable and feel like they're shopping at their local store. 
 Currency is binded to the country, so you can have different currencies for different countries. 
 
-Currencies are also stored in the database and you can edit them in the **ecoseller** dashboard. Everything is described in the [localization section](../../user/dashboard#localization) of the user documentation.
+Currencies are also stored in the database and you can edit them in the ecoseller dashboard. Everything is described in the [localization section](../../user/dashboard#localization) of the user documentation.
 
 ## VAT groups
 
 VAT groups are used to define different VAT rates for different products and countries. With this feature, you can have different VAT rates for different countries as well as different VAT rates for different products (usually there's a standard rate and reduced rate).
 
-VAT groups are also stored in the database and you can edit them in the **ecoseller** dashboard. Everything is described in the [localization section](../../user/dashboard#localization) of the user documentation.
+VAT groups are also stored in the database and you can edit them in the ecoseller dashboard. Everything is described in the [localization section](../../user/dashboard#localization) of the user documentation.

@@ -403,7 +403,7 @@ api.interceptors.request.use((config) => {
 ```
 
 # API Routes 
-[Next.js API Routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) provide a convenient way to create server-side endpoints within your Next.js application. These API routes allow you to handle server-side logic and expose custom API endpoints. This section of the documentation explores the usage of Next.js API Routes in the context of **ecoseller**.
+[Next.js API Routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) provide a convenient way to create server-side endpoints within your Next.js application. These API routes allow you to handle server-side logic and expose custom API endpoints. This section of the documentation explores the usage of Next.js API Routes in the context of ecoseller.
 
 In the Ecoseller architecture, it is recommended to avoid exposing the backend service directly to the client. By using Next.js API Routes, you can encapsulate server-side logic within your Next.js application, ensuring a secure and controlled environment for handling data and performing server-side operations. This approach provides several benefits:
 * **Security**: By not exposing the backend service to the client, you reduce the risk of potential security vulnerabilities. It prevents unauthorized access or tampering of sensitive data and operations that should be restricted to server-side execution only.
