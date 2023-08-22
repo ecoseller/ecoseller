@@ -2,12 +2,12 @@
 title: Introduction
 ---
 
-Unlock the future of e-commerce success with **ecoseller** – headless e-commerce solution that empowers your brand. **ecoseller** redefines the game, separating the captivating frontend from the dynamic backend, setting the stage for unparalleled flexibility and growth.
+Unlock the future of e-commerce success with ecoseller – headless e-commerce solution that empowers your brand. ecoseller redefines the game, separating the captivating frontend from the dynamic backend, setting the stage for unparalleled flexibility and growth.
 
 
 ![Overview](../../images/ecoseller.io.svg)
 
-Designed to cater to businesses of every scale, from the most daring sole proprietor to the middle size, **ecoseller** is your partner in success. Our platform's agility adapts to your ambitions, ensuring your digital presence resonates with impact.
+Designed to cater to businesses of every scale, from the most daring sole proprietor to the middle size, ecoseller is your partner in success. Our platform's agility adapts to your ambitions, ensuring your digital presence resonates with impact.
 
 ![Overview](../../images/dashboard/overview.png)
 Powered by the technological prowess of Django and Next.JS, our dashboard is a symphony of innovation, delivering real-time insights and intuitive control. Feast your eyes on the future with our dashboard, a glimpse into the seamless control that fuels your journey to the top.
@@ -15,15 +15,15 @@ Powered by the technological prowess of Django and Next.JS, our dashboard is a s
 
 ![Overview](../../images/dashboard/catalog_product_edit_media_reorder.gif)
 
-But that's just the beginning – we go beyond, embracing the art of recommendation to engage users and boosting sales like. **ecoseller's** recommendation system doesn't just sell, it captivates, creating personalized experiences that fuel engagement.
+But that's just the beginning – we go beyond, embracing the art of AI recommendation to engage users and boosting sales like. ecoseller's AI recommendation system doesn't just sell, it captivates, creating personalized experiences that fuel engagement.
 
-**ecoseller** aims to extensible platofrm, powered by our notification API. Seamlessly connect events, unlock the power to call external APIs – it's your gateway to endless possibilities, making **ecoseller** not just a platform but a universe of opportunities.
+ecoseller aims to extensible platofrm, powered by our notification API. Seamlessly connect events, unlock the power to call external APIs – it's your gateway to endless possibilities, making ecoseller not just a platform but a universe of opportunities.
 
 The data model, the dynamic canvas that lets you sell an infinite array of products with diverse attributes. Your product catalog is limitless, your customer's journey refined.
 
 ![Overview](../../images/models_all.png)
 
-Elevate your sales, engage your audience, and embrace a future where innovation thrives – all with **ecoseller** by your side. Your e-commerce empire starts here, ready to take on the world?
+Elevate your sales, engage your audience, and embrace a future where innovation thrives – all with ecoseller by your side. Your e-commerce empire starts here, ready to take on the world?
 
 
 So let's get started!
@@ -36,16 +36,16 @@ Table of contents:
 * TOC
 {:toc}
 
-Welcome to the documentation page of **ecoseller**, a cutting-edge open-source e-commerce platform built using the powerful combination of Django Rest Framework and React. Ecoseller offers a comprehensive solution for creating, managing, and optimizing your online store, empowering you to deliver better user experiences and drive business growth with system that ships quickly.
+Welcome to the documentation page of ecoseller, a cutting-edge open-source e-commerce platform built using the powerful combination of Django Rest Framework and React. Ecoseller offers a comprehensive solution for creating, managing, and optimizing your online store, empowering you to deliver better user experiences and drive business growth with system that ships quickly.
 
 Designed with developers and users in mind, Ecoseller comes bundled with a range of essential features, including an administration panel, a storefront, and an AI-powered recommendation system. This documentation serves as a comprehensive resource, offering detailed guidance on utilizing and customizing multiple aspects of the platform, from the frontend to the backend.
 
-Whether you are an e-commerce entrepreneur, a developer, or a business owner, **ecoseller** provides you with a solid foundation to establish and enhance your online presence. With its modular and scalable architecture, **ecoseller** offers flexibility and extensibility, allowing you to adapt the platform to suit your unique business requirements.
+Whether you are an e-commerce entrepreneur, a developer, or a business owner, ecoseller provides you with a solid foundation to establish and enhance your online presence. With its modular and scalable architecture, ecoseller offers flexibility and extensibility, allowing you to adapt the platform to suit your unique business requirements.
 
 # Key Features
-**ecoseller** offers a wide range of powerful features to help you build and manage your online store efficiently.
+ecoseller offers a wide range of powerful features to help you build and manage your online store efficiently.
 ## Dashboard
-The administration dashboard of **ecoseller** provides a user-friendly interface for managing your online store.
+The administration dashboard of ecoseller provides a user-friendly interface for managing your online store.
 
 ## Storefront
 **ecoseller's** storefront delivers a visually appealing and intuitive user interface. The storefront can serve as a good starting point for building your own e-commerce storefront or as a reference for creating a custom storefront from scratch.

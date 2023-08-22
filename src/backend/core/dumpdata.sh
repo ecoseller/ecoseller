@@ -1,1 +1,0 @@
-python3 manage.py dumpdata --natural-foreign --exclude=django_rq --exclude=contenttypes --exclude=auth.permission --exclude=auth.group --indent=4 > db.json

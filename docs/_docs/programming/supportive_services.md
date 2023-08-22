@@ -29,7 +29,7 @@ Please refer to `src/backend/core/search/analyzers.py` for more details. Hunspel
 
 
 ## Indexes
-The following indexes are defined in ecoseller:
+Ecoseller is indexing products so that users can search in products. The following index is defined for products:
 ### `products`
 This index is used to store the product information. It is defined in `src/backend/core/products/documents.py` and is based on the `Product` model defined in `src/backend/core/products/models.py`.
 Following data are stored:

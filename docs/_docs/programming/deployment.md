@@ -14,7 +14,7 @@ Ecoseller offers deployment using Docker and Docker Compose, providing a consist
 Docker Compose is a powerful tool that allows you to define and manage multi-container Docker applications. It simplifies the process of deploying and running complex applications by defining the services, networks, and volumes required for your application in a single YAML file. With Docker Compose, you can easily orchestrate the deployment of your application stack, specify environment variables, and configure inter-container communication.
 If you are not familiar with Docker Compose, we recommend you to read the [official documentation](https://docs.docker.com/compose/).
 
-All our docker-compose files define the same services (except for `docker-compose.demo.yml` and `docker-compose.prod.yml` - they contain Nginx reverse proxy), but with different configurations. The services are:
+All our docker-compose files define the same services (except for `docker-compose.yaml` - it doesn't contain Nginx reverse proxy), but with different configurations. The services are:
 * `backend` - Core backend service, written in Python using Django framework. It can be accessed via port 8000 and has three targets - `development`, `demo`, and `production`.
 * `postgres_backend` - PostgreSQL database for backend service. It can be accessed via port 5433.
 * `redis` - Redis database for backend service. It can be accessed via port 6379.
