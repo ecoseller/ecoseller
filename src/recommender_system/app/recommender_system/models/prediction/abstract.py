@@ -1,15 +1,10 @@
 from abc import ABC, abstractmethod
-from typing import Any, List, Optional, Dict, TYPE_CHECKING
-
-from dependency_injector.wiring import Provide, inject
+from typing import Any, List, Optional
 
 from recommender_system.models.stored.model.latest_identifier import (
     LatestIdentifierModel,
 )
 from recommender_system.utils.recommendation_type import RecommendationType
-
-if TYPE_CHECKING:
-    from recommender_system.managers.model_manager import ModelManager
 
 
 class AbstractPredictionModel(ABC):
@@ -18,7 +13,6 @@ class AbstractPredictionModel(ABC):
     class Meta:
         model_name: str
         title: str
-        description: str
 
     def __init__(self, identifier: Optional[str] = None):
         self.identifier = identifier or self.default_identifier
@@ -109,15 +103,3 @@ class AbstractPredictionModel(ABC):
         ).save()
         if latest_identifier is not None and latest_identifier != self.identifier:
             self.__class__(identifier=latest_identifier).delete()
-
-    @classmethod
-    @inject
-    def to_config(
-        cls, model_manager: "ModelManager" = Provide["model_manager"]
-    ) -> Dict[str, Any]:
-        return {
-            "name": cls.Meta.model_name,
-            "title": cls.Meta.title,
-            "description": cls.Meta.description,
-            "disabled": model_manager.config.is_disabled(model=cls.Meta.model_name),
-        }

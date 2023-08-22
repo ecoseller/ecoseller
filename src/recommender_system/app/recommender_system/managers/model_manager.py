@@ -87,9 +87,7 @@ class ModelManager:
 
         trainer.schedule_train(model_name=SimilarityPredictionModel.Meta.model_name)
 
-    def get_all_models(
-        self, include_dummy: bool = False
-    ) -> List[Type[AbstractPredictionModel]]:
+    def get_all_models(self) -> List[Type[AbstractPredictionModel]]:
         from recommender_system.models.prediction.selection.model import (
             SelectionPredictionModel,
         )
@@ -103,15 +101,8 @@ class ModelManager:
             GRU4RecPredictionModel,
         )
         from recommender_system.models.prediction.ease.model import EASEPredictionModel
-        from recommender_system.models.prediction.dummy.model import (
-            DummyPredictionModel,
-        )
 
-        dummy: List[Type[AbstractPredictionModel]] = (
-            [] if not include_dummy else [DummyPredictionModel]
-        )
-
-        return dummy + [
+        return [
             SelectionPredictionModel,
             PopularityPredictionModel,
             SimilarityPredictionModel,

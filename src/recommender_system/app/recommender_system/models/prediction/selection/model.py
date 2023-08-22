@@ -15,7 +15,6 @@ class SelectionPredictionModel(AbstractPredictionModel):
     class Meta:
         model_name = "selection"
         title = "Selection"
-        description = "Selection description"
 
     @property
     def default_identifier(self) -> str:

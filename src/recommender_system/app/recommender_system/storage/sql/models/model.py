@@ -29,8 +29,6 @@ class SQLConfig(ModelBase):
     retrieval_size = Column(Integer(), nullable=False)
     ordering_size = Column(Integer(), nullable=False)
 
-    models_disabled = Column(JSON(), nullable=False)
-
     homepage_retrieval_cascade = Column(
         postgresql.ARRAY(String(255)), nullable=False, default=[]
     )
