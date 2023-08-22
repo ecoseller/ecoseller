@@ -1,3 +1,9 @@
+# Ecoseller docker compose v2 file used for developement purposes 
+# It runs backend and frontend in development mode
+
+# to run the project, run the following command in the /src folder of the project 
+# docker compose up --build 
+
 version: "3.9"
 
 services:
@@ -14,12 +20,14 @@ services:
       - 8001:8001
     env_file:
       - ./backend/docker-compose.env
+    depends_on:
+      postgres_backend:
+        condition: service_healthy
   postgres_backend:
     image: postgres:13.0-alpine
     container_name: postgres_backend
     volumes:
-      - ./backend/postgres/mock_data.sql:/docker-entrypoint-initdb.d/setup_database.sql
-      - ./backend/postgres/data:/var/lib/postgresql/data/
+      - ./postgres_backend/data:/var/lib/postgresql/data/
     ports:
       - 5433:5432
     environment:
@@ -58,12 +66,12 @@ services:
   elasticsearch:
     container_name: elasticsearch
     build:
-      context: ./backend/elasticsearch
+      context: ./elasticsearch
     environment:
       - discovery.type=single-node
       - cluster.routing.allocation.disk.threshold_enabled=false
     volumes:
-      - ./backend/elasticsearch/data:/usr/share/elasticsearch/data
+      - ./elasticsearch/data:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
       - "9300:9300"
@@ -123,7 +131,8 @@ services:
     image: postgres:13.0-alpine
     container_name: postgres_rs
     volumes:
-      - ./recommender_system/setup_database.sql:/docker-entrypoint-initdb.d/setup_database.sql
+      - ./postgres_rs/setup_database.sql:/docker-entrypoint-initdb.d/setup_database.sql
+      - ./postgres_rs/data:/var/lib/postgresql/data/
     ports:
       - 5432:5432
     env_file:

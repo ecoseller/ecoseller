@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 from pydantic import Field
 
@@ -17,6 +17,8 @@ class Config(ImmutableApiModel):
     create_at: Optional[datetime] = datetime.now()
     retrieval_size: int = Field(default=1000, alias="retrievalSize")
     ordering_size: int = Field(default=50, alias="orderingSize")
+
+    models_disabled: Dict[str, bool] = Field(default={})
 
     homepage_retrieval_cascade: Optional[List[str]] = Field(
         alias="homepageRetrievalCascade"

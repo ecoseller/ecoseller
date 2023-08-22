@@ -16,6 +16,7 @@ class PopularityPredictionModel(AbstractPredictionModel):
     class Meta:
         model_name = "popularity"
         title = "Popularity"
+        description = "Popularity description"
 
     @property
     def default_identifier(self) -> str:

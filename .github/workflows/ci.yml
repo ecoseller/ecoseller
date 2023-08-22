@@ -118,7 +118,7 @@ jobs:
         with:
           path: src/recommender_system
       - name: Setup database
-        run: psql -h localhost -U postgres -f setup_database.sql
+        run: psql -h localhost -U postgres -f ../postgres_rs/setup_database.sql
       - name: Migrate database
         working-directory: src/recommender_system/app
         run: python -m recommender_system.scripts.migrate
