@@ -11,10 +11,6 @@ import Typography from "@mui/material/Typography";
 // components
 import { NextApiRequest, NextApiResponse } from "next";
 import { dashboardStatsAPI } from "@/pages/api/recommender-system/dashboard";
-import RecommenderConfigForm, {
-  IRecommenderConfigEditableProps,
-  IRecommenderConfigProps,
-} from "@/components/Dashboard/Recommender/RecommenderConfigForm";
 import TabContext from "@mui/lab/TabContext";
 import Box from "@mui/material/Box";
 import TabList from "@mui/lab/TabList";
@@ -27,11 +23,15 @@ import ModelStatistics, {
 import StatisticsItem, {
   IStatisticsItemProps,
 } from "@/components/Dashboard/Recommender/StatisticsItem";
-import CascadeConfig from "@/components/Dashboard/Recommender/CascadeConfig";
+import CascadeConfig from "@/components/Dashboard/Recommender/Configuration/CascadeConfig";
 import { ITrainingProps } from "@/components/Dashboard/Recommender/Training";
 import EditableContentWrapper from "@/components/Dashboard/Generic/EditableContentWrapper";
 import { generalSnackbarError, useSnackbarState } from "@/utils/snackbar";
 import SnackbarWithAlert from "@/components/Dashboard/Generic/SnackbarWithAlert";
+import {
+  IInfo,
+  IRecommenderConfigProps,
+} from "@/pages/dashboard/recommender-system/configuration";
 
 /*
 Layout:
@@ -48,11 +48,12 @@ interface IRecommenderTrainingProps {
   models: ITrainingProps[];
 }
 
-interface IRecommenderSystemProps {
+export interface IRecommenderSystemProps {
   models: IModelProps[];
   performance: IRecommenderPerformanceProps;
   training: IRecommenderTrainingProps;
   config: IRecommenderConfigProps;
+  info: IInfo;
 }
 
 const DashboardRecommenderSystemPage = ({
@@ -173,16 +174,16 @@ const DashboardRecommenderSystemPage = ({
             <StatisticsItem {...performance.item} />
 
             <Typography variant="h6">Configuration</Typography>
-            <RecommenderConfigForm
-              retrievalSize={config.retrievalSize}
-              orderingSize={config.orderingSize}
-              onChange={(data: IRecommenderConfigEditableProps) => {
-                console.log("data", data);
-                console.log("configState", { ...configState, ...data });
-                setConfigState({ ...configState, ...data });
-                console.log("changed", configState);
-              }}
-            />
+            {/*<RecommenderConfigForm*/}
+            {/*  retrievalSize={config.retrievalSize}*/}
+            {/*  orderingSize={config.orderingSize}*/}
+            {/*  onChange={(data: IRecommenderConfigEditableProps) => {*/}
+            {/*    console.log("data", data);*/}
+            {/*    console.log("configState", { ...configState, ...data });*/}
+            {/*    setConfigState({ ...configState, ...data });*/}
+            {/*    console.log("changed", configState);*/}
+            {/*  }}*/}
+            {/*/>*/}
           </Box>
 
           {/* model statistics */}
@@ -237,7 +238,7 @@ const DashboardRecommenderSystemPage = ({
                 key={cascade.name}
                 value={cascade.name}
               >
-                <CascadeConfig cascade={cascade.cascade} />
+                {/*<CascadeConfig cascade={cascade.cascade} />*/}
               </TabPanel>
             ))}
           </TabContext>
