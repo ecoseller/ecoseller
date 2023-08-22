@@ -26,7 +26,6 @@ services:
     image: postgres:13.0-alpine
     container_name: postgres_backend
     volumes:
-      - ./postgres_backend/mock_data.sql:/docker-entrypoint-initdb.d/setup_database.sql
       - ./postgres_backend/data:/var/lib/postgresql/data/
     ports:
       - 5433:5432
