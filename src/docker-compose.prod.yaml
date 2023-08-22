@@ -21,11 +21,13 @@ services:
       - ./backend/docker-compose.env
     environment:
       - LOAD_DEMO_DATA=1
+    depends_on:
+      postgres_backend:
+        condition: service_healthy
   postgres_backend:
     image: postgres:13.0-alpine
     container_name: postgres_backend
     volumes:
-      - ./postgres_backend/mock_data.sql:/docker-entrypoint-initdb.d/setup_database.sql
       - ./postgres_backend/data:/var/lib/postgresql/data/
     ports:
       - 5433:5432
@@ -131,7 +133,8 @@ services:
     image: postgres:13.0-alpine
     container_name: postgres_rs
     volumes:
-      - ./recommender_system/setup_database.sql:/docker-entrypoint-initdb.d/setup_database.sql
+      - ./postgres_rs/setup_database.sql:/docker-entrypoint-initdb.d/setup_database.sql
+      - ./postgres_rs/data:/var/lib/postgresql/data/
     ports:
       - 5432:5432
     env_file:

@@ -23,6 +23,7 @@ class EASEPredictionModel(AbstractPredictionModel):
     class Meta:
         model_name = "ease"
         title = "EASE"
+        description = "EASE description"
 
     def __init__(self, identifier: Optional[str] = None):
         super().__init__(identifier=identifier)

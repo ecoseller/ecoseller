@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Optional, TYPE_CHECKING
+from typing import List, Optional, TYPE_CHECKING, Dict, Any
 
 from dependency_injector.wiring import inject, Provide
 from pydantic import Field
@@ -31,29 +31,65 @@ class ConfigModel(ImmutableModelStoredModel):
 
     id: Optional[int]
     create_at: datetime = datetime.now()
-    retrieval_size: int = Field(default=1000, alias="retrievalSize")
-    ordering_size: int = Field(default=50, alias="orderingSize")
+    retrieval_size: int = Field(
+        default=1000,
+        alias="retrievalSize",
+        title="Retrieval size",
+        description="Retrieval size description",
+    )
+    ordering_size: int = Field(
+        default=50,
+        alias="orderingSize",
+        title="Ordering size",
+        description="Ordering size description",
+    )
+
+    models_disabled: Dict[str, bool] = Field(default={})
 
     homepage_retrieval_cascade: Optional[List[str]] = Field(
-        alias="homepageRetrievalCascade"
+        alias="homepageRetrievalCascade",
+        title="Homepage retrieval",
+        description="Homepage retrieval description",
     )
     homepage_scoring_cascade: Optional[List[str]] = Field(
-        alias="homepageScoringCascade"
+        alias="homepageScoringCascade",
+        title="Homepage scoring",
+        description="Homepage scoring description",
     )
 
+    category_list_retrieval_cascade: Optional[List[str]] = Field(
+        default=None,
+        alias="categoryListRetrievalCascade",
+        title="Category list retrieval",
+        description="Category list retrieval description",
+    )
     category_list_scoring_cascade: Optional[List[str]] = Field(
-        alias="categoryListScoringCascade"
+        alias="categoryListScoringCascade",
+        title="Category list scoring",
+        description="Category list scoring description",
     )
 
     product_detail_retrieval_cascade: Optional[List[str]] = Field(
-        alias="productDetailRetrievalCascade"
+        alias="productDetailRetrievalCascade",
+        title="Product detail retrieval",
+        description="Product detail retrieval description",
     )
     product_detail_scoring_cascade: Optional[List[str]] = Field(
-        alias="productDetailScoringCascade"
+        alias="productDetailScoringCascade",
+        title="Product detail scoring",
+        description="Product detail scoring description",
     )
 
-    cart_retrieval_cascade: Optional[List[str]] = Field(alias="cartRetrievalCascade")
-    cart_scoring_cascade: Optional[List[str]] = Field(alias="cartScoringCascade")
+    cart_retrieval_cascade: Optional[List[str]] = Field(
+        alias="cartRetrievalCascade",
+        title="Cart retrieval",
+        description="Cart retrieval description",
+    )
+    cart_scoring_cascade: Optional[List[str]] = Field(
+        alias="cartScoringCascade",
+        title="Cart scoring",
+        description="Cart scoring description",
+    )
 
     ease_config: EASEConfig = Field(default=EASEConfig(), alias="easeConfig")
     gru4rec_config: GRU4RecConfig = Field(
@@ -87,3 +123,36 @@ class ConfigModel(ImmutableModelStoredModel):
     @classmethod
     def get_current(cls) -> "ConfigModel":
         return cls()._storage.get_current_config()
+
+    def is_disabled(self, model: str) -> bool:
+        return self.models_disabled.get(model, False)
+
+    @inject
+    def dict(
+        self,
+        exclude_models: bool = True,
+        model_manager: "ModelManager" = Provide["model_manager"],
+        *args: Any,
+        **kwargs: Any,
+    ) -> Dict[str, Any]:
+        kwargs.setdefault("exclude", "category_list_retrieval_cascade")
+        result = super().dict(*args, **kwargs)
+        if not exclude_models:
+            result["models"] = [
+                model.to_config()
+                for model in model_manager.get_all_models(include_dummy=True)
+            ]
+        return result
+
+    @property
+    def info(self) -> Dict[str, Any]:
+        result = {
+            field.alias: {
+                "title": field.field_info.title,
+                "description": field.field_info.description,
+            }
+            for field in self.__fields__.values()
+        }
+        result["easeConfig"] = self.ease_config.info
+        result["gru4recConfig"] = self.gru4rec_config.info
+        return result

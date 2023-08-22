@@ -15,6 +15,7 @@ class DummyPredictionModel(AbstractPredictionModel):
     class Meta:
         model_name = "dummy"
         title = "Dummy"
+        description = "Dummy description"
 
     @property
     def default_identifier(self) -> str:

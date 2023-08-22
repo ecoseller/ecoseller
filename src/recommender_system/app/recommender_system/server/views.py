@@ -1,3 +1,4 @@
+import json
 import logging
 from datetime import datetime
 from typing import Any, Tuple
@@ -19,7 +20,7 @@ def view_healthcheck() -> Tuple[Any, ...]:
 def view_store_object(
     data_manager: DataManager = Provide["data_manager"],
 ) -> Tuple[Any, ...]:
-    logging.info(f"Storing object {request.json}")
+    logging.info(f"Storing object {json.dumps(request.json, indent=4)}")
     data_manager.store_object(data=request.json)
     return "", 200
 
@@ -28,7 +29,7 @@ def view_store_object(
 def view_store_objects(
     data_manager: DataManager = Provide["data_manager"],
 ) -> Tuple[Any, ...]:
-    logging.info(f"Storing objects {request.json}")
+    logging.info(f"Storing objects {json.dumps(request.json, indent=4)}")
     data_manager.store_objects(data=request.json)
     return "", 200
 
@@ -69,6 +70,9 @@ def view_get_dashboard_data(
             date_from=date_from, date_to=date_to
         ).dict(by_alias=True),
         "training": monitoring_manager.get_training_details().dict(by_alias=True),
-        "config": model_manager.config.dict(by_alias=True, exclude={"create_at", "id"}),
+        "config": model_manager.config.dict(
+            by_alias=True, exclude={"create_at", "id"}, exclude_models=False
+        ),
+        "info": model_manager.config.info,
     }
     return result, 200

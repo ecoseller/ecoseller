@@ -31,6 +31,7 @@ class SimilarityPredictionModel(AbstractPredictionModel):
     class Meta:
         model_name = "similarity"
         title = "Similarity"
+        description = "Similarity description"
 
     @property
     def default_identifier(self) -> str:

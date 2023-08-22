@@ -172,4 +172,5 @@ src/elasticsearch/hunspell/**/*.dic
 
 
 # DB
-src/postgres_backend/data*
+src/postgres_backend/data
+src/postgres_rs/data

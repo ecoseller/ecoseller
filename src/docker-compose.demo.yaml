@@ -125,7 +125,7 @@ services:
     image: postgres:13.0-alpine
     container_name: postgres_rs
     volumes:
-      - ./recommender_system/setup_database.sql:/docker-entrypoint-initdb.d/setup_database.sql
+      - ./postgres_rs/setup_database.sql:/docker-entrypoint-initdb.d/setup_database.sql
     ports:
       - 5432:5432
     env_file:
