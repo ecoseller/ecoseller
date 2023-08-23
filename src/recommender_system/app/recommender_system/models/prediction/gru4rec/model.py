@@ -64,6 +64,10 @@ class GRU4RecPredictionModel(AbstractPredictionModel):
         return len(visited_variants) > 0
 
     @classmethod
+    def can_be_trained(cls) -> bool:
+        return True
+
+    @classmethod
     @inject
     def is_ready_for_training(
         cls,

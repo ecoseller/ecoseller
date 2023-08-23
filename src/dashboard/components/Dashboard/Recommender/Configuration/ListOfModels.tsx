@@ -17,6 +17,9 @@ export interface IRecommenderModel {
   name: string;
   title: string;
   description: string;
+  isReadyForTraining: boolean;
+  canBeTrained: boolean;
+  isTrained: boolean;
   disabled: boolean;
 }
 
@@ -34,6 +37,9 @@ const ListOfModelsItem = ({
   title,
   description,
   disabled,
+  canBeTrained,
+  isReadyForTraining,
+  isTrained,
   onDisabledChange,
 }: IListOfModelsItemProps) => {
   const [disabledState, setDisabledState] = useState<boolean>(disabled);
@@ -59,6 +65,20 @@ const ListOfModelsItem = ({
           label={"Enabled"}
           labelPlacement={"start"}
         />
+        <Typography
+          sx={{ color: isReadyForTraining || !canBeTrained ? "green" : "red" }}
+        >
+          {isReadyForTraining || !canBeTrained
+            ? !canBeTrained
+              ? "Does not need training"
+              : "Available for training"
+            : "Not available for training"}
+        </Typography>
+        <Typography sx={{ color: isTrained ? "green" : "red" }}>
+          {isTrained
+            ? "Available for prediction"
+            : "Not available for prediction"}
+        </Typography>
       </Grid>
     </Grid>
   );

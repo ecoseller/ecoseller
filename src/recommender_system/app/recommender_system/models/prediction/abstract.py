@@ -39,8 +39,14 @@ class AbstractPredictionModel(ABC):
     ) -> bool:
         raise NotImplementedError()
 
+    @classmethod
     @abstractmethod
-    def is_ready_for_training(self) -> bool:
+    def can_be_trained(cls) -> bool:
+        raise NotImplementedError()
+
+    @classmethod
+    @abstractmethod
+    def is_ready_for_training(cls) -> bool:
         raise NotImplementedError()
 
     @abstractmethod
@@ -115,9 +121,17 @@ class AbstractPredictionModel(ABC):
     def to_config(
         cls, model_manager: "ModelManager" = Provide["model_manager"]
     ) -> Dict[str, Any]:
+        try:
+            _ = cls.get_latest_identifier()
+            is_trained = True
+        except LatestIdentifierModel.DoesNotExist:
+            is_trained = False
         return {
             "name": cls.Meta.model_name,
             "title": cls.Meta.title,
             "description": cls.Meta.description,
             "disabled": model_manager.config.is_disabled(model=cls.Meta.model_name),
+            "canBeTrained": cls.can_be_trained(),
+            "isReadyForTraining": cls.is_ready_for_training(),
+            "isTrained": is_trained,
         }

@@ -32,6 +32,10 @@ class SelectionPredictionModel(AbstractPredictionModel):
         return True
 
     @classmethod
+    def can_be_trained(cls) -> bool:
+        return False
+
+    @classmethod
     def is_ready_for_training(cls) -> bool:
         return False
 

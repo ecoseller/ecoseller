@@ -37,6 +37,10 @@ class PopularityPredictionModel(AbstractPredictionModel):
         ) > product_storage.count_objects(model_class=ProductVariantModel)
 
     @classmethod
+    def can_be_trained(cls) -> bool:
+        return False
+
+    @classmethod
     def is_ready_for_training(cls) -> bool:
         return False
 

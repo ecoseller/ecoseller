@@ -61,6 +61,10 @@ class EASEPredictionModel(AbstractPredictionModel):
         return user_id in user_mapping
 
     @classmethod
+    def can_be_trained(cls) -> bool:
+        return True
+
+    @classmethod
     @inject
     def is_ready_for_training(
         cls,

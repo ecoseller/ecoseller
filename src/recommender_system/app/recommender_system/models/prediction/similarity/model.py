@@ -57,6 +57,10 @@ class SimilarityPredictionModel(AbstractPredictionModel):
         return True
 
     @classmethod
+    def can_be_trained(cls) -> bool:
+        return True
+
+    @classmethod
     def is_ready_for_training(cls) -> bool:
         return True
 
