@@ -25,6 +25,7 @@ class ProductVariant(SafeDeleteModel):
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
     attributes = models.ManyToManyField("BaseAttribute", blank=True)
+    recommendation_weight = models.FloatField(default=0.5)
 
     def __str__(self) -> str:
         return "sku: {} ean: {}".format(self.sku, self.ean)

@@ -80,7 +80,15 @@ const EditToolbar = (props: EditToolbarProps) => {
     const id = randomId();
     setRows((oldRows) => [
       ...oldRows,
-      { id, sku: "", ean: "", weight: 0, attributes: [], isNew: true },
+      {
+        id,
+        sku: "",
+        ean: "",
+        weight: 0,
+        recommendation_weight: 0.5,
+        attributes: [],
+        isNew: true,
+      },
     ]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
@@ -220,6 +228,16 @@ const ProductVariantsEditor = ({
     {
       field: "weight",
       headerName: "Weight",
+      editable: true,
+      width: 125,
+      minWidth: 150,
+      maxWidth: 200,
+      sortable: false,
+      disableColumnMenu: true,
+    },
+    {
+      field: "recommendation_weight",
+      headerName: "Recommendation weight",
       editable: true,
       width: 125,
       minWidth: 150,
