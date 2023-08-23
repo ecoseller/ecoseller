@@ -394,12 +394,16 @@ Both datasets fill the storages with product and feedback data.
 
 ## Demo
 
-Demo data are imported to the Recommender system using SQL script during container initialization. These contain product and feedback data
-representing a subset of [MovieLens dataset](https://movielens.org).
+Demo data are imported to the Recommender system using `mock_data_rs_feedback.sql` and `mock_data_rs_products.sql`
+[scripts](https://github.com/ecoseller/demo-data/tree/master/sql) during container initialization. These contain product
+and feedback data representing a subset of [MovieLens dataset](https://movielens.org).
 
 Product variant sequences visited by the users were generated randomly.
 
-These data are imported when you select the `demo` branch of *ecoseller*'s `docker-compose`.
+These data are imported when the `demo` version of *ecoseller*'s `docker-compose` file is used:
+```shell
+docker compose -f docker-compose.demo.yaml up
+```
 
 This dataset contains ~ 1000 products, ~ 2000 product variants and ~ 500 users.
 
