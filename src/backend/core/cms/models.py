@@ -46,9 +46,6 @@ class PageCategory(SafeDeleteModel, TranslatableModel, SortableModel):
     def get_ordering_queryset(self):
         return PageCategory.objects.none()
 
-    # def __str__(self):
-    #     return self.safe_translation_getter("title", any_language=True)
-
 
 class Page(PolymorphicModel, SafeDeleteModel):
     # The shared base model

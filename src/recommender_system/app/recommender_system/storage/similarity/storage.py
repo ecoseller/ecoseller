@@ -12,7 +12,6 @@ class SQLSimilarityStorage(SQLStorage, AbstractSimilarityStorage):
     def get_closest_product_variant_skus(
         self, to: str, limit: Optional[int] = None, **kwargs: Any
     ) -> List[str]:
-        # TODO: Filter in stock
         query = self.session.query(SQLDistance.lhs, SQLDistance.rhs).select_from(
             SQLDistance
         )

@@ -6,9 +6,6 @@ from typing import Any, Dict, List, Optional, Tuple, TYPE_CHECKING
 import numpy as np
 from dependency_injector.wiring import inject, Provide
 
-# from recommender_system.models.stored.feedback.product_add_to_cart import (
-#     ProductAddToCartModel,
-# )
 from recommender_system.models.stored.feedback.review import ReviewModel
 from recommender_system.models.stored.model.training_statistics import (
     TrainingStatisticsModel,
@@ -117,7 +114,6 @@ class EASE:
                 continue
             user = self.user_mapping[str(review.user_id)]
             product_variant = self.product_variant_mapping[review.product_variant_sku]
-            # self.X[user, product_variant] = review.rating
             self.X[user, product_variant] = 1
 
         logging.info("Computing matrix B")
@@ -173,11 +169,8 @@ class EASE:
 
         logging.info("Preparing rating matrix")
 
-        # TODO: Use better rating matrix estimate
         reviews = ReviewModel.gets()
         user_ids = [review.user_id for review in reviews]
-        # reviews = ProductAddToCartModel.gets()
-        # user_ids = [review.user_id for review in reviews]
         skus = product_storage.get_objects_attribute(
             model_class=ProductVariantModel, attribute="sku", stock_quantity__gt=0
         )
