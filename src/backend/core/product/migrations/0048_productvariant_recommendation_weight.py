@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('product', '0047_extattributetype_safe_deleted_and_more'),
+        ("product", "0047_extattributetype_safe_deleted_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='productvariant',
-            name='recommendation_weight',
+            model_name="productvariant",
+            name="recommendation_weight",
             field=models.FloatField(default=0.5),
         ),
     ]
