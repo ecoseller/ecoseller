@@ -264,7 +264,7 @@ DashboardRecommenderSystemPage.getLayout = (page: ReactElement) => {
 
 export const getServerSideProps = async (context: any) => {
   const { req, res } = context;
-  const dateFrom = new Date(2023, 6, 1);
+  const dateFrom = new Date(Date.now() - 7 * 86400);
   const dateTo = new Date();
 
   const data: IRecommenderSystemProps = await dashboardStatsAPI(

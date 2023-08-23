@@ -2,36 +2,18 @@
 
 // layout
 import DashboardLayout from "@/pages/dashboard/layout";
-//react
-import React, { ReactElement, useEffect, useReducer, useState } from "react";
 import RootLayout from "@/pages/layout";
+import { dashboardStatsAPI } from "@/pages/api/recommender-system/dashboard";
+import { IRecommenderSystemProps } from "@/pages/dashboard/recommender-system";
+//react
+import React, { ReactElement, useState } from "react";
+import { NextApiRequest, NextApiResponse } from "next";
 // mui
-import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 // components
-import { NextApiRequest, NextApiResponse } from "next";
-import { dashboardStatsAPI } from "@/pages/api/recommender-system/dashboard";
-import RecommenderConfigForm, {
-  IRecommenderConfigEditableProps,
-  IRecommenderConfigProps,
-} from "@/components/Dashboard/Recommender/RecommenderConfigForm";
-import TabContext from "@mui/lab/TabContext";
-import Box from "@mui/material/Box";
-import TabList from "@mui/lab/TabList";
-import Tab from "@mui/material/Tab";
-import TabPanel from "@mui/lab/TabPanel";
-import ModelStatistics, {
-  IModelProps,
-  IModelPerformanceProps,
-} from "@/components/Dashboard/Recommender/ModelStatistics";
-import StatisticsItem, {
-  IStatisticsItemProps,
-} from "@/components/Dashboard/Recommender/StatisticsItem";
-import CascadeConfig from "@/components/Dashboard/Recommender/CascadeConfig";
-import { ITrainingProps } from "@/components/Dashboard/Recommender/Training";
-import EditableContentWrapper from "@/components/Dashboard/Generic/EditableContentWrapper";
-import { generalSnackbarError, useSnackbarState } from "@/utils/snackbar";
-import SnackbarWithAlert from "@/components/Dashboard/Generic/SnackbarWithAlert";
+import DateTimeRangePicker from "@/components/Dashboard/Recommender/DateTimeRangePicker";
+import Container from "@mui/material/Container";
 
 /*
 Layout:
@@ -39,19 +21,37 @@ Layout:
 */
 
 interface IRecommenderPerformanceProps {
-  k: number;
-  item: IStatisticsItemProps;
-  models: IModelPerformanceProps[];
+  performance: any;
+  // k: number;
+  // item: IStatisticsItemProps;
+  // models: IModelPerformanceProps[];
 }
 
 const DashboardRecommenderSystemPerformancePage = ({
-  k,
-  item,
-  models,
+  performance,
 }: IRecommenderPerformanceProps) => {
+  const [performanceState, setPerformanceState] = useState<any>(performance);
+
   return (
     <DashboardLayout>
-      <Typography>{`Performance`}</Typography>
+      <Container maxWidth="xl">
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={6} textAlign={"center"}>
+            <DateTimeRangePicker
+              onChange={async (dateFrom, dateTo) => {
+                const data = await dashboardStatsAPI("GET", dateFrom, dateTo);
+                setPerformanceState(data.performance);
+              }}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6} />
+
+          <Grid item xs={12} md={6}>
+            <Typography>{JSON.stringify(performanceState)}</Typography>
+          </Grid>
+        </Grid>
+      </Container>
     </DashboardLayout>
   );
 };
@@ -62,6 +62,26 @@ DashboardRecommenderSystemPerformancePage.getLayout = (page: ReactElement) => {
       <DashboardLayout>{page}</DashboardLayout>
     </RootLayout>
   );
+};
+
+export const getServerSideProps = async (context: any) => {
+  const { req, res } = context;
+  const dateFrom = new Date(Date.now() - 7 * 86400 * 1000);
+  const dateTo = new Date();
+
+  const data: IRecommenderSystemProps = await dashboardStatsAPI(
+    "GET",
+    dateFrom,
+    dateTo,
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
+  console.log("DATA", data);
+
+  return {
+    props: { performance: data.performance },
+  };
 };
 
 export default DashboardRecommenderSystemPerformancePage;
