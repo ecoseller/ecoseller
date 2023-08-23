@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("cart", "0026_rename_unit_price_gross_cartitem_unit_price_incl_vat_and_more"),
     ]
