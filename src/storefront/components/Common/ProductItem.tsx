@@ -29,7 +29,6 @@ const ProductItem = ({
   const router = useRouter();
   const { sendEvent } = useRecommender();
   return (
-    // <Link href={url}>
     <div
       className={styles.productItem}
       onClick={() => {
@@ -50,7 +49,6 @@ const ProductItem = ({
         <span className={styles.productItem_price}>{price}</span>
       </div>
     </div>
-    // </Link>
   );
 };
 

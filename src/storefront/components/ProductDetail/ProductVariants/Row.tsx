@@ -104,13 +104,7 @@ const ProductVariantRow = ({
   };
 
   return (
-    <Grid
-      container
-      spacing={{ xs: 4, md: 4, lg: 4 }}
-      // columns={{ xs: 12, sm: 12, md: 12, lg: 12 }}
-      // pt={4}
-      mb={4}
-    >
+    <Grid container spacing={{ xs: 4, md: 4, lg: 4 }} mb={4}>
       <Grid container item xs={5} sm={3} md={4} lg={3} direction="column">
         <Typography variant="body1" fontSize={"0.8rem"}>
           {serializeAttributes(variant.attributes)}

@@ -71,19 +71,16 @@ const ProductSortSelect = ({
       sortBy: "price",
       order: "desc",
       description: t("order-by-price-desc"),
-      // description: "Price: Highest to lowest",
     },
     titleAsc: {
       sortBy: "title",
       order: "asc",
       description: t("order-by-title-asc"),
-      // description: "Title: A - Z",
     },
     titleDesc: {
       sortBy: "title",
       order: "desc",
       description: t("order-by-title-desc"),
-      // description: "Title: Z - A",
     },
   };
 

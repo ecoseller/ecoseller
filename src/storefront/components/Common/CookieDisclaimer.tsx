@@ -14,8 +14,6 @@ interface ICookieDisclaimer {
 }
 
 const CookieDisclaimer = ({ open, setOpen }: ICookieDisclaimer) => {
-  // const [open,setOpen] = useState<boolean>(false);
-
   const { t } = useTranslation("cookie");
 
   const [openDiscount, setOpenDiscount] = useState<boolean>(false);
@@ -27,7 +25,6 @@ const CookieDisclaimer = ({ open, setOpen }: ICookieDisclaimer) => {
     setCookieState("ADS", true);
     setCookieSettingToCookies(true);
     setOpen(false);
-    // setOpenDiscount(true);
   };
 
   const saveSelectedSettings = () => {

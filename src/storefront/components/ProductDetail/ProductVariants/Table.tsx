@@ -39,12 +39,7 @@ const ProductVariants = ({
    */
 
   return (
-    <Grid
-      container
-      // spacing={{ xs: 4, md: 4, lg: 4 }}
-      columns={{ xs: 12, sm: 12, md: 12, lg: 12 }}
-      pt={4}
-    >
+    <Grid container columns={{ xs: 12, sm: 12, md: 12, lg: 12 }} pt={4}>
       {variants.map((variant: IProductVariant, index: number) => (
         <>
           <ProductVariantRow
