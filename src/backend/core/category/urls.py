@@ -15,5 +15,4 @@ urlpatterns = [
         "storefront/<int:pk>/attributes/",
         views.CategoryDetailAttributesStorefrontView.as_view(),
     ),
-    # path("dashboard/<int:id>/children/", views.CategoryChildrenViewDashboard.as_view()),
 ]

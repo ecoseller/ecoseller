@@ -54,7 +54,6 @@ class FileImageField(Base64FileField):
 
 
 class ProductMediaBaseSerializer(ModelSerializer):
-    # media = serializers.ImageField(required=False, use_url=True, read_only=True)
     media = FileImageField(required=False, use_url=True)
     type = serializers.ChoiceField(choices=ProductMediaTypes.CHOICES, required=False)
 
@@ -69,13 +68,11 @@ class ProductMediaBaseSerializer(ModelSerializer):
 
 
 class ProductMediaDetailsSerializer(ProductMediaBaseSerializer):
-    # product_id = serializers.ReadOnlyField(source="product.id")
     product_id = serializers.PrimaryKeyRelatedField(
         many=False,
         queryset=Product.objects.all(),
         source="product",
         required=False,
-        # write_only=True,
     )
     sort_order = serializers.IntegerField(required=False)
 
@@ -327,8 +324,6 @@ class BaseAttributeDashboardSerializer(TranslatableModelSerializer, ModelSeriali
             "value",
             "type",
             "translations",
-            # "order",
-            # "ext_attributes",
         )
 
 
@@ -349,7 +344,6 @@ class AtrributeTypeDashboardSerializer(TranslatableModelSerializer, ModelSeriali
 
 
 class ProductTypeSerializer(ModelSerializer):
-    # name = CharField(required=False)
     allowed_attribute_types = AtrributeTypeDashboardSerializer(
         many=True, read_only=True
     )
@@ -357,7 +351,6 @@ class ProductTypeSerializer(ModelSerializer):
         many=True,
         queryset=AttributeType.objects.all(),
         source="allowed_attribute_types",
-        # write_only=True,
     )
     create_at = serializers.DateTimeField(read_only=True)
     update_at = serializers.DateTimeField(read_only=True)
@@ -442,15 +435,6 @@ class ProductDashboardDetailSerializer(TranslatableModelSerializer, ModelSeriali
             del attrs["id"]
         if "type_id" in attrs and attrs["type_id"] is not None:
             attrs["type_id"] = attrs["type_id"].id
-        # else:
-        #     # if id is not present in attrs, it means that we are creating the product
-        #     # so we take maximum id from all products and add 1 to it
-        #     # this is not the best solution, but it works for now
-        #     max_id = Product.objects.all().aggregate(Max("id"))["id__max"]
-        #     if max_id is None:
-        #         max_id = 0
-        #     attrs["id"] = max_id + 1
-        #     print(attrs["id"])
 
         return attrs
 

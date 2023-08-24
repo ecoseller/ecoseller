@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from .models import (
     ProductVariant,
     Product,
@@ -32,9 +33,6 @@ class ProductVariantAdmin(admin.ModelAdmin):
     filter_horizontal = ("attributes",)
 
 
-# class ProductVariantInline(admin.TabularInline):
-#     model = Product.product_variants.through
-#     extra = 0
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ("id", "title", "category", "published", "update_at", "create_at")
@@ -48,14 +46,6 @@ class ProductAdmin(admin.ModelAdmin):
         "translations__slug",
     )
     filter_horizontal = ("product_variants",)
-    # inlines = [ProductVariantInline,]
-
-    # def get_prepopulated_fields(self, request, obj=None):
-    #     # can't use `prepopulated_fields = ..` because it breaks the admin validation
-    #     # for translated fields. This is the official django-parler workaround.
-    #     return {
-    #         'slug': ('title',)
-    #     }
 
 
 @admin.register(ProductType)

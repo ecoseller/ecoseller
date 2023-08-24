@@ -200,8 +200,6 @@ class ShippingMethodCountrySerializer(ModelSerializer):
     Contains shipping method and country.
     """
 
-    # shipping_method = ShippingMethodSerializer(read_only=True)
-
     class Meta:
         model = ShippingMethodCountry
         fields = (
@@ -258,8 +256,6 @@ class PaymentMethodCountrySerializer(ModelSerializer):
     Serializer of payment method country (see cart/models.py)
     Contains payment method and country.
     """
-
-    # payment_method = PaymentMethodSerializer(read_only=True)
 
     class Meta:
         model = PaymentMethodCountry
