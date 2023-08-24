@@ -20,10 +20,6 @@ export const shippingMethodDetailAPI = async (
     setRequestResponse(req, res);
   }
 
-  //   const contentType = req?.headers["content-type"]
-  //     ? req.headers["content-type"]
-  //     : "application/json";
-
   if (!id) throw new Error("Provide ID");
 
   const url = `/cart/dashboard/shipping/method/${id}/`;

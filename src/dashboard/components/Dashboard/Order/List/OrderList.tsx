@@ -70,14 +70,6 @@ export const OrderList = ({ orders }: IOrderListProps) => {
       rows={orders}
       columns={columns}
       hideFooter
-      // pageSizeOptions={[PAGE_SIZE, 60, 90]}
-      // initialState={{
-      //   pagination: {
-      //     paginationModel: {
-      //       pageSize: PAGE_SIZE,
-      //     },
-      //   },
-      // }}
       autoHeight={true}
       disableRowSelectionOnClick
       getRowId={(row) => row.token}

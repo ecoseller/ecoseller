@@ -29,12 +29,7 @@ const CollapsableContentWithTitle = ({
 
   return (
     <>
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        // mb={5}
-      >
+      <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Typography variant="h6" gutterBottom>
           {title}
         </Typography>

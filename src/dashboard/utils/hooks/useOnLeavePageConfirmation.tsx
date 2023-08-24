@@ -24,7 +24,6 @@ const useOnLeavePageConfirmation = ({
   const [pathToNavigateTo, setPathToNavigateTo] = useState<string>("");
 
   const killRouterEvent = useCallback(() => {
-    // router.events.emit("routeChangeError");
     router.events.emit("routeChangeError", "", "", { shallow: false });
     throwFakeErrorToFoolNextRouter();
   }, [router]);
@@ -38,7 +37,6 @@ const useOnLeavePageConfirmation = ({
         setPathToNavigateTo(url);
       }
     };
-    // console.log("url", nextPath);
 
     router.events.on("routeChangeStart", onRouteChange);
 

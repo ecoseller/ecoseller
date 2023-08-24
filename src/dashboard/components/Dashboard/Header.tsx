@@ -27,9 +27,6 @@ const BLUR = 6;
 const OPACITY = 0.8;
 
 const StyledRoot = styled(AppBar)(({ theme }: { theme: any }) => ({
-  //   bgBlur({ color: theme.palette.background.default }),
-  //   backdropFilter: `blur(${BLUR}px)`,
-  //   WebkitBackdropFilter: `blur(${BLUR}px)`,
   backgroundColor: alpha(
     theme.palette.background.default || "#000000",
     OPACITY

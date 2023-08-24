@@ -110,7 +110,6 @@ const PagesList = ({ pages }: PagesListProps) => {
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            // onClick={async () => await handleDeleteClick(id as number)}
             onClick={() => {
               setOpenDeleteDialog(id as number);
             }}

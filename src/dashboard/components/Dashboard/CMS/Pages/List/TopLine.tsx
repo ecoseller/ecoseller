@@ -25,15 +25,6 @@ const PagesListTopLine = () => {
         mb={5}
         spacing={2}
       >
-        {/* <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => {
-            // router.push("/dashboard/catalog/products/add");
-          }}
-        >
-          New page
-        </Button> */}
         <CreateButton />
       </Stack>
     </Stack>

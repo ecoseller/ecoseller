@@ -316,8 +316,6 @@ const ProductEditorWrapper = ({
       });
   };
 
-  // console.log("productState", productState);
-
   return (
     <EditableContentWrapper
       primaryButtonTitle={
@@ -365,11 +363,7 @@ const ProductEditorWrapper = ({
           <PermissionProvider
             allowedPermissions={["productmedia_change_permission"]}
           >
-            <ProductMediaEditor
-              disabled={false}
-              state={productState}
-              // dispatch={dispatchProductState}
-            />
+            <ProductMediaEditor disabled={false} state={productState} />
           </PermissionProvider>
           <PermissionProvider
             allowedPermissions={["productprice_change_permission"]}

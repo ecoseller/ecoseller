@@ -81,7 +81,6 @@ const ProductGrid = () => {
       field: "primary_image",
       headerName: "Photo",
       editable: false,
-      // maxWidth: 150,
       flex: 1,
       type: "image",
       sortable: false,
@@ -102,9 +101,6 @@ const ProductGrid = () => {
           <img
             src={imgPath(params.row.primary_image?.media)}
             alt={params.row.primary_image?.alt}
-            // quality={60}
-            // width={100}
-            // height={200}
             style={{
               objectFit: "contain",
               position: "relative",

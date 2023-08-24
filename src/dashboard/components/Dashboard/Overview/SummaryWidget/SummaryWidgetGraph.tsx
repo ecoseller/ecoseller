@@ -4,7 +4,6 @@ import dynamic from "next/dynamic";
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
-// import ReactApexChart from "react-apexcharts";
 // mui
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";

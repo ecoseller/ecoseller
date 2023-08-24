@@ -60,7 +60,6 @@ const PageCategoryTypeSetter = ({
           value={state}
           onChange={handleChange}
           input={<OutlinedInput label="Categories" />}
-          //   renderValue={(selected) => selected.join(", ")}
           renderValue={(selected) => {
             const selectedCategories = data?.filter(
               (type) => selected.indexOf(type.id) > -1

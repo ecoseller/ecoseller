@@ -10,7 +10,6 @@ const Logo = () => {
         src="/logo/dashboard.svg"
         sx={{
           display: "inline-flex",
-          //   width: 150,
           height: 23,
           mr: 1,
         }}

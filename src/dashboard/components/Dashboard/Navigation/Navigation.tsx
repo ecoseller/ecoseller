@@ -40,11 +40,9 @@ const StyledNavigationItem = styled((props: any) => (
   />
 ))(({ theme }) => ({
   ...theme.typography.body2,
-  // height: props.dense? 20: 48,
   position: "relative",
   textTransform: "capitalize",
   color: theme.palette.text.primary,
-  // fontWeight: "fontWeightBold",
   borderRadius: theme.shape.borderRadius,
   ":hover": {
     backgroundColor: "#F6F1F9",
@@ -118,7 +116,6 @@ const PermissionNavItem = ({
           dense={dense ? true : false}
           onClick={() => {
             setOpen(!open);
-            // onClick && onClick();
           }}
           selected={path.includes(pathname)}
           sx={{
