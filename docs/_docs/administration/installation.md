@@ -124,6 +124,12 @@ PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST -U $POSTGRES_USER -d $POSTG
 ![Product variants loaded to the database in demo envrionment](../../images/admin/db_product_productvariant_sql.png)
 
 
+# Troubleshooting
+
+If the installation failed because of timeout, please firstly check that your PC meets the [previously mentioned requirements](#prerequisites) 
+
+Especially, if you're using Docker on Windows, please check that your WSL resource limits meet the requirements.  
+If you need to update your WSL resource limits, you can follow [this guide](https://learn.microsoft.com/en-us/windows/wsl/wsl-config).
 
 # Environment variables 
 ecoseller utilizes environment variables to configure various aspects of the backend and recommendation system. These environment variables are stored in separate files, namely `docker-compose.env`. For the backend it's `src/backend/docker-compose.env` and `src/recommender_system/docker-compose.env` for recommendation system. Additionally, the storefront, dashboard, and other services have their environment variables directly specified in the  YAML file for specific docker compose.
@@ -187,7 +193,7 @@ RS_MODEL_DB_URL=postgresql://postgres:zZvyAvzG2O5gfr5@postgres_rs:5432/model
 # Reserved ports
 When running ecoseller, it is important to be aware of the reserved ports used by the various services within the platform. Reserved ports ensure that different components of ecoseller can communicate with each other effectively through Docker internal network. Here are the reserved ports used in ecoseller:
 
-## Production environment
+## Production environment
 By default, ecoseller exposes the following ports in production environment:
 * **Backend Service**:
 - Port 8080, however, if you're using serven name based routing, it's should not be exposed.
