@@ -87,7 +87,7 @@ export const CartProvider = ({ children }: ICartProviderProps): JSX.Element => {
       setCart(null);
       return;
     }
-    Cookies.set(cartTokenCookie, token); // TODO: set expiry date
+    Cookies.set(cartTokenCookie, token);
     refetchCart();
   }, [token]);
 

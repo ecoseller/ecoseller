@@ -10,6 +10,6 @@ class HttpConnector(NotificationConnector):
         """
         headers = kwargs.get("headers", None)
         data = kwargs.get("data", None)
-        _ = requests.request(
+        requests.request(
             method=kwargs["method"], url=kwargs["url"], json=data, headers=headers
         )

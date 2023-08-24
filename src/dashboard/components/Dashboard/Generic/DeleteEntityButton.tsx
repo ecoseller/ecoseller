@@ -29,7 +29,7 @@ const DeleteEntityButton = ({ onDelete }: IDeleteEntityButtonProps) => {
               color="error"
               startIcon={<DeleteIcon />}
               onClick={onDelete}
-              disabled={!hasPermission} // TODO: add permission
+              disabled={!hasPermission}
             >
               Delete
             </Button>

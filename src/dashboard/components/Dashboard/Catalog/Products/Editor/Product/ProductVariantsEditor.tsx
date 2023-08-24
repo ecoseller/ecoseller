@@ -342,29 +342,6 @@ const ProductVariantsEditor = ({
       },
     },
   ];
-  // TODO: SINCE COLUMN GROUPING IS EXPERIMENTAL, IT IS NOT WORKING PROPERLY
-  // CURRENTLY IT IS NOT POSSIBLE TO GROUP COLUMNS DUE TO PRODUCT TYPES
-
-  // const columnGroupingModel: GridColumnGroupingModel = [
-  //   {
-  //     groupId: "Prices",
-  //     children: [
-  //       ...(pricelistsData?.map((pricelist: IPriceList) => ({
-  //         field: `$PRICE_${pricelist.code}`,
-  //       })) || []), // <-- this creates groupping for pricelists
-  //     ],
-  //   },
-  //   {
-  //     groupId: "Attributes",
-  //     children: attributesData
-  //       ? [
-  //           ...(attributesData?.map((attribute) => ({
-  //             field: `$ATTRIBUTE_${attribute.type_name}`,
-  //           })) || []), // <-- this creates groupping for attributes
-  //         ]
-  //       : [],
-  //   },
-  // ];
 
   const handleRowEditStart = (
     params: GridRowParams,

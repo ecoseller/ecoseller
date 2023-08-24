@@ -1,12 +1,6 @@
 # Ecoseller backend
 This folder contains Ecoseller backend app, written in [Django REST Framework](https://www.django-rest-framework.org/).
 
-
-## Dev tools
-
-### Debugging
-- TODO
-
 ### `black`
 We're using [black](https://black.readthedocs.io/en/stable/) code formatter.  
 
