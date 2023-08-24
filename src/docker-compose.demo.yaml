@@ -34,9 +34,9 @@ services:
       - POSTGRES_INITDB_ARGS=--auth=trust --auth-host=trust --auth-local=trust
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-      interval: 20s
+      interval: 5s
       timeout: 5s
-      retries: 20
+      retries: 100
   redis:
     container_name: redis
     image: redis
@@ -134,7 +134,7 @@ services:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 5s
       timeout: 5s
-      retries: 20
+      retries: 100
   recommender_system:
     container_name: recommender_system
     build:
@@ -151,7 +151,7 @@ services:
       test: curl --fail http://localhost:8086 || exit 1
       interval: 5s
       timeout: 5s
-      retries: 20
+      retries: 100
     depends_on:
       postgres_rs:
         condition: service_healthy

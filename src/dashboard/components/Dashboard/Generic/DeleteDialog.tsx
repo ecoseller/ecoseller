@@ -35,7 +35,6 @@ const DeleteDialog = ({ open, setOpen, onDelete, text }: IDeleteDialog) => {
       <DialogActions>
         <Button
           color="secondary"
-          // variant="contained"
           onClick={async () => {
             setOpen(false);
           }}

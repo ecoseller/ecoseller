@@ -1,4 +1,3 @@
-# from django.contrib.auth.models import User
 from typing import Dict, Optional
 
 from django.apps import apps

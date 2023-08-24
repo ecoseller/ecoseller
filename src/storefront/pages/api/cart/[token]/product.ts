@@ -68,10 +68,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return cartProductAPI("PUT", token as string, req, res)
       .then((data) => res.status(200).json(data))
       .catch((error) => res.status(400).json(null));
-    //   } else if (method == "DELETE") {
-    //     return cartProductAPI("DELETE", token as string, req, res)
-    //       .then((data) => res.status(200).json(data))
-    //       .catch((error) => res.status(400).json(null));
   }
 
   return res.status(404).json({ message: "Method not supported" });

@@ -52,7 +52,6 @@ const CartCompleteOrder = ({ cart }: ICartCompleteOrderProps) => {
                 name="terms"
               />
             }
-            // label="I agree with terms and conditions"
             label={t("agree-with-terms-and-conditions")}
           />
           <FormControlLabel
@@ -65,7 +64,6 @@ const CartCompleteOrder = ({ cart }: ICartCompleteOrderProps) => {
                 name="processing"
               />
             }
-            // label="I agree with usage of contact information for marketing reasons"
             label={t("agree-with-usage-of-contact-information-for-marketing")}
           />
         </FormGroup>
@@ -112,7 +110,6 @@ const CartCompleteOrder = ({ cart }: ICartCompleteOrderProps) => {
             });
             clearCart();
             router.push(`/order/${data?.token}/completed`);
-            // router.push("/order/completed");
           }}
         >
           {t("complete-order")}

@@ -16,7 +16,6 @@ interface ICategoryListProps {
   categories: ICategoryLocalized[];
 }
 
-// const PAGE_SIZE = 30;
 const ROW_HEIGHT = 50;
 
 const CategoryList = ({ categories }: ICategoryListProps) => {
@@ -97,14 +96,6 @@ const CategoryList = ({ categories }: ICategoryListProps) => {
       rows={rows}
       columns={columns}
       hideFooter
-      // pageSizeOptions={[PAGE_SIZE, 60, 90]}
-      // initialState={{
-      //   pagination: {
-      //     paginationModel: {
-      //       pageSize: PAGE_SIZE,
-      //     },
-      //   },
-      // }}
       autoHeight={true}
       disableRowSelectionOnClick
       getRowHeight={() => ROW_HEIGHT}

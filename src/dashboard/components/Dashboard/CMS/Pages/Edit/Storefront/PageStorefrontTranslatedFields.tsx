@@ -35,8 +35,6 @@ const PageStorefrontTranslatedFields = ({
   state,
   dispatch,
 }: IPageStorefrontTranslatedFieldsProps) => {
-  // const [title, setTitle] = useState<string>("");
-  // const [slug, setSlug] = useState<string>("");
   const [editSlug, setEditSlug] = useState<boolean>(false);
 
   const setTitle = (title: string) => {

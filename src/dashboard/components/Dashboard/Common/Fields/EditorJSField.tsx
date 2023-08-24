@@ -118,7 +118,6 @@ const EditorJSField = ({
 
   // This will run only once
   useEffect(() => {
-    // initEditor();
     if (ejInstance?.current === null) {
       initEditor();
     }

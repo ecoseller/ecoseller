@@ -151,30 +151,6 @@ const ProductVariantPricesEditor = ({
           return [priceColumn, discountColumn];
         })
       : []), // <-- this generates pricelist columns
-
-    //   ({
-    //       field: `$PRICE_${pricelist.code}_price`,
-    //       headerName: `Price`,
-    //       editable: true,
-    //       width: 125,
-    //       minWidth: 150,
-    //       maxWidth: 200,
-    //       sortable: false,
-    //       disableColumnMenu: true,
-    //     }))
-    //   : []), // <-- this generates pricelist columns
-    // ...(pricelistsData
-    //   ? pricelistsData?.map((pricelist: IPriceList) => ({
-    //       field: `$PRICE_${pricelist.code}_discount`,
-    //       headerName: `Discount`,
-    //       editable: true,
-    //       width: 125,
-    //       minWidth: 150,
-    //       maxWidth: 200,
-    //       sortable: false,
-    //       disableColumnMenu: true,
-    //     }))
-    //   : []), // <-- this generates pricelist columns
   ];
 
   const columnGroupingModel: GridColumnGroupingModel =
@@ -193,16 +169,6 @@ const ProductVariantPricesEditor = ({
         },
       ],
     })) || [];
-  //   [
-  //   {
-  //     groupId: "Prices",
-  //     children: [
-  //       ...(pricelistsData?.map((pricelist: IPriceList) => ({
-  //         field: `$PRICE_${pricelist.code}`,
-  //       })) || []), // <-- this creates groupping for pricelists
-  //     ],
-  //   },
-  // ];
 
   const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
     setRowModesModel(newRowModesModel);

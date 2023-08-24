@@ -62,7 +62,6 @@ const RecommenderConfigForm = ({
     <Box pl={3} py={2}>
       <Labeled label="Retrieval size">
         <Input
-          // disabled={!hasPermission}
           type="number"
           value={retrievalSizeState}
           onChange={(
@@ -74,7 +73,6 @@ const RecommenderConfigForm = ({
       </Labeled>
       <Labeled label="Ordering size">
         <Input
-          // disabled={!hasPermission}
           type="number"
           value={orderingSizeState}
           onChange={(

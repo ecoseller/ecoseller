@@ -34,7 +34,6 @@ const style = {
   "&:hover": {
     // on hover for drag and drop make make the shadow purple and increase the size of the card
     transition: "all 0.1s ease-in-out",
-    // boxShadow: "0 0 0 0.2rem #F6F1F9",
     transform: "scale(1.01)",
   },
 };

@@ -142,16 +142,12 @@ const DashboardCountryPage = ({ countries, pricelists }: IProps) => {
       headerName: "Name",
       editable: true,
       flex: 1,
-      // sortable: false,
-      // disableColumnMenu: true,
     },
     {
       field: "locale",
       headerName: "Locale",
       editable: true,
       flex: 1,
-      // sortable: false,
-      // disableColumnMenu: true,
     },
     {
       field: "default_price_list",
@@ -163,8 +159,6 @@ const DashboardCountryPage = ({ countries, pricelists }: IProps) => {
         value: pricelist.code,
         label: pricelist.code,
       })),
-      // sortable: false,
-      // disableColumnMenu: true,
     },
     {
       field: "actions",

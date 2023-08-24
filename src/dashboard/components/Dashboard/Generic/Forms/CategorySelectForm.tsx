@@ -39,13 +39,6 @@ const CategorySelectForm = ({
     });
   }, []);
 
-  // const setCategory = (id: number) => {
-  //   dispatch({
-  //     type: ActionSetProduct.SETCATEGORY,
-  //     payload: { category: id },
-  //   });
-  // };
-
   const handleChange = (event: SelectChangeEvent) => {
     const menuItemValue = event.target.value;
 

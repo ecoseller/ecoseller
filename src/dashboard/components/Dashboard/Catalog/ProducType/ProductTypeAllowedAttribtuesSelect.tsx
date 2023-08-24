@@ -81,7 +81,6 @@ const ProductTypeAllowedAttribtuesSelect = ({
                 ?.map((attribute: IAttributeType) => attribute.type_name)
                 .join(", ")
             }
-            // MenuProps={MenuProps}
           >
             {attributeTypes.map((attribute) => (
               <MenuItem key={attribute.id} value={attribute.id}>

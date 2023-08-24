@@ -119,8 +119,6 @@ const DashboardCurrencyPage = ({ currencies }: { currencies: ICurrency[] }) => {
       headerName: "Symbol",
       editable: true,
       flex: 1,
-      // sortable: false,
-      // disableColumnMenu: true,
     },
     {
       field: "symbol_position",
@@ -132,8 +130,6 @@ const DashboardCurrencyPage = ({ currencies }: { currencies: ICurrency[] }) => {
         { value: "BEFORE", label: "Before price" },
         { value: "AFTER", label: "After price" },
       ],
-      // sortable: false,
-      // disableColumnMenu: true,
     },
     {
       field: "actions",

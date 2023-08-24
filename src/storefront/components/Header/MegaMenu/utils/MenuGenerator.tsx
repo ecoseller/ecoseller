@@ -312,25 +312,6 @@ export const MenuGenerator = (
           );
         }
         break;
-      // cat = (
-      //   <NavItem id={`nav-mega-${category.id}-Sub-menu-item`} role="none">
-      //     <NavItemLink
-      //       id={`navitem-mega-${category.id}-Sub-menu-item`}
-      //       role="menuitem"
-      //       href={`/category/${category.id}/${category.slug}`}
-      //       onClick={(e: any) => toggleSubMenu(e, `nav-${category.id}`)}
-      //       onKeyDown={(e: any) =>
-      //         a11yClick(e) && toggleSubMenu(e, `nav-${category.id}`)
-      //       }
-      //       ariaHaspopup="false"
-      //     >
-      //       <Typography variant={"h6"} fontSize={"0.85rem"} fontWeight={400}>
-      //         {category.title}
-      //       </Typography>
-      //     </NavItemLink>
-      //   </NavItem>
-      // );
-      // break;
     }
     categoryList.push(cat);
   });
