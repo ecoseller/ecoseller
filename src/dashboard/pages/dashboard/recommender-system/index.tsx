@@ -33,7 +33,6 @@ import EditableContentWrapper from "@/components/Dashboard/Generic/EditableConte
 import { generalSnackbarError, useSnackbarState } from "@/utils/snackbar";
 import SnackbarWithAlert from "@/components/Dashboard/Generic/SnackbarWithAlert";
 
-
 interface IRecommenderPerformanceProps {
   k: number;
   item: IStatisticsItemProps;

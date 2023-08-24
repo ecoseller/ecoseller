@@ -57,8 +57,8 @@ export const MenuGenerator = (
               isForward={children && children?.length > 0 ? true : false}
               isActive={
                 children &&
-                  children?.length > 0 &&
-                  !!activeMenus.includes(`nav-mega-${category.id}`)
+                children?.length > 0 &&
+                !!activeMenus.includes(`nav-mega-${category.id}`)
                   ? true
                   : false
               }
