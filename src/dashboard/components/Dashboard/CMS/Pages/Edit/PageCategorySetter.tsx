@@ -55,7 +55,6 @@ const PageCategorySetter = ({ state, set }: IPageCategorySetterProps) => {
           value={state}
           onChange={handleChange}
           input={<OutlinedInput label="Categories" />}
-          //   renderValue={(selected) => selected.join(", ")}
           renderValue={(selected) => {
             const selectedCategories = data?.filter(
               (category) => selected.indexOf(category.id) > -1

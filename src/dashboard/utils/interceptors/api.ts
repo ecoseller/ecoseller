@@ -10,14 +10,11 @@ const isServer = () => {
   return typeof window === "undefined";
 };
 
-// let accessToken = "";
 let req = <NextApiRequest>{};
 let res = <NextApiResponse>{};
 const baseURL = process.env.API_URL! || process.env.NEXT_PUBLIC_API_URL!;
 
-export const setAccessToken = (_accessToken: string) => {
-  // accessToken = _accessToken;
-};
+export const setAccessToken = (_accessToken: string) => {};
 
 export const getAccessToken = () => getCookie("accessToken", { req, res });
 
@@ -121,15 +118,6 @@ const refreshToken = async (oError: AxiosError) => {
     }
     return retryOriginalRequest;
   } catch (error) {
-    // on error go to login page
-    // if (!isServer() && !Router.asPath.includes("/login")) {
-    // 	Router.push("/login");
-    // }
-    // if (isServer()) {
-    // 	res.setHeader("location", "/login");
-    // 	res.statusCode = 302;
-    // 	res.end();
-    // }
     return Promise.reject(oError);
   } finally {
     fetchingToken = false;
@@ -147,15 +135,11 @@ export const cartApiUrlHelper = (
   // access token is preferred over cart_session
   // if there is no access token, then we use the cart_session cookie
 
-  //   const cart_session = getCookie("cart_session", { req, res });
   const access_token = getCookie("accessToken", { req, res });
 
   if (access_token) {
     return url;
   }
-  //   if (cart_session) {
-  //     return `${url}?cart_session=${cart_session}`;
-  //   }
   return url;
 };
 
@@ -164,7 +148,6 @@ export const backendApiHelper = (req: NextApiRequest, res: NextApiResponse) => {
 
   let headers: any = {
     "Content-Type": "application/json",
-    // ...req.headers,
   };
 
   const access_token = getCookie("accessToken", { req, res });

@@ -53,22 +53,12 @@ const EditableContentWrapper = ({
   const { hasPermission } = usePermission();
 
   const [saveDialogOpen, setSaveDialogOpen] = useState<boolean>(false);
-  // const [isSaved, setIsSaved] = useState<boolean>(false);
-
-  // useEffect(() => {
-  //   setIsSaved(false);
-  // }, [preventNavigation]);
-
-  // useEffect(() => {
-  //   setPreventNavigation(!isSaved);
-  // }, [isSaved]);
 
   const innerOnSave = async () => {
     if (onButtonClick) {
       await onButtonClick();
       setPreventNavigation(false);
     }
-    // setIsSaved(true);
   };
 
   const { navigate, pathToNavigateTo } = useOnLeavePageConfirmation({
@@ -81,12 +71,7 @@ const EditableContentWrapper = ({
 
   const forceClose = () => {
     setPreventNavigation(false);
-    // setIsSaved(true);
     navigate();
-
-    // this was probably causing that weird interpolation bug on next/router.
-    // I'll leave it here for now, but I think it's safe to remove it in future.
-    // router.push(pathToNavigateTo);
   };
 
   return (
@@ -98,7 +83,6 @@ const EditableContentWrapper = ({
           left: 0,
           position: "fixed",
           bottom: 0,
-          // left: 0,
           height: "65px",
           backgroundColor: "#F6F8FA",
           zIndex: 100,
@@ -131,8 +115,6 @@ const EditableContentWrapper = ({
               disabled={checkPermission && !hasPermission}
               onClick={async () => {
                 await innerOnSave();
-                // setIsSaved(true);
-                // setPreventNavigation(false);
               }}
             >
               {primaryButtonTitle}
@@ -144,8 +126,6 @@ const EditableContentWrapper = ({
         open={saveDialogOpen}
         onClose={(event: any, reason: string) => {
           if (reason === "backdropClick" || reason === "escapeKeyDown") {
-            // block usage of escape key and backdrop click
-            // to close dialog and force user to make a choice
             return;
           }
           setSaveDialogOpen(false);

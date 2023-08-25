@@ -322,7 +322,6 @@ class PermissionView(GenericAPIView):
     @check_user_is_staff_decorator()
     def get(self, request):
         # return just a few permissions that actually makes sense
-        # maybe put in some config in the future
         filterModels = [
             "group",
             "cart",

@@ -57,13 +57,6 @@ class UserSerializer(serializers.ModelSerializer):
     def get_user_permissions(self, obj):
         return list(obj.user_permissions.all())
 
-    # def update(self, instance, validated_data):
-    #     email = validated_data.pop("email")
-    #     user = User.objects.filter(email=email).first()
-    #     if user:
-    #         instance.user = user
-    #     return super().update(instance, validated_data)
-
 
 class TokenObtainDashboardSerializer(TokenObtainPairSerializer):
     """

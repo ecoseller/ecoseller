@@ -81,10 +81,6 @@ const ProductCard = ({ product }: IProductCardProps) => {
               };
             })
           );
-          // TODO: Trigger when visible
-          // sendEvent("RECOMMENDATION_VIEW", {
-          //   id: 42,
-          // });
         }}
       >
         <CardMedia

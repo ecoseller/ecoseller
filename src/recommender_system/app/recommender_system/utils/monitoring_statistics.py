@@ -30,7 +30,6 @@ class ModelStatistics(BaseModel):
 class Statistics(BaseModel):
     item: StatisticsItem
     models: List[ModelStatistics]
-    # TODO: Add usage
 
 
 class ModelTrainingDetails(BaseModel):

@@ -58,8 +58,6 @@ export const billingInfoInitialData = (
    * convert it into the format that the BillingInfoForm component expects.
    * */
 
-  // const { t } = useTranslation("common");
-
   return {
     first_name: {
       value: billingInfo.first_name,

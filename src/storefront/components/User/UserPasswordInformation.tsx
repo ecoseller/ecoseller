@@ -171,7 +171,6 @@ const UserPasswordInformation = ({
                   </InputAdornment>
                 }
                 label={t("new-password-label") /* New Password */}
-                // label="New Password"
               />
             </FormControl>
             <FormControl fullWidth variant="outlined" error={error}>

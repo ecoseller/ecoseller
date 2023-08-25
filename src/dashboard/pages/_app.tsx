@@ -84,7 +84,6 @@ const App = ({ Component, pageProps }: AppPropsWithLayout) => {
               axiosFetcher(url, locale)
                 .then((r: any) => {
                   if (r.data?.error && r.data?.error === "forbidden") {
-                    // throw "forbidden";
                     return;
                   }
                   return r.data;

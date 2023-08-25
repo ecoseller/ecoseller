@@ -63,17 +63,6 @@ const EditToolbar = (props: EditToolbarProps) => {
     }).then((res) => {
       if (res.ok) {
         res.json().then((data) => {
-          // setRows((oldRows) => [
-          //   ...oldRows,
-          //   {
-          //     ...newRow,
-          //     id: data.id,
-          //   },
-          // ]);
-          // setRowModesModel((oldModel) => ({
-          //   ...oldModel,
-          //   [data.id]: GridRowModes.Edit,
-          // }));
           router.push(`/dashboard/catalog/product-types/${data.id}`);
         });
       }
@@ -219,7 +208,6 @@ const DashboardProductTypesPage = ({
             autoHeight={true}
             rowModesModel={rowModesModel}
             onRowEditStop={handleRowEditStop}
-            // processRowUpdate={processRowUpdate}
             slots={{
               toolbar: EditToolbar,
             }}

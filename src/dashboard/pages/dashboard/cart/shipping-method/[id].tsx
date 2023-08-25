@@ -115,7 +115,6 @@ const DashboardShippingMethodDetailPage = ({
           id: undefined,
           translations: {},
           is_published: false,
-          // image: undefined,
         }
   );
 

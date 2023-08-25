@@ -146,9 +146,7 @@ const ProductVariantsEditor = ({
     // we also need to set the id of the row to the sku, because sku is the primary key of the variant
     // and we need to set isNew to false, because we are not creating a new variant, but editing an existing one
     console.log("updateMainState-UpdatingPriceRows", updateMainState);
-    // if (rows?.length > 0) {
-    //   return;
-    // }
+
     setRows(
       state?.product_variants
         ? state?.product_variants.map((variant: IProductVariant) => ({
@@ -255,18 +253,7 @@ const ProductVariantsEditor = ({
       sortable: false,
       disableColumnMenu: true,
     },
-    // ...(pricelistsData
-    //   ? pricelistsData?.map((pricelist: IPriceList) => ({
-    //       field: `$PRICE_${pricelist.code}`,
-    //       headerName: pricelist.code,
-    //       editable: true,
-    //       width: 125,
-    //       minWidth: 150,
-    //       maxWidth: 200,
-    //       sortable: false,
-    //       disableColumnMenu: true,
-    //     }))
-    //   : []), // <-- this generates pricelist columns
+
     ...(attributesData
       ? attributesData?.map((attribute) => ({
           field: `$ATTRIBUTE_${attribute.type_name}`,
@@ -342,29 +329,6 @@ const ProductVariantsEditor = ({
       },
     },
   ];
-  // TODO: SINCE COLUMN GROUPING IS EXPERIMENTAL, IT IS NOT WORKING PROPERLY
-  // CURRENTLY IT IS NOT POSSIBLE TO GROUP COLUMNS DUE TO PRODUCT TYPES
-
-  // const columnGroupingModel: GridColumnGroupingModel = [
-  //   {
-  //     groupId: "Prices",
-  //     children: [
-  //       ...(pricelistsData?.map((pricelist: IPriceList) => ({
-  //         field: `$PRICE_${pricelist.code}`,
-  //       })) || []), // <-- this creates groupping for pricelists
-  //     ],
-  //   },
-  //   {
-  //     groupId: "Attributes",
-  //     children: attributesData
-  //       ? [
-  //           ...(attributesData?.map((attribute) => ({
-  //             field: `$ATTRIBUTE_${attribute.type_name}`,
-  //           })) || []), // <-- this creates groupping for attributes
-  //         ]
-  //       : [],
-  //   },
-  // ];
 
   const handleRowEditStart = (
     params: GridRowParams,
@@ -397,7 +361,6 @@ const ProductVariantsEditor = ({
       return;
     }
 
-    // router.push(`/products/variants/${row.sku}`);
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
 
@@ -489,7 +452,6 @@ const ProductVariantsEditor = ({
             save.
           </Typography>
         ) : (
-          // <div style={{ height: 250, width: "100%" }}>
           <DataGrid
             rows={rows}
             columns={columns}
@@ -510,9 +472,7 @@ const ProductVariantsEditor = ({
             }}
             sx={{ overflowX: "scroll" }}
             experimentalFeatures={{ columnGrouping: true }} // <-- this enables column grouping (experimental)
-            // columnGroupingModel={columnGroupingModel} // <-- this creates groupping for attributes, but it is not working properly :(
           />
-          // </div>
         )}
       </CollapsableContentWithTitle>
       {snackbar ? (
