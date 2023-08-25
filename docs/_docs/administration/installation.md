@@ -53,6 +53,7 @@ docker compose -f docker-compose.prod.yaml up
 ```
 This command will start all the containers and services required for ecoseller to run. 
 Please note that the first time you run this command, it will take some time to download the required images and build the containers.
+Are you having trouble with the installation? Please see the [Troubleshooting](#troubleshooting) section.
 
 7. After the containers are up and running, in the default settings you can access the storefront at `http://localhost:3032` and the dashboard at `http://localhost:3033`. For advanced settings of Nginx reverse proxy please see [Configuration](#configuration) section.
 
@@ -130,6 +131,8 @@ If the installation failed because of timeout, please firstly check that your PC
 
 Especially, if you're using Docker on Windows, please check that your WSL resource limits meet the requirements.  
 If you need to update your WSL resource limits, you can follow [this guide](https://learn.microsoft.com/en-us/windows/wsl/wsl-config).
+
+If you're meeting the requirements, please try to to run the startup command again. If it fails again, please try to run it with `--build` flag. 
 
 # Environment variables 
 ecoseller utilizes environment variables to configure various aspects of the backend and recommendation system. These environment variables are stored in separate files, namely `docker-compose.env`. For the backend it's `src/backend/docker-compose.env` and `src/recommender_system/docker-compose.env` for recommendation system. Additionally, the storefront, dashboard, and other services have their environment variables directly specified in the  YAML file for specific docker compose.
