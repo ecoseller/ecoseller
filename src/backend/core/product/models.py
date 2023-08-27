@@ -51,7 +51,7 @@ class ProductVariant(SafeDeleteModel):
             "ean": self.ean,
             "weight": float(self.weight) if self.weight is not None else None,
             "stock_quantity": self.stock_quantity,
-            "recommendation_weight": 1.0,
+            "recommendation_weight": self.recommendation_weight,
             "update_at": self.update_at.isoformat(),
             "create_at": self.create_at.isoformat(),
             "attributes": [attribute.id for attribute in self.attributes.all()],
