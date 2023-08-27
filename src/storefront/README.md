@@ -3,11 +3,6 @@
 This folder contains Ecoseller storefront app, written in [Next.js](https://nextjs.org/).  
 This project is bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Dev tools
-
-### Debugging
-- TODO
-
 ### `eslint`
 We use [ESLint integrated in Next.js](https://nextjs.org/docs/basic-features/eslint) for linting
 

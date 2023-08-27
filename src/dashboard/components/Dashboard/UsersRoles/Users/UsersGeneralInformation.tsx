@@ -223,8 +223,6 @@ const UsersGrid = ({ users }: IUsersGridProps) => {
         autoHeight={true}
         onPaginationModelChange={setPaginationModel}
         paginationModel={paginationModel}
-        // rowCount={count}
-        // loading={isLoading}
         paginationMode="server"
         disableRowSelectionOnClick
         getRowHeight={() => "auto"}

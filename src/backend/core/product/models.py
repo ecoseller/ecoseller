@@ -25,6 +25,7 @@ class ProductVariant(SafeDeleteModel):
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
     attributes = models.ManyToManyField("BaseAttribute", blank=True)
+    recommendation_weight = models.FloatField(default=0.5)
 
     def __str__(self) -> str:
         return "sku: {} ean: {}".format(self.sku, self.ean)
@@ -256,8 +257,6 @@ class AttributeType(SafeDeleteModel, TranslatableModel, models.Model):
         help_text="Type name of attribute (e.g. weight, size)",
         blank=True,  # both blank and null must be True to allow empty string because of initial POST
         null=True,
-        # blank=False,
-        # null=False,
     )
     translations = TranslatedFields(
         name=models.CharField(
@@ -305,18 +304,6 @@ class AttributeType(SafeDeleteModel, TranslatableModel, models.Model):
             event,
             data=data,
         )
-
-
-# class TranslatableAttributeType(TranslatableModel, AttributeType):
-#     # https://django-parler.readthedocs.io/en/stable/advanced/existing.html
-#     class Meta:
-#         proxy = True
-
-#     translations = TranslatedFields(
-#         name=models.CharField(
-#             max_length=200, blank=True, help_text="Attribute type in given language"
-#         ),
-#     )
 
 
 class BaseAttribute(SafeDeleteModel, TranslatableModel):
@@ -384,18 +371,6 @@ class BaseAttribute(SafeDeleteModel, TranslatableModel):
             event,
             data=data,
         )
-
-
-# class TranslatableBaseAttribute(TranslatableModel, BaseAttribute):
-#     # https://django-parler.readthedocs.io/en/stable/advanced/existing.html
-#     class Meta:
-#         proxy = True
-
-#     translations = TranslatedFields(
-#         name=models.CharField(
-#             max_length=200, blank=True, help_text="Base Attribute in given language"
-#         ),
-#     )
 
 
 class ExtAttributeType(SafeDeleteModel):

@@ -1,4 +1,4 @@
-export type TLocale<T extends string> = "cs" | "sk" | "en" | "de" | "pl"; // TODO: this needs to be extended according to iso 639
+export type TLocale<T extends string> = "cs" | "sk" | "en" | "de" | "pl";
 
 export interface ICurrency {
   code: string;

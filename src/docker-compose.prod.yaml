@@ -28,6 +28,7 @@ services:
     image: postgres:13.0-alpine
     container_name: postgres_backend
     volumes:
+      - ./backend/postgres/mock_data.sql:/docker-entrypoint-initdb.d/setup_database.sql
       - ./postgres_backend/data:/var/lib/postgresql/data/
     ports:
       - 5433:5432
@@ -40,7 +41,7 @@ services:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 5s
       timeout: 5s
-      retries: 20
+      retries: 100
   redis:
     container_name: redis
     image: redis
@@ -143,7 +144,7 @@ services:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 5s
       timeout: 5s
-      retries: 20
+      retries: 100
   recommender_system:
     container_name: recommender_system
     build:
@@ -160,7 +161,7 @@ services:
       test: curl --fail http://localhost:8086 || exit 1
       interval: 5s
       timeout: 5s
-      retries: 20
+      retries: 100
     depends_on:
       postgres_rs:
         condition: service_healthy

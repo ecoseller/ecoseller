@@ -270,7 +270,7 @@ class PredictionPipeline:
             retrieval_duration=scoring_start - retrieval_start,
             scoring_duration=ordering_start - scoring_start,
             ordering_duration=ordering_end - ordering_start,
-            predicted_items=predictions,  # TODO: only first k items
+            predicted_items=predictions,
             create_at=datetime.now(),
         )
         result.create()

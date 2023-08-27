@@ -164,7 +164,6 @@ const ProductMediaEditor = ({ disabled, state }: IProductMediaEditorProps) => {
       const base64 = await convertBase64(file);
       console.log("base64", base64);
 
-      // await postProductMedia(formData)
       await postProductMedia({
         media: base64,
         product_id: state.id,

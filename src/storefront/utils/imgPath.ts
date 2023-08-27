@@ -22,7 +22,6 @@ const imgPath = (path: string, relative: boolean = false) => {
   if (backendApiUrl && clientApiUrl && path) {
     return path.replace(backendApiUrl, clientApiUrl);
   }
-  // return path.replace("http://backend:8000", "http://localhost:8000");
 
   return path;
 };

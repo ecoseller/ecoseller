@@ -1,11 +1,9 @@
 .slider {
-  // width: 100%;
   min-width: 100% !important;
   height: auto;
   position: relative;
 
   .slider_holder {
-    // width: 100%;
     min-width: 100% !important;
 
     height: 100%;
@@ -13,11 +11,8 @@
     z-index: 1;
 
     .slider_items_wrapper {
-      // width: 100%;
-      // max-width: 750px;
       min-width: 100% !important;
 
-      // width: 750px;
       height: 100%;
 
       a {

@@ -18,7 +18,7 @@ export interface IShippingMethodTranslation {
 }
 
 export interface IShippingMethodTranslations {
-  [locale: string]: IShippingMethodTranslation; // TODO: this needs to be extended according to iso 639 (TLocale)
+  [locale: string]: IShippingMethodTranslation;
 }
 
 export type TShippingMethodNoImage = Omit<IShippingMethod, "image">;
@@ -65,7 +65,7 @@ export interface IPaymentMethodTranslation {
 }
 
 export interface IPaymentMethodTranslations {
-  [locale: string]: IPaymentMethodTranslation; // TODO: this needs to be extended according to iso 639 (TLocale)
+  [locale: string]: IPaymentMethodTranslation;
 }
 
 export type TPaymentMethodNoImage = Omit<IShippingMethod, "image">;

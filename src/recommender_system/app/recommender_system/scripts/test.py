@@ -9,9 +9,9 @@ from flask import Flask
 from recommender_system.models.prediction.gru4rec.model import GRU4RecPredictionModel
 from recommender_system.models.prediction.ease.model import EASEPredictionModel
 
-# from recommender_system.models.prediction.similarity.model import (
-#     SimilarityPredictionModel,
-# )
+from recommender_system.models.prediction.similarity.model import (
+    SimilarityPredictionModel,
+)
 from recommender_system.models.stored.feedback.product_add_to_cart import (
     ProductAddToCartModel,
 )
@@ -109,7 +109,7 @@ def test_performance(app: Flask, items: int, identifier: str) -> None:
     trainer = app.container.trainer()
     result = {}
     for model_class in [
-        # SimilarityPredictionModel,
+        SimilarityPredictionModel,
         GRU4RecPredictionModel,
         EASEPredictionModel,
     ]:

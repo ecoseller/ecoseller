@@ -120,7 +120,6 @@ class PaginatedElasticSearchAPIView(APIView):
             response = self.obtain_elastic_results(query)
 
             print(f'Found {response.hits.total.value} hit(s) for query: "{query}"')
-            # print(response.to_dict())
             data = self.serialize_response(response)
 
             return Response(data)

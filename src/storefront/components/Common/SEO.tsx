@@ -69,7 +69,6 @@ const HeadMeta = ({
     name: title,
     description: description,
   };
-  // console.log('running head meta')
   const { pathname, query, locale, locales, asPath } = useRouter();
 
   return (

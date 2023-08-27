@@ -33,11 +33,6 @@ import {
   IRecommenderConfigProps,
 } from "@/pages/dashboard/recommender-system/configuration";
 
-/*
-Layout:
-  TODO
-*/
-
 interface IRecommenderPerformanceProps {
   k: number;
   item: IStatisticsItemProps;

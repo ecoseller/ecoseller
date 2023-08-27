@@ -25,7 +25,6 @@ class OrderItemSerializer(CartItemDetailSerializer):
     complaints = OrderItemComplaintSerializer(many=True)
 
     class Meta(CartItemDetailSerializer.Meta):
-        # model = CartItem
         fields = CartItemDetailSerializer.Meta.fields + ("complaints",)
 
 
@@ -34,8 +33,6 @@ class OrderCartSerializer(CartSerializer):
 
     class Meta(CartSerializer.Meta):
         pass
-        # model = Cart
-        # fields = CartSerializer.Meta.fields
 
 
 class OrderDetailSerializer(serializers.ModelSerializer):

@@ -42,7 +42,6 @@ const PageStorefrontBasicInfo = ({
             <TextField
               label="Storefront path"
               value={state.frontend_path}
-              // disabled={true}
               onChange={(
                 event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
               ) => {

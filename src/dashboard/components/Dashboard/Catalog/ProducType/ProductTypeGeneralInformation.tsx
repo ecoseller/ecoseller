@@ -39,7 +39,6 @@ const ProductTypeGeneralInformation = ({
             <TextField
               label="Name"
               value={state?.name}
-              // disabled={true}
               onChange={(
                 event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
               ) => {

@@ -241,7 +241,6 @@ const DashboardShippingMethodPage = ({
             autoHeight={true}
             rowModesModel={rowModesModel}
             onRowEditStop={handleRowEditStop}
-            // processRowUpdate={processRowUpdate}
             slots={{
               toolbar: EditToolbar,
             }}

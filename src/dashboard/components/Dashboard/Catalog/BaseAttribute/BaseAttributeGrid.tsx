@@ -167,23 +167,6 @@ const BaseAttributeGrid = ({
       }))
   );
 
-  // console.log(
-  //   "baseAttributes",
-  //   rows,
-  //   baseAttributes
-  //     .filter((row: IBaseAttribute) => typeof row.id == "number")
-  //     .map((row: IBaseAttribute) => ({
-  //       ...row,
-  //       id: row.id as number,
-  //       isNew: false,
-  //       valid: true,
-  //       ...(attribtueTypeValueType === "TEXT"
-  //         ? // check translations field and set it in the format $NAME_${LANGUAGE_CODE} for each language
-  //           deserializeTranslations(row)
-  //         : {}),
-  //     }))
-  // );
-
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [snackbar, setSnackbar] = useSnackbarState();
 

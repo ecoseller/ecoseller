@@ -5,7 +5,7 @@ from product.serializers import ProductStorefrontListSerializer
 class ProductSuggestionsSerializer(ProductStorefrontListSerializer):
     class Meta:
         model = Product
-        fields = [  # TODO: this needs some tunning after we have category page :)
+        fields = [
             "id",
             "title",
             "slug",

@@ -73,14 +73,6 @@ export const serializeProductVariantPricesFromRow = (
       discount: price.discount,
     }));
 
-  // .map(([key, value]) => ({
-  //   price_list: pricelistsData?.find(
-  //     (pricelist) => pricelist.code === key.replace("$PRICE_", "").replace("_price", "").replace("_discount", "")
-  //   )?.code,
-  //   key.endsWith("_discount") ? discount: Number
-  //   price: Number(value),
-  // }));
-
   return prices;
 };
 

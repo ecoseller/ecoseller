@@ -29,7 +29,6 @@ const ProductItem = ({
   const router = useRouter();
   const { sendEvent } = useRecommender();
   return (
-    // <Link href={url}>
     <div
       className={styles.productItem}
       onClick={() => {
@@ -38,10 +37,6 @@ const ProductItem = ({
           product_variant_sku,
           ...rs_info,
         });
-        // TODO: Trigger when visible
-        // sendEvent("RECOMMENDATION_VIEW", {
-        //   id: 42,
-        // });
         // this push will need to be changed to a link to the product page
         router.push(url, undefined, { shallow: false });
       }}
@@ -54,7 +49,6 @@ const ProductItem = ({
         <span className={styles.productItem_price}>{price}</span>
       </div>
     </div>
-    // </Link>
   );
 };
 

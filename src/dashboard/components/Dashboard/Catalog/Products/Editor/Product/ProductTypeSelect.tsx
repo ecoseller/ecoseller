@@ -36,7 +36,6 @@ const ProductTypeSelect = ({
   disabled,
 }: IProductMediaEditorProps) => {
   // simple select with categories
-  // const [categoryId, setCategoryId] = useState<string>("");
   const { hasPermission } = usePermission();
   const setProductTypeId = (id: number | undefined) => {
     dispatch({

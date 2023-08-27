@@ -191,7 +191,6 @@ class SimilarityPredictionModel(AbstractPredictionModel):
         variants_in_cart: List[str],
         similarity_storage: AbstractSimilarityStorage = Provide["similarity_storage"],
     ) -> List[str]:
-        # TODO: Check if there are variants in cart in model manager
         return similarity_storage.get_closest_product_variant_skus(
             to=random.choice(variants_in_cart), pks=variants
         )

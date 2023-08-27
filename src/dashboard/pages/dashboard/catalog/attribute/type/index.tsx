@@ -92,12 +92,6 @@ const DashboardAttributeTypePage = ({
 }: {
   productAttributeTypeData: IAttributeType[];
 }) => {
-  // const {
-  //   data: productAttributeTypeData,
-  //   error: productAttributeTypeError,
-  //   mutate: productAttributeTypeMutate,
-  // } = useSWR<IAttributeType[]>("/product/dashboard/attribute/type/");
-
   const [rows, setRows] = useState<IAttributeType[]>([]);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 
@@ -199,7 +193,6 @@ const DashboardAttributeTypePage = ({
             autoHeight={true}
             rowModesModel={rowModesModel}
             onRowEditStop={handleRowEditStop}
-            // processRowUpdate={processRowUpdate}
             slots={{
               toolbar: EditToolbar,
             }}

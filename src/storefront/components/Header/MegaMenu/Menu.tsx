@@ -96,11 +96,9 @@ const Menu = ({}: IMenu) => {
 
       // Bind the event listener to both mouse and key events
       document.addEventListener("mousedown", handleClickOutside);
-      // document.addEventListener("keydown", handleClickOutside);
       return () => {
         // Unbind the event listener to clean up
         document.removeEventListener("mousedown", handleClickOutside);
-        // document.removeEventListener("keydown", handleClickOutside);
       };
     }, [ref]);
   };
@@ -191,7 +189,6 @@ const Menu = ({}: IMenu) => {
         }}
       >
         <IconButton
-          // onClick={onOpenMobileMenu}
           onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
             toggleMegaMenu(e, "menubar-main-categories")
           }

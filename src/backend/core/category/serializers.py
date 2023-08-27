@@ -140,12 +140,6 @@ class TextualFilterSerializer(Serializer):
     selected_values_ids = ListField(child=IntegerField())
 
 
-# class NumericFilterSerializer(Serializer):
-#     id = IntegerField()
-#     min_value_id = IntegerField(allow_null=True)
-#     max_value_id = IntegerField(allow_null=True)
-
-
 class SelectedFiltersSerializer(Serializer):
     textual = TextualFilterSerializer(many=True)
     numeric = TextualFilterSerializer(many=True)

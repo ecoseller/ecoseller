@@ -9,7 +9,6 @@ from rest_framework.permissions import AllowAny
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListAPIView
 from django.db.models import Prefetch
 
-# from django.contrib.auth.models import User
 from .models import (
     PageCategoryType,
     PageCategory,
@@ -146,7 +145,6 @@ class PageCategoryPagesDashboardView(APIView):
 
     permission_classes = (AllowAny,)
 
-    # @check_user_is_staff_decorator()
     def get(self, request, pk):
         """
         Gets all pages in a category.
@@ -206,7 +204,6 @@ class PageTypePagesDashboardView(APIView):
 
     permission_classes = (AllowAny,)
 
-    # @check_user_is_staff_decorator()
     def get(self, request, pk):
         """
         Gets all pages in a type.

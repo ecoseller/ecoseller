@@ -1,5 +1,5 @@
-from elasticsearch_dsl.analysis import token_filter
 from elasticsearch_dsl import analyzer, tokenizer
+from elasticsearch_dsl.analysis import token_filter
 
 czech_stemmer = token_filter(
     "czech_stemmer",
@@ -12,7 +12,6 @@ unique_on_same_position = token_filter(
     type="unique",
     only_on_same_position=True,
 )
-
 
 czech_length = token_filter(
     "czech_length",
@@ -171,7 +170,6 @@ czech_autocomplete_hunspell_analyzer = analyzer(
     ],
 )
 
-# THIS NEEDS SOME EDITING!
 slovak_autocomplete_hunspell_analyzer = analyzer(
     "slovak_autocomplete_hunspell_analyzer",
     tokenizer=autocomplete_tokenizer,
