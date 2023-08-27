@@ -3,7 +3,6 @@
 // layout
 import DashboardLayout from "@/pages/dashboard/layout";
 import { dashboardStatsAPI } from "@/pages/api/recommender-system/dashboard";
-import { IRecommenderSystemProps } from "@/pages/dashboard/recommender-system";
 //react
 import React, { ReactElement, useState } from "react";
 import RootLayout from "@/pages/layout";
@@ -53,6 +52,11 @@ export interface IRecommenderConfigProps {
   cartScoringCascade: string[];
   easeConfig: IEASEConfigEditableProps;
   gru4recConfig: IGRU4RecConfigEditableProps;
+}
+
+interface IApiProps {
+  config: IRecommenderConfigProps;
+  info: IInfo;
 }
 
 const DashboardRecommenderSystemPage = ({
@@ -201,7 +205,7 @@ export const getServerSideProps = async (context: any) => {
   const dateFrom = new Date(2023, 6, 1);
   const dateTo = new Date();
 
-  const data: IRecommenderSystemProps = await dashboardStatsAPI(
+  const data: IApiProps = await dashboardStatsAPI(
     "GET",
     "configuration",
     dateFrom,

@@ -4,7 +4,6 @@
 import DashboardLayout from "@/pages/dashboard/layout";
 import RootLayout from "@/pages/layout";
 import { dashboardStatsAPI } from "@/pages/api/recommender-system/dashboard";
-import { IRecommenderSystemProps } from "@/pages/dashboard/recommender-system";
 //react
 import React, { ReactElement, useState } from "react";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -94,7 +93,7 @@ export const getServerSideProps = async (context: any) => {
   const dateFrom = new Date(Date.now() - 7 * 86400 * 1000);
   const dateTo = new Date();
 
-  const data: IRecommenderSystemProps = await dashboardStatsAPI(
+  const data: IRecommenderPerformanceProps = await dashboardStatsAPI(
     "GET",
     "performance",
     dateFrom,
@@ -106,7 +105,7 @@ export const getServerSideProps = async (context: any) => {
   console.log("DATA", data);
 
   return {
-    props: { models: data.models, performance: data.performance },
+    props: data,
   };
 };
 

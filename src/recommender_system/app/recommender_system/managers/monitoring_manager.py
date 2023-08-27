@@ -4,9 +4,6 @@ from typing import Optional
 from dependency_injector.wiring import inject, Provide
 
 from recommender_system.managers.model_manager import ModelManager
-from recommender_system.models.stored.model.training_statistics import (
-    TrainingStatisticsModel,
-)
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.storage.feedback.abstract import AbstractFeedbackStorage
 from recommender_system.storage.product.abstract import AbstractProductStorage
@@ -15,8 +12,11 @@ from recommender_system.utils.monitoring_statistics import (
     PerformanceData,
     PerformanceDataData,
     PerformanceDuration,
-    TrainingDetails,
-    ModelTrainingDetails,
+    Training,
+    TrainingData,
+    TrainingDataData,
+    TrainingMemory,
+    TrainingStatistics,
 )
 
 
@@ -115,25 +115,52 @@ class MonitoringManager:
         }
         return Performance(general=general, model_specific=model_specific)
 
+    def _extract_training_data(
+        self,
+        date_from: datetime,
+        date_to: datetime,
+        model_name: Optional[str],
+    ) -> TrainingData:
+        training_statistics_data = {
+            "started": 1,
+            "completed": 2,
+            "failed": 3,
+        }
+        peak_memory_data = {"avg": 10, "max": 100}
+        peak_memory_percentage_data = {"avg": 3, "max": 30}
+
+        return TrainingData(
+            data=TrainingDataData(
+                trainings=TrainingStatistics(
+                    started=training_statistics_data["started"],
+                    completed=training_statistics_data["completed"],
+                    failed=training_statistics_data["failed"],
+                ),
+                peak_memory=TrainingMemory(
+                    avg=peak_memory_data["avg"],
+                    max=peak_memory_data["max"],
+                ),
+                peak_memory_percentage=TrainingMemory(
+                    avg=peak_memory_percentage_data["avg"],
+                    max=peak_memory_percentage_data["max"],
+                ),
+            )
+        )
+
     @inject
     def get_training_details(
         self,
         date_from: datetime,
         date_to: datetime,
         model_manager: ModelManager = Provide["model_manager"],
-    ) -> TrainingDetails:
-        models_training_details = []
-        for model in model_manager.get_all_models():
-            try:
-                statistics = TrainingStatisticsModel.get_latest(
-                    model_name=model.Meta.model_name
-                )
-                models_training_details.append(
-                    ModelTrainingDetails(
-                        model_name=model.Meta.model_name, statistics=statistics
-                    )
-                )
-            except TrainingStatisticsModel.DoesNotExist:
-                pass
-
-        return TrainingDetails(models=models_training_details)
+    ) -> Training:
+        general = self._extract_training_data(
+            date_from=date_from, date_to=date_to, model_name=None
+        )
+        model_specific = {
+            model_name: self._extract_training_data(
+                date_from=date_from, date_to=date_to, model_name=model_name
+            )
+            for model_name in model_manager.get_all_model_names()
+        }
+        return Training(general=general, model_specific=model_specific)

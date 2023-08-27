@@ -32,10 +32,27 @@ class Performance(BaseModel):
     model_specific: Dict[str, PerformanceData] = Field(alias="modelSpecific")
 
 
-class ModelTrainingDetails(BaseModel):
-    model_name: str = Field(alias="name")
-    statistics: Optional[TrainingStatisticsModel]
+class TrainingStatistics(BaseModel):
+    started: int
+    completed: int
+    failed: int
 
 
-class TrainingDetails(BaseModel):
-    models: List[ModelTrainingDetails]
+class TrainingMemory(BaseModel):
+    avg: Optional[float]
+    max: Optional[float]
+
+
+class TrainingDataData(BaseModel):
+    trainings: TrainingStatistics
+    peak_memory: TrainingMemory = Field(alias="peakMemory")
+    peak_memory_percentage: TrainingMemory = Field(alias="peakMemoryPercentage")
+
+
+class TrainingData(BaseModel):
+    data: TrainingDataData
+
+
+class Training(BaseModel):
+    general: TrainingData
+    model_specific: Dict[str, TrainingData] = Field(alias="modelSpecific")

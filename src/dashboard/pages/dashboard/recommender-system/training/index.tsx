@@ -2,51 +2,77 @@
 
 // layout
 import DashboardLayout from "@/pages/dashboard/layout";
-//react
-import React, { ReactElement, useEffect, useReducer, useState } from "react";
 import RootLayout from "@/pages/layout";
+import { dashboardStatsAPI } from "@/pages/api/recommender-system/dashboard";
+//react
+import React, { ReactElement, useState } from "react";
+import { NextApiRequest, NextApiResponse } from "next";
 // mui
 import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
 // components
-import { NextApiRequest, NextApiResponse } from "next";
-import { dashboardStatsAPI } from "@/pages/api/recommender-system/dashboard";
-import RecommenderConfigForm, {
-  IRecommenderConfigEditableProps,
-  IRecommenderConfigProps,
-} from "@/components/Dashboard/Recommender/RecommenderConfigForm";
-import TabContext from "@mui/lab/TabContext";
-import Box from "@mui/material/Box";
-import TabList from "@mui/lab/TabList";
-import Tab from "@mui/material/Tab";
-import TabPanel from "@mui/lab/TabPanel";
-import ModelStatistics, {
-  IModelProps,
-  IModelPerformanceProps,
-} from "@/components/Dashboard/Recommender/ModelStatistics";
-import StatisticsItem, {
-  IStatisticsItemProps,
-} from "@/components/Dashboard/Recommender/StatisticsItem";
-import CascadeConfig from "@/components/Dashboard/Recommender/CascadeConfig";
-import { ITrainingProps } from "@/components/Dashboard/Recommender/Training";
-import EditableContentWrapper from "@/components/Dashboard/Generic/EditableContentWrapper";
-import { generalSnackbarError, useSnackbarState } from "@/utils/snackbar";
-import SnackbarWithAlert from "@/components/Dashboard/Generic/SnackbarWithAlert";
+import DateTimeRangePicker from "@/components/Dashboard/Recommender/DateTimeRangePicker";
+import { IRecommenderModel } from "@/components/Dashboard/Recommender/Configuration/ListOfModels";
+import GeneralTraining, {
+  IGeneralTrainingProps,
+} from "@/components/Dashboard/Recommender/Training/GeneralTraining";
+import ModelSpecificTraining, {
+  ITrainingDataModelProps,
+} from "@/components/Dashboard/Recommender/Training/ModelSpecificTraining";
 
 /*
 Layout:
   TODO
 */
 
-interface IRecommenderTrainingProps {
-  models: ITrainingProps[];
+interface ITraining {
+  general: IGeneralTrainingProps;
+  modelSpecific: ITrainingDataModelProps;
 }
+
+interface IRecommenderTrainingProps {
+  models: IRecommenderModel[];
+  training: ITraining;
+}
+
 const DashboardRecommenderSystemTrainingPage = ({
   models,
+  training,
 }: IRecommenderTrainingProps) => {
+  const [trainingState, setTrainingState] = useState<any>(training);
+
   return (
     <DashboardLayout>
-      <Typography>{`Training`}</Typography>
+      <Container maxWidth="xl">
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={6} textAlign={"center"}>
+            <DateTimeRangePicker
+              onChange={async (dateFrom, dateTo) => {
+                const data = await dashboardStatsAPI(
+                  "GET",
+                  "training",
+                  dateFrom,
+                  dateTo
+                );
+                setTrainingState(data.training);
+              }}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6} />
+
+          <Grid item xs={12} md={6}>
+            <GeneralTraining {...trainingState.general} />
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <ModelSpecificTraining
+              models={models}
+              data={trainingState.modelSpecific}
+            />
+          </Grid>
+        </Grid>
+      </Container>
     </DashboardLayout>
   );
 };
@@ -57,6 +83,27 @@ DashboardRecommenderSystemTrainingPage.getLayout = (page: ReactElement) => {
       <DashboardLayout>{page}</DashboardLayout>
     </RootLayout>
   );
+};
+
+export const getServerSideProps = async (context: any) => {
+  const { req, res } = context;
+  const dateFrom = new Date(Date.now() - 7 * 86400 * 1000);
+  const dateTo = new Date();
+
+  const data: IRecommenderTrainingProps = await dashboardStatsAPI(
+    "GET",
+    "training",
+    dateFrom,
+    dateTo,
+    req as NextApiRequest,
+    res as NextApiResponse
+  );
+
+  console.log("DATA", data);
+
+  return {
+    props: data,
+  };
 };
 
 export default DashboardRecommenderSystemTrainingPage;
