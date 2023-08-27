@@ -117,7 +117,10 @@ class MonitoringManager:
 
     @inject
     def get_training_details(
-        self, model_manager: ModelManager = Provide["model_manager"]
+        self,
+        date_from: datetime,
+        date_to: datetime,
+        model_manager: ModelManager = Provide["model_manager"],
     ) -> TrainingDetails:
         models_training_details = []
         for model in model_manager.get_all_models():

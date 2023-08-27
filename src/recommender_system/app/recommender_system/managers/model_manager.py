@@ -1,5 +1,5 @@
 import logging
-from typing import Any, List, Optional, Type, TYPE_CHECKING
+from typing import Any, List, Optional, Type, TYPE_CHECKING, Dict
 
 from dependency_injector.wiring import inject, Provide
 
@@ -86,6 +86,12 @@ class ModelManager:
         )
 
         trainer.schedule_train(model_name=SimilarityPredictionModel.Meta.model_name)
+
+    def get_all_models_dicts(self, include_dummy: bool = False) -> List[Dict[str, str]]:
+        return [
+            {"name": model.Meta.model_name, "title": model.Meta.title}
+            for model in self.get_all_models(include_dummy=include_dummy)
+        ]
 
     def get_all_models(
         self, include_dummy: bool = False

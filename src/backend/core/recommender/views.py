@@ -186,6 +186,7 @@ class RecommenderSystemDashboardView(APIView):
         data = RecommenderSystemApi.get_dashboard(
             date_from=request.query_params["date_from"],
             date_to=request.query_params["date_to"],
+            page=request.query_params["page"],
         )
         return Response(data, status=200)
 

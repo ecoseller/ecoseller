@@ -161,11 +161,6 @@ const navigationData: INavigationItem[] = [
         path: "/configuration",
         icon: undefined,
       },
-      {
-        title: "Analyzer",
-        path: "/analyzer",
-        icon: undefined,
-      },
     ],
   },
 ];

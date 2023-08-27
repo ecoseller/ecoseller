@@ -6,7 +6,9 @@ from recommender_system.server.views import (
     view_store_objects,
     view_predict,
     view_predict_product_positions,
-    view_get_dashboard_data,
+    view_get_dashboard_configuration,
+    view_get_dashboard_performance,
+    view_get_dashboard_training,
 )
 
 
@@ -23,4 +25,16 @@ def add_routes(app: Flask) -> None:
         methods=["POST"],
     )
 
-    app.add_url_rule("/dashboard", view_func=view_get_dashboard_data, methods=["GET"])
+    app.add_url_rule(
+        "/dashboard/configuration",
+        view_func=view_get_dashboard_configuration,
+        methods=["GET"],
+    )
+    app.add_url_rule(
+        "/dashboard/performance",
+        view_func=view_get_dashboard_performance,
+        methods=["GET"],
+    )
+    app.add_url_rule(
+        "/dashboard/training", view_func=view_get_dashboard_training, methods=["GET"]
+    )

@@ -55,24 +55,46 @@ def view_predict_product_positions(
 
 
 @inject
-def view_get_dashboard_data(
+def view_get_dashboard_configuration(
+    model_manager: ModelManager = Provide["model_manager"],
+) -> Tuple[Any, ...]:
+    result = {
+        "models": model_manager.get_all_models_dicts(),
+        "config": model_manager.config.dict(
+            by_alias=True, exclude={"create_at", "id"}, exclude_models=False
+        ),
+        "info": model_manager.config.info,
+    }
+    return result, 200
+
+
+@inject
+def view_get_dashboard_performance(
     model_manager: ModelManager = Provide["model_manager"],
     monitoring_manager: MonitoringManager = Provide["monitoring_manager"],
 ) -> Tuple[Any, ...]:
     date_from = datetime.strptime(request.args["date_from"], "%Y-%m-%dT%H:%M:%S.%fZ")
     date_to = datetime.strptime(request.args["date_to"], "%Y-%m-%dT%H:%M:%S.%fZ")
     result = {
-        "models": [
-            {"name": model.Meta.model_name, "title": model.Meta.title}
-            for model in model_manager.get_all_models()
-        ],
+        "models": model_manager.get_all_models_dicts(),
         "performance": monitoring_manager.get_performance(
             date_from=date_from, date_to=date_to
         ).dict(by_alias=True),
-        "training": monitoring_manager.get_training_details().dict(by_alias=True),
-        "config": model_manager.config.dict(
-            by_alias=True, exclude={"create_at", "id"}, exclude_models=False
-        ),
-        "info": model_manager.config.info,
+    }
+    return result, 200
+
+
+@inject
+def view_get_dashboard_training(
+    model_manager: ModelManager = Provide["model_manager"],
+    monitoring_manager: MonitoringManager = Provide["monitoring_manager"],
+) -> Tuple[Any, ...]:
+    date_from = datetime.strptime(request.args["date_from"], "%Y-%m-%dT%H:%M:%S.%fZ")
+    date_to = datetime.strptime(request.args["date_to"], "%Y-%m-%dT%H:%M:%S.%fZ")
+    result = {
+        "models": model_manager.get_all_models_dicts(),
+        "training": monitoring_manager.get_training_details(
+            date_from=date_from, date_to=date_to
+        ).dict(by_alias=True),
     }
     return result, 200

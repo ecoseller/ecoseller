@@ -50,7 +50,12 @@ const DashboardRecommenderSystemPerformancePage = ({
           <Grid item xs={12} md={6} textAlign={"center"}>
             <DateTimeRangePicker
               onChange={async (dateFrom, dateTo) => {
-                const data = await dashboardStatsAPI("GET", dateFrom, dateTo);
+                const data = await dashboardStatsAPI(
+                  "GET",
+                  "performance",
+                  dateFrom,
+                  dateTo
+                );
                 setPerformanceState(data.performance);
               }}
             />
@@ -91,6 +96,7 @@ export const getServerSideProps = async (context: any) => {
 
   const data: IRecommenderSystemProps = await dashboardStatsAPI(
     "GET",
+    "performance",
     dateFrom,
     dateTo,
     req as NextApiRequest,

@@ -203,6 +203,7 @@ export const getServerSideProps = async (context: any) => {
 
   const data: IRecommenderSystemProps = await dashboardStatsAPI(
     "GET",
+    "configuration",
     dateFrom,
     dateTo,
     req as NextApiRequest,

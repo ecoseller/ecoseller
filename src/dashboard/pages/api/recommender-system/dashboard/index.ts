@@ -17,6 +17,7 @@ function convertItem(data: any, k: number) {
 
 export const dashboardStatsAPI = async (
   method: HTTPMETHOD,
+  page: string,
   dateFrom: Date,
   dateTo: Date,
   req?: NextApiRequest,
@@ -29,7 +30,9 @@ export const dashboardStatsAPI = async (
   switch (method) {
     case "GET":
       return await api
-        .get(dashboardUrl, { params: { date_from: dateFrom, date_to: dateTo } })
+        .get(dashboardUrl, {
+          params: { date_from: dateFrom, date_to: dateTo, page },
+        })
         .then((response) => response.data)
         .catch((error: any) => {
           throw error;
