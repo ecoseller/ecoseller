@@ -14,8 +14,12 @@ import Grid from "@mui/material/Grid";
 // components
 import DateTimeRangePicker from "@/components/Dashboard/Recommender/DateTimeRangePicker";
 import Information from "@/components/Dashboard/Recommender/Performance/Information";
-import GeneralPerformance from "@/components/Dashboard/Recommender/Performance/GeneralPerformance";
-import ModelSpecificPerformance from "@/components/Dashboard/Recommender/Performance/ModelSpecificPerformance";
+import GeneralPerformance, {
+  IGeneralPerformanceProps,
+} from "@/components/Dashboard/Recommender/Performance/GeneralPerformance";
+import ModelSpecificPerformance, {
+  IPerformanceDataModelProps,
+} from "@/components/Dashboard/Recommender/Performance/ModelSpecificPerformance";
 import { IRecommenderModel } from "@/components/Dashboard/Recommender/Configuration/ListOfModels";
 
 /*
@@ -23,12 +27,14 @@ Layout:
   TODO
 */
 
+interface IPerformance {
+  general: IGeneralPerformanceProps;
+  modelSpecific: IPerformanceDataModelProps;
+}
+
 interface IRecommenderPerformanceProps {
   models: IRecommenderModel[];
-  performance: any;
-  // k: number;
-  // item: IStatisticsItemProps;
-  // models: IModelPerformanceProps[];
+  performance: IPerformance;
 }
 
 const DashboardRecommenderSystemPerformancePage = ({
@@ -55,11 +61,14 @@ const DashboardRecommenderSystemPerformancePage = ({
           </Grid>
 
           <Grid item xs={12} md={6}>
-            <GeneralPerformance />
+            <GeneralPerformance {...performanceState.general} />
           </Grid>
 
           <Grid item xs={12} md={6}>
-            <ModelSpecificPerformance models={models} />
+            <ModelSpecificPerformance
+              models={models}
+              data={performanceState.modelSpecific}
+            />
           </Grid>
         </Grid>
       </Container>

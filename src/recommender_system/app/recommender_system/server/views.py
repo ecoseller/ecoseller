@@ -61,17 +61,14 @@ def view_get_dashboard_data(
 ) -> Tuple[Any, ...]:
     date_from = datetime.strptime(request.args["date_from"], "%Y-%m-%dT%H:%M:%S.%fZ")
     date_to = datetime.strptime(request.args["date_to"], "%Y-%m-%dT%H:%M:%S.%fZ")
-    performance_dict = monitoring_manager.get_statistics(
-        date_from=date_from, date_to=date_to
-    ).dict(by_alias=True)
-    performance_dict["date_from"] = date_from
-    performance_dict["date_to"] = date_to
     result = {
         "models": [
             {"name": model.Meta.model_name, "title": model.Meta.title}
             for model in model_manager.get_all_models()
         ],
-        "performance": performance_dict,
+        "performance": monitoring_manager.get_performance(
+            date_from=date_from, date_to=date_to
+        ).dict(by_alias=True),
         "training": monitoring_manager.get_training_details().dict(by_alias=True),
         "config": model_manager.config.dict(
             by_alias=True, exclude={"create_at", "id"}, exclude_models=False

@@ -8,11 +8,13 @@ import RootLayout from "@/pages/layout";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
 // components
-import PerformanceData from "@/components/Dashboard/Recommender/Performance/PerformanceData";
+import PerformanceData, {
+  IPerformanceDataProps,
+} from "@/components/Dashboard/Recommender/Performance/PerformanceData";
 
-export interface IGeneralPerformanceProps {}
+export interface IGeneralPerformanceProps extends IPerformanceDataProps {}
 
-const GeneralPerformance = ({}: IGeneralPerformanceProps) => {
+const GeneralPerformance = ({ k, data }: IGeneralPerformanceProps) => {
   return (
     <Card
       sx={{
@@ -28,7 +30,7 @@ const GeneralPerformance = ({}: IGeneralPerformanceProps) => {
       >
         General performance
       </Typography>
-      <PerformanceData />
+      <PerformanceData k={k} data={data} />
     </Card>
   );
 };

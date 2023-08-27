@@ -12,15 +12,23 @@ import Tab from "@mui/material/Tab";
 import TabPanel from "@mui/lab/TabPanel";
 import Typography from "@mui/material/Typography";
 // components
-import PerformanceData from "@/components/Dashboard/Recommender/Performance/PerformanceData";
+import PerformanceData, {
+  IPerformanceDataProps,
+} from "@/components/Dashboard/Recommender/Performance/PerformanceData";
 import { IRecommenderModel } from "@/components/Dashboard/Recommender/Configuration/ListOfModels";
+
+export interface IPerformanceDataModelProps {
+  [key: string]: IPerformanceDataProps;
+}
 
 export interface IModelSpecificPerformanceProps {
   models: IRecommenderModel[];
+  data: IPerformanceDataModelProps;
 }
 
 const ModelSpecificPerformance = ({
   models,
+  data,
 }: IModelSpecificPerformanceProps) => {
   const [modelDisplayed, setModelDisplayed] = useState<string>(models[0].name);
 
@@ -55,8 +63,10 @@ const ModelSpecificPerformance = ({
         </TabList>
         {models.map((model) => (
           <TabPanel sx={{ p: 2 }} key={model.name} value={model.name}>
-            <Typography>{model.name}</Typography>
-            <PerformanceData />
+            <PerformanceData
+              k={data[model.name].k}
+              data={data[model.name].data}
+            />
           </TabPanel>
         ))}
       </TabContext>

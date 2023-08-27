@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 from pydantic import Field
 
@@ -8,28 +8,28 @@ from recommender_system.models.stored.model.training_statistics import (
 from recommender_system.utils.base_model import BaseModel
 
 
-class StatisticsItem(BaseModel):
+class PerformanceDuration(BaseModel):
+    avg: Optional[float]
+    max: Optional[float]
+
+
+class PerformanceDataData(BaseModel):
+    hit_rate: Optional[float] = Field(alias="hitRate")
+    future_hit_rate: Optional[float] = Field(alias="futureHitRate")
+    coverage: Optional[float] = Field(alias="coverage")
+    predictions: Optional[int] = Field(alias="predictions")
+    retrieval_duration: PerformanceDuration = Field(alias="retrievalDuration")
+    scoring_duration: PerformanceDuration = Field(alias="scoringDuration")
+
+
+class PerformanceData(BaseModel):
     k: int
-    direct_hit: Optional[float] = Field(alias="directHit")
-    future_hit: Optional[float] = Field(alias="futureHit")
-    coverage: Optional[float]
+    data: PerformanceDataData
 
 
-class TypeStatistics(BaseModel):
-    recommendation_type: str = Field(alias="name")
-    recommendation_type_title: str = Field(alias="title")
-    item: StatisticsItem
-
-
-class ModelStatistics(BaseModel):
-    model_name: str = Field(alias="name")
-    item: StatisticsItem
-    types: List[TypeStatistics]
-
-
-class Statistics(BaseModel):
-    item: StatisticsItem
-    models: List[ModelStatistics]
+class Performance(BaseModel):
+    general: PerformanceData
+    model_specific: Dict[str, PerformanceData] = Field(alias="modelSpecific")
 
 
 class ModelTrainingDetails(BaseModel):

@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Dict, List, Tuple
+from typing import Optional
 
 from dependency_injector.wiring import inject, Provide
 
@@ -11,162 +11,109 @@ from recommender_system.models.stored.product.product_variant import ProductVari
 from recommender_system.storage.feedback.abstract import AbstractFeedbackStorage
 from recommender_system.storage.product.abstract import AbstractProductStorage
 from recommender_system.utils.monitoring_statistics import (
-    Statistics,
-    ModelStatistics,
-    TypeStatistics,
-    StatisticsItem,
+    Performance,
+    PerformanceData,
+    PerformanceDataData,
+    PerformanceDuration,
     TrainingDetails,
     ModelTrainingDetails,
 )
-from recommender_system.utils.recommendation_type import RecommendationType
 
 
 class MonitoringManager:
-    def _extract_hit(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        global_hit = 0
-        global_all = 0
-        model = {}
-        detailed = {}
-        for model_name, model_data in data.items():
-            model_hit = 0
-            model_all = 0
-            detailed[model_name] = {}
-            for type_, type_data in model_data.items():
-                hit = type_data["hit"]
-                all_ = type_data["all"]
-                try:
-                    detailed[model_name][type_] = hit / all_
-                except ZeroDivisionError:
-                    detailed[model_name][type_] = None
-                model_hit += hit
-                model_all += all_
-
-            try:
-                model[model_name] = model_hit / model_all
-            except ZeroDivisionError:
-                model[model_name] = None
-            global_hit += model_hit
-            global_all += model_all
-
-        try:
-            global_ = global_hit / global_all
-        except ZeroDivisionError:
-            global_ = None
-
-        return {
-            "global": global_,
-            "model": model,
-            "detailed": detailed,
-        }
-
     @inject
     def _extract_coverage(
         self,
-        global_: List[Tuple[Any, ...]],
-        model: List[Tuple[Any, ...]],
-        detailed: List[Tuple[Any, ...]],
+        covered: int,
         product_storage: AbstractProductStorage = Provide["product_storage"],
-    ) -> Dict[str, Any]:
+    ) -> Optional[float]:
         items_count = max(
             product_storage.count_objects(model_class=ProductVariantModel), 1
         )
 
-        global_value = global_[0][0] / items_count
-
-        model_value = {model_name: count / items_count for model_name, count in model}
-
-        detailed_value = {}
-        for model_name, recommendation_type, count in detailed:
-            if model_name not in detailed_value:
-                detailed_value[model_name] = {}
-            detailed_value[model_name][recommendation_type] = count / items_count
-
-        return {
-            "global": global_value,
-            "model": model_value,
-            "detailed": detailed_value,
-        }
+        try:
+            return covered / items_count
+        except ZeroDivisionError:
+            return None
 
     @inject
-    def get_statistics(
+    def _extract_performance_data(
         self,
         date_from: datetime,
         date_to: datetime,
+        model_name: Optional[str],
         feedback_storage: AbstractFeedbackStorage = Provide["feedback_storage"],
-        model_manager: ModelManager = Provide["model_manager"],
-    ) -> Statistics:
+    ) -> PerformanceData:
         k = 10
+
         direct_hit_data = feedback_storage.count_direct_hit(
-            date_from=date_from, date_to=date_to, k=k
+            date_from=date_from, date_to=date_to, k=k, model_name=model_name
         )
-        direct_hit = self._extract_hit(data=direct_hit_data)
+        try:
+            direct_hit = direct_hit_data["hit"] / direct_hit_data["all"]
+        except ZeroDivisionError:
+            direct_hit = None
+
         future_hit_data = feedback_storage.count_future_hit(
-            date_from=date_from, date_to=date_to
+            date_from=date_from, date_to=date_to, k=k, model_name=model_name
         )
-        future_hit = self._extract_hit(data=future_hit_data)
-        global_coverage_data = feedback_storage.count_coverage(
-            date_from=date_from, date_to=date_to, per_model=False, per_type=False
+        try:
+            future_hit = future_hit_data["hit"] / future_hit_data["all"]
+        except ZeroDivisionError:
+            future_hit = None
+
+        coverage_data = feedback_storage.count_coverage(
+            date_from=date_from, date_to=date_to, model_name=model_name
         )
-        model_coverage_data = feedback_storage.count_coverage(
-            date_from=date_from, date_to=date_to, per_model=True, per_type=False
-        )
-        detailed_coverage_data = feedback_storage.count_coverage(
-            date_from=date_from, date_to=date_to, per_model=True, per_type=True
-        )
-        coverage = self._extract_coverage(
-            global_=global_coverage_data,
-            model=model_coverage_data,
-            detailed=detailed_coverage_data,
+        coverage = self._extract_coverage(covered=coverage_data)
+
+        predictions = feedback_storage.count_predictions(
+            date_from=date_from, date_to=date_to, model_name=model_name
         )
 
-        global_item = StatisticsItem(
+        retrieval_duration_data = feedback_storage.get_retrieval_duration(
+            date_from=date_from, date_to=date_to, model_name=model_name
+        )
+
+        scoring_duration_data = feedback_storage.get_scoring_duration(
+            date_from=date_from, date_to=date_to, model_name=model_name
+        )
+
+        return PerformanceData(
             k=k,
-            direct_hit=direct_hit["global"],
-            future_hit=future_hit["global"],
-            coverage=coverage["global"],
+            data=PerformanceDataData(
+                hit_rate=direct_hit,
+                future_hit_rate=future_hit,
+                coverage=coverage,
+                predictions=predictions,
+                retrieval_duration=PerformanceDuration(
+                    avg=retrieval_duration_data["avg"],
+                    max=retrieval_duration_data["max"],
+                ),
+                scoring_duration=PerformanceDuration(
+                    avg=scoring_duration_data["avg"],
+                    max=retrieval_duration_data["max"],
+                ),
+            ),
         )
 
-        model_statistics = []
-        for model_name in model_manager.get_all_model_names():
-            types = []
-            for recommendation_type in RecommendationType.values():
-                types.append(
-                    TypeStatistics(
-                        recommendation_type=recommendation_type,
-                        recommendation_type_title=RecommendationType.get_title(
-                            value=recommendation_type
-                        ),
-                        item=StatisticsItem(
-                            k=k,
-                            direct_hit=direct_hit["detailed"]
-                            .get(model_name, {})
-                            .get(recommendation_type),
-                            future_hit=future_hit["detailed"]
-                            .get(model_name, {})
-                            .get(recommendation_type),
-                            coverage=coverage["detailed"]
-                            .get(model_name, {})
-                            .get(recommendation_type),
-                        ),
-                    )
-                )
-            model_statistics.append(
-                ModelStatistics(
-                    model_name=model_name,
-                    item=StatisticsItem(
-                        k=k,
-                        direct_hit=direct_hit["model"].get(model_name),
-                        future_hit=future_hit["model"].get(model_name),
-                        coverage=coverage["model"].get(model_name),
-                    ),
-                    types=types,
-                )
+    @inject
+    def get_performance(
+        self,
+        date_from: datetime,
+        date_to: datetime,
+        model_manager: ModelManager = Provide["model_manager"],
+    ) -> Performance:
+        general = self._extract_performance_data(
+            date_from=date_from, date_to=date_to, model_name=None
+        )
+        model_specific = {
+            model_name: self._extract_performance_data(
+                date_from=date_from, date_to=date_to, model_name=model_name
             )
-
-        return Statistics(
-            item=global_item,
-            models=model_statistics,
-        )
+            for model_name in model_manager.get_all_model_names()
+        }
+        return Performance(general=general, model_specific=model_specific)
 
     @inject
     def get_training_details(
