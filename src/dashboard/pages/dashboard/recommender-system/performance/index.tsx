@@ -9,11 +9,14 @@ import { IRecommenderSystemProps } from "@/pages/dashboard/recommender-system";
 import React, { ReactElement, useState } from "react";
 import { NextApiRequest, NextApiResponse } from "next";
 // mui
+import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 // components
 import DateTimeRangePicker from "@/components/Dashboard/Recommender/DateTimeRangePicker";
-import Container from "@mui/material/Container";
+import Information from "@/components/Dashboard/Recommender/Performance/Information";
+import GeneralPerformance from "@/components/Dashboard/Recommender/Performance/GeneralPerformance";
+import ModelSpecificPerformance from "@/components/Dashboard/Recommender/Performance/ModelSpecificPerformance";
+import { IRecommenderModel } from "@/components/Dashboard/Recommender/Configuration/ListOfModels";
 
 /*
 Layout:
@@ -21,6 +24,7 @@ Layout:
 */
 
 interface IRecommenderPerformanceProps {
+  models: IRecommenderModel[];
   performance: any;
   // k: number;
   // item: IStatisticsItemProps;
@@ -28,6 +32,7 @@ interface IRecommenderPerformanceProps {
 }
 
 const DashboardRecommenderSystemPerformancePage = ({
+  models,
   performance,
 }: IRecommenderPerformanceProps) => {
   const [performanceState, setPerformanceState] = useState<any>(performance);
@@ -45,10 +50,16 @@ const DashboardRecommenderSystemPerformancePage = ({
             />
           </Grid>
 
-          <Grid item xs={12} md={6} />
+          <Grid item xs={12} md={6}>
+            <Information />
+          </Grid>
 
           <Grid item xs={12} md={6}>
-            <Typography>{JSON.stringify(performanceState)}</Typography>
+            <GeneralPerformance />
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <ModelSpecificPerformance models={models} />
           </Grid>
         </Grid>
       </Container>
@@ -80,7 +91,7 @@ export const getServerSideProps = async (context: any) => {
   console.log("DATA", data);
 
   return {
-    props: { performance: data.performance },
+    props: { models: data.models, performance: data.performance },
   };
 };
 

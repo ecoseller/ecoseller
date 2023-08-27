@@ -120,7 +120,6 @@ const RecommenderConfigForm = ({
             description={info.retrievalSize.description}
           >
             <Input
-              // disabled={!hasPermission}
               type="number"
               value={configFormState.retrievalSize}
               onChange={(
@@ -145,7 +144,6 @@ const RecommenderConfigForm = ({
             description={info.orderingSize.description}
           >
             <Input
-              // disabled={!hasPermission}
               type="number"
               value={configFormState.orderingSize}
               onChange={(
