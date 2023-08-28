@@ -78,6 +78,7 @@ def view_get_dashboard_performance(
         "performance": monitoring_manager.get_performance(
             date_from=date_from, date_to=date_to
         ).dict(by_alias=True),
+        "info": monitoring_manager.get_performance_info(),
     }
     return result, 200
 

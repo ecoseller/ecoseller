@@ -20,11 +20,7 @@ import ModelSpecificPerformance, {
   IPerformanceDataModelProps,
 } from "@/components/Dashboard/Recommender/Performance/ModelSpecificPerformance";
 import { IRecommenderModel } from "@/components/Dashboard/Recommender/Configuration/ListOfModels";
-
-/*
-Layout:
-  TODO
-*/
+import { IInfo } from "@/pages/dashboard/recommender-system/configuration";
 
 interface IPerformance {
   general: IGeneralPerformanceProps;
@@ -34,11 +30,13 @@ interface IPerformance {
 interface IRecommenderPerformanceProps {
   models: IRecommenderModel[];
   performance: IPerformance;
+  info: IInfo;
 }
 
 const DashboardRecommenderSystemPerformancePage = ({
   models,
   performance,
+  info,
 }: IRecommenderPerformanceProps) => {
   const [performanceState, setPerformanceState] = useState<any>(performance);
 
@@ -61,7 +59,7 @@ const DashboardRecommenderSystemPerformancePage = ({
           </Grid>
 
           <Grid item xs={12} md={6}>
-            <Information />
+            <Information k={performance.general.k} info={info} />
           </Grid>
 
           <Grid item xs={12} md={6}>

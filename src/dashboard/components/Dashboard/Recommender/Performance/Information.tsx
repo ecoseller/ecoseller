@@ -11,12 +11,17 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import { IInfo } from "@/pages/dashboard/recommender-system/configuration";
+import Divider from "@mui/material/Divider";
 
 // components
 
-export interface IInfomationProps {}
+export interface IInfomationProps {
+  k: number;
+  info: IInfo;
+}
 
-const Information = ({}: IInfomationProps) => {
+const Information = ({ k, info }: IInfomationProps) => {
   const [expanded, setExpanded] = useState<boolean>(false);
   const downIcon = <KeyboardArrowDownIcon />;
   const upIcon = <KeyboardArrowUpIcon />;
@@ -28,6 +33,21 @@ const Information = ({}: IInfomationProps) => {
       return !prevExpanded;
     });
   };
+
+  const infoElements: JSX.Element[] = [];
+  Object.values(info).map((item, idx) => {
+    infoElements.push(
+      <Box sx={{ p: 1 }}>
+        <Typography variant={"h6"} sx={{ mb: 1 }}>
+          {item.title.replace("%k%", `${k}`)}
+        </Typography>
+        <Typography>{item.description.replace("%k%", `${k}`)}</Typography>
+      </Box>
+    );
+    if (idx < Object.keys(info).length - 1) {
+      infoElements.push(<Divider sx={{ m: 1 }} />);
+    }
+  });
 
   return (
     <Card
@@ -47,9 +67,7 @@ const Information = ({}: IInfomationProps) => {
           {icon}
         </IconButton>
       </Typography>
-      <Box sx={{ display: expanded ? "block" : "none" }}>
-        <Typography>Info</Typography>
-      </Box>
+      <Box sx={{ display: expanded ? "block" : "none" }}>{infoElements}</Box>
     </Card>
   );
 };

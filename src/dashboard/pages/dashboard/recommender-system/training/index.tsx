@@ -20,11 +20,6 @@ import ModelSpecificTraining, {
   ITrainingDataModelProps,
 } from "@/components/Dashboard/Recommender/Training/ModelSpecificTraining";
 
-/*
-Layout:
-  TODO
-*/
-
 interface ITraining {
   general: IGeneralTrainingProps;
   modelSpecific: ITrainingDataModelProps;

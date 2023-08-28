@@ -24,11 +24,6 @@ import { IEASEConfigEditableProps } from "@/components/Dashboard/Recommender/Con
 import { IGRU4RecConfigEditableProps } from "@/components/Dashboard/Recommender/Configuration/GRU4RecConfigForm";
 import CascadeConfig from "@/components/Dashboard/Recommender/Configuration/CascadeConfig";
 
-/*
-Layout:
-  TODO
-*/
-
 interface IInfoItem {
   title: string;
   description: string;

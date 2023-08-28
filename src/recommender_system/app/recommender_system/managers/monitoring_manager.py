@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Dict, Any
 
 from dependency_injector.wiring import inject, Provide
 
@@ -115,6 +115,9 @@ class MonitoringManager:
             for model_name in model_manager.get_all_model_names()
         }
         return Performance(general=general, model_specific=model_specific)
+
+    def get_performance_info(self) -> Dict[str, Any]:
+        return PerformanceDataData.get_info()
 
     @inject
     def _extract_training_data(
