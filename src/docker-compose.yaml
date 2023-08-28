@@ -5,7 +5,7 @@
 # docker compose up --build 
 
 version: "3.9"
-
+name: ecoseller
 services:
   backend:
     container_name: backend

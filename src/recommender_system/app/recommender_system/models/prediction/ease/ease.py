@@ -7,8 +7,18 @@ import numpy as np
 from dependency_injector.wiring import inject, Provide
 
 from recommender_system.models.stored.feedback.review import ReviewModel
+from recommender_system.models.stored.model.training_finished import (
+    TrainingFinishedModel,
+)
+from recommender_system.models.stored.model.training_started import TrainingStartedModel
 from recommender_system.models.stored.model.training_statistics import (
     TrainingStatisticsModel,
+)
+from recommender_system.models.stored.model.training_step_finished import (
+    TrainingStepFinishedModel,
+)
+from recommender_system.models.stored.model.training_step_started import (
+    TrainingStepStartedModel,
 )
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.storage.ease.abstract import AbstractEASEStorage
@@ -164,6 +174,11 @@ class EASE:
     ) -> None:
         logging.info("Training started")
 
+        started_model = TrainingStartedModel(
+            model_name=self.model_name, model_identifier=self.model_identifier
+        )
+        started_model.create()
+
         start = time.time()
         peak_memory, peak_memory_percentage = get_current_memory_usage()
 
@@ -207,6 +222,13 @@ class EASE:
         else:
             for parameters in self.possible_parameters:
                 self._set_parameters(parameters=parameters)
+                step_started_model = TrainingStepStartedModel(
+                    training_id=started_model.training_id,
+                    model_name=self.model_name,
+                    model_identifier=self.model_identifier,
+                    hyperparameters=self.parameters,
+                )
+                step_started_model.create()
                 peak_memory, peak_memory_percentage = self._fit(
                     X_size=X_size,
                     reviews=train_reviews,
@@ -219,6 +241,12 @@ class EASE:
                     peak_memory=peak_memory,
                     peak_memory_percentage=peak_memory_percentage,
                 )
+                TrainingStepFinishedModel(
+                    step_id=step_started_model.step_id,
+                    model_name=self.model_name,
+                    model_identifier=self.model_identifier,
+                    metrics={"error": error if error != math.inf else "unknown"},
+                ).create()
                 if error < best_error:
                     best_error, best_parameters = error, parameters
 
@@ -231,6 +259,8 @@ class EASE:
         )
 
         end = time.time()
+
+        TrainingFinishedModel(training_id=started_model.training_id).create()
 
         statistics = TrainingStatisticsModel(
             model_name=self.model_name,

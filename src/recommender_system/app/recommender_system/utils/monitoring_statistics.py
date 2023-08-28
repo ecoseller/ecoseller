@@ -1,10 +1,7 @@
-from typing import List, Optional, Dict
+from typing import Optional, Dict
 
 from pydantic import Field
 
-from recommender_system.models.stored.model.training_statistics import (
-    TrainingStatisticsModel,
-)
 from recommender_system.utils.base_model import BaseModel
 
 

@@ -15,6 +15,12 @@ from recommender_system.models.prediction.similarity.tools import (
 from recommender_system.models.stored.model.latest_identifier import (
     LatestIdentifierModel,
 )
+from recommender_system.models.stored.model.training_finished import (
+    TrainingFinishedModel,
+)
+from recommender_system.models.stored.model.training_started import (
+    TrainingStartedModel,
+)
 from recommender_system.models.stored.model.training_statistics import (
     TrainingStatisticsModel,
 )
@@ -94,6 +100,11 @@ class SimilarityPredictionModel(AbstractPredictionModel):
         similarity_storage.bulk_create_objects(models=distance_models)
 
     def train(self) -> None:
+        started_model = TrainingStartedModel(
+            model_name=self.Meta.model_name,
+            model_identifier=self.identifier,
+        )
+        started_model.create()
         start = time.time()
 
         train_data = prepare_variants()
@@ -112,7 +123,9 @@ class SimilarityPredictionModel(AbstractPredictionModel):
         peak_memory, peak_memory_percentage = get_current_memory_usage()
         end = time.time()
 
-        statistics = TrainingStatisticsModel(
+        TrainingFinishedModel(training_id=started_model.training_id).create()
+
+        TrainingStatisticsModel(
             model_name=self.Meta.model_name,
             model_identifier=self.identifier,
             duration=end - start,
@@ -120,8 +133,7 @@ class SimilarityPredictionModel(AbstractPredictionModel):
             peak_memory_percentage=peak_memory_percentage,
             metrics={},
             hyperparameters={},
-        )
-        statistics.create()
+        ).create()
 
     def retrieve_homepage(self, session_id: str, user_id: Optional[int]) -> List[str]:
         raise TypeError(
