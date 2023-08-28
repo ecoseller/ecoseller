@@ -15,7 +15,10 @@ class DummyPredictionModel(AbstractPredictionModel):
     class Meta:
         model_name = "dummy"
         title = "Dummy"
-        description = "Dummy description"
+        description = """Dummy prediction model is the simplest implemented model, it can perform retrieval and scoring.
+        It selects product variants from the database without any ordering during retrieval. Scoring step does not
+        reorder the product variants in any way. It keeps the order the same as the retrieval step provided.
+        """
 
     @property
     def default_identifier(self) -> str:

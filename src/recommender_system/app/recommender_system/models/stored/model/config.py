@@ -35,13 +35,15 @@ class ConfigModel(ImmutableModelStoredModel):
         default=1000,
         alias="retrievalSize",
         title="Retrieval size",
-        description="Retrieval size description",
+        description="""How many product variants are selected in the retrieval step of the prediction pipeline. Higher
+        number generally leads to better results, but the prediction is slower.""",
     )
     ordering_size: int = Field(
         default=50,
         alias="orderingSize",
         title="Ordering size",
-        description="Ordering size description",
+        description="""How many product variants are considered in the ordering step of the prediction pipeline. Higher
+        number generally leads to better results, but the prediction is slower.""",
     )
 
     models_disabled: Dict[str, bool] = Field(default={})
@@ -49,46 +51,55 @@ class ConfigModel(ImmutableModelStoredModel):
     homepage_retrieval_cascade: Optional[List[str]] = Field(
         alias="homepageRetrievalCascade",
         title="Homepage retrieval",
-        description="Homepage retrieval description",
+        description="""Cascade of models used during retrieval step of the prediction pipeline when product variants for
+        homepage are being recommended.""",
     )
     homepage_scoring_cascade: Optional[List[str]] = Field(
         alias="homepageScoringCascade",
         title="Homepage scoring",
-        description="Homepage scoring description",
+        description="""Cascade of models used during scoring step of the prediction pipeline when product variants for
+        homepage are being recommended.""",
     )
 
     category_list_retrieval_cascade: Optional[List[str]] = Field(
         default=None,
         alias="categoryListRetrievalCascade",
         title="Category list retrieval",
-        description="Category list retrieval description",
+        description="""Retrieval step of the prediction pipeline when product variants of a category are ordered is
+        done by selecting the product variants of the corresponding category. No prediction model is involved in this
+        task.""",
     )
     category_list_scoring_cascade: Optional[List[str]] = Field(
         alias="categoryListScoringCascade",
         title="Category list scoring",
-        description="Category list scoring description",
+        description="""Cascade of models used during scoring step of the prediction pipeline when product variants for
+        product detail page are being recommended.""",
     )
 
     product_detail_retrieval_cascade: Optional[List[str]] = Field(
         alias="productDetailRetrievalCascade",
         title="Product detail retrieval",
-        description="Product detail retrieval description",
+        description="""Cascade of models used during retrieval step of the prediction pipeline when product variants for
+        product detail page are being recommended.""",
     )
     product_detail_scoring_cascade: Optional[List[str]] = Field(
         alias="productDetailScoringCascade",
         title="Product detail scoring",
-        description="Product detail scoring description",
+        description="""Cascade of models used during scoring step of the prediction pipeline when product variants for
+        product detail page are being recommended.""",
     )
 
     cart_retrieval_cascade: Optional[List[str]] = Field(
         alias="cartRetrievalCascade",
         title="Cart retrieval",
-        description="Cart retrieval description",
+        description="""Cascade of models used during retrieval step of the prediction pipeline when product variants for
+        cart page are being recommended.""",
     )
     cart_scoring_cascade: Optional[List[str]] = Field(
         alias="cartScoringCascade",
         title="Cart scoring",
-        description="Cart scoring description",
+        description="""Cascade of models used during scoring step of the prediction pipeline when product variants for
+        cart page are being recommended.""",
     )
 
     ease_config: EASEConfig = Field(default=EASEConfig(), alias="easeConfig")

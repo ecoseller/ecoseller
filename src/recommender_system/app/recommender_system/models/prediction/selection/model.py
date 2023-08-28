@@ -15,7 +15,10 @@ class SelectionPredictionModel(AbstractPredictionModel):
     class Meta:
         model_name = "selection"
         title = "Selection"
-        description = "Selection description"
+        description = """Selection prediction model selects the product variants from the database ordered randomly.
+        The randomization is weighted by the 'recommendation weight' attribute of each product variant so you can set
+        some product variants to be preferred by this model.
+        """
 
     @property
     def default_identifier(self) -> str:

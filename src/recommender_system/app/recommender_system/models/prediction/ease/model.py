@@ -23,7 +23,12 @@ class EASEPredictionModel(AbstractPredictionModel):
     class Meta:
         model_name = "ease"
         title = "EASE"
-        description = "EASE description"
+        description = """EASE prediction model estimates the scores a user gives each products by computing a dot
+        product of a vector representing the user's interaction with product variants and a precomputed item-item
+        matrix. The item-item matrix is computed during training, the vector is binary where 0 means 'the user has not
+        interacted with the product variant' and 1 means 'the user has interacted with the product variant'. The
+        interaction is defined as a review of a product variant.
+        """
 
     def __init__(self, identifier: Optional[str] = None):
         super().__init__(identifier=identifier)
@@ -82,10 +87,6 @@ class EASEPredictionModel(AbstractPredictionModel):
     def train(
         self, product_storage: AbstractProductStorage = Provide["product_storage"]
     ) -> None:
-        if not self.is_ready_for_training():
-            logging.info(
-                f"Skipping training of model {self.Meta.model_name}. Model is not ready."
-            )
         self.ease = EASE(identifier=self.identifier)
         self.ease.train()
         self.ease.save(identifier=self.identifier)

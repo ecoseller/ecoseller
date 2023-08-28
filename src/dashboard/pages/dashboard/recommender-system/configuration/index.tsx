@@ -145,9 +145,9 @@ const DashboardRecommenderSystemPage = ({
         }}
         returnPath={"/dashboard/recommender-system/configuration"}
       >
-        <Container maxWidth="xl">
+        <Container maxWidth={false}>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={12} md={6}>
+            <Grid item xs={12} lg={6}>
               <ListOfModels
                 models={models}
                 onChange={(models) => {
@@ -158,7 +158,7 @@ const DashboardRecommenderSystemPage = ({
                 }}
               />
             </Grid>
-            <Grid item xs={12} sm={12} md={6}>
+            <Grid item xs={12} lg={6}>
               <RecommenderConfigForm
                 models={models}
                 retrievalSize={retrievalSize}

@@ -57,7 +57,14 @@ class Trainer:
 
         logging.info(f"Training of model {queue_item.model_name} started.")
         queue_item.set_processed()
+
         model = model_manager.create_model(model_name=queue_item.model_name)
+        if not model.is_ready_for_training():
+            logging.info(
+                f"Skipping training of model {model.Meta.model_name}. Model is not ready."
+            )
+            return
+
         model.train()
         model.replace_old()
         logging.info(f"Training of model {queue_item.model_name} finished.")

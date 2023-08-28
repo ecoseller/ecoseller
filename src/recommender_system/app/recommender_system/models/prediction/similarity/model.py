@@ -37,7 +37,11 @@ class SimilarityPredictionModel(AbstractPredictionModel):
     class Meta:
         model_name = "similarity"
         title = "Similarity"
-        description = "Similarity description"
+        description = """Similarity prediction model recommends product variants closest to the currently viewed ones.
+        This model can thus be used only on product detail page and in cart, where random product variant is selected.
+        The distances of all product variants are computed based on their attributes during training and stored to the
+        database, ordered SQL select statement retrieves the closest product variants during prediction.
+        """
 
     @property
     def default_identifier(self) -> str:

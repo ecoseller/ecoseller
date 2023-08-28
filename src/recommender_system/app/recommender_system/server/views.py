@@ -59,7 +59,7 @@ def view_get_dashboard_configuration(
     model_manager: ModelManager = Provide["model_manager"],
 ) -> Tuple[Any, ...]:
     result = {
-        "models": model_manager.get_all_models_dicts(),
+        "models": model_manager.get_all_models_dicts(include_dummy=True),
         "config": model_manager.config.dict(by_alias=True, exclude={"create_at", "id"}),
         "info": model_manager.config.info,
     }

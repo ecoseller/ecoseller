@@ -46,11 +46,11 @@ const ListOfModelsItem = ({
 
   return (
     <Grid container p={1}>
-      <Grid item xs={12} sm={8}>
+      <Grid item xs={12} md={8}>
         <Typography variant={"h5"}>{title}</Typography>
         <Typography>{description}</Typography>
       </Grid>
-      <Grid item xs={12} sm={4} textAlign={"right"}>
+      <Grid item xs={12} md={4} textAlign={"right"}>
         <FormControlLabel
           control={
             <Switch

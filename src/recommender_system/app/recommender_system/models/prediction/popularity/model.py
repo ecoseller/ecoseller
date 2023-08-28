@@ -16,7 +16,9 @@ class PopularityPredictionModel(AbstractPredictionModel):
     class Meta:
         model_name = "popularity"
         title = "Popularity"
-        description = "Popularity description"
+        description = """Popularity prediction model recommends product variants to the user based on their overall
+        popularity. Popularity is measured as the number of the product variant units sold.
+        """
 
     @property
     def default_identifier(self) -> str:
