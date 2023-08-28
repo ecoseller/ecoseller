@@ -203,5 +203,11 @@
             "type": "RECOMMENDERAPI",
             "method": "store_object"
         }
+    ],
+    "RECOMMENDER_TRAINER_QUEUE_ITEM_SAVE": [
+        {
+            "type": "RECOMMENDERAPI",
+            "method": "store_object"
+        }
     ]
 }

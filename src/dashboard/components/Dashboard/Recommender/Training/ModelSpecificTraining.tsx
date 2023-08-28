@@ -17,6 +17,7 @@ import TrainingData, {
   ITrainingDataProps,
 } from "@/components/Dashboard/Recommender/Training/TrainingData";
 import { IRecommenderModel } from "@/components/Dashboard/Recommender/Configuration/ListOfModels";
+import { scheduleTraining } from "@/pages/api/recommender-system/dashboard";
 
 export interface ITrainingDataModelProps {
   [key: string]: ITrainingDataProps;
@@ -50,7 +51,7 @@ const ModelSpecificTraining = ({
         variant={"h4"}
         sx={{ display: "inline", width: "fit-content" }}
       >
-        Model training
+        Model-specific data
       </Typography>
       <TabContext value={modelDisplayed}>
         <TabList
@@ -65,7 +66,14 @@ const ModelSpecificTraining = ({
         {models.map((model) => (
           <TabPanel sx={{ p: 2 }} key={model.name} value={model.name}>
             <TrainingData data={data[model.name].data} />
-            <Button variant="outlined">Schedule training</Button>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                scheduleTraining(model.name);
+              }}
+            >
+              Schedule training
+            </Button>
           </TabPanel>
         ))}
       </TabContext>

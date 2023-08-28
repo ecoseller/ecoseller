@@ -49,7 +49,7 @@ const ModelSpecificPerformance = ({
         variant={"h4"}
         sx={{ display: "inline", width: "fit-content" }}
       >
-        Model performance
+        Model-specific data
       </Typography>
       <TabContext value={modelDisplayed}>
         <TabList

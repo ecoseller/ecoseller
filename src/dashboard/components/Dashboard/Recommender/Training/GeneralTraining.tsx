@@ -28,7 +28,7 @@ const GeneralTraining = ({ data }: IGeneralTrainingProps) => {
         variant={"h4"}
         sx={{ display: "inline", width: "fit-content" }}
       >
-        General training
+        General data
       </Typography>
       <TrainingData data={data} />
     </Card>

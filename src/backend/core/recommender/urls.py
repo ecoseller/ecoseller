@@ -13,6 +13,10 @@ urlpatterns = [
         views.RecommenderSystemDashboardView.as_view(),
     ),
     path(
+        "dashboard/recommender-system/schedule-training",
+        views.RecommenderSystemScheduleTrainingView.as_view(),
+    ),
+    path(
         "dashboard/recommender-system/config/",
         views.RecommenderSystemConfigView.as_view(),
     ),

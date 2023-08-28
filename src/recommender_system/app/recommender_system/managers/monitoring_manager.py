@@ -6,12 +6,13 @@ from dependency_injector.wiring import inject, Provide
 from recommender_system.managers.model_manager import ModelManager
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.storage.feedback.abstract import AbstractFeedbackStorage
+from recommender_system.storage.model.abstract import AbstractModelStorage
 from recommender_system.storage.product.abstract import AbstractProductStorage
 from recommender_system.utils.monitoring_statistics import (
     Performance,
     PerformanceData,
     PerformanceDataData,
-    PerformanceDuration,
+    Duration,
     Training,
     TrainingData,
     TrainingDataData,
@@ -86,11 +87,11 @@ class MonitoringManager:
                 future_hit_rate=future_hit,
                 coverage=coverage,
                 predictions=predictions,
-                retrieval_duration=PerformanceDuration(
+                retrieval_duration=Duration(
                     avg=retrieval_duration_data["avg"],
                     max=retrieval_duration_data["max"],
                 ),
-                scoring_duration=PerformanceDuration(
+                scoring_duration=Duration(
                     avg=scoring_duration_data["avg"],
                     max=retrieval_duration_data["max"],
                 ),
@@ -115,19 +116,27 @@ class MonitoringManager:
         }
         return Performance(general=general, model_specific=model_specific)
 
+    @inject
     def _extract_training_data(
         self,
         date_from: datetime,
         date_to: datetime,
         model_name: Optional[str],
+        model_storage: AbstractModelStorage = Provide["model_storage"],
     ) -> TrainingData:
-        training_statistics_data = {
-            "started": 1,
-            "completed": 2,
-            "failed": 3,
-        }
-        peak_memory_data = {"avg": 10, "max": 100}
-        peak_memory_percentage_data = {"avg": 3, "max": 30}
+        training_statistics_data = model_storage.count_trainings(
+            date_from=date_from, date_to=date_to, model_name=model_name
+        )
+        peak_memory_data = model_storage.get_peak_memory(
+            date_from=date_from, date_to=date_to, model_name=model_name
+        )
+
+        peak_memory = peak_memory_data["memory"]
+        peak_memory_percentage = peak_memory_data["percentage"]
+
+        training_duration_data = model_storage.get_training_duration(
+            date_from=date_from, date_to=date_to, model_name=model_name
+        )
 
         return TrainingData(
             data=TrainingDataData(
@@ -137,12 +146,16 @@ class MonitoringManager:
                     failed=training_statistics_data["failed"],
                 ),
                 peak_memory=TrainingMemory(
-                    avg=peak_memory_data["avg"],
-                    max=peak_memory_data["max"],
+                    avg=peak_memory["avg"],
+                    max=peak_memory["max"],
                 ),
                 peak_memory_percentage=TrainingMemory(
-                    avg=peak_memory_percentage_data["avg"],
-                    max=peak_memory_percentage_data["max"],
+                    avg=peak_memory_percentage["avg"],
+                    max=peak_memory_percentage["max"],
+                ),
+                duration=Duration(
+                    avg=training_duration_data["avg"],
+                    max=training_duration_data["max"],
                 ),
             )
         )

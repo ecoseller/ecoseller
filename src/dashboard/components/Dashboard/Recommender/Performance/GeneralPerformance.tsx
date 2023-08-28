@@ -28,7 +28,7 @@ const GeneralPerformance = ({ k, data }: IGeneralPerformanceProps) => {
         variant={"h4"}
         sx={{ display: "inline", width: "fit-content" }}
       >
-        General performance
+        General data
       </Typography>
       <PerformanceData k={k} data={data} />
     </Card>

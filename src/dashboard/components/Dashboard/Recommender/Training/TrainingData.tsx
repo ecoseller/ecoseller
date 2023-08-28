@@ -71,15 +71,16 @@ interface ITrainingsStatistics {
   failed: number;
 }
 
-interface IMemoryValues {
+interface IValues {
   avg: number | null;
   max: number | null;
 }
 
 interface ITrainingDataDataProps {
   trainings: ITrainingsStatistics;
-  peakMemory: IMemoryValues;
-  peakMemoryPercentage: IMemoryValues;
+  peakMemory: IValues;
+  peakMemoryPercentage: IValues;
+  duration: IValues;
 }
 
 export interface ITrainingDataProps {
@@ -102,7 +103,7 @@ const TrainingData = ({ data }: ITrainingDataProps) => {
     },
   ];
 
-  const parseMemoryValues = (data: IMemoryValues, unit: string) => {
+  const parseValues = (data: IValues, unit: string) => {
     return [
       {
         label: "Average",
@@ -114,11 +115,12 @@ const TrainingData = ({ data }: ITrainingDataProps) => {
       },
     ];
   };
-  const peakMemoryValues = parseMemoryValues(data.peakMemory, "MB");
-  const peakMemoryPercentageValues = parseMemoryValues(
+  const peakMemoryValues = parseValues(data.peakMemory, "MB");
+  const peakMemoryPercentageValues = parseValues(
     data.peakMemoryPercentage,
     "%"
   );
+  const durationValues = parseValues(data.duration, "s");
 
   return (
     <Box>
@@ -126,6 +128,9 @@ const TrainingData = ({ data }: ITrainingDataProps) => {
         label={`Number of trainings`}
         values={trainingStatisticsValues}
       />
+      <Divider />
+
+      <TrainingDataComposedItem label={`Duration`} values={durationValues} />
       <Divider />
 
       <TrainingDataComposedItem

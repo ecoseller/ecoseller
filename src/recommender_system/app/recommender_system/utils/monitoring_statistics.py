@@ -5,7 +5,7 @@ from pydantic import Field
 from recommender_system.utils.base_model import BaseModel
 
 
-class PerformanceDuration(BaseModel):
+class Duration(BaseModel):
     avg: Optional[float]
     max: Optional[float]
 
@@ -15,8 +15,8 @@ class PerformanceDataData(BaseModel):
     future_hit_rate: Optional[float] = Field(alias="futureHitRate")
     coverage: Optional[float] = Field(alias="coverage")
     predictions: Optional[int] = Field(alias="predictions")
-    retrieval_duration: PerformanceDuration = Field(alias="retrievalDuration")
-    scoring_duration: PerformanceDuration = Field(alias="scoringDuration")
+    retrieval_duration: Duration = Field(alias="retrievalDuration")
+    scoring_duration: Duration = Field(alias="scoringDuration")
 
 
 class PerformanceData(BaseModel):
@@ -44,6 +44,7 @@ class TrainingDataData(BaseModel):
     trainings: TrainingStatistics
     peak_memory: TrainingMemory = Field(alias="peakMemory")
     peak_memory_percentage: TrainingMemory = Field(alias="peakMemoryPercentage")
+    duration: Duration
 
 
 class TrainingData(BaseModel):
