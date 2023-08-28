@@ -160,6 +160,11 @@ def test_trainer_ease(prepare_ease_data, trainer: Trainer = Provide["trainer"]):
 
 @inject
 def test_trainer_gru4rec(prepare_gru4rec_data, trainer: Trainer = Provide["trainer"]):
+    def is_ready_for_training(self):
+        return True
+
+    GRU4RecPredictionModel.is_ready_for_training = is_ready_for_training
+
     _ = prepare_gru4rec_data
 
     try:

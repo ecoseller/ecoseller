@@ -110,6 +110,7 @@ def _config_model(id: Optional[int] = None) -> Dict[str, Any]:
         "create_at": _now,
         "retrieval_size": 1000,
         "ordering_size": 50,
+        "models_disabled": {},
         "homepage_retrieval_cascade": ["selection"],
         "homepage_scoring_cascade": ["selection"],
         "category_list_scoring_cascade": ["selection"],

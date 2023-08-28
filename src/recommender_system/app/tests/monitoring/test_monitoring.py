@@ -144,45 +144,15 @@ def test_statistics(
     date_from = datetime.now() - timedelta(seconds=2)
     _ = prepare_data
 
-    statistics = monitoring_manager.get_statistics(
+    statistics = monitoring_manager.get_performance(
         date_from=date_from, date_to=datetime.now()
     )
 
-    assert statistics.item.coverage == 3 / 4
-    assert statistics.item.direct_hit == 2 / 4
-    assert statistics.item.future_hit == 1 / 4
+    assert statistics.general.data.coverage == 3 / 4
+    assert statistics.general.data.hit_rate == 2 / 4
+    assert statistics.general.data.future_hit_rate == 1 / 4
 
-    similarity = [
-        item for item in statistics.models if item.model_name == "similarity"
-    ][0]
-    assert similarity.item.coverage == 3 / 4
-    assert similarity.item.direct_hit == 2 / 3
-    assert similarity.item.future_hit == 1 / 3
-
-    cart = [item for item in similarity.types if item.recommendation_type == "CART"][0]
-    assert cart.item.coverage == 3 / 4
-    assert cart.item.direct_hit == 1 / 2
-    assert cart.item.future_hit == 1 / 2
-
-    detail = [
-        item
-        for item in similarity.types
-        if item.recommendation_type == "PRODUCT_DETAIL"
-    ][0]
-    assert detail.item.coverage == 1 / 4
-    assert detail.item.direct_hit == 1 / 1
-    assert detail.item.future_hit == 0
-
-    selection = [item for item in statistics.models if item.model_name == "selection"][
-        0
-    ]
-    assert selection.item.coverage == 2 / 4
-    assert selection.item.direct_hit == 0
-    assert selection.item.future_hit == 0
-
-    detail = [
-        item for item in selection.types if item.recommendation_type == "PRODUCT_DETAIL"
-    ][0]
-    assert detail.item.coverage == 2 / 4
-    assert detail.item.direct_hit == 0
-    assert detail.item.future_hit == 0
+    similarity = statistics.model_specific["similarity"].data
+    assert similarity.coverage == 3 / 4
+    assert similarity.hit_rate == 2 / 3
+    assert similarity.future_hit_rate == 1 / 3

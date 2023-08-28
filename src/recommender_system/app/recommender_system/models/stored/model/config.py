@@ -146,7 +146,7 @@ class ConfigModel(ImmutableModelStoredModel):
         *args: Any,
         **kwargs: Any,
     ) -> Dict[str, Any]:
-        kwargs.setdefault("exclude", "category_list_retrieval_cascade")
+        kwargs.setdefault("exclude", {"category_list_retrieval_cascade"})
         return super().dict(*args, **kwargs)
 
     @property
