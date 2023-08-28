@@ -55,6 +55,7 @@ export interface IRecommenderConfigProps {
 }
 
 interface IApiProps {
+  models: IRecommenderModel[];
   config: IRecommenderConfigProps;
   info: IInfo;
 }
@@ -217,7 +218,7 @@ export const getServerSideProps = async (context: any) => {
   console.log("DATA", data);
 
   return {
-    props: { ...data.config, info: data.info },
+    props: { ...data.config, info: data.info, models: data.models },
   };
 };
 export default DashboardRecommenderSystemPage;

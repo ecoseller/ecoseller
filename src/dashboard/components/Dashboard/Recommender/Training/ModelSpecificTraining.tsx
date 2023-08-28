@@ -65,15 +65,22 @@ const ModelSpecificTraining = ({
         </TabList>
         {models.map((model) => (
           <TabPanel sx={{ p: 2 }} key={model.name} value={model.name}>
-            <TrainingData data={data[model.name].data} />
-            <Button
-              variant="outlined"
-              onClick={() => {
-                scheduleTraining(model.name);
-              }}
-            >
-              Schedule training
-            </Button>
+            {model.canBeTrained && (
+              <>
+                <TrainingData data={data[model.name].data} />
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    scheduleTraining(model.name);
+                  }}
+                >
+                  Schedule training
+                </Button>
+              </>
+            )}
+            {!model.canBeTrained && (
+              <Typography>{`${model.title} model does not need training.`}</Typography>
+            )}
           </TabPanel>
         ))}
       </TabContext>

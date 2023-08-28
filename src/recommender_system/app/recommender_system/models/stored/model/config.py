@@ -136,13 +136,7 @@ class ConfigModel(ImmutableModelStoredModel):
         **kwargs: Any,
     ) -> Dict[str, Any]:
         kwargs.setdefault("exclude", "category_list_retrieval_cascade")
-        result = super().dict(*args, **kwargs)
-        if not exclude_models:
-            result["models"] = [
-                model.to_config()
-                for model in model_manager.get_all_models(include_dummy=True)
-            ]
-        return result
+        return super().dict(*args, **kwargs)
 
     @property
     def info(self) -> Dict[str, Any]:

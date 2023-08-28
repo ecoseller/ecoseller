@@ -89,7 +89,7 @@ class ModelManager:
 
     def get_all_models_dicts(self, include_dummy: bool = False) -> List[Dict[str, str]]:
         return [
-            {"name": model.Meta.model_name, "title": model.Meta.title}
+            model.to_config()
             for model in self.get_all_models(include_dummy=include_dummy)
         ]
 
