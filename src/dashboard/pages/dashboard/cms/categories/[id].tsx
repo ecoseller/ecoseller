@@ -23,7 +23,7 @@ const PageCategoryEdit = ({ pageCategoryDetail }: IProps) => {
   console.log("pageCategoryDetail", pageCategoryDetail);
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <PageCategoryForm pageCategoryData={pageCategoryDetail} />
       </Container>
     </DashboardLayout>

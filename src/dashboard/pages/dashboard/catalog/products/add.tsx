@@ -28,7 +28,7 @@ const DashboardProductsAddPage = ({
 }: IProps) => {
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <PermissionProvider allowedPermissions={["product_add_permission"]}>
           <ProductEditorWrapper
             title={"Add product"}

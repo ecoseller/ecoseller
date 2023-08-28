@@ -40,7 +40,7 @@ const DashboardUserAddPage = () => {
 
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <PermissionProvider allowedPermissions={["user_add_permission"]}>
           <EditableContentWrapper
             primaryButtonTitle={PrimaryButtonAction.Create}

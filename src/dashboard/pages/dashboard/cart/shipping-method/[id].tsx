@@ -180,7 +180,7 @@ const DashboardShippingMethodDetailPage = ({
 
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <Stack>
           <EditableContentWrapper
             primaryButtonTitle={

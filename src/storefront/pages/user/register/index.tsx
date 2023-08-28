@@ -124,7 +124,7 @@ const StorefrontUserRegisterPage = () => {
   };
 
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth={false}>
       <EditorCard>
         <Typography variant="h6">
           {t("registration-form-title") /* Registration form */}

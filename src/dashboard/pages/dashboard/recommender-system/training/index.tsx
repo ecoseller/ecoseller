@@ -43,7 +43,7 @@ const DashboardRecommenderSystemTrainingPage = ({
 
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} textAlign={"center"}>
             <DateTimeRangePicker

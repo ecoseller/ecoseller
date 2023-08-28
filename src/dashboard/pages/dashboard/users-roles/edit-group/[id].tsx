@@ -49,7 +49,7 @@ const DashboardGroupEditPage = ({ group, permissions }: IEditGroupProps) => {
 
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <PermissionProvider allowedPermissions={["group_change_permission"]}>
           <EditableContentWrapper
             primaryButtonTitle={PrimaryButtonAction.Save}

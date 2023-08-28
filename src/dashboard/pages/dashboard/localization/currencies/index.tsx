@@ -333,7 +333,7 @@ const DashboardCurrencyPage = ({ currencies }: { currencies: ICurrency[] }) => {
 
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <Stack
           direction="row"
           alignItems="center"

@@ -31,7 +31,7 @@ const PageCategoriesPage = ({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <PageCategoriesListTopLine />
         <Card elevation={0}>
           <PageCategoriesList categories={categories} />

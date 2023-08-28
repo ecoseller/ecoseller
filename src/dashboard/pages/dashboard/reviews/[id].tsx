@@ -63,7 +63,7 @@ function getLabelText(value: number) {
 const DashboardProductsEditPage = ({ review, productRating }: IProps) => {
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <TopLineWithReturn
           title={`Review #${review.product_variant}`}
           returnPath={"/dashboard/reviews"}

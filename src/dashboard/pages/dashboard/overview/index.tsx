@@ -53,7 +53,7 @@ const DashboardOverviewPage = ({
 
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <Typography variant="h4" sx={{ mb: 5 }}>
           {`Today's order overview`}
         </Typography>

@@ -57,7 +57,7 @@ const StorefrontUserEditPage = ({ orders }: IUserOrdersProps) => {
   };
 
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth={false}>
       <OrderList orders={orders} />
     </Container>
   );

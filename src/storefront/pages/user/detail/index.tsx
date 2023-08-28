@@ -272,7 +272,7 @@ const StorefrontUserEditPage = ({ billingInfo, shippingInfo }: IUserProps) => {
   };
 
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth={false}>
       <UserGeneralInformation
         state={state}
         setState={(v: IUser) => setState(v)}

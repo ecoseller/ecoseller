@@ -26,7 +26,7 @@ const CMSPagesPage = ({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <PagesListTopLine />
         <Card elevation={0}>
           <PagesList pages={pages} />

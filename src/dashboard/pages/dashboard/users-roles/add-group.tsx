@@ -49,7 +49,7 @@ const DashboardGroupAddPage = ({ permissions }: IPermissionsProps) => {
 
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <PermissionProvider allowedPermissions={["group_add_permission"]}>
           <EditableContentWrapper
             primaryButtonTitle={PrimaryButtonAction.Create}

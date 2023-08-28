@@ -85,7 +85,7 @@ const ReviewPage = ({ items, order_id }: IReviewPageProps) => {
   };
 
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth={false}>
       {itemsState.map((item) => {
         return (
           <Box sx={{ mb: 2 }} key={item.product_id}>
