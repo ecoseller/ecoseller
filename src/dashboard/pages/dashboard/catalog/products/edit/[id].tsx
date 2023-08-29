@@ -30,7 +30,7 @@ const DashboardProductsEditPage = ({ product, pricelistsData }: IProps) => {
 
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <PermissionProvider allowedPermissions={["product_add_permission"]}>
           <ProductEditorWrapper
             title={`Edit product #${id}`}

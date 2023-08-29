@@ -1,5 +1,5 @@
 import logging
-from typing import Any, List, Optional, Type, TYPE_CHECKING
+from typing import Any, List, Optional, Type, TYPE_CHECKING, Dict
 
 from dependency_injector.wiring import inject, Provide
 
@@ -34,7 +34,7 @@ class ModelManager:
 
         for model_name in cascade:
             model_class = PredictionModelMapper.map(model_name=model_name)
-            if model_class.is_ready(
+            if not self.config.is_disabled(model=model_name) and model_class.is_ready(
                 recommendation_type=recommendation_type,
                 session_id=session_id,
                 user_id=user_id,
@@ -87,7 +87,29 @@ class ModelManager:
 
         trainer.schedule_train(model_name=SimilarityPredictionModel.Meta.model_name)
 
-    def get_all_models(self) -> List[Type[AbstractPredictionModel]]:
+    @inject
+    def reviews_modified(self, trainer: Trainer = Provide["trainer"]) -> None:
+        from recommender_system.models.prediction.ease.model import EASEPredictionModel
+
+        trainer.schedule_train(model_name=EASEPredictionModel.Meta.model_name)
+
+    @inject
+    def sessions_modified(self, trainer: Trainer = Provide["trainer"]) -> None:
+        from recommender_system.models.prediction.gru4rec.model import (
+            GRU4RecPredictionModel,
+        )
+
+        trainer.schedule_train(model_name=GRU4RecPredictionModel.Meta.model_name)
+
+    def get_all_models_dicts(self, include_dummy: bool = False) -> List[Dict[str, str]]:
+        return [
+            model.to_config()
+            for model in self.get_all_models(include_dummy=include_dummy)
+        ]
+
+    def get_all_models(
+        self, include_dummy: bool = False
+    ) -> List[Type[AbstractPredictionModel]]:
         from recommender_system.models.prediction.selection.model import (
             SelectionPredictionModel,
         )
@@ -101,8 +123,15 @@ class ModelManager:
             GRU4RecPredictionModel,
         )
         from recommender_system.models.prediction.ease.model import EASEPredictionModel
+        from recommender_system.models.prediction.dummy.model import (
+            DummyPredictionModel,
+        )
 
-        return [
+        dummy: List[Type[AbstractPredictionModel]] = (
+            [] if not include_dummy else [DummyPredictionModel]
+        )
+
+        return dummy + [
             SelectionPredictionModel,
             PopularityPredictionModel,
             SimilarityPredictionModel,

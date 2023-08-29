@@ -1,6 +1,14 @@
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.sql.schema import Column, Index
-from sqlalchemy.sql.sqltypes import Boolean, DECIMAL, JSON, Integer, String, TIMESTAMP
+from sqlalchemy.sql.sqltypes import (
+    Boolean,
+    DECIMAL,
+    JSON,
+    Integer,
+    String,
+    TIMESTAMP,
+    UUID,
+)
 from sqlalchemy.orm import declarative_base, DeclarativeBase
 
 from recommender_system.models.stored.model.config import ConfigModel
@@ -10,8 +18,18 @@ from recommender_system.models.stored.model.latest_identifier import (
 from recommender_system.models.stored.model.trainer_queue_item import (
     TrainerQueueItemModel,
 )
+from recommender_system.models.stored.model.training_finished import (
+    TrainingFinishedModel,
+)
+from recommender_system.models.stored.model.training_started import TrainingStartedModel
 from recommender_system.models.stored.model.training_statistics import (
     TrainingStatisticsModel,
+)
+from recommender_system.models.stored.model.training_step_finished import (
+    TrainingStepFinishedModel,
+)
+from recommender_system.models.stored.model.training_step_started import (
+    TrainingStepStartedModel,
 )
 from recommender_system.storage.sql.base import SQLModelBase
 
@@ -28,6 +46,8 @@ class SQLConfig(ModelBase):
     create_at = Column(TIMESTAMP(), nullable=False)
     retrieval_size = Column(Integer(), nullable=False)
     ordering_size = Column(Integer(), nullable=False)
+
+    models_disabled = Column(JSON(), nullable=False)
 
     homepage_retrieval_cascade = Column(
         postgresql.ARRAY(String(255)), nullable=False, default=[]
@@ -97,6 +117,38 @@ class SQLTrainerQueueItem(ModelBase):
         origin_model = TrainerQueueItemModel
 
 
+class SQLTrainingFinished(ModelBase):
+    """
+    This model represents training finished event table in SQL database.
+    """
+
+    training_id = Column(UUID(as_uuid=True), primary_key=True)
+    create_at = Column(TIMESTAMP(), nullable=False)
+    deleted = Column(Boolean(), nullable=False)
+
+    __tablename__ = "training_finished"
+
+    class Meta:
+        origin_model = TrainingFinishedModel
+
+
+class SQLTrainingStarted(ModelBase):
+    """
+    This model represents training started event table in SQL database.
+    """
+
+    training_id = Column(UUID(as_uuid=True), primary_key=True)
+    model_name = Column(String(255), nullable=False)
+    model_identifier = Column(String(255), nullable=False)
+    create_at = Column(TIMESTAMP(), nullable=False)
+    deleted = Column(Boolean(), nullable=False)
+
+    __tablename__ = "training_started"
+
+    class Meta:
+        origin_model = TrainingStartedModel
+
+
 class SQLTrainingStatistics(ModelBase):
     """
     This model represents training statistics table in SQL database.
@@ -118,3 +170,40 @@ class SQLTrainingStatistics(ModelBase):
 
     class Meta:
         origin_model = TrainingStatisticsModel
+
+
+class SQLTrainingStepFinished(ModelBase):
+    """
+    This model represents training step finished event table in SQL database.
+    """
+
+    step_id = Column(UUID(as_uuid=True), primary_key=True)
+    model_name = Column(String(255), nullable=False)
+    model_identifier = Column(String(255), nullable=False)
+    metrics = Column(JSON(), nullable=False)
+    create_at = Column(TIMESTAMP(), nullable=False)
+    deleted = Column(Boolean(), nullable=False)
+
+    __tablename__ = "training_step_finished"
+
+    class Meta:
+        origin_model = TrainingStepFinishedModel
+
+
+class SQLTrainingStepStarted(ModelBase):
+    """
+    This model represents training step started event table in SQL database.
+    """
+
+    step_id = Column(UUID(as_uuid=True), primary_key=True)
+    training_id = Column(UUID(as_uuid=True), nullable=False)
+    model_name = Column(String(255), nullable=False)
+    model_identifier = Column(String(255), nullable=False)
+    hyperparameters = Column(JSON(), nullable=False)
+    create_at = Column(TIMESTAMP(), nullable=False)
+    deleted = Column(Boolean(), nullable=False)
+
+    __tablename__ = "training_step_started"
+
+    class Meta:
+        origin_model = TrainingStepStartedModel

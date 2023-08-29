@@ -16,8 +16,18 @@ from recommender_system.models.prediction.gru4rec.layers import (
     ReducedLinearFeedforward,
     SelectGRUOutput,
 )
+from recommender_system.models.stored.model.training_finished import (
+    TrainingFinishedModel,
+)
+from recommender_system.models.stored.model.training_started import TrainingStartedModel
 from recommender_system.models.stored.model.training_statistics import (
     TrainingStatisticsModel,
+)
+from recommender_system.models.stored.model.training_step_finished import (
+    TrainingStepFinishedModel,
+)
+from recommender_system.models.stored.model.training_step_started import (
+    TrainingStepStartedModel,
 )
 from recommender_system.models.stored.product.product_variant import ProductVariantModel
 from recommender_system.storage.feedback.abstract import AbstractFeedbackStorage
@@ -298,13 +308,23 @@ class NeuralNetwork:
         return peak_memory, peak_memory_percentage
 
     def _full_train(
-        self, peak_memory: float, peak_memory_percentage: float
-    ) -> Tuple[float, float]:
+        self,
+        peak_memory: float,
+        peak_memory_percentage: float,
+        training_started_model: TrainingStartedModel,
+    ) -> Tuple[float, float, float]:
         best_parameters = None
         best_performance = -1
         for parameters in self.possible_parameters:
             data_loader = self._get_data_loader(loader_type=DataLoaderType.TRAIN)
             self._set_parameters(parameters=parameters)
+            step_started_model = TrainingStepStartedModel(
+                training_id=training_started_model.training_id,
+                model_name=self.model_name,
+                model_identifier=self.model_identifier,
+                hyperparameters=self.parameters,
+            )
+            step_started_model.create()
             peak_memory, peak_memory_percentage = self._run_epochs(
                 data_loader=data_loader,
                 num_epochs=self.num_epochs,
@@ -317,17 +337,24 @@ class NeuralNetwork:
                 peak_memory=peak_memory,
                 peak_memory_percentage=peak_memory_percentage,
             )
+            TrainingStepFinishedModel(
+                step_id=step_started_model.step_id,
+                model_name=self.model_name,
+                model_identifier=self.model_identifier,
+                metrics={"accuracy": performance},
+            ).create()
             if performance > best_performance:
                 best_performance, best_parameters = performance, parameters
 
         data_loader = self._get_data_loader(loader_type=DataLoaderType.FULL)
         self._set_parameters(parameters=best_parameters)
-        return self._run_epochs(
+        peak_memory, peak_memory_percentage = self._run_epochs(
             data_loader=data_loader,
             num_epochs=self.num_epochs,
             peak_memory=peak_memory,
             peak_memory_percentage=peak_memory_percentage,
         )
+        return peak_memory, peak_memory_percentage, best_performance
 
     def _incremental_train(
         self, peak_memory: float, peak_memory_percentage: float
@@ -342,20 +369,30 @@ class NeuralNetwork:
         )
 
     def train(self) -> None:
+        started_model = TrainingStartedModel(
+            model_name=self.model_name, model_identifier=self.model_identifier
+        )
+        started_model.create()
+
         start = time.time()
         peak_memory, peak_memory_percentage = get_current_memory_usage()
         if self.needs_full_train:
-            peak_memory, peak_memory_percentage = self._full_train(
-                peak_memory=peak_memory, peak_memory_percentage=peak_memory_percentage
+            peak_memory, peak_memory_percentage, performance = self._full_train(
+                peak_memory=peak_memory,
+                peak_memory_percentage=peak_memory_percentage,
+                training_started_model=started_model,
             )
             full_train = True
         else:
             peak_memory, peak_memory_percentage = self._incremental_train(
                 peak_memory=peak_memory, peak_memory_percentage=peak_memory_percentage
             )
+            performance = None
             full_train = False
 
         end = time.time()
+
+        TrainingFinishedModel(training_id=started_model.training_id).create()
 
         statistics = TrainingStatisticsModel(
             model_name=self.model_name,
@@ -364,7 +401,7 @@ class NeuralNetwork:
             peak_memory=peak_memory,
             peak_memory_percentage=peak_memory_percentage,
             full_train=full_train,
-            metrics={},
+            metrics={"accuracy": performance},
             hyperparameters=self.parameters,
         )
         statistics.create()

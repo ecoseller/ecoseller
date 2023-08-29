@@ -22,7 +22,7 @@ const CMSPageEdit = ({ pageDetail }: IProps) => {
   console.log("pageDetail", pageDetail);
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <PageEditorWrapper cmsPageData={pageDetail} />
       </Container>
     </DashboardLayout>

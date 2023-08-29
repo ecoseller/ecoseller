@@ -19,7 +19,7 @@ const CategoryEditPage = ({ category }: ICategoryEditPageProps) => {
 
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <PermissionProvider allowedPermissions={["category_change_permission"]}>
           <CategoryEditorWrapper
             initialCategory={category}

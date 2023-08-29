@@ -1,11 +1,14 @@
 from datetime import datetime
 from typing import TYPE_CHECKING
 
+from dependency_injector.wiring import inject, Provide
+
 from recommender_system.models.stored.feedback.immutable import (
     ImmutableFeedbackStoredModel,
 )
 
 if TYPE_CHECKING:
+    from recommender_system.managers.model_manager import ModelManager
     from recommender_system.models.stored.feedback.session import SessionModel
 
 
@@ -33,7 +36,8 @@ class ReviewModel(ImmutableFeedbackStoredModel):
 
         return SessionModel.get(pk=self.session_id)
 
-    def create(self) -> None:
+    @inject
+    def create(self, model_manager: "ModelManager" = Provide["model_manager"]) -> None:
         from recommender_system.models.stored.feedback.session import SessionModel
 
         super().create()
@@ -41,3 +45,4 @@ class ReviewModel(ImmutableFeedbackStoredModel):
             SessionModel.get(pk=self.session_id)
         except SessionModel.DoesNotExist:
             SessionModel(id=self.session_id, user_id=self.user_id).create()
+        model_manager.sessions_modified()

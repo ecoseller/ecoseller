@@ -18,7 +18,7 @@ const OrderListPage = ({ reviews }: IDashboardReviewPageProps) => {
   console.log(reviews);
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <Stack
           direction="row"
           alignItems="center"

@@ -21,7 +21,7 @@ const CategoriesPage = ({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <PermissionProvider allowedPermissions={["category_add_permission"]}>
           <CategoryListTopLine />
         </PermissionProvider>

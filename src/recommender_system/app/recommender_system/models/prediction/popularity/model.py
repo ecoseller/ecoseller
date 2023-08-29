@@ -16,6 +16,9 @@ class PopularityPredictionModel(AbstractPredictionModel):
     class Meta:
         model_name = "popularity"
         title = "Popularity"
+        description = """Popularity prediction model recommends product variants to the user based on their overall
+        popularity. Popularity is measured as the number of the product variant units sold.
+        """
 
     @property
     def default_identifier(self) -> str:
@@ -34,6 +37,10 @@ class PopularityPredictionModel(AbstractPredictionModel):
         return product_storage.count_objects(
             model_class=OrderModel
         ) > product_storage.count_objects(model_class=ProductVariantModel)
+
+    @classmethod
+    def can_be_trained(cls) -> bool:
+        return False
 
     @classmethod
     def is_ready_for_training(cls) -> bool:

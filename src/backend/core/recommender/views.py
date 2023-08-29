@@ -186,8 +186,28 @@ class RecommenderSystemDashboardView(APIView):
         data = RecommenderSystemApi.get_dashboard(
             date_from=request.query_params["date_from"],
             date_to=request.query_params["date_to"],
+            page=request.query_params["page"],
         )
         return Response(data, status=200)
+
+
+class RecommenderSystemScheduleTrainingView(APIView):
+    allowed_methods = ["POST"]
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request):
+        user_id = request.user
+        if user_id is None or not user_id.is_authenticated:
+            return Response({"error": "Not logged in user"}, status=400)
+        data = {
+            "_model_class": "TrainerQueueItem",
+            "model_name": request.data["model_name"],
+        }
+        settings.NOTIFICATIONS_API.notify(
+            EventTypes.RECOMMENDER_TRAINER_QUEUE_ITEM_SAVE,
+            data=data,
+        )
+        return Response({}, status=200)
 
 
 class RecommenderSystemConfigView(APIView):

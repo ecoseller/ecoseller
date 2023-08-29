@@ -17,7 +17,7 @@ const CategoryAddPage = () => {
   return (
     <DashboardLayout>
       <PermissionProvider allowedPermissions={["category_add_permission"]}>
-        <Container maxWidth="xl">
+        <Container maxWidth={false}>
           <CategoryEditorWrapper
             initialCategory={emptyCategory}
             creatingNew={true}

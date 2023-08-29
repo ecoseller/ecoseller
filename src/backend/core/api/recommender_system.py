@@ -28,11 +28,13 @@ class RecommenderSystemApi:
         cls.store_object(data=data)
 
     @classmethod
-    def get_dashboard(cls, date_from: str, date_to: str) -> Optional[Dict[str, Any]]:
+    def get_dashboard(
+        cls, date_from: str, date_to: str, page: str
+    ) -> Optional[Dict[str, Any]]:
         if cls.enabled:
             response = requests.request(
                 method="GET",
-                url=cls.server_url + "/dashboard",
+                url=cls.server_url + "/dashboard/" + page,
                 params={"date_from": date_from, "date_to": date_to},
             )
             return response.json()

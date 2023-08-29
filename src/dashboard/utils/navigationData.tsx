@@ -144,6 +144,24 @@ const navigationData: INavigationItem[] = [
     title: "Recommender System",
     path: "/dashboard/recommender-system",
     icon: <StarIcon />,
+    permissions: ["page_change_permission", "page_add_permission"],
+    children: [
+      {
+        title: "Performance",
+        path: "/performance",
+        icon: undefined,
+      },
+      {
+        title: "Training",
+        path: "/training",
+        icon: undefined,
+      },
+      {
+        title: "Configuration",
+        path: "/configuration",
+        icon: undefined,
+      },
+    ],
   },
 ];
 

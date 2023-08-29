@@ -80,7 +80,7 @@ const DashboardAttributeTypeDetailPage = ({ attributeType }: IProps) => {
 
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <Stack>
           <EditableContentWrapper
             primaryButtonTitle={

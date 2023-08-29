@@ -1,41 +1,80 @@
-from typing import List, Optional
+from typing import Optional, Dict, Any
 
 from pydantic import Field
 
-from recommender_system.models.stored.model.training_statistics import (
-    TrainingStatisticsModel,
-)
 from recommender_system.utils.base_model import BaseModel
 
 
-class StatisticsItem(BaseModel):
+class Duration(BaseModel):
+    avg: Optional[float]
+    max: Optional[float]
+
+
+class PerformanceDataData(BaseModel):
+    hit_rate: Optional[float] = Field(
+        alias="hitRate",
+        title="Hit rate @ %k%",
+        description="""How often users click on one of top %k% recommended products.""",
+    )
+    future_hit_rate: Optional[float] = Field(
+        alias="futureHitRate",
+        title="Future hit rate @ %k%",
+        description="""How often users visit one of top %k% recommended products during the rest of their session.""",
+    )
+    coverage: Optional[float] = Field(
+        alias="coverage",
+        title="Coverage",
+        description="""What fraction of the product variant catalogue was recommended.""",
+    )
+    predictions: Optional[int] = Field(alias="predictions")
+    retrieval_duration: Duration = Field(alias="retrievalDuration")
+    scoring_duration: Duration = Field(alias="scoringDuration")
+
+    @classmethod
+    def get_info(cls) -> Dict[str, Any]:
+        info_fields_names = ["hit_rate", "future_hit_rate", "coverage"]
+        info_fields = [cls.__fields__[name] for name in info_fields_names]
+        return {
+            field.alias: {
+                "title": field.field_info.title,
+                "description": field.field_info.description,
+            }
+            for field in info_fields
+        }
+
+
+class PerformanceData(BaseModel):
     k: int
-    direct_hit: Optional[float] = Field(alias="directHit")
-    future_hit: Optional[float] = Field(alias="futureHit")
-    coverage: Optional[float]
+    data: PerformanceDataData
 
 
-class TypeStatistics(BaseModel):
-    recommendation_type: str = Field(alias="name")
-    recommendation_type_title: str = Field(alias="title")
-    item: StatisticsItem
+class Performance(BaseModel):
+    general: PerformanceData
+    model_specific: Dict[str, PerformanceData] = Field(alias="modelSpecific")
 
 
-class ModelStatistics(BaseModel):
-    model_name: str = Field(alias="name")
-    item: StatisticsItem
-    types: List[TypeStatistics]
+class TrainingStatistics(BaseModel):
+    started: int
+    completed: int
+    failed: int
 
 
-class Statistics(BaseModel):
-    item: StatisticsItem
-    models: List[ModelStatistics]
+class TrainingMemory(BaseModel):
+    avg: Optional[float]
+    max: Optional[float]
 
 
-class ModelTrainingDetails(BaseModel):
-    model_name: str = Field(alias="name")
-    statistics: Optional[TrainingStatisticsModel]
+class TrainingDataData(BaseModel):
+    trainings: TrainingStatistics
+    peak_memory: TrainingMemory = Field(alias="peakMemory")
+    peak_memory_percentage: TrainingMemory = Field(alias="peakMemoryPercentage")
+    duration: Duration
 
 
-class TrainingDetails(BaseModel):
-    models: List[ModelTrainingDetails]
+class TrainingData(BaseModel):
+    data: TrainingDataData
+
+
+class Training(BaseModel):
+    general: TrainingData
+    model_specific: Dict[str, TrainingData] = Field(alias="modelSpecific")

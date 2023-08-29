@@ -5,7 +5,7 @@ COPY ./package.json .
 COPY ./package-lock.json .
 
 RUN npm install -g npm@8.8.0
-RUN npm ci --legacy-peer-deps
+RUN npm -f ci --legacy-peer-deps
 
 # builder
 FROM dependencies as builder

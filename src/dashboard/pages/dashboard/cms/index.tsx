@@ -14,7 +14,7 @@ import Typography from "@mui/material/Typography";
 const DashboardCMSPage = () => {
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <Typography variant="h4" sx={{ mb: 5 }}>
           CMS
         </Typography>

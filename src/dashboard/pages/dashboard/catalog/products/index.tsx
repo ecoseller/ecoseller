@@ -19,7 +19,7 @@ import { PermissionProvider } from "@/utils/context/permission";
 const DashboardProductsPage = () => {
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <PermissionProvider allowedPermissions={["product_add_permission"]}>
           <ProductListTopLine />
         </PermissionProvider>

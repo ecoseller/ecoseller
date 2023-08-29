@@ -28,6 +28,10 @@ class GRU4RecPredictionModel(AbstractPredictionModel):
     class Meta:
         model_name = "gru4rec"
         title = "GRU4Rec"
+        description = """GRU4Rec prediction model recommends product variants to the user based on their current
+        session. It uses recurrent neural network that predicts what product variants the user should see next. This
+        model can not perform the retrieval step of the prediction pipeline.
+        """
 
     def __init__(self, identifier: Optional[str] = None):
         super().__init__(identifier=identifier)
@@ -61,6 +65,10 @@ class GRU4RecPredictionModel(AbstractPredictionModel):
             return False
 
         return len(visited_variants) > 0
+
+    @classmethod
+    def can_be_trained(cls) -> bool:
+        return True
 
     @classmethod
     @inject

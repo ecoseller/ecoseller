@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 from sqlalchemy.orm.query import Query
 
@@ -59,18 +59,36 @@ class AbstractFeedbackStorage(AbstractStorage, ABC):
 
     @abstractmethod
     def count_future_hit(
-        self, date_from: datetime, date_to: datetime
+        self, date_from: datetime, date_to: datetime, k: int, model_name: Optional[str]
     ) -> Dict[str, Any]:
         raise NotImplementedError()
 
     @abstractmethod
     def count_direct_hit(
-        self, date_from: datetime, date_to: datetime, k: int
+        self, date_from: datetime, date_to: datetime, k: int, model_name: Optional[str]
     ) -> Dict[str, Any]:
         raise NotImplementedError()
 
     @abstractmethod
     def count_coverage(
-        self, date_from: datetime, date_to: datetime, per_model: bool, per_type: bool
-    ) -> List[Tuple[Any, ...]]:
+        self, date_from: datetime, date_to: datetime, model_name: Optional[str]
+    ) -> int:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def count_predictions(
+        self, date_from: datetime, date_to: datetime, model_name: Optional[str]
+    ) -> int:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def get_retrieval_duration(
+        self, date_from: datetime, date_to: datetime, model_name: Optional[str]
+    ) -> Dict[str, Any]:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def get_scoring_duration(
+        self, date_from: datetime, date_to: datetime, model_name: Optional[str]
+    ) -> Dict[str, Any]:
         raise NotImplementedError()

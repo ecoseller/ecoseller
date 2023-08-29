@@ -17,7 +17,7 @@ interface IDashboardOrderPageProps {
 const OrderListPage = ({ orders }: IDashboardOrderPageProps) => {
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <Stack
           direction="row"
           alignItems="center"

@@ -16,6 +16,7 @@ from recommender_system.models.api.product_type import ProductType
 from recommender_system.models.api.product_variant import ProductVariant
 from recommender_system.models.api.recommendation_view import RecommendationView
 from recommender_system.models.api.review import Review
+from recommender_system.models.api.trainer_queue_item import TrainerQueueItem
 
 
 class DataManager:
@@ -35,6 +36,7 @@ class DataManager:
         "ProductVariant": ProductVariant,
         "RecommendationView": RecommendationView,
         "Review": Review,
+        "TrainerQueueItem": TrainerQueueItem,
     }
 
     def store_object(self, data: Dict[str, Any]) -> None:

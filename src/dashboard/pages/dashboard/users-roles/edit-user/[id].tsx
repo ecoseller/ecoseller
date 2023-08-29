@@ -54,7 +54,7 @@ const DashboardUserEditPage = ({ userData, groups }: IUserEditProps) => {
 
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <PermissionProvider allowedPermissions={["user_change_permission"]}>
           <EditableContentWrapper
             primaryButtonTitle={PrimaryButtonAction.Save}

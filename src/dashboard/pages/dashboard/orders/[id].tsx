@@ -37,7 +37,7 @@ const OrderDetailPage = ({
 }: IOrderDetailPageProps) => {
   return (
     <DashboardLayout>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <OrderDetailWrapper
           order={order}
           billingInfo={billingInfo}

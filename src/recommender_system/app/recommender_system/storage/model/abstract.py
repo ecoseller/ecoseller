@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING, Dict
 
 from recommender_system.storage.abstract import AbstractStorage
 
@@ -35,4 +35,22 @@ class AbstractModelStorage(AbstractStorage, ABC):
 
     @abstractmethod
     def count_incremental_trainings(self, model_name: str) -> int:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def count_trainings(
+        self, date_from: datetime, date_to: datetime, model_name: Optional[str]
+    ) -> Dict[str, int]:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def get_peak_memory(
+        self, date_from: datetime, date_to: datetime, model_name: Optional[str]
+    ) -> Dict[str, Dict[str, int]]:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def get_training_duration(
+        self, date_from: datetime, date_to: datetime, model_name: Optional[str]
+    ) -> Dict[str, int]:
         raise NotImplementedError()
