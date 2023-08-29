@@ -34,7 +34,7 @@ class ModelManager:
 
         for model_name in cascade:
             model_class = PredictionModelMapper.map(model_name=model_name)
-            if model_class.is_ready(
+            if not self.config.is_disabled(model=model_name) and model_class.is_ready(
                 recommendation_type=recommendation_type,
                 session_id=session_id,
                 user_id=user_id,
