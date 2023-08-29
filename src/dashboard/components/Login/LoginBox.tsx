@@ -35,6 +35,15 @@ const LoginBox = ({}) => {
   );
   const [error, setError] = useState<string>("");
 
+  useEffect(() => {
+    if (email === "" && password === "") {
+      setEmail(process.env.NEXT_PUBLIC_DASHBOARD_USER || "");
+      setPassword(process.env.NEXT_PUBLIC_DASHBOARD_PASSWORD || "");
+    }
+  }, []);
+
+  console.log("email", email);
+
   return (
     <>
       <Link href={"https://ecoseller.io"}>
