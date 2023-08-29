@@ -9,6 +9,8 @@ Unlock the future of e-commerce success with ecoseller – headless e-commerce s
 
 Designed to cater to businesses of every scale, from the most daring sole proprietor to the middle size, ecoseller is your partner in success. Our platform's agility adapts to your ambitions, ensuring your digital presence resonates with impact.
 
+ecoseller solution includes two user-facing interfaces: storefront and dashboard. Storefront serves as the online storefront for customers, while dashboard provides a comprehensive administration panel for managing the e-commerce platform.
+
 ![Overview](../../images/dashboard/overview.png)
 Powered by the technological prowess of Django and Next.JS, our dashboard is a symphony of innovation, delivering real-time insights and intuitive control. Feast your eyes on the future with our dashboard, a glimpse into the seamless control that fuels your journey to the top.
 
