@@ -57,6 +57,11 @@ Are you having trouble with the installation? Please see the [Troubleshooting](#
 
 7. After the containers are up and running, in the default settings you can access the storefront at `http://localhost:3032` and the dashboard at `http://localhost:3033`. For advanced settings of Nginx reverse proxy please see [Configuration](#configuration) section.
 
+8. For initial dashboard login use the following credentials:
+- email: `admin@example.com`
+- password: `admin`
+Make sure you delete the default admin user and create a new one with a strong password or change the password of the default admin user.
+
 ### Configuration of production environment
 Nginx is used as a reverse proxy to efficiently handle incoming requests and distribute them to the appropriate services.
 It acts as a middle layer between the client and the backend services, enhancing performance and enabling load balancing.
