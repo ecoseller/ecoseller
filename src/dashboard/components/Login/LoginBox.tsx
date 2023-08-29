@@ -27,22 +27,9 @@ import jwt_decode from "jwt-decode";
 const LoginBox = ({}) => {
   const router = useRouter();
 
-  const [email, setEmail] = useState<string>(
-    process.env.NEXT_PUBLIC_DASHBOARD_USER || ""
-  );
-  const [password, setPassword] = useState<string>(
-    process.env.NEXT_PUBLIC_DASHBOARD_PASSWORD || ""
-  );
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
-
-  useEffect(() => {
-    if (email === "" && password === "") {
-      setEmail(process.env.NEXT_PUBLIC_DASHBOARD_USER || "");
-      setPassword(process.env.NEXT_PUBLIC_DASHBOARD_PASSWORD || "");
-    }
-  }, []);
-
-  console.log("email", email);
 
   return (
     <>
