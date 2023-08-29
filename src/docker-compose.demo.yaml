@@ -80,6 +80,8 @@ services:
       API_URL: "http://backend:8000"
       NEXT_PUBLIC_API_URL: "http://localhost:8000"
       NEXT_PUBLIC_BACKEND_API_URL: "http://backend:8000"
+      NEXT_PUBLIC_DASHBOARD_USER: "admin@example.com"
+      NEXT_PUBLIC_DASHBOARD_PASSWORD: "admin"
     volumes:
       - ./dashboard/pages:/usr/src/app/pages
       - ./dashboard/utils:/usr/src/app/utils

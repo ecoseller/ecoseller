@@ -1,6 +1,6 @@
 // /components/login/LoginBox
 // react
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // next.js
 import { useRouter } from "next/router";
 // mui
@@ -9,6 +9,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Link from "next/link";
+import Alert from "@mui/material/Alert";
 // components
 import Emoji from "../Emoji";
 // styles
@@ -26,8 +27,13 @@ import jwt_decode from "jwt-decode";
 const LoginBox = ({}) => {
   const router = useRouter();
 
-  const [email, setEmail] = useState<string>("admin@example.com");
-  const [password, setPassword] = useState<string>("admin");
+  const [email, setEmail] = useState<string>(
+    process.env.NEXT_PUBLIC_DASHBOARD_USER || ""
+  );
+  const [password, setPassword] = useState<string>(
+    process.env.NEXT_PUBLIC_DASHBOARD_PASSWORD || ""
+  );
+  const [error, setError] = useState<string>("");
 
   return (
     <>
@@ -89,6 +95,15 @@ const LoginBox = ({}) => {
             })
               .then((res) => res.json())
               .then((data: any) => {
+                console.log("data", data);
+                if (data === null) {
+                  throw new Error("Invalid credentials");
+                }
+                if (data.error) {
+                  throw new Error(data.error);
+                }
+                setError("");
+
                 const accessToken = data.access;
                 const refreshToken = data.refresh;
 
@@ -113,12 +128,14 @@ const LoginBox = ({}) => {
                 router.replace("/dashboard/overview");
               })
               .catch((error) => {
-                console.log(error);
+                console.log("error", error);
+                setError(error.message);
               });
           }}
         >
           Login
         </Button>
+        {error ? <Alert severity="error">{error}</Alert> : null}
       </Box>
     </>
   );

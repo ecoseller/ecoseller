@@ -3,9 +3,9 @@ from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework.generics import UpdateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.serializers import ValidationError
 from rest_framework_simplejwt import views as jwt_views
 from rest_framework_simplejwt.tokens import RefreshToken
-
 from core.pagination import DashboardPagination
 from roles.decorator import (
     check_user_access_decorator,
@@ -174,11 +174,15 @@ class CustomTokenObtainPairView(jwt_views.TokenObtainPairView):
             serializedData.is_valid(raise_exception=True)
             dashboardLogin = serializedData.validated_data["dashboard_login"]
             if dashboardLogin is True and not user.is_staff:
-                return Response({"error": "Not authorized"}, status=400)
+                return Response({"error": "Not authorized for this action"}, status=400)
             return response
+        except User.DoesNotExist:
+            return Response({"error": "Check provided credentials."}, status=400)
+        except ValidationError:
+            return Response({"error": "Check provided credentials."}, status=400)
         except Exception as e:
             print("Error", e)
-            return Response("Error login", status=400)
+            return Response({"error": "Error login"}, status=400)
 
 
 class PasswordView(UpdateAPIView):
