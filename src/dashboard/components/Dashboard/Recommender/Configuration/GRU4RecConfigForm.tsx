@@ -38,21 +38,24 @@ const GRU4RecConfigForm = ({
   info,
   onChange,
 }: IGRU4RecConfigProps) => {
-  const [eventsMultiplierState, setEventsMultiplierState] =
-    useState<number>(eventsMultiplier);
-  const [incrementalTrainingsState, setIncrementalTrainingsState] =
-    useState<number>(incrementalTrainings);
+  const [configState, setConfigState] = useState<IGRU4RecConfigEditableProps>({
+    numEpochsOptions,
+    batchSizeOptions,
+    embeddingSizeOptions,
+    hiddenSizeOptions,
+    learningRateOptions,
+    incrementalTrainings,
+    eventsMultiplier,
+  });
 
   const handleStateChange = (data: object) => {
-    onChange({
-      numEpochsOptions,
-      batchSizeOptions,
-      embeddingSizeOptions,
-      hiddenSizeOptions,
-      learningRateOptions,
-      incrementalTrainings,
-      eventsMultiplier,
-      ...data,
+    setConfigState((prevState) => {
+      const newState = {
+        ...prevState,
+        ...data,
+      };
+      onChange(newState);
+      return newState;
     });
   };
 
@@ -61,27 +64,42 @@ const GRU4RecConfigForm = ({
       <OptionsForm
         title={info.numEpochsOptions.title}
         description={info.numEpochsOptions.description}
-        options={numEpochsOptions}
+        options={configState.numEpochsOptions}
+        onChange={(options) => {
+          handleStateChange({ numEpochsOptions: options });
+        }}
       />
       <OptionsForm
         title={info.batchSizeOptions.title}
         description={info.batchSizeOptions.description}
-        options={batchSizeOptions}
+        options={configState.batchSizeOptions}
+        onChange={(options) => {
+          handleStateChange({ batchSizeOptions: options });
+        }}
       />
       <OptionsForm
         title={info.embeddingSizeOptions.title}
         description={info.embeddingSizeOptions.description}
-        options={embeddingSizeOptions}
+        options={configState.embeddingSizeOptions}
+        onChange={(options) => {
+          handleStateChange({ embeddingSizeOptions: options });
+        }}
       />
       <OptionsForm
         title={info.hiddenSizeOptions.title}
         description={info.hiddenSizeOptions.description}
-        options={hiddenSizeOptions}
+        options={configState.hiddenSizeOptions}
+        onChange={(options) => {
+          handleStateChange({ hiddenSizeOptions: options });
+        }}
       />
       <OptionsForm
         title={info.learningRateOptions.title}
         description={info.learningRateOptions.description}
-        options={learningRateOptions}
+        options={configState.learningRateOptions}
+        onChange={(options) => {
+          handleStateChange({ learningRateOptions: options });
+        }}
       />
       <Labeled
         label={info.incrementalTrainings.title}
@@ -90,12 +108,11 @@ const GRU4RecConfigForm = ({
         <Input
           // disabled={!hasPermission}
           type="number"
-          value={incrementalTrainingsState}
+          value={configState.incrementalTrainings}
           onChange={(
             e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
           ) => {
             const value = parseInt(e.target.value);
-            setIncrementalTrainingsState(value);
             handleStateChange({ incrementalTrainings: value });
           }}
         />
@@ -108,12 +125,11 @@ const GRU4RecConfigForm = ({
           // disabled={!hasPermission}
           type="number"
           inputProps={{ step: 0.01 }}
-          value={eventsMultiplierState}
+          value={configState.eventsMultiplier}
           onChange={(
             e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
           ) => {
             const value = parseFloat(e.target.value);
-            setEventsMultiplierState(value);
             handleStateChange({ eventsMultiplier: value });
           }}
         />

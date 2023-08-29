@@ -28,15 +28,27 @@ const EASEConfigForm = ({
   info,
   onChange,
 }: IEASEConfigProps) => {
-  const [reviewsMultiplierState, setReviewsMultiplierState] =
-    useState<number>(reviewsMultiplier);
+  const [configState, setConfigState] = useState<IEASEConfigEditableProps>({
+    l2Options,
+    reviewsMultiplier,
+  });
 
   return (
     <Stack spacing={2}>
       <OptionsForm
         title={info.l2Options.title}
         description={info.l2Options.description}
-        options={l2Options}
+        options={configState.l2Options}
+        onChange={(options) => {
+          setConfigState((prevState) => {
+            const newState = {
+              ...prevState,
+              l2Options: options,
+            };
+            onChange(newState);
+            return newState;
+          });
+        }}
       />
       <Labeled
         label={info.reviewsMultiplier.title}
@@ -46,13 +58,17 @@ const EASEConfigForm = ({
           // disabled={!hasPermission}
           type="number"
           inputProps={{ step: 0.01 }}
-          value={reviewsMultiplierState}
+          value={configState.reviewsMultiplier}
           onChange={(
             e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
           ) => {
-            onChange({
-              l2Options,
-              reviewsMultiplier: parseFloat(e.target.value),
+            setConfigState((prevState) => {
+              const newState = {
+                ...prevState,
+                reviewsMultiplier: parseFloat(e.target.value),
+              };
+              onChange(newState);
+              return newState;
             });
           }}
         />
