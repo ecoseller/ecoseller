@@ -108,21 +108,27 @@ const PerformanceData = ({ k, data }: IPerformanceDataProps) => {
     <Box>
       <PerformanceDataItem
         label={`Hit rate @ ${k}`}
-        value={data.hitRate !== null ? `${data.hitRate} %` : "unknown"}
+        value={
+          data.hitRate !== null ? `${data.hitRate.toFixed(4)} %` : "unknown"
+        }
       />
       <Divider />
 
       <PerformanceDataItem
         label={`Future hit rate @ ${k}`}
         value={
-          data.futureHitRate !== null ? `${data.futureHitRate} %` : "unknown"
+          data.futureHitRate !== null
+            ? `${data.futureHitRate.toFixed(4)} %`
+            : "unknown"
         }
       />
       <Divider />
 
       <PerformanceDataItem
         label={`Coverage`}
-        value={data.coverage !== null ? `${data.coverage} %` : "unknown"}
+        value={
+          data.coverage !== null ? `${data.coverage.toFixed(4)} %` : "unknown"
+        }
       />
       <Divider />
 

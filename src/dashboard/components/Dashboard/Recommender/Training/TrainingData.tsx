@@ -107,11 +107,11 @@ const TrainingData = ({ data }: ITrainingDataProps) => {
     return [
       {
         label: "Average",
-        value: data.avg ? `${data.avg.toFixed(2)} ${unit}` : "unknown",
+        value: data.avg !== null ? `${data.avg.toFixed(2)} ${unit}` : "unknown",
       },
       {
         label: "Maximum",
-        value: data.max ? `${data.max.toFixed(2)} ${unit}` : "unknown",
+        value: data.max !== null ? `${data.max.toFixed(2)} ${unit}` : "unknown",
       },
     ];
   };
