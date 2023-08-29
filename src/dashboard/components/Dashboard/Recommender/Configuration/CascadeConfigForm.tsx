@@ -41,6 +41,7 @@ const Cascade = SortableContainer(({ models }: ICascadeProps) => {
   return (
     <Box>
       {models.map((model, index) => (
+        // @ts-ignore
         <SortableItem key={model.name} index={index} title={model.title} />
       ))}
     </Box>
@@ -96,6 +97,7 @@ const CascadeConfigForm = ({
       <Typography variant="h6">{title}</Typography>
       <Typography variant="body1">{description}</Typography>
       {cascadeState.length > 0 && (
+        // @ts-ignore
         <Cascade axis={"x"} models={cascadeState} onSortEnd={onSortEnd} />
       )}
     </Stack>
