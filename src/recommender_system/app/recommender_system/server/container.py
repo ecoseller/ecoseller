@@ -7,7 +7,6 @@ from recommender_system.managers.data_manager import DataManager
 from recommender_system.managers.model_manager import ModelManager
 from recommender_system.managers.monitoring_manager import MonitoringManager
 from recommender_system.managers.prediction_pipeline import PredictionPipeline
-from recommender_system.managers.request_manager import RequestManager
 from recommender_system.managers.trainer import Trainer
 from recommender_system.storage.cache.storage import FileCacheStorage
 from recommender_system.storage.feedback.storage import SQLFeedbackStorage
@@ -28,7 +27,6 @@ class Container(containers.DeclarativeContainer):
     model_manager = providers.Singleton(ModelManager)
     monitoring_manager = providers.Singleton(MonitoringManager)
     prediction_pipeline = providers.Singleton(PredictionPipeline)
-    request_manager = providers.Singleton(RequestManager)
     trainer = providers.Singleton(Trainer)
 
     cache_storage = providers.Singleton(
