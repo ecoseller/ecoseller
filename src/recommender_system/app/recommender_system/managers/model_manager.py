@@ -87,6 +87,20 @@ class ModelManager:
 
         trainer.schedule_train(model_name=SimilarityPredictionModel.Meta.model_name)
 
+    @inject
+    def reviews_modified(self, trainer: Trainer = Provide["trainer"]) -> None:
+        from recommender_system.models.prediction.ease.model import EASEPredictionModel
+
+        trainer.schedule_train(model_name=EASEPredictionModel.Meta.model_name)
+
+    @inject
+    def sessions_modified(self, trainer: Trainer = Provide["trainer"]) -> None:
+        from recommender_system.models.prediction.gru4rec.model import (
+            GRU4RecPredictionModel,
+        )
+
+        trainer.schedule_train(model_name=GRU4RecPredictionModel.Meta.model_name)
+
     def get_all_models_dicts(self, include_dummy: bool = False) -> List[Dict[str, str]]:
         return [
             model.to_config()
