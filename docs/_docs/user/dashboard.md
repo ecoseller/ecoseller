@@ -684,7 +684,7 @@ The data contain number of trainings based on their status (*Completed* or *Fail
 
 The user can also schedule training of a prediction model, the model is added to the queue of models to be trained.
 
-![Training](../../images/dashboard/recommender_training.png)
+![Training](../../images/dashboard/recommender_no_training.png)
 
 Some prediction models can not be trained, this information is displayed to the user.
 
