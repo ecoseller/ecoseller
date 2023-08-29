@@ -93,11 +93,11 @@ const PerformanceData = ({ k, data }: IPerformanceDataProps) => {
     return [
       {
         label: "Average",
-        value: data.avg ? `${data.avg.toFixed(4)} s` : "unknown",
+        value: data.avg !== null ? `${data.avg.toFixed(4)} s` : "unknown",
       },
       {
         label: "Maximum",
-        value: data.max ? `${data.max.toFixed(4)} s` : "unknown",
+        value: data.max !== null ? `${data.max.toFixed(4)} s` : "unknown",
       },
     ];
   };
@@ -108,25 +108,27 @@ const PerformanceData = ({ k, data }: IPerformanceDataProps) => {
     <Box>
       <PerformanceDataItem
         label={`Hit rate @ ${k}`}
-        value={data.hitRate ? `${data.hitRate} %` : "unknown"}
+        value={data.hitRate !== null ? `${data.hitRate} %` : "unknown"}
       />
       <Divider />
 
       <PerformanceDataItem
         label={`Future hit rate @ ${k}`}
-        value={data.futureHitRate ? `${data.futureHitRate} %` : "unknown"}
+        value={
+          data.futureHitRate !== null ? `${data.futureHitRate} %` : "unknown"
+        }
       />
       <Divider />
 
       <PerformanceDataItem
         label={`Coverage`}
-        value={data.coverage ? `${data.coverage} %` : "unknown"}
+        value={data.coverage !== null ? `${data.coverage} %` : "unknown"}
       />
       <Divider />
 
       <PerformanceDataItem
         label={`Number of predictions`}
-        value={data.predictions ? `${data.predictions}` : "unknown"}
+        value={data.predictions !== null ? `${data.predictions}` : "unknown"}
       />
       <Divider />
 
