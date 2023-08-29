@@ -648,15 +648,23 @@ This section of the dashboard contains information regarding the Recommender sys
 *Performance* page contains information about the Recommender system's performance in the selected time window. Users can
 inspect metrics and other prediction-related information here.
 
+![Performance](../../images/dashboard/recommender_performance.png)
+
 *Training* page contains information about trainings of all prediction models. Each model can also be scheduled to be re-trained.
 
+![Training](../../images/dashboard/recommender_training.png)
+
 *Configuration* page enables user to configure the Recommender system and its individual models in real-time. Each model can also be disabled.
+
+![Configuration](../../images/dashboard/recommender_configuration.png)
 
 ## Performance
 
 Users can select time window for which to display performance data.
 
 All metrics are described in the *Information* section on this page. The default metrics are coverage, hit rate @ $k$ and future hit rate @ $k$.
+
+![Performance information](../../images/dashboard/recommender_performance_info.png)
 
 Coverage is the fraction of the product variant catalogue that was recommended, hit rate @ $k$ specifies how often the users click on one of top $k$
 recommended product variants. Future hit rate @ $k$ specifies how often users visit one of the top $k$ recommended product variants during the rest
@@ -676,7 +684,9 @@ The data contain number of trainings based on their status (*Completed* or *Fail
 
 The user can also schedule training of a prediction model, the model is added to the queue of models to be trained.
 
-Some prediction models are not being trained, this information is displayed to the user.
+![Training](../../images/dashboard/recommender_training.png)
+
+Some prediction models can not be trained, this information is displayed to the user.
 
 ## Configuration
 
@@ -685,9 +695,16 @@ also information whether the model is available for training (if enough data is 
 
 The Recommender system can be configured on this page. The configurable parameters contain *retrieval size* and *ordering size*.
 
-Each prediction model can also be configured, only GRU4Rec and EASE models have configurable parameters.
+![Configuration options](../../images/dashboard/recommender_configuration_options.png)
 
-All parameters are described in a tooltip above the info icon.
+Each prediction model can also be configured. Some of the parameters are options that the training algorithm chooses from - it tries all combinations
+of the parameters and selects the best combination based on the model's performance. Each parameter has description in a tooltip above a *info* icon.
 
-The prediction model cascades are displayed on this page as well. Each cascade defines the order of models that is tried when performing the corresponding
+![Configuration tooltip](../../images/dashboard/recommender_configuration_tooltip.png)
+
+The prediction model cascades can be edited on this page as well. Each cascade defines the order of models that is tried when performing the corresponding
 recommendations. If the first model can not be used, the second is selected and so on.
+
+![Configuration cascade](../../images/dashboard/recommender_configuration_cascade.png)
+
+Each cascade can be re-ordered using a drag&drop feature.
