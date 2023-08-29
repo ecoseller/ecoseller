@@ -32,7 +32,10 @@ export const userLoginAPI = async (
           return data;
         })
         .catch((error: any) => {
-          throw error;
+          if (error?.response?.data?.error) {
+            throw error.response.data.error;
+          }
+          throw "Error during login occured. Please check your backend service.";
         });
     default:
       throw new Error("Method not supported");
@@ -49,7 +52,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   return userLoginAPI(method as HTTPMETHOD, req, res)
     .then((data) => res.status(200).json(data))
-    .catch((error) => res.status(400).json(null));
+    .catch((error) => res.status(400).json({ error: error }));
 };
 
 export default handler;
