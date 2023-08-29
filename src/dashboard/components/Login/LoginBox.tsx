@@ -1,6 +1,6 @@
 // /components/login/LoginBox
 // react
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // next.js
 import { useRouter } from "next/router";
 // mui
@@ -27,8 +27,12 @@ import jwt_decode from "jwt-decode";
 const LoginBox = ({}) => {
   const router = useRouter();
 
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>(
+    process.env.NEXT_PUBLIC_DASHBOARD_USER || ""
+  );
+  const [password, setPassword] = useState<string>(
+    process.env.NEXT_PUBLIC_DASHBOARD_PASSWORD || ""
+  );
   const [error, setError] = useState<string>("");
 
   return (
