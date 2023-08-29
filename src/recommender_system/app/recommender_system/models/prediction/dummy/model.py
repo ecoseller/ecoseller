@@ -18,7 +18,7 @@ class DummyPredictionModel(AbstractPredictionModel):
         description = """Dummy prediction model is the simplest implemented model, it can perform retrieval and scoring.
         It selects product variants from the database without any ordering during retrieval. Scoring step does not
         reorder the product variants in any way. It keeps the order the same as the retrieval step provided. This model
-        is used when all of the other models fail, it is not included in any cascade. 
+        is used when all of the other models fail, it is not included in any cascade.
         """
 
     @property
