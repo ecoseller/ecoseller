@@ -1,6 +1,7 @@
 // next.js
 // react
-import React, { ReactElement } from "react";
+import React, { ReactElement, useState } from "react";
+import { SortableContainer, SortableElement } from "react-sortable-hoc";
 // layout
 import DashboardLayout from "@/pages/dashboard/layout"; //react
 import RootLayout from "@/pages/layout";
@@ -12,13 +13,39 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 
-export interface ICascadeConfigFormProps {
+interface ICascadeProps {
+  models: IRecommenderModel[];
+}
+
+interface ISortableItemProps {
+  key: string;
+  index: number;
+  title: string;
+}
+
+export interface ICascadeConfigFormProps extends ICascadeProps {
   name: string;
   title: string;
   description: string;
   cascade: string[] | null;
-  models: IRecommenderModel[];
+  onChange: (cascade: string[]) => void;
 }
+
+const SortableItem = SortableElement(
+  ({ key, index, title }: ISortableItemProps) => (
+    <ModelCascadeItem title={title} />
+  )
+);
+
+const Cascade = SortableContainer(({ models }: ICascadeProps) => {
+  return (
+    <Box>
+      {models.map((model, index) => (
+        <SortableItem key={model.name} index={index} title={model.title} />
+      ))}
+    </Box>
+  );
+});
 
 const CascadeConfigForm = ({
   name,
@@ -26,30 +53,51 @@ const CascadeConfigForm = ({
   description,
   cascade,
   models,
+  onChange,
 }: ICascadeConfigFormProps) => {
-  const cascadeModels = cascade?.map((modelName) => {
-    return (
-      models.find((model) => {
-        return model.name === modelName;
-      }) ?? {
-        name: modelName,
-        title: modelName,
-        description: "",
-        disabled: false,
-      }
-    );
-  });
+  const cascadeModels =
+    cascade?.map((modelName) => {
+      return (
+        models.find((model) => {
+          return model.name === modelName;
+        }) ?? {
+          name: modelName,
+          title: modelName,
+          description: "",
+          isReadyForTraining: false,
+          canBeTrained: false,
+          isTrained: false,
+          disabled: false,
+        }
+      );
+    }) || [];
+
+  const [cascadeState, setCascadeState] =
+    useState<IRecommenderModel[]>(cascadeModels);
+
+  const onSortEnd = ({
+    oldIndex,
+    newIndex,
+  }: {
+    oldIndex: number;
+    newIndex: number;
+  }) => {
+    setCascadeState((cascade) => {
+      const model = cascade[oldIndex];
+      cascade.splice(oldIndex, 1);
+      cascade.splice(newIndex, 0, model);
+      onChange(cascade.map((model) => model.name));
+      return cascade;
+    });
+  };
 
   return (
     <Stack spacing={2}>
       <Typography variant="h6">{title}</Typography>
       <Typography variant="body1">{description}</Typography>
-      <Box>
-        {cascadeModels !== undefined &&
-          cascadeModels.map((model) => (
-            <ModelCascadeItem key={model.name} title={model.title} />
-          ))}
-      </Box>
+      {cascadeState.length > 0 && (
+        <Cascade axis={"x"} models={cascadeState} onSortEnd={onSortEnd} />
+      )}
     </Stack>
   );
 };

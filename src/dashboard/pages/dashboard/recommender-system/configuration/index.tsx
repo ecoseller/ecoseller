@@ -173,7 +173,20 @@ const DashboardRecommenderSystemPage = ({
               />
             </Grid>
             <Grid item xs={12}>
-              <CascadeConfig models={models} info={info} cascades={cascades} />
+              <CascadeConfig
+                models={models}
+                info={info}
+                cascades={cascades}
+                onChange={(cascades) => {
+                  setPreventNavigation(true);
+                  setConfigState((prevState) => {
+                    return {
+                      ...prevState,
+                      ...cascades,
+                    };
+                  });
+                }}
+              />
             </Grid>
           </Grid>
         </Container>

@@ -32,9 +32,15 @@ export interface ICascadeConfigProps {
   models: IRecommenderModel[];
   info: IInfo;
   cascades: ICascadesProps;
+  onChange: (cascades: ICascadesProps) => void;
 }
 
-const CascadeConfig = ({ models, info, cascades }: ICascadeConfigProps) => {
+const CascadeConfig = ({
+  models,
+  info,
+  cascades,
+  onChange,
+}: ICascadeConfigProps) => {
   const cascadeNames = [
     "homepageRetrievalCascade",
     "homepageScoringCascade",
@@ -46,13 +52,15 @@ const CascadeConfig = ({ models, info, cascades }: ICascadeConfigProps) => {
     "cartScoringCascade",
   ];
 
+  const [cascadesState, setCascadesState] = useState<ICascadesProps>(cascades);
+
   const cascadeData = cascadeNames.map((name) => {
     return {
       name,
       title: info[name].title,
       description: info[name].description,
       // @ts-ignore
-      cascade: cascades[name],
+      cascade: cascadesState[name],
     };
   });
 
@@ -88,7 +96,19 @@ const CascadeConfig = ({ models, info, cascades }: ICascadeConfigProps) => {
         </Box>
         {cascadeData.map((cascade) => (
           <TabPanel sx={{ p: 2 }} key={cascade.name} value={cascade.name}>
-            <CascadeConfigForm models={models} {...cascade} />
+            <CascadeConfigForm
+              models={models}
+              onChange={(newCascadeValue) => {
+                setCascadesState((prevState) => {
+                  const newState = { ...prevState };
+                  // @ts-ignore
+                  newState[cascade.name] = newCascadeValue;
+                  onChange(newState);
+                  return newState;
+                });
+              }}
+              {...cascade}
+            />
           </TabPanel>
         ))}
       </TabContext>

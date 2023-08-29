@@ -14,7 +14,7 @@ const StyledSpan = styled("span")({
 });
 
 const ModelCascadeItem = ({ title }: IModelCascadeItemProps) => (
-  <StyledSpan>{title}</StyledSpan>
+  <StyledSpan sx={{ cursor: "pointer" }}>{title}</StyledSpan>
 );
 
 export default ModelCascadeItem;
