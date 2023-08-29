@@ -643,55 +643,51 @@ To edit an existing role, click on the edit button in the roles list. This opens
 
 # Recommender system
 
-This page provides an overview of the Recommender system as well as the possibility to configure the Recommender system in real-time.
+This section of the dashboard contains information regarding the Recommender system. It is divided into 3 pages.
 
-## Metrics
+*Performance* page contains information about the Recommender system's performance in the selected time window. Users can
+inspect metrics and other prediction-related information here.
 
-The Recommender system's performance is monitored the metrics described below.
+*Training* page contains information about trainings of all prediction models. Each model can also be scheduled to be re-trained.
 
-### Coverage
+*Configuration* page enables user to configure the Recommender system and its individual models in real-time. Each model can also be disabled.
 
-This metric describes which fraction of the product catalogue did the Recommender system recommend in the last 30 days.
+## Performance
 
-### Direct hit @ $k$
+Users can select time window for which to display performance data.
 
-This metric describes how often the users opened one of the top $k$ product details recommended to them as soon as the recommendation occurred.
+All metrics are described in the *Information* section on this page. The default metrics are coverage, hit rate @ $k$ and future hit rate @ $k$.
 
-### Future hit @ $k$
+Coverage is the fraction of the product variant catalogue that was recommended, hit rate @ $k$ specifies how often the users click on one of top $k$
+recommended product variants. Future hit rate @ $k$ specifies how often users visit one of the top $k$ recommended product variants during the rest
+of their session.
 
-This metric describes how often the users opened one of the top $k$ product details recommended to them if their whole session is considered.
-For example a user has been recommended product A's variant in one of the top $k$ recommendations. He then visited products B, C, D and then A.
-This counts as hit of recommendation, that provided product A's variant. But it wouldn't count as *Direct hit @ $k$* (if the same recommendation
-did not contain product B's variant among the top $k$ variants).
+Number of predictions and their duration is displayed for the user as well.
 
-## Global
+These statistics are computed for the whole Recommender system (*General data*) and for each prediction model individually (*Model-specific data*).
 
-The performance of the Recommender system as a whole is displayed first. It is also possible to adjust global parameters of the Recommender system.
+## Training
 
-Global parameters include *retrieval size* and *ordering size*.
+Training page has almost identical layout to the performance page. It enables user to select time window for which to display training data.
 
-*Retrieval size* specifies the number of product variants selected in the *retrieval*
-step of the *Prediction pipeline*. These variants are typically selected by less complex model so the more complex model can recommend the best in
-reasonable time. Higher number thus means more computational complexity, but better results as the elementary model can filter out relevant product
-variants.
+The training data are displayed for the whole Recommender system (*General data*) and for each prediction model individually (*Model-specific data*).
 
-*Ordering size* specified the number of product variants that are selected for ordering step of the pipeline. This step reorders the top product variants
-to maximize diversity, for example.
-![Global](../../images/dashboard/recommender_system_global.png)
+The data contain number of trainings based on their status (*Completed* or *Failed*), duration of the trainings and their memory consumption.
 
-## Models 
+The user can also schedule training of a prediction model, the model is added to the queue of models to be trained.
 
-The performance of the Recommender system can be inspected by the model providing recommendations and the situation, when the recommendation takes place.
-The selected situation contains only the performance of the model selected above.
-![Models](../../images/dashboard/recommender_system_models.png)
+Some prediction models are not being trained, this information is displayed to the user.
 
-Latest training statistics are displayed in this section as well as the selected model's configuration.
-All configuration options are listed in the [configuration section](../../programming/recommender_system#configuration) of the Recommender system page in the programming documentation.
-![Training](../../images/dashboard/recommender_system_training.png)
+## Configuration
 
-## Cascades
+Configuration page contains information about the individual prediction models. Each model can also be disabled in real-time. This list of models contains
+also information whether the model is available for training (if enough data is present) or whether it does not need any training.
 
-The last section of this page displays the cascades used by the Recommender system in each situation and pipeline's step.
+The Recommender system can be configured on this page. The configurable parameters contain *retrieval size* and *ordering size*.
 
-The Recommender system uses the first model of the cascade that is possible in the current situation - regarding its data and the current user.
-![Cascades](../../images/dashboard/recommender_system_cascades.png)
+Each prediction model can also be configured, only GRU4Rec and EASE models have configurable parameters.
+
+All parameters are described in a tooltip above the info icon.
+
+The prediction model cascades are displayed on this page as well. Each cascade defines the order of models that is tried when performing the corresponding
+recommendations. If the first model can not be used, the second is selected and so on.
