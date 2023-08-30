@@ -1,7 +1,7 @@
 ---
 title: User documentation - Dashboard
 category: User documentation
-order: 2
+order: 3
 ---
 
 Table of contents:

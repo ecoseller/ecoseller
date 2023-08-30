@@ -1,7 +1,7 @@
 ---
 title: User documentation - Storefront
 category: User documentation
-order: 3
+order: 4
 ---
 
 Table of contents:
