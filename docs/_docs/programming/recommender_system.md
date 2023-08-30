@@ -26,7 +26,7 @@ and usage of all the components of the Recommender system. The web server includ
 used via dependency injection. These components include storages and managers (*Cache manager*, *Data manager*, *Model manager*,
 *Monitoring manager* and *Prediction pipeline*).
 
-[Architecture](../../images/recommender_architecture.svg)
+![Architecture](../../images/recommender_architecture.svg)
 
 ## API
 
