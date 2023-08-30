@@ -1,5 +1,5 @@
 ---
-title: User documentation - Storefront
+title: Storefront
 category: User documentation
 order: 4
 ---

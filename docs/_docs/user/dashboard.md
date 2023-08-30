@@ -1,5 +1,5 @@
 ---
-title: User documentation - Dashboard
+title: Dashboard
 category: User documentation
 order: 3
 ---

@@ -8,8 +8,8 @@ Table of contents:
 * TOC
 {:toc}
 
-The following sections will guide you through the **core features** of the application and help you get started with it.  
-Please go through the tutorials in the following order (because the tutorials often depend on previous ones).
+The following sections will guide you through the **core features** of the application and help you get started with it using video tutorials.  
+Please go through the tutorials in the order listed (as they often depend on the previous ones).
 
 In case you want to see all of the ecoseller features, or you just prefer documentation in a textual form, see also
 - [dashboard docs](../dashboard/)
@@ -55,3 +55,6 @@ You'll learn how to:
 * Upload media (e.g. photos) to a given product
 
 <iframe width="720" height="480" src="https://www.youtube.com/embed/3cL92G4qyDo?si=r2frp8sHx-ucsWPL" frameborder="0" allowfullscreen></iframe>
+
+# Browsing & indexing products
+
