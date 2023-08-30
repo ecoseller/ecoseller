@@ -8,7 +8,12 @@ Table of contents:
 * TOC
 {:toc}
 
-The following sections will guide you through the core features of the application and help you get started with it.
+The following sections will guide you through the **core features** of the application and help you get started with it.  
+Please go through the tutorials in the following order (because the tutorials often depend on previous ones).
+
+In case you want to see all of the ecoseller features, or you just prefer documentation in a textual form, see also
+- [dashboard docs](../dashboard/)
+- [storefront docs](../storefront/)
 
 # First login to the dashboard
 In the following tutorial, you will learn the following:
@@ -30,4 +35,23 @@ This tutorial is focused on setting up localization-related data. You will learn
 <iframe width="720" height="480" src="https://www.youtube.com/embed/PHauZ1tTuw8" frameborder="0" allowfullscreen></iframe>
 
 # Creating your first product category
+
+This tutorial focuses on creating product categories, you'll learn how to
+* create new category
+* set parent category
+
+<iframe width="720" height="480" src="https://www.youtube.com/embed/6CteprmUUyM?si=OBDjk-S5kfZUCJK_" frameborder="0" allowfullscreen></iframe>
+
 # Creating your first product
+
+This tutorial describes step-by-step how to create your first product.
+
+You'll learn how to:
+* Create new attributes (both textual and numeric)
+* Create new product types and assign attributes to them
+* Create new product and set its product type
+* Create new product variants
+* Set product variant prices
+* Upload media (e.g. photos) to a given product
+
+<iframe width="720" height="480" src="https://www.youtube.com/embed/3cL92G4qyDo?si=r2frp8sHx-ucsWPL" frameborder="0" allowfullscreen></iframe>

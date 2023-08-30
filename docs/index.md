@@ -31,7 +31,8 @@ Elevate your sales, engage your audience, and embrace a future where innovation 
 So let's get started!
 - [Get started](/administration/installation/) quickly and with ease.
 - [Get a deeper understanding](/programming/technical-design/) of the platform and ways to extend it.
-- Learn how to [use the dashboard](/user/dashboard/) and [storefront](/user/storefront/).
+- Learn how to [use ecoseller](/user/getting_started/) using our video tutorials
+    - if you prefer textual documentation, see our [dashboard](/user/dashboard/) and [storefront](/user/storefront/) user docs
 
 <!-- 
 Table of contents:
