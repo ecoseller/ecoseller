@@ -50,7 +50,7 @@ export const CountryProvider = ({
       return;
     }
 
-    if (countryCookieValue && countryList.length > 0) {
+    if (countryCookieValue && countryList?.length > 0) {
       setCountryCookieAndLocale(countryCookieValue);
     } else if (countryList?.length > 0) {
       setCountryCookieAndLocale(DEFAULT_COUNTRY || countryList[0].code, true);

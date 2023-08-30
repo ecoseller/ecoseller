@@ -89,8 +89,8 @@ const ProductCard = ({ product }: IProductCardProps) => {
           sx={{
             objectFit: "contain",
           }}
-          image={imgPath(product.primary_image.media)}
-          title={product.primary_image.alt || ""}
+          image={imgPath(product?.primary_image?.media || "")}
+          title={product?.primary_image?.alt || ""}
         />
         <CardContent>
           <Typography gutterBottom variant="h6" component="div">
