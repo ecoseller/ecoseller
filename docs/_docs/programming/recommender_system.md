@@ -26,6 +26,8 @@ and usage of all the components of the Recommender system. The web server includ
 used via dependency injection. These components include storages and managers (*Cache manager*, *Data manager*, *Model manager*,
 *Monitoring manager* and *Prediction pipeline*).
 
+[Architecture](../../images/recommender_architecture.svg)
+
 ## API
 
 There are several API endpoints exposed by the Recommender system.
@@ -367,6 +369,9 @@ Monitoring data to be displayed on dashboard are prepared by monitoring manager.
 Trainer runs in a separate container to keep the Recommender system's response fast.
 
 It checks a database containing items representing training requests and once there are new requests, it starts training the corresponding prediction model.
+
+It also schedules models for training based on signals sent from [Model manager](#model-manager), the Python object inside the Recommender system's server
+takes care of this in order to keep this functionality inside single object.
 
 # Dockerization
 
