@@ -29,7 +29,6 @@ from recommender_system.utils.recommendation_type import RecommendationType
 class PredictionPipeline:
     class Step(Enum):
         RETRIEVAL = "RETRIEVAL"
-        FILTERING = "FILTERING"
         SCORING = "SCORING"
         ORDERING = "ORDERING"
 
@@ -274,6 +273,13 @@ class PredictionPipeline:
             create_at=datetime.now(),
         )
         result.create()
+
+        cache_manager.save(
+            recommendation_type=recommendation_type,
+            session_id=session_id,
+            predictions=predictions,
+            **kwargs,
+        )
 
         return retrieval_model, scoring_model, predictions
 
