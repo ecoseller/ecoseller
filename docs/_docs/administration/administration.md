@@ -129,3 +129,8 @@ Run the following command to restore the database from a backup file:
 pg_restore -U your_username -d your_database_name /path/to/backup.sql
 ```
 Replace `your_username`, `your_database_name`, and `/path/to/backup.sql` with the appropriate values.
+
+# Indexing products to Elasticsearch
+
+The process of indexing products is described in [programming docs](/programming/supportive_services/#indexing-products-to-elasticsearch)  
+You can also watch [our video tutorial](/user/getting_started/#browsing--indexing-products).

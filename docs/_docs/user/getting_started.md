@@ -58,3 +58,8 @@ You'll learn how to:
 
 # Browsing & indexing products
 
+In this tutorial you'll learn how to
+- browse and filter products on storefront
+- index the products to Elasticsearch
+
+<iframe width="720" height="480" src="https://www.youtube.com/embed/QNA5cp2veCU?si=B2EDfZ7vH1mI4fhA" frameborder="0" allowfullscreen></iframe>

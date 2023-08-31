@@ -47,7 +47,7 @@ git clone https://github.com/ecoseller/ecoseller.git
 
 5. If you are going to change the default ports or will use server name based routing as described in [Configuration](#configuration) section, please make sure that you change public URLs of backend for storefront and dashboard in `src/docker-compose.prod.yaml` file (`NEXT_PUBLIC_API_URL` variable).
 
-6. Run the following command to start ecoseller in production mode:
+6. Navigate to `src` folder and run the following command to start ecoseller in production mode:
 ```bash
 docker compose -f docker-compose.prod.yaml up
 ```
