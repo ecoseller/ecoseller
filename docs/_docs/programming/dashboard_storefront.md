@@ -285,10 +285,10 @@ This context provider creates a new recommender session for each user (if it doe
 - `children`: React component that is wrapped by the provider
 
 ### Recommender events
-Recommender events are used to track user's behaviour on the website. They are sent to the recommender server and are used to generate recommendations. They are defined in `RS_EVENT` variablle. Each event has its own payload. More information about recommender events can be found on the following links: #TODO: add links to recommender documentation
+Recommender events are used to track user's behaviour on the website. They are sent to the recommender server and are used to generate recommendations. They are defined in `RS_EVENT` variablle. Each event has its own payload. More information about recommender events can be found [here](/programming/backend/#action-based-triggers)
 
 ### Recommender situations
-Recommender situations are used to define the context in which the user is currently in. They are defined in `RS_RECOMMENDATIONS_SITUATIONS` variable. Each situation has its own payload. More information about recommender situations can be found on the following links: #TODO: add links to recommender documentation
+Recommender situations are used to define the context in which the user is currently in. They are defined in `RS_RECOMMENDATIONS_SITUATIONS` variable. Each situation has its own payload.
 
 ### Return value
 - `session`: string `uuid` session id
