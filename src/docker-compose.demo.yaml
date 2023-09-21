@@ -131,7 +131,7 @@ services:
     ports:
       - 5432:5432
     env_file:
-      - ./recommender_system/docker-compose.env
+      - ./recommender_system/docker-compose.demo.env
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 5s
@@ -148,7 +148,7 @@ services:
     ports:
       - 8086:8086
     env_file:
-      - ./recommender_system/docker-compose.env
+      - ./recommender_system/docker-compose.demo.env
     healthcheck:
       test: curl --fail http://localhost:8086 || exit 1
       interval: 5s
@@ -167,7 +167,7 @@ services:
       - ./recommender_system/app:/usr/src/app/
       - shared-volume:/usr/src/app/data/
     env_file:
-      - ./recommender_system/docker-compose.env
+      - ./recommender_system/docker-compose.demo.env
     depends_on:
       recommender_system:
         condition: service_healthy

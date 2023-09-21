@@ -100,7 +100,7 @@ class AbstractProductStorage(AbstractStorage, ABC):
 
     @abstractmethod
     def get_product_variant_attribute_values(
-        self, attribute_type_id: int
+        self, attribute_type_id: int, **kwargs: Any
     ) -> Dict[str, Optional[Any]]:
         """
         Selects value for given attribute type of all product variants that have this attribute type's value assigned.

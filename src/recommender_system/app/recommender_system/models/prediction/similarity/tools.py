@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 import logging
 import itertools
@@ -29,7 +30,11 @@ def prepare_variants(
         Object containing all data needed for training og similarity prediction model.
     """
     product_variant_skus = product_storage.get_objects_attribute(
-        model_class=ProductVariantModel, attribute=ProductVariantModel.Meta.primary_key
+        model_class=ProductVariantModel,
+        attribute=ProductVariantModel.Meta.primary_key,
+        limit=int(os.environ.get("TRAINING_ITEMS_LIMIT"))
+        if "TRAINING_ITEMS_LIMIT" in os.environ
+        else None,
     )
     variant_mapper = {}
     for i, sku in enumerate(product_variant_skus):
@@ -62,7 +67,7 @@ def prepare_variants(
             for i, value in enumerate(possible_values):
                 value_mapper[value] = i
             variant_attributes = product_storage.get_product_variant_attribute_values(
-                attribute_type_id=type_id
+                attribute_type_id=type_id, product_variant_sku__in=product_variant_skus
             )
             for sku, value in variant_attributes.items():
                 row = variant_mapper[sku]
