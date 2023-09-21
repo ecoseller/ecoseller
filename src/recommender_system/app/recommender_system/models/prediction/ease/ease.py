@@ -1,5 +1,6 @@
 import logging
 import math
+import os
 import time
 from typing import Any, Dict, List, Optional, Tuple, TYPE_CHECKING
 
@@ -184,11 +185,19 @@ class EASE:
 
         logging.info("Preparing rating matrix")
 
-        reviews = ReviewModel.gets()
-        user_ids = [review.user_id for review in reviews]
-        skus = product_storage.get_objects_attribute(
-            model_class=ProductVariantModel, attribute="sku", stock_quantity__gt=0
+        training_items_limit = (
+            int(os.environ.get("TRAINING_ITEMS_LIMIT"))
+            if "TRAINING_ITEMS_LIMIT" in os.environ
+            else None
         )
+        skus = product_storage.get_objects_attribute(
+            model_class=ProductVariantModel,
+            attribute="sku",
+            stock_quantity__gt=0,
+            limit=training_items_limit,
+        )
+        reviews = ReviewModel.gets(product_variant_sku__in=skus)
+        user_ids = [review.user_id for review in reviews]
 
         self.user_mapping = {str(user_ids[i]): i for i in range(len(user_ids))}
         self.product_variant_mapping = {skus[i]: i for i in range(len(skus))}

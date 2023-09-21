@@ -3,6 +3,9 @@ from typing import Any, Dict, List, Optional, TYPE_CHECKING
 from sqlalchemy import and_, func, case, or_
 from sqlalchemy.sql.functions import random
 
+from recommender_system.models.stored.product.attribute_product_variant import (
+    AttributeProductVariantModel,
+)
 from recommender_system.models.stored.similarity.distance import DistanceModel
 from recommender_system.storage.product.abstract import AbstractProductStorage
 from recommender_system.storage.product.statistics import NumericalStatistics
@@ -134,7 +137,7 @@ class SQLProductStorage(SQLStorage, AbstractProductStorage):
         return result
 
     def get_product_variant_attribute_values(
-        self, attribute_type_id: int
+        self, attribute_type_id: int, **kwargs: Any
     ) -> Dict[str, Optional[Any]]:
         from recommender_system.models.stored.product.attribute_type import (
             AttributeTypeModel,
@@ -152,10 +155,14 @@ class SQLProductStorage(SQLStorage, AbstractProductStorage):
         query = self.session.query(
             SQLAttributeProductVariant.product_variant_sku, value_column
         ).select_from(SQLAttributeProductVariant)
+
         query = query.join(
             SQLAttribute, SQLAttribute.id == SQLAttributeProductVariant.attribute_id
         )
         query = query.filter(SQLAttribute.attribute_type_id == attribute_type_id)
+        query = self._filter(
+            model_class=AttributeProductVariantModel, query=query, filters=kwargs
+        )
 
         return {row[0]: row[1] for row in query.all()}
 

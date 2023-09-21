@@ -93,7 +93,7 @@ class MonitoringManager:
                 ),
                 scoring_duration=Duration(
                     avg=scoring_duration_data["avg"],
-                    max=retrieval_duration_data["max"],
+                    max=scoring_duration_data["max"],
                 ),
             ),
         )
